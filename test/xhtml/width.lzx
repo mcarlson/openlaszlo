@@ -1,0 +1,20 @@
+<!-- check that the width of each text view is wide enough to not clip the text -->
+<canvas> 
+<splash/>
+<view>
+<simplelayout axis="y"/>
+<text> This is some text. </text>
+<text> This is some text. </text>
+<text> This is some text. </text>
+<text> This is some text. </text>
+<text> This is some text. </text>
+<text> This is some text. </text>
+<text> This is some text. </text>
+
+</view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

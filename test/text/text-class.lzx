@@ -1,0 +1,16 @@
+<canvas>
+  <class name="mytext">
+    <attribute name="text" type="text"/>
+    <text text="${parent.text}"/>
+  </class>
+
+  <simplelayout axis="y"/>
+  <text>text content</text>
+  <text text="text attribute"/>
+  <mytext>text content</mytext>
+  <mytext text="text attribute"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

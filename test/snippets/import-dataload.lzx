@@ -1,0 +1,25 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+  <simplelayout/>
+  <simplelayout/>
+  <text id='mytext' 
+        width="300" multiline="true"
+        >
+    Loads a snippet that loads dynamic data.
+    Should print a 'library loaded' message and a 'data loaded' message to debugger, and display
+    lines of text data from the small-contacts.xml file.
+    
+  </text>
+
+  <import name="lib" href="import-dataload-lib.lzx" stage="late" 
+          onload="Debug.write('loaded library import-dataload-lib.lzx')"/>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+     * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+

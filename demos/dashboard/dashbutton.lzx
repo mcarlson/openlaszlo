@@ -1,0 +1,101 @@
+<library>
+
+    <!-- RESOURCES -->
+    <resource name="buttonleft">
+        <frame src="img/cntctbtn_up_lft.swf"/>
+        <frame src="img/cntctbtn_mo_lft.swf"/>
+        <frame src="img/cntctbtn_dn_lft.swf"/>
+    </resource>
+    
+    <resource name="buttonmiddle">
+        <frame src="img/cntctbtn_up_mid.swf"/>
+        <frame src="img/cntctbtn_mo_mid.swf"/>
+        <frame src="img/cntctbtn_dn_mid.swf"/>
+    </resource>
+    
+    <resource name="buttonright">
+        <frame src="img/cntctbtn_up_rt.swf"/>
+        <frame src="img/cntctbtn_mo_rt.swf"/>
+        <frame src="img/cntctbtn_dn_rt.swf"/>
+    </resource>
+    
+    <!-- CLASS -->
+    <class name="dashbutton" clickable="true" font="vera" >
+        <attribute name="label"              value=""      type="string"/>
+        <attribute name="normalRsrcNumber"   value="1"     type="number"/>
+        <attribute name="overRsrcNumber"     value="2"     type="number"/>
+        <attribute name="downRsrcNumber"     value="3"     type="number"/>
+        <attribute name="mouseisdown"        value="false"/>
+
+        <!-- VIEWS -->
+        <view name="bkgnd" width="100%">
+            <view name="lft" resource="buttonleft" />
+            <view name="mid" resource="buttonmiddle" stretches="width"/>
+            <view name="rgt" resource="buttonright" />
+            <stableborderlayout axis="x"/>
+        </view>
+
+        <text name="title_hilite" y="-0.7" opacity="1" width="200" fgcolor="#143B45"
+              font="vera" fontsize="10" pixellock="false" >
+            <attribute name="x"    value="this.parent.title.x + 0.5" when="always"/>
+            <attribute name="text" value="parent.label" when="always"/>
+        </text>
+        
+        <text name="title" fgcolor="white" fontsize="10" width="200" >
+            <attribute name="text" value="parent.label" when="always" />
+            <method event="ontext"  >
+                this.setX(Math.round((this.parent.width - this.getTextWidth())/2.0) );
+            </method>
+        </text>
+    
+
+        <!-- MOUSEEVENT METHODS-->
+        <method event="onmousedown" >
+            this.mouseisdown = true;
+            this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
+            this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
+            this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+        </method>
+    
+        <method event="onmouseup" >
+            this.mouseisdown = false;
+            if (this.mouseisover) {
+                this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+            } else {
+                this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+            }
+        </method>
+    
+        <method event="onmouseover" ><![CDATA[
+            this.mouseisover = true;
+            if (this.mouseisdown) {
+                this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+            } else {
+                this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+            }
+         ]]> </method>
+    
+        <method event="onmouseout" > <![CDATA[
+            this.mouseisover = false;
+            this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
+            this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
+            this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+        ]]> </method>
+        
+   </class>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

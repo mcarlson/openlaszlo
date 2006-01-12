@@ -1,0 +1,51 @@
+<canvas bgcolor="#ACACB3" width="840" height="640"
+    title="Test -- Sortorder">
+    <debug  height="200" x="170" y="100"/>
+<dataset name="items">
+    <item>one</item>
+    <item>two</item>
+    <item>three</item>
+  </dataset>
+
+ 
+<!-- This test demonstrates that sortorder is broken.
+     Sort A-Z and Sort Z-A both try to set the sortorder
+     of the list item's datapath, but the sortorder doesn't
+     get set. Both before and after setting the sortorder,
+     it's reported as an undefined attribute in the debugger. -->
+
+  
+  <class name="myitem" extends="baselistitem"
+         bgcolor="${selected ? yellow : white}">
+     <attribute name="text" type="text"/>
+     <method name="applyData" args="d">
+         setAttribute('text', d);
+     </method>
+     <text x="0" y="10" text="${parent.text}"/>
+  </class>
+
+    <view>
+
+   <button x="170" y="350">Sort A-Z
+     <method event="onclick">
+         Debug.write( "sortorder = " + cl.firstNode.datapath.sortorder );
+         cl.setAttribute( 'sortorder', 'ascending' );
+         Debug.write( "Set sortorder to ascending, now sortorder = " + cl.firstNode.datapath.sortorder );
+     </method>
+   </button>
+    
+   <button x="170" y="380">Sort Z-A
+     <method event="onclick">
+         Debug.write( "sortorder = " + cl.firstNode.datapath.sortorder );
+         cl.setAttribute( 'sortorder', 'descending' );
+         Debug.write( "Set sortorder to descending, now sortorder = " + cl.firstNode.datapath.sortorder );
+     </method>
+   </button>
+
+    <baselist layout="axis:y; spacing:2" id="cl">
+    <myitem name="firstNode" height="50" width="175" 
+          bgcolor="yellow" fgcolor="green" datapath="items:/item/text()"></myitem>
+    </baselist>
+    </view>
+
+</canvas>

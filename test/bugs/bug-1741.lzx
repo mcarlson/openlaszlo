@@ -1,0 +1,19 @@
+<canvas debug="true">
+	<include href="lzunit"/>
+	
+	<class name="bug_1741" extends="TestCase">
+		<method name="testSplit">
+			str = "stringdata"
+			AssertEquals('s', str.split(''), 
+			'Expected first character only')
+		</method>
+	</class>
+	
+	<TestSuite>
+		<bug_1741/>
+	</TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

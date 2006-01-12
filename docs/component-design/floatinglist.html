@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link href="../../lps/includes/styles.css" type="text/css" rel="STYLESHEET">
+<title>Floating List Construction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#ffffff">
+<h2>Floating List </h2>
+<p><a href="../../examples/components/floatinglist_example.lzx?lzt=html">example</a> <br>
+  <a href="../reference/index.html?lz-floatinglist.html" target="test">LZX Reference</a><br>
+filename: floating list.lzx</p>
+<p>The floating list is used in conjunction with other components. Both combobox
+  and menu use this component. </p>
+<p>The floating list is defined by six pieces:</p>
+<p>1. The end caps (constructed of 3 pieces each)</p>
+<p>2. The menu area </p>
+<p>3. List highlight</p>
+<p></p>
+<p>4. List selection 5. Text (icon can be used in place of text) 6. The menu
+  shadow</p>
+<p></p>
+<p>The menu, highlight and selection areas are shapes defined in LZX code and
+  have no external resources. The border and background colors are attributes
+  which are defined in the floating list class and styles; both can be easily
+  customized. The highlight and selection are created by telling the list item
+  background color to change depending on interaction.</p>
+<p></p>
+<p>The end caps are rarely used together on one floating list and are each comprised
+  of three swfs: left, middle and right. The end caps are designed to scale horizontally.
+  Scaling the end caps vertically is not advised. Text is 11pt Verity Roman</p>
+<p></p>
+<p>The highlight and selected rectangles have a default height of 19 pixels and
+  a width determined by the width of the menu. The type is inset and left aligned
+  within the menu.</p>
+<p></p>
+<p></p>
+<p>The menu shadow is a 5 piece view*. The shadow middle resources stretch in
+  both the direction of their orientation, and are constrained to the width and
+  height of the floating list. Shadows were constructed in Macromedia Flash using &quot;Soften
+  edges&quot; and a gradation of 100% black to 0% black. </p>
+<p>The top right shadow resource has 3 frames that switch between states depending
+  on the context and position of the menu </p>
+<p>The frames are:</p>
+<p>"pop_shadow_flush_top_rt.swf&quot; no top cap (combo box, menu)</p>
+<p>"pop_shadow_corner_top_rt.swf no top cap (submenus)</p>
+<p>"pop_shadow_oval_top_rt.swf&quot; for use with the top cap</p>
+<p></p>
+<p></p>
+<p>*More info on multi-piece views: </p>
+<p><img src="images/image035.png" width="452" height="618"></p>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

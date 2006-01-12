@@ -1,0 +1,15 @@
+<library>
+
+  <include href="common-library.lzx"/>
+
+  <text bgcolor="red" >from duplicate-library-2</text>
+  <script>
+    Debug.write("in duplicate-library-2.lzx script, mynumber = ", mynumber);
+  </script>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

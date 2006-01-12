@@ -1,0 +1,40 @@
+<canvas width="600" height="800" debug="true">
+  <include href="lzunit" />
+  <debug y="100" height="600" />
+  <class name="bug_4565" extends="TestCase">
+      <method name="testIt">
+          <![CDATA[
+              var dp = [{a:'a', b:'b', c:'c'}, ['d', 'e', 'f'], {g:'g', h:'h', i:'i'}];
+              var broken = [];
+              var working = [];
+              Debug.write("This output:");
+              for (var i in dp) {
+                  for (var j in dp[i]) {
+                      broken.push(j);
+                      Debug.write(j, dp[i][j]);
+                  }
+              }
+              Debug.write("Should match this output:");
+              for (var i in dp) {
+                  var dpp = dp[i];
+                  for (var j in dp[i]) {
+                      working.push(j);
+                      Debug.write(j, dp[i][j]);
+                  }
+              }
+              AssertEquals(working.length, broken.length);
+              for (var i in working) {
+                  AssertEquals(working[i], broken[i]);
+              }
+          ]]>
+      </method>
+  </class>
+
+  <TestSuite>
+    <bug_4565 />
+  </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

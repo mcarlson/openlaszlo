@@ -1,0 +1,36 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+
+
+<canvas height="400" debug="true">
+	<class name="FormClass">
+		<attribute name="s" value="20" when="once"/>
+		<form name="survey" bgcolor="0xc0c0c0" height="200" spacing="${parent.s}">
+			<statictext>What is your favorite vacation spot?</statictext>
+			<radiogroup name="place">
+				<radiobutton>Hawaii</radiobutton>
+				<radiobutton>Paris</radiobutton>
+				<radiobutton>Jamaica</radiobutton>
+			</radiogroup>
+			<button isdefault="true">submit</button>
+		</form>
+	</class>
+	
+	<FormClass id="myform">
+		<text fgcolor="blue" y="200">'spacing' is 20</text>
+	</FormClass>
+
+	<FormClass s="100">
+		<text fgcolor="blue" y="200">'spacing' is 100</text>
+	</FormClass>
+
+	<simplelayout axis="x" spacing="10"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

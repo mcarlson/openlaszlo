@@ -1,0 +1,33 @@
+<library>
+    <!--- Provides component grouping for a form. A form is typicaly a
+          collection of UI elements where each represents data from the user
+          that will be submitted to the server as a request.
+          -->
+    <class name="baseform">
+        <!--- Holds a reference to each datacomponent contained within the
+              form. -->
+        <attribute name="formdata"/>
+        <!--- Formdata object is made early for child components.
+              @keywords private -->
+        <method event="onconstruct">
+            this.formdata = {};
+        </method>
+
+        <method name="addFormItem" args="item">
+            var base = item.name;
+            if (base == null) base = "$noname"
+            var itemname = base;
+            var count = 1;
+            while (this.formdata[itemname]) {
+                itemname = base + count++;
+            }
+            this.formdata[itemname] = item;
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

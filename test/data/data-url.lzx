@@ -1,0 +1,57 @@
+<canvas debug="true" height="600" >
+    <font src="helmetr.ttf" name="helvet" />
+    <debug y="130" height="400" width="400" fontsize="14" font="helvet" />
+    <simplelayout/>
+    <datasource timeout="3000" >
+        <dataset name="myds"
+            ontimeout="Debug.write(this.name + ': timed out')"
+            onerror="Debug.write(this.name + ': error')"
+            ondata="Debug.write('Response: ' + this.getPointer().serialize())" >
+        </dataset>
+    </datasource>
+
+    <view>
+        <simplelayout axis="x" spacing="2"/>
+        <text>Type url:</text>
+        <edittext width="500" id="url" >http:echo.jsp</edittext>
+    </view>
+
+    <command id="cmd_zip" onselect="butt.doit();"  key="['Enter']" active="true"/>
+
+    <checkbox text="cache in client"  id="ccache" />
+    <checkbox text="cache in server"  id="scache" />
+    <checkbox text="accept encodings" id="accenc" />
+    <checkbox text="resp headers"     id="resphead" />
+    <checkbox text="do POST"          id="post" />
+
+    <button id="butt" >Make request
+
+        <method event="onclick">
+            this.doit();
+        </method>
+
+        <method name="doit">
+            Debug.write("Requesting: " + url.getText()); 
+            var ds = canvas.datasets['myds'];
+
+            ds.setSrc(url.getText());
+
+            ds.cacheable          = scache.getValue();
+            ds.clientcacheable    = ccache.getValue();
+            ds.acceptencodings    = accenc.getValue();
+            ds.getresponseheaders = resphead.getValue();
+
+            if (post.getValue()) {
+                ds.setQueryType('POST');
+            } else {
+                ds.setQueryType('GET');
+            }
+
+            ds.doRequest();
+        </method>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

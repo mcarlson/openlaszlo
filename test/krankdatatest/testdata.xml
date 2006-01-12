@@ -1,0 +1,11 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<records>
+    <record label="one"/>
+    <record label="two"/>
+    <record label="three"/>
+    <record label="four"/>
+    <record label="five"/>
+</records>

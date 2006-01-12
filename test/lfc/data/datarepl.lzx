@@ -1,0 +1,106 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- testdatapath.lzx                                                      -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="800" height="800" debug="true">
+    <!-- setup local datasource -->
+    <debug x="300" width="300" height="400"/>
+    <script>
+        function assert( cond , msg ){
+            if ( ! cond ){
+                Debug.write( msg );
+            }
+        }
+    </script>
+    <class name="datatester" >
+            <datapath xpath="nodea/@color" />
+        <attribute name="bgcolor" value="this.data" when="always" />
+        <simplelayout/>
+        <text datapath="name()" width="100"/>
+        <text datapath="@prop" width="100"/>
+        <text datapath="@color" width="100"/>
+        <text datapath="text()" width="100"/>
+    </class>
+        
+    <dataset name="ds" >
+        <nodea prop="first nodea" color="46521236432" > sometext </nodea>
+        <nodeb prop="first nodeb" color="1565336432" />
+        <nodea prop="second nodea" color="56521236432" > more text </nodea>
+        <nodeb prop="second nodeb" color="565336432" >
+            <nodea prop="a under b" color="13421772">text a </nodea>
+        </nodeb>
+        <nodea prop="third nodea" color="2565336432" >
+            hi there
+            <nodea prop="deeper nodea" color="13421772">text a </nodea>
+            <nodeb prop="deeper nodeb" color="12303291">text b </nodeb>
+            <nodea prop="second deeper nodea" color="46521236432">text 2a </nodea>
+        </nodea>
+        <nodea prop="fourth nodea" color="565336432"> text text </nodea>
+        <nodea prop="fifth nodea" color="565336432"> mozart </nodea>
+        <nodea prop="99ffkd" color="46521236432"> bach </nodea>
+        <nodea prop="Heloo" color="46521236432"> tchaikovsky </nodea>
+        <nodea prop="data stuff is" color="46521236432"> stravinsky </nodea>
+        <nodea prop="cool" color="46521236432"> debussy </nodea>
+        <nodea prop="when it works" color="46521236432"> rimsky-korsakov</nodea>
+    </dataset>
+
+    <view datapath="ds:/" name="par" opacity="1" 
+          ondata="Debug.write( 'data!' ) ">
+        <simplelayout spacing="2"  />
+        <datatester name="encl" clickable="true">
+            <method event="onclick">
+                this.datapath.deleteNode();
+            </method>
+        </datatester>
+    </view>
+
+    <button>
+        Datapath
+        <attribute name="dpaths" value="[ 'ds:/' , 'ds:/nodea[3]' , 
+                                        'ds:/nodeb[2]','ds:/nodeb[1]']"/>
+        <attribute name="onum" value="1"/>
+        <method event="onclick">
+            Debug.write( 'set outer dpath to ' + this.dpaths[ this.onum ] );
+            par.setDatapath( this.dpaths[ this.onum] );
+            this.onum = ++this.onum &lt; 4 ? this.onum : 0;
+        </method>
+    </button>
+
+    <button >
+        Order
+        <attribute name="orderpaths" value="[ '@prop' , '@color' , 'text()' ]"/>
+        <attribute name="onum" value="0"/>
+        <method event="onclick">
+            Debug.write( "sort: " + this.orderpaths[ this.onum ] );
+            par.encl.setOrder( this.orderpaths[ this.onum] );
+            this.onum = ++this.onum &lt; 3 ? this.onum : 0;
+        </method>
+    </button>
+
+    <button >
+        Pooling
+        <method event="onclick">
+            par.encl.pooling = !par.encl.pooling;
+            Debug.write( "pooling set to : " + par.encl.pooling );
+        </method>
+    </button>
+       
+            
+    <simplelayout/>
+        
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

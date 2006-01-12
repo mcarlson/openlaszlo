@@ -1,0 +1,76 @@
+<canvas width="800" height="600">
+<class name="randView" extends="drawview">
+        <method event="oninit">
+            this.moveTo(100, 100);
+            this.lineTo(100, 200);
+            this.quadraticCurveTo(150, 250, 200, 200);
+            this.closePath();
+
+            this.fillStyle = 0x0000ff;
+            this.globalAlpha = .5;
+            this.fill();
+            
+            this.strokeStyle = 0xffff00;
+            this.lineWidth = 5;
+            this.stroke();
+            
+            var g = this.createRadialGradient(75, 75, .7, 300, 300, 0)
+            this.globalAlpha = 0;
+            g.addColorStop(0, 0x000000);
+            this.globalAlpha = 1;
+            g.addColorStop(1, 0xffffff);
+            this.fillStyle = g;
+            this.fill();
+
+            this.strokeStyle = 0x000000;
+            this.lineWidth = 0;
+            this.stroke();
+
+            this.beginPath();
+            this.lineTo(this.width, 0);
+            this.lineTo(this.width, this.height);
+            this.lineTo(0, this.height);
+            this.lineTo(0, 0);
+            this.closePath();
+            
+            var g = this.createLinearGradient(0,0,this.width,this.height)
+            this.globalAlpha = 0;
+            g.addColorStop(0, 0x000000);
+            this.globalAlpha = 1;
+            g.addColorStop(1, 0xffffff);
+            this.fillStyle = g;
+            this.fill();
+        </method>
+
+</class>
+
+<view>
+    <attribute name="iter" init="0"/>
+
+
+<method event="onidle" reference="LzIdle">
+      var myx=800*Math.random();
+      var myy=20 + 580*Math.random();
+      this.setAttribute("iter", ++this.iter);
+      parent.goo.setText("I:"+this.iter);
+      var blah=new randView( null,{ width : (800 - myx)*Math.random(),
+                         height : (580 - myy) * Math.random() ,
+                         bgcolor : parseInt(0xffffff)*Math.random(),
+                         //opacity : math.random(),
+                         //visible : false,
+                         //clickable : true,
+                         //onclick : "this.setAttribute('bgcolor',0)",
+                         y:myy, name : String(this.iter +1),
+                         x:myx
+                       });      
+del = new LzDelegate ( blah, "deleteNode");
+   LzTimer.addTimer(del, 1000 ); 
+</method>
+</view>
+<text name="goo"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

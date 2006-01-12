@@ -1,0 +1,18 @@
+<canvas debug="true" width="400" maxtextwidth="4000" height="600">
+  <font name="helmetr_ttf"                           src="helmetr.ttf"  /> 
+ <debug width="400" height="300" x="0" y="0"  font="helmetr_ttf" fontsize="20"/>
+
+ <text>This is some text</text>
+
+ <script>
+   <![CDATA[
+   debug.write("This is some sample text\nIn the selected font!");
+   debug.write('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz000000000011111111112222222222333333333344444444445555555555<font color="red">0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz000000000011111111112222222222333333333344444444445555555555</font><font color="blue">0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz000000000011111111112222222222333333333344444444445555555555</font>0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz000000000011111111112222222222333333333344444444445555555555');
+  ]]>
+ </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

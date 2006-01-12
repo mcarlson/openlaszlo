@@ -1,0 +1,112 @@
+<library>
+    <!--- Associates a form with a dataset. -->
+    <class name="submit" extends="node">
+        <!--- The dataset that specifies the request url, which will also hold
+              the result of the query. -->
+        <attribute name="data" value="0" setter="setDataset( data );" />
+        <!--- Read-only status of data request. Possible values are 'ok',
+              'requesting', and 'error'. Default: 'ok'. -->
+        <attribute name="status" type="string" value="ok" />
+        <!--- Error from most recent response or empty string; cleared to empty
+              string each time a request on the dataset is made. Default: ''-->
+        <attribute name="error" type="string" value="" />
+
+
+        <!--- keywords private -->
+        <attribute name="_timeoutDel" value="0" />
+        <!--- keywords private -->
+        <attribute name="_errorDel" value="0" />
+        <!--- keywords private -->
+        <attribute name="_dataDel" value="0" />
+
+        <!--- Method to set the dataset associated with form.
+              @param LzDataset dset: a dataset. -->
+        <method name="setDataset" args="dset" >
+            this._clearDels();
+
+            this.data = dset;
+
+            if (dset == 0) {
+                return;
+            }
+
+            this._dataDel = new LzDelegate(this, "_recvdata",
+                                           this.data, "ondata");
+            this._errorDel = new LzDelegate(this, "_recverror",
+                                            this.data, "onerror");
+            this._timeoutDel = new LzDelegate(this, "_recvtimeout",
+                                              this.data, "ontimeout");
+
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_recvdata" >
+            this.setAttribute('status', 'ok');
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_recverror" >
+            Debug.write('form submission error', this.data);
+            this.setAttribute('status', 'error');
+            this.setAttribute('error', this.data.getErrorString());
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_recvtimeout" >
+            Debug.write('form submission timeout');
+            this.setAttribute('status', 'timeout');
+            this.setAttribute('error', this.data.getErrorString());
+        </method>
+
+        <!--- Data from all sibling components and their children will send as a
+              request to the server using 'data' dataset. -->
+        <method name="submit"> <![CDATA[
+            if (!this.data) {
+                return;
+            }
+            //Debug.write('submit', parent, parent.formdata);
+            var query_data = new LzParam();  // data for the query
+            for (var i in parent.formdata) {
+               var item = parent.formdata[i];
+               var submitname = item.submitname;
+               if (submitname == "") submitname = item.name;
+               if (submitname != "" && parent.formdata[i].submit) {
+                    query_data.addValue(submitname,item.getValue(), true);
+               }
+            }
+
+            this.setAttribute('status', 'requesting');
+            this.setAttribute('error', '');
+            this.data.setQueryString( query_data );
+            this.data.doRequest();
+            ]]>
+        </method>
+
+        <!--- Remove any existing delegates.
+              @keywords private -->
+        <method name="_clearDels">
+            if (this._dataDel) {
+                this._dataDel.unregisterAll();
+                delete this._dataDel;
+            }
+            if (this._errorDel) {
+                this._errorDel.unregisterAll();
+                delete this._errorDel;
+            }
+            if (this._timeoutDel) {
+                this._timeoutDel.unregisterAll();
+                delete this._timeoutDel;
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="destroy">
+            this._clearDels();
+            super.destroy();
+        </method>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

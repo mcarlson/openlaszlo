@@ -1,0 +1,743 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="ecmascript-and-lzx"
+      xmlns:d="docbook">
+<head>
+  <title>ECMAScript</title>
+</head>
+
+<body>
+<?html2db class="appendix"?>
+<h1>ECMAScript</h1> 
+
+<p>LZX uses JavaScript (ECMAScript, i.e. ECMA-262), as a foundation
+for its scripting syntax. For more information please visit: <a
+href="http://www.ecma-international.org/"
+target="blank">http://www.ecma-international.org/</a>.</p>
+
+<h2>Including Script</h2>
+
+<p>Script can go in four places in an LZX application:</p>
+<ul>
+<li><p>Inside an <glossterm>event attribute</glossterm> such as <attribute>onclick</attribute>.</p>
+<example executable="false">
+&lt;canvas height="30"&gt;
+  &lt;button onclick="animate('x', 10, 1000, true)">Click&lt;/example&gt;
+&lt;/canvas&gt;
+</example>
+</li>
+
+<li><p>In a <tagname>method</tagname> or <tagname>script</tagname> tag.</p></li>
+<li><p>In an attribute with type <code>expression</code>.<todo>example</todo></p></li>
+<li><p>Inside a constraint expression.<todo>xref</todo></p></li>
+<li><p>In a separate file that is included via the <attribute>src</attribute> attribute of the <tagname>script</tagname> tag.</p>
+<example executable="false">
+&lt;canvas&gt;
+  &lt;include href="script.js"/&gt;
+  &lt;!-- &#x2014; --&gt;
+&lt;/canvas&gt;
+</example>
+</li>
+</ul>
+
+<h2><a name="differences"/>Differences between ECMA-262 and LZX</h2> 
+
+<p>The syntax and behaviour of LZX script is intended to be as
+specified by the ECMA-262 standard. However, there are some
+differences to be aware of.</p>
+
+<fixme>
+  Do some of these depend on the plugin version?
+</fixme>
+
+<dl>
+  <dt>Case-sensitivity</dt>
+  <dd>
+    <p>
+      Identifiers are not case sensitive. For example, <code>Boolean</code> and <code>boolean</code> refer to the same value. 
+    </p>
+    <p>
+      The best practice is to use identifiers with the proper case, as this discrepancy from ECMA-262 will be removed in a future release. 
+    </p>
+  </dd>
+  <dt>
+    Exceptions 
+  </dt>
+  <dd>
+    <p>
+      There are no exceptions, and no exception handling. <code>try</code>/<code>catch</code>/<code>finally</code> is not supported. 
+    </p>
+    <p>
+      Errors such as <code>1/0</code>, <code><var>u</var>()</code>, <code><var>k</var>()</code>, <code><var>u</var>.<var>p</var></code>, and <code><var>o</var>.<var>u</var></code> (where <code><var>u</var></code> is an undeclared variable, <code><var>k</var></code> is defined but isn't a function, and <code><var>o</var></code> is an object with property <code><var>p</var></code>) are silently ignored. (If debugging is enabled, all but the first of these will generate a warning message in the debugger window when evaluated.) 
+    </p>
+    
+    <p>The best practice for detecting program errors in LZX code is
+    to develop with debugging enabled (<xref linkend="debugging"/>)
+    and to write unit tests (<xref linkend="lzunit"/>).</p>
+    
+    <p>
+      The best practice for non-local transfer of control is to return a distinguished value or set a state variable. 
+    </p>
+  </dd>
+  <dt>
+    <code>String</code> conversion 
+  </dt>
+  <dd>
+    <p>
+      When a <code>String</code> appears in a boolean context, only <code>String</code>s that can be parsed as a non-zero number evaluate to <code>true</code>. The best practice is to use <code><var>string</var>.length</code> to test for non-empty. 
+    </p>
+  </dd>
+  <dt>
+    <code>undefined</code> conversion 
+  </dt>
+  <dd>
+    <p>
+      <code>undefined</code> converts to <code>""</code> in a string context and to <code>0</code> in a numeric context. The best practice is to test for <code>undefined</code> explicitly using <code>typeof(<var>expression</var>) == "undefined"</code>. 
+    </p>
+  </dd>
+  <dt>
+    ECMAScript Objects
+  </dt>
+  <dd>
+    <p>Some ECMAScript objects and properties are not supported.  See
+    <xref linkend="ecmascript.object-table"/> for a list of supported
+    objects.</p>
+  </dd>
+  <dt>
+    Browser Objects 
+  </dt>
+  <dd>
+    <p>
+      ECMA-262 is NOT the same as client-side JavaScript as implemented by web browsers. This means that the objects that are browser specific (e.g. <code>window</code>, <code>document</code>, etc.) are not available to the LZX developer. 
+    </p>
+  </dd>
+  <dt>
+    Unicode
+  </dt>
+  <dd>
+    <p>
+      Only Latin-1 and Shift-JIS characters are supported.
+    </p>
+  </dd>
+  <dt>
+    Forward references
+  </dt>
+  <dd>
+    <p>
+      Forward references to functions are not supported.
+    </p>
+  </dd>
+</dl>
+
+<p>LZX does not support the ECMAScript objects, attributes and methods
+presented in <code class="unsupported">this font</code> in the
+following table.</p>
+
+<table id="ecmascript.object-table" summary="Supported ECMAScript Properties">
+<?doc2html rowsep="1"?>
+  <thead>
+    <tr>
+      <th>ECMA Object</th>
+      <th>Properties</th>
+      <th>Methods</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        <p><code class="supported">Arguments</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">callee</code></li>
+          <li><code class="supported">length</code></li>
+        </ul>
+      </td>
+      <td>
+        &#xA0;
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Array</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Array.prototype</code></li>
+          <li><code class="supported">constructor</code></li>
+          <li><code class="supported">length</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Array(...)</code></li>
+          <li><code class="supported">new Array(...)</code></li>
+          <li><code class="supported">concat(...)</code></li>
+          <li><code class="supported">join(separator)</code></li>
+          <li><code class="supported">pop()</code></li>
+          <li><code class="supported">push(...)</code></li>
+          <li><code class="supported">reverse()</code></li>
+          <li><code class="supported">shift()</code></li>
+          <li><code class="supported">slice(start, end)</code></li>
+          <li><code class="supported">sort(comparefn)</code></li>
+          <li><code class="supported">splice(start, delete, ...)</code></li>
+          <li><code class="unsupported">toLocalString()</code></li>
+          <li><code class="supported">toString()</code></li>
+          <li><code class="supported">unshift(...)</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Boolean</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Boolean.prototype</code></li>
+          <li><code class="supported">constructor</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">Boolean(value)</code></li>
+          <li><code class="supported">new Boolean(value)</code><d:footnote>
+<p><code>new Boolean()</code> may not be used to coerce a <classname>String</classname> to a <classname>Boolean</classname>.</p></d:footnote>
+            <d:footnote><p><code>new Boolean()</code> may not be used to clone a wrapper.</p></d:footnote>
+          </li>
+          <li><code class="supported">toString()</code></li>
+          <li><code class="supported">valueOf()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Date</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Date.prototype</code></li>
+          <li><code class="supported">constructor</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Date(...)</code></li>
+          <li><code class="supported">new Date(<var>ms</var>)</code></li>
+          <li><code class="supported">new Date(...)</code></li>
+          <li><code class="unsupported">new Date(<var>string</var>)</code><d:footnoteref linkend="ecmascript.nodate"/></li>
+          <li><code class="unsupported">parse(<var>string</var>)</code><d:footnote id="ecmascript.nodate">
+          <p><code>new Date(<var>string</var>)</code> and <method>Date.parse</method> are not supported. Passing a string to <code>new Date(<var>datestring</var>)</code> is not supported. The best practice is to construct dates from date components, for example: in place of <code>new Date("7/20/1969")</code> use <code>new Date(1969, 7, 20)</code>.</p></d:footnote>
+          </li>
+          <li><code class="supported">Date.UTC(...)</code></li>
+          <li><code class="supported">get[UTC]Date()</code></li>
+          <li><code class="supported">get[UTC]Day()</code></li>
+          <li><code class="supported">get[UTC]FullYear()</code></li>
+          <li><code class="supported">get[UTC]Hours()</code></li>
+          <li><code class="supported">get[UTC]Millisconds()</code></li>
+          <li><code class="supported">get[UTC]Minutes()</code></li>
+          <li><code class="supported">get[UTC]Month()</code></li>
+          <li><code class="supported">get[UTC]Seconds()</code></li>
+          <li><code class="supported">getTime()</code></li>
+          <li><code class="supported">getTimezoneOffset()</code></li>
+          <li><code class="supported">getYear()</code></li>
+          <li><code class="supported">set[UTC]Date(date)</code></li>
+          <li><code class="supported">set[UTC]FullYear(year[, month[, date]])</code></li>
+          <li><code class="supported">set[UTC]Hours(<var>hours[, min[, sec[, ms]]]</var>)</code></li>
+          <li><code class="supported">set[UTC]Milliseconds(ms)</code></li>
+          <li><code class="supported">set[UTC]Minutes(minutes[, sec[, ms]])</code></li>
+          <li><code class="supported">set[UTC]Month(month[, date])</code></li>
+          <li><code class="supported">set[UTC]Seconds(sec[, ms])</code></li>
+          <li><code class="supported">setTime(ms)</code></li>
+          <li><code class="supported">setYear(year)</code></li>
+          <li><code class="unsupported">todateString()</code></li>
+          <li><code class="unsupported">toGMTSting()</code></li>
+          <li><code class="unsupported">toLocaleDateString()</code></li>
+          <li><code class="unsupported">toLocaleString()</code></li>
+          <li><code class="unsupported">toLocaleTimeString()</code></li>
+          <li><code class="supported">toString()</code></li>
+          <li><code class="unsupported">toTimeString()</code></li>
+          <li><code class="unsupported">toUTCString()</code></li>
+          <li><code class="supported">valueOf()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">Error</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">Error.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">Error(message)</code></li>
+          <li><code class="unsupported">new Error(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">EvalError</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">EvalError.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">EvalError(message)</code></li>
+          <li><code class="unsupported">new EvalError(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">Function</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">Function.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">length</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">Function(...)</code></li>
+          <li><code class="unsupported">new Function(...)</code></li>
+          <li><code class="unsupported">apply(this, args[])</code></li>
+          <li><code class="unsupported">call(this, ...)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Global</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Infinity</code></li>
+          <li><code class="supported">NaN</code></li>
+          <li><code class="supported">undefined</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">decodeURI()</code></li>
+          <li><code class="unsupported">decodeURIComponent()</code></li>
+          <li><code class="unsupported">encodeURI(uri)</code></li>
+          <li><code class="unsupported">encodeURIComponent(component)</code></li>
+          <li><code class="supported">escape(<var>string</var>)</code></li>
+          <li><code class="unsupported">eval(<var>string</var>)</code><d:footnote>
+          <p>The <method>eval</method> function cannot be used to execute arbitrary code.  It may only be used only to get the value of an identifier named by a <classname>String</classname>.</p></d:footnote>
+
+          </li>
+          <li><code class="supported">isFinite(number)</code></li>
+          <li><code class="supported">isNaN(number)</code></li>
+          <li><code class="supported">parseFloat(string)</code></li>
+          <li><code class="supported">parseInt(string[, radix])</code></li>
+          <li><code class="supported">unescape(string)</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Math</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Math.E</code></li>
+          <li><code class="supported">Math.LN2</code></li>
+          <li><code class="unsupported">Math.LOG2E</code><d:footnote><p><code>Math.LOG2E</code> is incorrect on the Flash 5 player</p></d:footnote></li>
+          <li><code class="supported">Math.PI</code></li>
+          <li><code class="supported">Math.SQRT1_2</code></li>
+          <li><code class="supported">Math.SQRT2</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">abs(x)</code></li>
+          <li><code class="supported">acos(x)</code></li>
+          <li><code class="supported">asin(x)</code></li>
+          <li><code class="supported">atan(x)</code></li>
+          <li><code class="supported">atan2(x, y)</code></li>
+          <li><code class="supported">ceil(x)</code></li>
+          <li><code class="supported">cos(x)</code></li>
+          <li><code class="supported">exp(x)</code></li>
+          <li><code class="supported">floor(x)</code></li>
+          <li><code class="supported">log(x)</code></li>
+          <li><code class="unsupported">max(...)</code><d:footnote id="fn.min-man">
+          <p><method>Math.max</method> and <method>Math.min</method> only support two arguments.</p></d:footnote></li>
+          <li><code class="unsupported">min(...)</code><d:footnoteref linkend="fn.min-man"/></li>
+          <li><code class="supported">pow(x, y)</code></li>
+          <li><code class="supported">random()</code></li>
+          <li><code class="supported">round(x)</code></li>
+          <li><code class="supported">sin(x)</code></li>
+          <li><code class="supported">sqrt(x)</code></li>
+          <li><code class="supported">tan(x)</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Number</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Number.prototype</code></li>
+          <li><code class="supported">Number.MAX_VALUE</code></li>
+          <li><code class="supported">Number.MIN_VALUE</code></li>
+          <li><code class="supported">Number.NaN</code></li>
+          <li><code class="supported">Number.NEGATIVE_INFINITY</code></li>
+          <li><code class="supported">Number.POSITIVE_INFINITY</code></li>
+          <li><code class="supported">constructor</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Number(value)</code></li>
+          <li><code class="supported">new Number(value)</code></li>
+          <li><code class="supported">toString()</code></li>
+          <li><code class="unsupported">toLocalString()</code></li>
+          <li><code class="unsupported">toFixed()</code></li>
+          <li><code class="unsupported">toExponential()</code></li>
+          <li><code class="unsupported">toPrecision()</code></li>
+          <li><code class="supported">valueOf()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">Object</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Object.prototype</code></li>
+          <li><code class="supported">constructor</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">Object()</code></li>
+          <li><code class="unsupported">Object(value)</code><d:footnote>
+          <p>Using <code>Object()</code> to create a wrapper is not
+          supported.</p></d:footnote>
+          </li>
+          <li><code class="supported">new Object()</code></li>
+          <li><code class="unsupported">hasOwnProperty(v)</code></li>
+          <li><code class="unsupported">isPrototypeOf(v)</code></li>
+          <li><code class="unsupported">propertyIsEnumerable(v)</code></li>
+          <li><code class="unsupported">toLocalString()</code></li>
+          <li><code class="unsupported">toString()</code><d:footnote>
+          <p><code>Object.toString</code> always returns "<code>[object
+          Object]</code>".</p></d:footnote>
+          </li>
+          <li><code class="supported">valueOf()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">RangeError</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">RangeError.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">RangeError(message)</code></li>
+          <li><code class="unsupported">new RangeError(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">ReferenceError</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">ReferenceError.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">ReferenceError(message)</code></li>
+          <li><code class="unsupported">new ReferenceError(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">RegExp</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">RegExp.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">global</code></li>
+          <li><code class="unsupported">ignoreCase</code></li>
+          <li><code class="unsupported">lastIndex</code></li>
+          <li><code class="unsupported">multiline</code></li>
+          <li><code class="unsupported">source</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">RegExp(pattern, flags)</code></li>
+          <li><code class="unsupported">new RegExp(pattern, flags)</code></li>
+          <li><code class="unsupported">exec(string)</code></li>
+          <li><code class="unsupported">test(string)</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="supported">String</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="supported">String.prototype</code></li>
+          <li><code class="supported">constructor</code></li>
+          <li><code class="supported">length</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">String(value)</code></li>
+          <li><code class="supported">new String(value)</code><d:footnote>
+          <p>Using <code>new String(<var>value</var>)</code> to clone a wrapper is not
+          supported.</p></d:footnote>
+          </li>
+          <li><code class="supported">String.fromCharCode(...)</code></li>
+          <li><code class="supported">charAt(pos)</code></li>
+          <li><code class="supported">charCodeAt(pos)</code></li>
+          <li><code class="supported">concat(...)</code></li>
+          <li><code class="supported">indexOf(searchstr[, start])</code></li>
+          <li><code class="supported">lastIndexOf(searchstr[, start])</code></li>
+          <li><code class="unsupported">localeCompare(that)</code></li>
+          <li><code class="unsupported">match(regexp)</code></li>
+          <li><code class="unsupported">replace(searchstr, replacement)</code></li>
+          <li><code class="unsupported">search(regexp)</code></li>
+          <li><code class="supported">slice(start[, end])</code></li>
+          <li><code class="supported">split(delimiter)</code></li>
+          <li><code class="supported">substring(start[, end])</code></li>
+          <li><code class="unsupported">toLocaleLowerCase()</code></li>
+          <li><code class="unsupported">toLocaleUpperCase()</code></li>
+          <li><code class="supported">toLowerCase()</code></li>
+          <li><code class="supported">toString()</code></li>
+          <li><code class="supported">toUpperCase()</code></li>
+          <li><code class="supported">valueOf()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">SyntaxError</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">SyntaxError.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">SyntaxError(message)</code></li>
+          <li><code class="unsupported">new SyntaxError(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">TypeError</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">TypeError.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">TypeError(message)</code></li>
+          <li><code class="unsupported">new TypeError(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <p><code class="unsupported">URIError</code></p>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">URIError.prototype</code></li>
+          <li><code class="unsupported">constructor</code></li>
+          <li><code class="unsupported">message</code></li>
+          <li><code class="unsupported">name</code></li>
+        </ul>
+      </td>
+      <td>
+        <ul>
+          <?html2dbk simplelist?>
+          <li><code class="unsupported">URIError(message)</code></li>
+          <li><code class="unsupported">new URIError(message)</code></li>
+          <li><code class="unsupported">toString()</code></li>
+        </ul>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Reserved Words</h2>
+
+<p>Reserved words may not be used as identifiers:</p>
+
+<table summary="ECMAScript Keywords">
+  <?dbhtml table-width="100%"?>
+  <tr>
+    <th>Keywords</th>
+    <th>Reserved for future use</th>
+  </tr>
+  <tr>
+    <td><d:simplelist type="vert" columns="3">
+    <d:member><code>break</code></d:member>
+    <d:member><code>case</code></d:member>
+    <d:member><code>catch</code></d:member>
+    <d:member><code>continue</code></d:member>
+    <d:member><code>default</code></d:member>
+    <d:member><code>delete</code></d:member>
+    <d:member><code>do</code></d:member>
+    <d:member><code>else</code></d:member>
+    <d:member><code>finally</code></d:member>
+    <d:member><code>for</code></d:member>
+    <d:member><code>function</code></d:member>
+    <d:member><code>if</code></d:member>
+    <d:member><code>in</code></d:member>
+    <d:member><code>instanceof</code></d:member>
+    <d:member><code>new</code></d:member>
+    <d:member><code>return</code></d:member>
+    <d:member><code>switch</code></d:member>
+    <d:member><code>this</code></d:member>
+    <d:member><code>throw</code></d:member>
+    <d:member><code>try</code></d:member>
+    <d:member><code>typeof</code></d:member>
+    <d:member><code>var</code></d:member>
+    <d:member><code>void</code></d:member>
+    <d:member><code>undefined</code></d:member>
+    <d:member><code>while</code></d:member>
+    <d:member><code>with</code></d:member>
+    </d:simplelist>
+    </td>
+    <td><d:simplelist columns="3">
+    <d:member><code>abstract</code></d:member>
+    <d:member><code>boolean</code></d:member>
+    <d:member><code>byte</code></d:member>
+    <d:member><code>char</code></d:member>
+    <d:member><code>class</code></d:member>
+    <d:member><code>const</code></d:member>
+    <d:member><code>debugger</code></d:member>
+    <d:member><code>double</code></d:member>
+    <d:member><code>enum</code></d:member>
+    <d:member><code>export</code></d:member>
+    <d:member><code>extends</code></d:member>
+    <d:member><code>final</code></d:member>
+    <d:member><code>float</code></d:member>
+    <d:member><code>goto</code></d:member>
+    <d:member><code>implements</code></d:member>
+    <d:member><code>import</code></d:member>
+    <d:member><code>int</code></d:member>
+    <d:member><code>interface</code></d:member>
+    <d:member><code>long</code></d:member>
+    <d:member><code>native</code></d:member>
+    <d:member><code>package</code></d:member>
+    <d:member><code>private</code></d:member>
+    <d:member><code>protected</code></d:member>
+    <d:member><code>public</code></d:member>
+    <d:member><code>short</code></d:member>
+    <d:member><code>static</code></d:member>
+    <d:member><code>super</code></d:member>
+    <d:member><code>synchronized</code></d:member>
+    <d:member><code>throws</code></d:member>
+    <d:member><code>transient</code></d:member>
+    <d:member><code>volatile</code></d:member>
+    </d:simplelist>
+    </td>
+  </tr>
+</table>
+
+<p>A property of an object may have any name, even that of a reserved
+word.  <code>object.property</code> and
+<code>object['property']</code> both refer to the
+<code>property</code> property of the object named
+<varname>object</varname>.  When using dot syntax
+(<code>object.property</code>) property names must be a valid
+identifiers, so <code>object.default</code>, for example, is a syntax
+error.  In this case <code>object['default']</code> can be used
+instead.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

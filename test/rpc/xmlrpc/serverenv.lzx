@@ -1,0 +1,51 @@
+<canvas debug="true" width="800" >
+
+    <!-- NOTE: You need to run remote/bin/localxmlrpc.sh to run this example -->
+
+    <debug x="370" width="400" height="300" />
+
+    <alert name="errormsg"/>
+
+    <simplelayout spacing="10"/>
+
+    <dataset name="envDset" />
+
+    <list name="env" width="250" height="200">
+        <textlistitem name="ti" datapath="envDset:/*" text="$path{'name()'}">
+            <method event="onselect">
+                canvas.display.setText(datapath.xpathQuery('text()'))
+            </method>
+        </textlistitem>
+    </list>
+            
+    <text name="display" selectable="true" width="350" multiline="true"
+          bgcolor="0xd0d0d0" />
+
+    <xmlrpc name="systemprop" service="http://localhost:8181/RPC2">
+
+        <method event="onload">
+            Debug.write('systemprop xlmrpc loaded');
+            this.getEnv.invoke();
+        </method>
+
+        <method event="onerror" args="error">
+            var mesg = error + ' -- was serverenv.sh run?';
+            Debug.write('error:', mesg);
+            errormsg.setAttribute('text', mesg)
+            errormsg.open()
+        </method>
+
+        <remotecall name="getEnv" funcname="localservice.getProperties" 
+                    dataobject="envDset">
+            <method event="ondata" args="d">
+                Debug.write('data:', d);
+            </method>
+        </remotecall>
+
+    </xmlrpc>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

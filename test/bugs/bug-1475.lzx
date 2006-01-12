@@ -1,0 +1,14 @@
+<class name="fontsizer">
+	<attribute name="fontsize" type="number" value="12"/>
+	<view>
+		<simplelayout/>
+		<button onclick="parent.parent.setAttribute('fontsize', parent.parent.fontsize + 1)">Up</button>
+		<button onclick="parent.parent.setAttribute('fontsize', parent.parent.fontsize - 1)">Down</button>
+	</view>
+	<text x="50"><attribute name="fontsize" type="number" value="${parent.fontsize}"/> Zurich Bold Extended</text>
+	<text x="250"><attribute name="fontsize" type="number" value="${parent.fontsize}"/>The Quick Brown Fox Jumped Over the Lazy Dog</text>
+</class>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,70 @@
+<canvas debug="true" height="800" width="1000">
+
+  <method event="oninit">
+    Debug.setWrapLines(true);
+    Debug.showInternalProperties = true;
+
+  </method>
+    <debug x="280" width="470" height="370" />
+
+    <dataset name="googleDset" />
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+        <method event="onload">
+            Debug.write('google soap service stub loaded');
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+
+        <remotecall name="spellcheck" funcname="doSpellingSuggestion">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param value="'check spelling'" />  
+
+            <method event="ondata" args="value">
+                Debug.write('spell check result:\n', value);
+            </method>
+
+            <method event="onerror" args="error">
+                Debug.write('spell check error:\n', error);
+            </method>
+        </remotecall>
+
+        <remotecall name="search" funcname="doGoogleSearch" 
+                    dataobject="googleDset">
+
+            <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+            <param value="'sweet'" />
+            <param value="1" />
+            <param value="10" />
+            <param value="true" />
+            <param value="''" />
+            <param value="true" />
+            <param value="''" />
+            <param value="''" />
+            <param value="''" />
+
+            <method event="ondata" args="value">
+                Debug.write('one:', value);
+            </method>
+
+        </remotecall>
+    </soap>
+
+    <view layout="spacing: 5" >
+        <button text="search" onclick="google.search.invoke()" />
+        <button text="spellcheck" onclick="google.spellcheck.invoke()" />
+        <view bgcolor="yellow" layout="axis: y" >
+            <view>
+                <datapath xpath="googleDset:/resultElements/item" pooling="true" />
+                <text datapath="URL/text()" resize="true"/>
+            </view>
+        </view>
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

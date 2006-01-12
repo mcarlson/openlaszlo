@@ -1,0 +1,20 @@
+<canvas  bgcolor="silver">
+    <simplelayout spacing="20"/>
+
+    <text>broken: the selection below should appear w/ chars 1-4 selected (oninit)</text>
+    <inputtext id="b" bgcolor="white" x="20" y="20">snapdragon
+        <method event="oninit">
+            this.setSelection(1,4);
+        </method>
+    </inputtext>
+
+    <text>works: click the button to select chars 1-4</text>
+    <view layout="axis:x; spacing:10">
+        <inputtext id="c" bgcolor="white" >mint tea</inputtext>
+        <button  onclick="c.setSelection(1,4);">setSelection</button>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

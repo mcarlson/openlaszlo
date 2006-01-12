@@ -1,0 +1,44 @@
+ 
+<canvas width="800" height="600">
+   <class name="drawme"  extends="drawview">
+      <attribute name="myx" type="number"/>
+      <attribute name="myy" type="number"/>
+        <method event="oninit">
+            this.moveTo(100*math.random(), 200*math.random());
+            this.lineTo(100*math.random(), 200*math.random());
+            this.closePath();
+
+            this.fillStyle = 0x0000ff;
+            //this.globalAlpha = .5;
+            this.fill();
+            
+            this.strokeStyle = 0xffff00;
+            this.lineWidth = 5;
+            this.stroke();
+            
+        </method>
+    </class>
+
+<view onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green" width="${parent.width}" height="${parent.height}">
+        <dragstate name="dragger"/>
+    <attribute name="i" init="0"/>
+<method event="onidle" reference="LzIdle">
+      var myx=800*math.random();
+      var myy=20 + 580*math.random();
+      this.setAttribute("i", ++i);
+      parent.goo.setText("I:"+i);
+      var blah=new drawme( this,{ width : (800 - myx)*math.random(),
+                         height : (580 - myy) * math.random() ,
+                         //bgcolor : parseInt(0xffffff)*math.random(),
+                         //opacity : math.random(),
+                         //visible : false,
+                         //clickable : true,
+                         //onclick : "this.setAttribute('bgcolor',0)",
+                         y:myy, name : String(i +1),
+                         x:myx
+
+                       });      
+</method>
+</view>
+<text name="goo"/>
+</canvas>

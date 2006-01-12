@@ -1,0 +1,82 @@
+
+<canvas  width="1024" height="700" >
+  <font name="Helvetica" src="helmetr.ttf" />
+  <debug x="400" height="400" width="400"/>
+    <text font="Helvetica" fontsize="18" resize="true">
+      <method event="oninit"> 
+        if (canvas.runtime != 'swf6') {
+            this.setText('canvas.runtime = '+canvas.runtime+', but this example must be run as flash6, make sure to put lzr=swf6 in the URL!');
+        } else {
+            this.setText('canvas.runtime is swf6, ahh what a great feeling');
+        }
+      </method>
+    </text>
+
+
+  <class name="swf6text">
+    <method event="onconstruct">
+      this.makeContainerResource();
+      Debug.write( 'mcref' , this.__LZmovieClipRef );
+      this.__LZmovieClipRef.createTextField( "$swf6text" , 0, 0, this.height, this.width, 40 );
+      this.__LZtext = this.__LZmovieClipRef['$swf6text'];
+      Debug.write( 'swf6text' , this.__LZtext );
+    </method>
+    <method name="setTextFormat" args="tf">
+      this.__LZText.setTextFormat(tf);
+    </method>
+
+    <method name="setNewTextFormat" args="tf">
+      this.__LZText.setNewTextFormat(tf);
+    </method>
+
+    <method name="getNewTextFormat">
+      return (this.__LZText.getNewTextFormat());
+    </method>
+    <method name="setText" args="s">
+      this.__LZText.text = s;
+    </method>
+  </class>
+
+
+  <swf6text name="bar" height="60" width="400">
+    <method event="oninit">
+      var tf = this.__LZText;
+      tf.border = true;
+      tf.embedFonts = false;
+      this.setNewTextFormat(new TextFormat("Arial", 18, 0xffcccc, true));
+      //this.setNewTextFormat(new TextFormat("\u005f\u30b4\u30b7\u30c3\u30af", 32, 0xff0000, true));
+      //this.setNewTextFormat(new TextFormat("\u005f\u7b49\u5e45", 32, 0xff0000, true));
+      //this.setNewTextFormat(new TextFormat("Broadway", 32, 0xff0000, true));
+      var fmt = new TextFormat();
+      fmt.size = 30;
+      this.setNewTextFormat(fmt);
+      //this.setText("foobar &#19977;&#x6708; &#22235;&#x6708;");
+      this.setText("Foobar is foo plus bar");
+      this.__LZText.type = 'input';
+      debug.write(this.getNewTextFormat());
+    </method>
+  </swf6text>
+
+  <swf6text name="baz" height="60" width="400">
+    <method event="oninit">
+      var tf = this.__LZText;
+      tf.border = true;
+      tf.embedFonts = true;
+      this.setNewTextFormat(new TextFormat('Helvetica', 18, 0x00ff00, true));
+      var fmt = new TextFormat();
+      fmt.size = 30;
+      this.setNewTextFormat(fmt);
+      this.setText("I am default, Oh so flash6-y!");
+
+      this.__LZText.type = 'input';
+      debug.write(this.getNewTextFormat());
+    </method>
+  </swf6text>
+  <simplelayout/>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

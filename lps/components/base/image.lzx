@@ -1,0 +1,39 @@
+<library>
+<!--- image represents an image that can be loaded at runtime, either by specifying a URL directly or by binding to data-->
+    <class name="image">
+        <!--- an optional prefix URL to load from. If specified, the url will be appended to this prefix.-->
+        <attribute name="prefix" value="" type="string"/>
+        <!--- The URL to load the image from.  May be set directly on this attribute or indirectly by specifying a datapath for this tag. -->
+        <attribute name="src" value="" type="string"/>
+        <!--- The last URL loaded by this image tag.  Used to prevent the same URL from loading twice.  @keywords readonly-->
+        <attribute name="lastloaded" value="" type="string"/>
+        <!--- If true, the same URL will be reloaded.  If false, the same URL will not load multiple times.  -->
+        <attribute name="forcereload" value="false" type="boolean"/>
+
+        <!--- @keywords private -->
+        <method name="applyData" args="d" >
+            if (d == null) return;
+            this.setAttribute('src', d);
+        </method>
+
+        <!--- Loads an image in response to the src attribute being set.  Should not be called directly - setAttribute('src' ...) shoudl be used instead. @keywords private -->
+        <method name="loadNow" event="onsrc" args="img">
+        <![CDATA[ 
+            // don't reload the same thing unless we're told to
+            if (this.forcereload == false && this.lastloaded == this.prefix + img) return;
+            this.lastloaded = this.prefix + img;
+            this.setSource( this.lastloaded );
+        ]]>
+        </method>
+
+        <!--- Loads the image on init.  @keywords private -->
+        <method event="oninit">
+        <![CDATA[  
+            if (this.src != '' && this.src != null) 
+                this.loadNow(this.src);
+        ]]>
+        </method>
+    </class>
+</library>
+<!-- @LZX_COPYRIGHT@ -->
+

@@ -1,0 +1,97 @@
+<canvas debug="true">
+    <dataset name="ds1">
+        <top>
+            <node>one</node>
+            <node>two</node>
+            <node>three</node>
+            <node>four</node>
+            <node>five</node>
+            <node>six</node>
+            <node>seven</node>
+            <node>eight</node>
+            <node>nine</node>
+            <node>ten</node>
+            <node>eleven</node>
+            <node>twelve</node>
+            <node>thirteen</node>
+            <node>fourteen</node>
+            <node>fifteen</node>
+        </top>
+    </dataset>
+    <dataset name="ds2">
+        <top>
+            <xnode>1</xnode>
+            <xnode>2</xnode>
+            <xnode>3</xnode>
+            <xnode>4</xnode>
+            <xnode>5</xnode>
+            <xnode>6</xnode>
+            <xnode>7</xnode>
+            <xnode>8</xnode>
+            <xnode>9</xnode>
+            <xnode>10</xnode>
+            <xnode>11</xnode>
+            <xnode>12</xnode>
+            <xnode>13</xnode>
+            <xnode>14</xnode>
+            <xnode>15</xnode>
+        </top>
+    </dataset>
+    <view y="100">
+        <simplelayout/>
+        <view id="rman">
+            <datapath id="checkdp">
+                <attribute name="doneDel" value="null"/>
+                <method event="onnodes" args="nodes">
+                    <![CDATA[
+                    for ( var i = 0; i < nodes.length ; i++ ){
+                        var tnode = nodes[i].getFirstChild();
+                        tnode.setData( tnode.data + "x" );
+                    }
+                    ]]>
+                </method>
+                <method event="onclones" args="clones">
+                    var lastclone = clones[ clones.length - 1 ];
+                    if ( !this.doneDel ){
+                        this.doneDel = new LzDelegate( this, 'replicationDone');
+                    } else {
+                        this.doneDel.unregisterAll();
+                    }
+                    this.doneDel.register( lastclone , "oninit" );
+                </method>
+                <method name="replicationDone">
+                    Debug.write( 'REPLICATION IS DONE!');
+                </method>
+            </datapath>
+            <simplelayout axis="x"/>
+            <text datapath="name()"/>
+            <text datapath="text()"/>
+            <attribute name="waittime" value="100"/>
+            <node>
+                <method event="onconstruct">
+                   <![CDATA[
+                    var endtime = parent.waittime + getTimer();
+                    while ( getTimer() < endtime ){
+                        //nop
+                    }
+                    ]]>
+                </method>
+            </node>
+        </view>
+    </view>
+    <button>
+        <attribute name="toggle" value="false"/>
+        <method event="onclick">
+            if ( toggle ){
+                rman.setDatapath( "ds1:/top/node" )
+            } else {
+                rman.setDatapath( " ds2 :/ top  /  xnode " )
+            }
+            this.toggle = !this.toggle;
+        </method>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

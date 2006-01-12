@@ -1,0 +1,41 @@
+<canvas debug="true" >
+    <include href="utils/layouts/alllayouts.lzx" />
+    <view name="stateview" bgcolor="green" width="300" height="200" >
+        <text name="title"> This is a view with states</text>
+        <state name="state1" onapply="Debug.write( 'Apply state 1')"
+               onremove="Debug.write( 'remove state 1')" >
+            <animator attribute="y" to="200" duration="1500" />
+            <animator attribute="width" to="50" duration="1500" relative="true"/>
+            <text y="parent.title.height">Im animating!</text>
+        </state>
+        <state name="state2">
+            <view width="parent.width" y="50">
+                <view bgcolor="red" height="22" options="releasetolayout;"/>
+                <view bgcolor="red" height="22" options="releasetolayout;"/>
+                <view bgcolor="red" height="22" options="releasetolayout;"/>
+                <resizelayout axis="x" spacing="10"/>
+            </view>
+            <!--This doesn't get compiled as a reference at the moment-->
+            <!--property name="height" value="this.width+50"/-->
+            <attribute name="width" value="250"/>
+        </state>
+        <state name="state3" onapply="this.parent.doMyApply()">
+            <text label="This is the mean state that kills others" y="22" />
+            <method name="doMyApply" >
+                this.state1.remove();
+                this.state2.remove();
+            </method>
+        </state>
+
+    </view>
+    <view x="stateview.width">
+        <button label="state1" onclick="stateview.state1.apply()"/>
+        <button label="state2" onclick="stateview.state2.apply()"/>
+        <button label="state3" onclick="stateview.state3.apply()" />
+        <simplelayout axis="y" spacing ="4" />
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

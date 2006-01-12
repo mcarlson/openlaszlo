@@ -1,0 +1,39 @@
+<canvas debug="true"> 
+    <dataset name="ds">
+        <item>Some text</item>
+        <item>Some text</item>
+        <item>Some text</item>
+        <item>Some text</item>
+        <item>Some text</item>
+        <item>Some text</item>
+        <item>Some text</item>
+    </dataset>
+    <class name="iclass" >
+        <text text="foo"></text>
+        <method name="toString">
+            return "iclass";
+        </method>
+    </class>
+    <view id="tme" oninit="Debug.write('subs is ' + this.subs)">
+        <attribute name='subs' value="" type="string"/>
+        <text>aaa</text>
+        <iclass/>
+        <text>bbb</text>
+        <iclass/>
+        <simplelayout spacing="1"/>
+        <method name="addSubview" args="v">
+            Debug.write( "adding subview: " + v );
+            this.subs += " a" + v;
+            this.repit = Debug.toString();
+            super.addSubview( v );
+        </method>
+        <method event="onaddsubview" args="v">
+            Debug.write( "onaddsubview: " + v );
+            this.subs += " o" + v;
+        </method>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

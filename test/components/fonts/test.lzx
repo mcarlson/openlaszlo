@@ -1,0 +1,110 @@
+<canvas height="1000" width="600" layout="axis:x;spacing:20;inset:10">
+
+    <font src="verity/verity9.ttf" name="verity9"/>
+    <font src="verity/verity9italic.ttf" name="verity9i"/>
+    <font src="verity/verity9bold.ttf" name="verity9b"/>
+    <font src="verity/verity9bolditalic.ttf" name="verity9bi"/>
+    <font src="verity/verity11.ttf" name="verity11"/>
+    <font src="verity/verity11italic.ttf" name="verity11i"/>
+    <font src="verity/verity11bold.ttf" name="verity11b"/>
+    <font src="verity/verity11bolditalic.ttf" name="verity11bi"/>
+    <view layout="spacing:10; inset:20">
+        <view font="verity11" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300" height="60" bgcolor="0xeaeaea"/>
+        </view>
+        <view font="verity11b" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300"  height="60" bgcolor="0xeaeaea"/>
+        </view>
+        <view font="verity11i" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300"  height="60" bgcolor="0xeaeaea"/>
+        </view>
+        <view font="verity11bi" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300"  height="60" bgcolor="0xeaeaea"/>
+        </view>
+   </view>
+
+    <view layout="spacing:10; inset:20">
+        <view font="verity9" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300" height="60" bgcolor="0xeaeaea"/>
+        </view>
+        <view font="verity9b" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300"  height="60" bgcolor="0xeaeaea"/>
+        </view>
+        <view font="verity9i" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300"  height="60" bgcolor="0xeaeaea"/>
+        </view>
+        <view font="verity9bi" layout="spacing:20">
+            <text multiline="true" width="300" >
+            Frosty the Snowman, was a jolly happy soul,
+            With a corncob pipe and a button nose, and two eyes made of coal.
+            Frosty the Snowman, is a fairytale, they say.
+            He was made of snow, but the children know he came to life one day.
+            There must have been some magic in that old silk hat they found,
+            For when they placed it on his head, he began to dance around!
+            </text>
+            <inputtext multiline="true" width="300"  height="60" bgcolor="0xeaeaea"/>
+        </view>
+   </view>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

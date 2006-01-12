@@ -1,0 +1,32 @@
+<library>
+
+    <resource src="./resources/lzwinframebl_rsc.swf" name="LzWinFrameBL_rsc"/>
+    <resource src="./resources/lzwinframebm_rsc.swf" name="LzWinFrameBM_rsc"/>
+    <resource src="./resources/lzwinframebr_rsc.swf" name="LzWinFrameBR_rsc"/>
+    <resource src="./resources/lzwinframeml_rsc.swf" name="LzWinFrameML_rsc" />
+    <resource src="./resources/lzwinframemr_rsc.swf" name="LzWinFrameMR_rsc" />
+    <resource src="./resources/lzwinframetl_rsc.swf" name="LzWinFrameTL_rsc" />
+    <resource src="./resources/lzwinframetm_rsc.swf" name="LzWinFrameTM_rsc" />
+    <resource src="./resources/lzwinframetr_rsc.swf" name="LzWinFrameTR_rsc" />
+    <resource src="./resources/lzwininvframebl_rsc.swf" name="LzWinInvFrameBL_rsc"/>
+    <resource src="./resources/lzwininvframebm_rsc.swf" name="LzWinInvFrameBM_rsc"/>
+    <resource src="./resources/lzwininvframebr_rsc.swf" name="LzWinInvFrameBR_rsc"/>
+    <resource src="./resources/lzwininvframeml_rsc.swf" name="LzWinInvFrameML_rsc" />
+    <resource src="./resources/lzwininvframemr_rsc.swf" name="LzWinInvFrameMR_rsc" />
+    <resource src="./resources/lzwininvframetl_rsc.swf" name="LzWinInvFrameTL_rsc" />
+    <resource src="./resources/lzwininvframetm_rsc.swf" name="LzWinInvFrameTM_rsc" />
+    <resource src="./resources/lzwininvframetr_rsc.swf" name="LzWinInvFrameTR_rsc" />
+    <resource src="./resources/lzwinstdtextl_rsc.swf" name="LzWinStdTextL_rsc" />
+    <resource src="./resources/lzwinstdtextm_rsc.swf" name="LzWinStdTextM_rsc" />
+    <resource src="./resources/lzwinstdtextr_rsc.swf" name="LzWinStdTextR_rsc" />
+    <resource src="./resources/lzwintabh_rsc.swf" name="LzWinTabH_rsc" />
+    <resource src="./resources/lzwintablv_rsc.swf" name="LzWinTabLV_rsc" />
+    <resource src="./resources/lzwintabrv_rsc.swf" name="LzWinTabRV_rsc" />
+    <resource src="./resources/lzwintabtr_rsc.swf" name="LzWinTabTR_rsc" />
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,145 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"-->
+<book xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>Software Engineer's Guide to Developing OpenLaszlo Applications</title>
+  <titleabbrev>Developer Guide</titleabbrev>
+
+  
+  <xi:include href="preface.dbk"/>
+  
+  <part id="overview">
+    <title>Overview</title>
+
+    <xi:include href="architecture.dbk"/>
+    <xi:include href="language-preliminaries.dbk"/>
+    <xi:include href="designers.dbk"/>
+    <xi:include href="program-development.dbk"/>
+  </part>
+  
+  <part id="tutorials">
+    <title>Tutorial Introduction</title>
+    <xi:include href="../tutorials/laszlo_basics.dbk"/>
+    <xi:include href="comp-intro.dbk"/>
+    <xi:include href="../tutorials/views.dbk"/>
+    <xi:include href="../tutorials/art_assets.dbk"/>
+    <xi:include href="../tutorials/text.dbk"/>
+    <xi:include href="../tutorials/scripting.dbk"/>
+    <xi:include href="../tutorials/data.dbk"/>
+    <xi:include href="../tutorials/classes.dbk"/>
+    <xi:include href="../tutorials/drawview-intro.dbk"/>
+    <!--xi:include href="../tutorials/solo-intro.dbk"-->
+  </part>
+  
+  <part id="building-apps">
+    <title>Fundamental Concepts</title>
+    <xi:include href="structure.dbk"/>
+    <xi:include href="comp-overview.dbk"/>
+    <xi:include href="layout-and-design.dbk"/>
+    <xi:include href="media-resources.dbk"/>
+    <xi:include href="text.dbk"/>
+    <xi:include href="richtext.dbk"/>
+    <xi:include href="fonts.dbk"/>
+    <?ignore <xi:include href="web-services.dbk"/> ?>
+    <xi:include href="animation.dbk"/>
+  </part>
+  
+  <part id="power">
+     <title>In Depth</title>
+     <xi:include href="proxied.dbk"/>
+     <xi:include href="views.dbk"/>
+     <xi:include href="constraints.dbk"/>
+     <xi:include href="classes-introductory.dbk"/>
+     <xi:include href="methods-events-attributes.dbk"/>
+     <xi:include href="delegates.dbk"/>
+     <xi:include href="input-gestures.dbk"/>
+     <xi:include href="states.dbk"/>
+     <xi:include href="classes-powerprogramming.dbk"/>
+     <xi:include href="components-design.dbk"/>
+     <xi:include href="browser-integration.dbk"/>
+  </part>
+  <part id="data">
+    <title>Data and Databinding</title>
+     <xi:include href="data-structures.dbk"/>
+     <xi:include href="databinding.dbk"/>
+     <xi:include href="../tutorials/data_app.dbk"/>
+   </part>
+   <part id="application">
+       <title>Examining Applications</title>
+       <xi:include href="survey-chapter.dbk"/>
+   </part>
+  <part id="performance">
+    <title>Performance Monitoring and Tuning</title>
+    <!--xi:include href="data-pooling.dbk"/-->
+    <xi:include href="performance.dbk"/>
+    <?ignore <chapter id="colors"><title>Color in Laszlo Applications</title></chapter>?>
+  </part>
+  
+  <part id="server-integration">
+    <title>Server Integration</title>
+    <!--xi:include href="integrating-existing.dbk"/-->
+    <xi:include href="cookies.dbk"/>
+    <xi:include href="persistent_connection.dbk"/>
+    <!--xi:include href="logging.dbk"/-->
+    <!--xi:include href="lps-request-types.dbk"/-->
+    <!--xi:include href="soap-xmlrpc.dbk"/-->
+    <!--xi:include href="deployers-guide.dbk"/-->
+     <!--xi:include href="caching.dbk"/-->
+   
+   </part>
+
+  <?ignore
+  <part id="advanced">
+    <title>Power Programming in LZX</title>
+    <!--Procedural Programming using Script-->
+?>
+
+<?ignore
+    <!--xi:include href="focus-modality.dbk"/-->
+     <!--xi:include href="best-practices.dbk"/-->
+  </part>
+  ?>
+  
+  <part id="laszlorpc">
+    <title>OpenLaszlo RPC</title>
+    <xi:include href="rpc.dbk"/>
+    <xi:include href="rpc-javarpc.dbk"/>
+    <xi:include href="rpc-soap.dbk"/>
+    <xi:include href="rpc-xmlrpc.dbk"/>
+  </part>
+
+  <part id="methodology">
+    <title>Development Methodology</title>
+    <xi:include href="editing-lzx.dbk"/>
+    <xi:include href="debugging.dbk"/>
+    <xi:include href="lzunit.dbk"/>
+  </part>
+  
+  <part id="appendices">
+    <title>Appendices</title>
+    <xi:include href="initialization-and-instantiation.dbk"/>
+    <xi:include href="ecmascript-and-lzx.dbk"/>
+  </part>
+
+  <!--part id="internal-documentation">
+    <title>Internal Documentation</title>
+    <xi:include href="chapter-template.dbk"/>
+    <chapter>
+      <title>Orphaned Chapters</title>
+      <para><ulink url="../components/components.lzx?lzt=html">Components Hierarchy</ulink></para>
+      <para><ulink url="../help/app-viewer.html">Online help</ulink></para>
+    </chapter>
+  </part-->
+
+  <!--appendix id="schema"><title>Schema</title></appendix-->
+  <!--appendix id="reserved-words"><title>Reserved words</title></appendix-->
+
+  <!--index/-->
+
+  <xi:include href="book-info.dbk"/>
+
+</book>

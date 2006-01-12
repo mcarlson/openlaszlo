@@ -1,0 +1,29 @@
+<!-- This should compile without warnings.  The left and center columns should look the same. Also when compiled with debugging, there should be warnings:
+Undefined font '_sans'.  Use 'sans-serif' instead.
+Undefined font '_serif'.  Use 'serif' instead.
+Undefined font '_typewriter'.  Use 'monospace' instead.
+-->
+<canvas layout="axis: y" fontsize="24" width="640">
+  <view layout="axis: x">
+    <view layout="axis: y">
+      <text font="_sans">Font: _sans</text>
+      <text font="_serif">Font: _serif</text>
+      <text font="_typewriter">Font: _typewriter</text>
+    </view>
+    <view layout="axis: y">
+      <text font="sans-serif">Font: sans-serif</text>
+      <text font="serif">Font: serif</text>
+      <text font="monospace">Font: monospace</text>
+    </view>
+
+    <view layout="axis: y">
+      <text font="Helvetica">Font: Helvetica</text>
+      <text font="Times">Font: Times</text>
+      <text font="Courier">Font: Courier</text>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

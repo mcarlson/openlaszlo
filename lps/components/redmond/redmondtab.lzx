@@ -1,0 +1,170 @@
+<library>
+
+    <!-- fonts -->
+    <include href="redmondfonts.lzx" />
+
+    <!-- includes -->
+    <include href="redmond/redmondpanel.lzx"/>
+
+    <!-- resources -->
+    <resource name="lzwintabh"  src="redmond/resources/lzwintabh_rsc.swf" />
+    <resource name="lzwintabtr" src="redmond/resources/lzwintabtr_rsc.swf"/>
+    <resource name="lzwintablv" src="redmond/resources/lzwintablv_rsc.swf"/>
+    <resource name="lzwintabrv" src="redmond/resources/lzwintabrv_rsc.swf"/>
+
+    <!--
+    // DEFINE OBJECT: tabpanelview
+    -->
+    <class name="tabpanelview"   font="lztahoe8" 
+           fontsize="8" >
+       <attribute name="selectedTab"        value="0"/>
+       <attribute name="tabheight"          value="30"/>
+       <attribute name="insetcontent"       value="0"/>
+       <attribute name="selheightdiff"      value="3"/>
+       <attribute name="initcomplete"       value="0" type="number"/>
+       <attribute name="defaultplacement"   value="tabheaders" type="string" />
+       <beveledpanel width="100%" y="${classroot.selheightdiff + classroot.tabheaders.height - 1}" 
+                     height="${parent.height - parent.tabheaders.height}" />
+       
+       <view name="tabheaders" y="${parent.selheightdiff}" >
+           <selectionmanager name="tabselector" toggle="false"/>
+           <simplelayout axis="x" />
+       </view>
+
+       <view name="content" y="${classroot.selheightdiff + classroot.tabheaders.height + classroot.insetcontent}" x="${classroot.insetcontent}"/>
+
+       <method name="setSelected" args="v"> <![CDATA[
+          if (!v.amselected)  this.tabheaders.tabselector.select(v); 
+       ]]> </method>
+
+       <method name="toString" args="v">
+            return "tabpanelview named " + this.name;
+       </method>
+
+        <method event="oninit">
+           this.tabheaders.tabselector.select(this.tabheaders.summary);
+           this.initcomplete = true;
+        </method>
+    </class>
+
+    <!--
+    // DEFINE OBJECT: tabview
+    -->
+    <class name="tabview" clickable="true" font="lztahoe8" 
+           fontsize="8" >
+        <attribute name="defaultplacement" value="tabcontent" type="string" />
+        <attribute name="text"        type="string" setter="this.setText(text)" />
+        <attribute name="label"       type="string" setter="this.setText(label)" />
+        <attribute name="minheight"   value="20" />
+        <attribute name="amselected"  value="false" />
+        <attribute name="inset"       value="8" />
+        <attribute name="y"           value="${minheight - height}" />
+        <attribute name="initcomplete" value="0" type="number"/>
+
+        <view name="top" width="100%">
+            <view resource="lzwintabh"  x="1" width="${parent.width - 2}" stretches="width"/>
+            <view resource="lzwintabtr" x="${classroot.width - 2}"/>
+        </view>
+
+        <view name="middle" y="${classroot.top.height}" 
+             width="100%" height="${classroot.height - classroot.top.height}" >
+            <view resource="lzwintablv"  height="100%" stretches="height"/>
+            <view bgcolor="0xBBBBBB"  height="100%" />
+            <view resource="lzwintabrv"  height="100%"  stretches="height"/>
+            <stableborderlayout axis="x"/>
+        </view>
+
+        <view name="bottom" width="100%" visible="true"
+              resource="lzwintabh" y="${classroot.height - 1}" stretches="width"/>
+        
+        <text name="title" text="${classroot.label}" x="${classroot.inset}" y="3" resize="true" />
+
+        <method event="onconstruct">
+             //create array of tabs
+            this.tabContentViews = new Array;
+            //store reference to tabpanelview
+            this.tabpanel = this.immediateparent.parent;
+        </method>
+
+        <method name="setText" args="t">
+            this.text=t;
+            this.label=t;
+            if (this['ontext']) this.ontext.sendEvent();
+            if (this['onlabel']) this.onlabel.sendEvent();
+            if (this.initcomplete) {
+                // if a width has not been set, the button should size to its label
+                if (!this.hassetwidth) {
+                    this.setWidth( this.title.width + 2*this.inset);
+                }
+            }
+        </method>
+
+        <method event="oninit">
+            <!-- if no height is defined for this instance, adopt that of its parent -->
+            <!-- which should be a tabpanelview -->
+            if (!hassetheight) this.setHeight(this.minheight);
+
+            //@field tabnumber: The number of this tab
+            this.tabnumber = this.immediateparent.subviews.length-1;
+                
+            this.initcomplete = true;
+            this.setText( this.label );
+            //debug.write("oninit:  " + this, amselected);
+            this.setSelected(amselected);
+        </method>
+
+        <!--
+         Overrides the view's determinePlacement method so that
+         views attached to the tab are properly displayed, depending on whether the
+         tab is selected or not. 
+         @keywords protected
+        -->
+        <method name="determinePlacement" args="aSub , placement" >
+            if ( placement == "tabcontent" ){
+                this.tabContentViews.push( aSub );
+                aSub.setVisible( this.amselected );
+                aSub.initstage = "late"; // this can be overriden with an attribute
+                return this.tabpanel.content;
+            } else {
+                return this; //don't bother to call inherited
+            }
+        </method>
+
+        <method event="onclick">
+            this.immediateparent.tabselector.select(this);
+        </method>
+
+        <method name="setSelected" args="isSelected" > <![CDATA[
+            //debug.write("called TABVIEW setSelected for,isSelected " + this,isSelected);
+            this.amselected = isSelected;
+            if ( isSelected ) {
+               this.setHeight(minheight + parent.selheightdiff) 
+            } else {
+               this.setHeight(minheight)     
+            }
+            this.bottom.setVisible(!isSelected);
+
+            // show or hide all subviews in content view of tabpane
+            for (var i = this.tabContentViews.length -1 ; !(i < 0 ); i-- ){
+                if ( isSelected ){
+                    //debug.write("completeing instantiation");
+                    this.tabContentViews[i].completeInstantiation();
+                }
+                this.tabContentViews[i].setVisible( isSelected);
+            }
+        ]]> </method> 
+
+        <method name="toString">
+            return "tabview " + this.name;
+        </method>
+      
+
+    </class>
+
+</library>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

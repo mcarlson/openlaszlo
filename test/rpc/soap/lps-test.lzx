@@ -1,0 +1,162 @@
+<canvas debug="true" height="600" width="1000">
+
+    <debug x="280" width="470" height="370" />
+
+    <!--
+    // Datatypes to check
+    //
+    // int
+    // float
+    // double
+    // boolean
+    // string
+    // int[]
+    // float[]
+    // string[]
+    // UserClass
+    -->
+
+    <dataset name="mydata" />
+    <dataset name="objectsdata" />
+    <dataset name="stringdata" />
+
+    <method name="assert_equal" args="msg,val,tval">
+    <![CDATA[
+        if (tval != val) {
+          Debug.write("** ERROR: "+msg+" : got "+val+", should be "+tval);
+        } else {
+          Debug.write("OK "+msg);
+        }
+    ]]>
+    </method>
+
+    <soap name="lpstest" wsdl="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws?wsdl">
+        <method event="onload">
+            Debug.write('lps test soap service stub loaded');
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+
+        <remotecall name="test_version" funcname="version" >
+            <method event="ondata" args="value">
+                canvas.assert_equal('test_version', value, "LPS-SOAP service test v 0.1");
+            </method>
+        </remotecall>
+
+        <remotecall name="test_boolean_boolean" funcname="boolean_boolean" >
+              <param value="true" />      
+              <method event="ondata" args="value">
+                  canvas.assert_equal('test_boolean_boolean', value, false);
+              </method>
+        </remotecall>
+
+
+        <remotecall name="test_int_float" funcname="int_float" >
+            <param value="259" />   
+            <method event="ondata" args="value">
+                canvas.assert_equal('test_int_float', value, 259.0);
+            </method>
+        </remotecall>
+
+
+        <remotecall name="test_int_double" funcname="int_double" >
+            <param value="259" />   
+            <method event="ondata" args="value">
+                canvas.assert_equal('test_int_double', value, 259.0);
+            </method>
+        </remotecall>
+
+        <remotecall name="test_float_float" funcname="float_float" >
+            <param value="259" />   
+            <method event="ondata" args="value">
+                canvas.assert_equal('test_float_float', value, 259.0);
+            </method>
+        </remotecall>
+
+        <remotecall name="test_double_double" funcname="double_double" >
+            <param value="259" />   
+            <method event="ondata" args="value">
+                canvas.assert_equal('test_double_double', value, 259.0);
+            </method>
+        </remotecall>
+
+        <remotecall name="testStringArray" funcname="strings" 
+                    dataobject="stringdata">
+            <param value="'Foobar Baz'" />      
+            <param value="6" />     
+            <method event="ondata" args="value">
+            <![CDATA[
+                for (var i = 0; i < 6; i++) {
+                    canvas.assert_equal('testStringArray', value[i], "Foobar Baz");
+                }
+            ]]>
+            </method>
+        </remotecall>
+
+        <remotecall name="testObjectArray" funcname="objects" 
+                    dataobject="objectsdata">
+            <param value="'Foobar Baz'" />      
+            <method event="ondata" args="value">
+            <![CDATA[
+                for (var i = 0; i < 6; i++) {
+                    canvas.assert_equal('testObjectArray', value[i], "Foobar Baz");
+                }
+            ]]>
+            </method>
+        </remotecall>
+
+        <remotecall name="testReverse" funcname="reverse" >
+            <param value="'foobar baz'" />
+            <method event="ondata" args="value">
+                canvas.assert_equal('testReverse', value, "zab raboof");
+            </method>
+        </remotecall>
+
+        <remotecall name="test_void" funcname="void_void" >
+            <method event="ondata" args="value">
+                Debug.write('void value', value);
+            </method>
+        </remotecall>
+
+    </soap>
+
+    <view>
+        <simplelayout axis="x"/>
+
+        <view layout="spacing: 5">
+            <method event="onload" reference="canvas.lpstest">
+                lpstest.test_version.invoke();      
+                lpstest.test_boolean_boolean.invoke();
+                lpstest.test_int_float.invoke();
+                lpstest.test_int_double.invoke();
+                lpstest.test_float_float.invoke();
+                lpstest.test_double_double.invoke();
+                lpstest.testReverse.invoke();
+                lpstest.testObjectArray.invoke();   
+                lpstest.testStringArray.invoke();
+                lpstest.test_void.invoke();
+            </method>
+            <button text="objects" onclick="lpstest.testObjectArray.invoke()" />
+            <view bgcolor="#ffcccc" layout="axis: y; spacing: 4" >
+                <datapath xpath="objectsdata:/item" pooling="true" />
+                <text datapath="text()" resize="true"/>
+            </view>
+        </view>
+
+        <view layout="spacing: 5" >
+            <button text="stringArray" 
+                    onclick="lpstest.testStringArray.invoke()" />
+            <view bgcolor="#ffcccc" layout="axis: y; spacing: 4" >
+                <datapath xpath="stringdata:/item" pooling="true" />
+                <text datapath="text()" resize="true"/>
+            </view>
+        </view>
+    </view> 
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

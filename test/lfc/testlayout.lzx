@@ -1,0 +1,63 @@
+<canvas debug="false" width="800" height="600">
+    <include href="utils/layouts/library.lzx" />
+
+    <class name="box" bgcolor="red" width="20" height ="10" >
+        <animator attribute="width" to="80" relative="true"
+        		  duration="5000" motion="easeout"/>
+    </class>
+
+    <text>simplelayout: red boxes animate width, inside black view</text>
+    <view y="15" bgcolor="black" height="20">
+        <box />
+        <box />
+        <box />
+        <box />
+        <simplelayout axis="x" spacing="12">
+            <animator attribute="spacing" to="20" duration="1000" 
+                      oninit="Debug.write( 'animint'  + this.view )"/>
+                
+        </simplelayout>
+    </view>
+
+    <text y="60">resizelayout: yellow boxes releasetolayout, expected to shrink as red boxes grow</text>
+    <view y="75" width="400" height="50" bgcolor="blue" >
+        <box />
+        <box options="releasetolayout;" bgcolor="yellow"/>
+        <box  options="releasetolayout;" bgcolor="yellow"/>
+        <box />
+        <resizelayout axis="x" spacing="12"/>
+    </view>
+
+    <text y="135">stableborderlayout: containing view grows, middle view should grow to fit</text>
+    <box y="150" height="50" width="40">
+        <view bgcolor="black" width="17" height="100%"/>
+        <view bgcolor="blue" height="100%"/>
+        <view bgcolor="black" width="18" height="100%"/>
+        <stableborderlayout axis="x" />
+    </box>
+
+
+
+
+    <class name="showname" extends="text" width="100" >
+        <attribute name="label" value="this.name" when="once" /> 
+    </class>
+
+	<!--
+    <view x="500">
+        <showname name="showit1" />
+        <showname name="showit2" />
+        <box options="ignorelayout" />
+        <showname name="showit3" />
+        <box options="ignorelayout" x="22"/>
+        <showname name="showit4" />
+        <showname name="showit5" />
+        <simplelayout axis="y" spacing="33"/>
+    </view>
+	-->
+	
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

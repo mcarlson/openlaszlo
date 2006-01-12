@@ -1,0 +1,41 @@
+<canvas debug="true" width="1800" height="800">
+  <method event="oninit">
+    Debug.showInternalProperties = true;
+  </method>
+
+  <debug x="200" fontsize="14" width="600" height="400"/>
+<script>
+
+function rightclick_handler (obj, menuobj) {
+  Debug.write("rightclick context menu", obj, menuobj);
+} 
+
+function my_itemhandler(obj, item) {
+   Debug.write("menu item selected", obj, item);
+}
+
+var cm1 = new ContextMenu(rightclick_handler);
+cm1.hideBuiltInItems();
+cm1.addItem(new ContextMenuItem("LZX Canvas Custom Item!", my_itemhandler));
+canvas.setContextMenu(cm1);
+
+var cm2 = new ContextMenu(rightclick_handler);
+cm2.hideBuiltInItems();
+cm2.addItem(new ContextMenuItem("View Custom Item 1", my_itemhandler));
+cm2.addItem(new ContextMenuItem("View Custom Item 2", my_itemhandler));
+cm2.addItem(new ContextMenuItem("View Custom Item 3", my_itemhandler));
+
+
+var cm3 = new ContextMenu(rightclick_handler);
+cm3.hideBuiltInItems();
+cm3.addItem(new ContextMenuItem("Text Custom Item 1", my_itemhandler));
+cm3.addItem(new ContextMenuItem("Text Custom Item 2", my_itemhandler));
+
+</script>
+<simplelayout/>
+<text id="foo"  fontsize="26"
+      oninit="setContextMenu(cm3)">FOOBAR</text>
+<view id="pp"  
+      width="200" height="200" bgcolor="blue" 
+      oninit="setContextMenu(cm2)"/>
+</canvas> 

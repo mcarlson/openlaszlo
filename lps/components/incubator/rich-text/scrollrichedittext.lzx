@@ -1,0 +1,72 @@
+<library>
+    <include href="baserichedittext.lzx" />
+
+    <!--- 
+        scrollrichedittext
+        A class which wraps up baserichedittext and ui for scrolling the textarea. 
+        [gregor 10.26.05]
+    -->
+    <class name="scrollrichedittext" extends="baserichedittext" 
+           multiline="true">
+
+        <!--- The default width of the text area border. -->
+        <attribute name="border" value="0" />
+
+        <_richinternalinputtext name="inp" x="${parent.border}" 
+            y="${parent.border}" 
+            height="${parent.height-parent.border*2}"
+            width="${parent.vs.visible
+                     ? parent.width - parent.vs.width - parent.border*2 
+                     : parent.width - parent.border*2 }">
+            <attribute name="lineheight"
+                       value="${this.getTextHeight()/this.maxscroll}"/>
+            <attribute name="maxheight" 
+                       value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
+            <attribute name="onpos" value="null"/>
+            <attribute name="pos" value="0" setter="this.setPos(pos)"/>
+
+            <!--- Set the scroll position and update the scrollbar to match 
+                @param Number p: position-->
+            <method name="setPos" args="p">
+                
+                if (this.isinited) {
+                    this.setScroll(1 - (p / this.lineheight));
+                    this.pos = p;
+                    if (this.onpos) this.onpos.sendEvent(p);
+                }
+            </method>
+            
+            
+            <method event="onscroll">
+                this.setPos(-this.lineheight * (this.scroll - 1), true);
+            </method>
+        </_richinternalinputtext>
+        
+        <!--- Overrides a parent method which calculates y position for text
+            in a way that doesn't make sense for this class. We just trap the 
+            call and do nothing. This field is positioned in y by the constraint
+            y=${parent.border}
+            Note: although this method is a no-op, it still has to be declared,
+            so the parent class's method does not get called on instances of 
+            this class. 
+        -->
+        <method name="_placeTextY">
+            // Do nothing. 
+        </method>
+
+
+        <vscrollbar name="vs" axis="y" scrollattr="pos"
+            scrolltarget="parent.inp" 
+            x="${parent.width - this.width}" 
+            stepsize="${parent.inp.lineheight}" 
+            scrollmax="${parent.inp.maxheight}" />
+
+   </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+     * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.
+     * Use is subject to license terms.
+     * X_LZ_COPYRIGHT_END
+     ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

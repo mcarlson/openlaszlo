@@ -1,0 +1,17 @@
+<canvas width="600">
+  <view resource="cd_cover.jpg"/>
+  <view name="player" resource="http:where_to_begin.mp3"/>
+  
+  <view>
+    <button onclick="player.setAttribute('play', false)">Pause</button>
+    
+    <button>Resume
+      <method event="onclick">
+        player.setAttribute("play", true);
+      </method>
+    </button>
+    <simplelayout axis="x" spacing="2"/>
+  </view>
+  
+  <simplelayout axis="y" spacing="4"/>
+</canvas>

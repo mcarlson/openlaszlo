@@ -1,0 +1,112 @@
+<canvas width="800" height="600" debug="true">
+
+    <include href="rpc/sessionrpc.lzx"/>
+
+    <debug x="300" y="20" width="500" height="400" />
+
+    <security>
+        <allow>
+            <pattern>^org\.openlaszlo\.test\.xmlrpc\.PeerCounter$</pattern>
+        </allow>
+    </security>
+
+    <dataset name="infoDset" />
+
+    <sessionrpc name="sessioninfo">
+        <method event="ondata" args="data">
+            Debug.write('xxx data:', data);
+        </method>
+
+        <method event="onerror" args="mesg">
+            Debug.write('xxx error:', mesg);
+        </method>
+
+        <remotecall funcname="getAttributeNames" dataobject="infoDset" />
+    </sessionrpc>
+
+    <webapprpc name="webappinfo">
+        <method event="ondata" args="data">
+            Debug.write('xxx data:', data);
+        </method>
+
+        <method event="onerror" args="mesg">
+            Debug.write('xxx error:', mesg);
+        </method>
+
+        <remotecall funcname="getAttributeNames" dataobject="infoDset" />
+    </webapprpc>
+
+    <class name="counter" loadoption="${settings.replace.loadoption}" autoload="false"
+           classname="org.openlaszlo.test.xmlrpc.PeerCounter" extends="javarpc">
+        
+        <method event="onerror" args="mesg">
+            Debug.write(this.name, 'onerror:', mesg)
+        </method>
+        
+        <method event="ondata" args="data">
+            Debug.write(this.name, 'ondata:', data)
+        </method>
+
+        <method event="onload" >
+            Debug.write(this.name, 'onload:', this.name)
+        </method>
+
+        <method event="onunload" >
+            Debug.write(this.name, 'onunload:', this.name)
+        </method>
+
+        <remotecall funcname="getCount" />
+        <remotecall funcname="getPeerNum" />
+        <remotecall funcname="increment" />
+        <remotecall funcname="decrement" />
+        <remotecall funcname="reset" />
+
+    </class>
+    
+    <simplelayout spacing="10"/>
+
+    <view bgcolor="0xc0c0c0" width="200" height="150" name="settings">
+        <attribute name="counter" value="${eval(this.scope.value + 'counter')}"/>
+        <simplelayout spacing="10"/>
+        <text><b>SETTINGS:</b></text>
+        <checkbox text="replace on create" name="replace">
+            <attribute name="loadoption" value="loadcreate" type="string" />
+            <method event="onvalue">
+                if (this.value) {
+                    this.setAttribute("loadoption", "create");
+                } else {
+                    this.setAttribute("loadoption", "loadcreate"); 
+                }
+            </method>
+        </checkbox>
+        <text>Scope:</text>
+        <radiogroup text="scope" name="scope" >
+            <constantlayout axis="x" value="20"/>
+            <radiobutton value="'session'" text="session"/>
+            <radiobutton value="'webapp'" text="webapp"/>
+        </radiogroup>   
+    </view>
+    
+
+    <counter name="sessioncounter" scope="session"/>
+    <counter name="webappcounter" scope="webapp"/>
+    
+    <button text="Create" onclick="settings.counter.load()"/>
+    <button text="increment counter" onclick="settings.counter.increment.invoke()"/>
+    <button text="decrement counter" onclick="settings.counter.decrement.invoke()"/>
+    <button text="get count" onclick="settings.counter.getCount.invoke()"/>
+    <button text="get last peer id" onclick="settings.counter.getPeerNum.invoke()"/>
+    <button text="reset count" onclick="settings.counter.reset.invoke()"/>
+    <button text="unload counter" onclick="settings.counter.unload()"/>
+    <button text="get session attributes" onclick="sessioninfo.getAttributeNames.invoke()"/>
+    <button text="get webapp attributes" onclick="webappinfo.getAttributeNames.invoke()"/>
+    <list spacing="3" scrollable="true" width="250" height="100" name="session_data"
+          datapath="infoDset:/">
+        <textlistitem datapath="item" text="$path{'text()'}" />
+    </list>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

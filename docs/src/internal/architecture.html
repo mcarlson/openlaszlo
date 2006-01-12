@@ -1,0 +1,220 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="architecture"
+      xmlns:d="docbook">
+<head>
+    <title>Architectural Overview</title>
+</head>
+<body>
+
+<h1>Laszlo Architecture</h1>
+
+<p>
+ Laszlo Presentation Server, LPS, is a platform for rich Internet applications that are easy to develop and deploy. 
+The Laszlo system architecture combines the power and usability of client/server design with the 
+administrative advantages and cost effectiveness of web applications.
+</p>
+
+<p>        
+LPS is a Java application that executes in a J2EE servlet
+container. LPS may communicate with <glossterm>back end</glossterm>
+servers and data sources using a variety of protocols. Laszlo
+applications written in LZX are compiled by LPS and served as bytecode
+to a plug in that runs in the client's web browser.  This constitutes
+the <dfn>front end</dfn>.  The currently supported run-time
+environment, the Flash 5 or higher plug-in, executes consistently and
+reliably on a variety of operating systems and device types, including
+Windows, Pocket PC, Mac OS, Linux, and Solaris, and a variety of
+mobile and set-top box platforms. LPS outputs bytecode in the SWF file
+format recognized by the Macromedia Flash player (version 5.0 and
+higher). Nothing in the Laszlo architecture binds it to Flash,
+however.  In the future, Laszlo may support other run time clients as
+they become widely available.</p>
+
+<p>
+In the Laszlo context, <dfn>client</dfn> means LZX application executing in user's web browser, and <dfn>server</dfn> means
+ LPS (which may, in turn, communicate with other servers).  The LZX client and LPS server communicate over HTTP; LPS sends byte code
+ and the LZX application sends XML.</p>
+
+<p>All Laszlo platform features, including streaming media and notification, are delivered over HTTP or HTTPS. Laszlo-based applications 
+thus maintain compatibility with standard corporate firewalls. This is a critical capability for public Internet applications.</p>
+
+<img class="illustration" src="images/architecture-1.gif"
+     title="Laszlo Client-Server Architecture"/>
+
+<h2>Laszlo Server Architecture</h2>
+
+<p>
+The Laszlo Presentation Server executes within a standard J2EE application server or Java servlet container running JRE 1.3 or higher. 
+These application server environments scale well, as does LPS itself. Laszlo applications can run on any OS 
+supported by these server products. Laszlo supports Windows, Solaris, Linux and Mac OS X server environments.</p>
+
+<p>The Laszlo Presentation Server consists of five main subsystems: </p>
+
+<ul>
+   <li>the <glossterm>Interface Compiler</glossterm></li>
+   <li>the <glossterm>Media Transcoder</glossterm></li>
+   <li>the <glossterm>Data Manager</glossterm></li>
+   <li>the <glossterm>Persistent Connection Manager</glossterm></li>
+   <li>the <glossterm>Cache</glossterm></li>
+</ul>
+
+<img class="illustration" src="images/architecture-2.gif"
+     title="Laszlo Server Architecture"/>
+
+<h3>The Interface Compiler</h3>
+
+<p>The <glossterm>Interface Compiler</glossterm> consists of an
+<glossterm>LZX Tag Compiler</glossterm>, and a <glossterm>Script
+Compiler</glossterm>.  The Interface Compiler additionally invokes the
+Media Compiler and the Data Manager to compile media and data sources
+that are <glossterm>baked in</glossterm> to the application.</p>
+
+<p>The LZX tag and script compilers convert Laszlo application
+description tags and JavaScript into executable (swf) bytecode for
+transmission to the Laszlo client environment. This code is placed into the cache, from which it is sent to the client. Depending on how
+the application is invoked, it is transmitted either as a .swf file, or as an HTML file with an embedded .swf object.</p>
+
+<p>        
+The Media Transcoder converts a full range of media assets into a single format for rendering by Laszlo's target 
+client rendering engine. This enables a Laszlo application to present supported media types in a unified manner on a 
+single canvas, without the distraction of multiple helper applications or supplemental playback software.</p>
+
+<p>The Media Transcoder automatically transcodes the following media
+types: JPEG, GIF, PNG, MP3, TrueType, and SWF (art/animation
+only).</p>
+
+<h3>The Data Manager</h3>
+
+<p>
+The Data Manager is comprised of a data compiler that converts all data into a compressed binary format readable by Laszlo 
+applications and a series of data connectors that enable Laszlo applications to retrieve data via XML/HTTP. Laszlo applications
+ can thus interface across the network with databases, XML Web Services, and Web-server based files or executables.</p>
+
+<h3>The Persistent Connection Manager</h3>
+
+<p>        
+The Persistent Connection Manager handles authentication and real-time messaging for Laszlo applications which require them. 
+It provides real-time messaging and notification or data push over HTTP.</p>
+
+<warning>This feature is provisional.  It works in limited capacity
+situations and is fine to develop with, but we do not recommend
+deployment (with the possible exception of low-capacity, non-mission
+critical deployment) with this feature. Please consult Laszlo directly
+if you have questions about the robustness of an application that uses
+this version of the persistent connection.</warning>
+<h3>The Cache</h3>
+<p>The cache contains the most recently compiled version of any application. The first time a Laszlo application is 
+requested, it is compiled and the resultant SWF file is sent to the client. A copy is also cached on the server, so that subsequent
+requests do not require waiting for the compilation.</p>
+
+
+<h2>Laszlo Client Architecture</h2>
+
+<p>
+Laszlo's client architecture consists of the Laszlo Foundation Classes, a core library compiled into every Laszlo application 
+that provides run-time services (such as, for example, a timer and an idling function) and a presentation renderer to
+ provide 2D graphics rendering and sound playback.  
+ None of these classes rely on Flash services or use the Flash object model. The Flash 
+player is used solely as a rendering engine.</p>
+
+
+<img class="illustration" src="images/architecture-3.gif"
+     title="Laszlo Client Architecture"/>
+
+
+<example title="Empty Application" extract="false">&lt;canvas/&gt;</example>
+
+<p>        
+When this application is running, even though it isn't &quot;doing anything,&quot; nevertheless it is maintaining a connection 
+with the server, and all the capabilities necessary for running an LZX application have actually been downloaded.</p>
+<p>
+There are four primary components within the Laszlo Foundation Classes: the Event System, the Data Loader/Binder, the Layout &amp; 
+Animation system and a set of Application Services.</p>
+
+<h3>The Event System</h3>
+
+<p>The event system recognizes and handles application events such as
+user mouse clicks or server data pushes. This component permits
+standard event-based programming on the client. Relative to conventional Web implementations, Laszlo applications typically  
+reduce the processing load placed on the host server, by enabling
+tasks such as client-side sorting, processing, validation, and dynamic
+display across all application states.</p>
+
+<h3>The Data Loader/Binder</h3>
+
+<p>The data loader serves as a data traffic director, accepting data streams
+across the network from the Presentation Server and binding data to
+appropriate visual display elements such as text fields, forms, and
+menu items.</p>
+
+<h3>The Layout and Animation System</h3>
+
+<p>The layout and animation system provides Laszlo applications with
+<glossterm>constraint-based</glossterm> screen layout of interface
+elements and <glossterm>algorithmic animation</glossterm> of interface
+state changes. This component enables you to build a dynamic
+application interface with minimal programming. It allows you to
+position a variable number of interface elements using either relative
+positioning or absolute pixel positioning. With the animation
+algorithms, screen interface updates are rendered in a visually
+continuous manner, clearly communicating the application's state
+changes to the user. </p>
+
+<h3>Laszlo Services System</h3>
+
+<p>        
+The Laszlo runtime includes support 
+for timers, sound and modal dialogs.</p>
+
+
+<h2>Data Flow of a Laszlo Application</h2>
+
+<p>This example uses a Laszlo application stored on the Laszlo
+Presentation Server as <code>weather.lzx</code>. The following diagram
+illustrates how this application would be executed by the Laszlo
+Presentation Server.</p>
+
+<img class="illustration" src="images/architecture-5.gif"
+     title="Laszlo Application Data Flow diagram for the Weather Application"/>
+
+<p>Starting with a user's entering a URL that requests the Weather application, this diagram illustrates the data flow
+ sequence from client to server, integrating data from an XML Web service, and sending the result back to the client.</p>
+
+<p>
+In Laszlo applications, presentation-related logic is separated from business logic and executed locally on the client. The Laszlo 
+server sends the client compressed binary data rather than text, reducing the amount of data transported in 
+comparison to HTML-based and other Web applications. Caching on both the server and client eliminates unnecessary code execution and
+ data transmission.</p>
+
+<h2>Security Model</h2>
+
+<p>
+The Laszlo application platform supports the SSL security model. Laszlo data transmissions across the Internet can 
+be encrypted using 
+SSL encryption over HTTPS. Laszlo applications execute on the client computer within the secure &quot;sandbox&quot; environment of
+ the 
+Flash Player, and cannot write to the local file system or access the client's native environment.</p>
+
+<p>
+Web services and databases used by a Laszlo application are also secured using a per-user authentication model. This 
+mechanism prevents use of the Laszlo Presentation Server as a proxy or gateway into insecure services or data.</p>
+
+<h2>Platform Support for Multiple Devices</h2>
+
+<p>
+The Laszlo architecture is designed to support multiple device types. Its dynamic layout mechanisms enable simple modifications to such properties as an application's overall 
+size to be intelligently applied by the platform. This simplifies adapting an application to work on screens and devices of different size.</p>
+
+<p>All screen visualizations in Laszlo use time-based rather than
+frame-based animation, and thus transparently accommodate the
+processor speed differences of various device types. An interface
+transition specified to take 500 milliseconds will take 500
+milliseconds regardless of the number of frames shown &#x2014; faster
+processors result in more frames and smoother animation, but the same
+duration of transition.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,9 @@
+<library>
+  <script>
+    mynumber ++;
+    Debug.write("new common-library mynumber = ", mynumber);
+    new LzText (canvas, {text: "new common-library.lzx "+mynumber});
+  </script>
+
+
+</library>

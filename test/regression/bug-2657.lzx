@@ -1,0 +1,9 @@
+<canvas>
+  <simplelayout/>
+  <frametimer/>
+  <edittext width="$once{parent.width -5}" height="$once{parent.height-5}" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

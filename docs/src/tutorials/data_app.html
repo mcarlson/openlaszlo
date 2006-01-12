@@ -1,0 +1,906 @@
+<html id="data_app" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Data-Driven Applications</title>
+</head>
+<body>
+
+<h1>Building Data-Driven Applications</h1>
+<h2>Introduction</h2>
+
+<p>In this tutorial, you create a fully-functional phonebook application. The application displays a list of contacts and allows you to add, modify, and delete existing contacts.</p>
+
+<ul>
+	<li>In the first part of this tutorial, you use a static XML document as the data source.</li>
+	<li>In the second part of this tutorial, you use a relational database as the data source.</li>
+</ul>
+
+<img class="illustration" src="img/d_t_datapp_1.gif" width="399" height="312"/>
+
+
+<h2>Retrieving Data</h2>
+
+<p>Displaying data in a Laszlo application involves two major steps:</p>
+
+<ul>
+    <li>Defining a dataset</li>
+    <li>Binding data to user interface components</li>
+</ul>
+
+<example title="Defining a dataset: phonebook.lzx">
+&lt;canvas height="50" width="700" bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset"&gt;
+    &lt;phonebook&gt;
+      &lt;contact category="friends"&gt;
+        &lt;firstName&gt;John&lt;/firstName&gt;
+        &lt;lastName&gt;Smith&lt;/lastName&gt;
+        &lt;phone&gt;617-536-7855&lt;/phone&gt;
+        &lt;email&gt;jsmith@mail.com&lt;/email&gt;
+      &lt;/contact&gt;
+    &lt;/phonebook&gt;
+  &lt;/dataset&gt;
+  &lt;view name="list"&gt;
+    &lt;simplelayout axis="x"/&gt;
+    &lt;!-- 1 --&gt;
+    &lt;text datapath="dset:/phonebook/contact/firstName/text()"/&gt;
+    &lt;text datapath="dset:/phonebook/contact/lastName/text()"/&gt;
+    &lt;text datapath="dset:/phonebook/contact/phone/text()"/&gt;
+    &lt;text datapath="dset:/phonebook/contact/email/text()"/&gt;
+    &lt;!-- 2 --&gt;
+    &lt;text datapath="dset:/phonebook/contact/@category"/&gt; 
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<img src="img/d_t_datapp_2.gif" width="433" height="37" alt="" border="0"/>
+-->
+<h3>Working with datasets</h3>
+<p>A dataset represents an XML document containing data for the application. A dataset tag can embed the data (like in this example), or point to an external resource as we will discuss later in this tutorial. You can define multiple datasets inside a single application. The dataset is also the cornerstone for Laszlo's data binding API.</p>
+
+
+<h3>Working with XPath and the data binding API</h3>
+<p>The data binding API allows user interface components to be automatically populated with data. For each user interface component, you use the datapath attribute to specify which data the component should display. The value of the datapath attribute is an XPath expression. XPath expressions use a simple URL-like notation to navigate through the hierarchical structure of an XML document. The expression is made of the name of the dataset, followed by a colon and the path to the desired tag. You use /text() to display the data value of a tag (comments 1 to 2), or @attribute_name  to display the value of a tag attribute (comment 2).</p>
+ 
+<h3>Relative addressing</h3>
+<p>To make your code easier to read and maintain, you can bind a container view to a particular node and then bind the user interface components inside the view using a relative address.</p>
+
+
+<example extract="false">
+&lt;view name="list" datapath="dset:/phonebook/contact"&gt;
+  &lt;simplelayout axis="x"/&gt;
+  &lt;text datapath="firstName/text()"/&gt;
+  &lt;text datapath="lastName/text()"/&gt;
+  &lt;text datapath="phone/text()"/&gt;
+  &lt;text datapath="email/text()"/&gt;
+  &lt;text datapath="@category"/&gt;
+&lt;/view&gt;
+</example>
+
+
+<h3>Working with multiple rows of data</h3>
+<p>Laszlo makes it easy to manipulate and display multiple rows of data. If the XPath expression points to more than one node in the XML document, bound user interface components are repeated for each node.</p>
+
+<example title="binding data to views">
+&lt;canvas height="50" width="700" bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset"&gt;
+    &lt;phonebook&gt;
+      &lt;contact category="friends"&gt;
+        &lt;firstName&gt;John&lt;/firstName&gt;
+        &lt;lastName&gt;Smith&lt;/lastName&gt;
+        &lt;phone&gt;617-536-7855&lt;/phone&gt;
+        &lt;email&gt;jsmith@mail.com&lt;/email&gt;
+      &lt;/contact&gt;
+      &lt;contact category="business"&gt;
+        &lt;firstName&gt;Mary&lt;/firstName&gt;
+        &lt;lastName&gt;Jones&lt;/lastName&gt;
+        &lt;phone&gt;415-534-1186&lt;/phone&gt;
+        &lt;email&gt;mjones@mail.com&lt;/email&gt;
+      &lt;/contact&gt;
+      &lt;contact category="friends"&gt;
+        &lt;firstName&gt;Lisa&lt;/firstName&gt;
+        &lt;lastName&gt;Brown&lt;/lastName&gt;
+        &lt;phone&gt;212-423-1132&lt;/phone&gt;
+        &lt;email&gt;lbrown@mail.com&lt;/email&gt;
+      &lt;/contact&gt;
+    &lt;/phonebook&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view name="list" datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="x"/&gt;
+    &lt;!-- 1 --&gt;
+    &lt;text datapath="firstName/text()"/&gt;
+    &lt;text datapath="lastName/text()"/&gt;
+    &lt;text datapath="phone/text()"/&gt;
+    &lt;text datapath="email/text()"/&gt;
+    &lt;text datapath="@category"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<!-- 
+<img src="img/d_t_datapp_3.gif" width="455" height="41" alt="" border="0"/>
+-->
+<p>XPath also supports a one-based index notation to limit the number of nodes retrieved by an expression.  You can experiment with the following XPath expressions for the datapath attribute of the list view (comment 1).</p>
+
+<table>
+  <tr>
+    <th>XPath expresssion</th>
+    <th>Result</th>
+  </tr>
+  <tr>
+    <td><code>dset:/phonebook/contact</code></td>
+    <td><p>All the contact nodes</p></td>
+  </tr>
+  <tr>
+    <td><code>dset:/phonebook/contact[1]</code></td>
+    <td><p>First contact node only</p></td>
+  </tr>
+  <tr>
+    <td><code>dset:/phonebook/contact[2-3]</code></td>
+    <td><p>Contact nodes 2 to 3</p></td>
+  </tr>
+  <tr>
+    <td><code>dset:/phonebook/contact[2-]</code></td>
+    <td><p>Contact nodes 2 and onwards</p></td>
+  </tr>
+  <tr>
+    <td><code>dset:/phonebook/contact[-2]</code></td>
+    <td><p>Contact nodes up to and including 2</p></td>
+  </tr>
+</table>
+
+<h3>Working with external XML documents</h3>
+
+<p>At this point, the data for the phonebook application is embedded in the application source code. This is appropriate for static information that is not reused across applications. However, in most cases, externalizing the data from the application source code is a better approach. </p>
+
+<p>First, we create an XML document called phonebook.xml containing the data for the phonebook application:</p>
+
+
+<pre class="code">
+<b>phonebook.xml:</b>
+&lt;phonebook&gt;
+  &lt;contact firstName="John" lastName="Smith" phone="617-536-7855" 
+           email="jsmith@mail.com"/&gt;
+  &lt;contact firstName="Lisa" lastName="Jones" phone="415-225-8743" 
+           email="ljones@mail.com"/&gt;
+  &lt;contact firstName="Mary" lastName="Brown" phone="212-665-5211" 
+           email="mbrown@mail.com"/&gt;
+&lt;/phonebook&gt;
+</pre>
+
+
+<p>We can now remove the data from the source code of the phonebook application, and make the dataset point to the phonebook.xml file:</p>
+
+
+<example title="using an external dataset">
+&lt;canvas height="50" width="700" bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset" src="../phonebook.xml"/&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view name="list" datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="x"/&gt;
+    &lt;text datapath="@firstName"/&gt;
+    &lt;text datapath="@lastName"/&gt;
+    &lt;text datapath="@phone"/&gt;
+    &lt;text datapath="@email"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<note>In the example above, <code>phonebook.lzx</code> and
+<code>phonebook.xml</code> are in the same directory
+<fixme>fixme</fixme>. You can also use a fully qualified or another
+relative URL to point to the desired file.</note>
+
+
+<h2>Updating Datasets</h2>
+
+<p>At this point, the phonebook application is only capable of displaying a list of contacts. In this section, we add update and delete capabilities to the application (we will take care of inserting new contacts later in this tutorial). The first step is to provide the application with a data input view (comment 2 to 3) that allows users to modify or delete a contact. By default, we make the view invisible. The onclick event defined for the list view (comment 1) works as a toggle to display/hide the updateContact view when a contact is clicked.</p>
+
+<example title="using &lt;onclick&gt; method to update data">
+&lt;canvas height="200" width="700" bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset" src="../phonebook.xml"/&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;!-- 1 --&gt;
+    &lt;view name="list" 
+          onclick="parent.updateContact.setVisible(!parent.updateContact.visible);"&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;text datapath="@firstName"/&gt;
+      &lt;text datapath="@lastName"/&gt;
+      &lt;text datapath="@phone"/&gt;
+      &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+    &lt;view name="updateContact" visible="false" x="20" height="120"&gt;
+      &lt;text y="10"&gt;First Name:&lt;/text&gt;
+      &lt;!-- 2 --&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+      &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+      &lt;text y="60"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+      &lt;text y="85"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+      &lt;button width="80" x="200" y="10"&gt;Update
+        &lt;!-- 2a --&gt;
+        &lt;method event="onclick"&gt;
+            parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/button&gt;
+      &lt;button width="80" x="200" y="40"&gt;Delete
+        &lt;!-- 2b --&gt;
+        &lt;method event="onclick"&gt;
+            parent.parent.datapath.deleteNode();
+        &lt;/method&gt;
+      &lt;/button&gt;
+      &lt;!-- 3 --&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<!--
+<img src="img/d_t_datapp_4.gif" width="397" height="163" alt="" border="0"/>
+-->
+<h3>Updating a dataset</h3>
+
+<p>To update a dataset based on information entered in bound user interface components, you invoke the updateData() method on the datapath object (comment 2a). updateData() simply copies the data from the bound user interface components back to the dataset.</p>
+
+
+<h3>Deleting a node in a dataset</h3>
+
+<p>To delete a node in a dataset, you invoke the deleteNode() method on the datapath object (comment 2b).</p>
+
+
+
+<h2>Working with Datapointers</h2>
+
+<h3>Binding data to a new node</h3>
+
+<p>Before looking at how a datapointer can be used to add a node to a dataset, we set up the user interface to allow the user to enter a new contact. </p>
+
+<example title="UI for adding new contact">
+&lt;canvas height="400" width="700" bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset" src="../phonebook.xml"/&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;!-- 1 --&gt;
+    &lt;text onclick="parent.newContact.setVisible(!parent.newContact.visible);"&gt;New Entry...&lt;/text&gt;
+    &lt;!-- 2 --&gt;
+    &lt;view name="newContact" datapath="new:/contact" 
+          visible="false" x="20" height="120"&gt;
+      &lt;text y="10"&gt;First Name:&lt;/text&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+      &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+      &lt;text y="60"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+      &lt;text y="85"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+      &lt;button width="80" x="200" y="10"&gt;Add
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/view&gt;
+    &lt;!-- 3 --&gt;
+  &lt;/view&gt;
+  &lt;view datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;view name="list" 
+          onclick="parent.updateContact.setVisible(!parent.updateContact.visible);"&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;text datapath="@firstName"/&gt;
+      &lt;text datapath="@lastName"/&gt;
+      &lt;text datapath="@phone"/&gt;
+      &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+    &lt;view name="updateContact" visible="false" x="20" height="120"&gt;
+      &lt;text y="10"&gt;First Name:&lt;/text&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+      &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+      &lt;text y="60"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+      &lt;text y="85"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+      &lt;button width="80" x="200" y="10"&gt;Update
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/button&gt;
+      &lt;button width="80" x="200" y="40"&gt;Delete
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.deleteNode();
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<img src="img/d_t_datapp_5.gif" width="415" height="196" alt="" border="0"/>
+-->
+<p>When the user clicks the "New Entry" text at the top of the contact list (comment 1), the newContact view (comments 2 to 3) is displayed. The newContact view is similar to the updateContact view except that its datapath attribute is set to "new:/contact". This creates a new temporary dataset with an empty contact node. </p>
+
+<p>If you run the application, you will notice that when you click the Add button, the new contact is not added to the list of contacts: we still have to add the new contact node defined in the temporary dataset to the main dataset (dset). We use a datapointer to perform this operation.</p>
+
+
+<h3>Using a datapointer</h3>
+<p>A datapointer is a pointer to a specific node in a dataset. You typically use a datapointer when you need to manipulate data programmatically. A datapointer can only point to one node in the dataset at a time, but you can define multiple datapointers, each pointing to a different node in the dataset.</p>
+
+<p>Let's modify the event handler of the Add button with the code required to add the new contact node to the dset dataset:</p>
+
+<pre class="code">
+&lt;method event="onclick"&gt;
+  parent.datapath.updateData();
+  var dp=canvas.datasets.dset.getPointer();   // 1
+  dp.selectChild();                           // 2
+  dp.addNodeFromPointer(parent.datapath);     // 3
+  parent.setDatapath("new:/contact");         // 4
+&lt;/method&gt;
+</pre>
+
+<table>
+  <tr>
+    <th>Comment</th>
+    <th>Explanation</th>
+  </tr>
+  
+  <tr>
+    <td><span class="regular">1</span></td>
+    <td><span class="regular">Obtain a datapointer for the dset dataset</span></td>
+  </tr>
+
+  <tr>
+    <td><span class="regular">2</span></td>
+    <td><span class="regular">Make the datapointer point to the first child node in dset, which is the &lt;phonebook&gt; tag</span></td>
+  </tr>
+
+  <tr>
+    <td><span class="regular">3</span></td>
+    <td><span class="regular">Add the new contact node to the phonebook node</span></td>
+  </tr>
+
+  <tr>
+    <td><span class="regular">4</span></td>
+    <td><span class="regular">reinitialize the datapath for the newContact view</span></td>
+  </tr>
+</table>
+
+<example title="Using &lt;onclick&gt; method to add new contact">
+&lt;canvas height="400" width="700" bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset" src="../phonebook.xml"/&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;!-- 1 --&gt;
+    &lt;text onclick="parent.newContact.setVisible(!parent.newContact.visible);"&gt;New Entry...&lt;/text&gt;
+    &lt;!-- 2 --&gt;
+    &lt;view name="newContact" datapath="new:/contact" 
+          visible="false" x="20" height="120"&gt;
+      &lt;text y="10"&gt;First Name:&lt;/text&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+      &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+      &lt;text y="60"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+      &lt;text y="85"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+      &lt;button width="80" x="200" y="10"&gt;Add<em>
+        &lt;method event="onclick"&gt;
+           parent.datapath.updateData();
+           var dp=canvas.datasets.dset.getPointer();   
+           dp.selectChild();                           
+           dp.addNodeFromPointer(parent.datapath);     
+           parent.setDatapath("new:/contact");         
+         &lt;/method&gt;</em>
+      &lt;/button&gt;
+    &lt;/view&gt;
+    &lt;!-- 3 --&gt;
+  &lt;/view&gt;
+  &lt;view datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;view name="list" 
+          onclick="parent.updateContact.setVisible(!parent.updateContact.visible);"&gt;
+        &lt;simplelayout axis="x"/&gt;
+        &lt;text datapath="@firstName"/&gt;
+        &lt;text datapath="@lastName"/&gt;
+        &lt;text datapath="@phone"/&gt;
+        &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+    &lt;view name="updateContact" visible="false" x="20" height="120"&gt;
+      &lt;text y="10"&gt;First Name:&lt;/text&gt;
+      &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+      &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+      &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+      &lt;text y="60"&gt;Phone:&lt;/text&gt;
+      &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+      &lt;text y="85"&gt;Email:&lt;/text&gt;
+      &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+      &lt;button width="80" x="200" y="10"&gt;Update
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/button&gt;
+      &lt;button width="80" x="200" y="40"&gt;Delete
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.deleteNode();
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+	
+
+<h2>Working with Classes</h2>
+
+<p>As you have probably noticed, most of the code for the newContact view and the updateContact view is identical. This is often a good indicator that there is an opportunity for abstracting generic code in a class. This approach promotes reuse and ensures consistency across the application. In this case we could create a generic contactview class defined as follows:</p>
+
+<pre class="code">
+&lt;class name="contactview" extends="view" visible="false" x="20" height="120"&gt;
+  &lt;text y="10"&gt;First Name:&lt;/text&gt;
+  &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+  &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+  &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+  &lt;text y="60"&gt;Phone:&lt;/text&gt;
+  &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+  &lt;text y="85"&gt;Email:&lt;/text&gt;
+  &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+&lt;/class&gt;
+</pre>
+
+
+<p>We can now modify the Phonebook application to use the contactview class:</p>
+
+<example title="Using &quot;contactview&quot; class">
+&lt;canvas height="200" width="700" bgcolor="#D4D0C8" &gt;
+  &lt;dataset name="dset" src="../phonebook.xml"/&gt; <em>
+  &lt;class name="contactview" extends="view" visible="false" x="20" height="120"&gt;
+    &lt;text y="10"&gt;First Name:&lt;/text&gt;
+    &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+    &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+    &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+    &lt;text y="60"&gt;Phone:&lt;/text&gt;
+    &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+    &lt;text y="85"&gt;Email:&lt;/text&gt;
+    &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+  &lt;/class&gt;</em>
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;text onclick="parent.newContact.setVisible(!parent.newContact.visible);"&gt;New Entry...&lt;/text&gt;
+    &lt;contactview name="newContact" datapath="new:/contact"&gt;
+      &lt;button width="80" x="200" y="10"&gt;Add
+        &lt;method event="onclick"&gt;
+          parent.datapath.updateData();
+          var dp=canvas.datasets.dset.getPointer();
+          dp.selectChild();
+          dp.addNodeFromPointer( parent.datapath );
+          parent.setVisible(false);
+          parent.setDatapath("new:/contact");
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/contactview&gt;
+  &lt;/view&gt;
+  &lt;view datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;view name="list" onclick="parent.updateContact.setVisible(!parent.updateContact.visible);"&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;text datapath="@firstName"/&gt;
+      &lt;text datapath="@lastName"/&gt;
+      &lt;text datapath="@phone"/&gt;
+      &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+    &lt;contactview name="updateContact"&gt;
+      &lt;button width="80" x="200" y="10"&gt;Update
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/button&gt;
+      &lt;button width="80" x="200" y="40"&gt;Delete
+        &lt;method event="onclick"&gt;
+          parent.parent.datapath.deleteNode();
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/contactview&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<h2>Working with a Database</h2>
+
+<p>In the first part of this tutorial, we have explored two approaches to provide data to a Laszlo application:</p>
+
+<ol>
+	<li>Embedding data in the source code of the application</li>
+	<li>Using an external XML document</li>
+</ol>
+
+<p>The dataset can also point to a server-side script that generates XML dynamically using information coming from a database, a Web service, a legacy system, etc.</p>
+
+<p>In this section of the tutorial, we modify the Phonebook application to work with a database: </p>
+
+<ul>
+	<li>The list of contacts is retrieved from a database table</li>
+	<li>Update, delete, and insert operations are applied to the database</li>
+</ul>
+
+<p>Laszlo integrates with any server-side technology that is capable of generating XML: Java Servlets, a JavaServer Pages (JSP), CGI scripts, PHP scripts, Active Server Pages (ASP), etc. </p>
+
+<p>In this tutorial we use JavaServer Pages as the server-side technology.</p>
+
+
+<h3>Database setup</h3>
+<p>You need a relational database and a JDBC driver to perform this section of the tutorial.</p>
+
+<ol>
+	<li>Create a table named contact</li>
+	<li>Define four varchar(20) columns named email, first_name, last_name, and phone respectively. If your database does not support the varchar data type, choose any other text-based data type</li>
+	<li>Specify email as the primary key for the contact table</li>
+	<li>Enter some sample data</li>
+</ol>
+
+
+
+<h3>Retrieving Data from a database</h3>
+
+
+<h4>Creating the JSP</h4>
+
+<p>The first step is to create a JavaServer Page that generates an XML document representing the contacts in the contact table.</p>
+
+<pre class="code">
+<b>getcontacts.jsp:</b>
+
+&lt;%@ page import="java.sql.*"%&gt;
+&lt;phonebook&gt;
+&lt;%
+    Connection connection = null;
+    try {
+        Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");  // 1
+        connection = DriverManager.getConnection("jdbc:odbc:laszlosamples"); // 2
+        Statement stmt = connection.createStatement();
+        ResultSet rs = stmt.executeQuery("select * from contact");
+        while (rs.next()) {
+    %&gt;
+            &lt;contact firstName="&lt;%= rs.getString("first_name")%&gt;"
+                           lastName="&lt;%= rs.getString("last_name")%&gt;"
+                           phone="&lt;%= rs.getString("phone")%&gt;"
+                           email="&lt;%= rs.getString("email")%&gt;"/&gt;
+    &lt;%
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    } finally {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+        }
+    }
+%&gt;
+&lt;/phonebook&gt;
+</pre>
+
+
+
+<p>In this example, we use Sun's JDBC-ODBC bridge to access the database:</p>
+
+
+<ul>
+	<li>Comment 1: replace sun.jdbc.odbc.JdbcOdbcDriver with the JDBC driver you are using.</li>
+	<li>Comment 2: replace jdbc:odbc:laszlosamples with the JDBC URL required by your driver.</li>
+</ul>
+
+
+
+<h4>Modifying the client application</h4>
+
+<p>Modifying the client application is straight forward. You modify the dataset tag attributes as follows:</p>
+
+<pre class="code">
+&lt;dataset name="dset" src="getcontacts.jsp" request="true" type="http"/&gt;
+</pre>
+
+
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Explanation</th>
+  </tr>
+
+  <tr>
+    <td><code>src="getcontacts.jsp"</code></td>
+    <td><span class="regular">A fully qualified or relative URL to the server-side program that generates the XML document</span></td>
+  </tr>
+
+  <tr>
+    <td><code>request="true"</code></td>
+    <td><span class="regular">Indicates that the request should be submitted automatically when the application is loaded</span></td>
+  </tr>
+
+  <tr>
+    <td><code>type="http"</code></td>
+    <td><span class="regular">Indicates an HTTP request. type="http" is implied when the value for the src attribute references a fully qualified URL starting with http://</span></td>
+  </tr>
+
+</table>
+
+
+
+<h2>Updating, Deleting, and Inserting Data</h2>
+
+<h3>Creating the JSP</h3>
+
+<p>For this example, we create a single JSP that handles inserts, deletes, and updates. </p>
+
+<pre class="code">
+<b>contactmgr.jsp:</b>
+
+&lt;%@ page import="java.sql.*"%&gt;
+&lt;%
+    Connection connection = null;
+    try {
+        String action=request.getParameter("action");       // 3
+        String firstName=request.getParameter("firstName");
+        String lastName=request.getParameter("lastName");
+        String phone=request.getParameter("phone");
+        String email=request.getParameter("email");
+        String pk=request.getParameter("pk");               // 4
+
+        Class.forName("sun.jdbc.odbc.JdbcOdbcDriver");
+        connection = DriverManager.getConnection("jdbc:odbc:laszlosamples"); // 1
+        String sql="";      // 2
+
+        if (action.equals("insert")) {
+            sql="INSERT INTO contact (first_name, last_name, phone, email) VALUES ('"+
+                                     firstName+"','"+lastName+"','"+phone+"','"+email+"')";
+        } else if (action.equals("update")) {
+            sql="UPDATE contact SET first_name='"+firstName+"', last_name='"+lastName+
+                                     "', phone='"+phone+"', email='"+email+"' WHERE email='"+pk+"'";
+        } else if (action.equals("delete")) {
+            sql="DELETE FROM contact WHERE email='"+pk+"'";
+        }
+
+        Statement stmt = connection.createStatement();
+        System.out.println("*** Executing SQL: "+sql);
+        stmt.executeUpdate(sql);
+%&gt;
+        &lt;result&gt;success&lt;/result&gt;
+&lt;%
+    } catch (Exception e) {
+        e.printStackTrace();
+%&gt;
+        &lt;result&gt;failure&lt;/result&gt;
+&lt;%
+    } finally {
+        try {
+            connection.close();
+        } catch (SQLException e) {
+        }
+    }
+%&gt;
+</pre>
+
+
+<p>In this example, we use Sun's JDBC-ODBC bridge to access the database:</p>
+
+<ul>
+	<li>Comment 1: replace sun.jdbc.odbc.JdbcOdbcDriver with the JDBC driver you are using.</li>
+	<li>Comment 2: replace jdbc:odbc:laszlosamples with the JDBC URL required by your driver.</li>
+</ul>
+
+<p>This JSP expects 6 parameters from the Laszlo client application (comments 3 to 4).</p>
+
+<table>
+  <tr>
+    <th>Attribute</th>
+    <th>Explanation</th>
+  </tr>
+
+  <tr>
+    <td><code>action</code></td>
+    <td><span class="regular">The operation to perform. Can be "insert", "update", or "delete".</span></td>
+</tr>
+
+<tr>
+    <td><code>firstName</code></td>
+    <td><span class="regular">Used for insert and update only. The firstName value for a new contact (insert), or the new firstName value for an existing contact (update).</span></td>
+</tr>
+
+<tr>
+    <td><code>lastName</code></td>
+    <td><span class="regular">Used for insert and update only. The lastName value for a new contact (insert), or the new lastName value for an existing contact (update).</span></td>
+</tr>
+
+<tr>
+    <td><code>phone</code></td>
+    <td><span class="regular">Used for insert and update only. The phone value for a new contact (insert), or the new phone value for an existing contact (update).</span></td>
+</tr>
+
+<tr>
+    <td><code>email</code></td>
+    <td><span class="regular">Used for insert and update only. The email value for a new contact (insert), or the new email value for an existing contact (update).</span></td>
+</tr>
+
+<tr>
+    <td><code>Pk</code></td>
+    <td><span class="regular">Used for update and delete only. The original value of email (the primary key) before it was changed. This value is needed in the WHERE clause of the UPDATE and DELETE statements.</span></td>
+</tr>
+
+</table>
+
+
+
+
+<h3>Modifying the client application</h3>
+
+
+<example extract="false">
+&lt;canvas bgcolor="#D4D0C8"&gt;
+  &lt;dataset name="dset" src="getcontacts.jsp" request="true" type="http"/&gt;
+  &lt;!-- 1 --&gt;
+  &lt;dataset name="dsSendData" request="false" src="contactmgr.jsp" type="http"/&gt;
+  &lt;class name="contactview" extends="view" visible="false" x="20" height="120"&gt;
+    &lt;!-- 2 --&gt;
+    &lt;text name="pk" visible="false" datapath="@email"/&gt;
+    &lt;text y="10"&gt;First Name:&lt;/text&gt;
+    &lt;edittext name="firstName" datapath="@firstName" x="80" y="10"/&gt;
+    &lt;text y="35"&gt;Last Name:&lt;/text&gt;
+    &lt;edittext name="lastname" datapath="@lastName" x="80" y="35"/&gt;
+    &lt;text y="60"&gt;Phone:&lt;/text&gt;
+    &lt;edittext name="phone" datapath="@phone" x="80" y="60"/&gt;
+    &lt;text y="85"&gt;Email:&lt;/text&gt;
+    &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
+    &lt;method name="sendData" args="action"&gt;
+      var d=canvas.datasets.dsSendData;                       // 3
+      var p=new LzParam();                                    // 3a
+      p.addValue("action", action, true);
+      p.addValue("pk", pk.getText(), true);
+      p.addValue("firstName", firstName.getText(), true);
+      p.addValue("lastName", lastName.getText(), true);
+      p.addValue("phone", phone.getText(), true);
+      p.addValue("email", email.getText(), true);            // 3b
+      d.setQueryString(p);                                   // 3c
+      d.doRequest();                                         // 3d
+    &lt;/method&gt;
+    &lt;!-- 4 --&gt;
+  &lt;/class&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;view&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;text onclick="parent.newContact.setVisible(!parent.newContact.visible);"&gt;New Entry...&lt;/text&gt;
+    &lt;contactview name="newContact" datapath="new:/contact"&gt;
+      &lt;button width="80" x="200" y="10"&gt;Add
+        &lt;method event="onclick"&gt;
+          parent.sendData("insert");                         // 5
+          parent.datapath.updateData();
+          var dp=canvas.datasets.dset.getPointer();
+          dp.selectChild();
+          dp.addNodeFromPointer( parent.datapath );
+          parent.setVisible(false);
+          parent.setDatapath("new:/contact");
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/contactview&gt;
+  &lt;/view&gt;
+  &lt;view datapath="dset:/phonebook/contact"&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;view name="list" onclick="parent.updateContact.setVisible(!parent.updateContact.visible);"&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;text datapath="@firstName"/&gt;
+      &lt;text datapath="@lastName"/&gt;
+      &lt;text datapath="@phone"/&gt;
+      &lt;text datapath="@email"/&gt;
+    &lt;/view&gt;
+    &lt;contactview name="updateContact"&gt;
+      &lt;button width="80" x="200" y="10"&gt;Update
+        &lt;method event="onclick"&gt;
+          parent.sendData("update");                      // 6
+          parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/button&gt;
+      &lt;button width="80" x="200" y="40"&gt;Delete
+        &lt;method event="onclick"&gt;
+          parent.sendData("delete");                      // 7
+          parent.parent.datapath.deleteNode();
+        &lt;/method&gt;
+      &lt;/button&gt;
+    &lt;/contactview&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+
+
+<table>
+  <tr>
+    <th>Comment</th>
+    <th>Explanation</th>
+</tr>
+
+<tr>
+    <td><span class="regular">1</span></td>
+    <td><span class="regular">We define a new dataset called dsSendData. This dataset is used to submit the information about a contact that we want to insert, update, or delete. We set the request attribute to false: the request will be submitted to the server when the user clicks the Add, Update, or Delete button.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">2</span></td>
+    <td><span class="regular">We define an invisible text component to keep track of the original primary key for the contact.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">3 - 4</span></td>
+    <td><span class="regular">We add a sendData() method to the contactview class. This method will submit a request to contactmgr.jsp using the dsSendData dataset and providing the contact information as page parameters. The method takes an action argument used to tell the server which operation (insert, update, or delete) to perform with the data.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">3a</span></td>
+    <td><span class="regular">We create a new LzParam object. The LzParam object encapsulates the page parameters submitted to the server as part of the HTTP request.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">3a to 3b</span></td>
+    <td><span class="regular">We populate the LzParam object with the six page parameters expected by the server: action, firstName, lastName, phone, email, and pk. The first argument of the addValue() method is the name of the page parameter, the second argument is the value of the page parameter, and the third argument specifies whether we want that value to be URI encoded. </span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">3c</span></td>
+    <td><span class="regular">We set the page parameters for the dsSendData request. Note: you don't always have to use an LZParam object to encapsulate page parameter. For example, you could set the page parameters for the dsSendData request using the following syntax:</span>
+<pre class="code">
+d.setQueryString( { action: "action",
+                    pk: pk.getText(),
+                    firstName: firstName.getText(),
+                    lastName: lastName.getText(),
+                    phone: phone.getText(),
+                    email: email.getText() } );
+</pre>
+<span class="regular">However, in this case, the page parameter values are not URI encoded and the request might fail if these values contain special characters.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">3d</span></td>
+    <td><span class="regular">This is the way to programmatically submit a request when the request attribute of the dataset tag is set to false.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">5</span></td>
+    <td><span class="regular">When the user clicks the Add button, we invoke the sendData() method requesting an insert operation.</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">6</span></td>
+    <td><span class="regular">When the user clicks the Update button, we invoke the sendData() method requesting an update operation</span></td>
+</tr>
+
+<tr>
+    <td><span class="regular">7</span></td>
+    <td><span class="regular">When the user clicks the Delete button, we invoke the sendData() method requesting a delete operation</span></td>
+</tr>
+</table>
+
+
+<h3>Using a datapointer to check for the success or failure of a request </h3>
+
+<p><code>contactmgr.jsp</code> returns a simple <code>success</code> xml document if the requested operation succeeded and <code>failure</code> if the operation failed. To check for the success or failure of the operation in the client application, you can define an event handler for the ondata event of the dsSendData dataset. In this event handler you use a datapointer to check for the value of the <code>tag</code>.</p>
+
+<pre class="code">
+&lt;datapointer xpath="dsSendData:/"&gt;
+  &lt;method event="ondata"&gt;
+    if (this.xpathQuery("result/text()") == "success") {
+      Debug.write("Operation succeeded");
+    } else {
+      Debug.write("Operation failed");
+    }
+  &lt;/method&gt;
+&lt;/datapointer&gt; 
+</pre>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

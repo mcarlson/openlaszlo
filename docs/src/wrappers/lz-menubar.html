@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Menubar">
+    <lztier>LZ Components</lztier>
+    <lzcategory>Menu and Command</lzcategory>
+    <lzshortdesc>
+        A menubar that contains menus.
+    </lzshortdesc>
+    <lztag>lz/menubar.xml</lztag>
+</lzelement>
+
+<p>The <tagname>menubar</tagname> tag creates a menubar that can be
+placed within any view, but is most commonly found within a window.
+By default, a menubar adjusts to the width of its parent unless
+otherwise directed. Within a window a menubar has its own
+<code>placement="menubar"</code> so that it lives above the contents
+of the window.</p>
+	 
+<example title="Simple menubar">
+&lt;canvas debug="true" height="250"&gt;
+  &lt;debug y="120"/&gt;
+  &lt;menubar width="200" &gt;
+    &lt;menu text="Menu 1" width="100"&gt;
+      &lt;menuitem text="Item 1" onselect="canvas.whichOne(this);"/&gt;
+      &lt;menuitem text="Item 2" onselect="canvas.whichOne(this);"/&gt;
+      &lt;menuitem text="Item 3" onselect="canvas.whichOne(this);"/&gt;
+      &lt;menuseparator/&gt;           
+      &lt;menuitem text="Item 4" onselect="canvas.whichOne(this);"/&gt;   
+    &lt;/menu&gt; 
+    &lt;menu text="Menu 2" width="100"&gt;
+      &lt;menuitem text="More items..." onselect="canvas.whichOne(this);"/&gt;  
+    &lt;/menu&gt;
+  &lt;/menubar&gt;
+  
+  &lt;method name="whichOne" args="vThis"&gt;
+    Debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+  &lt;/method&gt;
+&lt;/canvas&gt;	
+</example>
+ 
+
+<seealso>
+<tags>command menu menuitem menuseparator</tags>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

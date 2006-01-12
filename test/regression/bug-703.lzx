@@ -1,0 +1,22 @@
+<canvas debug="true">
+    <button y="200">
+        Two states
+        <attribute name="currstate" value="s1" type="string" />
+        <attribute name="y" value="this.immediateparent.getMouse( 'y' ) -3" when="always"/>
+        <method event="onclick" >
+            this[ currstate ].apply();
+            this.currstate = currstate == 's1' ? 's2' : 's1';
+        </method>
+
+        <state name="s1" onapply="this.parent.s2.remove()">
+            <attribute name="x" value="this.immediateparent.getMouse('x') - 5" when="always"/>
+        </state>
+        <state name="s2" onapply="this.parent.s1.remove()">
+            <attribute name="x" value="this.immediateparent.getMouse('x') - 45" when="always"/>
+        </state>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

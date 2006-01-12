@@ -1,0 +1,6 @@
+ <canvas proxied="false">
+   <!-- bypass the server, make direct data request -->
+   <dataset name="ds" src="http:../resources/xml/textnodes.xml" request="true"/>
+   <simplelayout/>
+   <text resize="true" datapath="ds:/items/item/text()"/>
+ </canvas>

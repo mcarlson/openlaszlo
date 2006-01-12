@@ -1,0 +1,24 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<ol>
+<li>On startup verify that:
+<ul>
+<li>reset button
+<li>move left button
+<li>move right button
+<li>stretch button
+<li>fade button
+<li>restore button
+<li>Window titled "My Window"
+<li>My window contains:
+<li>File Menu
+<li>Edit Menu
+<li>Looping Laszlo animation
+<li>horizontal scrollbar
+<li>resizable gripper
+</ul></li>
+</ol>
+TODO: MD Finish this app test plan

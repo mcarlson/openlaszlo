@@ -1,0 +1,38 @@
+<canvas>
+    <include href="redmond" />
+    <class name="mywindtext" extends="windowtext" width="100" 
+           onfocus="Debug.write( 'focus ' + this )"/>
+    <view name ="firstone">
+        <mywindtext name="w1n1"/>
+        <mywindtext name="w1n2"/>
+        <mywindtext name="w1n3"/>
+        <simplelayout axis="y" spacing="8"/>
+    </view>
+    <debug/>
+    <view name ="secone" x="150">
+        <mywindtext  name="w2n1"/>
+        <mywindtext  name="w2n2"/>
+        <view x="5">
+            <mywindtext name="w2c1n1"/>
+            <mywindtext name="w2c1n2"/>
+            <simplelayout axis="y" spacing="2" />
+        </view>
+        <mywindtext  name="w2n3"/>
+        <mywindtext  name="w2n4"/>
+        <simplelayout axis="y" spacing="2" />
+    </view>
+    <button y="200" label="change trap" onclick="this.switchFocusTrap()"
+            name="butt1">
+        <method name="switchFocusTrap" >
+            this.foctrap = this.foctrap == firstone ? secone : firstone;
+            LzFocus.setFocusTrap( this.foctrap );
+            Debug.write( "focus trap: " + this.foctrap );
+        </method>               
+    </button>
+    <button y="butt1.y+butt1.height" label="clear trap" onclick="LzFocus.clearFocusTrap()">
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

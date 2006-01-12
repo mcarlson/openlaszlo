@@ -1,0 +1,105 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- newfonts.lzx                                                          -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas>
+    <include href="utils/layouts/alllayouts.lzx" />
+    <include href="redmond" />
+    <splash/>
+
+    <font name="ario" src="ariosob.ttf" style="bold" />
+    <font name="ario" src="ariosor.ttf" />
+
+    <font name="chevara" src="chevaraor.ttf" style="bold" />
+    <font name="chevara" src="chevarar.ttf" />
+
+    <font name="conga" src="congab.ttf" style="bold" />
+    <font name="conga" src="congar.ttf" />
+
+    <font name="Helvetica-Condensed" src="helmetcb.ttf" style="bold" />
+    <font name="Helvetica-Condensed" src="helmetcbi.ttf" style="bold italic" />
+    <font name="Helvetica-Condensed" src="helmetci.ttf" style="italic" />
+    <font name="Helvetica-Condensed" src="helmetcr.ttf" />
+
+    <font name="Helvetica" src="helmetb.ttf" style="bold" />
+    <font name="Helvetica" src="helmetbi.ttf" style="bold italic" />
+    <font name="Helvetica" src="helmeti.ttf" style="italic" />
+    <font name="Helvetica" src="helmetr.ttf" />
+
+    <font name="Times Roman" src="timmonsb.ttf" style="bold" />
+    <font name="Times Roman" src="timmonsbi.ttf" style="bold italic" />
+    <font name="Times Roman" src="timmonsi.ttf" style="italic" />
+    <font name="Times Roman" src="timmonsr.ttf" />
+
+    <class name="fonttester" width="400" oninit="doit()" >
+        <attribute name="noitalic" value="true" />
+        <simplelayout axis="y" spacing="10" />
+        <text name="fn" width="100"> </text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"</text>
+        <text><b>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"</b></text>
+        <text><b>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"</b></text>
+        <!--
+        <state name="doital" >
+            <text><i>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"</i></text>
+            <text><i>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"</i></text>
+            <text><b><i>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"</i></b></text>
+            <text><b><i>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"</i></b></text>
+        </state>
+        -->
+        <text fgcolor="#00FF00" ><font color="#00FF00">Green</font></text>
+        <text fontsize="10">Ten (fontsize 10)</text>
+        <text fontsize="20">Twenty (fontsize 20)</text>
+        <text fontsize="40">Forty (fontsize 40)</text>
+        <text height="40" ><font size="40">Forty (size 40)</font></text>
+        <windowtext width="${immediateparent.width}">
+            Redmond input text
+        </windowtext>
+        <inputtext width="${immediateparent.width}">
+            Base input text
+        </inputtext>
+        <windowtext multiline="true" width="${immediateparent.width}" 
+            height="200" >
+            Wrap me baby wrap me up.
+        </windowtext>
+        <view bgcolor="black" height="2" width="${immediateparent.width}" />
+        <method name="doit" > 
+            fn.setText(fn.font.name);
+            Debug.write(fn.font.name);
+            Debug.write("Hello");
+            if (!noitalic) {
+                doital.apply()
+            }
+        </method>
+    </class>
+
+    <window title="Fonts are fun!" width="400" height="400" resizable="true">
+        <view width="${immediateparent.width}">
+        <simplelayout axis="y" spacing="10" />
+
+        <fonttester font="Times Roman"         fontsize="14" />
+        <fonttester font="Helvetica"           fontsize="14" />
+        <fonttester font="Helvetica-Condensed" fontsize="14" />
+
+        <fonttester font="conga"               fontsize="14" noitalic="true" />
+        <fonttester font="chevara"             fontsize="14" noitalic="true" />
+        <fonttester font="ario"                fontsize="14" noitalic="true" />
+
+        </view>
+        <scrollbar axis="y"/>
+    </window>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

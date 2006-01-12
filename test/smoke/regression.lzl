@@ -1,0 +1,1138 @@
+<library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <include href="lzunit/lzunit.lzx" />
+
+    <class name="bug_178" extends="TestCase">
+    
+        <method name="testScope">
+            //whether or not i is declared as a var here
+            //behavior is the same
+            var i;
+            i = "first";
+            this.func();
+            assertEquals("first", i)
+        </method>
+        <method name="func">
+            var i;
+            i = "second"
+            assertEquals("second", i)
+        </method>
+    </class>
+
+    <class name="bug_179" extends="TestCase">
+        <attribute name="num"/>
+        <method name="testLoop">
+            <![CDATA[
+            for ( var i = 0 ; i < 10 ; i++ ){
+                this.num = i;
+                assertEquals(this.num, i)
+            } 
+            ]]>
+        </method>
+    </class>
+    
+    <class name="bug_293" extends="TestCase">
+        <view name="txtview" width="100" height="50">
+            <text stretches="width" width="${thesizer.width}" height="20" yscale="${xscale}"> 
+                Hello, World!
+            </text>
+        </view>
+        <view id="thesizer" y="${parent.txtview.y + 20}" width="50" height="10" bgcolor="blue"/>
+        
+        <method name="testStretch">
+            thesizer.setWidth(100)
+            assertEquals(1, txtview.yscale)
+        </method>
+    </class>
+    
+    <class name="bug_320" extends="TestCase">
+      
+      <view name="txtview" fontstyle="bold" layout="axis: y; spacing: 10">
+        <text name="txt">bah</text>
+      </view>
+      <method name="testFontStyle">
+        assertEquals("bold", txtview.txt.fontstyle)
+      </method>
+    </class>
+    
+    <class name="bug_332" extends="TestCase">
+        <view name="col_view" bgcolor="0x000000" width="20" height="20"/>
+        <method name="testJStyleColor">
+            assertEquals(0, col_view.bgcolor)
+        </method>
+    </class>
+    
+    <class name="InnerRow">
+		<stableborderlayout axis="x" />
+		<view height="${parent.height}" width="${parent.width/4}" />
+		<view height="${parent.height}"/>
+		<view height="${parent.height}" width="${parent.width/4}"/>
+	</class>    
+
+    <class name="bug_366" extends="TestCase">
+        <view name="mediaWindow" width="300" height="200">
+            <stableborderlayout axis="y" />
+			
+			<view name="topRow" width="${parent.width}" height="50" bgcolor="yellow">
+				<InnerRow/>
+			</view>
+
+            <view name="middleRow" width="${parent.width}" bgcolor="green">
+            	<InnerRow/>
+            </view>
+
+            <view name="bottomRow" width="${parent.width}" height="50" bgcolor="yellow">
+            	<InnerRow/>
+            </view>
+        </view>
+        <method name="testHeight">
+            assertEquals(200, mediaWindow.height)
+        </method>
+    </class>
+    
+    <class name="bug_368" extends="TestCase">
+        <attribute name="abs_x" value="0" when="once"/>
+        <view id="redbox" bgcolor="red" width="50" height="50" y="-50" oninit="setupDelegate()">
+            <animatorgroup name="moveright" process="simultaneous" attribute="x" to="10" duration="500" 
+                onstop="parent.parent.finish()" start="false" relative="true" repeat="6">
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+                <animator/>
+            </animatorgroup>
+            <method name="setupDelegate">
+                this.repeatevent = new LzEvent(moveright, "myrepeatEvent")
+                moveright.setAttribute("onrepeat", repeatevent)
+                this.del = new LzDelegate(parent, "verifyPos", moveright, "myrepeatEvent")
+            </method>
+        </view>
+        <method name="testAnimate">
+            redbox.moveright.doStart()
+        </method>
+
+        <method name="finish">
+            this.verifyPos()
+            assertEquals(redbox.width, redbox.height)
+            redbox.destroy()
+        </method>
+
+        <method name="verifyPos">
+            this.abs_x += 100
+            assertEquals(abs_x, Math.round(redbox.x))
+        </method>
+    </class>
+    
+    <class name="bug_440" extends="TestCase">
+        <text name="sizeme" resize="true" bgcolor="yellow">Short text</text>
+        <method name="testResize">
+            var oldwidth = sizeme.width
+            sizeme.setText("Longer text than was there before")
+            assertTrue(sizeme.width &gt; oldwidth)
+        </method>
+    </class>
+
+    
+    <class name="slowinit" width="50" height="50" bgcolor="red">
+
+        <method name="construct" args="prn, argv">
+            for( var i=1000; i >0 ;i--){}; 
+            prn.resArray.push(argv.name)
+            super.construct(prn, argv)
+        </method>
+        <view oninit="for( var i=10; i >0 ;i--){};" width="10" height="10"
+              bgcolor="blue" />
+    </class>
+    
+    <class name="bug_511" extends="TestCase">
+        <attribute name="resArray" value="new Array()"/>
+
+        <method name="testInitOrder">
+            this.names = [ 'a' , 'b' , 'c' , 'd' , 'e' ]
+            for ( var i =0; i &lt; names.length; i++ ){
+                new slowinit( this, { name : names[ i ] } );
+            }
+        </method>
+        <method name="tearDown">
+            assertEquals(this.resArray.join(), this.names.join())
+        </method>
+    </class>
+
+    <script>
+    // Function defs for bug 535
+        function Foo (name) { this.name = name};
+        Foo.prototype.setUp = function () {
+            this.f = function () { return function () { return 19 }};
+            }
+        Foo.prototype.run = function () {
+            return this.f()();
+            }
+
+            function eff () { return function () { return 37 } };
+        var ohh = { g: function(){return 9}, f: function(){return this.g} }
+            var g = function g () { return 42 }
+
+    </script>
+
+    <class name="bug_535" extends="TestCase">
+        <method name="setUp">
+            <![CDATA[
+                     // f returns the global function g
+                     this.f = function () { return g };
+                     // o.f returns the local function g
+                     this.o = { g: function () { return 24 }, f: function () { return this.g } }
+                     this.e = function () { return {b: function () { return Math.PI }}}
+                     this.a = [ function () { return Math.PI } ]
+
+        ]]>
+            </method>
+
+            <method name="testClassFunction">
+            var bar = new Foo("bar");
+            bar.setUp();
+            assertEquals(19, bar.run());
+            </method>
+
+        <method name="testToplevelFunction">
+            assertEquals(37, eff()());
+        </method>
+
+        <method name="testToplevelObject">
+            assertEquals(9, ohh.f()());
+        </method>
+
+        <method name="testFunMeth">
+            assertEquals(Math.PI, e().b());
+        </method>
+
+        <method name="testArrMeth">
+            assertEquals(Math.PI, a[0]());
+        </method>
+
+        <method name="testFunFun">
+            assertSame(g, f(), "g == f()");
+            assertEquals(42, g(), "42 == g()");
+            var gee = f();
+            assertEquals(42, gee(), "42 == gee()");
+            var ans = f()();
+            assertEquals(42, ans, "42 == ans");
+            assertEquals(42, f()(), "42 == f()()");
+        </method>
+
+        <method name="testObjMeth">
+            <![CDATA[
+                with (o) {
+            assertSame(g, f(), "g == f()");
+            assertEquals(24, g(), "24 == g()");
+            var gee = f();
+            assertEquals(24, gee(), "24 == gee()");
+                    // TODO: [2003-04-21 ptw] This does not work.  It does
+                    // not return 24 (as intended), nor does it return 42
+                    // (which would be explicable), instead, it returns
+                    // undefined.  One plausible theory is that the
+                    // compiler should be replicating the scope of the
+                    // outer function when calling the inner function,
+                    // rather than passing undefined as the scope (which
+                    // is how global calls to a function object are
+                    // handled).
+    //          var ans = f()();
+    //          assertEquals(24, ans, "24 == ans");
+    //          assertEquals(24, f()(), "24 == f()()");
+            ]]>
+                }
+        </method>
+    </class>
+
+
+    <dataset name="bug553">
+        <testdata name="bug_553" status="PASS" cond="if you can read this"/>
+    </dataset>
+    
+    <class name="bug_553" extends="TestCase">
+
+        <view name="dataview" datapath="bug553:/testdata">
+            <simplelayout/>
+            <text name="n" datapath="@name"/>
+            <text name="st" datapath="@status"/>
+            <text name="c" datapath="@cond"/>
+        </view>
+        <method name="testTxtWidth">
+            assertFalse(dataview.n.width == 0)
+            assertFalse(dataview.st.width == 0)
+            assertFalse(dataview.c.width == 0)
+        </method>
+    </class>
+    <class name="bug_557" extends="TestCase">
+        <view name="testview">
+            <simplelayout name="namedlayout">
+              <attribute name="axis" value="y"/>
+              <attribute name="spacing" value="20"/>
+              <attribute name="foo" value="'dog'"/>
+            </simplelayout>
+            <text>test 1 line</text>
+            <text>test 2 line y axis spacing=20</text>
+        </view>
+        <method name="testLayoutAttr">
+            assertNotUndefined(testview.namedlayout.axis)
+            assertNotUndefined(testview.namedlayout.spacing)
+            assertNotUndefined(testview.namedlayout.foo)
+        </method>
+    </class>
+    
+    <dataset name="bug577" src="../resources/xml/http.xml"/>
+    <class name="bug_577" extends="TestCase">
+        <method name="testLocalDS">
+            assertUndefined(canvas.datasets.bug577.getAttribute('type'))
+        </method>
+    </class>
+
+
+
+  <class name="class_623">
+    <attribute name="bar"/>
+    <method name="setBar" args="newValue">
+      // uncommenting this line fixes the next one: this.bar = 1234;
+      bar = newValue;
+    </method>
+    <method name="getBar">
+      return bar;
+    </method>
+  </class>
+
+  <class name="bug_623" extends="TestCase">
+    <class_623 id="obj"/>
+    <method name="testSetGet">
+      obj.setBar(1);
+      assertEquals(1, obj.getBar());
+    </method>
+  </class>
+
+
+
+    
+    <class name="bug_663" extends="TestCase">
+        <attribute name="order" value="''" when="once"/>
+        <view name="redbox" bgcolor="red" width="50" height="50">
+            <animatorgroup name="anm" process="sequential" start="false" relative="true" onstop="parent.parent.verifyOrder()">
+                <animator attribute="x" to="100" duration="500" onstop="classroot.order += '1'"/>
+                <animator attribute="width" to="100" duration="500" onstop="classroot.order += '2'"/>
+            </animatorgroup>
+        </view>
+        <method name="testAnimOrder">
+            redbox.anm.doStart()
+        </method>
+        <method name="verifyOrder">
+            assertEquals(this.order, '12')
+        </method>
+    </class>
+
+    <class name="bug_733" extends="TestCase">
+        <method name="testEvalOrder">
+            assertEquals(-200, -(new Date(2000, 1, 1)).getFullYear()/10, "GEKKO!")
+        </method>
+    </class>
+
+    <dataset name="bug739" type="http" querystring="sleep=0" queuerequests="true" cacheable="false"
+            src="../lfc/data/httptimeout.jsp"/>
+    <class name="bug_739" extends="TestCase">
+        <method name="testStart">
+            this.tmstmp = new Array()
+            new LzDelegate(this, 'checkDelta', canvas.datasets.bug739, 'ondata')
+            canvas.datasets.bug739.doRequest();
+            canvas.datasets.bug739.doRequest();
+        </method>
+        <method name="checkDelta">
+        <![CDATA[
+            var d = new Date()
+            this.tmstmp.push(d.getTime())
+            if (!(tmstmp.length % 2))
+            {
+                var delay = tmstmp[1] - tmstmp[0]
+                assertTrue( delay < 32, "Expected delay less than 32 ms, got " + delay)
+            }
+        ]]>
+        </method>
+    </class>
+
+    <class name="bug_748" extends="TestCase">
+        <view name="popup">
+            <attribute name="defaultplacement" value="items" type="string"/>
+            <view name="items" bgcolor="0x000000" visible="false">
+                <view name="title" width="200" height="20"/>
+                <view name="tootle" width="200" height="20"/>
+            </view>
+            <view name="tricky"/>
+        </view>
+        <method name="testPlacement">
+            assertSame(popup.items, popup.tricky.immediateparent)
+        </method>
+    </class>
+
+    <class name="bug_950" extends="TestCase">
+        <view name="tv" width="${height}" height="100" bgcolor="yellow"/>
+
+        <method name="testConstraint">
+          assertEquals(100, tv.width)
+          tv.setAttribute('height', 200);
+          assertEquals(200, tv.width);
+        </method>
+    </class>
+    
+    <class name="bug_967" extends="TestCase">
+        <view name="rsv" width="120" height="200" resource="../resources/swf/logo.swf"/>
+        <method name="testAssetSize">
+            assertFalse(rsv.width == rsv.resourcewidth)
+            assertFalse(rsv.height == rsv.resourceheight)
+        </method>
+    </class>
+    
+    <class name="mynode" extends="node"/>
+    <class name="bug_1000" extends="TestCase">
+        <mynode name="myinstance"/>
+
+        <method name="testNode">
+            assertTrue(myinstance instanceof mynode);
+            assertTrue(myinstance instanceof LzNode);
+            assertFalse(myinstance instanceof LzView);
+        </method>
+    </class>
+
+    <class name="bug_1032" extends="TestCase">
+        <method name="testCanvasBgColor">
+            assertEquals(canvas.bgcolor, 0xffffff);
+        </method>
+    </class>
+    
+    <dataset name="bug1046" src="http:foo.lzx?lzt=serverinfo" request="false"/>
+    <class name="bug_1046" extends="TestCase">
+    	<method name="testStart">
+            new LzDelegate(this, 'checkHeaders', canvas.datasets.bug1046, 'ondata')
+            canvas.datasets.bug1046.doRequest();
+        </method>
+        <method name="checkHeaders">
+        	assertEquals('', canvas.datasets.bug1046.getAllResponseHeaders().toString())
+        </method>
+    </class>
+    
+    <class name="bug_1062" extends="TestCase">
+        <view name="view1"/>
+        <view name="view2"
+            onfocus="trace = trace.concat('onfocus')"
+            onblur="trace = trace.concat('onblur')">
+            <attribute name="trace" value="[]"/>
+        </view>
+        <method name="assertArrayEquals" args="a, b">
+            if (a.length != b.length) return false;
+            for (var i in a)
+            if (a[i] != b[i])
+            return false;
+            return true;
+        </method>
+        <method name="testNode">
+            LzFocus.setFocus(view1)
+            LzFocus.setFocus(view2)
+            LzFocus.setFocus(view2)
+            LzFocus.setFocus(view2)
+            LzFocus.setFocus(view1)
+            assertArrayEquals(['onfocus', 'onblur'], view2.trace)
+        </method>
+    </class>
+    
+    <class name="bug_1134" extends="TestCase">
+    	<attribute name="setterCalled" value="false" />
+    	<attribute name="myattr" setter="this.myattr = myattr; 
+    		this.setterCalled = true;"/>
+    	<method name="testAttr">
+		  	assertSame((typeof(myattr) != "undefined"), setterCalled)
+    	</method>
+    </class>
+
+    <dataset name="bug1254">
+        <one/><two/><three/><four/><five/>
+    </dataset>
+    <class name="bug_1254" extends="TestCase">
+        <datapointer name="tempDP" xpath="bug1254:/"/>
+        <attribute name="foo" value="$path{'bug1254:/two[1]/@num'}"/>
+        <method name="testDPConstraint">
+            tempDP.setXPath('two[1]')
+            tempDP.setNodeAttribute('num', 50)
+            assertEquals(foo, 50)
+        </method>
+    </class>
+    
+    <dataset name="bug1267">
+		<item name="first">first item</item>
+		<item name="second">second item</item>
+		<item name="third">third item</item>
+	</dataset>
+	
+    <class name="bug_1267" extends="TestCase">
+		<text name="foo" fontsize="10" datapath="bug1267:/  item
+		[1]
+		/
+		text()"/>
+			
+		<datapointer name="dp" xpath="bug1267:/"/>
+			
+		<method name="testDPSeparators">
+			assertEquals('first item', foo.datapath.data)
+			dp.setXPath('bug1267:/ item  [2] /  @name')
+			assertEquals('second', dp.data)
+		</method>
+	</class>
+	
+    <class name="classWithText">
+        <text name="me">some text here</text>
+        <view bgcolor="yellow" width="20" height="${parent.me.height}"/>
+        <simplelayout axis="x"/>
+    </class>
+
+    <class name="bug_1304" extends="TestCase">
+        <classWithText name="goo"/>
+        <view name="bo0">
+            <text name="me">some text here</text>
+            <view bgcolor="yellow" width="20" height="${parent.me.height}"/>
+            <simplelayout axis="x"/>
+        </view>
+
+        <method name="testTextWidth">
+            assertEquals(bo0.me.width, goo.me.width, "Width");
+        </method> 
+    </class>
+    
+    <dataset name="bug1314">
+        <root>some text</root>
+    </dataset>
+    <class name="bug_1314" extends="TestCase">
+        <inputtext id="dv" datapath="bug1314:/root/text()"/>
+        
+        <method name="testDMap">
+            dv.updateData();
+            assertEquals(41 , bug1314.getPointer().serialize().length);
+        </method>
+    </class>
+    
+    <dataset name="bug1315" src="../resources/xml/http.xml" type="http" request="true" getresponseheaders="false"/>
+    <class name="bug_1315" extends="TestCase">
+        <method name="testRespHeaders">
+            assertEquals('', canvas.datasets.bug1315.getAllResponseHeaders().toString())
+        </method>
+    </class>
+
+    <dataset name="bug1374">
+        <top enabled="true">
+        	<item order="1"/>
+        	<item order="2"/>
+        </top>
+    </dataset>
+    <class name="bug_1374" extends="TestCase">
+        <datapointer name="tempDP" xpath="bug1374:/"/>
+        <method name="testRetValue">
+            assertTrue(tempDP.setXPath('top/@enabled'))
+            assertFalse(tempDP.setXPath('top/item[3]'))
+        </method>
+    </class>
+
+	<class name="bug_1383" extends="TestCase">
+		<method name="testNode">
+		  var node = new LzNode();
+		  assertTrue(node instanceof LzNode);
+		  assertFalse(node instanceof LzView);
+		</method>
+		<method name="testView">
+		  var view = new LzView();
+		  assertTrue(view instanceof LzNode);
+		  assertTrue(view instanceof LzView);
+		</method>
+	</class>
+    
+    <dataset name="bug1484">
+    	<level1 name="top">
+    		<level2>
+    			<level3>
+    				<level4 name="bottom"/>
+    			</level3>
+    		</level2>
+    	</level1>
+    </dataset>
+    <class name="bug_1484" extends="TestCase">
+    	<datapointer name="dp" xpath="bug1484:/level1/level2/level3/level4"/>
+    	<method name="testSelectParent">
+    		while (dp.selectParent()) {}
+    		assertEquals('bug1484', dp.getNodeName())
+		</method>
+	</class>
+
+    <dataset name="bug1485">
+        <root a="1">
+            <a a="2"> <b a="3"/> </a>
+            <b a="4"/>
+            <a a="5"> <b a="6"><c a="7"/></b> </a>
+        </root>
+    </dataset>
+    <class name="bug_1485" extends="TestCase">
+        <view datapath="bug1485:/root/a[1]" name="ppar">
+            <view datapath="b/@a" name="pokeme"/>
+        </view>
+        <method name="test1">
+            assertEquals( 3 , ppar.pokeme.data );
+            var tnode = bug1485.childNodes[0].childNodes[2];
+            var dp = new LzDatapointer( this , { p : tnode } );
+            ppar.datapath.setFromPointer( dp );
+            assertEquals( 6 , ppar.pokeme.data );
+        </method>
+    </class>
+
+	<dataset name="bug1553">
+    	<foo value="one" />
+    	<foo value="two" />
+    </dataset>
+    
+    <class name="bug_1553" extends="TestCase">
+      	<attribute name="index" value="1" />
+      	<datapath xpath="bug1553:/"/>
+    	<text name="txt" datapath="${'foo[' + parent.index + ']/@value'}"/>
+    	<method name="testDatapathConstr">
+    		this.setAttribute('index', 2)
+    		assertEquals('two', txt.text)
+		</method>
+	</class>
+	
+	<dataset name="bug1653" src="http:foo.lzx" request="false"/>
+	<class name="bug_1653" extends="TestCase">
+		<method name="testGetSrc">
+			assertEquals(bug1653.getSrc(), "http:foo.lzx")
+		</method>
+	</class>
+	
+    <class name="bug_1660" extends="TestCase">
+    	<simplelayout axis="y"/>
+    	
+    	<view/>
+    	<button/>
+    	<state apply="false"/>
+    	<animator start="false" attribute="height"/>
+   		<radiogroup>
+          <radiobutton value="1" text="one"/>
+          <radiobutton value="2" text="two" selected="true"/>    	
+        </radiogroup>
+        <text width="100"/>
+        
+        <method name="testSubviews">
+          assertEquals(4, this.subviews.length)
+		  for (var i in this.subviews) 
+		  {
+			var child = this.subviews[i];
+			assertTrue(child instanceof LzView);
+		  }
+        </method>
+    </class>
+	
+    <dataset name="bug1664">
+        <node attribute="foo">stuff</node>
+    </dataset>
+    
+    <class name="bug_1664" extends="TestCase">
+        <view datapath="bug1664:/node/text()">
+            <method name="applyData" args="d">
+                parent.appliedTermData = d
+            </method>
+            <method event="ondata" args="d">
+                parent.eventTermData = d
+            </method>
+        </view>
+        <view datapath="bug1664:/node/@attribute">
+            <method name="applyData" args="d">
+                parent.appliedData = d
+            </method>
+            <method event="ondata" args="d">
+                parent.eventData = d
+            </method>
+        </view>
+        <method name="testFoo">
+            assertEquals('foo', appliedData)
+            assertEquals('foo', eventData, 'data sent with event is incompatible type')
+        </method>
+        <method name="testStuff">
+            assertEquals('stuff', appliedTermData)
+            assertEquals('stuff', eventTermData, 'data sent with event is incompatible type')
+        </method>
+    </class>
+
+	<dataset name="bug1666">
+		<root>foo</root>
+	</dataset>
+	<class name="bug_1666" extends="TestCase">
+		<view width="10" height="10" y="300" bgcolor="teal" name="_v">
+			<datapath xpath="bug1666:/bad" oninit="this.setAttribute('datacontrolsvisibility', false)"/>
+		</view>
+		<method name="testDCV">
+			assertTrue(_v.visible)
+		</method>
+	</class>
+	
+	<class name="bug_1672" extends="TestCase">
+		<method name="testEmptyReturn">
+			if (!false) return
+			assertTrue(false)
+			debug.write('you should not see this line')
+		</method>
+	</class>
+
+	<class name="bug_1702" extends="TestCase">
+	
+		<view name="foo" width="50" height="100" bgcolor="blue"/>
+		<method name="testZeroDuration">
+			anim = foo.animate('rotation', 180, 0)
+			assertNull(anim, 'Animator with duration of 0 was created!')
+		</method>
+	</class>
+		
+    <dataset name="bug1718">
+        <foo value="1" />
+        <foo value="2" />
+    </dataset>
+    <class name="bug_1718" extends="TestCase">
+		<view name="replGuy" datapath="bug1718:/foo">
+			 <text datapath="@value" />
+		</view>
+		<simplelayout/>
+		<method name="testXPath">
+			assertEquals('bug1718:/foo', replGuy.xpath)
+		</method>
+	</class>
+	
+	<dataset name="bug1723">
+
+        <root>
+            <record>A</record>
+            <record>B</record>
+            <record>C</record>
+            <record>D</record>
+        </root>
+    </dataset>
+	<class name="bug_1723" extends="TestCase">
+		<view name="t" datapath="bug1723:/root/record[1]"/>
+		<method name="testDP">
+			t.datapath.selectNext()
+			t.datapath.selectNext()
+			assertEquals('C', t.datapath.getNodeText())
+			t.datapath.selectPrev()
+			assertEquals('B', t.datapath.getNodeText())
+		</method>
+	</class>
+
+	<class name="bug_1767" extends="TestCase">
+		<method event="onmouseover"/>
+		<method name="testClickable">
+			assertTrue(this.clickable)
+		</method>
+	</class>
+	
+	<dataset name="bug1809">
+		<root><child/></root>
+	</dataset>
+	<class name="bug_1809" extends="TestCase">
+		<datapointer name="bad" xpath="bug1809:/foo/root"/>
+		<method name="testBadDP">
+			assertUndefined(bad.serialize())
+		</method>
+	</class>
+
+    <class name="bug_1843" extends="TestCase">
+        <view name="cv" bgcolor="teal" width="100" height="50" clickable="true"/>
+        <method name="testClickability">
+            assertTrue(cv.getAttribute("clickable"))
+        </method>
+    </class>
+    
+    <class name="bug_1897" extends="TestCase">
+    	<datapointer name="dp" xpath=""/>
+    	
+    	<method name="testEmptyXPath">
+    		dp.setNodeAttribute("foo", "bar")
+    		assertEquals(0, dp.getNodeCount())
+    	</method>
+    </class>
+
+	<class name="bug_1899" extends="TestCase">
+		<method name="testUrlEscape">
+		<![CDATA[
+			var d = "A!@#$%^&*() c"; 
+			
+			assertEquals(d, LzBrowser.urlUnescape(LzBrowser.urlEscape(d)))
+		]]>
+		</method>
+	</class>
+
+	<class name="toggle"
+		bgcolor="${this.value == 1 ? 0x00ff00 : 0x0000ff}"
+		width="10" height="10">
+		<attribute name="value" value="1"/>
+		<attribute name="gotinit" value="false"/>
+
+		<method event="oninit">
+			this.gotinit = true;
+		</method>
+
+		<method name="applyData" args="d">
+			classroot.assertTrue(this.gotinit)
+			this.setAttribute('value', d);
+		</method>
+	</class>
+
+	<dataset name="localdata">
+		<value>0</value>
+		<value>1</value>
+	</dataset>
+
+	<dataset name="remotedata" type="http" src="../resources/xml/data.xml" request="true"/>
+
+	<class name="bug_2029" extends="TestCase">
+		<simplelayout/>
+		<attribute name="msg" value="''" when="once"/>
+		<attribute name="fdel"/>
+		<method name="fail" args="message">
+			
+			// All this fuss is to make the failures of this case added to the test progress display
+			var tr = parent.controlPanel.theTestResult
+			if (typeof(fdel) == "undefined") 
+			{
+				msg = message
+				fdel = new LzDelegate(this, "fail", tr, "oninit")
+				return
+			}
+			else delete fdel
+			
+			setResult(tr)
+			result.currentTest = "bug_2029"
+			super.fail(msg)
+		</method>
+		<toggle name="local" datapath="localdata:/value/text()"/>
+		<toggle name="remote" datapath="remotedata:/mydata/value/text()"/>
+	</class>
+	
+	<class name="bug_2113" extends="TestCase">
+		<view name="lview" resource="http:../resources/swf/logo.swf"/>
+		<method name="testUnload">
+			lview.unload()
+			assertEquals(0, lview.loadratio)
+		</method>
+	</class>
+
+	<class name="bug_2125" extends="TestCase">
+		<view name="lview"/>
+		<method name="testSrc">
+			lview.setSource('http:../resources/swf/logo.swf')
+			assertNotUndefined(lview.getAttribute('resource'), 'Source attribute undefined!')
+		</method>
+	</class>
+	
+    <class name="bug_2131"  extends="TestCase">
+        <method event="onfxindent">
+            assertTrue(1 > 0)
+        </method>
+        
+        <method name="testStateAttr">
+        	mys.apply()
+        </method>
+
+        <state name="mys">
+            <attribute name="bgcolor" value="0xBB8825" />
+            <attribute name="fxindent" value="10" />
+        </state>
+    </class>
+	
+
+	<class name="bug_2223" extends="TestCase">
+		<view name="theview" bgcolor="red" height="20" width="20">
+			<animator name="theanim" attribute="width" duration="1000" to="300"
+			start="false"/> 
+		</view>
+
+		<method name="testAnimDelete">
+			theview.theanim.destroy()
+			assertEquals("undefined", typeof(theview.theanim))
+		</method>
+	</class>
+	
+	<class name="bug_2225" extends="TestCase">
+		<text name="txt_field" resize="true" height="15"/>
+		<inputtext name="inp_field" resize="true" height="15"/>
+		
+		<method name="testText">
+			txt_field.setText(343926)
+			assertNotNull(txt_field.getText())
+		</method>
+
+		<method name="testInputText">
+			inp_field.setText(5671)
+			assertNotNull(inp_field.getText())
+		</method>
+	</class>
+	
+    <dataset name="bug2239">
+        <item>first item from dataset</item>
+        <item>second item from dataset</item>
+        <item>third item from dataset</item>
+    </dataset>
+    
+    <class name="bug_2239" extends="TestCase">
+        <constantlayout axis="x" value="10"/>
+        <simplelayout spacing="5"/>
+        <inputtext datapath="bug2239:/item/text()" name="tbox" width="200"/>
+        <method name="testWidth">
+        	assertEquals(200, tbox.getCloneNumber(0).getAttribute('width'))
+        </method>
+    </class>
+    
+	<dataset name="bug2263">
+        <record a="fl'll" b="dkd&quot;kddk" />
+    </dataset>
+	<class name="bug_2263" extends="TestCase">
+		<method name="testSerialize">
+		<![CDATA[
+			assertEquals('<bug2263><record a="fl&apos;ll" b="dkd&quot;kddk"/></bug2263>', bug2263.serialize())
+		]]>
+		</method>
+	</class>
+	
+	<class name="bug_3005" extends="TestCase">
+		<view name="sv" initstage="late">
+			<datapath pooling="true" xpath="bug3069:/line"/>
+		</view>
+		<method name="testOrder">
+			var n = sv.clones.length
+			var dp = bug3069.getPointer()
+			
+			for (var i = 1; i &lt;= n; ++i)
+				assertEquals(i, dp.xpathQuery('line[' + i + ']/text()'))
+		</method>
+	</class>
+			
+	<dataset name="bug3036">
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+        <m f="Aaaa" s="Ppppp" d="gggg"/>
+	</dataset>
+	
+	<class name="bug_3036" extends="TestCase">
+		<view name="frame" clip="true" height="100">
+			<view name="outer" datapath="bug3036:/" height="200">
+				<view name="entry" height="20" width="100">
+					<attribute name="pos" value="$path{'position()'}"/>
+					<datapath xpath="m" replication="lazy"/>
+				</view>
+			</view>
+		</view>
+		
+		<method name="testLazyRepl">
+			var n = frame.outer.entry.clones.length
+			for (var i = 0; i &lt; n; ++i)
+				assertEquals(i + 1, frame.outer.entry.clones[i].pos)
+		</method>
+	</class>
+	
+	<dataset name="bug3069">
+		<line string="one">1</line>
+		<line string="two">2</line>
+		<line string="three">3</line>
+		<line string="four">4</line>
+	</dataset>
+	
+	<class name="bug_3069" extends="TestCase">
+		<view name="v0" datapath="bug3069:/line/text()">
+			<attribute name="num" value="$path{'last()'}"/>
+		</view>
+		
+		<method name="testXpathQuery">
+			assertEquals(v0.clones.length, this.subviews[0].datapath.xpathQuery('last()'))
+			assertEquals(v0.clones.length, this.subviews[0].num)
+		</method>
+	</class>
+	
+	<class name="bug_3071" extends="TestCase">
+		<view name="inside"/>
+		
+		<method name="testMethodContext">
+			assertNotUndefined(inside.onwidth)
+		</method>
+		
+		<method event="onwidth" reference="inside"/>
+	</class>
+
+   	<dataset name="bug3285">
+        <datanode dataone="1" datatwo="2"/>
+    </dataset>
+
+    <class name="bug_3285" extends="TestCase">
+        <attribute name="someval" value="9"/>
+        <node name="dmap" datapath="bug3285:/datanode">
+            <attribute name="attroneplusone" value="${ Number(attrone) + 1 }"/>
+            <attribute name="attrone" value="null"/>
+
+            <attribute name="datamapped" value="false"/>
+
+            <state apply="${parent.datamapped}">
+                <attribute name="attrone" value="$path{ '@dataone' }"/>
+            </state>
+
+            <state apply="${!parent.datamapped}">
+                <attribute name="attrone" value="${parent.someval}"/>
+            </state>
+
+            <attribute name="attrtwo" value="$path{ '@datatwo' }"/>
+        </node>
+        <method name="test1">
+            assertTrue( true );
+            assertEquals( dmap.attrone , 9 );
+            assertEquals( dmap.attrtwo , 2 );
+            assertEquals( dmap.attroneplusone , 10 );
+
+            //change the data
+            bug3285.getFirstChild().setAttr( 'dataone', 11 );
+            bug3285.getFirstChild().setAttr( 'datatwo', 22 );
+
+            assertEquals( dmap.attrone , 9 );
+            assertEquals( dmap.attrtwo , 22 );
+            assertEquals( dmap.attroneplusone , 10 );
+
+            this.setAttribute( 'someval', 99 );
+            assertEquals( dmap.attrone , 99 );
+            assertEquals( dmap.attrtwo , 22 );
+            assertEquals( dmap.attroneplusone , 100 );
+
+            //change the state
+            dmap.setAttribute( 'datamapped' , true );
+
+            assertEquals( dmap.attrone , 11 );
+            assertEquals( dmap.attrtwo , 22 );
+            assertEquals( dmap.attroneplusone , 12 );
+
+            //change the data
+            bug3285.getFirstChild().setAttr( 'dataone', 1 );
+            bug3285.getFirstChild().setAttr( 'datatwo', 2 );
+
+            assertEquals( dmap.attrone , 1 );
+            assertEquals( dmap.attrtwo , 2 );
+            assertEquals( dmap.attroneplusone , 2 );
+
+            this.setAttribute( 'someval', 9 );
+            assertEquals( dmap.attrone , 1 );
+            assertEquals( dmap.attrtwo , 2 );
+            assertEquals( dmap.attroneplusone , 2 );
+
+            dmap.setAttribute( 'datamapped' , false );
+
+            assertEquals( dmap.attrone , 9 );
+            assertEquals( dmap.attrtwo , 2 );
+            assertEquals( dmap.attroneplusone , 10 );
+
+            //change the data
+            bug3285.getFirstChild().setAttr( 'dataone', 11 );
+            bug3285.getFirstChild().setAttr( 'datatwo', 22 );
+
+            assertEquals( dmap.attrone , 9 );
+            assertEquals( dmap.attrtwo , 22 );
+            assertEquals( dmap.attroneplusone , 10 );
+
+
+        </method>
+    </class>
+
+    <dataset name="bug3435">
+      <mynode id="1">      
+         <mynode id="2" value="two"/>
+         <mynode id="3">
+            <mynode id="4"/>
+         </mynode>         
+      </mynode>
+    </dataset>
+	
+
+	<class name="bug_3435" extends="TestCase">
+		<method name="testAddNode">
+       		var dpSource = bug3435.getPointer();
+			dpSource.selectChild(2);
+			dpSource.selectNext(2);
+			var dpTarget = bug3435.getPointer();
+			dpTarget.selectChild(1);
+
+			var dpNewNode = dpTarget.addNodeFromPointer(dpSource);
+			
+	        var dpCheck = bug3435.getPointer();
+         	dpCheck.selectChild(2);
+	        dpCheck.selectNext(2);
+
+			assertEquals(dpNewNode.p.serialize(), dpCheck.serialize())
+			assertEquals('two', dpNewNode.xpathQuery('@value'))
+		</method>
+	</class>
+
+	<class name="bug_3452" extends="TestCase">
+		<view name="repl" datapath="bug3069:/line"/>
+
+		<method name="testCloneDatapath">
+			assertNotUndefined(repl.clones[ 0 ].datapath);
+			assertEquals ( repl.datapath.xpath, repl.clones[ 0 ].datapath.xpath );
+		</method>
+	</class>
+
+    <dataset name="bug3474">
+        <root>
+            <record/>
+            <record/>
+            <record/>
+            <record/>
+            <record/>
+        </root>
+    </dataset>
+
+    <class name="bug_3474" extends="TestCase">
+
+        <method name="testIt">
+            <![CDATA[ 
+            var chil = bug3474.getFirstChild().childNodes;
+
+            for ( var i = 0; i < repl.clones.length; i++ ){
+                var cl = repl.clones[ i ];
+                assertEquals( cl.data, chil[ i ] );
+                assertEquals( i+1 , cl.pos.data );
+                assertEquals( chil.length , cl.len.data ); 
+            }
+            ]]>
+        </method>
+
+        <view name="repl" datapath="bug3474:/root/*">
+            <view name="pos" datapath="position()" />
+            <view name="len" datapath="last()"/>
+        </view>
+    </class>
+	
+</library>

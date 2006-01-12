@@ -1,0 +1,85 @@
+<canvas debug="true">
+
+    <debug y="100" x="140" />
+
+    <text><b>Test .NET QuickStart MathService using LZX Web Services</b></text>
+    <checkbox id="usescriptapi">Use script API</checkbox>
+    <view layout="axis: x" ><text y="3">a:</text><edittext id="a" text="10"/></view>
+    <view layout="axis: x" ><text y="3">b:</text><edittext id="b" text="2" /></view>
+    <view layout="axis: x" ><text>result:</text><text id="result"/></view>
+    <simplelayout spacing="10" />
+
+    <class name="myremotecall" extends="remotecall">
+        <param value="${maths.makedoc(this.parent.funcname, a.text, b.text)}" />
+        <method event="ondata" args="value">
+            Debug.write(this.funcname, ": ", value);
+            result.setText(value);
+        </method>
+    </class>
+
+    <soap name="maths" 
+          wsdl="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/mathservice/cs/mathservice.asmx?WSDL">
+
+        <attribute name="loaded" type="boolean" value="false" />
+
+        <!-- Method to make a document for SOAP message requests -->
+        <method name="makedoc" args="func, av, bv"><![CDATA[
+            var s =  '<' + func + ' xmlns="' + 'http://tempuri.org/' + '" >' + 
+                               '<a>' + av + '</a>' + 
+                               '<b>' + bv + '</b>' + 
+                   '</' + func + '>';
+            Debug.write(s);
+            return s;
+        ]]></method>
+       
+        <method event="onload">
+            Debug.write(this.name + ' loaded');
+            this.loaded = true;
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+
+        <method event="ontimeout" args="error">
+            Debug.write('timeout:', error);
+        </method>
+
+        <myremotecall funcname="Add" />
+        <myremotecall funcname="Subtract" />
+        <myremotecall funcname="Multiply" />
+        <myremotecall funcname="Divide" />
+    </soap>
+
+    <text>Click list to test</text>
+    <list name="op" >
+        <textlistitem selected="true">Multiply</textlistitem>
+        <textlistitem>Add</textlistitem>
+        <textlistitem>Subtract</textlistitem>
+        <textlistitem>Divide</textlistitem>
+
+        <method event="onselect"><![CDATA[
+            if (!canvas.maths.loaded) return;
+            var del = new LzDelegate(this, 'handler');
+            if (this.value != null) {
+                var s = canvas.maths.makedoc(this.value, a.text, b.text); 
+                if (usescriptapi.getValue()) {
+                    canvas.maths.proxy[this.value]([s], del);
+                } else {
+                    canvas.maths[this.value].invoke();
+                }
+            }
+        ]]></method>
+
+        <method name="handler" args="d">
+            Debug.write('handle ', d);
+            result.setText(d.data);
+        </method>
+
+    </list>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

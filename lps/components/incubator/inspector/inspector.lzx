@@ -1,0 +1,167 @@
+<library>
+    <include href="colormenu.lzx"/>
+    <colormenu id="inspectorcolormenu">
+        <method name="setnewcolor" args="c">
+            owner.setnewcolor(c);
+        </method>
+    </colormenu>
+
+    <class name="colorbox" width="12" height="12"
+        bgcolor="${color == null ? 0xeaeaea : 0x000000}">
+        <attribute name="obj" value="null" when="always"/>
+<!--        <attribute name="color" value="${obj == null ? null : obj.bgcolor}"/>-->
+        <attribute name="color" value="null"/>
+        <method event="onobj">
+            new LzDelegate(this, 'updatecolor', obj, 'onbgcolor');
+            updatecolor();
+        </method>
+        <method name="updatecolor">
+            setAttribute('color', this.obj.bgcolor);
+        </method>
+
+        <method name="setnewcolor" args="c">
+            this.obj.setBGColor(c);
+            // updatecolor was getting white when color == null ???
+            setAttribute('color', c);
+        </method>
+
+        <view x="1" y="1" width="10" height="10" bgcolor="${parent.color}"
+            onmousedown="inspectorcolormenu.open(parent)"
+            onmouseup="inspectorcolormenu.close()">
+        </view>
+    </class>
+
+    <class name="toggletext" clickable='${!this.editing}'>
+        <attribute name="text" type="text"/>
+        <attribute name="editing" value="false"/>
+        <method event="onclick">
+            setAttribute('editing', true);
+            LzFocus.setFocus(editbox);
+        </method>
+        <text visible="${!parent.editing}" resize="true" name="t"
+              y="$once{ parent.height /2 - this.height/2}"
+              text="${parent.text}"/>
+
+        <state apply="${parent.editing}" pooling="true"
+               onapply="parent.editbox.setText(parent.text)"
+               onremove="parent.setAttribute('text', parent.editbox.getText())">
+            <edittext name="editbox" width="${parent.t.width + 10}">
+                <method name="init">
+                    this.globalMouseDel = new LzDelegate( this,
+                                                          "checkMouse" );
+                    super.init();
+                </method>
+                <method event="onfocus">
+                    this.globalMouseDel.register( LzGlobalMouse,
+                                                  "onmousedown" );
+                </method>
+                <method event="onblur">
+                    parent.setAttribute( 'editing' , false );
+                </method>
+                <method name="checkMouse" args="who">
+                    if ( !this.containsPt( this.getMouse( 'x' ) ,
+                                          this.getMouse( 'y' ) ) ){
+                        parent.setAttribute( 'editing' ,false );
+                    }
+                </method>
+                <method event="onkeyup" args="k">
+                    if ( k == 13 ){
+                        parent.setAttribute( "editing" , false );
+                    }
+                </method>
+            </edittext>
+        </state>
+    </class>
+
+    <class name="propedit" extends="toggletext">
+        <attribute name="obj" value="null" when="once"/>
+        <attribute name="prop" value="" type="string"/>
+        <attribute name="isnumber" value="true"/>
+        <method event="onediting">
+            if (this.editing == false) {
+                if (this.isnumber) this.obj.setAttribute(prop, Number(text));
+                else this.obj.setAttribute(prop, text);
+            }
+        </method>
+    </class>
+
+    <class name="item" x="10">
+        <attribute name="reference" when="always"/>
+        <attribute name="root" when="once" value="this"/>
+        <attribute name="open" value="false"/>
+        <attribute name="opendefaultplacement" value="true"/>
+        <attribute name="showcomponenthelpers" value="false"/>
+        <simplelayout/>
+        <view layout="axis:x; spacing:4">
+            <text text="..." onclick="debug.write(classroot.reference)"/>
+            <text text="${classroot.reference.visible ? 'o ' : 'x '}" resize="true"
+                onclick="classroot.reference.setVisible(!classroot.reference.visible)"/>
+            <text text="${classroot.reference.name == null ?
+                    classroot.reference.classname : classroot.reference.name}"
+                onclick="classroot.toggle()"
+                onmouseover="parent.setBGColor(0xddddff)"
+                onmouseout="parent.setBGColor(null)"/>
+            <state apply="${classroot.reference instanceof LzView}">
+                <colorbox y="1" obj="classroot.reference"/>
+                <propedit text="${classroot.reference.x}" obj="classroot.reference" prop="x"/>
+                <propedit text="${classroot.reference.y}" obj="classroot.reference" prop="y"/>
+                <propedit text="${classroot.reference.width}" obj="classroot.reference" prop="width"/>
+                <propedit text="${classroot.reference.height}" obj="classroot.reference" prop="height"/>
+            </state>
+        </view>
+        <view name="children" layout="class:simplelayout"/>
+        <method name="toggle"> <![CDATA[
+            if (!open) {
+                var nodes = this.reference.subnodes;
+
+                if (this.root.opendefaultplacement) {
+                     if (this.reference.defaultplacement != null) {
+                        var defplace = this.reference.searchSubnodes( "name" , this.reference.defaultplacement );
+                        nodes = defplace.subnodes;
+                    }
+                }
+                for (var i in nodes) {
+                    var show = true;
+                    if (this.reference == canvas && !this.showcomponenthelpers) {
+                       switch (nodes[i].classname) {
+                        case '_componentmanager':
+                        case 'style':
+                        case 'focusoverlay':
+                        case 'debugwindow':
+                        case 'inspector':
+                        case 'colormenu':
+                            show = false;
+                       }
+                    }
+                    if (show) new item(this.children, {reference: nodes[i], root:this.root});
+                }
+                setAttribute('open', true);
+            } else {
+                for (var i in this.children.subviews) {
+                    this.children.subviews[i].destroy();
+                }
+                setAttribute('open', false);
+            }
+        ]]>
+        </method>
+    </class>
+
+    <class name="inspector" extends="window"
+        title="Inspector" x="$once{canvas.width-this.width}"
+        width="340" height="200" resizable="true">
+        <view width="100%" height="${immediateparent.height-parent.settings.height}" clip="true">
+            <!-- item is the root node, it exands as you drill down -->
+            <item name="it" reference="canvas"
+                showcomponenthelpers="${classroot.settings.componenthelpers.value}"
+                opendefaultplacement="${classroot.settings.dp.value}"/>
+            <vscrollbar/>
+        </view>
+        <view name="settings" valign="bottom" layout="axis:y" bgcolor="0xeaeaea" width="100%">
+            <checkbox name="dp" value="true">open defaultplacement view</checkbox>
+            <checkbox name="componenthelpers" value="false">when opening canvas, show all component helpers</checkbox>
+        </view>
+    </class>
+
+    <inspector id="i"/>
+
+</library>

@@ -1,0 +1,108 @@
+/* *****************************************************************************
+ *
+ * LPSTestServices.java
+ *
+ * Test service for SOAP rpc calls
+ *
+ * ****************************************************************************/
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+
+/* Copy this to LPSTest.jws in the axis server directory, to enable it as a SOAP
+ * service.
+ */
+
+import java.util.*;
+
+/**
+ * @author Henry Minsky
+ */
+public class LPSTest {
+
+    public String version() {
+        return( "LPS-SOAP service test v 0.1" );
+    }
+    
+    public boolean boolean_boolean (boolean n) {
+        return !n;
+    }
+
+    public int int_int (int n) {
+        return n+n;
+    }
+
+    public float int_float (int n) {
+        return ((float) n);
+    }
+
+    public double int_double (int n) {
+        return ((double) n);
+    }
+
+    public float float_float (float n) {
+        return ((float) n);
+    }
+
+    public double double_double (double n) {
+        return  n;
+    }
+
+
+    public Object[] objects (String str) {
+        Vector l = new Vector();
+        for (int i = 0; i < 10; i++) {
+            l.add(str);
+        }
+        return l.toArray();
+    }
+
+    /* Return n copies of a string, as an array */
+    public String[] strings (String str, int n) {
+        String out[] = new String[n];
+        for (int i = 0; i < n; i++) {
+            out[i] = str;
+        }
+        return out;
+    }
+
+    public String reverse (String str) {
+        StringBuffer buf = new StringBuffer();
+        for (int i = str.length()-1; i >= 0; i--) {
+            buf.append(str.charAt(i));
+        }
+        return buf.toString();
+    }
+
+    public void void_void () { }
+
+    /*
+      public MyData struct1 (int n) {
+        MyData val = new MyData();
+        val.m = n;
+        return val;
+    }
+
+
+    public MyData[] struct2 (int n) {
+        MyData val = new MyData();
+        val.m = 4096;
+        MyData vals[] = new MyData[n];
+        return vals;
+    }
+
+    */
+
+}
+
+
+
+class MyData {
+    String id = "Foobar.";
+    int n = 259;
+    int m = 0;    
+    double k = 259.0;
+    String[] strs = {"foo", "bar", "baz", "bleh"};
+}

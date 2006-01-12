@@ -1,0 +1,9 @@
+<canvas debug="true">
+    <text>
+        Each BlogBox is powered by the Laszlo Presentation Server, and written using Laszlo’s rapid declarative XML development approach.   All application code is viewable and open source.  
+    </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

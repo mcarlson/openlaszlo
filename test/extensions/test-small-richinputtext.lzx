@@ -1,0 +1,151 @@
+<canvas debug="true" width="600" height="600">
+    <include href="lzunit"/>
+    <include href="/extensions/views/richinputtext.lzx" />
+    <include href="/extensions/views/LzTextFormat.lzx" />
+
+
+    <window y="0" width="${canvas.width-40}" resizable="true" height="200">
+    <simplelayout axis="y" />
+    <button onclick="rich.artDeco()">art deco</button>
+    <button onclick="rich.soSerify()">serify</button>
+    <button onclick="rich.defuseBomb()">defuse bomb</button>
+    <button onclick="rich.bestGuess()">best guess</button>
+    <button onclick="rich.pratfall()">pratfall</button>
+    <button onclick="rich.headphones()">headphones</button>
+    <button onclick="rich.goowy()">goowy</button>
+    <button onclick="rich.spacer()">spacer</button>
+
+    <richinputtext id="rich" 
+        width="${parent.width-40}" height="${parent.height-40}" 
+        multiline="true"
+        text="01234567890123456788901" >        
+        <method name="artDeco">
+        
+            Debug.write("art deco."); 
+            var tf = new LzTextFormat();
+            tf.font = "Futura";
+            tf.color = 0xAACC44; 
+            tf.size = 32;
+            
+            this.setTextFormat(tf, 5, 9);         
+        </method>
+        <method name="soSerify">
+            Debug.write("soSerify"); 
+
+            var tf = new LzTextFormat();
+            tf.color = blue; 
+            tf.italic = true;
+            tf.font = 'Courier'; 
+            this.setDefaultFormat(tf); 
+        </method>
+
+        <method name="defuseBomb">
+            Debug.write("defuseBomb"); 
+
+            var tf = new LzTextFormat();
+            tf.color = green; 
+            tf.bold = true;
+            tf.font = 'Monaco'; 
+            this.setDefaultFormat(tf);
+            
+            this.setSelection(11, 11);
+        </method>
+
+        <method name="bestGuess">
+            Debug.write("bestGuess"); 
+
+            var tf = new LzTextFormat();
+            tf.color = 0x3399FF; 
+            tf.underline = true;
+            tf.font = 'Arial'; 
+            
+            this.setDefaultFormat(tf);            
+            this.setSelection(this.getText().length, this.getText().length);
+            // User typing now will be blue and at the end of the field
+        </method>
+
+        <method name="pratfall">
+            Debug.write("pratfall"); 
+
+            var tf = new LzTextFormat();
+            tf.color = 0xFF9933; ; 
+            tf.italic = true;s
+            tf.font = 'Times'; 
+            
+
+            this.setDefaultFormat(tf);
+            // HERE'S THE FLASH BUG. 
+            // The user will type and ONLY THE FIRST CHAR will be orange. 
+            
+            this.setSelection(3,3);
+
+        </method>
+
+        <method name="headphones">
+            Debug.write("headphones"); 
+
+            var tf = new LzTextFormat();
+            tf.color = 0xFF3399; ; 
+            tf.italic = true;
+            tf.font = 'Times'; 
+            
+            this.setSelection(11,11);
+
+            this.setDefaultFormat(tf);
+            // HERE'S THE FLASH BUG. 
+            // The user will type and ONLY THE FIRST CHAR will be orange. 
+        </method>
+
+        <method name="goowy">
+            Debug.write("goowy"); 
+
+            var tf = new LzTextFormat();
+            tf.color = 0xFF3399; ; 
+            tf.italic = true;
+            tf.font = 'Times'; 
+            
+            // Set the format of the character *after* the insertion point
+            // to the desired format. 
+            this.setTextFormat(tf, 6, 7); 
+            this.setSelection(6, 6);
+        </method>
+
+        <method name="spacer">
+            Debug.write("spacer"); 
+
+            var tf = new LzTextFormat();
+            tf.color = 0xFF3399;  
+            tf.italic = true;
+            tf.font = 'Times'; 
+            
+            var insertion = 9 
+            var txt = this.getText(); 
+            var firstpart = txt.substr(0, insertion); 
+            var secondpart = txt.substr(insertion); 
+            
+            // todo: if there's already a space there, don't add a space. 
+            
+            var newtxt = firstpart + " " + secondpart; 
+            this.setText(newtxt); 
+            
+            this.setTextFormat(tf, insertion, insertion + 1); 
+            this.setSelection(insertion, insertion); 
+        </method>
+
+
+        
+    <method name="bigAndSans">
+        rich.setTextFormat(tf, 0, 300);  
+    </method> 
+    
+    <method name="blueAndItalic">
+    </method>    
+        
+    </richinputtext>
+    </window>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

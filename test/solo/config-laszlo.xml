@@ -1,0 +1,63 @@
+<!-- 
+ RWM configuration file
+
+ Copyright (c) 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.
+ -->
+<config>
+    <!--================================================================================-->
+    <!-- This config is for internal laszlo development, to be used by main-laszlo.lzx. -->
+    <!--================================================================================-->
+
+    <api-urls
+        auth="../lzauthentication"
+        mail="../lzmail"
+        pref="../lzpreferences"
+        contacts="../lzcontacts"
+    />
+
+    <prefetch
+        max-startup="8"
+    />
+
+    <constants
+        max-signatures="5"
+    />
+        
+    <misc-urls
+        forgot-password="http://FIXME_FORGOT_PASSWORD"
+        supported-domains="http://FIXME_SUPPORTED_DOMAINS"
+        get-more-space="http://FIXME_GET_MORE_SPACE"
+        help="http://FIXME_HELP"
+        laszlo="http://www.laszlosystems.com/"
+        feedback="http://FIXME_FEEDBACK"
+    />
+
+    <dev-features
+        enable-other-hosts="true"
+        enable-pw-shortcut="true"
+        enable-url-login="true"
+    />
+
+    <!-- The order of the folders in this element is significant. -->
+    <special-folders>
+        <folder name="INBOX" candragfolderto="true" candrag="false" inbox="true" selectfirst="true"
+            iconpath="resources/icons/inbox.swf;resources/icons/inbox_newmail.swf"/>
+        <folder name="Drafts" candragfolderto="false" candrag="false" draft="true"
+            iconpath="resources/icons/maildrafts.swf" />
+        <folder name="Sent" candragfolderto="false" candrag="false" sent="true"
+            iconpath="resources/icons/sent.swf" />
+        <folder name="Trash" candragfolderto="true" candrag="false" trash="true"
+            iconpath="resources/icons/trash.swf" />
+        <folder name="Suspect Email" candragfolderto="false" candrag="false"
+            group="Spam" suspect="true"
+            iconpath="resources/icons/suspectmail.swf" />
+        <folder name="Known spam" candragfolderto="false" candrag="false"
+            group="Spam" spam="true"
+            iconpath="resources/icons/knownspam.swf" />
+        <!-- Just used to store name for now -->
+        <folder name="search$results$folder" candragfolderto="false" 
+            candrag="false" search="true"
+            iconpath="../lzmodules/mail/mailresources/folder/icon_folder_search_results.png" />
+    </special-folders>
+
+</config>

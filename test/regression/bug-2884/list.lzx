@@ -1,0 +1,42 @@
+<canvas width="800">
+    <view x="15" y="15">
+        <simplelayout axis="x" spacing="10" />
+
+        <list id="l1" initstage="late" multiselect="true" width="130" 
+              shownitems="5">
+            <textlistitem name="one" text="list late" value="1" />
+            <textlistitem name="two" text="two" value="2" />
+            <textlistitem name="three" text="three" value="3" />
+            <textlistitem name="four" text="four" value="4" />
+        </list>
+
+        <list id="l2" multiselect="true" width="130" 
+              shownitems="5">
+            <textlistitem name="one" initstage="late" text="textlistitem late" value="1" />
+            <textlistitem name="two" initstage="late" text="two" value="2" />
+            <textlistitem name="three" initstage="late" text="three" value="3" />
+            <textlistitem name="four" initstage="late" text="four" value="4" />
+        </list>
+
+        <list id="l3" initstage="late" multiselect="true" width="130" 
+              shownitems="5">
+            <textlistitem name="one" initstage="late" text="all late" value="1" />
+            <textlistitem name="two" initstage="late" text="two" value="2" />
+            <textlistitem name="three" initstage="late" text="three" value="3" />
+            <textlistitem name="four" initstage="late" text="four" value="4" />
+        </list>
+
+        <list id="l4" multiselect="true" width="130" 
+              shownitems="5">
+            <textlistitem name="one" text="2 and 4 late" value="1" />
+            <textlistitem name="two" initstage="late" text="two" value="2" />
+            <textlistitem name="three" text="three" value="3" />
+            <textlistitem name="four" initstage="late" text="four" value="4" />
+        </list>
+
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

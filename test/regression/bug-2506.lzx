@@ -1,0 +1,70 @@
+<canvas bgcolor="silver" width="800" height="600">
+    <debug x="250"/>
+    <include href="/lz/library.lzx"/>
+
+    <dataset name="process" type="http"
+        src="http:../data/echo.jsp"/>
+        
+    <dataset name="age">
+    	<group>under 18</group>
+    	<group>18-29</group>
+    	<group>30-45</group>
+    	<group>46-65</group>
+    	<group>over 65</group>
+    </dataset>
+    
+    <dataset name="tz">
+		<zone>Pacific</zone>
+		<zone>Mountain</zone>
+		<zone>Central</zone>
+		<zone>Eastern</zone>
+	</dataset>
+    
+    <form bgcolor="teal" id="reg">
+        <submit name="vote" data="${process}"/>
+        
+        <statictext>First name</statictext>
+        <edittext name="fn" width="200"/>
+
+        <statictext>Last name</statictext>
+        <edittext name="ln" width="200"/>
+        
+        <statictext>Email address</statictext>
+        <edittext name="email" width="200"/>
+        
+        <statictext>What timezone do you live in?</statictext>
+        <radiogroup name="location" width="100">
+        	<radiobutton datapath="tz:/zone/text()"/>
+        </radiogroup>
+        <statictext>Your age category:</statictext>
+        <combobox  name="age_sel"
+                   x="5" y="5"
+                   width="100"  shownitems="3"
+                   defaulttext="choose one..."
+                   editable="false">
+            <textlistitem datapath="age:/group/text()" />
+        </combobox>
+        <edittext name="itext" height="85" width="300" multiline="true">your text here</edittext>
+
+        <checkbox name="gotcha" value="true">Please send me your spam</checkbox>
+
+        <button isdefault="true" width="100" height="30"
+            onclick="parent.vote.submit()">Register</button>
+    </form>
+
+   	<view>
+		<statictext>Query results</statictext>
+
+		<view width="200" height="150" clip="true" bgcolor="0xeeeeee">
+			<text fontsize="10" selectable="true" name="results" 
+				datapath="process:/echo/text()" multiline="true" width="${parent.height}"/>
+			<scrollbar/>
+		</view>
+		<simplelayout spacing="10"/>
+    </view>
+    <simplelayout spacing="10"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

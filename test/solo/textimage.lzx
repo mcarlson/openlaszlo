@@ -1,0 +1,15 @@
+<canvas proxied="false">
+  <dataset name="ds" src="http:../resources/xml/textimage.xml" request="true"/>
+
+  <view name="fooText" datapath="ds:/data/message[1]">
+    <text datapath="text()"  resize="true" multiline="true" width="640" height="480">
+  </text>
+  </view>
+  <button y="200">Swap Text
+    <attribute name="ind" value="$once{1}"/>
+    <method event="onclick">
+      if (++ind == 3) ind = 1
+      parent.fooText.setDatapath('ds:/data/message['+ind+']')
+    </method>
+  </button>
+</canvas>

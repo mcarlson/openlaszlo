@@ -1,0 +1,21 @@
+<canvas debug="true" height="350" width="100%"  bgcolor="yellow" >
+<simplelayout axis="x" spacing="10"/>
+<text>Parent</text>
+
+<view aaname="True" focusable="true" height="50" width="250" bgcolor="red" oninit="this.setAAActive(true)">
+<text>LzBrowser.isAAActive toggled to true</text>
+<method event="onfocus">
+   Debug.write("Should be true/true");
+   Debug.write( 'browser:'+LzBrowser.isAAActive());
+   Debug.write( 'view:'+this.aaactive);
+</method>
+</view>
+<view aaname="False" focusable="true" height="50" width="250" bgcolor="red" oninit="this.setAAActive(false)">
+<text>LzBrowser.isAAActive toggled to false</text>
+<method event="onfocus">
+   Debug.write("Should be true/false");
+   Debug.write( 'browser:'+LzBrowser.isAAActive());
+   Debug.write( 'view:'+this.aaactive);
+</method>
+</view>
+</canvas>

@@ -1,0 +1,81 @@
+<vcalendar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year2003>
+        <month5>
+            <day1>
+                <event>
+                   <summary value="Company Meeting"/>
+                   <comment value="Discuss Project Schedules."/>
+                   <start year="2003" month="5" day="1" hour="9"/>
+                   <end year="2003" month="5" day="1" hour="10"/>
+                </event>
+                 <event>
+                   <summary value="Long Lunch"/>
+                   <comment value="Birthday Celebration"/>
+                   <start year="2003" month="5" day="1" hour="1"/>
+                   <end year="2003" month="5" day="1" hour="3"/>
+                </event>
+            </day1>
+            <day5>
+                <event>
+                   <summary value="Cinco de Mayo"/>
+                   <comment value="Cinco de Mayo"/>
+                   <start year="2003" month="5" day="5" hour="9"/>
+                   <end year="2003" month="5" day="5" hour="11"/>
+                   <category value="holiday"/>
+                </event>
+            </day5>
+            <day11>
+                <event>
+                   <summary value="Mother's Day"/>
+                   <comment value="Mother's Day"/>
+                   <start year="2003" month="5" day="11" hour="9"/>
+                   <end year="2003" month="5" day="11" hour="16"/>
+                   <category value="holiday"/>
+                </event>
+                <event>
+                   <summary value="Lunch at Eliza's"/>
+                   <comment value="Take Mom to Eliza's"/>
+                   <start year="2003" month="5" day="11" hour="2"/>
+                   <end year="2003" month="5" day="11" hour="4"/>
+                   <category value="holiday"/>
+                </event>
+            </day11>
+            <day21>
+                <event>
+                   <summary value="Victoria Day"/>
+                   <comment value="Victoria Day, Canada"/>
+                   <start year="2003" month="5" day="19" hour="9"/>
+                   <end year="2003" month="5" day="21" hour="16"/>
+                   <category value="holiday"/>
+                </event>
+            </day21>
+            <day16>
+                <event>
+                   <summary value="Conference"/>
+                   <comment value="Comic Book Conference"/>
+                   <start year="2003" month="5" day="16" hour="9"/>
+                   <end year="2003" month="5" day="16" hour="12"/>
+                </event>
+                 <event>
+                   <summary value="Telephone Meeting"/>
+                   <comment value="Call 555-1212, East Coast Clients"/>
+                   <start year="2003" month="5" day="16" hour="2"/>
+                   <end year="2003" month="5" day="16" hour="3"/>
+                </event>
+           </day16>
+            <day26>
+                <event>
+                   <summary value="Memorial Day"/>
+                   <comment value="Memorial Day, US"/>
+                   <start year="2003" month="5" day="26" hour="9"/>
+                   <end year="2003" month="5" day="26" hour="16"/>
+                   <category value="holiday"/>
+                </event>
+            </day26>
+        </month5>
+    </year2003>
+</vcalendar>

@@ -1,0 +1,63 @@
+<canvas>
+    <include href="redmond"/>
+
+<window width="200" height="160" x="10" y="30"
+    resizable="true" closeable="true"
+    id="fw" title="Frosty the Snowman">
+    <menubar id="m" placement="menubar" spacing="0" >
+        <menu name="file" label="File" hasbutton="true" >
+            <menuitem label="new" />
+            <menuitem label="open..."/>
+            <menuitem label="close"/>
+            <menuseparator/>
+            <menuitem label="Save"/>
+            <menuitem label="Save All"/>
+            <menuitem label="Save as..."/>
+        </menu >
+    </menubar>
+    <view placement="toolbar" bgcolor="silver" width="100%">
+        <button>tool1</button>
+        <button>tool2</button>
+        <button>tool3</button>
+        <simplelayout axis="x"/>
+    </view>
+    <include href="../testmedia/frosty.lzx" />
+    <scrollbar id="sb"/>
+</window>
+
+<view>
+<inputtext id="wt" bgcolor="silver" width="100">new window title</inputtext>
+<button onclick="fw.setAttribute('title', wt.getText());wt.setText('')">set title</button>
+<button onclick="wt.setText(fw.title)">get title</button>
+<simplelayout axis="x" spacing="10"/>
+</view>
+
+
+<window x="10" y="200" width="300" height="200" title="this window is from the doc">
+
+    <tabpanelview x="5" y="10" clip="true"
+                  width="${parent.width-20}" height="${parent.height-62}"
+                  oninit="this.setSelected( this.tabOne );">
+
+        <tabview label="Tab 1" name="tabOne" width="45">
+            <windowframe x="8" y="10"
+                        width="${parent.parent.width-20}" height="${parent.parent.height-40}">
+                <text>This is the contents of tab 1.</text>
+            </windowframe>
+        </tabview>
+
+        <tabview label="Tab 2" clip="true">
+            <text x="5" y="5">First and last name please.</text>
+            <windowtext x="5" y="20" width="100">John</windowtext>
+            <windowtext x="115" y="20" width="100">Doe</windowtext>
+        </tabview>
+
+    </tabpanelview>
+
+</window>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

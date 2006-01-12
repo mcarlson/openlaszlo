@@ -1,0 +1,14 @@
+<canvas debug="true" height="1000" width="800" oninit="Debug.setX(350);">
+    <include href="lzunit" />
+    <include href="lzunit-combobox.lzx" />
+    <include href="lzunit-list.lzx" />
+
+    <TestSuite>
+        <test_combobox /> 
+        <test_list /> 
+    </TestSuite>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,43 @@
+<canvas bgcolor="0xeaeaea" width="800" proxied="false">
+
+	<dataset name="ds_folders" src="config-laszlo.xml" request="true"/>
+        <debug height="500" width="600"/>
+        <class name="configurator" extends="node" initstage="early">
+            <!--- path to the config file -->
+            <attribute name="src" type="string"/>
+            <!--- @keywords private -->
+            <method name="init"> <![CDATA[
+                super.init();
+                var ds = new LzDataset(
+                    null,
+                    { name    : 'config_ds',
+                      src     : src,
+                      request : true,
+                      type    : 'http' });
+
+                var configDel = new LzDelegate(this, 'initConfig', ds,'ondata');
+                 ]]>
+            </method>
+
+            <method name="initConfig"><![CDATA[
+                var configNode = config_ds.data;
+                var devFeatures = configNode.getElementsByTagName("dev-features");
+                Debug.write("devFeatures = ",devFeatures);
+                Debug.write("Expect true");
+                Debug.write("(devFeatures != null) = ",devFeatures != null  );
+                Debug.write("Expect true");
+                Debug.write("(devFeatures[0]  != null) =",devFeatures[0] != null  );
+                Debug.write("Expect true");
+                Debug.write("devFeatures[0]['attributes']['enable-pw-shortcut'] =",devFeatures[0]["attributes"]["enable-pw-shortcut"] );
+                Debug.write("devFeatures[0]['attributes']=",devFeatures[0]["attributes"]  );
+                Debug.write("Expect false");
+                Debug.write("(devFeatures[0]['attributes'] == null)=",devFeatures[0]["attributes"] == null  );
+               ]]>
+            </method>
+
+        </class>
+        
+    <configurator name="config" src="config-laszlo.xml"/>
+    
+</canvas>
+

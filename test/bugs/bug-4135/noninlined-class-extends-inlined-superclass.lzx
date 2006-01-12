@@ -1,0 +1,15 @@
+<!-- A red square should appear.  -->
+
+<canvas debug="true">
+  <?lzc class="c1" inline-only="true"?>
+  
+  <class name="c1" width="10" height="10" bgcolor="red"/>
+  
+  <class name="c2" extends="c1"/>
+  
+  <c2/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

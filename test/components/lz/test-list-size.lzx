@@ -1,0 +1,115 @@
+<canvas width="800">
+    <debug x="300" height="300"/>
+    <greenstyle name="greencolors"/>
+    <dataset name="mydata">
+        <date>
+            <day>1</day>
+            <day>2</day>
+            <day>3</day>
+            <day>4</day>
+            <day>5</day>
+            <day>6</day>
+            <day>7</day>
+            <day>8</day>
+            <day>9</day>
+            <day>10</day>
+            <day>11</day>
+            <day>12</day>
+            <day>13</day>
+            <day>14</day>
+            <day>15</day>
+            <day>16</day>
+            <day>17</day>
+            <day>18</day>
+            <day>19</day>
+            <day>20</day>
+            <day>21</day>
+            <day>22</day>
+            <day>23</day>
+            <day>24</day>
+            <day>25</day>
+            <day>26</day>
+            <day>27</day>
+            <day>28</day>
+            <day>29</day>
+            <day>30</day>
+            <day>31</day>
+        </date>
+    </dataset>
+    <dataset name="oneitem">
+        <item>something</item>
+    </dataset>
+    <dataset name="back">
+        <root/>
+    </dataset>
+
+    <inittimer/>
+    <class name="resizelistitem" extends="textlistitem">
+        <method event="onselected">
+            if (this.selected) this.setHeight(40);
+            else this.setHeight(20);
+        </method>
+    </class>
+    <view x="20" y="30" layout="axis:x;spacing:20">
+        <view layout="axis:y; spacing:2">
+            <text id="desc" resize="true">height="100"</text>
+            <list id="d1" height="100" y="50" dataoption="resize">
+                <resizelistitem id="t" datapath="back:/root/item/text()">
+<!--                    <datapath xpath="back:/root/item/text()" asyncnew="false"-->
+<!--                        replication="resize"/>-->
+                </resizelistitem>
+            </list>
+            <text y="35" text="${d1.value}"/>
+            <view layout="axis:x; spacing:4">
+                <button>add item
+                    <method event="onclick">
+                         back.getFirstChild().appendChild(oneitem.getFirstChild().cloneNode(true));
+                    </method>
+                </button>
+                <button>remove item
+                    <method event="onclick">
+                        var root = back.getFirstChild();
+                        root.removeChild(root.getFirstChild());
+                    </method>
+                </button>
+            </view>
+            <text width="200" multiline="true">click add until there's a scrollbar,
+            test scrolling, then remove till the scrollbar goes away</text>
+
+            <button>toggle height
+                <method event="onclick">
+                    if (d1.height == 100) {
+                        d1.setAttribute('shownitems', 4);
+                        d1.setheight(null);
+                        desc.setText('height == null, shownitems == 4');
+                    } else {
+                        d1.setheight(100);
+                    d1.setAttribute('shownitems', -1);
+                        desc.setText('height == 100, shownitems == -1');
+                    }
+                </method>
+            </button>
+            <button>toggle datapath
+                <attribute name="date" value="false" type="boolean"/>
+                <method event="onclick">
+                    if (this.date) {
+                        t.datapath.setAttribute('xpath', 'back:/root/item/text()');
+                        this.date = false;
+                    } else {
+                        t.datapath.setAttribute('xpath', 'mydata:/date/day/text()');
+                        this.date = true;
+                    }
+                </method>
+            </button>
+
+        </view>
+
+    </view>
+
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

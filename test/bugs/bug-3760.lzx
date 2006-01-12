@@ -1,0 +1,49 @@
+<canvas>
+    <dataset name="hier">
+        <all>
+            <cat name="cat1">
+                <item>Foo1</item>
+                <item>Bar1</item>
+                <item>Slop1</item>
+                <item>Plop1</item>
+            </cat>
+            <cat name="cat2">
+                <item>Foo2</item>
+                <item>Bar2</item>
+                <item>Slop2</item>
+                <item>Plop2</item>
+            </cat>
+            <cat name="cat3">
+                <item>Foo3</item>
+                <item>Bar3</item>
+                <item>Slop3</item>
+                <item>Plop3</item>
+            </cat>
+        </all>
+    </dataset>
+    <simplelayout spacing="20"/>
+    <text width="200" multiline="true">Make a selection in the combo, then
+    change the combo contents. The selection persists, even though there's no
+    corresponding element in the combo. (You have to click the button once to
+    give the combo some contents.)</text>
+
+    <combobox id="cb">
+        <textlistitem id="tli" text="$path{'text()'}"/>
+    </combobox>
+
+    <button> Change combo contents
+        <attribute name="dnum" value="1"/>
+        <method event="onclick">
+            var npath = "hier:/all/cat[" + dnum +"]/*";
+            Debug.write( npath );
+            dnum = ++dnum > 3 ? 1 : dnum;
+            tli.setDatapath( npath );
+            cb.clearSelection();
+        </method>
+    </button>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

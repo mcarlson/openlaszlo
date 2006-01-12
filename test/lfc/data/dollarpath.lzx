@@ -1,0 +1,143 @@
+<canvas debug="true" width="800" height="600">
+    <debug x="200" width="500" height="500"/>
+    <include href="lzunit/lzunit.lzx" />
+
+    <view y="200" name="rpar">
+        <attribute name="repcnt" value="0"/>
+        <view datapath="somedat:/data/record[3]/">
+            <attribute name="n" value="$path{'name/text()'}"/>
+            <attribute name="w" value="$path{'phone/@work'}"/>
+            <attribute name="h" value="$path{'options/hairy/@color'}"/>
+            <attribute name="m" value="$path{'name()'}"/>
+            <attribute name="p" value="$path{'position()'}"/>
+            <attribute name="l" value="$path{'last()'}"/>
+
+            <inputtext name="i0" text="${parent.n}" />
+            <inputtext name="i1" text="${parent.w}" />
+            <inputtext name="i2" text="${parent.h}" />
+            <inputtext name="i3" text="${parent.m}" id="rr" />
+            <inputtext name="i4" text="${parent.p.toString()}" />
+            <inputtext name="i5" text="${parent.l.toString()}" />
+            <button>update
+                <method event="onclick">
+                    parent.setAttribute( "n" , parent.i0.getText() );
+                    parent.setAttribute( "w" , parent.i1.getText() );
+                    parent.setAttribute( "h" , parent.i2.getText() );
+                    parent.setAttribute( "m" , parent.i3.getText() );
+                    parent.setAttribute( "p" , parent.i4.getText() );
+                    parent.setAttribute( "l" , parent.i5.getText() );
+                </method>
+            </button>
+
+            <simplelayout/>
+        </view>
+        <view id="replator" oninit="parent.repcnt++">
+            <attribute name="pos" value="$path{'position()'}"/>
+            <attribute name="cnt" value="$path{'last()'}"/>
+
+            <attribute name="bgcolor" value="${this.pos%2 == 0 ? silver : teal}"/>
+            <datapath pooling="true" 
+                      xpath="somedat:/data/record/"/>
+            <text name="n" width="60" datapath="name/text()"/>
+            <text text="${parent.pos +'/' + parent.cnt }" width="40"/>
+            <text datapath="phone/@work"/>
+            <text>
+                <datapath xpath="options/hairy/@color" >
+                    <attribute name="dataControlsVisibility" value="false"/>
+                </datapath>
+            </text>
+            <simplelayout axis="x"/>
+        </view>
+        <simplelayout/>
+    </view>
+
+    <dataset name="somedat">
+        <data>
+            <record show="true">
+                <name>Boo</name>
+                <phone home="155-1212" work="122-1515"/>
+                <options>
+                    <hairy color="red"/>
+                    <glasses type="tortoise"/>
+                </options>
+            </record>
+            <record>
+                <name>Coo</name>
+                <phone home="255-1212" work="222-1515"/>
+                <options>
+                    <hairy />
+                    <glasses type="blue"/>
+                </options>
+            </record>
+            <record show="true">
+                <name>Doo</name>
+                <phone home="355-1212" work="322-1515"/>
+                <options>
+                    <hairy color="blue"/>
+                    <glasses type="tortoise"/>
+                </options>
+            </record>
+            <record>
+                <name>Foo</name>
+                <phone home="455-1212" work="422-1515"/>
+                <options>
+                    <hairy />
+                </options>
+            </record>
+            <record show="true">
+                <name>Goo</name>
+                <phone home="555-1212" work="522-1515"/>
+                <options>
+                    <hairy color="green"/>
+                </options>
+            </record>
+            <record show="true">
+                <name>Hoo</name>
+                <phone home="655-1212" work="622-1515"/>
+                <options>
+                    <glasses type="contacts"/>
+                </options>
+            </record>
+        </data>
+    </dataset>
+    <TestSuite>
+        <TestCase>
+            <method name="test1">
+                assertEquals( 6, replator.clones.length );
+                somedat.getFirstChild().getFirstChild().setNodeName( 'plop' );
+                assertEquals( 5, replator.clones.length );
+                somedat.getFirstChild().getFirstChild().setNodeName( 'record' );
+                assertEquals( 6, replator.clones.length );
+                var opath = replator.xpath;
+                replator.setDatapath( opath + 'options/glasses/../..' );
+                assertEquals( 4, replator.clones.length );
+                assertEquals( "Hoo" , replator.clones[3].n.getText());
+                assertEquals( 4 , replator.clones[3].pos);
+                assertEquals( 4 , replator.clones[3].cnt);
+                replator.setDatapath( opath );
+                assertEquals( 6, replator.clones.length );
+                assertEquals( "Foo" , replator.clones[3].n.getText());
+                assertEquals( 4 , replator.clones[3].pos);
+                assertEquals( 6 , replator.clones[3].cnt);
+                replator.setDatapath( opath + 
+                                      'options/hairy[@color="red"]/../..' );
+                assertEquals( 1, replator.clones.length );
+                somedat.childNodes[0].childNodes[1].childNodes[2].
+                            childNodes[0].setAttr( 'color' , 'red' );
+                assertEquals( 2, replator.clones.length );
+                assertEquals( "Coo" , replator.clones[1].n.getText());
+                somedat.childNodes[0].childNodes[1].childNodes[2].
+                            childNodes[0].removeAttr( 'color' );
+                assertEquals( 1, replator.clones.length );
+                replator.setDatapath( opath );
+
+                assertEquals( 6, rpar.repcnt );
+
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Tabelement">
+    <lztier>LZ Component</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+        A tab element view that is opened and closed in conjunction with a
+        tabslider.
+    </lzshortdesc>
+    <lztag>lz/tabelement.xml</lztag>
+</lzelement>
+
+<p><classname>tabelement</classname> is a non-visual view contained
+within a <classname link="true">tabslider</classname> that opens and
+closes when directed by a tabslider. In practice, the
+<classname>tabelement</classname> class can be extended to create
+whatever look and feel is desired. The following example demonstrates
+how that is done.</p>
+
+<example class="program" id="tabelement-1">
+&lt;canvas height="200"&gt;
+  &lt;include href="lz/tabslider.lzx" /&gt;
+
+  &lt;!-- Custom tabelement --&gt;
+  &lt;class name="mytabelement" extends="tabelement" bgcolor="blue"&gt;
+    &lt;!-- classroot.parent = reference to tabslider --&gt;
+    &lt;view placement="header" bgcolor="red" height="100%" width="100%"&gt;
+      &lt;text name="title" x="2" y="1" text="${classroot.text}"/&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;!-- Use custom tabelement --&gt;
+  &lt;tabslider bgcolor="yellow" width="100" height="200" spacing="2"&gt;
+    &lt;mytabelement text="Tab 1"&gt;
+      &lt;view bgcolor="white" width="30" height="30"/&gt;
+    &lt;/mytabelement&gt;
+    &lt;mytabelement text="Tab 2"/&gt;
+    &lt;mytabelement text="Tab 3"/&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

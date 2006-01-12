@@ -1,0 +1,21 @@
+<canvas width="800" height="400" debug="false" bgcolor="#a0a0a0">
+    <command onselect="cl.dokey('enter')"   key="['Enter']"   active="true"/>
+    <command onselect="cl.dokey('tab')"     key="['tab']"     active="true"/>
+    <command onselect="cl.dokey('shift-tab')"     key="['shift', 'tab']"     active="true"/>
+    <command onselect="cl.dokey('uparrow')" key="['uparrow']" active="true"/>
+    <command onselect="cl.dokey('downarrow')" key="['downarrow']" active="true"/>
+    <command onselect="cl.dokey('alt-p')"   key="['alt','p']" active="true"/>
+
+    <text id="keytext" x="10" width="100" bgcolor="#d0d0d0"></text>
+    <inputtext name="cl" x="10" width="200" height="50" bgcolor="#ffffff"
+            label="this is a key test area">
+        <method name="dokey" args="key">
+            keytext.setText(key);
+        </method>
+    </inputtext>
+    <simplelayout axis="y" spacing="4"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

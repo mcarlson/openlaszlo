@@ -1,0 +1,27 @@
+<canvas bgcolor="silver" width="1024" height="600">
+  <simplelayout axis="y" spacing="10"/>
+  <view bgcolor="#ccffcc">
+    <simplelayout axis="y" spacing="10"/>
+    <text>&lt;simpleinputtext&gt;</text>
+    <simpleinputtext id="e1" text="(e1) no width no height" />
+    <text width="200" onclick="e1.settext( 'e1.input.fixedsize = ' + e1.input.fixedsize )">click me</text>
+  </view>
+
+  <view bgcolor="#ffcccc">
+    <simplelayout axis="y" spacing="10"/>
+    <text>&lt;edittext&gt;</text>
+    <edittext  id="e2" ></edittext>
+    <text width="200" onclick="e2.settext( 'e2.field.fixedsize = ' + e2.field.fixedsize )">click me</text>
+  </view>
+
+  <view bgcolor="#ccccff">
+    <simplelayout axis="y" spacing="10"/>
+    <text>&lt;inputtext&gt;</text>
+    <inputtext bgcolor="white" id="e3"  />
+    <text width="200" onclick="e3.settext( 'e3.fixedsize = ' + e3.fixedsize )">click me</text>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

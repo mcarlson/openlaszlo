@@ -1,0 +1,28 @@
+<canvas width="1024">
+  <import name="lib" href="drawview-library.lzx"
+          stage="late"
+          onload="canvas.doLoaded()"/>
+  <method name="doLoaded">
+     new drawme( canvas,{myx: 800*math.random(),
+                         myy: 20 + 580*math.random() , 
+                         width : (800 - myx)*math.random(),
+                         height : (580 - myy) * math.random() ,
+                         y:myy, name : String(i +1),
+                         x:myx
+                       });  
+     new drawme( canvas,{myx: 800*math.random(),
+                         myy: 20 + 580*math.random() , 
+                         width : (800 - myx)*math.random(),
+                         height : (580 - myy) * math.random() ,
+                         y:myy, name : String(i +1),
+                         x:myx
+                       });  
+     new drawme( canvas,{myx: 800*math.random(),
+                         myy: 20 + 580*math.random() , 
+                         width : (800 - myx)*math.random(),
+                         height : (580 - myy) * math.random() ,
+                         y:myy, name : String(i +1),
+                         x:myx
+                       });  
+  </method>
+</canvas>

@@ -1,0 +1,11 @@
+<canvas>
+    <dataset name="myds"/>
+    <text name="repl" datapath="myds:/*/name()"/>
+    <button onclick="canvas.datasets.myds.appendChild( new LzDataElement( 'record' ) )">Add record</button>
+    <button onclick="repl.setVisible( !repl.visible )">Toggle vis</button>
+    <simplelayout/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

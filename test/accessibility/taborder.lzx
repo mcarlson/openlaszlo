@@ -1,0 +1,7 @@
+<canvas proxied="false">
+    <include href="base/basebutton.lzx"/>
+    <simplelayout spacing="4"/>
+    <text aatabindex="10">Tab ordering requires flash 8 or greater.</text>
+    <text width="200" aatabindex="1" oninit="this.setText('accessibility on: ' + LzBrowser.isAAActive())"/>
+
+</canvas>

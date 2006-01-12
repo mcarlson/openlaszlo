@@ -1,0 +1,234 @@
+<canvas width="900" height="900">
+
+    <attribute name="defaultstyle" value="${greenstyle}"/>
+
+	<view x="35" layout="class:simplelayout; axis:x; spacing:2">
+	    <button onclick="ts1.animate('height',100,1000,true)">grow tabslider</button>
+	    <button onclick="ts1.additem('a New Tab')">add item</button>
+	</view>
+
+
+	<text x="50" y="25">Test: growing &amp; adding to tabslider</text>
+    <tabslider id="ts1" x="50" y="50"
+               width="150" height="200" 
+               bordersize="1"  >
+
+        <tabelement text="Section One" selected="true" >
+            <view x="10" y="10" initstage="late">
+            <checkbox>checkbox one</checkbox>
+            <checkbox>checkbox two</checkbox>
+            <button>Submit</button>
+            <view bgcolor="red" height="200" width="20"  />
+            <simplelayout axis="y" spacing="10"/>
+            </view>
+
+        </tabelement>
+
+        <tabelement text="Section Two" >
+           <view bgcolor="green" 
+                 x="3" y="3" 
+                 width="50" 
+                 height="50"/> 
+        </tabelement>
+        
+        <tabelement text="Section Three"   >
+           <view bgcolor="blue" 
+                 x="3" y="3"
+                 width="50" height="50"/> 
+        </tabelement>
+        
+        <!-- show that a view ( not extended from basetabelement ) can be added to a tabslider and ignored -->
+        <basecomponent x="${parent.width - width}" width="50" height="50" bgcolor="red" 
+                       options="ignorelayout" focusable="true"/>
+
+    </tabslider>
+
+	<text x="250" y="25" >Test: spacing between tabs </text>
+    <tabslider id="ts2" x="250" y="50"
+               width="150" height="200" 
+               bordersize="1"  spacing="5" >
+
+        <tabelement text="Section One" selected="true" >
+            <view x="10" y="10" initstage="late">
+            <checkbox>checkbox one</checkbox>
+            <checkbox>checkbox two</checkbox>
+            <button>Submit</button>
+            <simplelayout axis="y" spacing="10"/>
+            </view>
+
+        </tabelement>
+
+        <tabelement text="Section Two" >
+           <view bgcolor="green" 
+                 x="3" y="3" 
+                 width="50" 
+                 height="50"/> 
+        </tabelement>
+        
+        <tabelement text="Section Three"   >
+           <view bgcolor="blue" 
+                 x="3" y="3"
+                 width="50" height="50"/> 
+        </tabelement>
+    </tabslider>
+
+	<text x="450" y="25" >Test: other elements in header </text>
+    <tabslider id="ts3" x="450" y="50" 
+               width="150" height="200"
+               bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
+
+        <tabelement text="Section One" text_x="20" fontsize="8" >
+           <view bgcolor="red" placement="header" 
+                 width="10" height="10" x="5" y="5" />
+           <view bgcolor="red"  
+                 x="3" y="3"
+                 width="50" height="50"/> 
+        </tabelement>
+        
+        <tabelement text="Section Two" text_x="20">
+           <view bgcolor="green" placement="header" 
+                 width="10" height="10" x="5" y="5" />
+           <view bgcolor="green" 
+                 x="3" y="3"
+                 width="50" height="50"/> 
+        </tabelement>
+        
+        <tabelement text="Section Three" text_x="20" >
+           <view bgcolor="blue" placement="header" 
+                 width="10" height="10" x="5" y="5" />
+           <view bgcolor="blue" 
+                 x="3" y="3"
+                 width="50" height="50"/> 
+        </tabelement>
+    </tabslider>
+
+
+    <text x="650" y="25" >Test: insets on all sides</text>
+    <tabslider id="ts4" x="650" y="50" 
+               width="150" height="200"
+               bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
+
+        <tabelement text="Insets 0" text_x="20" fontsize="8" selected="true">
+           <view bgcolor="red"  
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Insets 10" text_x="20" inset_left="10" inset_top="10" inset_right="10" inset_bottom="10">
+           <view bgcolor="green" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Insets 20" text_x="20" inset_left="20" inset_top="20" inset_right="20" inset_bottom="20">
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Insets 80" text_x="20" inset_left="80" inset_top="80" inset_right="80" inset_bottom="80">
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+    </tabslider>
+
+
+    <!-- begin second row -->
+    <text x="50" y="300" >Test: top inset</text>
+    <tabslider id="ts5" x="50" y="325" 
+               width="150" height="200"
+               bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
+
+        <tabelement text="Top Inset 50" text_x="20" inset_top="50" selected="true">
+           <view bgcolor="red" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Top Inset 100" text_x="20" inset_top="100" >
+           <view bgcolor="green" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Top Inset 150" text_x="20" inset_top="150" >
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+    </tabslider>
+
+
+    <text x="250" y="300" >Test: right inset</text>
+    <tabslider id="ts6" x="250" y="325" 
+               width="150" height="200"
+               bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
+        <tabelement text="Right Inset 50" text_x="20" inset_right="50" selected="true">
+           <view bgcolor="red" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Right Inset 100" text_x="20" inset_right="100" >
+           <view bgcolor="green" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Right Inset 150" text_x="20" inset_right="150" >
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+    </tabslider>
+
+    <text x="450" y="300" >Test: bottom inset</text>
+    <tabslider id="ts7" x="450" y="325" 
+               width="150" height="200"
+               bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
+        <tabelement text="Bottom Inset 50" text_x="20" inset_bottom="50" selected="true">
+           <view bgcolor="red" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Bottom Inset 100" text_x="20" inset_bottom="100" >
+           <view bgcolor="green" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Bottom Inset 150" text_x="20" inset_bottom="150" >
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+    </tabslider>
+
+
+    <text x="650" y="300" >Test: left inset</text>
+    <tabslider id="ts8" x="650" y="325" 
+               width="150" height="200"
+               bordersize="2"  bordercolor="0x5555FF" mintabheight="30" >
+
+        <tabelement text="Left Inset 50" text_x="20" inset_left="50" selected="true">
+           <view bgcolor="red" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Left Inset 100" text_x="20" inset_left="100" >
+           <view bgcolor="green" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Left Inset 150" text_x="20" inset_left="150" >
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+    </tabslider>
+
+
+    <!-- begin third row -->
+    <text x="50" y="575" >Test: min/header height &amp; hideonclose</text>
+    <tabslider id="ts9" x="50" y="600" 
+               width="150" height="200"
+               bordersize="2"  mintabheight="30" >
+
+        <tabelement text="min=40, header=22" text_x="20" headerheight="22" 
+                    minheight="40" hideonclose="false">
+           <view bgcolor="red" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="min=50, header=50" text_x="20" 
+                    minheight="50" headerheight="50">
+           <view bgcolor="green" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+        <tabelement text="Normal" text_x="20" >
+           <view bgcolor="blue" 
+                 width="${parent.width}" height="${parent.height}"/> 
+        </tabelement>
+    </tabslider>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,87 @@
+<canvas width="800" bgcolor="0xeaeaea">
+    <greenstyle name="greencolors"/>
+    <bluestyle name="bluecolors"/>
+
+    <dataset name="weatherdata" request="true" type="http"
+            src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=94114"/>
+    <dataset name="contactsData" request="true" type="http"
+    src="http:../../demos/contacts/contactsdata.xml"/>
+    <tabs style="bluecolors">
+        <tabpane> Contacts
+            <grid datapath="contactsData:/*" sizetoheader="false">
+
+                <gridtext editable="false" width="50" datapath="position()"
+                          resizable="false" sortable="false">
+                          No.
+                </gridtext>
+
+                <gridtext datapath="@firstname"> First </gridtext>
+
+                <gridtext datapath="@lastname">Last </gridtext>
+
+                <gridtext datapath="@displayname"> Fullname </gridtext>
+
+                <gridcolumn resizable="false" sortable="false" width="150">
+                    Default contact
+                    <radiogroup xoffset="-10" text="$path{ '@title'}"
+                                defaultselection="0"
+                                layout="axis:'x'">
+                        <attribute name="y"
+                                    value="$once{ immediateparent.height /2
+                                                - this.height/2}"/>
+                        <attribute name="workdef" value="$path{ '@work_default' }"/>
+                        <attribute name="homedef" value="$path{ '@home_default' }"/>
+                        <attribute name="datasel"
+                                    value="${ workdef == '1' ? 2 : 1 }"/>
+
+                        <method event="ondatasel" name="checkDataSel">
+                            if ( !this._initcomplete ) return;
+                            this.selectItem(  datasel );
+                        </method>
+
+                        <method event="oninit">
+                            this.checkDataSel();
+                        </method>
+
+                        <method event="onselect">
+                            if ( this.value == 1 ){
+                                this.workdef = 0;
+                                this.homedef = 1;
+                            } else if ( this.value == 2 ){
+                                this.workdef = 1;
+                                this.homedef = 0;
+                            }
+                            this.datapath.updateData();
+                        </method>
+
+                        <radiobutton value="1"
+                            onmouseover="parent.immediateparent.domouseover()"
+                            onmouseout="parent.immediateparent.domouseout()" >
+                            home</radiobutton>
+                        <radiobutton value="2"
+                            onmouseover="parent.immediateparent.domouseover()"
+                            onmouseout="parent.immediateparent.domouseout()" >
+                            work</radiobutton>
+                    </radiogroup>
+                </gridcolumn>
+
+            </grid>
+        </tabpane>
+        <tabpane> Weather
+            <grid width="${parent.width -
+                            ( parent.inset_left +parent.inset_right )}"
+                  height="${parent.height -
+                            ( parent.inset_top +parent.inset_bottom )}"
+                  showvlines="true" bgcolor0="$once{greencolors.basecolor}" sizetoheader="false"
+                  datapath="weatherdata:/weather/current"
+                style="greencolors"/>
+        </tabpane>
+
+    </tabs>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

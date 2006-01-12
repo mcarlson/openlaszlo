@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="running-my-apps" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Running My Apps</title>
+</head>
+
+<body>
+
+<a name="running"></a>
+<h1>Running My Apps</h1>
+
+<p>To run a Laszlo application that you have created or modified, you must either:</p>
+
+<ul>
+    <li><b>Put your .lzx files and art assets inside the my-apps folder</b> or 
+    a subdirectory within the my-apps folder inside the lps-@VERSIONID@ Web application.
+    For example, if you installed the LPS using the Windows installer, the my-apps directory is at:
+    <pre>    yourInstallationDir\jakarta-tomcat-4.1.12\webapps\lps-@VERSIONID@\my-apps</pre>
+      For Linux and OS X, the my-apps directory is at:
+      <pre>    yourInstallationDir/jakarta-tomcat-4.1.12/webapps/lps-@VERSIONID@/my-apps</pre>
+    <p>To display the application in your browser, browse to:</p>
+    <pre>    http://localhost:8080/lps-@VERSIONID@/<i>my-apps</i>/<i>yourApplicationName</i>.lzx</pre>
+    <note>If your modifications do not show, click the browser's <b>reload</b> button.</note>
+
+    <p>or, you can</p>
+</li>
+
+<li><b>Create your own Laszlo-enabled Web application</b> inside your servlet container. 
+<br/>To create a Laszlo-enabled Web application:
+
+<ol>
+    <li>Create a new directory for your application</li>
+    <li>In this new directory, create a subdirectory called <b>WEB-INF</b>.<br/>
+    Yes, it <i>must</i> be called <b>WEB-INF</b> just <b>WEB-INF</b>.</li>
+    <li>Copy the <b><code>lib</code></b> and <b><code>lps</code></b> directories
+    and <b><code>web.xml</code></b> file from the LPS web
+    application into your web application.  For @VERSIONID@ you can find these
+    directories at
+
+<pre>yourInstallationDir\jakarta-tomcat-4.1.12\webapps\lps-@VERSIONID@\WEB-INF (Windows)
+yourInstallationDir/jakarta-tomcat-4.1.12/webapps/lps-@VERSIONID@/WEB-INF (Linux) </pre> 
+
+    For the Core, you can find these directories at
+    
+<pre>yourInstallationDir\lps-@VERSIONID@\WEB-INF     (Windows Core edition)
+yourInstallationDir/lps/lps-@VERSIONID@/WEB-INF (Linux, OS-X Core edition)  </pre> 
+Copy them into your applications WEB-INF directory.
+    <p><b>WARNING:</b>Make sure you duplicate the precise directory structure of the WEB-INF directory when you place these files and directories into your newly-created directory.</p>
+</li>
+
+<li>Put the .lzx files and art assets that make up your application inside the new directory you created, or put them into a subdirectory you create inside of it. 
+</li>
+
+    <li>Consult your servlet container documentation for a information about how to deploy this Web application into the container. For Tomcat, you can copy this directory into 
+
+<pre>      tomcatInstallationDirectory\webapps\your-application-dir (Windows)
+      tomcatInstallationDirectory/webapps/your-application-dir (Linux, OS-X)</pre>       </li>
+      </ol>
+</li>
+</ul>
+
+<p>For more detailed information about program development, see the <a
+href="./tutorials/program-development.html">Program Development</a>
+chapter of the <a href="developers-guide">Laszlo Developer's
+Guide</a>.</p>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

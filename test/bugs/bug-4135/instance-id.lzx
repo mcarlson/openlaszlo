@@ -1,0 +1,15 @@
+<!-- Clicking in the upper right corner should print the name of the view,
+     not undefined. -->
+
+<canvas>
+  <?lzc classes="c1" inline-only="true"?>
+  
+  <class name="c1"/>
+  
+  <c1 id="myid" width="10" height="10"
+      onclick="Debug.write('myid =', myid)"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,9 @@
+<canvas width="1200" height="800" debug='true' proxied="false">
+  <debug x="200"/>
+  <simplelayout/>
+  <view id="v1"      resource="http:logo.gif"/>
+  <view id="v2"      resource="http:logo.png"/>
+  <view id="v3"      resource="http:logo.tiff"/>
+  <view id="v4"      resource="http:logo.jpeg"/>
+  <view id="v5"      resource="http:logo.jpg"/>
+</canvas>

@@ -1,0 +1,344 @@
+<library>
+
+    <!--- An abstract class to create remote objects. -->
+    <class name="rpc" extends="node">
+
+        <!--- Load remote object during init. If false, create remote object by
+              calling load(). Default is true. -->
+        <attribute name="autoload" value="true" type="boolean" />
+
+        <!--- The remote proxy object. Proxy is set after the rpc object
+              loads. Proxy contains client-side function stubs to remote
+              methods. Each method takes an array of arguments and a delegate
+              like:
+
+                myrpc.proxy.remoteFunc( [ p1, p2, ..., pN ], delegate );
+
+              Remote methods with no arguments are passed in an empty array
+              like:
+
+                myrpc.proxy.otherRemoteFunc( [], delegate );
+
+              The delegate is used to handle the return value since RPC calls
+              are asynchronous.
+
+              @keywords readonly -->
+        <attribute name="proxy" value="null" type="expression" />
+
+        <!--- Make connection secure between client and the LPS secure
+             (HTTPS). Default is false. -->
+        <attribute name="secure" value="false" type="boolean" />
+
+        <!--- The port to use for the secure socket between the client and the
+              LPS. If secure is false, this value is ignored.  -->
+        <attribute name="secureport" value="null" type="number" />
+
+        <!--- This event is triggered when the remote object is loaded. -->
+        <attribute name="onload" value="null" type="expression" />
+        <!--- This event is triggered when the remote object is unloaded. -->
+        <attribute name="onunload" value="null" type="expression" />
+        <!--- This event is triggered when declared inner calls don't handle
+              their ondata events. -->
+        <!-- <attribute name="ondata" value="null" type="expression" /> -->
+        <!--- This event is triggered when an error or timeout occurs associated
+              with getting this object or calling one of its remote methods. -->
+        <!-- <attribute name="onerror" value="null" type="expression" /> -->
+
+        <!--- @keywords private -->
+        <attribute name="_loadDel" value="null" type="expression" />
+        <!--- @keywords private -->
+        <attribute name="_unloadDel" value="null" type="expression" />
+        <!--- @keywords private -->
+        <attribute name="_registered" value="${[]}" type="expression" />
+        <!--- Flag to verify with proxy whether declared calls exist.
+              @keywords private -->
+        <attribute name="_verifywithproxy" value="true" type="boolean" />
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- ABSTRACT: method to load the remote object interface. -->
+        <method name="load">
+            Debug.write(this.name, "error: load method not defined");
+        </method>
+
+        <!--- Interface to unload proxy stub. Default is to null proxy. -->
+        <method name="unload">
+            this._unloadDel.execute( { status: 'ok' } );
+        </method>
+
+
+        <!--=================================================================-->
+        <!-- private methods                                                 -->
+        <!--=================================================================-->
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            this._loadDel = new LzDelegate(this , "_load");
+            this._unloadDel = new LzDelegate(this , "_unload");
+            if (this.autoload) this.load();
+        </method>
+
+
+        <!--- @keywords private -->
+        <method name="_load" args="o">
+        <![CDATA[
+            if (o.status == "error") {
+                if (typeof(this.onerror) != "undefined") {
+                    this.onerror.sendEvent(o.message, o['error']);
+                } else {
+                    Debug.write(this.name, "load error:", o.message);
+                }
+                return false;
+            }
+
+            if (this._setup(o) && this.onload) {
+                this.onload.sendEvent();
+            }
+        ]]>
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_unload" args="o">
+        <![CDATA[
+            if (o.status == "error") {
+                if (this.onerror) {
+                    this.onerror.sendEvent(o.message, o['error']);
+                } else {
+                    Debug.write(this.name, "load error:", o.message);
+                }
+                return false;
+            }
+            this.proxy = null;
+            if (this.onunload) this.onunload.sendEvent();
+        ]]>
+        </method>
+
+        <!--- Register a remote function to a call member
+              @keywords private -->
+        <method name="_register" args="callcontext,funcname">
+            if ( this.proxy == null ) {
+                this._registered.push( { c: callcontext, f: funcname } );
+                return;
+            }
+            
+            callcontext._funcref = this.proxy[funcname];
+        </method>
+
+
+        <!--- If error, returns false, else true.
+              @param Object o: data object returned from server. Can contain an
+              error or the actual client object.
+              @keywords private
+        -->
+        <method name="_setup" args="o">
+        <![CDATA[
+            this.proxy = o.stub;
+
+            // register proxy functions for remotecall objects using
+            // remotecontext reference.
+            for (var i=0; i < this._registered.length; i++) {
+                var item = this._registered[i];
+                item.c['_funcref'] = this.proxy[item.f];
+            }
+
+            for (var k in this.subnodes) {
+                var c = this.subnodes[k];
+                if ( ! (c instanceof remotecall) ) continue;
+
+                // funcname is required
+                var fn = c['funcname'];
+                if (fn == null) continue;
+
+                if (c['name'] == null) c['name'] = fn;
+
+                if (this._verifywithproxy && typeof(this.proxy[fn]) != 'function') {
+                    Debug.write(this.name, "warning: function", fn, "not defined");
+                    continue;
+                }
+                c._funcref = this.proxy[fn];
+            }
+
+            return true;
+        ]]>
+        </method>
+
+    </class>
+
+
+    <!--- A class to invoke rpc methods more declaratively. -->
+    <class name="remotecall" extends="node">
+        <!--- Name of remotecall. Default is value of funcname attribute. -->
+        <attribute name="name" value="$once{null}" />
+        <!--- Name of remote function this remotecall refers. -->
+        <attribute name="funcname" value="$once{null}" type="string" />
+        <!--- If an LzDataset or an LzDataElement is set, return values will
+              be mapped into the dataobject. -->
+        <attribute name="dataobject" value="null" type="expression" />
+        <!--- If set, this is the remote object context in which funcname is run
+              from. -->
+        <attribute name="remotecontext" value="null" type="expression" />
+
+        <!--- If true, a remote response returns an object. The object of a
+             successful response will contain the return value (data), an object
+             containing specific information about the request (info), and the
+             associated unique sequence request number (seqnum), e.g., { data:
+             ..., info: ..., seqnu: ...}. A failure response returns an object
+             that contains the error message (message), the error type (error),
+             an object containing specific information about the request (info),
+             and the associated unique sequence request number (seqnum), e.g., {
+             message: ..., error: ..., info: ..., seqnum: ...}. If false, an
+             error just returns the error message and a successful response
+             returns a value. Default is false. -->
+        <attribute name="inforeturnvalue" value="false" type="boolean" />
+
+        <!--- This event is triggered when data is returned from a remote
+              method. -->
+        <!-- <attribute name="ondata" value="null" type="expression"/> -->
+        <!--- This event is triggered when an error occurs. -->
+        <!-- <attribute name="onerror" value="null" type="expression" /> -->
+
+        <!--- Reference to remote function.
+              @keywords private readonly -->
+        <attribute name="_funcref" value="null" type="expression" />
+
+        <!--- Call this method to invoke function with passed in parameters. 
+              @param Array params: array of parameters. A parameter can be an
+              object, array, or primitive type. This is optional if
+              &lt;param&gt;s have been declared this remotecall's body.
+              @param LzDelegate delegate: (optional) the remotecall will use the
+              passed in delegate, otherwise it will run the default. Note: if
+              LzDelegate passed in contains a property called 'dataobject', the
+              return value will be mapped to it. The dataobject property can be
+              a dataset or a LzDataElement object.
+              @return Number the unique sequence request number associated with
+              this call, or -1 if there was a problem invoking this method. -->
+        <method name="invoke" args="params, delegate">
+        <![CDATA[
+            if (typeof(this._funcref) != 'function') {
+                Debug.write(this.name, "error: could not invoke; is remote service loaded?");
+                return -1;
+            }
+
+            if (params == null) {
+                params = [];
+                if (this.subnodes != null) {
+                    for (var i=0; i < this.subnodes.length; i++) {
+                        // if getValue method is declared in param, call that
+                        // instead to get value.
+                        var tsi = this.subnodes[i];
+                        if (tsi['getValue'] != null && tsi.getValue['prototype'] != null) {
+                            params[i] = tsi.getValue();
+                        } else {
+                            params[i] = tsi.value;
+                        }
+                    }
+                }
+            } else if (params.__proto__ != Array.prototype) {
+                Debug.write(this.name, "error: first argument (params) is not an array");
+                return -1;
+            }
+
+            if (delegate == null) {
+                delegate = this._delegate
+            } else if ( ! ( delegate instanceof LzDelegate ) ) {
+                Debug.write(this.name, "error: second argument (delegate) is not a delegate");
+                return -1;
+            }
+
+            return this._funcref(params, delegate);
+        ]]>
+        </method>
+
+
+        <!--- @keywords private -->
+        <method name="init">
+            if (this.funcname == null) {
+                Debug.write(this.name, "error: required funcname is not set");
+                return;
+            }
+
+            super.init();
+
+            if ( this.name == null ) {
+                this.setAttribute('name', this.funcname);
+            }
+
+            if (this.remotecontext != null) {
+                this.remotecontext._register(this, this.funcname);
+            }
+
+            this._delegate = new LzDelegate(this, '_handler');
+            this._delegate.dataobject = this.dataobject;
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_handler" args="o">
+        <![CDATA[
+            // responseheaders are SOAP specific
+            if (o.opinfo['responseheaders'] != null) {
+                var r = new _root.LzDataElement("root", { }, o.opinfo.responseheaders);
+                if ( this.remotecontext != null && this.remotecontext.responseheaders != null) {
+                    this.remotecontext.responseheaders.setData( r );
+                } else if ( parent.responseheaders != null ) {
+                    parent.responseheaders.setData( r );
+                }
+            }
+
+            var retval;
+            if (o.status == 'error') {
+                retval = 
+                    inforeturnvalue
+                    ? { message: o.message, error: o['error'], 
+                        info: o.opinfo, seqnum: o.seqnum }
+                    :  o.message;
+
+                if (this['onerror']) {
+                    this.onerror.sendEvent(retval);
+                } else if (parent['onerror']) {
+                    parent.onerror.sendEvent(retval);
+                } else if (this.remotecontext != null &&
+                           this.remotecontext['onerror']) {
+                    this.remotecontext.onerror.sendEvent(retval);
+                } else {
+                    Debug.write(this.name, "remotecall onerror:", o.error);
+                }
+                return;
+            }
+
+            retval = 
+                inforeturnvalue
+                ? { data: o.data, info: o.opinfo, seqnum: o.seqnum }
+                : o.data;
+
+            if (this['ondata']) {
+                this.ondata.sendEvent(retval);
+            } else if (parent['ondata']) {
+                parent.ondata.sendEvent(retval);
+            } else if (this.remotecontext != null &&
+                       this.remotecontext['ondata']) {
+                this.remotecontext.ondata.sendEvent(retval);     
+            }
+        ]]>
+        </method>
+
+    </class>
+
+
+    <!-- Element to use inside remotecall. -->
+    <class name="param" extends="node">
+        <!--- Value to use for paramter. A getValue() method can be declared
+              inside param to use its return as the parameter value. If both
+              value attribute and getValue method are declared, param will use
+              getValue(). -->
+        <attribute name="value" value="null" type="expression" />
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

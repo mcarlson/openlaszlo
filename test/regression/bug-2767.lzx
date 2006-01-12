@@ -1,0 +1,24 @@
+<canvas height="600" width="800" debug="true" >
+  <view oninit="Debug.setAttribute('y', 300);"/>
+  <include href="redmond"/>
+  <window id="wd" title="TabSlider with Toggle" x="100" y="0" width="200" height="300" resizable="true" >
+    <tabslider id="tslider" 
+	       bgcolor="white" 
+	       height="${immediateparent.height}" 
+	       width="${immediateparent.width}" 
+	       spacing="2" 
+	       mintabheight="20" 
+	       slideduration="333" >
+      <tabelement name="t1" bgcolor="red" selected="true"/>
+      <tabelement bgcolor="red" height="30"/>
+      <tabelement bgcolor="red" height="60"/>
+      <tabelement bgcolor="red" height="20"/>
+    </tabslider>
+  </window>
+  
+  <button text="Add Green Tab" onclick="new tabelement(tslider,{bgcolor:0x00FF00})" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

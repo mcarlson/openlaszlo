@@ -1,0 +1,36 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzBrowser"> 
+	<lztier>Service</lztier>
+    <lzcategory>Scripting</lzcategory> 
+    <lzshortdesc>Provides access to the browser and player environment</lzshortdesc> 
+    <lzapi>api-lzbrowser.xml</lzapi>
+</lzelement> 
+
+<p>The <classname>LzBrowser</classname> service provides access to the
+browser and player environment.  It includes methods to load URLs in
+the browser, and check the version of the player. For example:</p>
+
+<example title="Using LzBrowser to launch another browser">
+ &lt;canvas height="140" debug="true"&gt;
+   &lt;!-- Load the Laszlo site in a new window --&gt;
+   &lt;button onclick="LzBrowser.loadURL('http://www.laszlosystems.com/', '_blank')"&gt;
+     Click me
+   &lt;/button&gt;
+   &lt;script&gt;
+     // List the player version
+     Debug.write('Player version: ' + LzBrowser.getVersion());
+   &lt;/script&gt;
+ &lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

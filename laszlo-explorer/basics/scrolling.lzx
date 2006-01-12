@@ -1,0 +1,7 @@
+<canvas width="200">
+  <view clip="true" width="150" height="150">
+    <view resource="culebra-trip.jpg"/>
+    <scrollbar axis="x"/>
+    <scrollbar axis="y"/>
+  </view>
+</canvas>

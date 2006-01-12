@@ -1,0 +1,656 @@
+<!--
+  $Id$
+
+  LZUnit Tests
+
+  This is a set of tests that test that LZUnit works as expected.  It
+  verifies that things that should be true are true, and that things
+  that should signal an error signal an error (it does this by
+  intercepting the error and signalling and error if no error or the
+  wrong error is signalled).
+-->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<library>
+  <!--
+    Test cases that depend on ActionScript semantics
+  -->
+  <class name="ActionScriptSemantics" extends="TestCase" semantics="'actionscript'">
+    <method name="setUp">
+      this.foo = {zot: "qux"};
+      this.nullvar = null;
+    </method>
+
+    <method name="tearDown">
+      delete this.foo;
+      delete this.nullvar;
+    </method>
+
+    <method name="testActionScriptSemantics">
+    <![CDATA[
+         // coercion of strings to booleans is fudged for Flash 4
+         // compatibility
+         if (canvas.runtime < "swf7") {
+           assertFalse("non-empty", "'non-empty' is false");
+           assertFalse('0', "'0' is false");
+
+           // As is coercion of undefined to a string or number
+           assertEquals(String(undefined), '',
+                        "String(undefined) == ''");
+           assertEquals(Number(undefined), 0,
+                        "Number(undefined) == 0");
+           // Why do I need the explicit String coercion? 
+           assertEquals("foo", "" + {toString: function() {return "foo"}},
+                        "coercion to string");
+           // Henry's checks
+           assertSame(true, undefined < 1, "undefined < 1");
+           assertSame(true, undefined > -1, "undefined > -1");
+           assertEquals(0, Math.min(undefined, 1), "Math.min(undefined, 1) == 0");
+           assertEquals(-1, Math.min(undefined, -1), "Math.min(undefined, -1) == -1");
+           assertEquals(1, Math.max(undefined, 1), "Math.max(undefined, 1) == 1");
+           assertEquals(0, Math.max(undefined, -1), "Math.max(undefined, -1) == 0");
+         }
+         else {
+           Debug.write('ActionScriptSemantics: 11 tests skipped for runtime >= swf7');
+         }
+    ]]>
+    </method>
+  </class>
+
+  <!--
+    Test cases that depend on JavaScript semantics
+  -->
+  <class name="JavaScriptSemantics" extends="TestCase" semantics="'javascript'">
+    <method name="setUp">
+      this.foo = {zot: "qux"};
+      this.nullvar = null;
+    </method>
+
+    <method name="tearDown">
+      delete this.foo;
+      delete this.nullvar;
+    </method>
+
+    <method name="testJavaScriptSemantics">
+      <![CDATA[
+      assertTrue("non-empty", "'non-empty' is true");
+      assertTrue('0', "'0' is true");
+
+      if (canvas.runtime >= "swf7") {
+          assertEquals('undefined', String(undefined),
+                       "String(undefined) == 'undefined'");
+          assertSame(true, isNaN(Number(undefined)),
+                     "isNaN(Number(undefined))");
+      }
+
+      /* Lot's o' float math corner cases */
+
+      /* NaN */
+      assertSame(true, isNaN(0.0 / 0.0),
+                   "isNaN(0.0 / 0.0)");
+      assertSame(true, isNaN(Math.sqrt(-2.0)),
+                   "isNaN(Math.sqrt(-2.0))");
+      assertSame(true, isNaN(NaN + NaN),
+                   "isNaN(NaN + NaN)");
+      assertSame(true, isNaN(NaN + 2.0),
+                   "isNaN(NaN + 2.0)");
+      assertSame(true, isNaN(NaN * 3.0),
+                   "isNaN(NaN * 3.0)");
+      assertSame(true, isNaN((0.0 / 0.0) * Infinity),
+                   "isNaN((0.0 / 0.0) * Infinity)");
+      assertSame(true, isNaN(Math.abs(0.0 / 0.0)),
+                   "isNaN(Math.abs(0.0 / 0.0))");
+      assertSame(false, NaN > -1.0, "NaN > -1.0");
+      assertSame(false, NaN < -1.0, "NaN < -1.0");
+      assertSame(false, NaN >= -1.0, "NaN >= -1.0");
+      assertSame(false, NaN <= -1.0, "NaN <= -1.0");
+      assertSame(false, NaN == -1.0, "NaN == -1.0");
+      assertSame(true, NaN != -1.0, "NaN != -1.0");
+      assertSame(false, NaN > 0.0, "NaN > 0.0");
+      assertSame(false, NaN < 0.0, "NaN < 0.0");
+      assertSame(false, NaN >= 0.0, "NaN >= 0.0");
+      assertSame(false, NaN <= 0.0, "NaN <= 0.0");
+      assertSame(false, NaN == 0.0, "NaN == 0.0");
+      assertSame(true, NaN != 0.0, "NaN != 0.0");
+      assertSame(false, NaN > 1.0, "NaN > 1.0");
+      assertSame(false, NaN < 1.0, "NaN < 1.0");
+      assertSame(false, NaN >= 1.0, "NaN >= 1.0");
+      assertSame(false, NaN <= 1.0, "NaN <= 1.0");
+      assertSame(false, NaN == 1.0, "NaN == 1.0");
+      assertSame(true, NaN != 1.0, "NaN != 1.0");
+      assertTrue(NaN != 1.0, "NaN != 1.0");
+
+
+      /* Infinity */
+      assertSame(false, NaN > Infinity,
+                  "NaN > Infinity");
+      assertSame(false, NaN < Infinity,
+                  "NaN < Infinity");
+      assertSame(false, (0.0 / 0.0) == (0.0 / 0.0),
+                  "(0.0 / 0.0) == (0.0 / 0.0)");
+      assertEquals(1.0 / 0.0, Infinity, "1.0 / 0.0 == Infinity");
+      assertEquals(Infinity, Infinity, "Infinity == Infinity");
+      assertEquals((1.0 / 0.0) + 2.0, Infinity, "(1.0 / 0.0) + 2.0 == Infinity");
+      assertEquals((1.0 / 0.0) * 0.5, Infinity, "(1.0 / 0.0) * 0.5 == Infinity");
+      assertEquals((1.0 / 0.0) + (1.0 / 0.0), Infinity,
+                   "(1.0 / 0.0) + (1.0 / 0.0) == Infinity");
+      assertEquals((1.0 / 0.0) * (1.0 / 0.0), Infinity,
+                   "(1.0 / 0.0) * (1.0 / 0.0) == Infinity");
+
+      assertSame(true, isNaN((1.0 / 0.0) * 0.0),
+                 "isNaN((1.0 / 0.0) * 0.0)");
+      assertSame(true, isNaN((1.0 / 0.0) - (1.0 / 0.0)),
+                 "isNaN((1.0 / 0.0) - (1.0 / 0.0))");
+      assertSame(true, isNaN((1.0 / 0.0) / (1.0 / 0.0)),
+                 "isNaN((1.0 / 0.0) / (1.0 / 0.0))");
+
+      /* Negative Infinity */
+      assertSame(false, NaN > -Infinity,
+                  "NaN > -Infinity");
+      assertSame(false, NaN < -Infinity,
+                  "NaN < -Infinity");
+      assertEquals(-1.0 / 0.0, -Infinity, "-1.0 / 0.0 == -Infinity");
+      assertEquals(-Infinity, -Infinity, "-Infinity == -Infinity");
+      assertEquals((-1.0 / 0.0) + 2.0, -Infinity, "(-1.0 / 0.0) + 2.0 == -Infinity");
+      assertEquals((-1.0 / 0.0) * 0.5, -Infinity, "(-1.0 / 0.0) * 0.5 == -Infinity");
+      assertEquals((-1.0 / 0.0) + (-1.0 / 0.0), -Infinity,
+                   "(-1.0 / 0.0) + (-1.0 / 0.0) == -Infinity");
+      assertEquals((-1.0 / 0.0) * (-1.0 / 0.0), Infinity,
+                   "(-1.0 / 0.0) * (-1.0 / 0.0) == Infinity");
+      assertEquals((-1.0 / 0.0) * (1.0 / 0.0), -Infinity,
+                   "(-1.0 / 0.0) * (1.0 / 0.0) == -Infinity");
+
+      assertSame(true, isNaN((-1.0 / 0.0) * 0.0),
+                 "isNaN((-1.0 / 0.0) * 0.0)");
+      assertSame(true, isNaN((-1.0 / 0.0) - (-1.0 / 0.0)),
+                 "isNaN((-1.0 / 0.0) - (-1.0 / 0.0))");
+      assertSame(true, isNaN((-1.0 / 0.0) / (-1.0 / 0.0)),
+                 "isNaN((-1.0 / 0.0) / (-1.0 / 0.0))");
+
+      /* Negative 0 */
+      var negative0 = (-2/Infinity);
+      assertEquals(0, negative0, "0 == -0");
+      assertEquals(Infinity, 2 / 0, "Infinity == 2 / 0");
+      assertEquals(-Infinity, -2 / 0, "-Infinity == -2 / 0");
+      assertEquals(0, negative0 * negative0, "-0 * -0 == 0");
+      assertEquals(3, 3 + negative0, "3 + -0 == 3");
+      assertEquals(negative0, 4 * negative0, "4 * -0 == -0");
+      assertEquals(0, 0 - 0, "0 - 0 == 0");
+      assertEquals(0, negative0 - negative0, "-0 - -0 == 0");
+      assertEquals(negative0, negative0 + negative0, "-0 + -0 == -0");
+      assertEquals(0, negative0 + 0, "-0 + 0 == 0");
+      assertEquals(0, 0 + negative0, "0 + -0 == 0");
+      assertEquals(negative0, negative0 - 0, "-0 - 0 == -0");
+      assertEquals(0, -(negative0), "-(-0) == 0");
+      assertEquals(0, -(0), "-(0) == 0");
+      assertSame(true, isNaN(0 / negative0), "isNaN(0 / -0)");
+
+      /* Henry's checks */
+      if (canvas.runtime >= "swf7") {
+          assertSame(false, undefined < 1, "undefined < 1");
+          assertSame(false, undefined > -1, "undefined > -1");
+          assertSame(true, isNaN(Math.min(undefined, 1)), "isNaN(Math.min(undefined, 1))");
+          assertSame(true, isNaN(Math.max(undefined, 1)), "isNaN(Math.max(undefined, 1))");
+          assertSame(true, isNaN(Math.min(undefined, -1)), "isNaN(Math.min(undefined, -1))");
+          assertSame(true, isNaN(Math.max(undefined, -1)), "isNaN(Math.max(undefined, -1))");
+      }
+      else {
+          /* 6 skipped here, 2 skipped earlier */
+          Debug.write('JavaScriptSemantics: 8 tests skipped for runtime < swf7');
+      }
+
+      assertSame(true, isNaN(Infinity * 0), "Infinity * 0 isNaN");
+      /* FIXME: [2002-11-16 ptw] (coercion string) broken in Flash? */
+//       assertEquals("foo", {toString: function() {return "foo"}},
+//           "coercion to string");
+
+      assertSame(foo, foo, "object === itself");
+
+      assertNotSame(null, undefined, "null !== undefined");
+
+      assertNotNull(0, "0 is not null");
+      assertNotNull(false, "false is not null");
+      assertNotNull(undefined, "undefined is not null");
+
+      assertNotUndefined(0, "0 is not undefined");
+      assertNotUndefined(false, "false is not undefined");
+      assertNotUndefined(null, "null is not undefined");
+      assertNotUndefined(nullvar, "variable initialized to null is not undefined");
+      ]]>
+    </method>
+  </class>
+
+  <!--
+    Positive test cases that should hold true in either ActionScript
+    or JavaScript
+  -->
+  <class name="Tautologies" extends="TestCase">
+
+    <method name="setUp">
+      this.foo = {zot: "qux"};
+      this.nullvar = null;
+    </method>
+
+    <method name="tearDown">
+      delete this.foo;
+      delete this.nullvar;
+    </method>
+
+    <method name="testSuccess">
+    <![CDATA[
+      assertTrue(true, "true is true");
+      assertTrue(1, "1 is true");
+      assertTrue('1', "'1' is true");
+      assertTrue('1492', "'1492' is true");
+      assertTrue([], "[] is true");
+      assertTrue({}, "{} is true");
+      assertSame(true, isNaN(0/0), "0/0 isNaN");
+      assertSame(true, isNaN(Infinity - Infinity),
+          "Infinity - Infinity isNaN");
+      assertSame(true, isNaN(Infinity / Infinity),
+          "Infinity / Infinity isNaN");
+      assertSame(true, isNaN('random string'), "'random string' isNaN");
+
+      assertFalse(false, "false is false");
+      assertFalse(null, "null is false");
+      assertFalse(0, "0 is false");
+      assertFalse('', "'' is false");
+      assertFalse(undefined, "undefined is false");
+      assertFalse(0/0, "NaN is false");
+
+      assertEquals(null, undefined, "null == undefined");
+      assertEquals('foo', 'foo', "'foo' == 'foo'");
+      assertEquals(foo, foo, "object == itself");
+      assertEquals(1, '1', "1 == '1'");
+      assertEquals(1, true, "1 == true");
+      assertEquals(true, '1', "true == '1'");
+      assertEquals(0, false, "0 == false");
+      assertEquals('0', false, "'0' == false");
+      assertEquals(42, {valueOf: function() {return 42}},
+          "coercion to value");
+
+      assertWithin(0, .001, .01, ".001 within .01 of 0");
+      assertWithin(0, Number.MAX_VALUE, Infinity,
+          "MAX_VALUE within Infinity of 0");
+      assertWithin(0, 0.0, Number.MIN_VALUE, "0.0 within MIN_VALUE of 0");
+
+      assertSame(undefined, undefined, "undefined === undefined");
+      assertSame(null, null, "null === null");
+      assertSame(1, 1.000000000, "1 === 1.0");
+      assertSame(Infinity, 1/0, "Infinity === 1/0");
+      assertSame(1/Infinity, 0, "1/Infinity === 0");
+      assertSame(Infinity * Infinity, Infinity,
+          "Infinity * Infinity === Infinity");
+      assertSame(Infinity + Infinity, Infinity,
+          "Infinity + Infinity === Infinity");
+
+      assertSame(true, true, "true === true");
+
+      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.22
+      var flashVersion = LzBrowser.getVersion();
+      if (flashVersion < 8 || flashVersion > 8.22) {
+          assertNotSame(NaN, NaN, "NaN !== NaN");
+      }
+
+      assertNotSame(NaN, Infinity, "NaN !== Infinity");
+      assertNotSame(Infinity, NaN, "Infinity !== NaN");
+      assertNotSame('', ' ', "'' !== ' '");
+      assertNotSame(true, false, "true !== false");
+      assertNotSame(foo, {zot: "qux"}, "object !== similar object");
+
+      assertNull(null, "null is null");
+      assertNull(nullvar, "variable initialized to null is null");
+
+      assertNotNull('', "'' is not null");
+      assertNotNull([], "[] is not null");
+      assertNotNull({}, "{} is not null");
+
+      assertUndefined(undefined, "undefined is undefined");
+
+      assertNotUndefined('', "'' is not undefined");
+      assertNotUndefined([], "[] is not undefined");
+      assertNotUndefined({}, "{} is not undefined");
+
+      /* instanceof */
+      var cases = [
+        {instance: [], constructor: Array},
+        {instance: new Boolean(false), constructor: Boolean},
+        {instance: new Date(), constructor: Date},
+        {instance: new Number(1), constructor: Number},
+        {instance: {}, constructor: Object},
+        {instance: new String(""), constructor: String},
+        {instance: true, constructor: null},
+        {instance: 0, constructor: null},
+        {instance: "test", constructor: null},
+        {instance: new LzNode(), constructor: LzNode}
+      ];
+      var types = [Array, Boolean, Date, Number, String];
+
+      for (var k in cases) {
+        var i = cases[k].instance;
+        var c = cases[k].constructor;
+        for (var t in types) {
+          if (c) {
+            // All objects are instanceof Object
+            assertSame(true, i instanceof Object, Debug.__String(i) + ' instanceof ' + Debug.__String(Object));
+          }
+          // Check constructor
+          if (c && types[t].prototype == c.prototype) {
+            assertSame(true, i instanceof types[t], Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+          } else {
+            assertSame(false, i instanceof types[t], Debug.__String(i) + ' instanceof ' + Debug.__String(types[t]));
+          }
+        }
+      }
+      /* comparisons that are problematic in swf */
+      assertSame(true, -1 < 0, "-1 < 0");
+      assertSame(false, 0 < 0, "0 < 0");
+      assertSame(false, 1 < 0, "1 < 0");
+      assertSame(true, -1 <= 0, "-1 <= 0");
+      assertSame(true, 0 <= 0, "0 <= 0");
+      assertSame(false, 1 <= 0, "1 <= 0");
+      assertSame(false, -1 == 0, "-1 == 0");
+      assertSame(true, 0 == 0, "0 == 0");
+      assertSame(false, 1 == 0, "1 == 0");
+      assertSame(true, -1 != 0, "-1 != 0");
+      assertSame(false, 0 != 0, "0 != 0");
+      assertSame(true, 1 != 0, "1 != 0");
+      assertSame(false, -1 > 0, "-1 > 0");
+      assertSame(false, 0 > 0, "0 > 0");
+      assertSame(true, 1 > 0, "1 > 0");
+      assertSame(false, -1 >= 0, "-1 >= 0");
+      assertSame(true, 0 >= 0, "0 >= 0");
+      assertSame(true, 1 >= 0, "1 >= 0");
+     ]]>
+    </method>
+
+  </class>
+
+  <!--
+    Negative test cases for failure
+
+    Verify that things we expect to fail actually fail
+
+    [Future: generalize and make available to any unit test]
+  -->
+  <class name="IntentionalFailures" extends="TestCase">
+
+    <attribute name="expectedFailure" />
+    <attribute name="expectedFailures" />
+
+    <method name="construct" args="parent, args">
+      this.expectedFailure = null;
+      this.expectedFailures = 0;
+      super.construct(parent, args);
+    </method>
+
+    <!-- Override fail for testing purposes -->
+    <method name="fail" args="message">
+      <![CDATA[
+        dw("IntentionalFailures.fail(", message, ")");
+        if (typeof(expectedFailure) == "null") {
+            return super.fail(message);
+        } else if (typeof(expectedFailure) == "function") {
+            if (expectedFailure(message)) {
+                expectedFailures++;
+                return;
+            }
+        } else if (expectedFailure == message) {
+            expectedFailures++;
+            return;
+        }
+        super.fail(format("Wrong failure", expectedFailure,
+                   message));
+      ]]>
+    </method>
+
+    <method name="setUp">
+      this.foo = {zot: "qux"};
+      expectedFailure = null;
+      expectedFailures = 0;
+    </method>
+
+    <method name="tearDown">
+      delete this.foo;
+      expectedFailure = null;
+    </method>
+
+    <method name="testFailure">
+      expectedFailure = "This is an intentional failure"
+      fail(expectedFailure);
+      assertEquals(expectedFailures, 1, "Total number of expected failures");
+    </method>
+
+    <method name="testFailures">
+    <![CDATA[
+      var ef = function(m) {
+          return m.indexOf("Expected") == 0;
+      }
+      expectedFailure = ef;
+      assertFalse(true, "Expected");
+      assertFalse(1, "Expected");
+      assertFalse('1', "Expected");
+      assertFalse('1492', "Expected");
+      assertFalse([], "Expected");
+      assertFalse({}, "Expected");
+      expectedFailure = null;
+      assertEquals(6, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      assertTrue(false, "Expected");
+      assertTrue(null, "Expected");
+      assertTrue(0, "Expected");
+      assertTrue('', "Expected");
+      assertTrue(undefined, "Expected");
+      assertTrue(0/0, "Expected");
+      expectedFailure = null;
+      assertEquals(12, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      assertEquals(null, 'null', "Expected");
+      assertEquals('undefined', undefined, "Expected");
+      assertEquals(NaN, 0, "Expected");
+      assertEquals(1, 'one', "Expected");
+      assertEquals(1, 'true', "Expected");
+      assertEquals('true', '1', "Expected");
+      expectedFailure = null;
+      assertEquals(18, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      assertWithin(0, .1, .01, "Expected");
+      assertWithin(0, Infinity, Number.MAX_VALUE,
+          "Expected");
+//       assertWithin(0, Number.MIN_VALUE, 0.0, "Expected");
+      /* TODO: [2002-11-17 ptw] Above broken, try a similar small
+        number */
+      assertWithin(0, 1e-307, 0.0, "Expected");
+      expectedFailure = null;
+      assertEquals(21, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      assertNotSame(undefined, undefined, "Expected");
+      assertNotSame(null, null, "Expected");
+      assertNotSame(1, 1.000000000, "Expected");
+      assertNotSame(Infinity, 1/0, "Expected");
+      assertNotSame(1/Infinity, 0, "Expected");
+      expectedFailure = null;
+      assertEquals(26, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      assertNotSame(true, true, "Expected");
+      expectedFailure = null;
+      assertEquals(27, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.22
+      var flashVersion = LzBrowser.getVersion();
+      var nexp = 27;
+      if (flashVersion < 8 || flashVersion > 8.22) {
+          nexp++;
+          assertSame(NaN, NaN, "Expected");
+      }
+      nexp++;
+      assertSame(NaN, Infinity, "Expected");
+      nexp++;
+      assertSame(Infinity, NaN, "Expected");
+      nexp++;
+      assertSame('', ' ', "Expected");
+      nexp++;
+      assertSame(true, false, "Expected");
+      nexp++;
+      assertSame(foo, {zot: "qux"}, "Expected");
+      expectedFailure = null;
+      assertEquals(nexp, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      nexp++;
+      assertNotNull(null, "Expected");
+      expectedFailure = null;
+      assertEquals(nexp, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      nexp++;
+      assertNull('', "Expected");
+      nexp++;
+      assertNull([], "Expected");
+      nexp++;
+      assertNull({}, "Expected");
+      expectedFailure = null;
+      assertEquals(nexp, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      nexp++;
+      assertNotUndefined(undefined, "Expected");
+      expectedFailure = null;
+      assertEquals(nexp, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+
+      nexp++;
+      assertUndefined('', "Expected");
+      nexp++;
+      assertUndefined([], "Expected");
+      nexp++;
+      assertUndefined({}, "Expected");
+      expectedFailure = null;
+      assertEquals(nexp, expectedFailures, "Total number of expected failures");
+      expectedFailure = ef;
+    ]]>
+    </method>
+
+  </class>
+
+  <!--
+    Negative test cases for errors
+  -->
+  <class name="IntentionalErrors" extends="TestCase" semantics="'javascript'">
+
+    <attribute name="expectedError" />
+    <attribute name="expectedErrors" />
+
+    <method name="construct" args="parent, args">
+      this.expectedError = null;
+      this.expectedErrors = 0;
+      super.construct(parent, args);
+    </method>
+
+    <!-- Override error for testing purposes -->
+    <method name="error" args="message">
+      <![CDATA[
+        if (typeof(expectedError) == "null") {
+            return super.error(message);
+        } else if (typeof(expectedError) == "function") {
+            if (expectedError(message)) {
+                Debug.write("Expected error: " + message);
+                expectedErrors++;
+                return;
+            }
+        } else if (expectedError == message) {
+            Debug.write("Expected error: " + message);
+            expectedErrors++;
+            return;
+        }
+        super.error(format("Wrong error", expectedError,
+            message));
+
+      ]]>
+    </method>
+
+    <method name="setUp">
+      expectedError = null
+      expectedErrors = 0;
+      this.nonFunction = { nonMethod: 3 };
+    </method>
+
+    <method name="tearDown">
+      expectedError = null;
+      delete this.nonFunction;
+    </method>
+
+    <method name="testError">
+      expectedError = "This is an intentional error";
+      error(expectedError);
+      assertEquals(1, expectedErrors, "Total number of expected errors");
+    </method>
+
+    <method name="testUndefinedErrors">
+    <![CDATA[
+      expectedError = function(m) {
+          return m.indexOf(arguments.callee.expectedMatch) != -1;
+      }
+      expectedError.toString = function () {
+          return '/.*' + this.expectedMatch + '.*/';
+      }
+
+      expectedError.expectedMatch = "testing";
+      error("testing: 1, 2, 3");
+      assertEquals(1, expectedErrors, "Total number of expected errors");
+
+      expectedError.expectedMatch = "This is a";
+      $reportSourceWarning(0, 0, "This is a test");
+      assertEquals(2, expectedErrors, "Total number of expected errors");
+
+      // These tests only work if debugging is enabled
+      if (Debug) {
+        expectedError.expectedMatch = "flooglesnort";
+        // TODO: [2002-11-16 ptw] below currently signals two errors
+        undefined.flooglesnort;
+        assertEquals(4, expectedErrors, "Total number of expected errors");
+
+        nonFunction.flooglesnort;
+        assertEquals(5, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "call to undefined function";
+        flooglesnort();
+        assertEquals(6, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "call to non-function";
+        nonFunction();
+        assertEquals(7, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "call to undefined method";
+        nonFunction.flooglesnort();
+        assertEquals(8, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "call to non-method";
+        nonFunction.nonMethod();
+        assertEquals(9, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "undefined variable";
+        this.devnull = flooglesnort;
+        assertEquals(10, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "undefined object";
+        undefined['flooglesnort'];
+        assertEquals(11, expectedErrors, "Total number of expected errors");
+
+        expectedError.expectedMatch = "undefined property";
+        nonFunction[undefined] = 'this is an error';
+        assertEquals(12, expectedErrors, "Total number of expected errors");
+      }
+      ]]>
+    </method>
+  </class>
+</library>

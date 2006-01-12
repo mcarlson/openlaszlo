@@ -1,0 +1,58 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link href="../../lps/includes/styles.css" type="text/css" rel="STYLESHEET">
+<title>Button Construction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#ffffff">
+<h2>Button </h2>
+<p><a href="../../examples/components/button_example.lzx?lzt=html">example</a> <br>
+  <a href="../reference/index.html?lz-button.html" target="test">LZX Reference</a><br>
+filename: button.lzx</p>
+<p>The default component button has a height of 22 pixels and a width determined
+  by the length of the button text and its padding. The button face is 18 pixels
+  tall with 2 pixel borders for the bezels. The type is centered on the button
+  face. The button is comprised of scalable vector resources which enable disproportional
+  resizing without distortion. Resizing the button will not alter the text size.
+  The button can also contain an icon image with or without text included (see
+  Button example in the LPS 2.0 Welcome Page).</p>
+<p>The button form is constructed of four views. The views are: </p>
+<p>1. The "Outer Bezel" creates an indented area around the button</p>
+<p>2. The "Inner Bezel" defines the edges of the button </p>
+<p>3. The &quot;Simple Face&quot; is the face of the button. </p>
+<p>4. The &quot;Text&quot; for the button label -11 pt Verity Roman</p>
+<p>(An icon or image can be used with text or alone.)</p>
+<p></p>
+<p>Views 1-3 are constructed as multiple frame resources which change based on
+  the state of the button. </p>
+<p></p>
+<p>The outer and inner bezels (and each of their states) are constructed of a "hairline" .swf
+  file with two different colored strokes on each rectangle. These files were
+  built using the Flash authoring tool, and take advantage of a feature of the
+  .swf file format that is not supported in other vector-based programs (such
+  as Adobe Illustrator). Hairline strokes created in Flash will retain their
+  weight regardless of scaling*. This means that using a size other than the
+  default will not distort the look of the button. Although transparent, the
+  disabled state of the button (which is visually smaller) retains the Outer
+  Bezel to insure alignment with the other resources. </p>
+<p></p>
+<p>The face view contains a .swf resource which is a vector gradient acting as
+  the face of the button. There are 4 separate files for each of the button states,
+  each with its own gradation and opacity. These files are saved as 1 pixel wide
+  by 18 pixel high (default face height) resources and are scaled horizontally
+  to the width of the button. </p>
+<p></p>
+<p>*An unfortunate effect of this technique is that a "hairline" only retains
+  its width when decreasing scale. Scaling a "hairline" up will scale the thickness
+  of the stroke. In an effort to work around this, the assets for both outer
+  and inner bezels (and their states) are set at the overly large size of 500x500
+  pixels.</p>
+<p><img src="images/image026.png" width="466" height="594"></p>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,88 @@
+<library>
+    
+    <include href="rpc/rpc.lzx" />
+    <include href="rpc/library/soap.js" />
+
+    <!--- A class to get and use a soap object. -->
+    <class name="soap" extends="rpc">
+
+        <!--- Required attribute that specifies WSDL to read for the SOAP
+              object. The value for wsdl should be an href. -->
+        <attribute name="wsdl" type="string" />
+
+        <!--- The SOAP service to fetch. If not specified, the first service
+              encountered in the WSDL is used. -->
+        <attribute name="service" value="" type="string" />
+
+        <!--- The SOAP port to use. If not specified, the first SOAP port
+              encountered in the WSDL is used. -->
+        <attribute name="port" value="" type="string" />
+
+        <!--- The SOAP header to pass with each request. This can be either a
+              string or a dataset. Default is null. -->
+        <attribute name="requestheaders" value="null" type="expression" />
+
+        <!--- If set, the SOAP response header returned by the last
+              call. The value for this must be a dataset. Default is null. -->
+        <attribute name="responseheaders" value="null" type="expression" />
+
+        <!--- The prototypes that can be used to create objects. 
+              @keywords readonly -->
+        <attribute name="proto" value="null" type="expression" />
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- Load the object. If successful, this.proxy is set to an object
+              with remote APIs. -->
+        <method name="load">
+            LzSOAPService.loadObject(this._loadDel,
+                { wsdl: this.wsdl, service: this.service, port: this.port },
+                  this.secure, this.secureport);
+        </method>
+
+        <!--=================================================================-->
+        <!-- private methods                                                 -->
+        <!--=================================================================-->
+
+
+        <!--- @keywords private -->
+        <method name="init">
+            if (this['wsdl'] == null) {
+                Debug.write('soap error: required wsdl attribute not set');
+                return;
+            }
+            super.init();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setup" args="o">
+            var ok = super._setup(o);
+            if (ok) {
+                var stubinfo = o.stubinfo;
+                this.service = o.stubinfo.service;
+                this.port = o.stubinfo.port;
+                if ( o.stubinfo['proto'] ) {
+                    this.proto = o.stubinfo.proto;
+                }
+
+                for (var k in this.proxy) {
+                    var tpka = this.proxy[k]['args'];
+                    if (tpka == null) {
+                        tpka = this.proxy[k].args = {};
+                    }
+                    tpka.superclass = this;
+                }
+            }
+            return ok;
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

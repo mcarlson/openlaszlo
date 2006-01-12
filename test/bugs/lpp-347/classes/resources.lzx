@@ -1,0 +1,48 @@
+<library>
+
+    <!-- small button resource: used by buttons and new combobox -->
+    <resource name="button_small_left_rsc" >
+        <frame src="resources/button/small_button/sm_btn_up_lft.swf" />
+        <frame src="resources/button/small_button/sm_btn_mo_lft.swf" />
+        <frame src="resources/button/small_button/sm_btn_dn_lft.swf" />
+        <frame src="resources/button/small_button/sm_btn_dsbl_lft.swf" />
+    </resource>
+
+    <resource name="button_small_right_rsc" >
+        <frame src="resources/button/small_button/sm_btn_up_rt.swf" />
+        <frame src="resources/button/small_button/sm_btn_mo_rt.swf" />
+        <frame src="resources/button/small_button/sm_btn_dn_rt.swf" />
+        <frame src="resources/button/small_button/sm_btn_dsbl_rt.swf" />
+    </resource>
+    
+    <resource name="button_small_middle_rsc" >
+        <frame src="resources/button/small_button/sm_btn_up_mid.swf" />
+        <frame src="resources/button/small_button/sm_btn_mo_mid.swf" />
+        <frame src="resources/button/small_button/sm_btn_dn_mid.swf" />
+        <frame src="resources/button/small_button/sm_btn_dsbl_mid.swf" />
+    </resource>
+
+    <!-- big button resource: used by buttons -->
+    <resource name="button_big_left_rsc" >
+        <frame src="resources/button/big_button/big_btn_up_lft.swf" />
+        <frame src="resources/button/big_button/big_btn_mo_lft.swf" />
+        <frame src="resources/button/big_button/big_btn_dn_lft.swf" />
+        <frame src="resources/button/big_button/big_btn_dsbl_lft.swf" />
+    </resource>
+
+    <resource name="button_big_right_rsc" >
+        <frame src="resources/button/big_button/big_btn_up_rt.swf" />
+        <frame src="resources/button/big_button/big_btn_mo_rt.swf" />
+        <frame src="resources/button/big_button/big_btn_dn_rt.swf" />
+        <frame src="resources/button/big_button/big_btn_dsbl_rt.swf" />
+    </resource>
+    
+    <resource name="button_big_middle_rsc" >
+        <frame src="resources/button/big_button/big_btn_up_mid.swf" />
+        <frame src="resources/button/big_button/big_btn_mo_mid.swf" />
+        <frame src="resources/button/big_button/big_btn_dn_mid.swf" />
+        <frame src="resources/button/big_button/big_btn_dsbl_mid.swf" />
+    </resource>
+
+
+</library>

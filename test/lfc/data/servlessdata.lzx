@@ -1,0 +1,12 @@
+<canvas width="900" debug="true">
+    <debug x="300" width="300" height="400"/>
+    <include href="datapointerServerless.lzx"/>
+
+    <TestSuite>
+        <TestDatapointerServerless/>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,69 @@
+<canvas debug="false">
+    <debug x="300" y="300"/>
+
+    <class name="offview" width="100" height="50" bgcolor="blue" opacity=".5">
+    </class>
+
+    <class name="describeit">
+        <attribute name="text" type="text"/>
+        <simplelayout axis="x" spacing="20"/>
+        <text width="200" multiline="true" text="${parent.text}"/>
+        <attribute name="defaultplacement" value="content" type="string"/>
+        <view name="content"/>
+    </class>
+
+        
+    <view >
+        <simplelayout spacing="50"/>
+        <describeit height="60">
+            Rotation about arbitrary point
+            <offview xoffset="20" yoffset="20" y="20" x="50">
+                <animator attribute="rotation" from="0" to="360" 
+                          motion="linear" duration="1000" repeat="Infinity"/>
+            </offview>
+        </describeit>
+        <describeit>
+            Note that the offset describes how to place the object 
+            in the parent -- it's a modification to make to the view's x,y
+            coordinates before drawing it.
+            <simplelayout axis="x"/>
+            <view bgcolor="red" opacity=".5" width="100" height="50"/>
+            <offview xoffset="20" yoffset="20"/>
+            <view bgcolor="gray" opacity=".5" width="100" height="50"/>
+        </describeit>
+        <describeit height="60">
+            Offsets don't affect the view's subviews.
+            <offview >
+                <animatorgroup repeat="Infinity" duration="1000">
+                    <animatorgroup process="simultaneous">
+                        <animator attribute="xoffset" from="0" to="-20" />
+                        <animator attribute="yoffset" from="0" to="-20"/>
+                    </animatorgroup>
+                    <animatorgroup process="simultaneous">
+                        <animator attribute="xoffset" from="-20" to="0" />
+                        <animator attribute="yoffset" from="-20" to="0"/>
+                    </animatorgroup>
+                </animatorgroup>
+                <simplelayout axis="x" spacing="2"/>
+                <view bgcolor="gray" width="20" height="20"/>
+                <view bgcolor="gray" width="20" height="20"/>
+                <view bgcolor="gray" width="20" height="20"/>
+            </offview>
+        </describeit>
+        <describeit>
+            In this case, the offset is a function of the view's size, so
+            the view is effectively centered on its offset, even as its size 
+            changes.
+            <offview x="100" xoffset="${this.width/2}">
+                <animatorgroup repeat="Infinity" duration="1000">
+                    <animator attribute="width" from="100" to="200" />
+                    <animator attribute="width" from="200" to="100"/>
+                </animatorgroup>
+            </offview>
+        </describeit>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

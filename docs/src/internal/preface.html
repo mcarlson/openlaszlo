@@ -1,0 +1,232 @@
+<html id="preface"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:d="docbook">
+<head>
+  <title>Preface</title>
+</head>
+
+<body>
+<?html2db class="preface"?>
+
+<h1>Preface</h1>
+
+<p>We invented this technology to make it possible to create web
+applications that are delightful to use.</p>
+
+<p>Every computer user knows the power of the Internet, and every web
+surfer has been awed at one time or another by the vast wealth of the
+Web. But at the same time everyone knows, even if they only know it
+subconsciously, that web-based applications running in a browser offer
+a user experience that is inherently inferior to that of
+locally-running programs. There is something almost retrograde about
+interacting with websites; they're anomalous, like rotary telephones
+in a touch-tone world.</p>
+
+<p>The reason for this is clear. It's not because web designers don't
+know anything about usability or visual design or software
+engineering. It's because they have not had the tools they require to
+build the web experience they conceive.</p>
+
+<p>HTML is a great thing; DHTML is a great thing. Macromedia's
+Flash<d:trademark/> is a great thing. But none of them allow
+developers to create astounding user experiences, because all of them
+are based on fundamentally limited models. The variants of HTML are
+based on the metaphor of a &quot;page,&quot; which forces users to
+process information in arbitrary discrete chunks separated by jarring
+transitions and &quot;page refreshes.&quot; Flash offers the
+possibility of a much more continuous user experience, but its
+&quot;movie&quot; metaphor forces developers to leave behind many
+essential tools and techniques of modern software development.</p>
+
+<p>In contrast, Laszlo's solution was built from the ground up for
+application development &#x2014; not &quot;page&quot; development, not
+&quot;movie&quot; development &#x2014; and is centered around standard
+development approaches. LZX applications are written in XML files with
+embedded JavaScript, which provides an ideal foundation for teams of
+serious developers. Laszlo supports standards-based object-oriented
+development and data binding, and enables rich interactivity without
+requiring complex, timeline-based visual authoring.</p>
+
+<p>The result is applications that are delightful to use. Now,
+delightfulness is in the eye of the beholder, of course, and that's
+why we suggest that you right now click on  our <a href="/demos/amazon/amazon.lzx">e-commerce</a>
+application.
+ This program communicates with
+Amazon.com's data servers and allows you to browse their products,
+create a wish list, fill a shopping cart, and so forth. So in many
+ways it's just like any other similar e-commerce site. But notice that
+there are no screen refreshes, and that you can move items by dragging
+them with the mouse, that it's hard to get &quot;lost.&quot; Now
+consider that this program was written in a few hours using a simple
+text editor.</p>
+
+<p>We suggest that you play around with any of the dozens of other
+sample applications <a href="/demos/">here</a> or on the Laszlo Systems <a href="http://www.laszlosystems.com/demos/">website</a>   to get a feel for
+what a Laszlo application is like. One sometimes hears the phrase
+&quot;Rich Internet Application&quot; to describe programs like these,
+and their defining characteristic is that they make people smile. A
+growing body of empirical studies <todo>source</todo> shows that when
+people have a more pleasant experience on a website, the longer they
+stay there, and on commercial sites, the more commerce they
+transact.</p>
+
+<h2>Audience and rationale for this book</h2>
+
+<p>This book is written for software developers who have familiarity
+with the concepts of object-oriented programming as implemented in
+languages such as Java, C++, or JavaScript, and with the fundamentals
+of XML data formats.</p>
+
+<p>We also hope that this <i>Guide</i> will be accessible to web
+developers who know HTML and CSS but haven't yet worked with object
+oriented languages, and to developers and designers familiar with
+Flash or FlashMX. If this describes you, you may have a little
+homework to do outside the scope of this book, but in general you
+should have no trouble becoming a fluent LZX developer. A good place
+for you to start learning would be with the <a
+href="${tutorials}">tutorials</a>.</p>
+<h3>Learn by Doing</h3>
+<p>This Guide contains hundreds of "live" examples, that is, 
+Laszlo Applications that are embedded in this page. You'll have more fun and get more out of this document if you "play with the code." To do so,
+simply click on the "Edit" link at the bottom left corner of each example. This will cause a new window to pop up that is a self-contained
+environment for modifying and executing Laszlo applications. Edit the sample code then click "update" and see the results displayed in the 
+right-hand side of the window. To return the sample code to its inital state, click "Reset." </p>
+<p>
+If you would like to save a copy of the application for later use, click on the "Save As" button.
+</p>
+
+
+
+<h3>Sequential and Random Access</h3>
+
+<p><i>Designing, Developing and Deploying Laszlo Applications</i> is intended for sequential and random
+access. In general each chapter draws on the concepts covered in the chapters
+that precede it, but not (too much) on those in the chapters that follow it. If you start with Chapter One
+and read to the end, you won't get lost.</p>  
+<p>
+ At the same time each
+chapter is designed to be encyclopedic: the chapter on Animation
+covers the entire subject of animation, and so forth.</p>
+<p> 
+ Short self-contained examples appear throughout. Longer examples are linked to.</p>
+
+
+<h2>Typographic Conventions</h2>
+<p>Code is displayed thus: <code>var a = f(2)</code>.  Longer sections of code and other verbatim information is displayed in a separate paragraph:</p>
+
+<pre>
+An example file
+that spans several
+lines
+</pre>
+
+<p>Example programs are shown thus:</p>
+<example executable="false">&lt;canvas height="20"&gt;
+  &lt;text&gt;Hello World!&lt;/text&gt;
+&lt;/canvas&gt;</example>
+
+<p>Some example programs are run within the page.  The running
+application is shown first, followed by the application source code,
+followed by an Edit button that allows you to try out the effect of
+making changes to the application source code.</p>
+<example>&lt;canvas height="20"&gt;
+  &lt;text&gt;Hello World!&lt;/text&gt;
+&lt;/canvas&gt;</example>
+
+<todo>Material marked thus is only shown in the beta distributions of
+the documentation, and must be eliminated before the product is
+final.</todo>
+
+<fixme>Material in <d:sgmltag>fixme</d:sgmltag> is only shown
+internally, and should not be present in beta or final
+distributions.</fixme>
+
+<h2>Related documentation</h2>
+
+  <!--preface>
+    <title>Preface</title>
+    <para>Please check the <ulink
+    url="http://www.laszlosystems.com/developers/">Developer Zone</ulink>
+    of the Laszlo web site for updates and forthcoming chapters.  Also see
+    the <ulink url="../lzx-reference/">LZX Reference</ulink> for
+    comprehensive API documentation for individual tags, classes, and
+    references.</para>
+  </preface-->
+  
+
+<p>In addition to this <em>Developer's Guide</em>, please see also</p>
+<ul>
+  <li>The <a href="${reference}"><em>LZX Reference
+  Manual</em></a>. This online, hyperlinked, comprehensive reference
+  for LZX contains entries for each LZX tag and API. Its format will
+  be familiar to users of JavaDoc(tm) and similar systems. <!--todo>However,
+  there is a special richness to the information contained in LZX
+  Reference pages, therefore please see &quot;Using the LZX Reference
+  Manual&quot; in Chapter 3 for a quick preview;</todo--></li>
+  
+  
+  <li>The <a href="${tutorials}">online tutorials</a> and sample
+  applications at <a
+  href="http://www.laszlosystems.com/demos">http://www.laszlosystems.com/demos</a>
+  provide a hands-on instructional overview of the LZX language.</li>
+</ul>
+
+<h2>Suggested reading paths</h2>
+<todo>
+This section, ideally, may be replaced with an interactive (lzx) map.
+</todo>
+
+<p>The best way to use the <em>LZX Developer's Guide</em> depends on
+your experience.</p>
+
+<p><em>Experienced Object-Oriented programmers</em>: We suggest that
+you start by reading Chapters 1, 2 and 4 of this Guide. If you have
+never worked with JavaScript, you can learn the basics quickly at one
+of the JavaScript tutorials at <a
+href="http://www.w3schools.com/js/default.asp">W3Schools</a>, <a
+href="http://www.wdvl.com/Authoring/JavaScript/Tutorial/">WVDL</a>, or
+<a href="http://www.pageresource.com/jscript/">PageResource.com</a>. Then visit
+the Laszlo Systems website and the Laszlo demo-hosting site <a
+href="http://mylaszlo.com">MyLaszlo.com</a> and play around with the
+tutorials and sample programs; as you read the sample code be sure to
+look up appropriate entries in the <em>Reference Manual.</em> At that
+point you'll know what further reading you need to do in this
+guide.</p>
+<p><em>Web/Flash developers with no Object-Oriented experience:</em>
+We suggest that you start with the <a
+href="${tutorials}">tutorials</a> in order to get a general feel for
+LZX programming. Don't worry about mastering the subjects they cover;
+your goal is to begin to get comfortable with the language.</p>
+
+<p>If you need to, learn the basics of 
+<a href="http://www.w3.org/XML/">XML</a>.</p>
+
+<p>Then read the rest of <xref linkend="overview">Part
+I of this guide</xref>.</p>
+
+<todo>Work your way through a JavaScript tutorial
+<todo>link</todo>. Caution: it makes sense to read the first four
+chapters of this book before doing the JavaScript tutorial, because
+LZX employs JavaScript in a way that is quite distinct from the way it
+is used in web browsers.</todo>
+
+<todo>Then read Chapters 4 through 12 of this manual, making sure that
+you edit the sample programs.  After you've done that you'll be
+an experienced Object Oriented programmer and able to decide for
+yourself how best to proceed from there.</todo>
+
+<h3>Use the Forums</h3>
+
+<p>The best way to learn any programming language is to draw upon the
+experience and goodwill of its development community (and to write
+code! as the saying goes, nobody learned to ride a bicycle by reading
+about it). The LZX developer community has a home at <a href="http://www.laszlosystems.com/developers/forums/">http://www.laszlosystems.com/developers/forums/</a>. There
+you will find an active discussion of all aspects of the language, and
+a place to ask questions of your own.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,69 @@
+<library>
+
+    <class name="shoppinglist" height="${parent.height}">
+
+        <attribute name="total" type="number" value="0"/>
+        <attribute name="panel_to_nudge" />
+
+        <view name="list" y="14" height="$once{parent.height-85}" 
+              width="$once{parent.width}">
+            <simplelayout axis="y" spacing="6"/>
+            <!-- Repeated view displaying list of items in the shopping cart -->
+            <view x="12" width="${parent.width}">
+                <datapath xpath="Details" pooling="true"/>
+                <simplelayout axis="x" spacing="6"/>
+                <view datapath="ImageUrlSmall/text()" width="50" height="50" clip="true"
+                    onmouseover="dragsmall.display(this, this.datapath.getNodeText());"
+                    onmouseout="dragsmall.hide();"
+                    onmousedown="dragsmall.start();"
+                    onmouseup="dragsmall.stop(); parent.parent.parent.itemDropped(parent.datapath);">
+                    <attribute name="source" value="${this.data}"/>
+                </view>
+
+                <view width="$once{parent.width}" fgcolor="#666699">
+                    <simplelayout axis="y"/>
+                    <text fontsize="12" fontstyle="bold" datapath="ProductName/text()" width="${parent.width}"/>
+                    <text datapath="Artists/Artist[1]/text()" width="${parent.width}"/>
+                    <view fontsize="12" fontstyle="bold">
+                        <simplelayout axis="x" spacing="4"/>
+                        <text>Our Price:</text>
+                        <text datapath="OurPrice/text()" width="${parent.width}"/>
+                    </view>
+                </view>
+
+            </view>
+        </view>
+
+        <view name="divider" y="$once{parent.list.height}" 
+              resource="divider_panel" />
+
+        <view x="4" y="$once{parent.divider.y + 20}"
+              fontstyle="bold" fontsize="14" 
+              font="Arial,Helvetica">
+            <simplelayout axis="x"/>
+            <text fgcolor="#666699">Total:  $</text>
+            <text fgcolor="#666699" width="100" 
+                  text="${Math.round(classroot.total*100)/100}"/>
+        </view>
+
+        <trashcan x="144" y="$once{parent.divider.y + 17}" name="trashCan" />
+
+        <method name="addItem" args="dpath">
+            this.panel_to_nudge.nudge();
+
+            this.setAttribute("total", total+parseFloat(dpath.xpathQuery("OurPrice/text()").substring(1)));
+            datapath.addNodeFromPointer(dpath);
+        </method>
+
+        <method name="removeItem" args="dpath">
+            this.setAttribute("total", total-parseFloat(dpath.xpathQuery("OurPrice/text()").substring(1)));
+            dpath.deleteNode();
+        </method>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

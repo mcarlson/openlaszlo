@@ -1,0 +1,53 @@
+<canvas debug="true" width="800" >
+
+    <debug x="370" width="400" height="300" />
+
+    <alert name="errormsg"/>
+
+    <simplelayout spacing="10"/>
+
+    <dataset name="envDset" />
+
+    <list name="env" width="250" height="200">
+        <textlistitem name="ti" datapath="envDset:/*" text="$path{'name()'}">
+            <method event="onselect">
+                canvas.display.setText(datapath.xpathQuery('text()'))
+            </method>
+        </textlistitem>
+    </list>
+            
+    <text name="display" selectable="true" width="350" multiline="true" bgcolor="0xd0d0d0" />
+
+    <!-- See WEB-INF/class/SystemProp.java for backend source code. -->
+    <security>
+        <allow>
+            <pattern>^SystemProp$</pattern>
+        </allow>
+    </security>
+
+    <javarpc name="systemprop" scope="none" classname="SystemProp">
+
+        <method event="onload">
+            this.getProperties.invoke();
+        </method>
+
+        <method event="onerror" args="msg">
+            errormsg.setAttribute('text', 'error: ' + msg)
+            errormsg.open()
+        </method>
+
+        <remotecall name="getProperties" funcname="getProperties" 
+                    dataobject="envDset">
+            <method event="ondata" args="d">
+                Debug.write('data:', d);
+            </method>
+        </remotecall>
+
+    </javarpc>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

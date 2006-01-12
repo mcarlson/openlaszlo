@@ -1,0 +1,31 @@
+<library>  
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!-- this tests a couple of empty set cases, need some more here -->
+    <datasource name="http">
+        <dataset name="empty" request="true"
+                 src="../resources/xml/empty.xml"/>
+    </datasource>
+     <datasource name="http2">
+        <dataset name="empty2" request="true"
+                 src="../resources/xml/empty2.xml"/>
+    </datasource>
+
+  <class name="TestData" extends="TestCase">
+
+    <view name="data" datapath="http:/root" />
+    <view name="lor" datapath="http2:/root/child"/>
+
+    <method name="testEmpty">
+      Debug.write("expect:  couldn't find dataset for http:/root");
+      assertEquals(0,0,0);
+    </method>
+    <method name="testEmpty2">
+      Debug.write("expect:  couldn't find dataset for http2:/root/child");
+      assertEquals(0,0,0);
+    </method>
+  </class>
+</library>

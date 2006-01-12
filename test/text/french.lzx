@@ -1,0 +1,20 @@
+<canvas>
+<dataset name="items">
+  <combodata name="combodata">
+    <embolo_type name="embolo_type">
+      <item value="1">abcd</item>
+      <item value="2">abcd</item>
+      <item value="3">áááá</item>
+      <item value="4">áááá</item>
+      <item value="5">KZT1</item>
+      <item value="6">KZT2</item>
+      <item value="7">KZT3</item>
+      <item value="8">KLEM</item>
+    </embolo_type>
+  </combodata>
+</dataset>
+
+<list id="a2" toggleselected="true" oninit="selectItemAt(0)" width="130" shownitems="10">
+  <textlistitem datapath="items:/combodata/embolo_type/item" text="$path{'text()'}" value="$path{'@value'}"/>
+</list>
+</canvas>

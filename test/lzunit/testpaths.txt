@@ -1,0 +1,13 @@
+test/smoke/smokecheck.lzx
+test/lfc/version.lzx
+test/lfc/data/alldata.lzx
+test/lfc/animators/lzunit_animator_prop.lzx
+test/lfc/lzunit-node.lzx
+test/lfc/lzunit-node-initsequence.lzx
+test/lfc/lzunit-node-placement.lzx
+test/lfc/lzunit-node-replication.lzx
+test/components/base/lzunit-baseslider.lzx
+test/components/base/lzunit-baselist.lzx
+test/components/base/lzunit-basetabs.lzx
+test/components/lz/lzunit-components.lzx
+test/bugs/lzunit-lpp-842.lzx

@@ -1,0 +1,7 @@
+<--With ptw's changeset 33909, which coerces format %d arg to a number, this should return NaN in the debugger because #d is undefined-->
+
+<canvas width="200" debug="true">
+<script>
+Debug.format('%#d');
+</script>
+</canvas>

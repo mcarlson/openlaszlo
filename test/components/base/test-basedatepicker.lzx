@@ -1,0 +1,85 @@
+<canvas height="200"> 
+    <class name="myday" 
+           extends="basedatepickerday" 
+           bgcolor="green"
+           width="20"
+           height="20">
+        <method event="onclick">
+        <![CDATA[
+            if( !this.disabled && this.selectable ) {
+                this.setAttribute('selected', true);    
+            }
+        ]]>
+        </method>
+
+        <text text="${parent.daynum}"
+              visible="${!parent.disabled}" 
+              opacity="${parent.selectable ? 1 : .3 }"/>       
+    </class>
+
+    <class name="myweek" extends="basedatepickerweek">
+        <simplelayout axis="x" spacing="1"/> 
+    </class> 
+    
+    <class name="mydatepicker" 
+           extends="basedatepicker" 
+           weekclass="myweek"
+           dayclass="myday"
+           xinset="0"
+           yinset="0">
+
+        <method name="setMonthToShow" args="month, year">
+            super.setMonthToShow(month,year);
+            this.display.month.datapath.setXPath(
+            "datepicker_strings_en:/months/month[@index='" + month + "']/@full" );
+            this.display.year.setText( year );
+        </method>
+
+        <method event="onselecteddate">
+            if( this.selecteddate != null ) {
+                this.selected.year.setText( this.selecteddate.getFullYear() );
+                this.selected.month.datapath.setXPath(
+                        "datepicker_strings_en:/months/month[@index='" + 
+                        this.selecteddate.getMonth() + "']/@full" ); 
+                this.selected.date.setText( this.selecteddate.getDate() );
+            }
+        </method>
+
+        <view options="ignorelayout">
+            <text width="20" height="20" bgcolor="red" text="S"/>
+            <text width="20" height="20" bgcolor="red" text="M"/>
+            <text width="20" height="20" bgcolor="red" text="T"/>
+            <text width="20" height="20" bgcolor="red" text="W"/>
+            <text width="20" height="20" bgcolor="red" text="T"/>
+            <text width="20" height="20" bgcolor="red" text="F"/>
+            <text width="20" height="20" bgcolor="red" text="S"/>
+            <simplelayout axis="x" spacing="1"/>
+        </view> 
+        <view> 
+            <button text="previous" onclick="classroot.showPreviousMonth()"/>
+            <button text="next" onclick="classroot.showNextMonth()"/>
+            <simplelayout axis="x"/>
+        </view>
+        <view name="display">
+            <text> Showing: </text>
+            <text name="month" datapath="." resize="true"/>
+            <text name="year" resize="true"/>
+            <simplelayout axis="x" spacing="2"/>
+        </view>
+        <view name="selected">
+            <text> Selected: </text>
+            <text name="month" datapath="." resize="true"/>
+            <text name="date" resize="true"/>
+            <text name="year" resize="true"/>
+            <simplelayout axis="x" spacing="2"/>
+        </view> 
+
+        <simplelayout axis="y" placement="content" spacing="1" inset="20"/> 
+        <simplelayout axis="y"/>
+    </class> 
+    <mydatepicker/> 
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

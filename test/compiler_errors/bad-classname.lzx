@@ -1,0 +1,12 @@
+<!-- declaring an attribute with an illegal name throws error-->
+<canvas width="300" height="200" bgcolor="red"> 
+
+  <class name="do">
+    <attribute name="" value="259"/>
+  </class>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

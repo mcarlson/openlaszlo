@@ -1,0 +1,30 @@
+<canvas debug="true">
+  <dataset name="cards">
+    <cards>
+      <row><card>2c.gif</card></row>
+      <row><card>3d.gif</card></row>
+      <row><card>kd.gif</card></row>
+      <row><card>qh.gif</card></row>
+      <row><card>th.gif</card></row>
+    </cards>
+  </dataset>
+  
+  <class name="card">
+    <view datapath="card[1]/text()">
+      <method name="applyData" args="d" >
+	if (d == null) { return; }
+	Debug.write('D:'+d);
+	setSource( '../resources/gif/'+d );
+      </method>
+    </view>
+  </class>
+  
+  <view>
+    <simplelayout spacing="1" axis="x" />
+    <card datapath="cards:/cards[1]/row/"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

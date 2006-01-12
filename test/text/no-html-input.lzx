@@ -1,0 +1,29 @@
+<!-- verify that a fixed-size input text field does not try to 
+    do HTML formatting (fixes bug #909)
+
+-->
+
+<canvas width="1000" height="800">
+
+    <font name="Helvetica">
+    <face src="helmetcb.ttf"  style="bold" />
+    <face src="helmetcbi.ttf" style="bold italic" />
+    <face src="helmetci.ttf"  style="italic" />
+    <face src="helmetcr.ttf" />
+    </font>
+
+<view id="v1" oninit="testhtml()">
+  <simplelayout spacing="4" axis="y" />
+  <inputtext font="Helvetica" fontsize="18" name="t3" width="400" height="80" multiline="true"  bgcolor="#fffccc"></inputtext>
+  <method name="testhtml">
+    <![CDATA[
+    var str = "The following should look like raw HTML codes, not formatted html: <b>foo & ' \" & <i>bar</i>";
+    this.t3.settext(str);
+    ]]>
+  </method>
+</view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

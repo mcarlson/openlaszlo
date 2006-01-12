@@ -1,0 +1,9 @@
+<canvas debug="true">
+
+    <font src="FuturNo2DBol_small.ttf" name="futura" />
+
+    <simplelayout/>
+    <text font="futura">This looks ok.</text>
+    <text font="futura" fontstyle="bold">Did not load bold futura.</text>
+
+</canvas>

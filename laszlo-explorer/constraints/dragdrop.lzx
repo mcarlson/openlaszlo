@@ -1,0 +1,37 @@
+<canvas>
+  <view y ="30" >
+    <simplelayout axis="x" spacing="5"/>
+    <view id="cart" bgcolor="#666699" 
+          height="200" width="125">
+      <text fgcolor="#FFFFFF" 
+            x="5" y="5" >Shopping Cart</text>
+    </view>
+    <view id="wish" bgcolor="#666699" 
+          height="200" width="125">
+      <text fgcolor="#FFFFFF" 
+            x="5" y="5" >Wish List</text>
+    </view>
+  </view>
+  
+  <view x="${cart.x+10}" y="${cart.y+55}" 
+        resource="norahjones.jpg"
+        onmousedown="dragging.apply()"
+        onmouseup="dragging.remove(); stop()">
+    
+    <dragstate name="dragging"/>
+    
+    <method name="stop">
+      if (this.x>wish.x) {
+        this.animate("x", wish.x+10, 300);
+        this.animate("y", wish.y+55, 300);
+      } else {
+        this.animate("x", cart.x+10, 300);
+        this.animate("y", cart.y+55, 300);
+      }
+    </method>
+  </view>
+  
+  <text x="5" y="5">
+    Drag picture between shopping cart and wishlist
+  </text>
+</canvas>

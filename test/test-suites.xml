@@ -1,0 +1,91 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- LPS Test suites -->
+
+<test-suites>   
+    <suite name="Tests"
+           directory="test"
+           test="lps" />
+    <suite name="Regression"
+           directory="test/regression"
+           test="lps" />
+    <suite name="Checkin smoke Tests"
+           directory="test/smoke"
+           test="lps" />
+    <suite name="Apple Animation Test"
+           directory="test/apple-animation-test"
+           test="lps" />
+    <suite name="LZ Components"
+           directory="test/components/lz"
+           test="lps" />
+    <suite name="Redmond Components"
+           directory="test/components/redmond"
+           test="lps" />
+    <suite name="examples"
+           directory="examples"
+           test="lps" />
+    <suite name="chat"
+           directory="sample-apps/chat"
+           test="lps"/>
+    <suite name="noughts"
+           directory="sample-apps/noughts"
+           test="lps"/>
+    <suite name="weather"
+           directory="sample-apps/weather"
+           test="lps"/>
+    <suite name="contacts"
+           directory="sample-apps/contacts"
+           test="lps"/>
+    <suite name="Welcome Support Frame"
+           directory="lz-utils/welcome_support"
+           test="lps"/>
+    <suite name="Welcome Support Cover"
+           directory="lz-utils/welcome_support/coverpages"
+           test="lps"/>
+    <suite name="Welcome Support Headers"
+           directory="lz-utils/welcome_support/headers"
+           test="lps"/>
+<!--
+    <suite name="Bugs"
+           directory="test/bugs"
+           test="lps"/>
+-->
+    <suite name="Window Tutorial"
+           directory="test/tutorials/window"
+           test="lps"/>
+    <suite name="Calculator Tutorial"
+           directory="test/tutorials/calculator"
+           test="lps"/>
+    <suite name="Scripting Tutorial"
+           directory="test/tutorials/scripting"
+           test="lps"/>
+
+    <suite name="calendar"
+           directory="sample-apps/calendar"
+           test="lps"/>
+    <suite name="dashboard"
+           directory="sample-apps/dashboard"
+           test="lps"/>
+    <suite name="Amazon"
+           directory="sample-apps/amazon"
+           test="lps"/>
+    <suite name="Survey"
+           directory="sample-apps/vacation-survey"
+           test="lps"/>
+    
+<!--
+    <suite name="messenger"
+           directory="sample-apps/messenger"
+           test="lps"/>
+-->
+
+<!--    <suite name="Compiler JavaScript Generation"
+           directory="server/test/jsgen"
+           test="js" />
+   <suite name="Compiler Errors"
+           directory="test/compiler_errors"
+           test="lps" />
+-->
+</test-suites>

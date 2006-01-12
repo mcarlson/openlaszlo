@@ -1,0 +1,86 @@
+<library>
+    <include href="../styles/chartstyle.lzx"/>
+    <include href="../common/dataseries.lzx"/>
+    <include href="../common/viewspoolmanager.lzx"/>
+    <include href="../common/virtualdrawview.lzx"/>
+    <include href="../common/rectangularchart.lzx"/>
+    <include href="../common/legend.lzx"/>
+    <include href="../common/axis.lzx"/>
+    <include href="../common/databar.lzx"/>
+    <include href="columnchartplotarea.lzx"/>
+    
+    <!--- a chart class that render vertical bar -->
+    <class name="columnchart" extends="rectangularchart">
+        <!--- @keyword private -->
+        <method name="init">
+            // this.render() needs the reference to plotarea, so let's get it here
+            plotarea = this.getNodeOfClass("columnchartplotarea");
+            this.render();
+            super.init();            
+        </method>    
+
+        
+        <!--- @keyword private -->
+        <method name="renderPlotArea">
+        <![CDATA[
+            super.renderPlotArea();
+
+            plotarea.clear();
+            plotarea.setDataBound(haxis.minimumRender, vaxis.minimumRender,  haxis.maximumRender + 1, vaxis.maximumRender);
+            var topseries = this.getDataSeries();
+            
+            var numSeries = topseries.getNumDataSeries();
+            plotarea.numseries = numSeries;
+            var barwidth =  1 / (numSeries + 1);  
+            this.style.resetDataStyleCycle();
+            for(var i = 0; i < numSeries; i++)
+            {
+                var leafseries = topseries.getDataSeries(i); 
+                var xseries = leafseries.getDataColumn(haxis.columnName).values;
+                var yseries = leafseries.getDataColumn(vaxis.columnName).values;
+                var tooltipseries = null;
+                var labelseries = null;
+                var ldatastyle = this.style.getDataStyle(i);
+                if(this.datatipEnabled){                                      
+                    tooltipseries = leafseries.getDataColumn(this.datatipColumn).values; 
+                }
+                if ( this.datalabelEnabled ){
+                    labelseries = leafseries.getDataColumn(this.datalabelColumn).values;
+                }
+                
+                if (leafseries.enabled ) {                
+                    plotarea.renderSeries(xseries, yseries, tooltipseries, labelseries, ldatastyle, barwidth / 2 + barwidth * i, barwidth, i, haxis.type);          
+                    this.datatooltip.style = ldatastyle;
+                }
+            }
+        ]]>
+        </method>
+        
+        <!--- change the virtual boundary of the bar chart
+            @param Number newminx: the new min x of the boundary
+            @param Number newminy: the new min y of the boundary
+            @param Number newmaxx: the new max x of the boundary
+            @param Number newmaxy: the new max y of the boundary
+            @param Number animated: the animation duration in milliseconds. 0 for no animation
+            @param Number undoable: deterimine if the action can be undo
+        -->
+        <method name="changeBound" args="newminx, newminy, newmaxx, newmaxy,  animated, undoable">           
+            actionhelper.changeBound(newminx, newminy, newmaxx - 1, newmaxy,  animated, undoable);
+        </method>
+        
+        
+        
+        <columnchartplotarea name="plotarea" x="50" y="20" width="500" height="300" clip="true"/>
+        <!-- view name="plotareabackground" x="${parent.plotarea.x}" y="${parent.plotarea.y}" width="${parent.plotarea.width}" height="${parent.plotarea.height}" bgcolor="0xffeeff" /-->
+        
+    </class>
+    
+</library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->

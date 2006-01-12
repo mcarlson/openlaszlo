@@ -1,0 +1,124 @@
+<canvas width="800" height="800">
+    <debug width="600" height="300" y="400"/>
+    <dataset name="dsO">
+        <root>
+            <item> item1 </item>
+            <item> item2 </item>
+            <item> item3 </item>
+            <item> item4 </item>
+        </root>
+    </dataset>
+    <simplelayout axis="x" spacing="50"/>
+
+    <view>
+        <simplelayout/>
+        <button> Switch to forced replication
+            <method event="onclick">
+                <![CDATA[  
+                var newnodes = [];
+                for ( var i = 0; i < 4; i++ ){
+                    newnodes.push( new LzDataElement( "item" ,null,
+                                                       [ new LzDataText( 
+                                                              "forced" + i )]));
+                }
+                parent.replParent.repl.setNodes( newnodes );
+                ]]>
+            </method>
+        </button>
+        <button> Poke replicated data
+            <method event="onclick">
+                var dp = new LzDatapointer( );
+                dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
+                dp.setNodeText( dp.getNodeText() + "+" );
+                dp.setPointer( parent.replParent.subviews[ 3 ].datapath.p );
+                dp.setNodeText( dp.getNodeText() + "+" );
+            </method>
+        </button>
+
+        <view name="replParent" datapath="dsO:/root">
+            <simplelayout/>
+            <text name="repl" datapath="item/text()"/>
+        </view>
+    </view>
+    <view>
+        <simplelayout/>
+        <button> Force replication
+            <method event="onclick">
+                <![CDATA[  
+                var newnodes = [];
+                for ( var i = 0; i < 4; i++ ){
+                    newnodes.push( new LzDataElement( "item" ,
+                                                      { foo : Math.random() },
+                                                      [ new LzDataText( 
+                                                              "forced" + i )]));
+                }
+                parent.replParent.repl.datapath.setNodes( newnodes );
+                ]]>
+            </method>
+        </button>
+        <button> Poke replicated data
+            <method event="onclick">
+                var dp = new LzDatapointer( );
+                dp.setPointer( parent.replParent.subviews[ 0 ].datapath.p );
+                dp.setNodeText( dp.getNodeText() + "+" );
+                dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
+                dp.setNodeAttribute( 'foo' , 
+                                   Number( dp.getNodeAttribute( 'foo' ) * 2  ));
+            </method>
+        </button>
+
+        <view name="replParent" datapath="dsO:/root">
+            <simplelayout/>
+            <view name="repl">
+                <datapath/>
+                <simplelayout axis="x"/>
+                <text width="20" datapath="position()"/>
+                <text datapath="@foo"/>
+                <text datapath="text()"/>
+            </view>
+        </view>
+    </view>
+    <view>
+        <simplelayout/>
+        <button> Force replication (shared parents)
+            <method event="onclick">
+                <![CDATA[  
+                var newnodes = [];
+                for ( var j = 0; j < 2; j++ ){
+                    var tnodes = [];
+                    for ( var i = 0; i < 3; i++ ){
+                        tnodes.push( new LzDataElement( "item" ,
+                                       { foo : Math.random() },
+                                       [ new LzDataText( "shareforced" + i )]));
+
+                    }
+                    new LzDataElement( "apar" , null, tnodes );
+                    newnodes = newnodes.concat( tnodes );
+                }
+                parent.replParent.repl.datapath.setNodes( newnodes );
+                ]]>
+            </method>
+        </button>
+        <button> Poke replicated data
+            <method event="onclick">
+                var dp = new LzDatapointer( );
+                dp.setPointer( parent.replParent.subviews[ 0 ].datapath.p );
+                dp.setNodeText( dp.getNodeText() + "+" );
+                dp.setPointer( parent.replParent.subviews[ 1 ].datapath.p );
+                dp.setNodeAttribute( 'foo' , 
+                                   Number( dp.getNodeAttribute( 'foo' ) * 2  ));
+            </method>
+        </button>
+
+        <view name="replParent" datapath="dsO:/root">
+            <simplelayout/>
+            <view name="repl">
+                <datapath/>
+                <simplelayout axis="x"/>
+                <text width="20" datapath="position()"/>
+                <text datapath="@foo"/>
+                <text datapath="text()"/>
+            </view>
+        </view>
+    </view>
+</canvas>

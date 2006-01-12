@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="compiler"
+      xmlns:d="docbook">
+
+<head>
+<title>Compiler</title>
+</head>
+<body>
+
+<h1>Compiler</h1>
+
+<p>The <dfn>compiler</dfn> (aka interface compiler, or application compiler) compiles an XML file and the files that it includes (see inclusion in the guide) into an object file.  The type of the object file depends on the nature of the runtime.  In the current release, it is a Flash 5 swf file.  In the internal sources, it is a Flash 5 or Flash 6 file, depending on the compiler options.</p>
+
+<p>The Server invokes the compiler via the Compilation Manager, when it receives a request for an uncached application source URL.  In addition, the build system uses the <code>lzc</code> command-line tool to compile an application for smoketesting.</p>
+
+<img src="images/compiler-package.png"/>
+
+<p>The compiler consists of the <dfn>parser</dfn>, the <dfn>schema</dfn> and <dfn>validator</dfn>, the <dfn>element compiler</dfn>, and the <dfn>script compiler</dfn>.
+
+The element compiler recursively visits the elements of the input file and the files that it includes, and collects resources and bytecode into the output file.  The element compiler calls the script compiler to compile ECMAScript into object bytecode.  (In the current implementation, this bytecode is Flash 6 bytecode.)</p>
+<p>The element compiler also calls the Media Compiler and the Data Compiler to compile inline images, movies, audio files, and XML data sets.  The Media and Data Compiler are also used during application execution, to serve requests for media objects and data sets from the running application.</p>
+
+<p>The compiler implementation is in the <code>org.openlaszlo.compiler</code> package.  The implementation of the script compiler is in <code>org.openlaszlo.sc</code>.</p>
+
+<h2>Stages</h2>
+
+<img src="images/compiler-stages.png"/>
+
+<p>Compilation takes place in these stages:</p>
+<dl>
+
+<dt>Parsing</dt>
+<dd>The location of the application source file is dereferenced, a DOM representation of the file is read into memory, and non-library include statements are expanded.</dd>
+
+<dt>Schema update</dt>
+<dd>The default schema is copied, and updated according to the class definitions in the main DOM and in the targets of library include statements, which are parsed as in the Parsing step above.  (The targets of non-library include statements were incorporated into the DOM during the Parsing step of the main document.)</dd>
+
+<dt>Validation</dt>
+<dd>The main DOM and library include targets are validated against the updated schema.  Any validation warnings and errors are collected into the list of compiler warnings.  (Note that even a fatal validation error is a non-fatal compiler warning.)</dd>
+
+<dt>Element compilation</dt>
+<dd>The XML elements of the document are recursively visited, and the information in them is used to collect information into the object file.  This stage is called simply "compilation" in the sources and in the diagram above.</dd>
+
+</dl>
+
+<h3>Parsing</h3>
+
+<p><dfn>Parsing</dfn> is the process of constructing an expanded DOM representation of the resource at a location.  It is consists of the following stages.  The main methods for this are in the <code>Parser</code> class.</p>
+
+<dl>
+<dt>Dereference</dt>
+<dd>The name of the file is dereferenced to a resource (currently a file on the local file system).  For the main file, the file pathname should be absolute.  For an include file, the pathname may be relative, in which case it is resolved first against the file that includes it, and then against the component and font subdirectories of the lps directory.</dd>
+
+<dt>Parse</dt>
+<dd>A SAX parser reads the input stream, and passes the result to:</dd>
+
+<dt>Build Pre-Transform DOM</dt>
+<dd>Use a content handler to intercept both SAX events and source location, and build a DOM out of custom elements that include the source location as fields.</dd>
+
+<dt>Preprocess</dt>
+<dd>Use saxon to apply an XSLT stylesheet (<code>lps/schema/preprocess.xsl</code>) document.  This updates the namespace, and adds a namespace to elements with no namespace.  Since the source locations are represented as attributes, they're preserved.</dd>
+
+<dt>Build Post-Transform DOM</dt>
+<dd>Build a JDOM model from the events that result from preprocessing.  We use a custom class that parses source location attributes into fields on the elements, which are subclasses of the JDOM elements.</dd>
+
+<dt>Expand</dt>
+<dd>Replace non-library include statements by their targets, which are recursively parsed.  A stack of currently-processing resources is used to detect recursive includes.</dd>
+</dl>
+
+<h3>Schema Update</h3>
+
+<h3>Validation</h3>
+
+<h3>Element compilation</h3>
+<p>During element processing, the XML elements of the document are recursively visited, and the information in them is used to collect information into the object file.  This stage is called simply "compilation" in the sources.</p>
+
+<p>The compiler is implemented as a set of classes that extend <code>ElementCompiler</code>.  Different subclasses compile different kinds of elements (script tags, font tags, view and other node tags, etc.).  Each subclass contains methods that update the schema with tags that the element defines, and that update the output objects according to the content of the element.</p>
+
+<p>The <code>Compiler</code> creates an instance of <code>CanvasCompiler</code>, and applies it to the document root.  <code>CanvasCompiler</code> extends <code>ToplevelCompiler</code>, which applies instances of <code>ElementCompiler</code> to each of the node's children.</p>
+
+<p>The <code>compile</code> method of an element compiler may do one of these things:</p>
+<ul>
+<li>Invoke compilers on the element's children (the <code>CanvasCompiler</code> and <code>LibraryCompiler</code>, both of which extend <code>ToplevelCompiler</code>).</li>
+<li>Add assets to the object file.  (<code>ResourceCompiler</code> and <code>FontCompiler</code>.)</li>
+<li>Generate ECMAScript which is compiled into bytecodes that are added to the object file (<code>ScriptCompiler</code>, <code>ViewCompiler</code>).</li>
+<li>Add bytecodes directly to the object file (<code>DataCompiler</code>).</li>
+</ul>
+
+
+<h2>Dependency Tracking</h2>
+
+<p>The compiler keeps track of which resources are used to file.</p>
+
+<h2>Compilation Manager</h2>
+
+<h2>Output</h2>
+
+<p>The output of compilation is represented by an instance of <code>Canvas</code>.  During compilation, <code>SWFWriter</code> maintains the state of object file and has methods that add to it.</p>
+
+<h2>Error Collection</h2>
+
+<h2>Compilation-Dependent State</h2>
+
+<p>Instances of the following classes are created once for each compilation, and threaded through the various calls within the compiler, either as arguments, fields of arguments, or fields of objects that are created to handle the compilation.</p>
+
+<dl>
+<dt><code>Canvas</code></dt>
+<dt><code>CompilationEnvironment</code></dt>
+<dt><code>CompilationWarnings</code></dt>
+<dt><code>SWFWriter</code></dt>
+<dt><code>Parser</code></dt>
+<dt><code>ViewSchema</code></dt>
+</dl>
+
+</body>
+</html>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

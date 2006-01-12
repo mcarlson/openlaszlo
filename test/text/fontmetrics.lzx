@@ -1,0 +1,71 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- fontmetrics.lzx                                                       -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas height="1000" width="1600" >
+    <font name="vera" src="bitstream-vera-1.10/vera.ttf"/>
+    <font name="lztahoe8" src="lztahoe8.ttf"/>
+    <font name="timmons" src="timmonsr.ttf"/>
+    <font name="helmet" src="helmetr.ttf"/>
+    <simplelayout axis="y" />
+
+    <class name="lines" width="${canvas.width}" >
+        <!-- LPS fontmetrics are for the default fontsize of 8 --> 
+        <attribute name="defaultsize" value="8" />
+        <!-- External leading is a constant in the LPS 2 pixels --> 
+        <attribute name="leading"     value="2" />
+        <!-- LFC font metrics are for the default font size; must multiply by factor -->
+        <attribute name="factor" value="${this.tview.fontsize/defaultsize}" />
+        <attribute name="lzfont" value="${this.tview.font}" /> 
+
+        <!-- external leading -->
+        <view name="v1" bgcolor="red" 
+            height="${classroot.leading/2}" width="${canvas.width}" />
+        <!-- ascent -->
+        <view name="v2" bgcolor="green" 
+            height="${classroot.lzfont.ascent*classroot.factor}" width="${canvas.width}" 
+            y="${classroot.v1.height + classroot.v1.y}"/>
+        <!-- descent -->
+        <view name="v3" bgcolor="blue" 
+            height="${classroot.lzfont.descent*classroot.factor}" 
+            width="${canvas.width}" 
+            y="${classroot.v2.height + classroot.v2.y}"/>
+        <!-- 1 pixel on bottom -->
+        <view name="v4" bgcolor="red" 
+            height="${classroot.leading/2}" width="${canvas.width}" 
+            y="${classroot.v3.height + classroot.v3.y}"/>
+
+        <!-- For now, we must create a text view to get font attributes -->
+        <text name="tview" multiline="true" width="${canvas.width}"  
+                  text="${this.fontname + ' abcdefghijklmnopqrstyuvwxyzAM'}" />
+
+    </class>
+
+    <class name="tester" >
+        <view width="${canvas.width}" >
+            <simplelayout axis="y" />
+            <lines />
+            <lines />
+            <lines />
+        </view>
+    </class>
+
+    <tester font="helmet" fontsize="56" />
+    <tester font="helmet" fontsize="20" />
+    <tester font="timmons" fontsize="56" />
+    <tester font="lztahoe8" fontsize="56" />
+    <tester font="vera" fontsize="56" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

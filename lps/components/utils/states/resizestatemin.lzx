@@ -1,0 +1,25 @@
+<library>
+    <!--- this state is designed to be applied to a view that has defined the
+         attributes: minwidth and minheight
+    -->
+    <class name="resizestatemin" extends="state">
+        <!--- @keywords private -->
+        <attribute name="xroffset"
+                    value="$once{this.x - this.width + this.getMouse( 'x' )}" />
+        <!--- @keywords private -->
+        <attribute name="width"
+                    value="${Math.max((this.immediateparent.getMouse( 'x' )- xroffset), minwidth)}" />
+
+        <!--- @keywords private -->
+        <attribute name="yroffset"
+                    value="$once{this.y - this.height + this.getMouse( 'y' ) }" />
+        <!--- @keywords private -->
+        <attribute name="height"
+                    value="${Math.max((this.immediateparent.getMouse( 'y' )- yroffset), minheight)}" />
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

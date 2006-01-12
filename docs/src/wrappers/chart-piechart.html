@@ -1,0 +1,64 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="piechart">
+    <lztier>Charts and Graphs</lztier>
+    <lzcategory>charts and graphs</lzcategory>
+    <lzshortdesc>
+        a component that uses series data to make a pie chart
+    </lzshortdesc>
+    <lztag>charts/piechart/piechart.xml</lztag>
+</lzelement>
+<warning>This component is of Beta Quality.</warning>
+<p>
+Here is a piechart that uses series data.</p>
+<example title="piechart">
+&lt;canvas width="1000" height="400" debug="false"&gt;    
+    &lt;dataset name="baseball" src="../../data/pie-data.xml"/&gt; 
+    
+    &lt;piechart id="chart1" width="500" height="500"  dataPointsEnabled="true"
+    datalabelEnabled="true" datalabelColumn="y" style="defaultchartstyle"&gt;
+        &lt;dataseries datapath="baseball:/records"&gt;
+            &lt;datacolumn name="x"  columndatapath="record/@year" datatype="number"/&gt; 
+            &lt;dataseries label="wins"&gt;                
+                &lt;datacolumn  name="y" columndatapath="record/@wins" datatype="number"/&gt;
+            &lt;/dataseries&gt;  
+            &lt;datacolumn name="tooltip" columndatapath="record"&gt;
+                    &lt;method name="processData" args="v"&gt;
+                        return  "year: " + v.attributes.year + "  wins: " + v.attributes.wins;
+                    &lt;/method&gt;
+            &lt;/datacolumn&gt;                        
+        &lt;/dataseries&gt; 
+               
+        &lt;strokestyle name="pieslicestyle" strokeColor="0x000000" strokeWidth="2"  strokeType="dotted" /&gt;
+        &lt;legend name="legendbox" legendFontsize="14" initstage="late" legendborder="false"&gt;
+            &lt;method event="onitemmouseover" args="item"&gt;
+                var piepiece = parent.plotarea.arrPiePieces[item.identifier];
+                piepiece.renderInnerWedge();
+            &lt;/method&gt;
+            
+            &lt;method event="onitemmouseout" args="item"&gt;
+                var piepiece = parent.plotarea.arrPiePieces[item.identifier];
+                piepiece.renderWedge();
+            &lt;/method&gt;
+        &lt;/legend&gt;
+        
+    &lt;/piechart&gt;
+&lt;/canvas&gt;
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->
+</example>
+</body>
+</html>

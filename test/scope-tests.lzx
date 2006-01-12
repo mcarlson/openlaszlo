@@ -1,0 +1,88 @@
+<!-- The debugger should show a sequence of lines, such that the values before and after the colon on each line are the same -->
+<!-- TODO: [2003-01-14 ows] Rewrite to use lzunit -->
+<canvas debug="true">
+<script><![CDATA[
+function show(name, value, expected) {
+  if (true) {//expected) {
+    Debug.write(name + " == " + expected + ": " + value);
+  } else {
+    Debug.write(name + ": " + value);
+  }
+}
+
+var Global = 'global'
+function f1(Global) {
+  return Global;
+}
+show('f1', f1('arg'), 'arg')
+
+function f1b() {
+  var Global = 'local'
+  return Global;
+}
+show('f1', f1b(), 'local')
+
+function f(j) {
+  return 'FUNCTION SCOPE FAILED';
+}
+
+var i = 'VARIABLE I SCOPE FAILED';
+var j = 'VARIABLE J SCOPE FAILED';
+
+function f2(i) {
+  function f(j) {
+    return j;
+  }
+  return f(i)
+}
+show('f2', f2('arg'), 'arg')
+
+function f5setup() {
+  Global = 'setup';
+}
+
+function f5() {
+  return Global;
+}
+
+f5setup();
+show('f5', f5(), 'setup')
+
+function g() {return h(); function h() {return 1}}
+show('g()', g(), 1)
+
+// Lexical closures do not work
+function outer(x) {
+  function inner() {
+    return x;
+  }
+}
+
+Debug.write('Expect this not to work in Flash 5 (lexical closure)');
+var o = outer(42);
+var p = outer(99);
+var x = 1492
+show('outer(42)()', o(), 42);
+show('outer(99)()', p(), 99);
+
+Debug.write('Expect this to work (handmade lexical closure)');
+// How one might implement lexical closures
+function outer(x) {
+  function inner() {
+    with (arguments.callee.$scope)
+      return x;
+  }
+  inner.$scope = {x: x}
+  return inner;
+}
+o = outer(37)
+p = outer(84)
+x = 1965
+show('outer(37)()', o(), 37)
+
+]]></script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

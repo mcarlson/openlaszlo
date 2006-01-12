@@ -1,0 +1,24 @@
+<canvas height="500" width="600" bgcolor="#eaeaea" debug="true">
+	<simplelayout spacing="10"/>
+	<text name="val" x="20" height="20" bgcolor="0xffffff" selectable="true"
+		label="C:\Jetty-4.2.11;C:\Jetty-4.2.11\lib\org.mortbay.jetty.jar;C:\Jetty-4.2.11\lib\javax.servlet.jar;C:\Jetty-4.2.11\lib\org.mortbay.jmx.jar;C:\Jetty-4.2.11\ext\xercesImpl.jar;C:\Jetty-4.2.11\ext\xmlParserAPIs.jar;C:\Jetty-4.2.11\ext\ant.jar;C:\Jetty-4.2.11\ext\jasper-runtime.jar;C:\Jetty-4.2.11\ext\jasper-compiler.jar;C:\Jetty-4.2.11\ext\jcert.jar;C:\Jetty-4.2.11\ext\jmxri.jar;C:\Jetty-4.2.11\ext\jmxtools.jar;C:\Jetty-4.2.11\ext\jnet.jar;C:\Jetty-4.2.11\ext\jsse.jar;C:\Jetty-4.2.11\ext\xml-apis.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.ftp.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.jaas.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.jetty-jdk1.2.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.jetty.plus.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.jetty.plus.resource.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.jmx-jdk1.2.jar;C:\Jetty-4.2.11\extra\lib\org.mortbay.loadbalancer.jar;C:\Jetty-4.2.11\extra\ext\activation.jar;C:\Jetty-4.2.11\extra\ext\carol.jar;C:\Jetty-4.2.11\extra\ext\commons-cli.jar;C:\Jetty-4.2.11\extra\ext\commons-logging.jar;C:\Jetty-4.2.11\extra\ext\hsqldb.jar;C:\Jetty-4.2.11\extra\ext\jonas_timer.jar;C:\Jetty-4.2.11\extra\ext\jotm.jar;C:\Jetty-4.2.11\extra\ext\jotm_iiop_stubs.jar;C:\Jetty-4.2.11\extra\ext\jotm_jrmp_stubs.jar;C:\Jetty-4.2.11\extra\ext\jta-spec1_0_1.jar;C:\Jetty-4.2.11\extra\ext\jts1_0.jar;C:\Jetty-4.2.11\extra\ext\log4j.jar;C:\Jetty-4.2.11\extra\ext\mail.jar;C:\Jetty-4.2.11\extra\ext\objectweb-datasource.jar;C:\Jetty-4.2.11\extra\ext\ow_util_log_file.jar;C:\Jetty-4.2.11\extra\ext\ow_util_log_wrp_log4j.jar;C:\Jetty-4.2.11\extra\ext\p6spy.jar;C:\Jetty-4.2.11\extra\ext\xapool.jar;C:\JVM\j2sdk1.4.0\lib\tools.jar"
+		width="${canvas.width}">
+		<method name="increaseFS">
+			this.setAttribute("fontsize", ++fontsize)
+			debug.write('font size is now ' + fontsize)
+		</method>
+		<method name="decreaseFS">
+			this.setAttribute("fontsize", --fontsize)
+			debug.write('font size is now ' + fontsize)
+		</method>
+	</text>
+
+	<button x="20" label="Increase font" onclick="val.increaseFS()"/>
+	<button x="20" label="Decrease font" onclick="val.decreaseFS()"/>
+	
+	<debug y="100"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

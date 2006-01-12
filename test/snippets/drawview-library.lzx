@@ -1,0 +1,47 @@
+<library>
+   <class name="drawme"  extends="drawview">
+      <attribute name="myx" type="number"/>
+      <attribute name="myy" type="number"/>
+        <method event="oninit">
+            this.moveTo(100*math.random(), 200*math.random());
+            this.lineTo(100*math.random(), 200*math.random());
+            this.quadraticCurveTo(150*math.random(), 250*math.random(), 200*math.random(), 200*math.random());
+            this.closePath();
+
+            this.fillStyle = 0x0000ff;
+            this.globalAlpha = .5;
+            this.fill();
+            
+            this.strokeStyle = 0xffff00;
+            this.lineWidth = 5;
+            this.stroke();
+            
+            var g = this.createRadialGradient(75, 75, .7, 300*math.random(), 300*math.random(), 0)
+            this.globalAlpha = 0;
+            g.addColorStop(0, 0x000000);
+            this.globalAlpha = 1;
+            g.addColorStop(1, 0xffffff);
+            this.fillStyle = g;
+            this.fill();
+
+            this.strokeStyle = 0x000000;
+            this.lineWidth = 0;
+            this.stroke();
+
+            this.beginPath();
+            this.lineTo(this.width, 0);
+            this.lineTo(this.width, this.height);
+            this.lineTo(0, this.height);
+            this.lineTo(0, 0);
+            this.closePath();
+            
+            var g = this.createLinearGradient(0,0,this.width,this.height)
+            this.globalAlpha = 0;
+            g.addColorStop(0,  parseInt(0xffffff)*math.random());
+            this.globalAlpha = 1;
+            g.addColorStop(1,  parseInt(0xffffff)*math.random());
+            this.fillStyle = g;
+            this.fill();
+        </method>
+    </class>
+</library>

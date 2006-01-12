@@ -1,0 +1,80 @@
+<library>
+
+    <include href="lzunit"/>
+
+    <dataset name="ctest_methods">
+        <methods>
+            <call name="getCount" tester="initCount"/>
+            <call name="increment" tester="inc_test"/>
+            <call name="increment" tester="inc_test"/>
+            <call name="getPeerNum" tester="pid_test"/>
+            <call name="getCount"/>
+            <call name="decrement" tester="dec_test"/>
+            <call name="getCount"/>
+            <call name="reset" tester="resetCount"/>
+            <call name="getCount"/>
+        </methods>
+    </dataset>
+
+    <class name="CountSyncTester" extends="SyncTester">
+
+        <attribute name="l_count"/>
+        <attribute name="l_id"/>
+
+        <method name="initCount" args="v">
+            this.l_count = v.data
+            this.l_id = v.data
+        </method>
+        
+        <method name="resetCount">
+            l_count = 0
+        </method>
+
+        <method name="inspect" args="v">
+            assertEquals(l_count, v.data, 'failed after getCount')
+        </method>
+        
+        <method name="inc_test" args="v">
+            assertEquals(++l_count, v.data, 'failed after increment')
+        </method>
+        
+        <method name="dec_test" args="v">
+            assertEquals(--l_count, v.data, 'failed after increment')
+        </method>
+
+        <method name="pid_test" args="v">
+            assertEquals(l_id, v.data, 'failed after getPeerNum')
+        </method>
+        
+        <!-- don't run testBegin..wait til after javarpc proxy is loaded -->
+        <method name="testBegin" />
+
+        <method name="callNext">
+            if ( ! this['del'] ) {
+                this.del = new LzDelegate(this, '_handler'); 
+            }
+            this.tested_object[current_method]([], this.del);
+        </method>
+
+        <javarpc name="counter" loadoption="create" scope="session" 
+                 classname="org.openlaszlo.test.xmlrpc.PeerCounter">
+            <method event="onload">
+                parent.assertTrue(this['proxy'])
+                var dp = parent.cur_meth.dupePointer()
+                do {
+                    // Assert that remote function prototypes exist in proxy stub.
+                    parent.assertTrue(typeof(this.proxy[dp.xpathQuery('@name')]) == 'function');
+                } while (dp.selectNext())
+
+                parent.setAttribute('tested_object', this.proxy);
+                parent.callNext();
+            </method>
+        </javarpc>
+
+    </class>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</library>

@@ -1,0 +1,15 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+
+
+<canvas>
+<inputtext width="400" height="200" resizable="false" multiline="true">Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line.  One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.  Test test testing lots of text. This is wrapped text. One long line. One very long line.</inputtext>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,21 @@
+<records>
+    <record value="1" month="Jan" myhits="198" yourhits="90" hishits="9" />
+    <record value="2" month="Jan" myhits="100" yourhits="45" hishits="56" />
+    <record value="3" month="Dec" myhits="75" yourhits="126" hishits="124" />
+    <record value="4" month="Nov" myhits="120" yourhits="67" hishits="189" />
+    <record value="5" month="Apr" myhits="80" yourhits="78" hishits="59" />
+    <record value="6" month="Mar" myhits="100" yourhits="56" hishits="32" />
+    <record value="7" month="Jul" myhits="110" yourhits="14" hishits="24" />
+    <record value="8" month="Jul" myhits="40" yourhits="89" hishits="15" />
+    <record value="9" month="Aug" myhits="50" yourhits="56" hishits="85" />
+    <record value="10" month="Aug" myhits="10" yourhits="48" hishits="67" />
+    <record value="11" month="Aug" myhits="90" yourhits="167" hishits="76" />
+    <record value="12" month="Dec" myhits="5" yourhits="123" hishits="135" />
+    <record value="13" month="Dec" myhits="140" yourhits="78" hishits="167" />
+    <record value="14" month="Jan" myhits="190" yourhits="78" hishits="198" />
+    <record value="15" month="Feb" myhits="130" yourhits="156" hishits="136" />
+    <record value="16" month="Feb" myhits="120" yourhits="123" hishits="15" />
+    <record value="17" month="Mar" myhits="80" yourhits="167" hishits="67" />
+    <record value="18" month="Mar" myhits="90" yourhits="34" hishits="82" />
+</records>
+

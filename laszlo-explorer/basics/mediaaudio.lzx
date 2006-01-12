@@ -1,0 +1,4 @@
+<canvas width="200">
+  <view resource="cd_cover.jpg"/>
+  <view resource="http:where_to_begin.mp3"/>
+</canvas>

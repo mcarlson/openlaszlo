@@ -1,0 +1,39 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- tikalProjects.lzx                                                     -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX)                                     -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas>
+ <bluestyle name="defaultstyle" isdefault="true"/>
+ <alert id="errMsg" title="Error"/>
+ <include href="lz/tree.lzx" />
+ <splash/>
+
+ <dataset name="projects"
+          request="true"
+          type="file"
+          src="file:tikalProjects.xml"
+          onerror="errMsg.setAttribute('text','dataset Error: getting data from '+this.src+' !');errMsg.open();"
+          ontimeout="errMsg.setAttribute('text','dataset Timeout: getting data from '+this.src+' !');errMsg.open();"
+ />
+
+ <view name="main" width="300" height="300" clip="true">
+  <view name="contents">
+   <tree datapath="projects:/root" showroot="false" text="$path{'@name'}" open="$path{'@isopen'}">
+    <tree datapath="*" isleaf="$path{'@isleaf'}" text="$path{'@name'}">
+     <method event="onactivate">
+      var url = this.datapath.xpathQuery('@url');
+      if (url != null) {
+       LzBrowser.loadURL(url,'tikalMainView');
+       }
+     </method>
+    </tree>
+   </tree>
+  </view>
+   <scrollbar/>
+ </view>
+</canvas>
+

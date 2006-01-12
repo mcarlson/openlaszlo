@@ -1,0 +1,60 @@
+<canvas width="1000" height="900" debug="false">    
+    <include href="chartstyle.lzx"/>    
+    
+    <dataset name="baseball" src="../../data/simple-redsox-data.xml"/> 
+
+    <simplelayout axis="y"/>   
+        
+     <!-- Chart Title -->      
+      <view name="title"  y="10">
+        <text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF"> Column Chart.</text>      
+     </view>
+
+    <!-- Column Chart -->     
+    <columnchart id="chart1" width="500" height="500" datatipEnabled="false" datatipColumn="tooltip" 
+    style="defaultchartstyle01" datalabelEnabled="true" datalabelColumn="label">
+
+        <dataseries datapath="baseball:/records" >
+            <datacolumn name="x"  columndatapath="record/@year" datatype="number"/>
+            <datacolumn name="label" columndatapath="record/@year"/>
+            <dataseries label="wins">                
+                <datacolumn  name="y" columndatapath="record/@wins" datatype="number"/>
+                <datacolumn name="tooltip" columndatapath="record">
+                    <method name="processData" args="v">
+                        return  "year: " + v.attributes.year + "  wins: " + v.attributes.wins;
+                    </method>
+                </datacolumn>
+            </dataseries>
+                     
+          
+        </dataseries> 
+        
+        <columnchartplotarea name="plotarea" clip="true"/>
+        
+        <horizontalaxis name="haxis" title="Years" type="categorical" columnName="x" minimum="1" maximum="5"  titleLocation="low" axisEnabled="false">
+        </horizontalaxis>
+        
+        <verticalaxis name="vaxis" title="Values" type="linear"  columnName="y"  minimum="60" maximum="120" titleLocation="low">
+        </verticalaxis>        
+            
+    </columnchart>
+    
+    <legend name="legendbox" legendFontsize="14" legendborder="true" chart="${chart1}" x="${chart1.x + chart1.width}" y="${(chart1.y + chart1.height)/2}" options="ignorelayout" fillColor="0x339933" borderWidth="3">
+          <method event="onitemmouseclick" args="item">
+              var topseries = this.chart.getDataSeries();
+
+              topseries.getDataSeries(item.identifier).enabled = item.linevisible;
+              this.chart.renderPlotArea();
+              item.linevisible = !item.linevisible;
+          </method> 
+    </legend>
+</canvas>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

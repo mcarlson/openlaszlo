@@ -1,0 +1,20 @@
+<canvas >
+    <include href="utils/states/resizestate.lzx" />
+    <include href="utils/states/dragstate.lzx" />
+    <view x="10" y="10" >
+        <view bgcolor="red" width="20" height="20" 
+            onmousedown="this.drag.apply()" onmouseup="this.drag.remove()">
+            <dragstate name="drag" />
+        </view>
+
+        <view bgcolor="green" width="120" height="120"  y="50" x="10"
+            onmousedown="this.resize.apply()" onmouseup="this.resize.remove()">
+            <resizestate name="resize" />
+        </view>
+    </view> 
+ 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

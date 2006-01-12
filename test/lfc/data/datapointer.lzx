@@ -1,0 +1,134 @@
+<library>
+    <include href="lzunit/lzunit.lzx" />
+
+    <dataset name="localme" src="testdata.xml"/>
+
+    <dataset name="loadme" type="http" src="http:testdata.xml" request="true" trimwhitespace="false">
+    </dataset>
+
+    <class name="TestDatapointer" extends="TestCase">
+        <attribute name="dp2ready" value="false"/>
+        <attribute name="t2del" value="false"/>
+        <attribute name="waitcnt" value="0"/>
+
+        <datapointer xpath="localme:/data" name="dp1" />
+
+        <datapointer xpath="loadme:/data" name="dp2" 
+                     ondata="parent.dp2ready = true"/>
+
+        <method name="test">
+            this.doIt( dp1 , 'localme');
+        </method>
+
+        <method name="test2">
+            if ( ! this.dp2ready ){
+                if ( ! this.t2del ){
+                    Debug.write( "test isn't done until async test runs" );
+                    this.t2del = new LzDelegate( this , 'test2' );
+                }
+
+                if ( this.waitcnt++ > 100 ){
+                    fail( "Didn't get async data" );
+                } else {
+                    LzIdle.callOnIdle( this.t2del );
+                }
+                return;
+            }
+
+            Debug.write( 'running async test for loaded data' );
+            this.doIt( dp2 , 'loadme' );
+        </method>
+
+        <method name="doIt" args="dp, dsname">
+            <![CDATA[
+            assertTrue( true );
+            assertEquals(  'record' , dp.xpathQuery( 'record[1]/name()' ) );
+            assertEquals( 4 , dp.xpathQuery( "match2/bb" ).length ) ;
+            assertEquals( ' some Text ' , dp.xpathQuery( '*[3]/text()' ) );
+            assertEquals( " some Text  some Text " ,
+                          dp.xpathQuery( '*/text()' ).join("") );
+
+
+            dp.setPointer  ( global[ dsname ].getFirstChild() ) ;
+            assertEquals( 'data' , dp.getNodeName() );
+
+            assertFalse( dp.setXPath  ( dsname + ":/ff"  ) );
+            assertTrue( dp.setXPath  ( dsname+ ":/data"  ) );
+            assertFalse( dp.setXPath  ( "match2"  ) );
+            assertTrue( dp.setXPath  ( dsname+ ":/data" ) );
+            assertTrue( dp.setXPath  ( "match2[2]"  ) );
+            assertEquals( 5 , dp.getNodeOffset() );
+            assertEquals( 'match2' , dp.getNodeName  () );
+            dp.setNodeAttribute  ('x', 22) ;
+            assertEquals( dp.p.attributes , dp.getNodeAttributes() );
+            assertEquals( 22 , dp.getNodeAttribute( 'x' ) );
+
+            assertEquals( global[ dsname ], dp.getDataset( ) );
+            dp.setNodeName ("bunny");
+            assertEquals( '<bunny x="22"><ee/><ff/><bb> otherbb </bb><bb last="true"/></bunny>' ,  dp.serialize() );
+
+
+
+            assertTrue( dp.isValid  ( ) );
+            dp.deleteNode();
+            assertFalse( dp.isValid  ( ) );
+            assertTrue( dp.setXPath( dsname +":/" ) );
+            assertTrue( dp.setXPath( "data/match2" ) );
+            var ndp = dp.dupePointer  ();
+
+
+            assertTrue(ndp.selectChild() );
+            assertTrue(ndp.selectNext  ( )  );
+            assertEquals( 'bb' , ndp.getNodeName  ( )  );
+            assertFalse( ndp.selectNext  ( 4 )  );
+            assertTrue( ndp.selectNext  ( 2 )  );
+            assertFalse( ndp.selectChild() );
+            assertTrue( ndp.selectParent  (  2) );
+            assertEquals( 'data' , ndp.getNodeName(  ) );
+            assertTrue( ndp.selectParent() );
+            assertEquals( dsname , ndp.getNodeName(  ) );
+            assertFalse( ndp.selectParent() );
+            //done with ndp
+            assertFalse( dp.selectNextParent  ( ) );
+            dp.setPointer( dp.p.parentNode.childNodes[1].childNodes[2] );
+            assertEquals( "c" , dp.getNodeName() );
+            assertTrue( dp.selectNextParent  ( ) );
+            assertEquals( "foo" , dp.getNodeName() );
+            dp.deleteNodeAttribute  ('a') ;
+            assertEquals( "<foo> some Text </foo>" , dp.serialize() );
+            assertEquals( " some Text " , dp.getNodeText  () );
+            dp.addNode  ( 'a' , 'insidetext' , { x :22 } );
+
+
+
+            dp.setNodeText  ('new text') ;
+
+            assertEquals( "new text" , dp.getNodeText  () );
+
+            assertEquals( '<foo>new text<a x="22">insidetext</a></foo>',
+                          dp.serialize() );
+            dp.p.removeChild( dp.p.getFirstChild() );
+
+            dp.setNodeText( "goes at end" );
+            assertEquals( '<foo><a x="22">insidetext</a>goes at end</foo>',
+                          dp.serialize() );
+            assertEquals( 2 , dp.getNodeCount  () );
+            dp.addNodeFromPointer( dp );
+            assertEquals( '<foo><a x="22">insidetext</a>goes at end'+
+            '<foo><a x="22">insidetext</a>goes at end</foo>' + '</foo>',
+                          dp.serialize() );
+
+
+            ndp.setFromPointer  ( dp );
+            assertEquals( ndp.serialize(), dp.serialize() );
+
+            ]]>
+            
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

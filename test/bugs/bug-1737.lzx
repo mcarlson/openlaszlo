@@ -1,0 +1,11 @@
+<canvas debug="true">
+  <view>
+    <method event="oninit">
+      debug.write('stuff'.charAt[1])
+    </method>
+  </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

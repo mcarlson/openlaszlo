@@ -1,0 +1,34 @@
+<canvas>
+  <include href="lzunit"/>
+
+  <dataset name="acceptData" src="http:httpheader.jsp?parameter=accept" request="true"/>
+  <dataset name="acceptEncodingData" src="http:httpheader.jsp?parameter=accept-encoding" request="true"/>
+
+  <simplelayout axis="y"/>
+  <text name="accept" datapath="acceptData:/value/text()" width="600"/>
+  <text name="acceptEncoding" datapath="acceptEncodingData:/value/text()" width="600"/>
+
+  <TestSuite>
+    <TestCase>
+      <method name="testAccept">
+         var expected = ["application/xml", "application/xhtml+xml", "text/xml"];
+         expected.sort();
+         var values = accept.getText().split(',');
+         for (var i in values) {
+           values[i] = values[i].split(';')[0];
+}
+         values.sort();
+         assertEquals(expected, values);
+      </method>
+      <method name="testAcceptEncoding">
+         var value = acceptEncoding.getText();
+         assertEquals("null", value);
+      </method>
+    </TestCase>
+  </TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

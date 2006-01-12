@@ -1,0 +1,6 @@
+<library>
+  <myclass text="[1] loaded myclass" fontsize="11"/>
+  <myclass text="[2] loaded myclass" fontsize="12" />
+  <myclass text="[3] loaded myclass" fontsize="13" />
+</library>
+

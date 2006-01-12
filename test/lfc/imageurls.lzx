@@ -1,0 +1,16 @@
+<canvas width="800" height="600">
+    <include href="utils/layouts/alllayouts.lzx" />
+
+    <text>Make sure both images load - the first is URI-encoded...</text>
+    <view>
+        <view resource="http://www2.images.com/webimages/gps/thumb/hor%2003%20mak002.jpg" />
+        <view resource="http://www2.images.com/webimages/sis/thumb/101804-12.jpg" />
+        <simplelayout axis="x" spacing="10" />
+    </view>
+    <simplelayout axis="y" spacing="10" />
+</canvas>    
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

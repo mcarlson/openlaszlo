@@ -1,0 +1,13 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!-- Should issue a compiler warning that <font> tag in a imported library will not work -->
+<canvas>
+
+ <import name="lib" href="font-library.lzx" stage="late" 
+         onload="new LzText(canvas,{text: 'foobar', font: 'myfont'})"/>
+ <text fontsize="20" font="myfont">This should issue a compiler warning that the font cannot be used in an import library</text>
+
+</canvas>

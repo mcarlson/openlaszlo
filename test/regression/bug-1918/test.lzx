@@ -1,0 +1,38 @@
+<canvas >
+    <debug />
+
+    <script>
+    <![CDATA[
+
+        Debug.write('simpletest');
+        var ary = new Array;
+        ary[0] = 'one';
+        var j = '0';
+        Debug.write('ary[' + j + '] => [' + typeof(ary[j]) + ' ' + ary[j] + ']');
+        j = '-';
+        Debug.write('ary[' + j + '] => [' + typeof(ary[j]) + ' ' + ary[j] + ']');
+        ary[1] = 'two';
+        ary[2] = 'three';
+        Debug.write('for test');
+        for (var i in ary) {
+                Debug.write('ary[' + i + '] => [' + typeof(ary[i]) + ' ' + ary[i] + ']');
+        }
+
+    ]]>
+    </script>
+    <view bgcolor="blue" width="600" height="400">
+    <simplelayout axis="y" />
+    <text>
+      simpletest
+    </text>
+    <text text="${('ary[' + 0 + '] => [' + typeof(ary[0]) + ' ' +
+    ary[0] + ']')}" />
+    <text text="${('ary[' + '-' + '] => [' + typeof(ary['-']) + ' ' +
+    ary['-'] + ']')}" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

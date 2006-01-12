@@ -1,0 +1,27 @@
+<canvas>
+    <include href="lz" />
+
+    <dataset name="items">
+        <item value="1" >item one</item>
+        <item value="2" >item two</item>
+        <item value="3" >item three</item>
+    </dataset>
+
+    <simplelayout axis="y" spacing="4" />
+    <text text="${ 'value: ' + parent.cb.value }" 
+          name="status" resize="true"/>
+    <combobox name="cb" x="5" y="5" width="130" spacing="0" shownitems="6"
+              defaulttext="choose one..." editable="true">
+        <textlistitem  datapath="items:/item/text()">
+            <method event="onselected" args="isSelected">
+                if (isSelected) {
+                    parent.parent.status.setText('value: ' + parent.value);
+                }
+            </method>
+        </textlistitem>
+    </combobox>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

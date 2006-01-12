@@ -1,0 +1,1104 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<html id="deployers-guide" xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:d="docbook">
+<head>
+  <title>Deploying Laszlo Applications</title>
+</head>
+<body>
+
+<h1>Deploying Laszlo Applications</h1>
+<fixme>
+Need introductory paragraph about deploying serverless or serverful.
+</fixme>
+<h2><a name="introduction"></a>Introduction</h2>
+<p>This document explains how to deploy proxied OpenLaszlo applications with the
+OpenLaszlo Server. If you deploy your applications SOLO, that is, not proxied by the OpenLaszlo Server, you do not need to read this chapter.</p>
+ 
+<p>An OpenLaszlo application is the set of LZX files and accompanying art
+assets and data files that are used by that application.</p>
+
+<p>The OpenLaszlo Server is a set of 100% pure Java classes (along with some
+configuration files) that can be used to develop and deploy OpenLaszlo
+applications inside Java servlet containers/application servers. OpenLaszlo
+application deployers need to know a few details about Java servlet
+containers/application servers.  This document reviews these details and
+then goes on to explain how to deploy proxied OpenLaszlo applications with OpenLaszlo Server.</p>
+
+<h2><a name="steps"></a>Steps to deploying an OpenLaszlo application</h2>
+<p>Once a proxied OpenLaszlo application has been developed, for users other than
+the developer to have access to it, it must be deployed.  OpenLaszlo
+applications are deployed inside Java servlet containers/application
+servers. The steps include: </p>
+<ol>
+	<li>Develop a Laszlo application</li>
+	<li>Choose, install, and configure a servlet container for deployment.</li>
+	<li>Create a web application including the OpenLaszlo application and OpenLaszlo Server software.</li>
+	<li>Configure the OpenLaszlo Server</li>
+	<li>Monitor OpenLaszlo Server activity</li>
+</ol>
+
+<h2><a name="developing">Developing an OpenLaszlo application</a></h2>
+<p>In order to develop an OpenLaszlo application, you should install OpenLaszlo Server on your 
+development machine.
+<a name="installing"></a>The OpenLaszlo Server comes in two distributions. </p>
+    <h3>LPS (standard)</h3>
+    <ul>
+        <li>Bundles the Jakarta Tomcat Servlet Container</li>
+        <li>Includes a Java web application archive (WAR) that is
+    pre-configured for OpenLaszlo applications.</li>
+        <li>Requires just a few simple installation steps.</li>
+    </ul>
+    <h3>OpenLaszlo Core</h3>
+    <ul>
+        <li>Includes a Java web application archive (WAR) directory that is
+    pre-configured for OpenLaszlo applications.</li>
+        <li>Requires that you have a Java servlet container or application
+    server that supports at least 2.3 of the Java servlet specification.</li>
+    </ul>
+    <p>The same installation can be used to both develop and deploy an
+    OpenLaszlo application.  Alternatively, you may use a separate installation
+    to deploy your OpenLaszlo applications.</p>
+    <p>Conventions used in the remainder of this document:</p>
+    <ul>
+      <li>We use $INSTALLDIR as the directory in which you installed the OpenLaszlo Server.</li>
+      <li>When file or directory path names are provided, unless
+      otherwise noted, we use the Unix convention for the separator
+      character--the forward slash ('<code>/</code>').  To translate
+      the documentation for use on Windows systems, simply replace
+      every instance of '<code>/</code>' with a '<code>\</code>'.</li>
+    </ul>
+   
+
+<h2><a name="servletcontainers"></a>Servlet containers/application servers</h2>
+<p>A quick note on terminology: The terms servlet container and
+application server are often used interchangeably.  OpenLaszlo documentation
+tends to prefer the term servlet container because it is more specific
+and accurate.  The term application server is less standard but, in
+general, it is used to describe Java server software that usually is
+actually a servlet container.  Also, any J2EE application server is, by
+the definition given in the J2EE specification, a servlet container. In
+general, the OpenLaszlo Server requires that a servlet container/application server
+support at least version 2.3 of the Java servlet specification. </p>
+<p>The OpenLaszlo Server comes with the Jakarta Tomcat servlet container, which
+can be used to deploy OpenLaszlo applications.  There are several other
+servlet containers on the market today.   Laszlo does not endorse any
+specific servlet containers.  See the 
+public <a target="_blank" href="http://www.laszlosystems.com">Laszlo</a> website for the 
+latest list of supported containers.
+Information on how to choose a and configure a servlet container is beyond the scope of
+this document, but deployers should note that performance of a servlet
+container (and underlying JVM) can have a significant impact on OpenLaszlo Server
+performance.  </p>
+<p>Once you have chosen and installed a servlet container, you may need
+to adjust some of its default configuration settings.  In particular,
+you may need to configure the default TCP/IP port and secure (SSL/https)
+TCP/IP port.  You may also need to configure the container's  JVM
+settings like the initial and maximum heap sizes (see <a href="#javamemconfig">below</a>)
+and the default and
+maximum number of threads.</p>
+
+<p>Some servlet containers may also be configured with web servers like the 
+Apache HTTPD web server sitting in front of them.  The precise details for how to 
+set up configurations like this, as well as the how to adjust the settings mentioned above are
+beyond the scope of this document; see your servlet container
+documentation for details.  However, see below for more details on which
+parameters you may need to set.</p>
+<h3><a name="javamemconfig"></a>Setting Java memory (heap) sizes</h3>
+<p>You can set the heap sizes via the <code>-Xmx</code> and <code>-Xms</code> command 
+line options such</p><pre>
+JAVA_OPTS='-Xmx512 -Xms256m'</pre>
+<p>which will set both the initial heap size to 256 MBytes and maximum heap sizes to 512 MBytes.  See
+your servlet container documentation, in particular, for where to place
+this setting.</p>
+
+<p>Note that the DNS hostname of the computer running the servlet
+container as well as the TCP/IP port(s) on which it listens will surface
+as part of the URL that will be used to access your OpenLaszlo application
+when it is deployed.  In the remainder of this document, we will use the
+hostname <code><i>host</i></code> and port number <code><i>$port</i></code> to indicate the values of these
+settings.</p>
+
+<h3>Java</h3>
+<p>To run the LPS you <em>must</em> have the Java SDK (sometimes
+called the JDK, J2SDK, or J2SE SDK), not just the JRE, version 1.4 or greater. It's available at
+<a
+href="http://java.sun.com/j2se/1.4.2/download.html">http://java.sun.com/j2se/1.4.2/download.html</a>
+(click the <i>Download J2SE SDK</i> link).</p>
+
+<note>Mac OSX users do not have to install the SDK, as it is
+installed with OSX by default.</note>
+<h2><a name="directories"></a>Java web application directories (webapps)</h2>
+<p>The name for the directory structure that houses OpenLaszlo applications
+within a servlet container is called, confusingly, a Java web
+application, or often simply a webapp.  Webapps are sometimes packaged
+as single files that are called web application archive (WAR) files.</p>
+<p>The LPS (standard) distribution comes with a Laszlo-enabled webapp
+directory pre-installed in Tomcat.  The web application directory is</p>
+<pre class="code">$INSTALLDIR/Server/lps-@VERSIONID@</pre>
+<p>This webapp includes sample Laszlo applications, example LZX files,
+tutorials, and documentation.  The LPS Core distribution comes with
+a copy of this Laszlo-enabled webapp for you to install into your own
+servlet container.  The directory version of this webapp is </p>
+<pre class="code">$INSTALLDIR/lps-@VERSIONID@</pre>
+<p>Note that the name of the webapp surfaces as part of the URL used to
+access your Laszlo applications.  We will use the string $webapp below
+to indicate the name of a deployed web application.</p>
+
+<p>For more details on Java web applications and WAR files, see the <a
+target="_blank" href="http://java.sun.com/products/servlet/">Sun
+documentation on servlets</a>.</p>
+
+<h3>Creating OpenLaszlo-enabled Web Applications</h3>
+<p>To create an empty OpenLaszlo-enabled webapp, you simply create a new
+directory and copy in the WEB-INF directory from the lps-@VERSIONID@ webapp. On a
+UNIX system, do</p>
+<pre class="code">mkdir myapp<br/>cp -r $LPS-WEBAPPDIR/WEB-INF myapp<br/>cp -r $LPS-WEBAPPDIR/lps myapp<br/></pre>
+<p>where $LPS-WEBAPPDIR is the path to a copy of the lps-@VERSIONID@ web
+application. For LPS (standard) distribution, $LPS-WEBAPPDIR is
+$INSTALLDIR/Server/lps-@VERSIONID@.</p>
+<p>To place your Laszlo applications inside myapp, copy the LZX (.lzx extension)
+files and art assets for your
+Laszlo application(s) inside the myapp directory. 
+</p>
+<p>To deploy the webapp, follow your servlet container's instructions.</p>
+<note>
+Note that the lps-@VERSIONID@ webapp that is packaged with LPS comes
+pre-configured for development, not deployment. Before deploying your applications 
+you will nteed to reconfigure LPS 
+for deployment, as explained in the next section.
+</note>
+<h3>Creating the minimal OpenLaszlo Server</h3>
+<p>The OpenLaszlo Server comes with several assets, such as documentation and examples, that you may not need 
+or want to deploy with your OpenLaszlo application. To create a minimal deployment configuration:
+(For LPS 2.2 and later).
+</p>
+<ol>
+	<li>clear the lps caches and lps logs (or stop server and remove caches/logs and restart server)</li>
+	<li>compile your applications</li>
+</ol>
+<p>
+Now you can safely remove everything under the webapp except the WEB-INF directory and the lps directory.
+
+keeping only:</p>
+<ul>
+
+	<li> lps-$version/WEB-INF</li>
+	<li> lps-$verson/lps</li>
+</ul>
+
+<p>
+You <i>should</i> also remove</p>
+
+<pre><code>lps-3.1/lps/utils</code></pre>
+<p>
+ as it includes the source code viewer jsp and other unneeded utilities.
+</p>
+
+
+
+<h2><a name="configuring"></a>Configuring the LPS</h2>
+<p>The OpenLaszlo Server comes preconfigured for use as a development platform.  There
+are a number of configurable settings that affect the Server performance
+and security that should be set properly when deploying OpenLaszlo
+applications. You can see a sample deployment configuration in $WEBAPP/WEB-INF/lps/config-deploy
+</p>
+<p>
+The files that are used to configure the
+OpenLaszlo Server are:</p>
+<ul>
+    <li><a href="#web.xml"><b>$WEBAPP/WEB-INF/web.xml</b></a> - Java web
+application configuration</li>
+    <li><a href="#lps.properties"><b>$WEBAPP/WEB-INF/lps/config/lps.properties</b></a>
+- LPS configuration properties</li>
+  <li><a href="#lps.xml"><b>$WEBAPP/WEB-INF/lps/config/lps.xml</b></a> -
+LPS log configuration and filters for data requests and user-agents. <br/>
+  </li>
+    <li><a href="#lzusers.xml"><b>$WEBAPP/WEB-INF/lps/config/lzusers.xml</b></a>
+- User database for default LPS security servlet</li>
+    <li><a href="#crossdomain.xml"><b>$WEBAPP/WEB-INF/lps/config/crossdomain.xml</b></a>
+    - Sample Cross Domain Policy file for applications that need runtime HTTPS access.</li>
+</ul>
+<p>Changing settings in any of these files will require that the
+Laszlo-enabled web application be restarted.  See you servlet container
+documentation for instructions on how to restart.  For the OpenLaszlo (standard)
+distribution, you can simply stop and re-start Tomcat.</p>
+
+<h3><a name="web.xml"></a>WEB-INF/web.xml </h3>
+<p>This file is used to configure the webapp that houses Laszlo
+application as well as the main LPS servlet.</p>
+<p>The web.xml must contain a servlet declaration that uses the
+<classname link="false">org.openlaszlo.servlets.LZServlet</classname> class like:</p>
+
+<pre class="code">&lt;servlet&gt;
+  &lt;servlet-name&gt;LPS&lt;/servlet-name&gt;
+  &lt;servlet-class&gt;org.openlaszlo.servlets.LZServlet&lt;/servlet-class&gt;
+&lt;/servlet&gt;</pre>
+
+<p>There should be a servlet mapping that maps all .lzx files to this
+servlet like:</p>
+
+<pre class="code">&lt;servlet-mapping&gt;
+  &lt;servlet-name&gt;LPS&lt;/servlet-name&gt;
+  &lt;url-pattern&gt;*.lzx&lt;/url-pattern&gt;
+&lt;/servlet-mapping&gt;</pre>
+
+<p>There are also other settings you can make here that affect the
+authentication scheme used by the OpenLaszlo Server to authenticate use of the LPS
+persistent connection feature.  See the 'Using the Persistent Connection
+Feature' document for more details.</p>
+
+<h3><a name="lps.properties"></a>WEB-INF/lps/config/lps.properties</h3>
+<p>This file contains numerous settings that affect LPS operation.
+Below is the lps.properties file that ships with LPS.</p>
+
+<pre class="code">
+#===============================================================================
+# LPS properties file for development
+#===============================================================================
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+#===============================================================================
+# Default request type for naked .lzx requests (requests with no (or unknown) lzt 
+# query string).  For development, you want 'app_console'.  For deployment, you
+# want 'html'.
+#defaultRequestType=html
+defaultRequestType=app_console
+
+#===============================================================================
+# Request toggles - many of these should be set to false 
+# for deployment.
+allowRequestXML=true
+allowRequestINFO=true
+allowRequestSOURCE=true
+allowRequestFILTER=true
+
+
+# The following requests will require the admin. password if set below
+allowRequestCLEARCACHE=true
+allowRequestCLEARLOG=true
+allowRequestLOG=true
+allowRequestLOGCONFIG=true
+allowRequestGC=true
+allowRequestCACHEINFO=true
+allowRequestSETCACHESIZE=true
+allowRequestSERVERINFO=true
+allowRequestERRORCOUNT=true
+allowRequestSTAT=true
+allowRequestCONNECTIONINFO=true
+allowRequestJAVARPCINFO=true
+allowRequestSOAPINFO=true
+allowRequestXMLRPCINFO=true
+
+#===============================================================================
+# Allow forced recompile (will require admin password if reset)
+allowRecompile=true
+
+#===============================================================================
+# Uncomment for stat (default is true) and url collection (default is false)
+#collectStat=true
+#dataRequest.collectURL=true
+#mediaRequest.collectURL=true
+
+#===============================================================================
+# Password to check for administrative requests.
+# Uncomment and admin requests will require this passwd in the query
+# string as ?pwd=your_passwd_here
+#adminPassword=SET_ME_PLEASE
+
+#===============================================================================
+## Backend http properties
+#
+#http.maxConns=1000
+#http.maxConnsPerHost=1000
+# The number of redirects to try (security issue; default is 0)
+http.followRedirects=3
+# Timeout for back-end http requests
+#http.backendTimeout=30000
+#http.backendConnectionTimeout=30000
+
+#===============================================================================
+# Compilation manager dependency options: 
+#
+# never - compile once
+# check  - check all includes
+# always - compile for each access
+#
+# 'never' results in highest performance, requires an ?lzrecompile=true request
+# to recompile the application.
+compMgrDependencyOption=check
+
+#===============================================================================
+# Cache settings
+#
+# Locations of cache directories
+# The default location is inside the WEB-INF/lps/work directory
+# of your web application.  
+
+# Compilation cache
+#cache.directory=WEB-INF/lps/work/cache
+# Compilation media cache
+#cmcache.directory=WEB-INF/lps/work/cache/cmcache
+# Script compiler cache
+#scache.directory=WEB-INF/lps/work/scache
+
+# Runtime Media cache
+#mcache.directory=WEB-INF/lps/work/mcache
+# Runtime Data cache
+#dcache.directory=WEB-INF/lps/work/dcache
+
+# Cache sizes (0 = disabled (or allow 1 item for disk caches), -1 means infinite)
+# Defaults are 500000000 for disk and 1000000 for mem
+#mcache.disk.size=500000000
+#mcache.mem.size=1000000
+
+# Max size allowable for an item to be cached in memory
+# in the media cache (some media files are big and we
+# need to keep them on disk only).
+mcache.mem.item.max=1000000
+
+# Cache sizes (0 = disabled (or allow 1 item for disk caches), -1 means infinite)
+# Defaults are 500000000 for disk and 1000000 for mem
+#dcache.disk.size=500000000
+#dcache.mem.size=1000000
+
+# Compiler Media Cache
+# there is no need to keep any of these files in memory
+cmcache.mem.size=0
+
+# Keeps script cache small
+scache.disk.size=10000000
+scache.mem.size=1000000
+
+#===============================================================================
+# Apache AXIS settings
+
+# Defaults to WEB-INF/lps/config/client-config.wsdd
+# axis.clientConfigFile=client-config.wsdd
+
+#===============================================================================
+# WSDL load options: 
+#
+# never - loads once
+# always - loads for each access
+#
+# 'never' results in highest performance
+rpc.soap.wsdlLoadOption=always
+
+#===============================================================================
+# Persistent connection properties
+maxMessageLen=2000
+connectionLength=65536
+
+#===============================================================================
+
+#===============================================================================
+# Compiler parameters
+compiler.runtime.default=swf7
+
+</pre>
+
+<h3><a name="requesttypes"></a>Request types</h3>
+
+<p>In general, when you go to deploy an  OpenLaszlo application, you may
+wish to disable certain request types. The OpenLaszlo Server supports numerous
+request types that are indicated via the <code>?lzt</code> query
+string variable in an URL.  You can specify the default request type
+for URLs that don't specify <code>?lzt</code> via the
+<code>defaultRequestType</code> property.</p>
+
+<table summary="Request Types">
+    <tr valign="top">
+      <th>Property</th>
+      <th>Request type</th>
+      <th>LPS Response when enabled</th>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestXML</span></td>
+      <td><span class="regular">?lzt=xml</span></td>
+      <td><span class="regular">XML for the LZX application source</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestINFO</span></td>
+      <td><span class="regular">?lzt=info</span></td>
+      <td><span class="regular">Information about compiled LZX
+application</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestSOURCE</span></td>
+      <td><span class="regular">?lzt=source<br/>
+                                ?lzt=debug</span></td>
+      <td><span class="regular">HTML wrapper for LZX source code<br/>
+                                Debugger</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestFILTER</span></td>
+      <td><span class="regular">?lzt=filter</span></td>
+      <td><span class="regular">Filter for dynamic HTML wrapper</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestCLEARCACHE</span></td>
+      <td><span class="regular">?lzt=clearcache</span></td>
+      <td><span class="regular">Clears all server caches</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestLOG</span></td>
+      <td><span class="regular">?lzt=log</span></td>
+      <td><span class="regular">Responds with the current detailed log</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestLOGCONFIG</span></td>
+      <td><span class="regular">?lzt=logconfig</span></td>
+      <td><span class="regular">Displays and sets log configuration</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestCLEARLOG</span></td>
+      <td><span class="regular">?lzt=clearlog</span></td>
+      <td><span class="regular">Clears the current log</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestCACHEINFO</span></td>
+      <td><span class="regular">?lzt=cacheinfo</span></td>
+      <td><span class="regular">Gets media cache information</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestSERVERINFO</span></td>
+      <td><span class="regular">?lzt=serverinfo</span></td>
+      <td><span class="regular">Gets LPS information</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestERRORCOUNT</span></td>
+      <td><span class="regular">?lzt=errorcount</span></td>
+      <td><span class="regular">Gets LPS error count</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestSTAT</span></td>
+      <td><span class="regular">?lzt=stat</span></td>
+      <td><span class="regular">Gets LPS statistics when enabled</span></td>
+    </tr>
+    <tr valign="top">
+      <td><span class="regular">allowRequestGC</span></td>
+      <td><span class="regular">?lzt=gc</span></td>
+      <td><span class="regular">Runs the garbage collector</span></td>
+    </tr>
+       <tr valign="top">
+      <td><span class="regular">allowRequestCONNECTIONINFO</span></td>
+      <td><span class="regular">?lzt=connectioninfo</span></td>
+      <td><span class="regular">Gets information on persistent connection</span></td>
+    </tr>
+</table>
+<h3>Compilation Manager Dependency Option</h3>
+<p>There are three values for this property:</p>
+<dl>
+  <dt><code>always</code></dt>
+  <dd>compile an LZX application on each request.</dd>
+  <dt><code>check</code></dt>
+  <dd>compile the LZX application if it or any of
+  its source files or assets have changed since the application was
+  last compiled.</dd>
+  <dt><code>never</code></dt>
+  <dd>compile the LZX application only if there is
+  no cached version.  This results in highest server performance but
+  requires LPS restarts to pick up any application changes.</dd>
+</dl>
+
+<p>In general, deployments where the LZX source files and assets are
+fixed should use <code>never</code>.  For deployments where LZX source
+and/or art assets may change, you should use <code>check</code>.  If you
+choose <code>never</code> and need to update the application, you may
+provide the <code>lzrecompile=true</code> query string at the end
+of a request for the application.  You may also need to provide the administrator
+password for this to take affect.</p>
+
+<h4>LPS script compiler cache</h4>
+<p>The LPS maintains an in-memory cache of recently compiled script
+segments. In general, the default value of 100 should suffice.  Under
+rare circumstances, when deployed Laszlo application will be edited,
+recompiled frequently, or generated automatically via a pre-processing
+request, you may want to increase the size of this cache.</p>
+
+<h4>LPS cache directories</h4>
+<p>By default, LPS places its caches inside the web application's WEB-INF
+directory.  this is
+<code>$INSTALLDIR/lps-@VERSIONID@/WEB-INF/lps/work/cache</code>.</p>
+
+<h3><a name="caches"></a>Configuring Compiler, Media, and Data Caches</h3>
+<p>The LPS uses several caches that are maintained
+via a standard LRU (least recently used) algorithm.  Each caches can
+be configured independently and each one can be set to use
+disk only or memory (backed by disk) plus additional disk space.
+The caches (and their names) are:</p>
+
+<table summary="Server Caches">
+  <tr>
+    <th>Cache</th>
+    <th>Name</th>
+    <th>Use</th>
+  </tr>
+  <tr>
+    <td>Compiler</td>
+    <td><code>cache</code></td>
+    <td>applications</td>
+  </tr>
+  <tr>
+    <td>Media</td>
+    <td><code>media</code></td>
+    <td>runtime media</td>
+  </tr>
+  <tr>
+    <td>Data</td>
+    <td><code>data</code></td>
+    <td>runtime XML data</td>
+  </tr>
+  <tr>
+    <td>Compiler Media</td>
+    <td><code>cmcache</code></td>
+    <td>statically compiled media</td>
+  </tr>
+</table>
+
+<p>In general, it helps to know the expected number and size of the
+items being cached to optimally tune some of these numbers.  Here's
+the list:</p>
+
+<table summary="Server cache configuration">
+  <tr>
+    <th>Property</th>
+    <th>Definition</th>
+    <th>Values</th>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.disk.size</code></td>
+    <td>max size in bytes for disk cache</td>
+    <td><p><code>-1</code> means infinite; <code>0</code> means disabled</p></td>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.mem.size</code></td>
+    <td>max size in bytes for RAM cache</td>
+    <td><p>Same as above except <code>0</code> means allow 0
+    items</p></td>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.mem.item.max</code></td>
+    <td>max size in bytes for an in memory item</td>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.disk.load</code></td>
+    <td></td>
+    <td>default <code>0.75</code></td>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.disk.mapsize</code></td>
+    <td>initial map capacity</td>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.mem.load</code></td>
+    <td/>
+    <td>default <code>0.75</code></td>
+  </tr>
+  <tr>
+    <td><code><i>name</i>.mem.mapsize</code></td>
+    <td>initial map capacity</td>
+  </tr>
+</table>
+
+<p><code><i>name</i></code> is one of <code>cache</code>,
+<code>dcache</code>, <code>mcache</code>, <code>cmcache</code>.</p>
+
+<p>Note that the amount of disk space a cache will use is actually
+<code><i>name</i>.disk.size</code> + <code><i>name</i>.mem.size</code>. Also note that the cache will does not
+keep track of the amount of disk space used for meta data. For
+smaller items, the meta data can be significant.
+</p>
+
+<p>Each cache has two properties that affect its performance:
+<i>initial capacity</i> (<code>mapsize</code>) and <i>load factor
+</i>(<code>load</code>).  The <i>capacity</i> is the number of buckets
+in a hash table, and the initial capacity is simply the capacity at
+the time the hash table is created.  The <i>load factor</i> is a
+measure of how full the hash table is allowed to get before its
+capacity is automatically increased.  When the number of entries in
+the hash table exceeds the product of the load factor and the current
+capacity, the capacity is roughly doubled by calling the
+<method>rehash</method> method.</p>
+
+<p>As a general rule, the default load factor (<code>.75</code>)
+offers a good tradeoff between time and space costs.  Higher values
+decrease the space overhead but increase the lookup cost (reflected in
+most of the operations of the <classname link="false">HashMap</classname> class,
+including <method>get</method> and <method>put</method>).  The
+expected number of entries in the map and its load factor should be
+taken into account when setting its initial capacity, so as to
+minimize the number of <method>rehash</method> operations.  If the
+initial capacity is greater than the maximum number of entries divided
+by the load factor, no <method>rehash</method> operations will ever
+occur.</p>
+
+<h3><a name="lps.xml"></a>WEB-INF/lps/config/lps.xml</h3>
+<a name="black-list"/>
+    <p>The <code>lps.xml</code> file contains configuration options for </p>
+    <ul>
+        <li>specifying a security 'white-list/black-list' for LPS back-end data/media requests 
+        </li>
+        <li>allowing/denying gzip content-encoding based on user-agent
+        </li>
+        <li>allowing/denying persistent connections based on user-agent
+        </li>
+    </ul>
+    <p>Below is an example on what this file can look like:<br/>
+</p>
+<pre>&lt;lps-configuration&gt;
+
+    &lt;!-- Default options --&gt;
+    &lt;option name="content-encoding-user-agent" &gt;
+        &lt;deny&gt;
+            &lt;!-- Deny Netscape 4.7* --&gt;
+            &lt;pattern&gt;Mozilla/4\.7[0-9]* .*&lt;/pattern&gt;
+        &lt;/deny&gt;
+    &lt;/option&gt;
+
+    &lt;option name="connection-user-agent" &gt;
+        &lt;deny&gt;
+            &lt;!-- Deny Safari --&gt;
+            &lt;pattern&gt;Safari&lt;/pattern&gt;
+        &lt;/deny&gt;
+    &lt;/option&gt;
+
+    &lt;application path="/examples/dataimage.lzx" &gt;
+        &lt;option name="proxy-security-urls"&gt;
+            &lt;allow&gt;
+                &lt;pattern&gt;http://.*\.images\.com/.*&lt;/pattern&gt;
+                &lt;pattern&gt;http://.*\.adobe\.com/.*&lt;/pattern&gt;
+            &lt;/allow&gt;
+        &lt;/option&gt; 
+    &lt;/application&gt;
+
+    &lt;application path="/examples/data.lzx" &gt;
+        &lt;option name="proxy-security-urls" &gt;
+            &lt;deny&gt;
+                &lt;pattern&gt;http://.*\.foobar\.net/.*&lt;/pattern&gt;
+            &lt;/deny&gt;
+        &lt;/option&gt; 
+    &lt;/application&gt;
+
+    &lt;!-- Deny requests under /secret in the foobar.com domain --&gt;
+    &lt;!-- for LZX files that begin with /data.                 --&gt;
+    &lt;application pattern="/data.*\.lzx" &gt;
+        &lt;option name="proxy-security-urls" &gt;
+            &lt;deny&gt;
+                &lt;pattern&gt;http://*\.foobar\.net/.*&lt;/pattern&gt;
+            &lt;/deny&gt;
+        &lt;/option&gt; 
+    &lt;/application&gt;
+
+&lt;/lps-configuration&gt;
+</pre>
+
+<p>The root element of <code>lps.xml</code> is
+<tagname link="false">lps-configuration</tagname> and only two valid tags
+exist:</p>
+<ul>
+  <li><tagname link="false">option</tagname></li>
+  <li><tagname link="false">application</tagname></li>
+</ul>
+
+<p>Any <tagname>option</tagname> tag defined under
+<code>&lt;lps-configuration&gt;</code> is considered a global
+default. This default option may be overridden by using the
+<tagname>application</tagname> tag.</p>
+
+<p>The <tagname>option</tagname> tag has one attribute called
+<attribute>name</attribute> that takes one of the following
+values:</p>
+
+<dl>
+  <dt><code>content-encoding-user-agent</code></dt>
+  <dd>determines which
+  user-agents are allowed/denied content-encoding.</dd>
+  <dt><code>proxy-security-urls</code></dt>
+  <dd>white-list/black-list of
+  allowed/prohibited request URLs.</dd>
+</dl>
+
+<p>Each <tagname>option</tagname> can have one of two elements:
+<tagname link="false">allow</tagname> or <tagname link="false">deny</tagname>. The
+<tagname>allow</tagname> and <tagname>deny</tagname> tags contain a
+list of regular expression patterns to be matched. For example, to
+disallow content encoding for Netscape 4.7:</p>
+
+<pre>
+    &lt;option name="content-encoding-user-agent" &gt;
+        &lt;deny&gt;
+            &lt;pattern&gt;Mozilla/4\.7[0-9]* .*&lt;/pattern&gt;
+        &lt;/deny&gt;
+    &lt;/option&gt;
+</pre>
+
+<p>Or to only allow requests to fetch data from the <code>laszlosystems.com</code>
+or <code>foobar.com</code> domain:</p>
+
+<pre>
+    &lt;option name="proxy-security-urls" &gt;
+        &lt;allow&gt;
+            &lt;pattern&gt;http://.*\.laszlosystems\.com/.*&lt;/pattern&gt;
+            &lt;pattern&gt;http://.*\.foobar\.com/.*&lt;/pattern&gt;
+        &lt;/allow&gt;
+    &lt;/option&gt;
+</pre>
+
+<p>A set of <tagname>option</tagname> tags also can be placed inside
+the <tagname>application</tagname> tag, which will override the
+default option for an application path. The
+<tagname>application</tagname> tag takes one of two attributes:
+</p>
+
+<dl>
+  <dt><attribute>path</attribute></dt>
+  <dd>the pathname of the
+  application.</dd>
+  <dt><attribute>pattern</attribute></dt>
+  <dd>a regular expression to match an
+  application path.</dd>
+</dl>
+
+<p>Both path and pattern are relative to the web application name.</p>
+
+<p>To match the application path <code>/examples/dataimage.lzx</code>
+and only allow URL requests that for any directory under
+<code>images.com</code> and <code>adobe.com</code>:</p>
+
+<pre>
+    &lt;application <i>path="/examples/dataimage.lzx"</i>&gt;
+        &lt;option name="proxy-security-urls"&gt;
+            &lt;allow&gt;
+                &lt;pattern&gt;http://.*\.images\.com/.*&lt;/pattern&gt;
+                &lt;pattern&gt;http://.*\.adobe\.com/.*&lt;/pattern&gt;
+            &lt;/allow&gt;
+        &lt;/option&gt; 
+    &lt;/application&gt;
+</pre>
+
+<p>You can also use a regular expression to match a set of application
+paths by using the <attribute>pattern</attribute> attribute:</p>
+
+<pre>
+    &lt;application <i>pattern="/examples/data.*\.lzx"</i> &gt;
+        &lt;option name="proxy-security-urls"&gt;
+            &lt;deny&gt;
+                &lt;pattern&gt;http://.*\.foobar\.com/.*&lt;/pattern&gt;
+            &lt;/deny&gt;
+        &lt;/option&gt; 
+    &lt;/application&gt;
+</pre>
+
+<p>The LPS uses the following precedence to determine which filter
+will be applied to your application:</p>
+
+<ol>
+  <li>There is a matching application path attribute and it contains a matching
+      option.</li>
+  <li>There is a matching application pattern attribute and it contains a
+      matching option.</li>
+  <li>There is matching global option.</li>
+  <li>Allow request.</li>
+</ol>
+
+
+<h3><a name="logfile"></a>LPS logging configuration</h3>
+
+<p>The LPS provides a highly configurable and efficient logging
+mechanism that you can use to debug and monitor server activities.
+(Note that some of the details covered here may also be found in
+<xref linkend="logging">the chapter on <a
+href="loggging.html">Logging</a></xref>.)</p>
+
+<p>The LPS uses the well-known <a target="_blank"
+href="http://jakarta.apache.org/log4j/docs/documentation.html">Log4j</a>
+package for logging details about its operation. You can configure LPS
+logging by modifying elements of the
+<code>log4j:configuration</code> tag in the lps.xml
+configuration file. The default location for the detailed LPS log file
+is inside the web application's WEB-INF directory at 
+<code><i>$webapp</i>/WEB-INF/lps/work/logs/lps.log</code>.</p>
+
+<p>You can change the location of this file using a "File" parameter in the
+<code>lps</code> appender. For example,</p>
+<pre class="code">
+&lt;appender name="lps" class="org.apache.log4j.RollingFileAppender"&gt;
+  <em>&lt;param name="File" value="lps.log"/&gt;</em>
+    &lt;!-- other settings here --&gt;
+&lt;/appender&gt;
+</pre>
+<p>will leave the log in the default location inside the web applications's
+WEB-INF directory.  You can also modify the amount of logging done by
+changing the priority of your logger from <code>info</code> to
+<code>debug</code>. For more details on this file see the <a target="_blank"
+href="http://jakarta.apache.org/log4j/docs/manual.html">online manual</a> and
+the <a target="_blank"
+href="http://nagoya.apache.org/wiki/apachewiki.cgi?Log4JProjectPages/Log4JXmlFormat">xml
+configurator primer</a>. There's also the <a target="_blank"
+href="http://jakarta.apache.org/log4j/docs/api/org/apache/log4j/PatternLayout.html">detailed
+doc</a> about the pattern layout for controlling the format of each log
+statement. The default settings will keep 5 backup log files each with a maximum
+size of 10 MBytes. You can change them by using the MaxBackupIndex param and
+MaxFileSize param in the lps appender. For example, the following will keep 20
+backup log files with a maximum size of 5 MBytes.</p>
+<pre class="code">
+&lt;appender name="lps" class="org.apache.log4j.RollingFileAppender">
+  <em>&lt;param name="MaxBackupIndex" value="20"/></em>
+  <em>&lt;param name="MaxFileSize" value="5MB"/></em>
+  &lt;!-- other settings here -->
+&lt;/appender>
+</pre>
+<p>
+Your servlet container will likely maintain logs of its own.  See your
+servlet container documentation of the location and configuration of these logs.
+</p>
+<p>
+The default configuration that ships with the LPS also includes a logger named,
+<code>org.openlaszlo.exceptions</code>.  The LPS will log unexpected
+exceptions to this logger.  During development this logger should be left as
+WARN or ERROR level, but most deployments will prefer to comment it out, unless
+they are troubleshooting.
+</p>
+<h4>Runtime log configuration</h4>
+<p>
+The LPS logging can be configured during runtime with the
+<code>lzt=logconfig</code> request type. The request by itself returns the
+server's log4j configuration. You can modify and tell the LPS to read your new
+configuration options by passing a <code>lzt=logconfig&amp;reread=1</code> query
+parameter. The LPS always looks for a log4j.xml file first in the server's
+configuration directory before checking for the &lt;log4j:configuration&gt;
+element in lps.xml.
+</p>
+<p>
+You can also pass the LPS a new XML configuration by sending using the
+<code>xml</code> parameter.
+</p>
+<pre class="code">
+    lzt=logconfig&amp;xml=%3Clog4j:configuration%3E...%3C/log4j:configuration%3E
+</pre>
+<p>
+To save your new settings into a log4j.xml file that your LPS can use as your default log configuration, send <code>save=1</code> with your new settings.
+</p>
+<pre class="code">
+    lzt=logconfig&amp;xml=...&amp;save=1
+</pre>
+
+<h3>SOAP Options</h3>
+
+<h4>WSDL Load Option</h4>
+<p>There are two values for this property:</p>
+<dl>
+  <dt><code>always</code></dt>
+  <dd>Fetch the WSDL from the backend for every load of a SOAP object.</dd>
+  <dt><code>never</code></dt>
+  <dd>Fetch the WSDL from the backend once during startup. Subsequent loads will
+  fetch WSDL from cache.</dd>
+</dl>
+
+<p>Use <code>never</code> during deployment and <code>always</code> for
+development. Default is <code>always</code>. You'll need to restart the
+server for changes to take effect.</p>
+
+<h4>Modifying AXIS SOAP Transport</h4>
+
+<p>The <a href="http://ws.apache.org/axis/">Apache Axis</a> library is used to
+support SOAP in the LPS. The LPS uses <a
+href="http://jakarta.apache.org/commons/httpclient/">HttpClient</a> as its HTTP
+transport of choice through its configuration of
+WEB-INF/lps/config/client-config.wsdd.</p>
+
+<pre class="code">
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;deployment name="commonsHTTPConfig" xmlns="http://xml.apache.org/axis/wsdd/" 
+            xmlns:java="http://xml.apache.org/axis/wsdd/providers/java"&gt;
+  &lt;transport name="http" pivot="java:org.apache.axis.transport.http.CommonsHTTPSender" /&gt;
+&lt;/deployment&gt;
+</pre>
+
+<p>The <a
+href="http://ws.apache.org/axis/java/apiDocs/org/apache/axis/transport/http/CommonsHTTPSender.html">CommonsHTTPSender</a>
+class uses HttpClient to call SOAP services.</p>
+
+<h3><a name="lzusers.xml"></a>WEB-INF/lps/config/lzusers.xml </h3>
+<p>This file contains the set of users recognized by the default LPS
+security servlet used by the default LPS authenticator interface.  The
+LPS authenticator is used by the LPS for authenticating users who
+attempt to connect to the LPS via LPS Persistent Connections.  See Using
+LPS Persistent Connections for details. </p>
+
+
+<h3><a name="config-deploy"></a>WEB-INF/lps/config-deploy sample deploymeht configuration</h3>
+<p>In parallel with the <code>config</code> directory in <code>WEB-INF/lps</code> there is
+a directory named <code>config-deploy</code> which contains a sample LPS configuration
+for deployment purposes.  To use this directory, simply delete, move, or rename
+the <code>config</code> directory out of the way and copy, rename the <code>config-deploy</code> one
+ to <code>config</code>.  You should definitely review the configuration and modify it to suit your needs. 
+ Of course you will have to (re)start your LPS.</p>
+
+
+<h2><a name="security"></a>Security</h2>
+<fixme>
+There should be a section in "Deploying with Laszlo Presentation Server" on "Locking down a server".
+  The existing section 8.2 "Readability of Source Files" is part of this, but it needs to go over the lps properties that need to be changed (all the allowRequest properties?), to remind the user to check the docs for the servlet container, and probably additional stuff that Eric and Antun know and that we should capture.
+
+</fixme>
+<p>The LPS and Laszlo Applications inherit the security of the container in/from
+which they are deployed.  If you would like to serve Laszlo Applications over secure
+HTTPS transport, you will need to enable this feature in your servlet container.
+</p>
+<p>
+With few exceptions, Laszlo applications work identically
+when served over HTTPS.  The two exceptions are:</p>
+<ul>
+    <li>There is increase in server and client CPU 
+    load to handle the encryption/decryption that is part of HTTPS/SSL.</li>
+    <li>An HTTPS-served application can make runtime HTTPS data 
+    and media requests without any additional configuration.</li>
+</ul>
+
+<p>Laszlo applications served over standard (insecure) HTTP transport can 
+make secure runtime HTTPS requests.  These requests are transported securely 
+from the client to the LPS.  (They are also transported securely from any 
+back-end to the LPS itself).</p>
+<a name="crossdomain.xml"></a>
+
+    <note>Laszlo applications served over (insecure) HTTP that run 
+    in the Macromedia Flash 7 player may require additional server configuration to 
+    access runtime data and media over secure HTTPS.  According to Macromedia
+    documentation, you will need to provide a cross-domain policy file that explicitly 
+    allows such access to your remote data.  Laszlo provides a sample (and <i>lenient</i>) 
+    cross-domain policy file (<code>$WEBAPP/WEB-INF/lps/config/crossdomain.xml</code>) 
+    that, when copied to the <i>root</i>
+    directory of the front-most server that serves the
+    Laszlo application, will enable HTTPS access from applications that
+    are loaded over (insecure) HTTP from any server.  
+    If you need to support HTTPS access from HTTP-loaded apps, you should 
+    read this example file and follow the instructions inside it before copying.
+    See the <a href="http://www.macromedia.com/devnet/mx/flash/articles/fplayer_security.html">
+    Macromedia article on security in Flash 7</a> for details on the format and 
+    interpretation of the cross-domain policy file.</note>
+    
+    <p>
+    If you are running the LPS inside a servlet container and
+    the servlet container is directly accessible, then the file <code>crossdomain.xml</code> should be placed in 
+    container's ROOT web application.  See your servlet container's documentation for 
+    locating this directory.
+    If you are fronting your container with another server such as Apache, this file
+    needs to be placed in that server's <i>root</i> directory.  For example, with Apache,
+    this would be Apache's DocumentRoot directory (or the root of
+    Apache's virtual host directory for the host that's serving the application).
+    </p>
+    <h3><a name="dosattack"></a>Preventing denial of service (DOS) attacks </h3>
+    <p>
+    The configuration of your servlet container (or front-side server) can also
+    affect the security of the LPS.  To prevent certain denial-of-service
+    (DOS) attacks, you may want to configure the max size of an HTTP request body, 
+    the maximum size of an HTTP request header, the maximum number of HTTP headers in a 
+    request, and the maximum size of the initial request line (url and query string).  
+    </p>
+<p>
+</p>
+<h3><a name="sourcereader"></a>Readability of Source Files</h3>
+<p>
+The OpenLaszlo Source Viewer, which ships with the OpenLaszlo Server, allows anyone with internet access to read any XML files, including sources to any .lzx program,
+in your LPS directory by using a query such as, for example,
+<code>http://localhost:8080/lps/lps/utils/viewer/viewer.jsp?file=/examples/tag-definition.lzx</code>.</p>
+
+<p>To prevent this, remove or rename the <code>viewer</code> directory from the <code>lps/lps/utils</code> directory and set <tt>allowRequestSOURCE=false</tt> in the<a href="lps.properties"> file.</a> 
+</p>
+<p>Also note that source code to your applications may be made visible through the context ("right click") menu.  See <a href="${dguide}/input-devices.html#view_source">this page</a> for a discussion about how to disable this programmatically.
+</p>
+<?ignore
+<h2>Deployment Checklist</h2>
+
+
+A checklist sounds good.
+
+I don't know if we need to go into them, but there are container specific issues here too for things like:
+
+- masquerading/hiding response headers
+- maximum length of an URL
+- maximum lenght of a request header
+- maximum size of a request body
+?>
+<h2><a name="monitoring"></a>Monitoring LPS activity</h2>
+<p>You can monitor LPS activity by looking at the log file.  You can
+examine the log file directly on the server (see <a href="#logfile">above</a>
+for locating the log file).  Or you can use the simple administrator's console
+that comes with LPS at
+<code>http://$host:$port/$webapp/lps/admin/console.lzx</code>.</p>
+<p>(If the administrative password has been configured in the <code>lps.properties</code>
+file, then you will need this password to use the console.)</p>
+<p>
+See also the next section on server <a href="#lpsstatistics">statistics</a>.
+</p>
+
+<h2>Browser Compatibility</h2>
+<p>
+<a name="encoding"></a>
+
+Different browsers vary in their support for options such as gzip
+compression and http request options . The table below summarizes
+known browser capabilities at this time. As explained in section <a
+href="#lps.xml">WEB-INF/lps/config/lps.xml</a>, the lps.xml file is
+configured with regexp patterns which specify these browsers by
+matching on their user-agent string.</p>
+
+<table border="1">
+    <tr>
+      <th>   Doesn't support gzip correctly  </th>
+      <th>   Say they support gzip but don't  </th>
+      <th>   Don't support if-modified-since correctly  </th>
+      <th>   Can't abort an HTTP request   </th>
+    </tr>
+    <tr>
+      <td> Older Safaris, MAC IE5.2   </td>
+      <td> See lps.xml table </td>
+      <td> Everything but Safari </td>
+      <td> Mac IE5.2, NS 4.7x </td>
+    </tr>
+</table>
+
+
+
+<h2><a name="lpsstatistics"></a>LPS statistics</h2>
+<p>You can use the <a href="#requesttypes">lzt=stat</a> request type to track
+server statistics. You will need to verify that you have the stat request type
+enabled in your <a href="#lps.properties">lps.properties</a>. The stat request
+type will return XML showing general server configuration, server load for the
+past 1/5/15 minutes, and information on the number of unique data and media
+urls. Note that administrative requests are not included in these
+statistics.</p>
+<h3>Load</h3>
+<p>The server keeps track of the following loads:</p>
+    <ul>
+        <li>application: load on server for LZX application requests.</li>
+        <li>media: load on server for media requests, e.g., mp3, gif. </li>
+        <li>data: load on server for data requests.</li>
+        <li>persistent connection: number of active persistent connections.</li>
+        <li>all: sum of application, media, and data loads.</li>
+    </ul>
+<h3>URL collection</h3>
+<p>The server also keeps track of the number of unique data and media urls that
+have been requested. You can toggle url details at run-time by using the
+durl=[0|1] and murl=[0|1] query string parameters for data and media urls,
+respectively. By default, url details are turned off. See <a
+href="#lps.properties">lps.properties</a> for more info.
+</p>
+<fixme>
+
+1) there is a second directory, in parallel with the config one called config-deploy which has config files suitable for a deployment.  Swapping the two at delpoyment time (and changing "defaults") is what this is about.  I will make sure that this directory is included in the distribution(s).
+
+2) there is a command line argument, which can be passed in as a "JAVA_OPTS=-Dlps.config.dir.abs=DIRECTORY" to allow you to pass in an alternate directory, or use the config-deploy one without renaming.  In fact, "JAVA_OPTS=-Dlps.config.dir=config-deploy" will do the job nicely, (without the .abs, the path is relative to the same place the config directory is located).
+</fixme>
+</body>
+</html>
+
+

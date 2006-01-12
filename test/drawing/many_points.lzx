@@ -1,0 +1,63 @@
+ <canvas width="800" height="600">
+<include href="utils/performance" />
+  <class name="drawLines"  extends="drawview" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green" width="200" height="200">
+    <attribute name="it" type="number" value="10"/>
+    <dragstate name="dragger"/>
+    <method event="oninit">
+           for (var i=0; i != this.it ; i++){
+            this.moveTo(200*math.random(), 200*math.random());
+            this.lineTo(200*math.random(), 200*math.random());
+           }
+            this.closePath();
+            this.strokeStyle = 0xff0000;
+            this.lineWidth = 1;
+            this.stroke();
+            
+    </method>
+  </class>
+    <class name="randOnly"  extends="drawview" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()" bgcolor="green" width="200" height="200">
+    <attribute name="it" type="number" value="10"/>
+    <dragstate name="dragger"/>
+    <method event="oninit">
+           for (var i=0; i != this.it ; i++){
+            200*math.random();
+            200*math.random();
+            200*math.random();
+            200*math.random();
+           }
+    </method>
+  </class>
+<view>
+<simplelayout/>
+  <button>100 Lines
+    <method event="onclick">
+      new drawLines( canvas,{ it : 100, x:100 });      
+    </method>
+  </button>
+  <button>1000 Lines
+    <method event="onclick">
+      new drawLines( canvas,{ it : 1000, x:100, y:200});      
+    </method>
+  </button>
+  <button>10000 Lines
+    <method event="onclick">
+      new drawLines( canvas,{ it : 10000, x:100, y:400 });      
+    </method>
+  </button>
+  <button>100 Rand
+    <method event="onclick">
+      new randOnly( canvas,{ it : 100, x:300 });      
+    </method>
+  </button>
+  <button>1000 Rand
+    <method event="onclick">
+      new randOnly( canvas,{ it : 1000, x:300, y:200});      
+    </method>
+  </button>
+  <button>10000 Rand
+    <method event="onclick">
+      new randOnly( canvas,{ it : 10000, x:300, y:400 });      
+    </method>
+  </button>
+</view>
+</canvas>

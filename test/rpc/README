@@ -1,0 +1,59 @@
+[JAVARPC]
+
+To run these, you need to do "ant build-tests" first. The java sources are
+located in WEB-INF/lps/server/src/org/openlaszlo/test/xmlrpc.
+
+- test-all.lzx: lzunit test. Runs test-count.lzx, test-databinding.lzx,
+and test-typemap.lzx.
+
+- innerclass.lzx: inspect debugger output, make sure there are no exceptions
+
+- serverenv.lzx: gets server system properties.
+
+- session-counter.lzx: invokes counter class in server which can be saved in
+either session or webapp object.
+
+- session.lzx: tests <sessionrpc>.
+
+- webapp.lzx: tests <webapprpc>.
+
+
+
+[SOAP]
+
+- amazon.lzx: tests amazon SOAP webservice.
+
+- context.lzx: tests <remotecalls remotecontext="...">.
+
+- dictionary.lzx: tests document style SOAP service.
+
+- geography.lzx: tests RPC call with array return value.
+
+- google.lzx: tests declared <param> style in <remotecall>. Return value is a
+  complex object.
+
+- temperature.lzx: tests scalar return value.
+
+
+
+
+[XMLRPC]
+
+- meerkat.lzx: a crude example of a hierarchical navigation system, driven by
+  data obtained from O'Reilly news syndication service (Meerkat) that uses
+  XMLRPC as the protocol. Pretty straightforward to use; the top level is news
+  categories, which contain channels, which in turn are collections of articles.
+
+- serverenv.lzx: a simple example of querying a standalone Java XMLRPC service
+  to display server environment in a list. Click on list items to see their
+  values.
+
+  You'll need to run serverenv.sh. Make sure you LPS_HOME and JAVA_HOME
+  environment variables are correctly set and nothing is running in port 8181.
+
+[COPYRIGHT]
+
+* T_LZ_COPYRIGHT_BEGIN ******************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Use is subject to license terms.                                          *
+* T_LZ_COPYRIGHT_END ********************************************************

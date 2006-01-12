@@ -1,0 +1,167 @@
+<canvas debug="true" width="800" height="600">
+
+    <include href="base/basetree.lzx" />
+
+    <debug x="280" y="415" width="450" height="160" />
+    
+    <dataset name="categories"/>
+    
+    <alert id="errormsg"/>
+    
+    <xmlrpc name="meerkat" secure="true" secureport="8443"
+            service="http://www.oreillynet.com/meerkat/xml-rpc/server.php">
+
+        <method event="onload">
+            canvas.meerkat.getCategories.invoke();
+            status.setVisible(true);
+        </method>
+
+        <method event="ondata" args="data">
+            Debug.write('ondata:', data);
+            status.setVisible(false);
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write('onerror:', error);
+            errormsg.setAttribute('text', 'Server error: ' + error + '\nPlease try again.')
+            errormsg.open()
+        </method>
+
+        <remotecall name="getChannelsByCategory" 
+                    funcname="meerkat.getChannelsByCategory" />
+        <remotecall name="getItems"
+                    funcname="meerkat.getItems" />
+        <remotecall name="getCategories" dataobject="categories"
+                    funcname="meerkat.getCategories" />
+
+    </xmlrpc>
+
+
+    <class name="datatree" extends="basetree" closesiblings="true" 
+           closechildren="true" xindent="25"
+           onmouseover="t.setAttribute('fgcolor', blue)"
+           onmouseout="t.setAttribute('fgcolor', black)">
+        <attribute name="del" value="null" type="expression" /> <!-- LzDelegate --> 
+        <attribute name="bkg" value="0xd0d0d0"/>
+        <attribute name="isloaded" value="false" type="boolean" />
+
+        <statictext name="t" height="25" width="300" clickable="false"
+            bgcolor="$once{parent.bkg}" text="$path{'title/text()'}" 
+            placement="item" />
+
+        <datapath>
+            <method event="onclones">
+                Debug.write('replicating')
+                if (!this['doneDel']) {
+                   this.doneDel = new LzDelegate(this, 'openOH')
+                   this.doneDel.register(clones[ clones.length - 1 ], 'oninit')
+                }
+            </method>
+            <method name="openOH">
+                Debug.write('clones done');
+            </method>
+        </datapath>
+
+        <method name="gotData" args="v">
+            status.setVisible(false);
+
+            if (v.status != 'ok') {
+                errormsg.setAttribute('text', 'Server error: ' + v.message + '\nPlease try again.')
+                errormsg.open()
+                return;
+            } 
+
+            this.isloaded = true;
+            this.setAttribute('open', true)
+        </method>
+    </class>
+    
+
+    <view width="500" height="400" bgcolor="0xc0c0c0" clip="true" >
+        <datatree id="cat_list" datapath="categories:/" showroot="false" 
+            autoscroll="true">
+
+            <!-- Category level -->
+            <datatree datapath="item">
+         
+                <method event="onclick">
+                    // make remotecall only if we haven't made it before
+                    if ( ! this.del ) {
+
+                        this.del = new LzDelegate(this, "gotData")
+                        this.del.dataobject = this.datapath.p;
+
+                        var id = this.datapath.xpathQuery('id/text()')
+                        meerkat.getChannelsByCategory.invoke([ Number(id) ], this.del);
+                        status.setVisible(true)
+                        return;
+                    }
+                    this.setAttribute('open', ! this.open)
+                </method>
+                
+                <!-- Channels this category contains -->
+                <datatree datapath="element/item" bkg="0xe0e0e0" yindent="25">
+                
+                    <method event="onclick">
+                        // make remotecall only if we haven't made it before
+                        if ( ! this.isloaded ) {
+                            this.del = new LzDelegate(this, "gotData")
+                            var id = this.datapath.xpathQuery('id/text()')
+
+                            this.del = new LzDelegate(this, "gotData");
+                            this.del.dataobject = this.datapath.p;
+
+                            meerkat.getItems.invoke( [ { channel: Number(id) } ], this.del )
+                            status.setVisible(true)
+                            return;
+                        }
+                        this.setAttribute('open', ! this.open)
+                    </method>
+
+                    <!-- And finally, list of articles in the channel. -->
+                    <datatree name="articles" datapath="element/item" bkg="white">
+                        <statictext placement="item" x="25" y="25" width="300" multiline="true"
+                            onclick="LzBrowser.loadURL(this.datapath.xpathQuery('../link/text()'), '_blank')"
+                            onmouseover="setAttribute('fgcolor', blue)"
+                            onmouseout="setAttribute('fgcolor', black)"
+                            datapath="description/text()" />
+                    </datatree>
+                </datatree>
+            </datatree>
+        </datatree>
+        <scrollbar visible="${scrollable}"/>        
+    </view>
+        
+    <view id="status" visible="false" width="$once{canvas.width}" 
+          height="$once{canvas.height}" bgcolor="white" opacity=".2">
+        <method name="setVisible" args="visible">
+            if (visible) {
+                LzModeManager.makeModal(this);
+            } else {
+                LzModeManager.release(this);
+            }
+            super.setVisible(visible);
+        </method>
+
+        <text x="200" y="200" width="150" visible="${parent.visible}">
+            Please wait...
+        </text>
+    </view>
+
+    <view resource="../meerkat-powered.jpg" y="405" 
+        onclick="LzBrowser.loadURL('http://meerkat.oreillynet.com', '_blank')"/>
+
+<!--
+    <button name="browse" text="Browse" x="100" y="405">
+        <method event="onclick" >
+            canvas.meerkat.getCategories.invoke();
+            status.setVisible(true);
+        </method>
+    </button>
+-->
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

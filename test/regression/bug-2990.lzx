@@ -1,0 +1,28 @@
+<canvas>
+    <simplelayout spacing="10"/>
+    <inputtext name="color"/>
+
+    <text bgcolor="${parent.color.getText() == 'wood' ? 0x00ff00 : 
+0xff0000}" text="${color.getText()}"/>
+
+    <inputtext name="color2" resizable="true"/>
+
+    <text bgcolor="${parent.color2.getText() == 'wood' ? 0x00ff00 : 
+0xff0000}" text="${color2.getText()}"/>
+
+    <inputtext name="color3" multiline="true"
+               height="100"/>
+
+    <text bgcolor="${parent.color3.getText() == 'wood' ? 0x00ff00 : 
+0xff0000}" text="${color3.getText()}"/>
+
+    <inputtext name="color4" resizable="true" multiline="true"
+               height="100"/>
+
+    <text bgcolor="${parent.color4.getText() == 'wood' ? 0x00ff00 : 
+0xff0000}" text="${color4.getText()}"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

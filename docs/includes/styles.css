@@ -1,0 +1,344 @@
+/* Stylesheet for LPS docs                                            */
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+/* default font: note that table cells do not inherit default font from body! */
+body, th, td {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 12px;
+    line-height : 18px;
+    color: #333333;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight : bold;
+    margin-bottom : -5px;
+    margin-top : 20px;
+}
+
+h1 {
+    font-size : 18px;
+}
+
+h2 {
+    font-size : 16px;
+}
+
+h3 {
+    font-size : 14px;
+}
+
+h4 {
+}
+
+h5 {
+    color: #4F4F4F;
+}
+
+h6 {
+    color: #696969;
+}
+
+.chaptertoc > ol {
+    margin-left: -30px;
+}
+
+img.logo {
+    float: right;
+}
+
+img.illustration, img.screenshot {
+    margin-left : 25px;
+    margin-top : 15px;
+    margin-bottom : 30px;
+}
+
+
+/* ************************************************************************ */
+
+.regular {
+    font-size : 12px;
+    line-height : 18px;
+}
+
+.smaller, .copyright {
+    font-size : 10px;
+    line-height : 16px;
+}
+
+.copyright {
+    border-top: 1px solid black;
+}
+
+dt {
+    font-size : 11px;
+    line-height : 14px;
+    font-weight : bold;
+    color: #1F1F1F;
+    margin-left : 10px;
+}
+
+dd {
+    line-height : 14px;
+    padding-bottom : 5px;
+    padding-left : 45px;
+    margin-left: 10px;
+}
+
+
+th {
+    line-height : 14px;
+    font-weight : bold;
+    color: #1F1F1F;
+}
+
+
+/* ************************************************************************ */
+
+a[href^="http:"] {
+    /* from http://www.web-graphics.com/ */
+    background: url(aoutside.gif) right center no-repeat;
+    padding-right: 8px;
+    margin-right: 2px;
+}
+
+p a:visited {
+    color: #9999CC;
+}
+
+p a:active {
+    color: #333399;
+}
+
+p a:hover {
+    text-decoration: none;
+}
+
+.regular a:visited {
+    color: #9999CC;
+}
+
+.regular a:active {
+    color: #333399;
+}
+
+.regular a:hover {
+    text-decoration: none;
+}
+
+/* ************************************************************************ */
+
+.em {
+    font-style: italic;
+}
+
+pre em, pre .em, .redText {
+    color: blue;
+    font-style: normal;
+    font-weight: bold;
+}
+
+/* ************************************************************************ */
+
+.bodytext {
+    font-size : 12px;
+    line-height : 18px;
+}
+
+body.tutorial,
+body.dguide-chapter {
+    background-color: white;
+    padding-left : 60px;
+    padding-top : 20px;
+    padding-right : 100px;
+}
+
+body.tutorial h1, body.dguide-chapter h1 { margin-left : -45px; }
+body.tutorial h2, body.dguide-chapter h2 { margin-left: -30px; }
+body.tutorial h3, body.dguide-chapter h3 { margin-left : -15px; }
+
+body.release-notes {
+    background-color: white;
+    padding-left : 60px;
+    padding-top : 20px;
+    padding-right : 80px;
+}
+
+body.doc-index {
+    background-color: white;
+    padding-left : 60px;
+    padding-top : 20px;
+    padding-right : 80px;
+}
+
+.docTableTitle {
+    font-size : 16px;
+    font-weight : bold;
+}
+
+
+.docTableTitle a:visited {
+    color: #9999CC;
+}
+
+.docTableTitle a:active {
+    color: #333399;
+}
+
+.docTableTitle a:hover {
+    text-decoration: none;
+}
+
+.chaptertoc {
+    float: left;
+}
+
+.endchaptertoc {
+    clear: both;
+}
+
+.examples-index {
+    float: right;
+    border: 1px solid gray;
+    padding: 0 5px 0 40px;
+}
+
+.examples-index ol {
+    padding-left: 0;
+    margin-left: 0;
+}
+
+.examples-index ul {
+    list-style: none;
+    padding-left: 10px;
+}
+
+.examples-index h2 {
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.note {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.warning {
+    border-top: 1px solid;
+    border-bottom: 1px solid;
+}
+
+.todo, .fixme {
+    background-color: yellow;
+    border-top: 1px solid red;
+    border-bottom: 1px solid red;
+
+}
+
+
+/* Code ******************************************* */
+
+.code, .program, .fragment, tt {
+    font-family : "Courier New", Courier, monospace;
+    font-size : 13px;
+    font-weight : bold;
+    color : #646464;
+    background-color : #eaeaea;
+}
+
+.code, .program, .fragment {
+    padding: 1px 10px;
+}
+
+tt {
+    padding: 1px 4px;
+}
+
+tt tt, pre tt {
+    padding: 1px 0;
+}
+
+pre {
+    margin-left: 10px;
+}
+
+pre.code, pre.program, pre.fragment {
+    font-family : "Courier New", Courier, monospace;
+    font-size : 13px;
+    background-color : #CFD4E1;
+    color : black;
+    font-weight : normal;
+}
+
+tt.varname {
+    font-style: italic;
+}
+
+.code a:visited, .program a:visited, .fragment a:visited, tt a:visited {
+    color: #9999CC;
+}
+
+.code a:visited, .program a:visited, .fragment a:active, tt a:active {
+    color: #333399;
+}
+
+.code a:visited, .program a:visited, .fragment a:hover, tt a:hover {
+    text-decoration: none;
+}
+
+
+/* Examples ******************************************* */
+.liveExample {
+    margin-top: 5pt;
+    margin-bottom: 5pt;
+    border-left: 1px solid #7b839a;
+    border-right: 1px solid #7b839a;
+    border-top: 1px solid #b0b8cf;
+    border-bottom: 1px solid #8E96AD;
+}
+
+.exampleTableTitle {
+    color : #ffffff;
+    font-size : 10px;
+    font-weight: bold;
+    text-decoration: none;
+
+    background-color: #7b839a;
+    border-bottom: 1px solid black;
+    padding-left: 10pt;
+    padding-top: 1pt;
+    padding-bottom: 1pt;
+}
+
+.exampleCanvas {
+    background-color: white;
+}
+
+.liveExample pre {
+    margin: 0 0 0 0;
+    padding-top: 10pt;
+    padding-bottom: 10pt;
+}
+
+.exampleTableEdit {
+    background-color: #CFD4E1;
+    padding-left: 7pt;
+}
+
+.exampleTableEdit a.unused {
+    background-color: #8E96AD;
+    color : white;
+    font-size : 10px;
+    font-weight: bold;
+    text-decoration: none;
+    border-top: 1px solid #E7E3F0;
+    border-left: 1px solid #E7E3F0;
+    border-right: 1px solid black;
+    border-bottom: 1px solid #8E96AD;
+    padding-left: 7pt;
+    padding-right: 6pt;
+    padding-top: 2pt;
+    padding-bottom: 2pt;
+}

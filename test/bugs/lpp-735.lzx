@@ -1,0 +1,24 @@
+<canvas debug="true">
+  <debug />
+  <include href="lzunit"/>
+
+  <DebugObject debugWrite="true" initstage="late">
+    <attribute name="att1" type="string" value="Attribut 1"/>
+    <attribute name="att2" type="expression" value="$once{{objAt1:'objAttribute1',objAt2:'objAttribute2'}}"/>
+    <attribute name="att3" type="string" value="Attribut 3"/>
+    <attribute name="att4" type="string" value="Attribut 4"/>
+
+    <method name="_dbg_typename">
+      return "achimsDebugObject";
+    </method>
+
+    <method name="debugFields">
+      return ['att1','att3'];
+    </method>
+
+    <method event="oninit">
+      Debug.write("oninit()");
+      dw(this,"test");
+    </method>
+  </DebugObject>
+</canvas>

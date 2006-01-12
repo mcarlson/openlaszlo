@@ -1,0 +1,65 @@
+<library>
+    <include href="base/basegrid.lzx" />   
+    <include href="gridtext.lzx" />   
+    <include href="scrollbar.lzx" />   
+    <!-- simplelayout must be included since the includer doesn't recognzize 
+         use of the layout attribute below -->
+    <include href="utils/layouts/simplelayout.lzx" />   
+
+    <!--- A row-based data display and editing component.-->
+    <class name="grid" extends="basegrid">
+
+        <!--- If false, the grid will never show a horizontal scrollbar,
+              even if the rows are wider than the grid.-->
+        <attribute name="showhscroll" value="true"/>
+        <!--- @keywords private -->
+        <attribute name="needshscroll" 
+                   value="${ header.width &lt; header.hcontent.width }"/>
+
+        <!--- @keywords private -->
+        <attribute name="_showHeaderFill" value="${!sizetoheader}"/>
+
+        <!--- The layout of attribute of the grid is set up to control
+              the way that the header columns are situated. Changing this 
+              property changes the header column layout.-->
+        <attribute name="layout" 
+                   value="placement : 'hcontent';axis:'x' ; spacing:-1"/>
+
+        <!--- @keywords private -->
+        <attribute name="_columnclass" value="gridtext" />
+
+        <!--- @keywords private -->
+        <scrollbar placement="content" name="_scrx"/>
+
+        <!--- @keywords private -->
+        <state apply="${ parent.showhscroll &amp;&amp; 
+                         parent.needshscroll &amp;&amp; 
+                         parent.sizetoheader == false}">
+            <scrollbar axis="x" scrolltarget="classroot.header.hcontent"/>
+        </state>
+
+        <!--- @keywords private -->
+        <state apply="${ parent._showHeaderFill }">
+            <button clickable="false" 
+                    placement="header"
+                    x="${ immediateparent.hcontent.width }"
+                    width="${Math.max( classroot._scrx.width , 
+                                        parent.width - this.x )}"
+                    focusable="false" />
+        </state>
+
+        <!--- @keywords private -->
+        <method name="init">
+            //need to cheat up the content because the button size is too big
+            //b/c of its highlight state
+            mainlayout.setAttribute( 'spacing' , -1);
+            super.init();
+        </method>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

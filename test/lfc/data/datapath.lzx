@@ -1,0 +1,150 @@
+<library>
+    <include href="lzunit/lzunit.lzx" />
+    <debug x="300" width="500" height="400"/>
+
+    <dataset name="eventtestset" src="testdata.xml"/>
+    <dataset name="dptest1" src="testdata.xml"/>
+    <dataset name="dptest2" src="http:testdata.xml" type="http" request="true"/>
+
+    <class name="dataEventReporter"> 
+        <method event="ondata" args="d">
+            classroot.collect( this,  d , 'ondata' );
+        </method>
+        <method name="applyData" args="d">
+            classroot.collect( this,  d , 'applyData' );
+        </method>
+    </class>
+
+    <class name="TestDatapath" extends="TestCase">
+        <dataEventReporter name="etcRoot" datapath="eventtestset:/">
+            <dataEventReporter name="etc1" datapath="data">
+                <dataEventReporter name="etc2" datapath="record[2]">
+                    <dataEventReporter name="etc3" datapath="a[1]"/>
+                </dataEventReporter>
+            </dataEventReporter>
+        </dataEventReporter>
+
+        <!--
+        <view datapath="dptest1:/">
+        </view>
+        <attribute name="collector" value="false"/>
+        -->
+
+        <method name="collect" args="from , is , type">
+            if ( 'undefined' == typeof( this.collector ) ){
+                this.clearCollected();
+            }
+
+            this.collector[ type ].push( from , is );
+        </method>
+
+        <method name="clearCollected">
+            this.collector = { ondata : [] , applyData :[] };
+        </method>
+
+        <method name="test1">
+            assertTrue( true );
+            assertEquals( 'eventtestset' , etcRoot.datapath.getNodeName() );
+            assertEquals( 'data' , etcRoot.etc1.datapath.getNodeName() );
+            assertEquals( 'record' , etcRoot.etc1.etc2.datapath.getNodeName() );
+            //assertUndefined is broken with the debugger up
+            //no data applied -- no selectors
+            assertEquals( 0 , this.collector.applyData.length );
+            assertEquals( 8 , this.collector.ondata.length );
+            //Expect ondata to be received after init for views which get data
+            //before init
+            assertEquals( etcRoot.etc1, this.collector.ondata[4] );
+            assertEquals( eventtestset.getFirstChild(),
+                          this.collector.ondata[5] );
+
+            this.clearCollected();
+            etcRoot.etc1.datapath.setNodeAttribute( 'foo' , 55 );
+            assertEquals( 0 , this.collector.applyData.length );
+            assertEquals( 0 , this.collector.ondata.length );
+
+            var et2 = etcRoot.etc1.etc2;
+            var res = et2.datapath.p.parentNode.insertBefore( 
+                                            new LzDataElement('record',{a:1.5}),
+                                            et2.datapath.p );
+            assertEquals( 1.5 , et2.datapath.p.attributes.a );
+            assertEquals( 4 , collector.ondata.length );
+            this.clearCollected();
+
+            et2.datapath.deleteNode();
+            assertEquals( 2, et2.datapath.p.attributes.a );
+            assertEquals( 4 , collector.ondata.length );
+            assertEquals( et2, collector.ondata[2] );
+            this.clearCollected();
+
+            etcRoot.etc1.datapath.setNodeName( 'rah' );
+            assertEquals( 6 , this.collector.ondata.length );
+            assertEquals( et2.etc3, collector.ondata[0] );
+            this.clearCollected();
+
+            assertFalse( etcRoot.etc1.datapath.setNodeName( 'data' ) );
+            assertEquals( 0 , this.collector.ondata.length );
+            etcRoot.datapath.p.getFirstChild().setNodeName( 'data' );
+            assertEquals( 6 , this.collector.ondata.length );
+            this.clearCollected();
+
+            et2.datapath.selectPrev();
+            assertEquals( 4 , this.collector.ondata.length );
+            assertEquals( et2, collector.ondata[2] );
+            this.clearCollected();
+
+            et2.setDatapath( "record[2]/@a" );
+            assertEquals( 4 , this.collector.ondata.length );
+            assertEquals( 2 , this.collector.applyData.length );
+            assertEquals( et2, collector.ondata[2] );
+            assertEquals ( 2 , et2.data );
+            var r2 =eventtestset.getFirstChild().getFirstChild().
+                                                            getNextSibling();
+            this.clearCollected();
+
+            r2.setAttr( 'a' , 77 );
+            assertEquals ( 77 , et2.data );
+            assertEquals( 2 , this.collector.ondata.length );
+            assertEquals( 2 , this.collector.applyData.length );
+            this.clearCollected();
+
+            var et1 = etcRoot.etc1;
+
+            Debug.write( p1 );
+            et1.setDatapath( 'data/@foo' );
+            assertEquals ( 55 , et1.data );
+            assertEquals( 2 , this.collector.ondata.length );
+            assertEquals( 2 , this.collector.applyData.length );
+            this.clearCollected();
+
+            var p1 = r2.parentNode;
+            p1.setAttr( 'calm' , true );
+            assertEquals( 0 , this.collector.ondata.length );
+            assertEquals( 0 , this.collector.applyData.length );
+            p1.setAttr( 'foo' , true );
+            assertEquals ( true , et1.data );
+            assertEquals( 2 , this.collector.ondata.length );
+            assertEquals( 2 , this.collector.applyData.length );
+            this.clearCollected();
+
+            var nn =p1.insertBefore( new LzDataElement( 'gross' , {bub: 33} ),
+                                     p1.getFirstChild() );
+            assertEquals( 0 , this.collector.ondata.length );
+            assertEquals( 0 , this.collector.applyData.length );
+
+            nn.setNodeName( 'blumb' );
+            assertEquals( 0 , this.collector.ondata.length );
+            assertEquals( 0 , this.collector.applyData.length );
+
+            nn.setNodeName( 'record' );
+            assertEquals( 4 , this.collector.ondata.length );
+            assertEquals( 2 , this.collector.applyData.length );
+            assertEquals( et2.etc3  , this.collector.ondata[0] );
+            
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

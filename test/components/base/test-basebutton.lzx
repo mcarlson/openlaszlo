@@ -1,0 +1,95 @@
+<canvas width="800" >
+    <debug x="250" height="200"/>
+    <resource name="defaultattrs_res" >
+        <frame src="resources/scrollbtn_x_lft_up.swf" />
+        <frame src="resources/scrollbtn_x_lft_mo.swf" />
+        <frame src="resources/scrollbtn_x_lft_dn.swf" />
+        <frame src="resources/scrollbtn_x_lft_dsbl.swf" />
+    </resource>
+
+    <resource name="up_res" >
+        <frame src="resources/scrollbtn_x_lft_up.swf" />
+    </resource>
+
+    <resource name="upover_res" >
+        <frame src="resources/scrollbtn_x_lft_up.swf" />
+        <frame src="resources/scrollbtn_x_lft_mo.swf" />
+    </resource>
+
+    <resource name="downupover_res" >
+        <frame src="resources/scrollbtn_x_lft_dn.swf" />
+        <frame src="resources/scrollbtn_x_lft_up.swf" />
+        <frame src="resources/scrollbtn_x_lft_mo.swf" />
+    </resource>
+
+
+    <!-- multiframe resources to test the resourceviewcount attribute -->
+    <resource name="button_big_left_rsc" > 
+        <frame src="resources/button/big_btn_up_lft.swf" />
+        <frame src="resources/button/big_btn_mo_lft.swf" />
+        <frame src="resources/button/big_btn_dn_lft.swf" />
+    </resource>
+
+    <resource name="button_big_right_rsc" >
+        <frame src="resources/button/big_btn_up_rt.swf" />
+        <frame src="resources/button/big_btn_mo_rt.swf" />
+        <frame src="resources/button/big_btn_dn_rt.swf" />
+    </resource>
+    
+    <resource name="button_big_middle_rsc" >
+        <frame src="resources/button/big_btn_up_mid.swf" />
+        <frame src="resources/button/big_btn_mo_mid.swf" />
+        <frame src="resources/button/big_btn_dn_mid.swf" />
+    </resource>
+
+
+    <!-- this is a 2 frame SWF: up state, down state -->
+    <resource src="resources/windowclose.swf" name="updown_res" />
+
+    <simplelayout spacing="5" inset="30"/>
+    <constantlayout axis="x" value="20"/>
+    <text width="350" text="${'toString() : ' + parent.defaultattrs}"/>
+    <text>defaultattrs: up, over, down, disabled</text>
+    <basebutton id="d" name="defaultattrs" resource="defaultattrs_res"
+        onclick="debug.write('click', this)"/>
+    <button onclick="d.setAttribute('enabled', !d.enabled)">toggle enabled</button>
+
+    <text>ddefaultattrs: up, over, down, disabled (enabled="false")</text>
+    <basebutton name="ddefaultattrs" resource="defaultattrs_res"
+        enabled="false"
+        onclick="debug.write('click', this)"/>
+
+    <text>uponly: up</text>
+    <basebutton name="uponly" resource="up_res"
+        onclick="debug.write('click', this)"/>
+
+    <text>downupover: down, up, over</text>
+    <basebutton name="downupover" resource="downupover_res"
+        downResourceNumber="1"
+        normalResourceNumber="2"
+        overResourceNumber="3"
+        onclick="debug.write('click', this)"/>
+
+    <text>upover: up, over</text>
+    <basebutton name="upover" resource="upover_res"
+        onclick="debug.write('click', this)"/>
+
+    <text>over state unused, just up and down</text>
+    <basebutton x="2" name="close_btn" resource="updown_res"
+        downResourceNumber="2" onclick="debug.write('click', this)"
+        overResourceNumber="0"  />
+        
+        
+    <text>resourceviewcount attr test. basebutton syncs the resource number of subviews 1 thru resourceviewcount</text>
+    <basebutton resourceviewcount="3" width="100">
+        <stableborderlayout axis="x" />
+        <view resource="button_big_left_rsc" /> 
+        <view resource="button_big_middle_rsc" stretches="width"  /> 
+        <view resource="button_big_right_rsc" />     
+    </basebutton>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

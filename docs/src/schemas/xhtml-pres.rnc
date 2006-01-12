@@ -1,0 +1,22 @@
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+hr = element hr { hr.attlist }
+hr.attlist = Common.attrib
+Block.class |= hr
+b = element b { b.attlist, Inline.model }
+b.attlist = Common.attrib
+big = element big { big.attlist, Inline.model }
+big.attlist = Common.attrib
+i = element i { i.attlist, Inline.model }
+i.attlist = Common.attrib
+small = element small { small.attlist, Inline.model }
+small.attlist = Common.attrib
+sub = element sub { sub.attlist, Inline.model }
+sub.attlist = Common.attrib
+sup = element sup { sup.attlist, Inline.model }
+sup.attlist = Common.attrib
+tt = element tt { tt.attlist, Inline.model }
+tt.attlist = Common.attrib
+Inline.class |= b | big | i | small | sub | sup | tt

@@ -1,0 +1,47 @@
+<library>
+    <include href="base/basevaluecomponent.lzx" />
+
+    <!--- an abstract class for components which might submit data to a form -->
+    <class name="baseformitem" extends="basevaluecomponent">
+
+        <!--- protected: the form (if any) that contains this component -->
+        <attribute name="_parentform" value="null"/>
+
+        <!--- the name used when submitting the data of the form item
+            if no submitname is given, the 'name' attribute is used
+            unlike the name attribute, submitname may be changed at runtime -->
+        <attribute name="submitname" value="" type="string"/>
+
+        <!--- if submit is true, then the value of this element will be submitted
+            with the form.  By default, submit is true when enabled.  -->
+        <attribute name="submit" value="${enabled}" type="boolean"/>
+
+        <method event="oninit">
+            <![CDATA[
+                if (this.submitname == "") this.submitname = this.name;
+                if (this.submitname == "") {
+                    // Debug.write('name required for form submit', this);
+                    return;
+                }
+
+                var p = this.immediateparent;
+                while (p != canvas) {
+                     if (p[ 'formdata' ]) {
+                        // found a form parent
+                        p.addFormItem(this);
+                        this._parentform  =  p;
+                        break;
+                     }
+                     p = p.immediateparent;
+                }
+            ]]>
+        </method>
+
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

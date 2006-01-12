@@ -1,0 +1,24 @@
+<canvas width="600" height="800">
+    <splash/>
+    <window title="Single Line Text Field" x="10" y="10" width="400">
+    <text id="tt1">Everything looks OK with Dog &amp; Cat, but ... (click 
+button)</text>
+    </window>
+
+ <window title="Multi-Line Text Field" x="10" y="100" width="400">
+    <text id="tt2" multiline="true">Everything looks OK with Dog &amp; Cat, 
+but ... (click button)</text>
+    </window>
+    <window title="Window 3"  x="0" y="200"
+            resizable="true" >
+        <simplelayout axis="y" spacing="2" />
+        <button x="20" height="20" onclick="tt1.setText('Dog &amp; 
+Cat')">SetText Single Line</button>
+        <button x="20" height="20" onclick="tt2.setText('Dog &amp; 
+Cat')">SetText Multi-Line</button>
+    </window>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

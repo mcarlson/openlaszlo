@@ -1,0 +1,148 @@
+<canvas debug="true" >
+  <include href="lzunit" />
+  <include href="lz/checkbox.lzx"/>
+  <include href="lz/button.lzx"/>
+
+    <!-- set testPrivateAttributes to false to test only public/protected attributes -->
+  <attribute name="testPrivateAttributes" value="true"/>
+
+  <script>
+    asynchronousTests = false;
+    
+  </script>
+
+  <TestSuite>
+
+    <TestCase>
+    
+      <!-- use checkbox because it's pretty much the simplest component -->
+      <checkbox name="tb">
+        <attribute name="c0" value="0"/>
+        <method event="on_enabled" args="v">
+          c0++;
+        </method>
+        <attribute name="c1" value="0"/>
+        <method event="onfocusable" args="v">
+          c1++;
+        </method>
+        <attribute name="c2" value="0"/>
+        <method event="onisdefault" args="v">
+          c2++;
+        </method>
+      </checkbox>
+      
+      <method name="checkConsistency" args="tc">
+        if (tc.enabled == false) {
+          assertEquals(false, tc.focusable);
+        }
+      </method>
+      
+      <method name="resetState" args="tc">
+        tc.setAttribute('enabled', true);
+        tc.setAttribute('focusable', true);
+        tc.setAttribute('doesenter', true);
+        tc.setAttribute('isdefault', false);
+      </method>
+      
+      <method name="setUp">
+        resetState(tb);
+        checkConsistency(tb);
+      </method>
+      
+      <method name="tearDown">
+        checkConsistency(tb);
+      </method>
+      
+      <!-- test whether setting enabled works -->
+      <method name="testSetEnabled">
+        assertEquals(true, tb.enabled);
+        tb.setAttribute('enabled', false);
+        assertEquals(false, tb.enabled);
+        tb.setAttribute('enabled', true);
+        assertEquals(true, tb.enabled);
+      </method>
+      
+      <!-- test whether on_enabled event is called when enabled attr changes -->
+      <method name="testOnEnabled">
+        if (canvas.testPrivateAttributes) {
+          var c = tb.c0;
+          tb.setAttribute('enabled', ! tb.enabled);
+          assertEquals(c + 1, tb.c0);
+        }
+      </method>
+
+      <!-- test whether setting focusable works -->
+      <method name="testSetFocusable">
+        <!-- tb is enabled now -->
+        assertEquals(true, tb.enabled);
+        assertEquals(true, tb.focusable);
+        tb.setAttribute('focusable', false);
+        assertEquals(true, tb.enabled);
+        assertEquals(false, tb.focusable);
+      </method>
+      
+      <!-- test whether onfocusable event is called when focusable attr changes -->
+      <method name="testOnFocusable">
+        var c = tb.c1;
+        tb.setAttribute('focusable', false);
+        assertEquals(c + 1, tb.c1);
+      </method>
+
+      <!-- test whether component is (de)focusable when it is enabled -->
+      <method name="testFocusableWhenEnabled">
+        assertEquals(true, tb.focusable);
+        assertEquals(true, tb.enabled);
+        tb.setAttribute('focusable', false);
+        assertEquals(false, tb.focusable);
+        tb.setAttribute('focusable', true);
+        assertEquals(true, tb.focusable);
+      </method>
+
+      <!-- test whether component is no longer focusable when it isn't enabled -->
+      <method name="testNotFocusableWhenDisabled">
+        assertEquals(true, tb.focusable);
+        tb.setAttribute('enabled', false);
+        assertEquals(false, tb.enabled);
+        assertEquals(false, tb.focusable);
+      </method>
+
+      <!-- test whether text can be set and retrieved -->
+      <method name="testSetText">
+        var tx = "this is some text.";
+        tb.setAttribute('text', tx);
+        assertEquals(tx, tb.text);
+      </method>
+      
+      <method name="testDoesEnter">
+        assertEquals(true, tb.doesenter);
+        tb.setAttribute('doesenter', false);
+        assertEquals(false, tb.doesenter);
+        tb.setAttribute('doesenter', true);
+        assertEquals(true, tb.doesenter);
+      </method>
+      
+      <method name="testSetIsDefault">
+        assertEquals(false, tb.isdefault);
+        tb.setAttribute('isdefault', true);
+        assertEquals(true, tb.isdefault);
+      </method>
+      
+      <method name="testOnIsDefault">
+        if (canvas.testPrivateAttributes) {
+          var c = tb.c2;
+          tb.setAttribute('isdefault', true);
+          assertEquals(c + 1, tb.c2);
+        }
+      </method>
+      
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

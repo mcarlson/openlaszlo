@@ -1,0 +1,22 @@
+<canvas width="1200" height="600">
+  <dataset type="http" name="mydata" src="echoUTF8.jsp" />
+  <simplelayout spacing="4"/>
+  <edittext bgcolor="#cccccc" width="200" id="t1" text="&#12354;&#12356;&#12358;&#12360;&#12362;"/>
+  <text id="t2" width="200" bgcolor="#ffcccc"/>
+
+  <button>Submit
+    <method event="onclick">
+        var d = canvas.datasets.mydata;
+        var val = t1.getText();
+        Debug.write("sending request for data.");
+        d.setQueryString({foo : escape(val), bar : 'foobar', baz : 'bazbo'});
+        d.doRequest(); 
+      </method>
+    </button>
+
+  <view name="foo" datapath="mydata:/response/formcomponent">
+    <text bgcolor="#ffccff" width="200" datapath="@name"/>
+    <text x="200" bgcolor="#eeccaa" width="200" datapath="text()"/>
+  </view>
+
+</canvas>

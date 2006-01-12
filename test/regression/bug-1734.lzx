@@ -1,0 +1,38 @@
+<canvas width="800" height="600" debug="true"> 
+	<debug y="100"/>
+    <view name="mover" x="5" y="5" width="20" height="20" bgcolor="blue"/>
+    
+    <button x="5" y="30" text="Go!" onclick="this.startMoving()">
+
+        <method name="startMoving">
+            Debug.write( "in startMoving()" );
+            var anim = canvas.mover.animate( "x", 20, 1000 );
+            if ( typeof(this.continueDel) == 'undefined') {
+                this.continueDel = new LzDelegate( this, "continueMoving" );
+            }
+            this.continueDel.register( anim, "onstop" );
+        </method>
+        
+        <method name="continueMoving">
+            Debug.write( "in continueMoving()" );
+            Debug.write( "x=" + canvas.mover.getAttribute( "x" ));
+
+            var anim = canvas.mover.animate( "x", 500, 1000 );
+            if ( typeof(this.finalDel) == 'undefined' ) {
+                this.finalDel = new LzDelegate( this, "getFinalPos" );
+            }
+            this.finalDel.register( anim, "onstop" );
+        </method>
+
+        <method name="getFinalPos" >
+            Debug.write( "in getFinalPos()" );
+            Debug.write( "x=" + canvas.mover.getAttribute( "x" ));
+        </method>
+            
+    </button>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

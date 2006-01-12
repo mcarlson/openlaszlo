@@ -1,0 +1,8 @@
+This is a stub file that will follow along with the release to record what environments have been certified compatible with LPS. This is an internal document that needs to be accurate for the release meeting. 
+
+There is a section of the release notes that will contain the platforms supported. 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,29 @@
+<canvas width="100%" height="80%" debug="true">
+
+        <simplelayout/>
+
+        <button>Play
+            <method event="onclick">
+                blah.setSource('blast.swf');
+            </method>
+        </button>
+        
+        <view name="blah" play="false">
+           
+           <method event="onload">
+               Debug.write('onload');
+               play();
+           </method>
+           
+           <method event="onlastframe">
+               Debug.write('onlastframe');
+               stop();
+           </method>
+           
+           <method event="onframe">
+               frame_label.setText(frame);
+           </method>
+        </view>
+        
+        <text name="frame_label" resize="true"/>
+</canvas>

@@ -1,0 +1,11 @@
+<addresslist>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+    <address fullname="Laszlo" address="1040 Mariposa Street" city="San Francisco" state="CA" zip="94107"/>
+    <address fullname="Mark Jenkins" address="518 Chenery Street" city="San Francisco" state="CA" zip="94131"/>
+    <address fullname="Antun Karlovac" address="1040 Mariposa Street" city="San Francisco" state="CA" zip="94107"/>
+
+</addresslist>

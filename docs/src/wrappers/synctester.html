@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="SyncTester">
+    <lztier>Development Component</lztier>
+    <lzcategory>Development</lzcategory>
+    <lzshortdesc>
+        An extension of TestCase for testing asynchronous objects safely.
+    </lzshortdesc>
+    <lztag>lzunit/synctester.xml</lztag>
+    <lzseealso>testcase.html</lzseealso>
+    <lzseealso>testsuite.html</lzseealso>
+</lzelement>
+
+    <p>
+    SyncTester is an extension of TestCase that is useful for testing 
+    objects whose method are to be called sequentially, in effect synchronizing
+    methods with potentially asynchronous behavior.
+    </p>
+    
+    <p>
+    To take advantage of this helper class, you must declare a dataset 
+    named "&lt;instance name&gt;_methods", with a root node whose children are the 
+    method names to be called synchronously. The method nodes must be named 
+    "call", and  have at least the "name" attribute defined. If the method 
+    needs to be called with arguments, specify them as value of the optional 
+    "args" attribute (only one argument is currently supported). 
+    </p>
+    
+    <p>
+    Your specific tests will only run once a method returns. It is possible to
+    provide an inspector method for each of the asynchronous methods declared;
+    you reference it with the "tester" attribute of a node in the dataset. These
+    inspector methods must be defined on the SyncTester object. If you don't 
+    specify a tester for a method, the default handler named <method>inspect</method> 
+    will be called with the result of the method call as an argument. You should 
+    override this method if you want to have a generic inspector for most or 
+    all of your methods.
+    </p>
+    
+    <p>
+    Generally speaking, you would expect that an event is sent when a method 
+    is done. This framework allows you to specify what event indicates the end
+    of method execution by declaring the "event" attribute. It is assumed that 
+    the sender of the event is the object referenced by the 
+    <attribute>tested_object</attribute> attribute, or that the following method
+    accepts a delegate to call on completion, as the last argument. If neither of
+    these assumptions is correct, the flow of method execution will break.
+    </p>
+    
+    <p>
+    For example, if you have an instance of this class named "userinfo", then 
+    your list of methods might be declared like this:
+    
+    <pre>
+    &lt;dataset name="userinfo_methods"&gt;
+        &lt;suite&gt;
+            &lt;call name="isAuthenticated" args="admin"/&gt;
+            &lt;call name="getExpiration" event="ondata"/&gt;
+            &lt;call name="createAccount" event="onload" tester="checkAcct"/&gt;
+        &lt;/suite&gt;
+    &lt;/dataset&gt;
+    </pre>
+    </p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

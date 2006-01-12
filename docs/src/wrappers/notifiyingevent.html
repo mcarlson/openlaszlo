@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="../lps/includes/styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzNotifyingEvent">
+    <lztier>LFC</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        An enhanced event.
+    </lzshortdesc>
+    <lzapi>api-lznotifyingevent.xml</lzapi>
+    <seealso>delegate</seealso>
+</lzelement>
+
+<p>In some cases, an object which publishes an event needs to know
+when delegates register and unregister for that event. Notifying
+events serve this purpose, and they send events when delegates
+register or unregister with them. This can be used to optimize
+subsystems when they are not in use. Unlike regular events, notifying
+events are created using the <code>new</code> keyword. In all other
+respects, notifying events are the same as regular events.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

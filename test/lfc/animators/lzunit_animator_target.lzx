@@ -1,0 +1,83 @@
+<canvas height="500">
+    <include href="lzunit"/>
+    <debug y="300" height="200"/>
+
+    <simplelayout/>
+    <text multiline="true">Run this test with debug=true<br/>
+        wait until you see "test complete" in the debugger</text>
+    <view name="tester" height="60">
+        <attribute name="testnum" value="0" type="number"/>
+        <view name="bluebox" bgcolor="blue" width="10" height="10"/>
+        <view name="redbox" bgcolor="red" width="10" height="10" y="5"/>
+        <view name="greenbox" bgcolor="green" width="10" height="10" y="10"/>
+        <method name="reset" args="new_test_num, new_object">
+            bluebox.setX(0);
+            redbox.setX(0);
+            this.setAttribute('testnum', new_test_num);
+        </method>
+    </view>
+
+    <animator id="simpletargetanm" target="${canvas.tester.bluebox}"
+        attribute="x" to="200" duration="100" start="false"
+        onstop="animatorsuite.animatorcase.checkSimpleTargetAnim()"/>
+
+    <animatorgroup id="anmgroup" start="false"
+        onstop="animatorsuite.animatorcase.checkAnimGroup()">
+        <animator target="${canvas.tester.bluebox}"
+            attribute="x" to="100" duration="2000" />
+        <animator target="${canvas.tester.redbox}"
+            attribute="y" to="50" duration="2000" />
+    </animatorgroup>
+
+    <TestSuite name="animatorsuite">
+        <TestCase name="animatorcase">
+            <method name="testSimpleTargetAnim">
+                Debug.write('1. simple target animation');
+                canvas.tester.reset(1);
+                simpletargetanm.doStart();
+            </method>
+            <method name="checkSimpleTargetAnim">
+                switch (canvas.tester.testnum) {
+                    case 1:
+                        debug.write('canvas.tester.bluebox.x',canvas.tester.bluebox.x);
+                        assertEquals(200, canvas.tester.bluebox.x);
+
+                        Debug.write("2. change the animator's target");
+                        canvas.tester.reset(2);
+                        simpletargetanm.setTarget(canvas.tester.redbox);
+                        simpletargetanm.doStart();
+                        break;
+                   case 2:
+                        assertEquals(200, canvas.tester.redbox.x);
+
+                        Debug.write('3. animatorgroup: 2 animators, 2 targets');
+                        canvas.tester.reset(3);
+                        anmgroup.doStart();
+                        break;
+                }
+            </method>
+            <method name="checkAnimGroup">
+                switch (canvas.tester.testnum) {
+                    case 3:
+                        assertEquals(100, canvas.tester.bluebox.x);
+                        assertEquals(50, canvas.tester.redbox.y);
+                        Debug.write('4. animatorgroup: set target');
+                        canvas.tester.reset(4);
+                        anmgroup.setTarget(canvas.tester.greenbox);
+                        anmgroup.doStart();
+                        break;
+                    case 4:
+                        assertEquals(100, canvas.tester.greenbox.x);
+                        assertEquals(50, canvas.tester.greenbox.y);
+                        Debug.write('--- test complete ---');
+                        break;
+                }
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

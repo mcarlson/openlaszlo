@@ -1,0 +1,51 @@
+<canvas debug="true" oninit="debug.setY(50)">
+
+    <connection authenticator="none" />
+
+    <connectiondatasource name="mydatasource">
+        <method event="onconnect">
+            Debug.write("***connected***");
+        </method>
+        <method event="ondisconnect">
+            Debug.write("***disconnected***");
+        </method>
+    </connectiondatasource>
+
+    <view>
+        <attribute name="counter" value="0" />
+        <simplelayout axis="x" spacing="5"/>
+        <button>connect
+            <method event="onclick">
+                canvas.mydatasource.connect();
+                Debug.write('connect: counter is ' + (++parent.counter));
+            </method>
+        </button>
+        <button>disconnect
+            <method event="onclick">
+            <![CDATA[
+                if (0 < parent.counter) {
+                  canvas.mydatasource.disconnect();
+                  --parent.counter;
+                }
+                Debug.write('disconnect: counter is ' + parent.counter);
+            ]]>
+            </method>
+        </button>
+        <button>force disconnect
+            <method event="onclick">
+            <![CDATA[
+                if (0 < parent.counter) {
+                  canvas.mydatasource.clientDisconnect(true);
+                  parent.counter = 0;
+                }
+                Debug.write('force disconnect');
+            ]]>
+            </method>
+        </button>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

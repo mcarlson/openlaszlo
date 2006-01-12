@@ -1,0 +1,91 @@
+<library>
+<class name="wrappinglayout" extends="layout" >
+    <!--- The primary axis for wrapping. -->
+    <attribute name="axis" value="x" setter="this.setAxis( axis )"
+               type="string" />
+    <!--- A pixel amount to use between the views controlled by the layout in
+          both axes. By default, both xspacing and yspacing are set to this
+          value. -->
+    <attribute name="spacing" value="1"/>
+    <!--- A pixel amount to offset the first view controlled by the layout in x
+          axis -->
+    <attribute name="xinset" value="0"/>
+    <!--- A pixel amount to offset the first view controlled by the layout in y
+          axis -->
+    <attribute name="yinset" value="0"/>
+    <!--- A pixel amount to use between the views controlled by the layout in
+          the x axis. -->
+    <attribute name="xspacing" value="${this.spacing}" />
+    <!--- A pixel amount to use between the views controlled by the layout in
+          the y axis. -->
+    <attribute name="yspacing" value="${this.spacing}" />
+    <!--- If given, a number of miliseconds to use to animate the views in to
+          place.-->
+    <attribute name="duration"     value="0"/>
+    <!--- @keywords private -->
+    <method name="setAxis" args="a" >
+        <!-- CURRENTLY THIS METHOD IS NOT USED -->
+        this.axis = a;
+        this.otherAxis =  a == "x" ? "y" : "x"
+        this.sizeAxis = a == "x" ? "width" : "height"
+        this.otherSizeAxis = a == "x" ? "height" : "width"
+    </method>
+
+    <!--- @keywords private -->
+    <method name="addSubview" args="newsub">
+        this.updateDelegate.register( newsub,  'onwidth');
+        this.updateDelegate.register( newsub,  'onheight');
+        this.updateDelegate.register( this.immediateparent,  'onwidth');
+        super.addSubview( newsub );
+        this.update();
+   </method>
+
+    <!--- This method is usually called automatically when any of the views
+          controlled by the layout change their size , or when the size of
+          layout's immediateparent changes. However it can be called directly
+          to force the layout to update -->
+   <method name="update">
+        <![CDATA[
+        if ( this.locked ) return;
+        var l = this.subviews.length;
+        var limit = this.immediateparent[this.sizeAxis];
+
+        // position along this.axis
+        var pos = this[this.axis + 'inset'];
+        // position along this.otherAxis
+        var otherpos = this[this.otherAxis + 'inset'];
+        var maxdimension = 0;
+        var space = this[this.axis + 'spacing'];    // spacing in axis dimension
+        var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
+
+        for(var i=0; i < l; i++) {
+            var s = this.subviews[i];
+            s.animate(this.axis, pos, this.duration,false);
+            s.animate(this.otherAxis, otherpos, this.duration,false);
+            pos += s[this.sizeAxis];
+            if ( i < (l - 1)) {
+                pos += space;
+                maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
+                if (( pos > limit) ||
+                    (pos + this.subviews[i+1][this.sizeAxis] >  limit)) {
+                    pos = this[this.axis + 'inset'];
+                    otherpos += maxdimension + otherspace;
+                    maxdimension = 0;   // Reset the height/width after every row/column                    
+                }
+            }
+
+
+        }
+        ]]>
+    </method>
+    <!--- @keywords private -->
+    <method name="toString">
+         return 'wrappinglayout for ' + this.immediateparent;
+    </method>
+</class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

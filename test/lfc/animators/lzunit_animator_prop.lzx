@@ -1,0 +1,39 @@
+<canvas height="500">
+    <include href="lzunit"/>
+    <debug y="350"/>
+
+    <simplelayout/>
+    <text multiline="true">Run this test with debug=true<br/>
+        wait until you see "test complete" in the debugger</text>
+    <view height="100">
+        <view id="bluebox" bgcolor="blue" width="10" height="10">
+            <animator name="anm" attribute="x" from="0" to="100" duration="2000" start="false"
+            relative="false" onstop="animatorsuite.animatorcase.checkSimpleXAnim()"/>
+            <animator name="anm2" attribute="x" from="0" to="200" duration="3000" start="false"
+            relative="false" onstop="animatorsuite.animatorcase.checkSimpleXAnim2()"/>
+        </view>
+    </view>
+
+    <TestSuite name="animatorsuite">
+        <TestCase name="animatorcase">
+            <method name="testSimpleXAnim">
+                bluebox.anm.doStart()
+            </method>
+            <method name="checkSimpleXAnim">
+                assertEquals(100, bluebox.x);
+                bluebox.setX(0);
+                bluebox.anm2.doStart()
+            </method>
+            <method name="checkSimpleXAnim2">
+                assertEquals(200, bluebox.x);
+                bluebox.setX(0);
+                Debug.write('--- test complete ---');
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

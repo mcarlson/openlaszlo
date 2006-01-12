@@ -1,0 +1,36 @@
+<canvas debug="true" bgcolor="silver">
+    <font src="bitstream-vera-1.10/verabd.ttf" name="vera"/>
+
+    <debug x="250"/>
+    <dataset name="ds">
+        <item>first item</item>
+        <item>second item</item>
+        <item>third item</item>
+    </dataset>
+    <view x="30" y="30">
+
+         <simpleinputtext id="a" >(A) text in tag</simpleinputtext>
+        <simpleinputtext id="a1" onfocus="debug.write('onfocus', this)"
+            onblur="debug.write('onblur', this)"
+            >(A1) text in tag - test focus</simpleinputtext>
+
+
+        <view bgcolor="blue" width="200" height="2"/>
+         <view>
+             <text>from a dataset with font and fontsize:</text>
+             <simpleinputtext x="10" font="vera" fontsize="20" id="repl"
+                              width="200" datapath="ds:/item/text()"/>
+             <simplelayout spacing="4"/>
+
+         </view>
+         <button onclick="repl.datapath.updateData();Debug.write( ds.serialize() )">
+            Update
+         </button>
+         <simplelayout spacing="10"/>
+
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

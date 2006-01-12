@@ -1,0 +1,23 @@
+<canvas>
+<simplelayout/>
+<class name="atest">
+<attribute name="t1" type="string"/>
+<attribute name="t2" type="string"/>
+<attribute name="t3" type="string"/>
+<attribute name="t4" type="string"/>
+</class>
+<atest width="300" bgcolor="yellow" t1="test text" t2="test longer" t3="test short" t4="test some really long and funky shit">
+<simplelayout/>
+<text  resize="true" bgcolor="red" oninit="this.setText(parent.t1);this.setX(parent.width - this.width-100)"/>
+<text  resize="true" bgcolor="red" oninit="this.setText(parent.t2);this.setX(parent.width - this.width-100)"/>
+<text  resize="true" bgcolor="red" oninit="this.setText(parent.t3);this.setX(parent.width - this.width-100)"/>
+<text  resize="true" bgcolor="red" oninit="this.setText(parent.t4);this.setX(parent.width - this.width-100)"/>
+
+
+</atest>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

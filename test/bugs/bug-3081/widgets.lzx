@@ -1,0 +1,330 @@
+<canvas width="3200" height="800">
+    <debug />
+
+    <!-- = Includes ======================================================= -->
+    <!-- #BUG: Uncomment this and you get a complier error -->
+    <!-- <include href="lz/library.lzx" /> -->
+    <include href="classlib.lzx" />
+
+    <!-- = Datasets ======================================================= -->
+    <dataset name="login_ds" 
+             src="http://www.mylaszlo.com/blogbox/login.php"
+             request="false" />
+
+    <!-- This needs to come from data -->
+    <dataset name="allWidgets_ds">
+        <widget_classes>
+            <widget_class id="1"
+                          title="LinkBlox"
+                          img_url="http://www.mylaszlo.com/blogbox/blogbox/blogbox_screenshot.png"
+                          default_xml="http://www.mylaszlo.com/blogbox/blogbox/default_opml.xml">
+                <short_desc>Let visitors play MP3 format audio files, right in the browser window. Customize the Soundblox with your own external</short_desc>
+            </widget_class>
+            <widget_class id="2"
+                          title="SoundBlox"
+                          img_url="http://www.mylaszlo.com/blogbox/mp3player/mp3_player_screenshot.png"
+                          default_xml="http://www.mylaszlo.com/projects/mp3player/mp3player/default_opml.xml">
+                <short_desc>Compactly present your favorite links within expandable tabs. Customize the LinkBox with your own external OPML XML file.</short_desc>
+            </widget_class>
+        </widget_classes>
+    </dataset>
+
+    <dataset name="addEditInstance_ds" 
+             src="http://www.mylaszlo.com/blogbox/saveWidget.php" 
+             request="false" />
+
+    <dataset name="allInstances_ds" 
+             src="http://www.mylaszlo.com/blogbox/getAccountDetails.php" 
+             request="false"/>
+
+    <dataset name="editbuffer_ds" />
+
+    <!-- Buffer dataset that populates the instances -->
+    <dataset name="allWidgetsTempData_ds">
+        <widgets />
+    </dataset>
+
+    <!-- Empty node that gets copied into XML -->
+    <dataset name="newInstanceNode_ds">
+        <new_instance opml_url=""
+                      site_name="My Site Name"
+                      site_url="" />
+    </dataset>
+
+        
+    <!--
+    
+    <dataset name="allWidgetsTempData_ds">
+        <widgets>
+            <widget_class default_xml="http://www.mylaszlo.com/blogbox/blogbox/default_opml.xml" img_url="http://www.mylaszlo.com/blogbox/blogbox/blogbox_screenshot.png" title="Blogbox" id="1">
+                <short_desc>This is a short description describing how great this thing is.</short_desc>
+                <widget_instance default_xml="http://www.mylaszlo.com/blogbox/blogbox/default_opml.xml" image_url="http://www.mylaszlo.com/blogbox/blogbox/blogbox_screenshot.png" opml_url="http://www.antunkarlovac.com/opml.xml" site_url="www.antunkarlovac.com" site_name="Antun&apos;s Site" widget_id="1" id="1"/>
+                <widget_instance default_xml="http://www.mylaszlo.com/blogbox/blogbox/default_opml.xml" image_url="http://www.mylaszlo.com/blogbox/blogbox/blogbox_screenshot.png" opml_url="http://www.antunkarlovac.com/opml.xml" site_url="www.antunkarlovac.com" site_name="Antun&apos;s Other Site" widget_id="1" id="3"/>
+                <new_instance opml_url=""
+                            site_name="My Site Name"
+                            site_url="" /> 
+            </widget_class>
+        </widgets>
+    </dataset>
+    -->
+
+    <dataset name="createAccount_ds" 
+             src="http://www.mylaszlo.com/blogbox/createAccount.php"
+             type="http"
+             request="false" />
+
+    <!-- = Datapointers =================================================== -->
+    <datapointer xpath="login_ds:/response">
+        <method event="ondata">
+            // User has just clicked "Login"
+            var msg = this.xpathQuery( '@msg' );
+            loader.hide();
+            if ( msg == "Login OK." ) {
+                accountArea.revealLoginArea();
+            } else if ( msg == "Bad login." ) {
+                message.msg( msg );
+                accountArea.setAttribute( "email", "" );
+                accountArea.setAttribute( "password", "" );
+            }
+        </method>
+
+    </datapointer>
+
+    <datapointer name="toAllWidgets_dp" xpath="allWidgetsTempData_ds:/widgets" />
+
+    <!-- Used to copy new_instance nodes to the buffer dataset -->
+    <datapointer name="fromNewInstance_dp" 
+                 xpath="newInstanceNode_ds:/new_instance" />
+
+    <!-- Used to reset new instance nodes for things like copying over
+         default values that pertain to the widget_class the xpath
+         is set as-->
+    <datapointer name="newInstanceActions_dp" xpath="allWidgetsTempData_ds:/">
+        <method name="resetNewInstanceInformation">
+            debug.write( "==== resetNewInstanceInformation called ====" );
+            debug.write( "nodename: " + this.getNodeName() );
+            debug.write( "xml before: " + this.serialize() );
+            // XXX: TODO: Got to here. This appears to work, but there are 
+            // some bugs (2965) that prevent the textbox from displaying 
+            // properly.
+            Debug.printlength = Infinity;
+            debug.write( "before: " + this.getNodeAttribute( "site_name" ) );
+            this.setNodeAttribute( "site_name", "Just a test" );
+            debug.write( "after: " + this.getNodeAttribute( "site_name" ) );
+            debug.write( "xml after: " + this.serialize() );
+        </method>
+        
+    </datapointer>
+
+    <datapointer name="fromAllWidgets_dp" xpath="allWidgets_ds:/widget_classes">
+        <method event="ondata">
+            // Copy all widget_class tags from the widget_class allWidgets_ds 
+            // to the buffer dataset "allWidgetsTempData_ds".
+            var fromdp = canvas.fromAllWidgets_dp;
+            var todp = canvas.toAllWidgets_dp;
+            fromdp.selectChild();
+            do {
+                // Add the widget_class node
+                todp.addNodeFromPointer( fromdp );
+            } while ( fromdp.selectNext() );
+
+            // Go through each widget_class and add in a blank new_instance
+            // node, which will later be used as the user-edit buffer.
+            todp.setXPath( "allWidgetsTempData_ds:/widgets/widget_class[1]" );
+            do {
+                todp.addNodeFromPointer( canvas.fromNewInstance_dp );
+            } while ( todp.selectNext() );
+
+        </method>
+    </datapointer>
+
+    <datapointer xpath="allInstances_ds:/*">
+        <method event="ondata">
+            loader.hide();
+            if ( this.xpathQuery("@msg") ) {
+                message.msg( "There was a problem connecting to the database." );
+                return false;
+            }
+
+            // Knowledge of users account.
+            accountArea.setAttribute( "account_id", this.xpathQuery("@id") );
+            accountArea.setAttribute( "createdate", this.xpathQuery("@createdate") );
+
+            // Copy all instances into their relevant widget_class nodes 
+            // in the new buffer dataset.
+            var todp = canvas.toAllWidgets_dp;
+            this.selectChild();
+            do {
+                var widget_id = this.xpathQuery("@widget_id");
+                var dp = "allWidgetsTempData_ds:/widgets/widget_class[@id='"
+                       + widget_id + "']";
+                todp.setXPath( dp );
+                todp.addNodeFromPointer( this );
+            } while ( this.selectNext() );
+            
+            // Reset the XPath so that next time someone logs out/back in,
+            // the ondata event will fire and the process can begin again.
+            this.setXPath( "allInstances_ds:/*" );
+            debug.write( "XPATH at end of while loop: " + this.xpath );
+
+            // TODO:
+            // Make sure that the pulldown is not visible if 
+            // there are no instances of the widget.
+
+        </method>
+    </datapointer>
+
+    <datapointer name="addEditInstance_dp" 
+                 xpath="addEditInstance_ds:/response">
+        <method event="ondata">
+            loader.hide();
+            var msg = this.xpathQuery( '@msg' );
+            if ( msg == "Success." ) {
+                refreshWidget_dp.refreshInstance( this );
+                message.msg( "Widget instance saved!" );
+                loader.hide();
+                var replNode = canvas.accountArea.widgetsArea.widgets.saveWidget;
+                replNode.showIncludeCode();
+            } else {
+                // TODO: Handle this error
+                message.msg( "There was a problem fulfilling your request: " + msg );
+            }
+        </method>
+    </datapointer>
+
+    <!-- When the user has added/updated a widget, copy over the new
+         information to the temp database -->
+    <datapointer name="refreshWidget_dp">
+        <method name="refreshInstance" args="response_dp">
+            response_dp.setXPath("widget_instance[1]");
+            var widget_id = response_dp.xpathQuery( "@widget_id" );
+            var instance_id = response_dp.xpathQuery( "@id" );
+            var xp = "allWidgetsTempData_ds:/widgets[1]/widget_class[@id='"+widget_id+"']";
+            this.setXPath( xp );
+            var instDP = this.dupePointer();
+            instDP.setXPath("widget_instance[@id='"+instance_id+"']");
+            if ( instDP.isValid() ) {
+                // The user has just EDITED an instance
+                instDP.deleteNode();
+            } 
+            this.addNodeFromPointer( response_dp );
+        </method>
+    </datapointer>
+
+    <!-- When the user has tried to make a new account -->
+    <datapointer name="createAccount_dp" xpath="createAccount_ds:/response">
+        <method event="ondata">
+            var msg = this.xpathQuery( "@msg" );
+            accountArea.login.loginMessage( msg );
+
+            if ( msg == "Account created OK." ) {
+                accountArea.login.hideRegistrationBox();
+                accountArea.login.showLoginBox();
+            }
+        </method>
+    </datapointer>
+
+    <datapointer name="allWidgetsTempDataClear_dp">
+        <method name="resetTempData">
+            debug.write( "------- resetTempData called -------" );
+            Debug.write( this.serialize() );
+            this.selectChild();
+            do {
+                if ( this.getNodeName() == "widget_instance" ) {
+                    Debug.write( "deleting: " + this.getNodeName()
+                                 + " " + this.xpathQuery("@site_name") );
+                    this.deleteNode();
+                    Debug.write( "after: " + this.getNodeName()
+                                 + " " + this.xpathQuery("@site_name") );
+                }
+            } while ( this.selectNext() );
+            this.addNodeFromPointer( canvas.fromNewInstance_dp );
+        </method>
+    </datapointer>
+
+
+    <!-- = The app ======================================================== -->
+
+    <view resource="resources/titlebar_laszlo_blogbox.gif" />
+
+    <text multiline="true" width="630" x="60" y="80">
+These BlogBoxes add exciting customizable functionality to your blog or web site, viewable within any modern Web browser.  They are provided free for non-commercial use, on an experimental basis.  Please enjoy them, and let us know what you think!<br/><br/>
+
+Key Features<br/>
+
+- Sized to fit nicely within your blog gutter<br/>
+- Customizable via editing of simple external XML configuration files<br/>
+- Simply embedded within your blog template via an auto-generated script tag<br/>
+- Usable within any Web browser enabled with the Flash player (version 5 or above<br/><br/>
+
+Each BlogBox is powered by the Laszlo Presentation Server, and written using Laszlo's rapid declarative XML development approach.   All application code is viewable and open source.  
+
+    </text>
+
+    <view name="accountArea" y="294" bgcolor="0xEAEAEA" height="600">
+        <attribute name="account_id" type="string" value="" />
+        <attribute name="email" type="string" value="" />
+        <attribute name="password" type="string" value="" />
+        <attribute name="createdate" type="string" value="" />
+
+        <login_bar name="login" />
+
+        <method name="revealLoginArea"><![CDATA[
+            this.login.getAccountWidgets();
+            this.login.loginButton.setText( "Log Out" );
+            this.login.showLoggedInUser( this.email );
+            this.openLoginArea();
+            /*
+            debug.write( "nodes:" );
+            debug.write( this.widgetsArea.widgets.nodes );
+            debug.write( "clones:" );
+            debug.write( this.widgetsArea.widgets.clones );
+            */
+
+            for ( var i=0; i<this.widgetsArea.widgets.clones.length; i++ ) {
+                var smelly = this.widgetsArea.widgets.clones[i];
+                smelly.makeLoggedIn();
+            }
+            ]]>
+        </method>
+
+        <method name="hideLoginArea"><![CDATA[
+            for ( var i=0; i<this.widgetsArea.widgets.clones.length; i++ ) {
+                var smelly = this.widgetsArea.widgets.clones[i];
+                smelly.makeLoggedOut();
+            }
+            this.closeLoginArea();
+
+            ]]>
+        </method>
+
+        <method name="openLoginArea">
+            this.animate( "y", 51, 750, false );
+        </method>
+
+        <method name="closeLoginArea">
+            this.animate( "y", 294, 750, false );
+        </method>
+
+        <view name="widgetsArea" y="46" x="22">
+            <simplelayout axis="x" spacing="60" />
+            <widget name="widgets" 
+                    datapath="allWidgetsTempData_ds:/widgets[1]/widget_class"/>
+        </view>
+    </view>
+
+
+
+
+
+    <loadingIndicator name="loader" />
+
+    <messageHolder name="message" />
+
+    <registrationBox name="registration" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,28 @@
+<canvas>
+    <text text="${tn.a + '-' + tn.b}"/>
+    <node name="tn">
+        <attribute name="a" value="x" type="string"/>
+        <!--
+            this.a =a
+            this.ona.sendEvent->
+                for delegates in delegateList
+                    delgates.execute(a) -->
+        <attribute name="b" value="${this.a + ' $$'}" type="string"/>
+               <!--
+            this.b =b
+            this.onb.sendEvent->
+                for delegates in delegateList
+                    delgates.execute(b) -->
+    </node>
+    <text> 
+        <method event="onb" reference="tn">
+            setAttribute( 'text' ,tn.a + '-' + tn.b);
+        </method>
+    </text>
+    <simplelayout/>
+    <button onclick="tn.setAttribute( 'a', 'uhoh')"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

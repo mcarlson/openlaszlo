@@ -1,0 +1,394 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="delegates">
+<head>
+    <title>Delegates</title>
+</head>
+
+<body>
+
+<h1>Delegates</h1>
+ 
+<p>This chapter explains the use of delegates, which are a part of the mechanism that different parts of an OpenLaszlo application use to communicate with each other when values of attributes change. </p>
+<p>
+You generally only need to be arware of delegates for objects that you create in script (that is, not with tags). For objects that you create with tags, for example &lt;view&gt;, you can manage communication using event handlers in either 'onfoo' or '&lt;method event=...&gt;' syntax, as described in <xref linkend="methods-events-attributes"/>. This syntax is takes care of delegates for you.  Delegates are still there, behind the scenes, but the system manages them invisibly. However, it's helpful to understand the relationship between tag and script-based event syntax.</p>
+<p>The last section of this chapter explains how delegates compare to similar things in other programming languages.</p>
+
+
+
+<!--=========================================================================-->
+<!-- Major sub-heads in h2, etc                                                               -->
+<!--=========================================================================-->
+<?ignore
+<h2><a name="overview">Overview</a></h2>
+
+<p> </p>
+
+<!-- See other chapters in the D3 guide and also the wiki for more informtion on formatting chapters --> 
+<!-- Here is a list of some topics you may want to discuss in this chapter-->
+
+
+ <h2>LZX's point-to-point event system</h2>
+<fixme>
+Link to appropriate section of the "methods, attributes events " chapter
+</fixme>
+<fixme>
+ No 'broadcast'; no trickle up or down
+ Event: message that attribute has changed value(??)
+</fixme>
+<h3>Delegate: named method of an instance </h3>
+?>
+
+
+<h2>Overview</h2>
+<p>
+The purpose of a delegate is to bind an event at runtime to a particular method. Thus to "register an event with a delegate" simply means to bind that event, temporarily, to the method that is invoked by the delegate. The event stays bound to that method until you "unregister" the delegate. This means, then, that when the event happens the method is executed.</p>
+<p>
+Significantly, you can use delegates even if you don't know, at compile time, the name of the event that will invoke the delegate&#8212; the name of the event can be passed as a parameter whose value is generated during the running of the application.
+</p>
+<p>
+In LZX, delegates and events are defined in terms of each other.
+A delegate is a named object that calls a method, and an event is an object which stores delegates.  </p>
+<p>
+When the event is generated, it
+calls all of its delegates in turn. A delegate can be considered, then, a named method of an instance. 
+</p>
+<p>
+Delegates that you explicitly create are generally used for objects that are created in script (that is, not by tags), although delegates can be associated with tag-generated objects as well.
+</p>
+
+<p>
+Delegates are necessary because sometimes you don't know, at compile time, what a particular event should do.  For example, say you have a <classname>window</classname>, and you want a certain method to be called every time the window is clicked.  In that case, you would use a tag such as <code>&lt;window onclick="clickhandler()"&gt;</code>.  However, there may exist times when the desired action for the event depends on conditions at the time the event is created.  In that situation you would use delegates.</p>
+<h3>LzDelegate</h3>
+<p>
+To create and manage delegates, you use the <classname link="true">LzDelegate</classname> class.
+</p>
+<p>
+The syntax for creating a delegate is:</p>
+<pre>
+LzDelegate(object, method, sender, event)
+</pre>
+<p>
+The 3rd and 4th optional arguments to LzDelegate are just shorthand: </p>
+<pre>
+ var del = new LzDelegate(object, method, sender, event); 
+</pre>
+<p>
+is the same as: 
+</p>
+<pre>
+ var del = new LzDelegate(object, method); 
+ del.register(sender, event);
+</pre> 
+
+<h3>Relationship betwen delegates and tag-generated events</h3>
+
+<p>
+The <classname link="true">LzDelegate</classname> class is used to create delegates in script. 
+</p>
+<p>
+That is to say, you can statically attach a method to an event by:</p>
+<pre>
+    &lt;method event="eventName" reference="eventSender"&gt;
+       ...what to do...
+    &lt;/method&gt;
+</pre>
+<p>
+but if you don't know <code>eventName</code> or <code>eventSender</code> at compile time, you need to use the dynamic technique:
+</p>
+<pre>
+
+     &lt;method name="methodName"&gt;
+       ...what to do...
+     &lt;/method&gt;
+
+     &lt;method name="createDelegate&gt;
+     this.myDel = new LzDelegate(this, "methodName", eventSender, "eventName");
+     &lt;/method&gt;
+</pre>
+<p>
+An event handler automatically handles all the work of making and registering a delegate for you: 
+</p>
+<pre>
+onclick="do something or other"; 
+</pre>
+<p>
+expands to: 
+</p>
+<pre>
+ &lt;method event="onclick" target="this"&gt; 
+ do something or other; 
+ &lt;/method&gt; 
+</pre>
+<p>
+(target is optional, defaults to <code>this</code>) Which expands to: </p>
+<pre>
+ // make up a unique method name 
+ var uid = $m + &lt;unique id&gt; 
+ // make a method of that name to run the onclick code 
+ this.$m = function () { ; }; 
+ // make a delegate for that method 
+ var del = new LzDelegate(this, $m); 
+ // register it to receive onclick events 
+ del.register(this, 'onclick'); 
+</pre>
+<p>
+The example below illustrates <classname>LzDelegate</classname> in use.
+</p>
+
+<h3> Example: using LzDelegate to register an event at runtime </h3>
+
+<p>
+The following example is a simple memory game.  When a button is clicked once,
+nothing special is reported.  If a button is clicked a second time, the green
+status bar reports a message stating this fact.  The game can be started over by
+clicking the 'start over' button.
+</p>
+
+<p>
+Notice that for each button, when the <code>onclick</code> event is fired, the <method>regbutton</method>
+method in invoked on the canvas.  The <method>regbutton</method> method creates a delegate for
+the <method>buttonclickedagain</method> method if no such delegate already exist, and then registers
+the 'onclick' event of the button that has just been clicked. 
+</p>
+<h4>Flow of control</h4>
+<p>
+ If a button that
+hasn't been clicked before is clicked, nothing special is reported (although the delegate is created). However,
+when a
+previously clicked button is clicked,
+the delegate calls <method>buttonclickedagain</method> which prints
+the message stating this fact.  This is because buttons that have already been clicked have had their 'onclick' events 'registered with' (or bound to) the delegate.</p>
+<p>
+ Clicking on the 'start over' button unregisters
+all events from the delegate, and resets the message to nothing special.   
+</p>
+
+<example title="Registering an event at runtime">
+&lt;canvas height="100"&gt; 
+    &lt;view width="80"&gt; 
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;button width="20" height="20" onclick="canvas.regbutton(this)" onmousedown="canvas.reset()"/&gt;
+        &lt;wrappinglayout/&gt;
+    &lt;/view&gt; 
+    &lt;text id="statusText" bgcolor="green" resize="true"/&gt; 
+    &lt;button text="start over" onclick="canvas.startover()"/&gt;
+    &lt;simplelayout axis="y"/&gt;
+
+    &lt;method name="regbutton" args="b"&gt; 
+        if( typeof this.del == "undefined" )  {
+            this.del = new LzDelegate( this, "buttonclickedagain" ); 
+        }      
+
+        this.del.register( b, "onclick" );
+    &lt;/method&gt; 
+
+    &lt;method name="startover"&gt;
+        this.del.unregisterAll(); 
+        this.reset();
+    &lt;/method&gt;
+
+    &lt;method name="reset"&gt; 
+        statusText.setAttribute("text", "Nothing special");
+    &lt;/method&gt; 
+
+    &lt;method name="buttonclickedagain"&gt; 
+        statusText.setAttribute("text", "That button was clicked two or more times");
+    &lt;/method&gt; 
+&lt;/canvas&gt;
+</example>
+<h2>Delegates and Memory Management</h2>
+<p>
+When you destroy an object--for example, a view -- you free up the memory that was used to store it.  However, destroying the view does not destroy the delegates associated with it.  You should "clean up" the delegate manually to free up the memory used by it.
+</p>
+<h3>Memory Management example</h3>
+<p>
+To dynamically attach a method to an event, use a delegate:
+</p>
+<example extract="false" title="Delegates and memory">
+&lt;class ...&gt;
+   &lt;method name="doit"&gt; ... &lt;/method&gt;
+
+   &lt;method event="init"&gt;
+     super.init();
+     this.myDel = new LzDelegate(this, 'doit', libraryName, 'onload');
+   &lt;/method&gt;
+&lt;!--
+Be sure to clean up your delegate manually, if you destroy
+instances, or the application will "leak" memory:--&gt;
+
+   &lt;method name="destroy"&gt;
+     this.myDel.unregisterAll();  // "destroys" delegates
+     super.destroy();
+   &lt;/method&gt;
+
+&lt;/class&gt;
+</example>
+<h2>Using a LzTimer to show the passage of time </h2>
+
+<p> 
+In the following example, a visual timer is created which shows each passing
+second.   When the <tagname>text</tagname> node is initialized, we call the
+<method>updateTimer</method> method.  <method>updateTimer</method> first updates the text showing to indicate
+the number of seconds passed, and then increments the secondsPassed attribute.
+The first time <method>updateTimer</method> is invoked, a new delegate is created which simply
+calls <method>updateTimer</method>,  and a timer is created which in turn calls the newly
+created delegate after 1 second.   Each subsequent time <method>updateTimer</method> is invoked
+by the delegate, instead of creating a new timer (which would be inefficient) , <method>LzTimer.resetTimer</method> is invoked.    
+</p> 
+
+<example title="Using LzTimer to created a second timer">
+&lt;canvas height="20"&gt; 
+    &lt;text oninit="updateTimer()"&gt;
+        &lt;attribute name="secondsPassed" type="number" value="0"/&gt; 
+
+        &lt;method name="updateTimer"&gt;
+            this.setAttribute('text', this.secondsPassed );
+            this.secondsPassed++; 
+
+            if( typeof this.del == "undefined" ) { 
+                this.del = new LzDelegate( this, "updateTimer" );
+                LzTimer.addTimer( this.del, 1000 );
+            } else {
+                LzTimer.resetTimer( this.del, 1000 );
+            }
+        &lt;/method&gt;
+    &lt;/text&gt; 
+&lt;/canvas&gt;
+</example>
+
+<h2> Using <classname>LzDelegate</classname> to determine initialization of the last replicated view </h2>
+
+<p>
+In the following example, when the last <tagname>text</tagname> object has been
+replicated and initialized, we set the text in the green <tagname>text</tagname> to 'The last
+view has been replicated'.  Do accomplish this task, we first explicitly declare 
+a datapath on the <tagname>text</tagname> to be replicated.  Next, we handle
+the onclones event, which indicates that the new <tagname>text</tagname> nodes
+has been cloned, but not initialized.  Inside the onclones event, we determine the
+last replicated clone, and register the oninit event using LzDelegate.  When the
+last <tagname>text</tagname> node has been initialized, the delegate calls the
+"replicationComplete" method, where the text of the green <tagname>text</tagname> node is updated. 
+</p>
+
+<p> 
+This technique can also be used to detect when the last view has loaded its
+resource by simply registering the <event>onload</event> event instead of the <event>oninit</event> event.  
+</p>
+<example title="Registering an event for when the last view is replicated">
+&lt;canvas height="125"&gt; 
+    &lt;dataset name="people"&gt;
+        &lt;people&gt; 
+            &lt;person name="John"/&gt; 
+            &lt;person name="Eric"/&gt; 
+            &lt;person name="Andrew"/&gt; 
+            &lt;person name="chrisk"/&gt; 
+            &lt;person name="Sarah"/&gt; 
+            &lt;person name="Pablo"/&gt; 
+            &lt;person name="Adam"/&gt; 
+        &lt;/people&gt;
+    &lt;/dataset&gt; 
+
+    &lt;view&gt;
+        &lt;text&gt;
+            &lt;datapath xpath="people:/people/person/@name"&gt;
+                &lt;method event="onclones"&gt;
+                    var lastclone = this.clones[ this.clones.length - 1 ];
+
+                    if( typeof this.del == "undefined" ) {
+                        this.del = new LzDelegate( this, "replicationComplete") 
+                    } else {
+                        this.del.ungregisterAll();
+                    }
+
+                    this.del.register( lastclone, "oninit"); 
+                &lt;/method&gt;
+
+                &lt;method name="replicationComplete"&gt;
+                    lastRepText.setText("The last view has been replicated"); 
+                &lt;/method&gt;
+            &lt;/datapath&gt;
+        &lt;/text&gt;
+        &lt;simplelayout axis="y"/&gt;
+    &lt;/view&gt;
+
+    &lt;text id="lastRepText" bgcolor="green" resize="true"&gt; 
+        Replication incomplete
+    &lt;/text&gt;
+   
+    &lt;simplelayout axis="y"/&gt; 
+&lt;/canvas&gt; 
+</example>
+<h2>Delegates as attributes</h2>
+<p>
+A delegate is an object, and as such it can be an attribute of another object. For example, consider:</p>
+<example extract="false" title="delegate as attribute">
+&lt;button text="clickme"&gt;
+    &lt;attribute name="mydel" type="expression"
+               value="$once{new LzDelegate(this, 'handler')}"
+</example>
+<p>
+The above code creates the delegate <code>mydel</code> when the button is instantiated. This technique of declaring a delegate has the advantage of being easy to read, and it ensures that only one delegate is created.
+</p>
+<p>For an example that uses this technique, see <a href="${dguide}rpc.html#delegate-as-attribute">this</a> example in the chapter on XML-rpc.</p>
+<h2>Delegates in relation to other languages</h2>
+<p>
+Here is a brief discussion of delegates in relation to other programming languages with which you may be familiar.  You don't need to follow this discussion in order to use delegates in LZX.
+</p>
+<p>
+A delegate is a 'method pointer'. It's a way of saying: "give me a thing that when I call it will call method m on object o." (As opposed to a function pointer, which doesn't capture the object.) In Java, you use an 'anonymous inner class' to get this effect (i.e., Java creates an instance with a function). In Lisp, you use a closure (i.e., Lisp creates a function with a context). [The Java and Lisp ways are just two sides of the same coin.] </p>
+<p>
+Basically: </p>
+<pre>
+
+ // constructor 
+ LzDelegate = function(o, m) { this.o = o; this.m = m; } 
+ LzDelegate.prototype.execute = function () { with (this) { return o[m](); } }; 
+
+ var del = new LzDelegate(object, 'method'); 
+ del.execute(); 
+</pre>
+<p>
+is the same as: </p>
+<pre>
+
+ // constructor 
+ function makeDelegate (o, m) { return function () { return o[m](); }; }; 
+
+ var del = makeDelegate(object, 'method'); 
+ del(); 
+</pre>
+<p>
+Here you can see the parallel between allocating an instance that captures the context 'o' and 'm' and has a function (method) to invoke it, and a function that you can invoke that captures the context 'o' and 'm' by being a closure. 
+</p>
+
+
+<?ignore
+<h2>Services that are based on delegates</h2>
+
+<fixme>
+This chapter needs to be flushed out with examples of custom events, an explanation of lzdelegate, an example using timers
+</fixme>
+<fixme>
+"listens" for event
+ Understanding the "registry" (not to be confused with windows registry)
+ When are events triggered?
+i.  on data
+ii.  on percent
+iii.  on init
+iv.  etc
+v.  Forward reference to 'initialization/instantiation' chapter
+</fixme>
+ ?>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

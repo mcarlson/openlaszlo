@@ -1,0 +1,24 @@
+<canvas width="800"  height="2000">
+
+    <debug x="370" width="400" height="300" fontsize="14"/>
+
+    <alert name="errormsg"/>
+    <dataset name="envDset" />
+    <dataset name="fooset">
+         <java.runtime.name>Java(TM) 2 Runtime Environment, Standard
+Edition</java.runtime.name>
+         <java.protocol.handler.pkgs>org.apache.axis.transport</java.protocol.handler.pkgs>
+         <java.runtime.name>Java(TM) 2 Runtime Environment, Standard
+Edition</java.runtime.name>
+         <java.protocol.handler.pkgs>org.apache.axis.transport</java.protocol.handler.pkgs>
+         <java.runtime.name>Java(TM) 2 Runtime Environment, Standard
+Edition</java.runtime.name>
+
+    </dataset>
+
+    <list name="foo" width="250" height="100">
+        <textlistitem datapath="fooset:/*" text="$path{'name()'}"/>
+    </list>
+
+
+</canvas>

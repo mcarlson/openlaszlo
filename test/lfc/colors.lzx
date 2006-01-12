@@ -1,0 +1,28 @@
+<canvas>
+<simplelayout axis="y"/>
+<class name="swatch" extends="text" width="100"
+  fgcolor="${this.bgcolor == gray ? black : 0xffffff - this.bgcolor}"/>
+
+<!-- bgcolor could be "black" instead of "$once{black}", but this
+would test the compiler, not the runtime values -->
+<swatch bgcolor="$once{black}">black</swatch>
+<swatch bgcolor="$once{green}">green</swatch>
+<swatch bgcolor="$once{silver}">silver</swatch>
+<swatch bgcolor="$once{lime}">lime</swatch>
+<swatch bgcolor="$once{gray}">gray</swatch>
+<swatch bgcolor="$once{olive}">olive</swatch>
+<swatch bgcolor="$once{white}">white</swatch>
+<swatch bgcolor="$once{yellow}">yellow</swatch>
+<swatch bgcolor="$once{maroon}">maroon</swatch>
+<swatch bgcolor="$once{navy}">navy</swatch>
+<swatch bgcolor="$once{red}">red</swatch>
+<swatch bgcolor="$once{blue}">blue</swatch>
+<swatch bgcolor="$once{purple}">purple</swatch>
+<swatch bgcolor="$once{teal}">teal</swatch>
+<swatch bgcolor="$once{fuchsia}">fuchsia</swatch>
+<swatch bgcolor="$once{aqua}">aqua</swatch>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

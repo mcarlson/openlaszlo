@@ -1,0 +1,25 @@
+<canvas layout="spacing: 5" width="200">
+  <class name="box" bgcolor="red"
+         height="100" width="100" />
+  
+  <class name="borderedbox" extends="box"
+         width="${size}" height="${size}"
+         onmouseover="this.changeSize(50)"
+         onmouseout="this.changeSize(-50)">
+    <attribute name="size" value="100"/>
+    <attribute name="bordersize" value="3"/>
+    <view bgcolor="yellow"
+          x="${parent.bordersize}" 
+          y="${parent.bordersize}"
+          width="${parent.width - parent.bordersize*2}"
+          height="${parent.height - parent.bordersize*2}"/>
+    
+    <method name="changeSize" args="pixels">
+      this.animate('size', pixels, 500, true);
+    </method>
+  </class>
+  
+  <borderedbox/>
+  <borderedbox bordersize="6"/>
+  <borderedbox bordersize="9"/>
+</canvas>

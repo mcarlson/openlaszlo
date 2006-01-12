@@ -1,0 +1,16 @@
+<!-- This should compile with no errors.  It doesn't matter what it
+does.  It just tests that the compiler isn't confused by script whose
+last line ends in a line comment -->
+<canvas>
+<view oninit="
+debug.setx(100);
+debug.sety(200);
+//debug.setheight(400);
+" x="10 //">
+<method name="m" args="x //">return x//</method>
+</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

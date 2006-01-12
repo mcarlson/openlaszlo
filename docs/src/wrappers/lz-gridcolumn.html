@@ -1,0 +1,56 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Gridcolumn">
+    <lztier>LZ Components</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+       Declares a column in a grid.
+    </lzshortdesc>
+    <lztag>lz/gridcolumn.xml</lztag>
+</lzelement>
+
+<p>
+The <classname>gridcolumn</classname> class can be used to declare a
+column in a <classname>grid</classname> with the standard column
+header look without specifying exactly what goes inside the
+column. This can be useful for embedding other components within a
+grid.</p>
+
+<example>
+&lt;canvas height="160"&gt;
+  &lt;dataset name="contacts" request="true"
+      src="http://www.laszlosystems.com/lps-3.1/demos/contacts/contactsdata.xml"/&gt;
+
+  &lt;grid datapath="contacts:/resultset"&gt;
+    &lt;gridcolumn showheader="false" width="50"&gt;
+      &lt;view bgcolor="#CCCCCC" width="${parent.width}"
+             placement="header"
+             height="${parent.immediateparent.height-1}"/&gt;
+      &lt;text datapath="position()"/&gt;
+    &lt;/gridcolumn&gt;
+    &lt;gridcolumn width="200"&gt; Name
+      &lt;text datapath="@displayname"/&gt;
+    &lt;/gridcolumn&gt;
+    &lt;gridcolumn sortable="false"&gt; Home
+      &lt;checkbox value="$path{'@home_default'}"
+                xoffset="${10-parent.width/2}"&gt;
+        &lt;method event="onvalue"&gt;
+          this.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/checkbox&gt;
+    &lt;/gridcolumn&gt;
+  &lt;/grid&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

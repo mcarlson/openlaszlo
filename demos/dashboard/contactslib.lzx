@@ -1,0 +1,410 @@
+<!--=======================================================================-->
+<!-- contactslib.lzx                                                       -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+    <include href="base/basetabslider.lzx" />
+    <include href="dashbutton.lzx" />
+    
+    
+    <resource name="contactTopButtons"  src="img/contact_data_top_buttons.swf"/>
+    <resource name="contactTopR"        src="img/contact_data_top_r.swf"/>
+    <resource name="contactTopL"        src="img/contact_data_top_l.swf"/>
+    <resource name="contactBut"         src="img/contact_data_top_but.swf"/>
+    <resource name="contactButPng"      src="img/contact_data_top_but.png"/>
+    <resource name="contactEmailBut"    src="img/contact_email_but.swf"/>
+    <resource name="littleN"            src="img/contact_mini_n.swf"/>
+    <resource name="littlePlus"         src="img/contact_mini_plus.swf"/>
+    <resource name="light"              src="img/presencelight.swf"/>
+
+    <dataset name="newrecord">
+        <item>
+            <name></name>
+            <title></title>
+            <light></light>
+            <email></email>
+            <email></email>
+            <telephone></telephone>
+            <address></address>
+            <notes/>
+        </item>
+    </dataset>
+
+     <!-- CLASS: contactsinput ============================================ -->    
+    <class name="contactsinput" bgcolor="black" >
+        <inputtext name="t" x="1" y="1" width="${parent.width-2}" 
+                   height="${parent.height-2}" bgcolor="white"
+                   font="lztahoe8"/>
+        <method name="applyData" args="d">
+            this.t.setText( d );
+        </method>
+        <method name="updateData">
+            return this.t.updateData();
+        </method>
+    </class>
+
+     <!-- CLASS: contactsbutton ============================================ -->    
+    <class name="contactsbutton" resource="contactButPng" height="16"  width="50">
+        <attribute name="label" value="button" type="string"/>
+        <text fontsize="11" fgcolor="black" x="${parent.title.x - 0.5}" 
+              y="-.3" font="vera" clip="false" pixellock="false">
+            <attribute name="text" value="${parent.label}"/>
+        </text>
+        <text name="title" fontsize="11" fgcolor="#ffffff"  
+              font="vera" clip="false" pixellock="true">
+            <attribute name="text" value="${parent.label}"/>
+            <method event="ontext">
+                this.setX(Math.round( ( this.parent.width -  
+                                        this.getTextWidth())/2.0));
+            </method>
+        </text>
+    </class>
+    
+
+     <!-- CLASS: contactElement ============================================ -->    
+    <class name="contactElement" extends="basetabelement" clickable="false"   > <!-- bgcolor="0x674432" -->
+        
+        <!-- ATTRIBUTES -->
+        <attribute name="minheight" value="34"/>
+        <attribute name="height" value="$once{ this.minheight}"/>
+        <attribute name="showBar" value="true"/>
+        <attribute name="tabName" value="Name" type="string" /> 
+        <attribute name="tabBiz" value="Title" type="string" /> 
+        <attribute name="emailAddresses" value="" type="string" />
+        <attribute name="telephoneNumbers" value="" type="string" />
+        <attribute name="address" value="" type="string" />
+        <attribute name="notes" value="" type="string" />
+        <attribute name="openHeight" value="190" />
+
+        <!-- VIEWS -->
+        <view name="main" height="${parent.height}" 
+              width="${parent.parent.parent.width-16}" 
+              options="releasetolayout" clip="true" >
+
+            <view name="top" width="${parent.width}" 
+                  height="${classroot.minheight}" 
+                  bgcolor="#88B29D" 
+                  onclick="classroot.parent.select(classroot)" >
+
+                <view name="flashPanel" opacity="0" bgcolor="white" 
+                      width="${parent.width}" height="34"/>
+                
+                <view height="1" width="${parent.width}" bgcolor="#B0DEC9"/>
+                <view width="1" height="${parent.height}" bgcolor="#B0DEC9"/>
+                <view x="${parent.width-1}" width="1" height="${parent.height}" 
+                      bgcolor="#568A70"/>
+                <view y="${parent.height-1}" width="${parent.width}" height="1" 
+                      bgcolor="#568A70"/>
+             
+                <text name="tabName" fontsize="10" fgcolor="0x222222" x="9" 
+                      y="2" datapath="name/text()" font="vera" width="180"/>
+                <text name="tabBiz" fontsize="10" fgcolor="0x222222"  x="9" 
+                      y="15" datapath="title/text()" font="veraroman" 
+                      width="180"/>
+                
+                <view name="light" resource="light" x="${parent.width-20}" 
+                      y="14" datapath="light/text()" visible="false">
+                    <method name="applyData" args="d">
+                        if (d == "on") {
+                            setVisible(true);
+
+                            parent.flashPanel.setAttribute("opacity",.9);
+                            parent.flashPanel.animate("opacity",0,2000,false);
+                        } else {
+                            setVisible(false);
+                        }
+                    </method>
+                </view>
+            </view>
+ 
+           <view name="content" width="${immediateparent.width}"  >
+                <attribute name="visible" 
+                           value="${classroot.contentvisible}"/>
+
+                <!-- Email button -->
+                <view x="5" y="38" resource="contactEmailBut" />
+
+                <!-- Dividing line -->
+                <view x="5" y="58" width="${parent.width-10}" height="1" 
+                      bgcolor="#8D9E95"/>
+                <view x="5" y="59" width="${parent.width-10}" height="1" 
+                      bgcolor="#C4DBCF"/>
+                
+                <!-- Info header and backing box -->
+                <view x="5" y="60" width="35" height="15" bgcolor="#82998D"/> 
+                <text x="6" y="60" fontsize="10" fgcolor="white" 
+                      font="vera" clip="false">Info</text>
+
+                <!-- Email header -->
+                <text fgcolor="#222222" x="5" y="77" fontsize="10"  
+                      font="vera" clip="false">Email Addresses</text>
+                <view resource="littleN" x="${parent.width-20}" y="79"/>
+
+                <!-- Email contents -->
+                <text fgcolor="#222222" name="emailList" x="5" y="90"  
+                      fontsize="10" font="veraroman" clip="false" resize="true"
+                      datapath="email[1]/text()"/>
+
+                <!-- Telephone header -->
+                <text fgcolor="#222222" x="5" 
+                      y="${parent.emailList.height+parent.emailList.y+10}" 
+                      fontsize="10"  font="vera" 
+                      clip="false">Telephone No's</text>
+                <view resource="littleN" x="${parent.width-20}" 
+                      y="${parent.emailList.height+parent.emailList.y+16}"/>
+
+                <!-- Telephone contents -->
+                <text fgcolor="#222222" name="telephoneList" x="5"  resize="true"
+                      y="${parent.emailList.height+parent.emailList.y+24}" 
+                      fontsize="10"  font="veraroman" clip="false" 
+                      datapath="telephone[1]/text()"/>
+
+                <!-- Address header -->
+                <text fgcolor="#222222" x="5" 
+                      y="${parent.telephoneList.height+parent.telephoneList.y+10}"
+                      fontsize="10" font="vera" clip="false">Address</text>
+                <view resource="littleN" x="${parent.width-20}" 
+                     y="${parent.telephoneList.height+parent.telephoneList.y+16}"/>
+                
+                <!-- Address contents -->
+                <text fgcolor="#222222" name="address" x="5" resize="true"
+                      y="${parent.telephoneList.height+parent.telephoneList.y+24}" 
+                      fontsize="10" font="veraroman" clip="false" 
+                      datapath="address/text()"/>
+
+                <!-- Dividing line -->
+                <view x="5" y="${parent.address.height+parent.address.y+10}"
+                      width="${parent.width-10}" height="1" bgcolor="#8D9E95"/>
+                <view name="dln" x="5" 
+                      y="${parent.address.height+parent.address.y+11}" 
+                      width="${parent.width-10}" height="1" bgcolor="#C4DBCF"/>
+
+                <!-- Notes & more header -->
+                <view x="5" y="${parent.dln.y + 1}" width="90" height="15" 
+                      bgcolor="#82998D"/>
+                <view resource="littlePlus" x="${parent.width-20}" 
+                      y="${parent.dln.y + 4}"/>
+                <text x="6" y="${parent.dln.y + 1}" fontsize="10" 
+                      fgcolor="white" font="vera" 
+                      clip="false">Notes &amp; More </text>
+
+                <!-- Notes contents -->
+                <text fgcolor="#222222" name="notes" x="5" resize="true"
+                      y="${parent.address.height+parent.address.y+30}" 
+                      fontsize="10" font="veraroman" clip="false" 
+                      datapath="notes/text()"/>
+
+            </view>
+        </view>
+        
+        <method event="oninit" >
+            // calling resetHeight everytime a tabelement gets added 
+            // forces the basetabslider to properly report its height
+            // to the scrollbar.
+            parent.resetHeight();
+        </method>
+
+        <method name="setSelected" args="isSelected" >
+            // code from baselistitem
+            this.selected = s;
+            //if (this.onselected) this.onselected.sendEvent(s);
+            
+            // now open/close the item
+            if ( !parent._initcomplete ) return;
+            if ( isSelected ) {
+                this.open( openHeight, parent.slideduration,true );
+            } else {
+                this.close( -openHeight, parent.slideduration );
+            }
+        </method>
+    </class>
+    <!-- END: contactElement ============================================================= -->
+
+
+    <class name="contacts" x="0" y="10" 
+           width="${parent.width}" 
+           height="${immediateparent.height-10}" >
+       
+        <!-- Start of newContact -->
+        <view name="newContact" width="${parent.width}" height="25" clip="true">
+
+            <view name="top" 
+                  height="20" 
+                  bgcolor="#8CB29C" 
+                  width="${parent.width}">
+                <datapointer xpath="contactsData:/" name="contactsDP"/>
+
+                <method name="init" >
+                    super.init();
+                    this.dl = new LzDelegate(this,"closed");
+                    this.state='closed';
+                </method>
+                <method name="closed">
+                    this.parent.immediateparent.list['scrollbar']['updateThumbPos']();
+                    this.parent.middle.setVisible(false);
+                    this.dl.unregisterAll();
+                </method>
+                <method name="open">
+                    if (this.state!="open"){
+                        this.state="open";
+                        parent.middle.setVisible(true);
+                        if ( !parent.middle['isinited'] ) {
+                            parent.middle.completeInstantiation();
+                        }
+                        parent.animate("height",270,500,true);
+                        //clear text fields
+                        //FIXME: would be better use a single datapointer
+                        //rather than newing one each time
+                        var dp = new LzDatapointer( this , 
+                                        { xpath : "newrecord:/item/name" } );
+                        do{
+                            dp.setNodeText("");
+                        } while( dp.selectNext() );
+                    }
+                </method>
+                <method name="close">
+                    if (this.state!="closed"){
+                        this.state="closed";
+                        var anm = parent.animate("height",-270,500,true);
+                        this.dl.register(anm,"onstop");
+                    }
+                </method>
+
+                <method name="store">
+                    parent.middle.datapath.updateData();
+                    contactsDP.addNodeFromPointer( parent.middle.datapath );
+                    this.close();
+                </method>
+                
+                <dashbutton label="new" x="4" y="2" width="43"
+                              onclick="parent.open();LzFocus.setFocus(newnametxt.t);"  />
+                <dashbutton label="save" width="50" x="${parent.width-110}" y="2"
+                              onclick="parent.store()"/>
+                <dashbutton label="cancel" width="50" x="${parent.width-55}" y="2"
+                              onclick="parent.close()"/>
+            </view>
+
+            <view bgcolor="#48735D" y="20" width="${parent.width}" height="1"/>
+
+            <view name="middle" initstage="defer"
+                  y="21" bgcolor="#B6CCC1"
+                  datapath="newrecord:/item[1]"
+                  height="${parent.height-parent.top.height}"
+                  width="${parent.width}" visible="false">
+                <view bgcolor="#9EBAAB" height="${parent.height}" width="55"/>
+
+                <text x="3" y="5" fgcolor="#222222" fontsize="10" 
+                      font="vera" clip="false" 
+                      pixellock="true">Name</text>
+                <contactsinput id="newnametxt" x="60" y="3" width="${parent.width-65}" 
+                               datapath="name/text()" 
+                               height="18"/>
+
+                <text x="3" y="23" fgcolor="#222222" fontsize="10" 
+                      font="vera" clip="false">Title</text>
+                <contactsinput x="60" y="20" width="${parent.width-65}" 
+                               datapath="title/text()"
+                               height="18"/>
+
+                <text x="3" y="52" fgcolor="#222222" fontsize="10" 
+                      font="vera" clip="false">Email</text>
+                <contactsinput x="60" y="48" width="${parent.width-65}" 
+                               datapath="email[1]/text()"
+                               height="18"/>
+                <contactsinput x="60" y="65" width="${parent.width-65}" 
+                               datapath="email[2]/text()"
+                               height="18"/>
+
+                <text x="3" y="95" fgcolor="#222222" width="100" 
+                      height="100" fontsize="10" font="vera">Phone</text>
+
+                <text x="57" y="97" fgcolor="#222222" 
+                        fontsize="10" font="veraroman" 
+                        clip="false">Home</text>
+                <contactsinput x="93" y="95" width="${parent.width-98}" 
+                               datapath="telephone/text()"
+                               height="18"/>
+
+                <text x="57" y="114" fgcolor="#222222" fontsize="10" 
+                        font="veraroman" clip="false">Work</text>
+                <contactsinput x="93" y="112" width="${parent.width-98}" 
+                                height="18"/>
+
+                <text x="57" y="131" fgcolor="#222222" 
+                        fontsize="10" font="veraroman" 
+                        clip="false" >Cell</text>
+                <contactsinput x="93" y="129" width="${parent.width-98}" 
+                        height="18"/>
+
+                <text x="57" y="148" fgcolor="#222222" fontsize="10" 
+                        font="veraroman" clip="false">Fax</text>
+                <contactsinput x="93" y="146" width="${parent.width-98}" 
+                                height="18"/>
+
+                <text x="3" y="175" fgcolor="#222222" fontsize="10" 
+                      clip="false" font="vera">Address</text>
+                <contactsinput x="60" y="175" width="${parent.width-65}" 
+                               datapath="address/text()"
+                               height="18"/>
+                <contactsinput x="60" y="192" width="${parent.width-65}" 
+                               height="18"/>
+                <contactsinput x="60" y="209" width="${parent.width-65}" 
+                               height="18"/>
+                <contactsinput x="60" y="226" width="${parent.width-65}" 
+                               height="18"/>
+                
+                <dashbutton label="notes" x="4" y="250"  width="43"
+                                onclick="parent.close()" />
+
+            </view>
+            <view resource="contactTopL" 
+                  stretches="width"
+                  y="${parent.height-5}"
+                  width="${parent.width}"/>
+            <view resource="contactTopR" 
+                  y="${parent.height-25}"
+                  x="${parent.width-160}">
+                <view name="buttons" 
+                      resource="contactTopButtons" 
+                      y="4"
+                      x="80"/>
+            </view>
+        </view>
+        <!-- End of newContact -->
+
+
+        <view name="list" 
+              y="${parent.newContact.height}" 
+              height="${immediateparent.height-parent.newContact.height-9}" 
+              width="${parent.width}" 
+              bgcolor="#B6CCC1"
+              clip="true">
+             <!-- toggle -->
+            <basetabslider id="tts" width="${parent.width-16}"
+                       name="listContents" 
+                       toggleselected="true" >
+                <contactElement> 
+                    <datapath pooling="true" xpath="contactsData:/item" />
+                </contactElement> 
+                
+                <method name="setHeight" args="h" >
+                    if ( h != height ) {
+                        super.setHeight(h);
+                        // don't resetheight ... as is done in super class method
+                    }
+                </method>
+            </basetabslider>
+
+            <scrollbar axis="y" oninit="setColorTint(this,'B6CCC1',-120)"/>
+        </view> 
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

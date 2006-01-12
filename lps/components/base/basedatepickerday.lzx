@@ -1,0 +1,61 @@
+<library>
+
+    <!--- Abstract class representing days for the basedatepicker.  -->
+    <class name="basedatepickerday">
+
+        <!--- The day of the month to be displayed 
+              @keywords protected -->
+        <attribute name="daynum" value="null"/>
+
+        <!--- Indicates if this day should be enabled or disabled.  The day 
+              would be disbled if it should not show it's daynum.
+              @keywords protected 
+        --> 
+        <attribute name="disabled" type="boolean" value="false"/> 
+
+        <!--- Indicates if this day is selectable.  The day is selectable if 
+              it is within the range of possible selected dates 
+              @keywords protected 
+        --> 
+        <attribute name="selectable" type="boolean" value="null"/> 
+
+        <!--- Indicates if this day is currently selected 
+              @keywords protected
+        -->
+        <attribute name="selected" type="boolean" value="false"/> 
+
+        <!--- This method is called when this day recieves focus. 
+              @keywords protected -->
+        <method name="gotFocus">
+        </method> 
+
+        <!--- This method is called when this day looses focus. 
+              @keywords protected -->
+        <method name="removeFocus">
+        </method> 
+        
+        <method event="onselected"> 
+            if( this.selected ) { 
+                parent.parent.parent.setSelecteddatepickerday( this ); 
+            } 
+        </method> 
+
+        <!--- This method is called when this day has focus, and the 
+              enter key is pushed. 
+              @keywords protected --> 
+        <method name="buttonpush" event="onmousedown"> 
+        </method>
+
+        <!--- This method is called when this day has focus, and the 
+              enter key is released. 
+              @keywords protected --> 
+        <method name="buttonrelease" event="onmouseup"> 
+        </method> 
+
+    </class> 
+</library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

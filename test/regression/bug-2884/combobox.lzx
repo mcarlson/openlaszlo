@@ -1,0 +1,35 @@
+<canvas debug="true" width="800" height="600" oninit="debug.setY(100);">
+
+    <view x="15" y="15">
+        <simplelayout axis="x" spacing="10" />
+        <combobox id="cbox1" width="130" spacing="5" initstage="late">
+            <textlistitem name="one" text="combobox late" value="1"/>
+            <textlistitem name="two" text="two" value="2"/>
+            <textlistitem name="three" text="three" value="3"/>
+            <textlistitem name="four" text="four" value="4"/>
+        </combobox>
+        <combobox id="cbox2" width="130" spacing="5" >
+            <textlistitem name="one" initstage="late" text="textlistitems late" value="1"/>
+            <textlistitem name="two" initstage="late" text="two" value="2"/>
+            <textlistitem name="three" initstage="late" text="three" value="3"/>
+            <textlistitem name="four" initstage="late" text="four" value="4"/>
+        </combobox>
+        <combobox id="cbox3" width="130" spacing="5" initstage="late">
+            <textlistitem name="one" initstage="late" text="all late" value="1"/>
+            <textlistitem name="two" initstage="late" text="two" value="2"/>
+            <textlistitem name="three" initstage="late" text="three" value="3"/>
+            <textlistitem name="four" initstage="late" text="four" value="4"/>
+        </combobox>
+        <combobox id="cbox4" width="130" spacing="5" >
+            <textlistitem name="one" text="2 and 4 late" value="1"/>
+            <textlistitem name="two" initstage="late" text="two" value="2"/>
+            <textlistitem name="three" text="three" value="3"/>
+            <textlistitem name="four" initstage="late" text="four" value="4"/>
+        </combobox>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

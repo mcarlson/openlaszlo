@@ -1,0 +1,35 @@
+<canvas width="1200" height="800" debug="true">
+
+  <!-- Tests whether you can open a secure HTTPS connection for data to the LPS server,
+  which then opens an insecure proxied HTTP connection to the data back end. That is the 
+  desired behavior.
+
+  What you should see happen is an HTTPS connection from the browser
+  to the LPS, and then an HTTP request issued from the server to the
+  target backend data source
+  http://www.beartronics.com:8800/test/foo.xml.
+
+  The ondata event should then fire and a small XML string be printed to the debugger.
+
+  If the test file http://www.beartronics.com:8800/test/foo.xml is not
+  available, replace this with a URL to some xml data page with a
+  small XML test data.
+
+
+  -->
+
+
+  <debug x="100" width="900" height="500" fontsize="12"/>
+
+  <dataset name="myds" 
+           secure="true" secureport="443"
+           src="http://www.beartronics.com:8800/test/foo.xml" 
+           ondata="Debug.write('got data', this.serialize())" 
+           onerror="Debug.write('got error', this.serialize())" 
+           type="http"/>
+
+  <button onclick="myds.doRequest()">do</button>
+
+
+</canvas>
+

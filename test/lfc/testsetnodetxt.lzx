@@ -1,0 +1,29 @@
+<canvas>
+    <dataset name="ds1">
+        <item attr="a">This is some text
+            <subitem attr="me"/>
+        </item>
+    </dataset>
+
+    <dataset name="ds2" />
+
+    <class name="dnode">
+        <inputtext datapath="@attr"/>
+        <inputtext datapath="text()"/>
+        <inputtext datapath="subitem/@attr"/>
+        <inputtext datapath="subitem/text()"/>
+        <simplelayout/>
+    </class>
+
+    <dnode name="src" datapath="ds1:/item"/>
+    <button onclick="src.datapath.updateData();ds2.getPointer().addNodeFromPointer(src.datapath)">
+        copy
+    </button>
+    <dnode datapath="ds2:/item"/>
+    <simplelayout/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

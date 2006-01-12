@@ -1,0 +1,12 @@
+<library>
+
+<simplelayout/>
+<view resource="http:resources/black-white.png"/>
+<view resource="http:resources/nsct.jpg"/>
+<view resource="http:resources/titlebar_laszlo_blogbox.gif"/>
+<view resource="http:somerandom.jsp"/>
+
+<!-- jpg should not give any error, it is supported for runtime loading -->
+<view resource="http:resources/bush.jpg"/>
+
+</library>

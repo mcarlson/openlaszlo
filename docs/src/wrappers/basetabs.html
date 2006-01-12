@@ -1,0 +1,120 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basetabs">
+    <lztier>Base Component</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A non-visual container for basetabpanes.
+    </lzshortdesc>
+    <lztag>base/basetabs.xml</lztag>
+</lzelement>
+
+<p>The <classname>basetabs</classname> component conceptually houses a
+row of tabs that control the visibility of a stack of
+<classname>basetabpane</classname>s. When a
+<classname>basetabpane</classname> is added to the
+<classname>basetab</classname> component, a corresponding
+<classname>basetab</classname> is created for that
+<classname>basetabpane</classname>.</p>
+
+<p>Due to the non-visual nature of <classname>basetab</classname>, a
+visible subclass of <classname>basetab</classname> is used in the next
+example to demonstrate the correlation between
+<classname>basetabpane</classname> and <classname>basetab</classname>
+items.</p>
+
+<example title="introduction to basetabs">
+&lt;canvas width="150" height="75"&gt;
+  &lt;include href="base"/&gt;
+
+  &lt;class name="aquatab" extends="basetab" width="40" height="20" 
+          bgcolor="aqua"&gt;
+    &lt;text&gt;tab&lt;/text&gt;
+  &lt;/class&gt;
+
+  &lt;basetabs x="10" y="10" tabclass="aquatab"&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;one&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;two&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;three&lt;/text&gt;
+    &lt;/basetabpane&gt;
+  &lt;/basetabs&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>As can be seen, three <classname>basetab</classname> items have
+been created for the three <tagname>basetabpane</tagname>s
+declared.</p>
+
+<p>Though the <tagname>basetabpane</tagname> <em>element</em> is the
+child of a <tagname>basetab</tagname> element, in the runtime view
+hierarchy instances of <classname>basetabs</classname> are the
+immediate parents of a <classname>basetabsbar</classname> (where
+<classname>basetab</classname> components are placed and laid out) and
+<classname>basetabscontent</classname> (where the
+<classname>basetabpane</classname> components are placed and laid
+out).</p>
+
+<p>The following diagram illustrates the correlation between
+<classname>basetabs</classname>, <classname>basetabsbar</classname>
+(the container for <classname>basetab</classname> items), and
+<classname>basetabscontent</classname> (the container for
+<classname>basetabpane</classname>s).</p>
+
+<center>
+  <img src="images/basetabs/tabs-diagram.gif" width="416" height="120" />
+</center>
+
+<p>You can change the look and feel of your basetabs by using a
+different <classname>basetab</classname>,
+<classname>basetabsbar</classname>, and/or
+<classname>basetabscontent</classname>.</p>
+
+<example title="modifying the basetabs look">
+&lt;canvas width="150" height="75"&gt;
+  &lt;include href="base"/&gt;
+  
+  &lt;class name="mytab" extends="basetab" width="40" height="20" bgcolor="lime"&gt;
+    &lt;text&gt;mytab&lt;/text&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="mytabsbar" extends="basetabsbar" bgcolor="navy"
+         layout="class: simplelayout; axis: x; spacing: 5"/&gt;
+  
+  &lt;class name="mytabscontent" extends="basetabscontent" bgcolor="silver"/&gt;
+  
+  &lt;basetabs x="10" y="10" tabclass="mytab" barclass="mytabsbar"
+            contentclass="mytabscontent"&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;one&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;two&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;three&lt;/text&gt;
+    &lt;/basetabpane&gt;
+  &lt;/basetabs&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<tags>basetab basetabsbar basetabpane basetabscontent</tags>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

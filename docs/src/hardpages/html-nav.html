@@ -1,0 +1,73 @@
+<html xmlns:d="docbuild">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico"/>
+    <title>LZX Reference Navigation</title>
+    <style type="text/css">
+      img {border: 0}
+      body {margin: 0}
+    </style>
+    <script type="text/javascript" src="../../lps/includes/embed.js"/>
+    <script type="text/javascript" src="../includes/docs.js"/>
+    <script type="text/javascript">
+      function lzShowReferenceNavWidget() {
+        var show = lzGetCookie('show-reference-nav-widget');
+        return show == 'true';
+      }
+      
+      function lzSetShowReferenceNavWidget(show) {
+        // get the current date and time plus one year
+        // FIXME: never expire
+        var expires = new Date();
+        expires.setTime(expires.getTime() + (365*24*60*60*1000));
+        lzSetCookie('show-reference-nav-widget', show, expires);
+        
+        // reload the current document
+        document.location = document.location;
+      }
+    </script>
+  </head>
+  <body>
+    <script type="text/javascript">
+      if (lzShowReferenceNavWidget()) {
+        lzEmbed({url: 'nav.lzo?lzt=swf&amp;showTaskBar=false&amp;fb=1&amp;target=content', bgcolor: '#ffffff', width: '<d:width/>', height: '<d:height/>'});
+      }
+    </script>
+    <div id="lzx-fallback">
+      <a href="#" onclick="document.getElementById('contents').style.display = 'block'; document.getElementById('classes').style.display = 'none'; document.getElementById('tags').style.display = 'none'">Contents</a>
+      <a href="#" onclick="document.getElementById('contents').style.display = 'none'; document.getElementById('classes').style.display = 'block'; document.getElementById('tags').style.display = 'none'">Classes</a>
+      <a href="#" onclick="document.getElementById('contents').style.display = 'none'; document.getElementById('classes').style.display = 'none'; document.getElementById('tags').style.display = 'block'">Tags</a>
+      <div id="contents">
+        <d:contents/>
+      </div>
+      <div id="classes" style="display: none">
+        <d:index src="classes.xml"/>
+      </div>
+      <div id="tags" style="display: none">
+        <d:index src="tags.xml"/>
+      </div>
+    </div>
+    
+    <script type="text/javascript">
+      if (lzShowReferenceNavWidget()) {
+        document.getElementById("lzx-fallback").style.display = 'none';
+      }
+    </script>
+    
+    <a id="html-button" style="display: none" href="#" onclick="lzSetShowReferenceNavWidget(false)">HTML</a>
+    <a id="lzx-button" style="display: none" href="#" onclick="lzSetShowReferenceNavWidget(true)">LZX</a>
+    
+    <script type="text/javascript">
+      if (lzShowReferenceNavWidget()) {
+        document.getElementById("html-button").style.display = 'inline';
+      } else {
+        document.getElementById("lzx-button").style.display = 'inline';
+      }
+    </script>
+
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

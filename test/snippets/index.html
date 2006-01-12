@@ -1,0 +1,136 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Dynamically Loaded Libraries</title>
+  </head>
+  <body>
+    <h1>Dynamically Loaded Libraries</h1>
+    
+    <p>The spec is <a
+    href="../../../docs/platform/designs/libraries.html">here</a>.
+    This document refers to a <code>name</code> attribute which isn't
+    yet in the spec; many other features are also likely to change as
+    we think through this more and as we gain experience with the
+    implementation.</p>
+    
+    <h2>Implementation Phases</h2>
+      <ol><li><a href="import-view.lzx">Compile and run a file that imports a library that 
+           defines an instance</a>
+       </li>
+      <li><a href="import-class.lzx">Compile and run a file that imports a library that defines a class</a>
+      </li>
+      <li><a href="import-script.lzx">Compile and run a file that imports a library that runs some code in a &lt;script&gt; block</a>
+      </li>
+
+
+      <li>Compile and run a file that imports a library directly, not via LPS server proxy.
+      <br><a href="import-class-and-view-direct.lzx">
+      The library defines a class and also contains a view instance. <br>
+Loads the library, and instantiates several instances of the new class.  
+       </a>
+
+      <li>A library that imports a library statically included in the main file (TBD)</li>
+      <li>A library that extends an included class (<a href="import-included-class.lzx">here</a>) 
+      <li>A library that imports another dynamic library (TBD)</li>
+      <li>Circular imports (TBD)</li>
+      <li> <a href="import-dataset.lzx">Imports a library which defines a local dataset</a>
+      <li>Import relative to the pathname of an included file
+	<ul>
+	  <li><a href="load_relative_sub.lzx">subdirectory</a></li>
+	  <li><a href="adirectory/load_relative_parent.lzx">parent directory</a></li> 
+	</ul>
+      </li>
+      <li> An app declares a class which overrides an autoincluded component classname. A library instantiates and instance of the class. The component should not be autoincluded in the main app. 
+      <a href="override-autoinclude.lzx">override-autoinclude.lzx</a>
+      </li>
+      <li>Namespaces (TBD)</li>
+      <li>SOLO + Snippets
+      <li> Import library which references free vars <a href="import-globals.lzx">import-globals.lzx</a> proxied
+      <li> Import library which references free vars <a href="import-globals.lzx?lzproxied=false">import-globals.lzx?lzproxied=false</a> SOLO
+      <li> Import library which loads http data <a href="import-dataload.lzx">import-dataload.lzx</a> proxied
+      <li> Import library which loads http data <a href="import-dataload.lzx?lzproxied=false">import-dataload.lzx?lzproxied=false</a> SOLO
+	<ul>
+	  <li>load dataset unproxied  (<a href="solo-snippet-data.lzx">here</a>) </li>
+	  <li>load dataset inherited (<a href="solo-include-inherited-data.lzx">here</a>) </li>
+	  <li>load dataset proxied (<a href="solo-include-proxied-data.lzx">here</a>) </li>
+	  <li>proxied load dataset inherited (<a href="proxied-include-inherited-data.lzx">here</a>) </li>
+	</ul>
+      </li>
+     <li>More tests for the LzLibrary API (TBD)
+	<ul>
+	  <li>import resource (<a href="import-resource.lzx">here</a>)</li>
+	  <li>import class resource (<a href="import-class-resource.lzx">here</a>)</li>
+	  <li>import view resource (<a href="import-view-resource.lzx">here</a>)</li>
+	  <li>import component (<a href="import-component.lzx">here</a>)</li>
+	  <li>import instance of parent class (<a href="import-parent-instance.lzx">here</a>)</li>
+	  <li>import layout and css (<a href="import-layout.lzx">here</a>)</li>
+	  <li>import view with states (<a href="import-state.lzx">here</a>)</li>
+      <li> Test that  <a href="duplicate-load.lzx">common library is included just once</a>.
+	   
+	</ul>
+      </li>
+    </ol>
+
+    <h2>Error Cases</h2>
+    These should give errors or warnings
+    <ol>
+    <li><a href="import-class-and-view-direct-conflict.lzx">Conflicting values of 'proxied' attribute on <tt>&lt;import&gt;</tt> tag in app and <tt>&lt;library&gt;</tt> tag in library file.</a>
+    <li><a href="import-font.lzx"><code>import</code> if a library containing a font should generate warning</a>
+    <li><a href="import-unsupported-media.lzx">Imported file tries to load unsupported media</a>
+    <li><a href="import-unsupported-apis.lzx">Imported file tries to run unsupported apis</a>
+     <li> <a href="duplicate-load-with-warning.lzx"> Static library which is included in two different &lt;import&gt;s should give compiler warning</a>.
+
+</ol>
+
+    <h2>Design</h2>
+
+    <h3>Compiler</h3>
+    
+    <p><code>import</code> elements are processed by a new class
+    <code>ImportCompiler</code>, which extends
+    <code>ToplevelCompiler</code>.</p>
+    
+    <p>For illustration, assume that an instance of this class is
+    applied to the source element <code>&lt;import name="mylib"
+    src="mylib.lzx"/&gt;</code>.</p>
+    
+    <p><code>ImportCompiler.updateSchema</code> is the same as
+    <code>LibraryCompiler.updateSchema</code>.  It updates the schema
+    of the application that contains the import with the classes
+    defined in the imported file.</p>
+    
+    <p><code>ImportCompiler.compile</code> does two things:</p>
+
+    <p>1. It compiles into the current application the equivalent of
+    <code>var mylib = LzLibrary("mylib.lzx");</code>.  When this is
+    loaded, it creates an instance <code>mylib</code> of LzLibrary
+    such that <code>mylib.url == "mylib.lzx"</code> and
+    <code>mylib.loaded == false</code>.</p>
+    
+    <p>2. It recursively invokes the compilation manager on mylib.lzx.
+    This creates a compiled library file that can be served in
+    response to the runtime's request for this library.  If the
+    compilation of mylib.lzx results in an error, this is thrown again
+    as a compilation error for the current application.  If the
+    compilation of mylib.lzx results in warnings, these warnings are
+    appended to the list of warnings for the current application.</p>
+
+    <h3>Runtime</h3>
+    <p>Compiling a library import creates an instance of LzLibrary in
+    the main application.  LzLibrary has properties <code>url</code>
+    and <code>loaded</code> (boolean).  The
+    <code>library.load()</code> method loads the library, if it has
+    not already been loaded.  It does this by requesting the URI of
+    the library file from the server, similar to the way that
+    <code>Debug.eval()</code> is done now.</p>
+
+    <h2>Issues</h2>
+    <p>Resources and embedded fonts may be problematic.  Fonts may be
+    downright impossible.  Resources may or may not need to be turned
+    into requests even if they have static syntax.</p>
+
+  </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

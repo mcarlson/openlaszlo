@@ -1,0 +1,55 @@
+<!-- The debugger should show a sequence of lines, such that the values before and after the colon on each line are the same -->
+<!-- If this doesn't work, copy some more material from ../scope-tests.lzx to here -->
+<!-- TODO: [2003-01-14 ows] Rewrite to use lzunit -->
+<canvas debug="true">
+<script><![CDATA[
+function show(name, value, expected) {
+  if (true) {//expected) {
+    Debug.write(name + " == " + expected + ": " + value);
+  } else {
+    Debug.write(name + ": " + value);
+  }
+}
+
+var m="global"
+
+class C {
+  var m="instance"
+  function C() {
+    this.m = 'ctor'
+  }
+  function set(v) {
+    this.m = v;
+  }
+  function get() {
+    return this.m;
+  }
+}
+
+aC = new C()
+bC = new C()
+show('global', m, 'global')
+Debug.write('Expect "reference to undefined property m"');
+show('Class.m', C.m, '')
+show('aC.m', aC.m, 'ctor')
+show('aC.get()', aC.get(), 'ctor')
+aC.set('arg')
+show('aC.get()', aC.get(), 'arg')
+show('bC.get()', bC.get(), 'ctor')
+
+class D extends C {
+  function set(v) {
+    this.m = v+1;
+  }
+}
+
+aD = new D()
+aD.set(1)
+show('aD.get()', aD.get(), 2)
+
+]]></script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

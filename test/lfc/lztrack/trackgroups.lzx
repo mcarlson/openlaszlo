@@ -1,0 +1,112 @@
+<canvas debug="true">
+     <debug y="240"/>
+    <simplelayout inset="10" spacing="10"/>
+    <class name="trackview" bgcolor="${mycolor}"
+        clickable="true"
+        onclick="this.bringToFront()"
+        width="80" height="40">
+        <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
+        <attribute name="mycolor" value="0x000099"/>
+        <method event="oninit">
+             debug.write("LzTrack.register(" + this, this.trackgroup + ")");
+             LzTrack.register(this, this.trackgroup);
+        </method>
+        <method event="onmousetrackover">
+            setAttribute('bgcolor', 0x00dd00);
+            debug.write("onmousetrackover", this);
+        </method>
+        <method event="onmousetrackout">
+            setAttribute('bgcolor', this.mycolor);
+            debug.write("onmousetrackout", this);
+        </method>
+        <method event="onmousetrackup">
+            debug.write("onmousetrackup", this);
+        </method>
+    </class>
+
+    <text width="500" multiline="true">
+    The checkbox controls activating the group, so the track events will be
+    sent while the mouse is up.  In the left collumn there is a single group.
+    In the right collumn there are two groups (the blue squares over the
+    and the light blue rectangle).
+    </text>
+    <view>
+    <simplelayout axis="x" spacing="20"/>
+
+    <view>
+        <attribute name="trackgroup" value="one" type="string"/>
+        <simplelayout spacing="10"/>
+
+        <checkbox text="${'group: ' + parent.trackgroup}">
+            <method event="onvalue" args="v">
+                if (v) {
+                    debug.write('activate: '+parent.trackgroup);
+                    LzTrack.activate(parent.trackgroup);
+                } else {
+                    debug.write('deactivate: '+parent.trackgroup);
+                    LzTrack.deactivate(parent.trackgroup);
+                }
+            </method>
+        </checkbox>
+        <trackview id="t1"/>
+        <trackview id="t2"/>
+        <trackview id="t3"/>
+        <trackview id="t4"/>
+        <trackview id="t5"/>
+    </view>
+
+    <view>
+        <simplelayout spacing="10"/>
+
+        <checkbox text="${'groups: twoA and twoB'}">
+            <method event="onvalue" args="v">
+                if (v) {
+                    debug.write('activate: twoA and twoB');
+                    LzTrack.activate("twoA");
+                    LzTrack.activate("twoB");
+                } else {
+                    debug.write('deactivate: twoA and twoB');
+                    LzTrack.deactivate("twoA");
+                    LzTrack.deactivate("twoB");
+                }
+            </method>
+        </checkbox>
+        <view bgcolor="0xddddff" name="container" width="84">
+            <attribute name="trackgroup" value="twoA" type="string"/>
+            <method event="oninit">
+                 debug.write("LzTrack.register(" + this, this.trackgroup + ")");
+                 LzTrack.register(this, this.trackgroup);
+            </method>
+            <method event="onmousetrackover">
+                setAttribute('bgcolor', 0xdddd00);
+                debug.write("onmousetrackover", this);
+            </method>
+            <method event="onmousetrackout">
+                setAttribute('bgcolor', 0xddddff);
+                debug.write("onmousetrackout", this);
+            </method>
+            <method event="onmousetrackup">
+                debug.write("onmousetrackup", this);
+            </method>
+
+
+
+            <view x="4">
+                <attribute name="trackgroup" value="twoB" type="string"/>
+                <simplelayout spacing="5" inset="5"/>
+                <trackview id="b1"/>
+                <trackview id="b2"/>
+                <trackview id="b3"/>
+                <trackview id="b4"/>
+                <trackview id="b5"/>
+            </view>
+        </view>
+    </view>
+
+   </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

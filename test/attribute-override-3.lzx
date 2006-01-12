@@ -1,0 +1,79 @@
+<!-- 
+
+Attribute values which override (used-defined) superclass values in the CLASS tag of a class definition are not compiled with
+the correct type, because they are not looking at the superclass schema to get the type, but are defaulting
+to EXPRESSION, or whatever is in the base system schema for that attribute name.
+
+Test passed if you see  "passed" in green at the top of the screen.
+
+-->
+
+<canvas width="800" height="800">
+
+    <simplelayout axis="y" spacing="20" />
+
+    <class name="mywindow" width="300">
+    	<attribute name="title" value="my" type="string" when="once"/>
+    	<simplelayout axis="y" />
+        <attribute name="testprop" value="prop" type="string"/>
+        <attribute name="testprop2" value="prop2" type="string"/>
+        <attribute name="testprop3" value="prop3 is OK by me " type="string"/>
+        <method name="testCall" >
+            Debug.write( "test it and testprop is " + this.testprop );
+        </method>
+        <button onclick="this.parent.testCall()" >BaseClass mywindow</button>
+    </class>
+
+    <class name="mymywindow" extends="mywindow" title="mymy" testprop2="This is supposed to be a string">
+        <attribute name="testprop" value="interpreted Right Also" />
+        <attribute name="testprop3" value="interpretedRightAlso2" type="string" />
+        <attribute name="testprop4" value="259" type="number" />
+        <method name="closeWindow" >
+            Debug.write( "closeWindow in mymy" );
+            super.closeWindow();
+        </method>
+        <method name="testCall" >
+            Debug.write( "in the subclass testCall; testProp2 = " + this.testprop2);
+            Debug.write( "in the subclass testCall; testProp3 = " + this.testprop3);
+            Debug.write( "in the subclass testCall; testProp4 = " + this.testprop4);
+
+            super.testCall();
+        </method>
+        <button onclick="Debug.write( 'hi' )" >Subclass mymywindow</button>
+    </class>
+
+    <text id="result" resize="true"  x="400">Checking</text>
+    <!-- clicking on "baseclass" button will show the bug that "testprop2" is undefined, since
+         it was interpreted as type "expression" -->
+    <mymywindow name="m" bgcolor="red" oninit="checkresults()" >
+            <method name="checkresults" >
+            var passed = true;
+            if  (this.testprop != "interpreted Right Also") passed = false;
+            if (this.testprop3 !=  "interpretedRightAlso2") passed = false;
+            if (this.testprop4 !=  "259") passed = false;
+            result.settext(passed ? "passed" : "failed");
+            if (passed) {
+                result.setbgcolor(0xccffcc);
+            } else {
+                result.setbgcolor(0xffcccc);
+            }
+        </method>
+     </mymywindow>
+
+    <mywindow bgcolor="#cccccc" />
+
+    <mymywindow title="inst" testprop="instanceTestProp" bgcolor="green"
+                testprop2="This is Good">
+       <text multiline="true" width="${parent.width}" >Clicking on the
+"baseclass" button will show a correct value, "This is Good", because the
+attribute value in the call to the instance is being interpreted correctly
+with type STRING
+</text>
+</mymywindow>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

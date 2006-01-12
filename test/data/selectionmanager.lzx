@@ -1,0 +1,24 @@
+<canvas width="200" height="200">
+  <dataset name="mydata" type="http" src="http:../resources/xml/800_forms.xml" request="true"/>
+
+  <class name="selectme" onclick="immediateparent.selector.select(this)"
+         height="17" width="100" bgcolor="white">
+    <text datapath="text()"/>
+    <method name="setselected" args="isselected">
+      if (isselected) setAttribute('bgcolor', yellow);
+      else setAttribute('bgcolor', white);
+    </method>
+  </class>
+
+  <view height="70" clip="true">
+    <view>
+      <dataselectionmanager name="selector"/>
+      <selectme>
+        <datapath xpath="mydata:/resultset/row/reporter/" replication="lazy"/>
+      </selectme>
+      <simplelayout/>
+    </view>
+    <scrollbar/>
+  </view>
+</canvas>
+

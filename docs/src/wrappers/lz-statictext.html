@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Statictext">
+    <lztier>LZ Component</lztier>
+    <lzcategory>text</lzcategory>
+    <lzshortdesc>
+    text component that uses the default component font and fontsize
+    </lzshortdesc>
+    <lztag>base/statictext.xml</lztag>
+</lzelement>
+
+<p>The <tagname>statictext</tagname> tag provides a text field which
+has a look and feel to match the lz component set, even when the
+canvas font has been changed.  It can accept any text attribute.
+</p> 
+
+<example id="statictext-1" title="Example use of statictext">
+&lt;canvas height="100" font="conga" layout="axis: y"&gt;
+  &lt;font name="conga" src="congab.ttf"/&gt;
+  &lt;include href="base/basecomponent.lzx" /&gt;
+  &lt;text&gt;text in app default font (Conga)&lt;/text&gt;
+  &lt;statictext&gt;text in component default font&lt;/statictext&gt;
+&lt;/canvas>
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

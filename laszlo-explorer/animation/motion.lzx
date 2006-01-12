@@ -1,0 +1,29 @@
+<canvas>
+  <view bgcolor="#666699"
+        x="120" y="120" 
+        width="170" height="200" >
+    <text fgcolor="#FFFFFF" align="center">Shopping Cart</text>
+  </view>
+  
+  <view name="item" y="10" resource="cd_cover.jpg">
+  
+    <animatorgroup name="linear_move" process="simultaneous"
+                   start="false"  duration="700" >
+      <animator attribute="x" from="0" to="130" />
+      <animator attribute="y" from="10" to="250"/>
+    </animatorgroup>
+    
+    <animatorgroup name="bending_move" process="simultaneous"
+                   start="false" duration="700" >
+      <animator attribute="x" from="0"  to="130" />
+      <animator attribute="y" from="10" to="250" motion="easein"/>
+    </animatorgroup>
+    
+  </view>
+  
+  <view y="350" x="20">
+    <simplelayout axis="x" spacing="5" />
+    <button onclick="item.linear_move.doStart()">Linear Move</button>
+    <button onclick="item.bending_move.doStart()">Bending Move</button>
+  </view>
+</canvas>

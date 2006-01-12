@@ -1,0 +1,23 @@
+<canvas>
+  <script>
+    function f() {
+      var tstring = ' ';
+      for (var i in {a: 1, b: 2}) {
+        tstring = tstring + i + ' ';
+      }
+      for (var i in [3, 4]) {
+        tstring = tstring + i + ' ';
+      }
+      return tstring;
+    }
+  </script>
+  <view oninit="out.setText(f())" bgcolor="yellow">
+    <simplelayout/>
+    <text>expecting: a, b, 1, 0</text>
+    <text id="out"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

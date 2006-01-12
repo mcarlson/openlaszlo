@@ -1,0 +1,13 @@
+<canvas> 
+  <debug y="100" />
+  <dataset name="ds"> 
+    <item>foo</item>
+  </dataset> 
+  
+  <view name="pp"> 
+    <attribute name="what" value="item" type="string" />
+    <text datapath="ds:/" text="$path{parent.what}" /> 
+  </view> 
+
+  <simplelayout/> 
+</canvas> 

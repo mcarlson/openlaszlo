@@ -1,0 +1,138 @@
+<!--=======================================================================-->
+<!-- citydata.xml                                                          -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--                                                                       -->
+<!-- Data Structure                                                        -->
+<!-- x & y:  position of city 'dot' on map                                 -->
+<!-- labelposition: 2-label appears above the dot centered                 -->
+<!--                3-label appears to the right of the dot                --> 
+<!--                4-label appears below the dot centered                 --> 
+<!--                1-label appears to the left of the dot                 --> 
+<!-- timezoneoffset: the diff amount from GMT time when daylight savings   -->
+<!--                 is not in effect.                                     -->
+<!-- dst_start: Start date for daylight savings, month(0-11),day,hour,min  -->
+<!-- dst_end:     End date for daylight savings, month(0-11),day,hour,min  -->
+<!--=======================================================================-->
+
+<cities>
+	<city x="36" y="79" labelposition="2" timezoneoffset="-8"
+              dst_start="3,6,2,0" dst_end="9,26,2,0">
+		<name>San Francisco</name>
+	</city>
+
+	<city x="131" y="71" labelposition="3" timezoneoffset="-5"
+              dst_start="3,6,2,0" dst_end="9,26,2,0">
+		<name>Boston</name>
+	</city>
+
+	<city x="259" y="50" labelposition="1" timezoneoffset="0"
+              dst_start="2,30,1,0" dst_end="9,26,2,0">
+		<name>London</name>
+	</city>
+
+	<city x="21" y="31" labelposition="3" timezoneoffset="-9"
+              dst_start="3,6,2,0" dst_end="9,26,2,0">
+		<name>Anchorage</name>
+	</city>
+	<city x="123" y="80" labelposition="4" timezoneoffset="-5"
+              dst_start="3,6,2,0" dst_end="9,26,2,0">
+		<name>New York City</name>
+	</city>
+	<city x="100" y="72" labelposition="2" timezoneoffset="-6"
+              dst_start="3,6,2,0" dst_end="9,26,2,0">
+		<name>Chicago</name>
+	</city>
+	<city x="65" y="123" labelposition="1" timezoneoffset="-6"
+              dst_start="3,6,2,0" dst_end="9,26,2,0">
+		<name>Mexico City</name>
+	</city>
+        <!-- No DST -->
+	<city x="113" y="159" labelposition="1" timezoneoffset="-5"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Bogota</name>
+	</city>
+        <!-- No DST -->
+	<city x="153" y="249" labelposition="4" timezoneoffset="-3"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Buenos Aires</name>
+	</city>
+        <!-- No DST -->
+	<city x="227" y="134" labelposition="1" timezoneoffset="0"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Dakar</name>
+	</city>
+	<city x="265" y="57" labelposition="4" timezoneoffset="1"
+              dst_start="2,30,2,0" dst_end="9,26,3,0">
+		<name>Paris</name>
+	</city>
+	<city x="282" y="50" labelposition="3" timezoneoffset="1"
+              dst_start="2,30,2,0" dst_end="9,26,3,0">
+		<name>Berlin</name>
+	</city>
+	<city x="282" y="72" labelposition="3" timezoneoffset="1"
+              dst_start="2,30,2,0" dst_end="9,26,3,0">
+		<name>Rome</name>
+	</city>
+	<city x="320" y="98" labelposition="1" timezoneoffset="2"
+              dst_start="3,25,0,0" dst_end="8,26,0,0">
+		<name>Cairo</name>
+	</city>
+	<city x="346" y="91" labelposition="3" timezoneoffset="3"
+              dst_start="3,1,3,0" dst_end="9,1,4,0">
+		<name>Baghdad</name>
+	</city>
+        <!-- No DST -->
+	<city x="338" y="172" labelposition="1" timezoneoffset="3"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Nairobi</name>
+	</city>
+        <!-- No DST -->
+	<city x="317" y="226" labelposition="1" timezoneoffset="2"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Johannesburg</name>
+	</city>
+        <!-- No DST -->
+	<city x="405" y="123" labelposition="1" timezoneoffset="5.5"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Bombay</name>
+	</city>
+        <!-- No DST -->
+	<city x="459" y="133" labelposition="1" timezoneoffset="7"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Bangkok</name>
+	</city>
+        <!-- No DST -->
+	<city x="468" y="163" labelposition="1" timezoneoffset="8"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Singapore</name>
+	</city>
+	<city x="531" y="250" labelposition="1" timezoneoffset="10"
+              dst_start="9,26,2,0" dst_end="2,30,3,0">
+		<name>Melbourne</name>
+	</city>
+        <!-- No DST -->
+	<city x="483" y="115" labelposition="3" timezoneoffset="8"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Hong Kong</name>
+	</city>
+        <!-- No DST -->
+	<city x="476" y="73" labelposition="1" timezoneoffset="8"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Beijing</name>
+	</city>
+        <!-- No DST -->
+	<city x="500" y="83" labelposition="4" timezoneoffset="9"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Seoul</name>
+	</city>
+        <!-- No DST -->
+	<city x="523" y="85" labelposition="3" timezoneoffset="9"
+              dst_start="3,6,2,0" dst_end="3,6,2,0">
+		<name>Tokyo</name>
+	</city>
+
+</cities>

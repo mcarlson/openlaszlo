@@ -1,0 +1,26 @@
+<canvas debug="true">
+    <debug y="200"/>
+    <dataset name="myds">
+        <people>
+            <person name="dad" glasses="yes"/>
+            <person name="mike" glasses="yes"/>
+            <person name="veronica" glasses="no"/>
+            <person name="cj" glasses="soon"/>
+            <person name="adam" glasses="sometimes"/>
+            <person name="owen" glasses="no"/>
+        </people>
+    </dataset>
+
+    <view name="pop" bgcolor="red"
+          height="20" width="${inp.getText()}"/>
+    <inputtext name="inp">20</inputtext>
+    <text name="t1" text="${inp.getText()}"></text>
+    <text name="t2" text="${t1.getText()}"></text>
+    <view bgcolor="blue" x="${t2.getTextWidth()}" width="4" height="10"/>
+
+    <simplelayout/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

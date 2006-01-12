@@ -1,0 +1,22 @@
+<canvas>
+    <include href="utils/layouts/alllayouts.lzx" />
+    <font src="helmetr.ttf" name="Helvetica"/>
+    <font src="helmetb.ttf" style="bold" name="Helvetica"/>
+    <font src="helmeti.ttf" style="italic" name="Helvetica"/>
+    <font src="helmetbi.ttf" style="bold italic" name="Helvetica"/>
+<view><simplelayout axis="y" spacing="10"/>
+<text font="Helvetica"><b>b</b> <i>i</i> <b><i>bi</i></b> <u>u</u> <b><u>bu</u></b> <i><u>iu</u></i> <b><i><u>biu</u></i></b></text>
+<text>Text containing <method name="f">return "Ignore this method"</method>method and <attribute name="p" value="'ignored'"/>value tags.</text>
+<text>Character entities: &lt;, &gt;, and &amp;.</text>
+<text>
+Multiline text
+preceded and followed
+by
+whitespace.
+</text>
+</view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

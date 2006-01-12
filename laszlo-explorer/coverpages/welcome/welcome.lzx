@@ -1,0 +1,145 @@
+<!--=======================================================================-->
+<!-- welcome.lzx                                                           -->
+<!--                                                                       -->
+<!-- Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas width="600" height="640"  bgcolor="#EAEAEA" >
+    <include href="clock.lzx"/>
+    <include href="cityspot.lzx"/>
+
+    <!-- DATA -->
+    <dataset src="citydata.xml" name="cities"/>
+
+    <!-- FONTS -->
+    <font src="bitstream-vera-1.10/verabd.ttf" name="headerfont"/>
+    <font name="Helmet">
+        <face src="helmetr.ttf" />
+        <face src="helmetb.ttf"  style="bold" />
+    </font>
+
+    <simplelayout/>
+
+    <view >
+        <view initstage="early" resource="images/loadingclock_nofade.swf">
+            <method event="oninit" reference="canvas">
+                this.destroy();
+            </method>
+        </view>
+
+        <!-- SECONDTIMER: an object that sends out an 'onsecond' event -->
+        <node id="secondtimer" >
+            <!-- trigger the initial animation on the oninit of the canvas.
+                 this helps in the krank process so that the initial time that the app
+                 get's is not stored in internal variables causing two animations to occur. -->
+            <method event="oninit" reference="canvas">
+               this.del = new LzDelegate ( this, "tick" );
+               LzTimer.addTimer( this.del, 1000 );
+             </method>
+            <method name="tick" >
+               this.onsecond.sendEvent();
+               LzTimer.addTimer( this.del, 1000 );
+            </method>
+        </node>
+
+
+        <!-- 'Laszlo (R) Presentation Server' -->
+        <view x="15" y="20" layout="axis:y; spacing:1">
+            <view>
+                <view resource="images/openlaszlo_blue_logo.png" /> 
+            </view>
+            <view id="headerline" width="560" height="1" bgcolor="0x394660"/>
+        </view>
+        
+        <!-- 'Designed for developers. Developed for Design' -->
+        <text x="15" y="48" fontstyle="bold" fgcolor="0x394660" >The premier open source platform for rich Internet applications</text>
+        <view x="15" y="64" layout="spacing:10">
+
+            <!-- descriptive text -->
+            <text fgcolor="0x394660" multiline="true"
+                width="560">
+                Welcome to Laszlo, the open source XML-native
+                platform for building rich Internet applications.  Laszlo technology
+                allows you to create a new generation of web applications with a breakthrough user experience.
+                We built this Explorer to quickly introduce you to the power and flexibility of the Laszlo Platform.
+                <br/><br/>Explore and enjoy!
+            </text>
+
+            <view id="clockintro" layout="axis:y" >
+                <text fgcolor="0x394660" fontstyle="bold">Laszlo World Clock</text>
+                <text fgcolor="0x394660" multiline="true" width="178">
+                This sample Laszlo application displays time around the world.
+                Check out the Demos and Sample Applications sections for more Laszlo examples,
+                read the Developers Guide, and start creating your own Laszlo Applications.
+                </text>
+            </view>
+        </view>
+
+        <!-- MAP -->
+        <view id="map" x="15" y="${clockintro.parent.y + clockintro.parent.height + 10}" >
+            <view resource="images/lps_map.png" />
+
+            <!-- This instance is duplicated for each record contained in citydata.xml. -->
+            <cityspot id="citySpotSF"     datapath="cities:/cities/city[1]" />
+            <cityspot id="citySpotBoston" datapath="cities:/cities/city[2]" />
+            <cityspot id="citySpotLondon" datapath="cities:/cities/city[3]" />
+            <cityspot datapath="cities:/cities/city" />
+        </view>
+
+        <!-- CLOCKS -->
+        <view name="clocks" x="199" y="${clockintro.y + clockintro.parent.y + 14}" >
+
+            <!-- synced to SF permanetly -->
+            <view layout="axis:y; spacing:4">
+                <view layout="axis:y"  width="100%">
+                    <text fgcolor="0x394660" fontstyle="bold" resize="true" align="center">Laszlo Systems</text>
+                    <text fgcolor="0x394660" resize="true" align="center">San Francisco</text>
+                </view>
+                <clock>
+                    <method event="oninit" reference="canvas" >
+                        citySpotSF.syncclock( this )
+                    </method>
+                </clock>
+            </view>
+
+            <!-- synced to BOSTON permanetly -->
+            <view layout="axis:y; spacing:4">
+                <view layout="axis:y" width="100%">
+                    <text fgcolor="0x394660" fontstyle="bold" resize="true" align="center">Laszlo Systems</text>
+                    <text fgcolor="0x394660" resize="true" align="center">Boston</text>
+                </view>
+                <clock >
+                    <method event="oninit" reference="canvas" >
+                        citySpotBoston.syncclock( this )
+                    </method>
+                </clock>
+            </view>
+
+            <!-- synced to user's choice -->
+            <view layout="axis:y; spacing:4" y="-10" >
+                <text fgcolor="0x394660" fontstyle="bold"  id="myclocktext"
+                    resize="true" align="center">London</text>
+                <clock id="myclock"  >
+                    <attribute name="width" value="${this.unstretchedwidth*.6}" />
+                    <method event="oninit" reference="canvas" >
+                        citySpotLondon.activateclock( this )
+                    </method>
+                </clock>
+            </view>
+            <simplelayout axis="x" spacing="20" />
+        </view>
+
+        <!-- copyright art -->
+        <view resource="images/copyright_text.swf" x="15" y="${map.y+310}" />
+
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

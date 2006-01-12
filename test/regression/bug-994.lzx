@@ -1,0 +1,15 @@
+<canvas width="128" height="128">
+  
+  <resource name="face"  src="../resources/png/face.png"/>
+  <resource name="hour" src="../resources/png/hour.png"/>
+  <resource name="minute" src="../resources/png/minute.png"/>
+  
+  <view x="10" y="10" resource="face"/>
+  <view x="64" y="64" resource="minute" oninit="this.animate('rotation',36000, 10000,'true');"/>
+  <view x="64" y="64"  resource="hour" oninit="this.animate('rotation',360,     10000,'true');"/>
+  
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

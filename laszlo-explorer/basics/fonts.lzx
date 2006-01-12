@@ -1,0 +1,11 @@
+<canvas width="200">
+  <font name="helmet" src="helmetb.ttf"/>
+  
+  <simplelayout axis="y" spacing="8"/>
+  
+  <text font="helmet" 
+        fontsize="20" 
+        fgcolor="#175DDE">Where to Begin</text>
+  
+  <view resource="cd_cover.jpg"/>
+</canvas>

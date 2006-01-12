@@ -1,0 +1,116 @@
+<library>
+  <!-- test the 'nsprefix' option, to preserve namespace information in data compiler -->
+    <include href="lzunit/lzunit.lzx" />
+
+    <!-- default value of nsprefix -->
+    <dataset name="dds" src="http:namespace.xml"                    request="true" type="http" />
+
+    <!-- nsprefix = false -->
+    <dataset name="lds" src="http:namespace.xml"   nsprefix="false" request="true" type="http" />
+
+    <!-- nsprefix = true -->
+    <dataset name="ldsns" src="http:namespace.xml" nsprefix="true"  request="true" type="http" />
+
+    <!-- top level dataset, inline compile-time inclusion -->
+    <dataset name="topds" src="namespace.xml" nsprefix="false" />
+    <dataset name="topdsns" src="namespace.xml" nsprefix="true" />
+
+    <!--
+    <text datapath="lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/>
+    -->
+
+    <class name="TestNamespace" extends="TestCase">
+        <attribute name="dp2ready" value="false"/>
+        <attribute name="t2del" value="false"/>
+        <attribute name="waitcnt" value="0"/>
+
+        <datapointer xpath="lds:/persons" name="dp1" />
+        <datapointer xpath="ldsns:/persons" name="dp2" ondata="parent.dp2ready = true"/>
+
+
+        <!-- test compiled-in data sets -->
+        <datapointer xpath="topds:/persons" name="dp3" />
+        <datapointer xpath="topdsns:/persons" name="dp4" />
+
+        <!-- local dataset, default nsprefix value -->
+        <dataset name="localdsdefault" src="namespace.xml"/>
+
+
+        <!-- local dataset, no namespace prefix -->
+        <dataset name="localds" src="namespace.xml" nsprefix="false"/>
+
+
+        <!-- local dataset, namespace prefix -->
+        <dataset name="localdsns" src="namespace.xml" nsprefix="true"/>
+
+
+        <method name="test2">
+            if ( ! this.dp2ready ){
+                if ( ! this.t2del ){
+                    Debug.write( "test isn't done until async test runs" );
+                    this.t2del = new LzDelegate( this , 'test2' );
+                }
+
+                if ( this.waitcnt++ > 100 ){
+                    fail( "Didn't get async data" );
+                } else {
+                    LzIdle.callOnIdle( this.t2del );
+                }
+                return;
+            }
+
+            Debug.write( 'running async test for loaded data' );
+            this.doIt( 'http', dp1, dp2 );
+            this.doIt( 'static', dp3, dp4 );
+        </method>
+
+        <method name="doIt" args="dtype, dp, dpns">
+            <![CDATA[
+            assertTrue( true );
+
+            Debug.write("type of dataset", dtype);
+            Debug.write("dp", dp);
+            Debug.write("dpns", dpns);
+
+            assertEquals(  'jonny' , dp.xpathQuery( 'person[1]/@name' ) );
+            assertEquals(  'Jeff' , dp.xpathQuery( 'person[4]/firstName/text()' ));
+
+            assertEquals(  'jonny' , dpns.xpathQuery( 'foo:person[1]/@name' ) );
+            assertEquals(  'Jeff' , dpns.xpathQuery( 'person[2]/firstName/text()' ));
+
+
+            assertEquals(  'jonny' , this.localdsdefault.getPointer().xpathQuery( '/persons/foo:person[1]/@name' ) );
+            assertEquals(  'Jeff' ,  this.localdsdefault.getPointer().xpathQuery( '/persons/person[2]/firstName/text()' ));
+
+            Debug.write("localds", this.localds);
+            assertEquals( 4 , this.localds.getPointer().xpathQuery( "/persons/person" ).length ) ;
+            assertEquals( 2 , this.localdsns.getPointer().xpathQuery( "/persons/person" ).length ) ;
+
+
+            // with namespace prefixes, attribute named "name" and "secret:name" are different
+            // xpath parsing of attribute names with prefixes is broken
+            // assertEquals(  'freddy' , dpns.xpathQuery( 'foo:person[1]/@secret:name' ) );
+
+            assertEquals(  'bret' , dpns.xpathQuery( 'foo:person[2]/@name' ) );
+            // assertEquals(  'bart' , dpns.xpathQuery( 'foo:person[2]/@secret:name' ) );
+
+
+
+            // with namespace prefixes stripped, you will get three matches
+            assertEquals( 4 , dp.xpathQuery( "person/firstName/text()" ).length ) ;
+            // with prefixes enabled, you'll get only two matches
+            assertEquals( 2 , dpns.xpathQuery( "person/firstName/text()" ).length ) ;
+            // with prefixes will also match one foo:person
+            assertEquals( 2 , dpns.xpathQuery( "foo:person/firstName/text()" ).length ) ;
+
+
+            ]]>
+            
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

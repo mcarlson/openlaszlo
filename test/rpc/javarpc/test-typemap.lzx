@@ -1,0 +1,130 @@
+<library>
+
+    <include href="lzunit"/>
+    
+    <dataset name="typemap_methods">
+        <methods>
+            <call name="getString" return="string" />
+            <call name="getList" return="object" tester="inspectList"/>
+            <call name="getBool" return="boolean"/>
+            <call name="getInt" return="number"/>
+            <call name="getDouble" return="number"/>
+            <call name="getObject" return="object" tester="inspectObject"/>
+            <call name="getProperties" return="object" tester="inspectObject"/>
+            <call name="getVoid" tester="inspectVoid" />
+        </methods>
+    </dataset>
+    
+    <class name="inspector" extends="remotecall">
+        <attribute name="exp_type" type="string"/>
+        
+        <method event="ondata" args="d">
+            parent.parent.assertEquals(this.exp_type, typeof(d))
+        </method>
+        
+        <method event="onerror" args="msg">
+            parent.onerror.sendEvent("in " + this.name + " >>> " + msg)
+        </method>
+    </class>
+
+    <class name="TypeMapSyncTester" extends="SyncTester">
+
+        <method name="inspect" args="res">
+            var prefix = "in " + this.current_method 
+            if (res.status == 'ok') {
+                assertEquals(cur_meth.xpathQuery('@return'), typeof(res.data), prefix)
+            } else {
+                types.onerror.sendEvent(prefix + " >>> " + res.message)
+            }
+        </method>
+        
+        <method name="inspectList" args="res">
+            inspect(res)
+            assertNotUndefined(res.data.length)
+        </method>
+
+        <method name="inspectObject" args="res">
+            inspect(res)
+            var nprop = 0
+            for (var n in res.data)
+                ++nprop;
+            assertFalse(nprop == 0)
+        </method>
+        
+        <method name="inspectVoid" args="res">
+            // void type should be LzRPC.t_void object
+            if (res.status == 'ok') {
+                assertEquals(res.data, LzRPC.t_void);
+            }
+        </method>
+        
+
+        <!-- don't run testBegin..wait til after javarpc proxy is loaded -->
+        <method name="testBegin" />
+
+        <!-- Argument mapping testers -->
+        <method name="runArgMappingsTest">
+            with (types) {
+                callWithArg.invoke( [ 'foo', 'String' ] );
+                callWithArg.invoke( [ 'foo', 'Object' ] );
+
+                callWithList.invoke( [ [ 10 ] ] );
+                callWithList.invoke( [ [ 46, {foo: 'hmm'}, ['a', 'b', 'c'] ] ] );
+                callWithList.invoke( [ [4, 215, 57] ] );
+
+                callWithMap.invoke( [ { foo: 367, bar: 'blah' } ] );
+
+                callWithBoolean.invoke( [ true ] )
+                callWithInt.invoke( [ 713 ] )
+                callWithDouble.invoke( [ 4642.532356443E+8 ] )
+                callWithInt.invoke( [ new Number(311) ] )
+                callWithDouble.invoke( [ new Number(4642.532356443E+8) ] )
+            }
+        </method>
+
+        <method name="callNext">
+            if ( ! this['del'] ) {
+                this.del = new LzDelegate(this, '_handler'); 
+            }
+            this.tested_object[current_method]([], this.del);
+        </method>
+
+
+        <javarpc name="types" scope="session"
+                 classname="org.openlaszlo.test.xmlrpc.TypeMap">
+
+            <inspector funcname="callWithArg"     exp_type="boolean"/>
+            <inspector funcname="callWithBoolean" exp_type="boolean"/>
+            <inspector funcname="callWithInt"     exp_type="boolean"/>
+            <inspector funcname="callWithDouble"  exp_type="boolean"/>
+            <inspector funcname="callWithMap"     exp_type="boolean"/>
+            <inspector funcname="callWithList"    exp_type="boolean"/>
+
+            <method event="onerror" args="err">
+                canvas.setAttribute('runTests', canvas.runTests + 1)
+                parent.error(err)
+            </method>
+
+            <method event="onload">
+                parent.assertTrue(this['proxy'])
+                var dp = parent.cur_meth.dupePointer()
+                do {
+                    // Assert that remote function prototypes exist in proxy stub.
+                    parent.assertTrue(typeof(this.proxy[dp.xpathQuery('@name')]) == 'function');
+                } while (dp.selectNext())
+
+                // we have to wait until proxy is loaded before running tests
+                parent.runArgMappingsTest();
+
+                parent.setAttribute('tested_object', this.proxy);
+                parent.callNext();
+            </method>
+        </javarpc>
+
+    </class>
+
+</library>      
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

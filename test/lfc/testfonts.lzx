@@ -1,0 +1,66 @@
+<!-- make sure that font info is propagated when a class is instantiated. -->
+ <canvas width="800" height="800">
+    <include href="utils/layouts/alllayouts.lzx" />
+    <splash />
+
+    <font name="Arioso" src="ariosor.ttf" />
+    <font name="Times Roman" src="timmonsr.ttf" />
+
+
+    <!-- basic font propagation -->
+    <simplelayout />
+    <view font="Arioso">
+        <view fontsize="24">
+            <!-- should be arioso bold 24 -->
+            <inputtext fontstyle="bold" > Arioso bold 24 
+            </inputtext>
+        </view>
+    </view>
+
+    <!-- class is a inputtext -->
+    <class name="isa" extends="inputtext" />
+    <view font="Arioso">
+        <view fontsize="24">
+            <!-- should be arioso bold 24 -->
+            <isa fontstyle="bold" > Arioso bold 24 
+            </isa>
+        </view>
+    </view>
+
+    <!-- class has a inputtext -->
+    <class name="hasa" bgcolor="red" >
+        <inputtext>Arioso bold 24</inputtext> 
+    </class>
+    <view font="Arioso">
+        <view fontsize="24" fontstyle="bold" >
+            <hasa/>
+        </view>
+    </view>
+
+    <!-- class changes font info -->
+    <class name="changes" font="Times Roman" >
+    </class>
+    <view font="Arioso">
+        <changes fontsize="24">
+            <!-- should be Times Roman bold 24 -->
+            <inputtext fontstyle="bold" > Times Roman bold 24 
+            </inputtext>
+        </changes>
+    </view>
+
+    <!-- class changes font info and has a font-->
+    <class name="hardest" font="Times Roman" >
+        <inputtext fontstyle="bold" >Times Roman bold size unset</inputtext> 
+    </class>
+    <view font="Arioso" fontstyle="plain">
+        <!-- should be Times Roman bold 30 -->
+        <hardest fontsize="30" />
+    </view>
+
+    
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

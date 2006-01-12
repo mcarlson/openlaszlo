@@ -1,0 +1,25 @@
+<canvas>
+    <view width="200">
+        <simplelayout spacing="5"/>
+        <view name="foo" bgcolor="blue" width="200" height="100"
+              clickable="true">
+            <text valign="middle" align="center" 
+                    label="Click to change bgcolor" fgcolor="0xffffff"/>
+            <method event="onclick">
+            <![CDATA[
+                    setAttribute('bgcolor', bgcolor << 1)
+                    debug.write('bgcolor is now ' + bgcolor)
+            ]]>
+            </method>
+        </view>
+        <view name="tcol" width="100" bgcolor="${parent.foo.bgcolor}" 
+              height="25" onclick="setAttribute('bgcolor', parent.foo.bgcolor)">
+            <text valign="middle" align="center" 
+                label="Click to sync bgcolor" fgcolor="0xffffff"/>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

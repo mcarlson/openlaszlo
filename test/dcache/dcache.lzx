@@ -1,0 +1,72 @@
+<!--===================================================================-->
+<!-- 1. Clear server data cache. (lzt=clearcache)                      -->
+<!-- 2. Run this test case.                                            -->
+<!-- 3. Check to see if data cache has been populated. (lzt=cacheinfo) -->
+<!-- 4. Click the 'request two' button.                                -->
+<!-- 5. Check cache info again. Data cache size should have grown.     -->
+<!--===================================================================-->
+
+<canvas debug="true" oninit="debug.setX(30);debug.setY(100)" >
+
+    <dataset type="http" name="one" request="true" src="one.xml" 
+        cacheable="true" getresponseheaders="false"/>
+    <dataset type="http" name="two" src="two.xml" 
+        cacheable="true" getresponseheaders="false"/>
+
+    <datapointer xpath="one:/" 
+        onerror="Debug.write(this.getDataset().getErrorString())" 
+        oninit="Debug.write( 'Dataset for ' + this + ' : ' + this.getDataset() )" >
+
+        <method event="ondata">
+            Debug.write("proc data in : "+ this);
+            if (this.getDataset().getStatusCode() != 200) {
+                return;
+            }
+
+            Debug.write("Load time: "+ this.getDataset().getLoadTime());
+            <!-- List headers -->
+            Debug.write("HTTP status: "+ this.getDataset().getStatusCode());
+            Debug.write("Date: " +
+                        this.getDataset().getResponseHeader('Date'));
+            var h = this.getDataset().getAllResponseHeaders();
+
+            Debug.write( h.serialize( '=' , '\n' ) );
+            
+            this.selectChild();
+            Debug.write( this.serialize() );
+        </method>
+
+    </datapointer>
+
+    <button onclick="canvas.two.doRequest()">request two
+        <datapointer xpath="two:/" 
+            onerror="Debug.write(this.getDataset().getErrorString())" 
+            oninit="Debug.write( 'Dataset for ' + this + ' : ' + this.getDataset() )" >
+
+            <method event="ondata">
+                Debug.write("proc data in : "+ this);
+                if (this.getDataset().getStatusCode() != 200) {
+                    return;
+                }
+
+                Debug.write("Load time: "+ this.getDataset().getLoadTime());
+                <!-- List headers -->
+                Debug.write("HTTP status: "+ this.getDataset().getStatusCode());
+                Debug.write("Date: " +
+                            this.getDataset().getResponseHeader('Date'));
+                var h = this.getDataset().getAllResponseHeaders();
+
+                Debug.write( h.serialize( '=' , '\n' ) );
+                
+                this.selectChild();
+                Debug.write( this.serialize() );
+            </method>
+
+        </datapointer>
+    </button>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

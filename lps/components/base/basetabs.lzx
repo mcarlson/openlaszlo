@@ -1,0 +1,558 @@
+<library>
+    <include href="base/baselistitem.lzx" />
+    <include href="base/baselist.lzx" />
+
+    <!-- =============== -->
+    <!--  BASETAB CLASS  -->
+    <!-- =============== -->
+
+    <!--- The base tab class. This class is to be used only in conjunction with
+          basetabs and basetabapane classes. You can pass the name of this class
+          in the 'tabclass' attribute of basetabpane, tabpane, basetabs, and
+          tabs classes. Basetabs uses this class as its default 'tabclass'. -->
+    <class name="basetab" extends="baselistitem" clickable="true" 
+        focusable="true">
+
+        <!--- The tabpane associated with this tab.
+              @keywords readonly -->
+        <attribute name="tabpane" value="null" type="expression" />
+
+        <!--- The name of this tab. This is constrained to the tabpane's
+              text. 
+              @keywords readonly -->
+        <attribute name="text" value="${this.tabpane.text}" type="text"/>
+
+        <!--- @keywords private -->
+        <method event="onconstruct">
+            this.tpDestroyDel = new LzDelegate(this, 'destroy' , 
+                                               this.tabpane, 'ondestroy' );
+        </method>
+
+        <!--- @keywords private -->
+        <method name="init">
+        <![CDATA[
+            super.init();
+
+            // If I'm selected, tell my parent to select me. Basetabs cannot exist
+            // w/o basetabpanes, so not necessary to check for existence.
+            if (parent instanceof basetabsbar && tabpane.selected) {
+                parent.select(this);
+            }
+
+            // clear out tabpane's selected argument (so as not to confuse)
+            this.tabpane.setAttribute('selected', null);
+        ]]>
+        </method>
+
+        <!--- @keywords private -->
+        <method name="destroy">
+        <![CDATA[
+            if (parent instanceof basetabsbar && parent._initcomplete) {
+                // We need to move selected to another tab
+                if (parent._selector.selected[0] == this) {
+                    if (parent.subviews.length == 1) {
+                        // select no one if this is last
+                        parent._selector.setAttribute('selected', null);
+                    } else {
+                        // set to first tab that isn't me
+                        var myTab = parent.subviews[0];
+                        if (myTab == this) myTab = parent.subviews[1];
+
+                                                myTab.setSelected(true);
+                        parent._selector.setAttribute('selected', [myTab]);
+                    }
+                }
+            }
+            super.destroy();
+        ]]>
+        </method>
+
+        <!--- Used with keyboard navigation. Selects this tab with the space
+              bar.
+              @keywords private -->
+        <method name="doSpaceUp">
+            this.setAttribute( 'selected' , true );
+        </method>
+
+        <!--- Deprecated: this method is unused.
+              @keywords private -->
+        <method name="setText" args="t">
+            this.setAttribute( 'text' , t );
+        </method>
+
+        <!--- Selects and makes this tab's corresponding tabpane visible.
+              @param Boolean s: true if selected, otherwise false. -->
+        <method name="setSelected" args="s">
+        <![CDATA[
+            if (s) {
+                if (this.tabpane['content'] != null) {
+                    this.tabpane.content.completeInstantiation();
+                }
+                this.setAttribute("clickable",false);
+                this.tabpane.setVisible(true);
+                this.setAttribute ('focusable' , false );
+            } else {
+                this.setAttribute("clickable",true);
+                this.tabpane.setVisible(false);
+                this.setAttribute ('focusable' , true );
+            }
+            super.setSelected(s);
+        ]]>
+        </method>
+
+    </class> <!-- class basetab -->
+
+    <!-- =================== -->
+    <!--  BASETABSBAR CLASS  -->
+    <!-- =================== -->
+
+    <!--- This class is a container for basetab items. It must be a child of
+          basetabs. The default layout for its subviews is "class: simplelayout;
+          axis: x; spacing: 0". You can pass the name of this class in the
+          'barclass' attribute of tabpane, basetabpane, basetabs, and
+          tabs. Basetabs uses this class as its default 'barclass'. -->
+    <class name="basetabsbar" extends="baselist" itemclassname="basetab" 
+           layout="class: simplelayout; axis: x; spacing: 0">
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            var sel = this.getSelection();
+            if (!sel) {
+                subviews[0].setAttribute('selected', true);
+            }
+        </method>
+
+        <!--- Override select for tabsbar since we want to select the item, not
+              the item's value.
+              @keywords private -->
+        <method name="select" args="item" >
+            if (item == null) return;
+            if (this._initcomplete) {
+                this._selector.select(item);
+                this.setAttribute("value", item );
+                relayerTabs();
+                item.updateDefault();
+            } else {
+                this._initialselection = item;
+            }
+            // turn off doesenter when selected so that default buttons work 
+            this.setAttribute( 'doesenter', false );
+        </method>
+
+        <!--- Relayers all tabs so that they look correct when one is selected.
+              @keywords private -->
+        <method name="relayerTabs">
+        <![CDATA[
+            // Iterate through tabs in order of appearance, sending every tab to
+            // back except for the selected tab, which will be brought to front.
+            for (var i=0; i < this.subviews.length; i++) {
+                var sv = this.subviews[i];
+                if (sv["selected"]) {
+                    sv.bringToFront();
+                } else {
+                    sv.sendToBack();
+                }
+            }
+        ]]>
+        </method>
+
+    </class> <!-- class basetabsbar -->
+
+    <!-- ==================== -->
+    <!--  BASETABPANECONTENT  -->
+    <!-- ==================== -->
+    <!--- This is the content of a basetabpane.
+          @keywords private -->
+    <class name="basetabpanecontent"
+           x="${parent.inset_left}" y="${parent.inset_top}">
+
+        <!--- Set this to force a determinePlacement call.
+              @keywords private readonly -->
+        <attribute name="defaultplacement" value="_null_" type="string"/>
+
+        <!--- @keywords private -->
+        <method name="determinePlacement" args="v , p ">
+            v.parent = this.parent;
+            return this;
+        </method>
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            _recalculateContentWidth();
+            _recalculateContentHeight();
+            this._contentWDel = 
+                new LzDelegate(this, "_recalculateContentWidth", this, "onwidth");
+            this._contentHDel = 
+                new LzDelegate(this, "_recalculateContentHeight", this, "onheight");
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_recalculateContentWidth">
+            parent.parent._calculateContentWidth(this.width, 
+                                                 parent.inset_left, 
+                                                 parent.inset_right, 
+                                                 parent.parent.bordersize);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_recalculateContentHeight">
+            parent.parent._calculateContentHeight(this.height,
+                                                  parent.inset_top,
+                                                  parent.inset_bottom,
+                                                  parent.parent.bordersize);
+        </method>
+    </class> <!-- class basetabpanecontent -->
+
+    <!-- =================== -->
+    <!--  BASETABPANE CLASS  -->
+    <!-- =================== -->
+    <!--- The basetabpane for basetabs. If width and height are not set, all
+          basetabpanes will resize themselves to largest basetabpane or the
+          width of the basetabsbar, whichever is larger. The content of the
+          basetabpane is initstage late. You can override this value by setting
+          initstage late on basetabpane. -->
+    <class name="basetabpane" extends="basecomponent" focusable="false"
+           width="${parent._contentWidth}" height="${parent._contentHeight}"
+           visible="false">
+
+        <!--- If a datapath tag is declared, this attribute will be passed to
+              the datapath when it's created. Default is false. -->
+              <attribute name="datacontrolsvisibility" value="false" />
+        
+        <!--- If a basetabpane is selected, then it will be shown.
+              Its associated tab will be also be selected. -->
+        <attribute name="selected" value="false" type="boolean" 
+                   setter="_setSelected(selected)" />
+
+        <!--- The tab associated with this basetabpane.
+              @keywords readonly -->
+        <attribute name="tab" value="null" type="expression" />
+        <!--- The tabclass to use to instantiate its associated tab. This
+              overrides the basetabs tabclass. Leave undefined here so that
+              basetabs can have it.
+              @keywords final -->
+        <attribute name="tabclass" type="string" />
+
+        <!--- Top inset for basetabpane in tabs content. Default is basetabs's
+              inset_top. -->
+        <attribute name="inset_top" value="${parent.inset_top}" type="number" />
+        <!--- Right inset for basetabpane in tabs content. Default is basetabs's
+              inset_right. -->
+        <attribute name="inset_right" value="${parent.inset_right}" type="number" />
+        <!--- Bottom inset for basetabpane in tabs content. Default is basetabs's
+              inset_bottom. -->
+        <attribute name="inset_bottom" value="${parent.inset_bottom}" type="number" />
+        <!--- Left inset for basetabpane in tabs content. Default is basetabs's
+              inset_left. -->
+        <attribute name="inset_left" value="${parent.inset_left}" type="number" />
+
+        <!--- Text value for tab. Default is 'tab'. -->
+        <attribute name="text" value="tab" type="text" />
+
+        <!--- DO NOT OVERRIDE THIS VARIABLE.
+              Tell basetabs I want to be placed in basetabscontent
+              defaultplacement flag. See basetabs.determinePlacement().
+              @keywords private -->
+        <attribute name="placement" value="_tabscontent" type="string" />
+
+        <!--- SUBCLASSES OVERRIDING THIS CLASS MUST PAY ATTENTION TO THIS
+              VARIABLE.
+              Number of children to keep in class instead of placing in
+              content. This number is used in the createChildren method and it
+              determines how many are spliced from the beginning of the array.
+              This is something subclasses of tabpane content will have to be
+              mindful of.
+              @keywords private -->
+        <attribute name="_keepchildren" value="0" type="number" />
+
+        <!--- Overrides LzNode.setDatapath().
+              @keywords private -->
+        <method name="setDatapath" args="dp">
+
+                    if (null != this.datapath) {
+                this.datapath.setXPath(dp);
+            } else {
+                var data_args = { xpath : dp }
+                if (this.datacontrolsvisibility != null) {
+                    data_args.datacontrolsvisibility = this.datacontrolsvisibility;
+                }
+                new LzDatapath ( this, data_args );
+            }
+        </method>
+
+
+        <!--- Everything after _keepchildren number will be swallowed by 
+              content.
+              @keywords private -->
+        <method name="createChildren" args="c">
+        <![CDATA[
+            var myChildren = [];
+            if (_keepchildren > 0) {
+                myChildren = c.slice(0, _keepchildren);
+                c.splice(0, _keepchildren);
+            }
+
+            // Intercept basetabpane initstage for its content. Note: createChildren
+            // gets called before init.
+            var is = "late"
+            if (this['initstage'] != null) {
+                is = this.initstage;
+            }
+            this.initstage = null;
+            myChildren.push( { name: "basetabpanecontent", 
+                               attrs: { name: 'content', parent: this, 
+                                        initstage: is },
+                               children: c } );
+            super.createChildren( myChildren );
+        ]]>
+        </method>
+
+        <!--- Setter for selected attribute.
+              @param Boolean s: true if selected, otherwise false.
+              @keywords private -->
+        <method name="_setSelected" args="s">
+            this.selected = s;
+            if (this.selected != this.tab.selected)
+              this.tab.setAttribute("selected", s);
+        </method>
+
+    </class> <!-- class basetabpane -->
+
+
+    <!-- ================= -->
+    <!--  BASETABSCONTENT  -->
+    <!-- ================= -->
+
+    <!--- Basetabscontent should be in basetabs. If width and height are not
+          set, basetabscontent will stretch to the largest content item. You can
+          pass the name of this class in the 'contentclass' attribute of
+          basetabs and tabs. Basetabs uses this class as its default
+          'contentclass'.-->
+    <class name="basetabscontent" extends="basecomponent" focusable="false"
+           height="${parent._contentHeight}" width="${parent._contentWidth}"
+           initstage="immediate">
+
+        <!--- Change the default placement of basetabs to defaultplacement of 
+              tabscontent and create associated tabs.
+              @keywords private -->
+        <method name="determinePlacement" args="v,p">
+        <![CDATA[
+
+            if (v instanceof basetabpane) {
+                // reassign parent of view to basetabs
+                v.parent = this.parent;
+                p = this.defaultplacement;
+            }
+            return super.determinePlacement( v , p );
+        ]]>
+        </method>
+
+    </class> <!-- class basetabscontent -->
+
+
+    <!-- ========== -->
+    <!--  BASETABS  -->
+    <!-- ========== -->
+    <!--- The base tabs object. This is the outermost containing component
+          within which there are a basetabsbar and the basetabscontent. -->
+    <class name="basetabs" extends="basecomponent" focusable="false">
+
+        <!--- The size of the border surrounding a basetabpane. Default is
+              0. -->
+        <attribute name="bordersize" value="0" type="number" />
+        
+        <!-- ================ -->
+        <!--  content insets  -->
+        <!-- ================ -->
+        <!--- The top inset for content appearing within a basetabpane. Default
+              is 8. -->
+        <attribute name="inset_top" value="8" type="number" when="immediately" />
+        <!--- The left inset for content appearing within a basetabpane. Default
+              is 8. -->
+        <attribute name="inset_left" value="8" type="number" />
+        <!--- The bottom inset for content appearing within a basetabpane. 
+              Default is 8. -->
+        <attribute name="inset_bottom" value="8" type="number" />
+        <!--- The right inset for content appearing within a basetabpane. 
+              Default is 8. -->
+        <attribute name="inset_right" value="8" type="number" />
+
+        <!-- ========== -->
+        <!--  tabclass  -->
+        <!-- ========== -->
+        <!--- Class to instantiate tab items for basetabsbar. Can be
+              overridden by basetabpane. Default is 'basetab'. 
+              @keywords final -->
+        <attribute name="tabclass" value="basetab" type="string" />
+
+        <!-- =============== -->
+        <!--  tabsbar values  -->
+        <!-- =============== -->
+        <!--- This is a reference to its basetabsbar. 
+              @keywords readonly -->
+        <attribute name="bar" value="null" type="expression" />
+        <!--- Class to instantiate to contain tab items. Default is
+              'basetabsbar'.
+              @keywords final -->
+        <attribute name="barclass" value="basetabsbar" type="string" />
+
+        <!-- ===================== -->
+        <!--  content area values  -->
+        <!-- ==-================== -->
+        <!--- This is a reference to basetab's content area. This is where all
+              basetabpanes in tabs are placed.
+              @keywords readonly -->
+        <attribute name="content" value="null" type="expression" />
+        <!--- Class to instantiate to contain basetabpanes.
+              @keywords final -->
+        <attribute name="contentclass" value="basetabscontent" type="string" />
+
+        <!--- Basetab's layout for its basetabsbar and basetabscontent
+              area. Default is "class: simplelayout; axis: y; spacing: 0". -->
+        <attribute name="layout"
+            value="class: simplelayout; axis: y; spacing: 0"/>
+
+        <!--- The height of the content area. Tabscontent uses this.
+              @keywords private -->
+        <attribute name="_contentHeight" value="0" type="number" />
+        <!--- The width of the content area.  Tabscontent uses this.
+              @keywords private -->
+        <attribute name="_contentWidth" 
+                   value="${Math.max(_maxTabpaneContentWidth, this.bar.width)}"
+                   type="number" />
+        
+        <!--- @keywords private -->
+        <attribute name="_maxTabpaneContentWidth" value="0" type="number" />
+
+        <!--- @keywords private -->
+        <method event="onconstruct">
+            // Create tabsbar
+            if (this.barclass != "") {
+                if (typeof(global[this.barclass]) != "undefined") {
+                    this.bar = new global[this.barclass](this, {}, null, true);
+                } else {
+                    Debug.write('barclass ' + this.barclass + ' is undefined');
+                }
+            }
+            if (this.bar == null) {
+                this.bar = new basetabsbar(this, {}, null, true);
+                Debug.write('Using basetabsbar for tab bar');
+            }
+
+            // Create tabscontent, if it hasn't been already created
+            if (this.contentclass != "") {
+                if (typeof(global[this.contentclass]) != "undefined") {
+                    this.content = new global[this.contentclass](this, {}, null, true);
+                } else {
+                    Debug.write('contentclass ' + this.contentclass + 
+                                ' is undefined');
+                }
+            } 
+            if (this.content == null) {
+                this.content = new basetabscontent(this, {}, null, true);
+                Debug.write('Using basetabscontent for tabs content area');
+            }
+        </method>
+
+
+        <!--- @keywords private -->
+        <method name="determinePlacement" args="v,p,args">
+        <![CDATA[
+
+            // Special flag passed on from basetabpane to tell tabs to place it
+            // in contents defaultplacement. Subclasses should *not* override
+            // this value.
+            if (p == "_tabscontent") {
+
+                // only create new tabs if there's a place to put them
+                var tc = args['tabclass'];
+                if (typeof(tc) == "undefined") {
+                  tc = v['tabclass'];
+                  if (typeof(tc) == "undefined") {
+                    tc = this.tabclass;
+                    if ($debug) {
+                      if (typeof(tc) == "undefined") {
+                        Debug.write('no tabclass given');
+                      }
+                    }
+                  }
+                }
+                if (typeof(global[tc]) != "undefined") {
+                    v.tab = new global[tc](this.bar, { tabpane: v }, null, true);
+                } else {
+                  if ($debug) {
+                    Debug.write('tabclass \'' + tc + '\' is undefined');
+                  }
+                }
+
+                return this.content.determinePlacement(v, p);
+            }
+
+            return super.determinePlacement(v,p);
+        ]]>
+        </method>
+
+
+        <!--- Calculates the max content width.
+              @param Number w: width to check against current max content width.
+              @param Number il: inset left
+              @param Number ir: inset right
+              @param Number b: border size
+              @keywords private -->
+        <method name="_calculateContentWidth" args="w,il,ir,b">
+        <![CDATA[
+            // only deal with this if we don't have a set height
+            if (!hassetwidth) {
+                // this can happen if child view inits before inset values
+                // are set in basetabs.
+                if (il == null) il = this.inset_left;
+                if (ir == null) ir = this.inset_right;
+                if (b == null ) b  = this.bordersize;
+                var checkW  = w+(2*b)+il+ir;
+                if (checkW > this._maxTabpaneContentWidth) {
+                    setAttribute("_maxTabpaneContentWidth", checkW);
+                }
+            } else if (this.width != _contentWidth) {
+                setAttribute("_contentWidth", this.width);
+            }
+        ]]>
+        </method>
+
+        <!--- Calculates the max content height.
+              @param Number h: height to check against current max content height.
+              @param Number it: inset top
+              @param Number ib: inset bottom
+              @param Number b: border size
+              @keywords private -->
+        <method name="_calculateContentHeight" args="h,it,ib,b">
+        <![CDATA[
+            // only deal with this if we don't have a set height
+            if (!hassetheight) {
+                // this can happen if child view can inits before inset values
+                // are set in basetabs.
+                if (it == null) it = this.inset_top;
+                if (ib == null) ib = this.inset_bottom;
+                if (b == null ) b  = this.bordersize;
+                var checkH = h+(2*b)+it+ib;
+                if (checkH > this._contentHeight) {
+                    setAttribute("_contentHeight", checkH);
+                }
+            } else {
+                var myh = this.height - this.bar.height;
+                if (myh != this._contentHeight) {
+                    setAttribute("_contentHeight", myh);
+                }
+            }
+        ]]>
+        </method>
+
+    </class> <!-- class basetabs -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

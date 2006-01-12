@@ -1,0 +1,45 @@
+<canvas width="1000" height="1000">
+    <include href="utils/layouts/alllayouts.lzx" />
+
+    <font src="helmetr.ttf"               name="Helvetica" />
+    <font src="helmetb.ttf"               name="Helvetica" style="bold"/>
+    <font src="helmeti.ttf"               name="Helvetica" style="italic" />
+    <font src="helmetbi.ttf"              name="Helvetica" style="bold italic" />
+
+ <view name="test">
+   <simplelayout axis="y"/> 
+   <button>Hello there</button>
+   <button>
+     Hello there
+   </button>
+   <text>lztahoe8</text>
+   <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+   <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+
+   <text id="ttext" multiline="true" width="300" font="Helvetica" fontsize="14">Q: What did Tarzan say when he saw the elephants coming over the hill?
+A: "The elephants are coming over the hill."
+
+Q: What did he say when saw them coming over the hill wearing sunglasses?
+A: Nothing, for he didn't recognize them.
+</text>
+
+
+   <text id="ttext2"  
+       multiline="true" font="Helvetica" width="300" 
+       fontsize="10">       This had leading whitespace and <b>bold</b> and <i>italic</i> text.
+This is the second line. It should not be broken.
+        And this, the third line, has some leading whitespace and  <b><i>bold italic</i></b> text.
+This line has 20 point <font size="20">big text</font> and a long line line. 
+
+There was a blank line before this one. 
+This is the last line. There's a linebreak a the end of it.
+    </text>
+
+
+ </view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

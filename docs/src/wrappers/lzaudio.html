@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzAudio">
+    <lztier>Service</lztier>
+    <lzcategory>Media</lzcategory>
+    <lzshortdesc>
+        Audio playback service.
+    </lzshortdesc>
+    <lzapi>api-lzaudio.xml</lzapi>
+</lzelement>
+
+<p>The audio service manages the playback of sound.  It maintains the
+notion of a <dfn>current sound</dfn>.  You can set the current sound
+and start playing it using the <code>LzAudio.playSound()</code> API.
+See the <a href="${examples}audio.lzx?lzt=html">audio</a> example.
+Also see the <tagname link="true">resource</tagname> tag for for
+details on audio resources and see the <a
+href="${examples}music/music.lzx?lzt=html">music</a> example for
+streaming media.</p>
+
+<example class="program" id="lzaudio-1">
+&lt;canvas height="20"&gt;
+  &lt;resource src="resources/poof.mp3" name="poof"/&gt;
+  &lt;button text="Poof"
+           onclick="LzAudio.playSound('poof');"/&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

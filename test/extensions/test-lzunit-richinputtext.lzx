@@ -1,0 +1,493 @@
+<canvas debug="true" width="800" height="600">
+    <include href="lzunit"/>
+    <include href="/extensions/views/richinputtext.lzx" />
+    <include href="/extensions/views/LzTextFormat.lzx" />
+    <include href="/utils/textutils.lzx" />
+
+    <class name="RichTextTestBase" extends="TestCase"> 
+        <!--- Constant for testing. --> 
+        <attribute name="PLAIN_A" type="string" value="aaa." />
+        <attribute name="PLAIN_B" type="string" value="bBb!" /> 
+        <attribute name="PLAIN_C" type="string" value="c cat c!" />
+        <attribute name="RICH_A" type="string" value="&lt;b&gt;rich&lt;/b&gt;" />
+        <attribute name="RICH_B" type="string" value="&lt;b&gt;i have spaces&lt;/b&gt;" />    
+        <attribute name="RICH_C" type="string" value="&lt;b&gt; space before and after &lt;/b&gt;" />    
+        <attribute name="PLAIN_RICH_A" type="string" value="rich" />
+        <attribute name="PLAIN_RICH_B" type="string" value="i have spaces" />    
+        <attribute name="PLAIN_RICH_C" type="string" value=" space before and after " />
+        <attribute name="LONG_A" type="string" value="Until very recently, it was commonplace knowledge that DHTML doesnt work consistently across browsers, isnt maintainable, requires code forking, delivers limited fidelity and so on. And while perhaps this is still common knowledge among level-headed developers, somehow the introduction of the Ajax buzzword has induced Web-wide amnesia, and people are now under the illusion that creating full-scale applications in JavaScript is a simple proposition. Just throw in a little script here and there, and you have an app suitable for Web deployment. No new learning required, just a few clever hacks." />
+        <attribute name="LONG_B" type="string" value="I wrote out the semagrams for _process create-endpoint inclusive-we_ meaning _lets start_. Raspberry replied in the affirmative." />
+        
+        <method name="setUp">
+            Debug.write("RichTextTestBase.setUp"); 
+            rich.init();            
+        </method>
+        
+    </class>    
+    
+    <class name="Basics" extends="RichTextTestBase">
+        <method name="testConstants">
+            assertNotSame(PLAIN_A, PLAIN_B); 
+        </method>
+        <method name="testStartEmpty">
+            var contents = rich.getText();
+            assertSame("", contents); 
+        </method>
+
+        <method name="testReplace">
+            var foo = "FooBarBaz Lum.";
+            rich.setText(foo);
+            var after = rich.getText();
+            assertSame(foo, after); 
+        </method>
+
+        <method name="testFixCRs">
+            var str = new String(PLAIN_A + "\r" + PLAIN_B);
+            var foo = textutils.replace(str, "\r", ""); 
+            assertSame(PLAIN_A  + PLAIN_B, foo); 
+        </method>
+
+        <method name="testReplaceStr">
+            var orig = "I am a little teapot.";
+            var findme = "t";
+            var replacewith = "!";
+            var processed = textutils.replace(orig, findme, replacewith);
+            assertSame("I am a li!!le !eapo!.", processed)
+
+            // single replacement at beginning of the string
+            processed = textutils.replace("twelve", findme, replacewith);
+            assertSame("!welve", processed)
+            
+            // single replacement in middle of the string
+            processed = textutils.replace("lite", findme, replacewith);
+            assertSame("li!e", processed)
+            
+            // test single replacement at end of string
+            processed = textutils.replace("great", findme, replacewith);
+            assertSame("grea!", processed)
+
+            // test two replacements in a row
+            processed = textutils.replace("utter", findme, replacewith);
+            assertSame("u!!er", processed)
+
+            // test complete replacement
+            processed = textutils.replace("tttttt", findme, replacewith);
+            assertSame("!!!!!!", processed)
+            
+
+        </method>
+
+    </class>
+    
+    <class name="TestDefaultDefault" extends="TestCase">
+        <method name="testDefault">
+            if (!rich['defaultformat']) rich.defaultformat = new LzTextFormat(this, {font:"GreenPeas", size:25}); 
+            assertNotNull(rich.defaultformat); 
+            assertEquals("GreenPeas", rich.defaultformat.font); 
+        </method>
+        <!--- BUG FIXME. defaultformat should get assigned a value by default, but does not 
+            [ben 8.10.05] --> 
+        <method name="TODOtestDefaultNoInit">
+            assertNotNull(rich.defaultformat); 
+            assertEquals("GreenPeas", rich.defaultformat.font); 
+        </method>
+    </class>   
+
+    <class name="AppendingToPlain" extends="RichTextTestBase">
+        <!--- Puts a constant string into the text field. --> 
+        <method name="setUp">
+            rich.setText(PLAIN_A); 
+        </method>
+        <method name="testSetup">var contents = rich.getText();
+            assertSame(PLAIN_A, contents); 
+        </method>
+
+        <method name="testAppendPlain">
+            rich.appendText(PLAIN_B); 
+            var after = rich.getText();
+            assertSame(PLAIN_A + PLAIN_B, after); 
+        </method>
+
+        <!--- If we accept that the field will add a newline, the 
+            rest of the text will match. --> 
+        <method name="testAppendHTMLFudge">
+            rich.appendText(RICH_B, true); 
+            var after = rich.getText();
+            var munge = textutils.replace(after, "\r", ""); 
+            assertSame(PLAIN_A + PLAIN_RICH_B, munge); 
+        </method>
+        
+
+        <method name="testSerialAppend">
+            rich.appendText(PLAIN_B); 
+            rich.appendText(PLAIN_C); 
+            var after = rich.getText();
+            assertSame(PLAIN_A + PLAIN_B + PLAIN_C, after); 
+        </method>
+    </class>
+    
+
+    <class name="AppendingToHTML" extends="RichTextTestBase">
+        <!--- Puts a constant string into the text field. --> 
+        <method name="setUp">
+            rich.setHTMLText(RICH_A); 
+        </method>
+
+        <method name="testGetHTML">
+            var contents = rich.getHTMLText();
+            // We should have some formatting in there; it shouldn't be
+            // just the plain text. However, we don't want to have to parse
+            // out the formatting ourselves to check it... so this is a soft
+            // pass. 
+            assertNotSame(PLAIN_RICH_A, contents);
+        </method>
+
+        <method name="testGetPlain">
+            var contents = rich.getText();
+            assertSame(PLAIN_RICH_A, contents); 
+        </method>
+        
+        
+        <method name="testAppendPlaintextWithFlag">
+            rich.appendText(PLAIN_B, false); 
+            var after = rich.getText();
+            assertSame(PLAIN_RICH_A + PLAIN_B, after); 
+        </method>
+
+        <method name="testAppendPlaintextNoFlag">
+            rich.appendText(PLAIN_B); 
+            var after = rich.getText();
+            assertSame(PLAIN_RICH_A + PLAIN_B, after); 
+        </method>
+        
+        <!--- The failure of this test seems to indicate that appendText(foo, true)
+            adds a newline \r after the text it appends. -->
+        <method name="testAppendHTML">
+            rich.appendText(RICH_B, true); 
+            var after = rich.getText();
+            var munge = textutils.replace(after, "\r", ""); 
+            assertSame(PLAIN_RICH_A + PLAIN_RICH_B, munge); 
+        </method>
+        
+        <method name="testSerialAppend">
+            rich.appendText(RICH_B, true); 
+            rich.appendText(RICH_C, true); 
+            var after = rich.getText();
+            var munge = textutils.replace(after, "\r", "");             
+            assertSame(PLAIN_RICH_A + PLAIN_RICH_B + PLAIN_RICH_C, munge); 
+        </method>
+    </class>
+    
+    <!--- Common functionality for testing rich text formats. -->     
+    <class name="FormatsTestBase" extends="RichTextTestBase">
+        <attribute name="NUMBERS" value="012345 67890 1234 567890" type="string" />
+                
+        <attribute name="plainFormat"  />
+        <attribute name="boldFormat" />
+        <attribute name="niceFormat" />
+        <attribute name="weirdFormat" />  
+
+        <!--- Puts a constant string into the text field. --> 
+        <method name="setUp">
+            Debug.write("FormatsTestBase.setUp"); 
+            rich.setText(NUMBERS); 
+            plainFormat = new LzTextFormat(); 
+            boldFormat = new LzTextFormat(this, {bold:true});
+            niceFormat = new LzTextFormat(this, {font:"Verdana", size:11, align:"left"});            
+            weirdFormat = new LzTextFormat(this, {font:"Courier", size:50, color:0x9900BB, 
+                                                 italic:true, align:"center"});         
+        </method>
+
+        <method name="sameFormat" args="a, b">
+            var attrs = new Array("font", "size", "color", "bold", "italic",
+            "underline", "url", "target", "align", "leftmargin",
+            "rightmargin", "indent", "leading");             
+            for (var i in attrs) {
+            var attr = attrs[i]; 
+            if (a[attr] || b[attr]) 
+            assertEquals(a[attr], b[attr]);  
+            }
+            
+        </method>
+    </class>
+
+    <class name="Formats" extends="FormatsTestBase">
+        
+       <!--- Test setting & getting a format on existing text. -->
+        <method name="testFormatExistingTextPlain">
+            Debug.write("testFormatExistingTextPlain, this is..", this); 
+
+            rich.setTextFormat(plainFormat, 3, 8); 
+            var fmt = rich.getTextFormat(3, 8);
+            assertFalse(fmt.bold);
+        </method>
+
+       <!--- Test setting a format on existing text. -->
+        <method name="testFormatExistingTextBold">
+            rich.setTextFormat(boldFormat, 3, 8); 
+            var fmt = rich.getTextFormat(3, 8);
+            Debug.write(fmt); 
+            assertTrue(fmt.bold);
+        </method>
+        
+        <!--- Put some text in the field, then, with no selection, set the format. 
+            It should not change the format of the text. -->
+        <method name="testNoSelectionFormatChange">
+            rich.setText(LONG_B); 
+            var fmt = rich.getTextFormat(3, 7);
+            Debug.write("this is simple."); 
+            assertFalse(fmt.bold); 
+            rich.applyTextAttr("bold", true); 
+            fmt = rich.getTextFormat(3, 7);
+            Debug.write("trickier."); 
+            assertFalse(fmt.bold); 
+
+            // Test for a bug where appending text makes the whole text get bold.                         
+            // Drat, can't reproduce at this level. 
+            rich.appendText(PLAIN_A);
+            fmt = rich.getTextFormat(3, 7);
+            Debug.write("trickier."); 
+            assertFalse(fmt.bold); 
+        </method>
+    </class>
+
+    <class name="DefaultFormats" extends="FormatsTestBase">
+        <!--- Set the default format, then setting text with the setText method.
+            The text we just added should display in the default font -->
+        <method name="SKIPtestSetPlain">
+            rich.setDefaultFormat(weirdFormat);
+            rich.setText(NUMBERS);
+            var gotfmt = rich.getTextFormat(3,8);
+            sameFormat(weirdFormat, gotfmt);  
+        </method>
+
+        <!--- Test setting and getting a default format -->
+        <method name="testSetDefault">
+            rich.setDefaultFormat(niceFormat);
+            var gotfmt = rich.defaultformat; 
+            sameFormat(niceFormat, gotfmt); 
+        </method>
+
+
+        <!--- Test setting a format then setting text with the setHTMLText method.
+            The formatting will be the default format for text in this field,
+            unless it is specified explicitly in the string. 
+         -->
+        <method name="testSetHTMLRich">
+            rich.setDefaultFormat(weirdFormat);
+            rich.setHTMLText(RICH_A); 
+            // We know that RICH_A has bold formatting, and nothing else special about it. 
+            var gotfmt = rich.getTextFormat(2,3);
+            assertEquals(weirdFormat.font, gotfmt.font); 
+            assertEquals(weirdFormat.size, gotfmt.size); 
+            assertTrue(gotfmt.bold); 
+        </method>
+   </class>
+
+    <class name="ChangeAttributes" extends="FormatsTestBase">
+        <method name="testSimpleChange">
+            rich.setText(PLAIN_A);
+            rich.applyTextAttr("font", "Courier", 1,3);
+            var f = rich.getTextFormat(1, 3);
+            assertEquals("Courier", f.font); 
+        </method>
+
+        <method name="SKIPtestFormatAfterSet">
+            assertEquals("Verdana", niceFormat.font); 
+            rich.setDefaultFormat(niceFormat); 
+            rich.setText(LONG_A);
+            var f = rich.getTextFormat(7, 9);
+            assertNotSame("Times", f.font); // the font should be the niceFormat font, Verdana
+            assertEquals("Verdana", f.font); 
+        </method> 
+        
+        <!--- Apply a text attribute to the middle of the text, then add some text at the end.
+            The text at the end should be in the default format. --> 
+        <method name="testAddAfterChange">
+            rich.setDefaultFormat(niceFormat); 
+            rich.setText(LONG_A);
+
+            rich.applyTextAttr("font", "Courier", 7,9);
+            f = rich.getTextFormat(7, 9);
+            assertEquals("Courier", f.font); 
+
+            rich._forceResetDefaultFormat(); 
+            rich.appendText(PLAIN_A, false);
+            var ending = rich.getText().substr(LONG_A.length);
+            assertEquals(PLAIN_A, ending);  
+            
+            
+            f = rich.getTextFormat(LONG_A.length, LONG_A.length + 1);
+            assertEquals("Verdana", f.font); 
+        </method>
+        
+        <!--- Smaller, more focused test:
+            set the default format
+            set the text
+            apply a text attribute inside the text (but not at the end)
+            append plaintext 
+            the format of the plaintext should be the default format
+        -->
+        <method name="SKIPtestTimesTrouble">
+            rich.setDefaultFormat(niceFormat);
+            rich.setText(LONG_A);
+            rich.applyTextAttr("font", "Tahoma", 7, 11); 
+            rich._forceResetDefaultFormat(); 
+            rich.appendText(PLAIN_A, false);
+            var f = rich.getTextFormat(LONG_A.length, LONG_A.length + 1);
+            assertEquals("Verdana", f.font);
+        </method>
+
+        <!--- Do the same thing as in testTimesTrouble, but append as HTML. -->
+        <method name="SKIPtestTimesTroubleAppendHTML">
+            rich.setDefaultFormat(niceFormat);
+            rich.setText(LONG_A);
+            rich.applyTextAttr("font", "Tahoma", 7, 11); 
+            rich.appendText(PLAIN_A, true);
+            var f = rich.getTextFormat(LONG_A.length, LONG_A.length + 1);
+            assertEquals("Verdana", f.font);
+        </method>
+        
+        <!--- Do the the same thing as testTimesTrouble,
+            but do the appending ourselves, in lzx, right here,
+            not with the appendText function. 
+        --> 
+        <method name="SKIPtestTimesTroubleNoAppend">
+            rich.setDefaultFormat(niceFormat);
+            rich.setText(LONG_A);
+            rich.applyTextAttr("font", "Tahoma", 7, 11); 
+            var newstr = rich.getHTMLText() + PLAIN_A;
+            rich.setHTMLText(newstr); 
+            var f = rich.getTextFormat(LONG_A.length, LONG_A.length + 1);
+            assertEquals("Verdana", f.font);
+            var pt = textutils.replace(rich.getText(), "\r", ""); 
+            assertEquals(LONG_A + PLAIN_A, pt); 
+        </method>
+    </class>
+
+    <class name="Toggle" extends="RichTextTestBase">
+        <!--- test toggling in the middle of a field --> 
+        <method name="testSingleInternal">
+            rich.setText(PLAIN_A); 
+            var f = rich.getTextFormat(2,3); 
+            assertFalse(f.bold);
+            rich.toggleFormat("bold", 2,3);
+            f = rich.getTextFormat(2,3);    
+            assertTrue(f.bold);
+        </method>
+
+        <!--- Toggle from plain to bold, and back --> 
+        <method name="testDoubleInternal">
+            rich.setText(PLAIN_A); 
+            var f = rich.getTextFormat(2,3); 
+            assertFalse(f.bold);
+            rich.toggleFormat("bold", 2,3);
+            f = rich.getTextFormat(2,3);
+            assertTrue(f.bold);
+            rich.toggleFormat("bold", 2,3);
+            f = rich.getTextFormat(2,3);
+            assertFalse(f.bold);
+        </method>
+
+        <!--- Toggle from plain to bold, then add some text at the end. 
+            The newly added text should be plain. --> 
+        <method name="testAddAfterToggle">
+            rich.setText(PLAIN_A); 
+            var f = rich.getTextFormat(2,3); 
+            assertFalse(f.bold);
+            rich.toggleFormat("bold", 2,3);
+            var len = PLAIN_A.length;
+            rich.appendText(PLAIN_B, false);
+            f = rich.getTextFormat(len, len+1);
+            assertFalse(f.bold); 
+        </method>
+    </class>
+
+
+    <class name="TestTypingFormat" extends="FormatsTestBase">
+        
+        <method name="testMoreSetup">
+            var myformat =  new LzTextFormat(this, {font:"Monaco", size:20, align:"left"});  
+            rich.setDefaultFormat(myformat); 
+            sameFormat(myformat, rich.defaultformat); 
+        </method>
+        
+        <method name="testStuff">
+           // Make sure there's stuff in the field. 
+            assertTrue(rich.getText().length > 0); 
+            
+            var initialFormat = rich.getTextFormat(0, rich.getText().length); 
+            
+            var myformat =  new LzTextFormat(this, {font:"Monaco", size:20, align:"left"});  
+            var otherformat =  new LzTextFormat(this, {font:"Tahoma", size:9, align:"center", italic:true});  
+            
+            // Make sure that setting the default actually sets the default,
+            // but doesn't change the format of the existing text
+            rich.setDefaultFormat(myformat); 
+            sameFormat(myFormat, rich.defaultformat); 
+            var afterChangingDefault = rich.getTextFormat(0, rich.getText().length); 
+            sameFormat(initialFormat, afterChangingDefault);             
+        </method>
+        
+        <method name="SKIPtestNotSureWhatYet">
+           // Make sure there's stuff in the field. 
+            assertTrue(rich.getText().length > 0); 
+            
+            var initialFormat = rich.getTextFormat(0, rich.getText().length); 
+            var myformat =  new LzTextFormat(this, {font:"Monaco", size:20, align:"left"});  
+            var otherformat =  new LzTextFormat(this, {font:"Tahoma", size:9, align:"center", italic:true});  
+            
+            // Make sure that setting the default actually sets the default,
+            // but doesn't change the format of the existing text
+            rich.setDefaultFormat(myformat); 
+            sameFormat(myFormat, rich.defaultformat); 
+            var afterChangingDefault = rich.getTextFormat(0, rich.getText().length); 
+            sameFormat(initialFormat, afterChangingDefault);             
+
+            // We're getting ready to actually do something cool, namely,
+            // add some text to the end, and make sure it has the default format. 
+            rich.appendText("john tesh is an excellent musician."); 
+            var appendedTextFormat = rich.getTextFormat(NUMBERS.length, NUMBERS.length + 5);
+            sameFormat(rich.defaultformat, appendedTextFormat); 
+            assertEquals(rich.defaultformat.font, appendedTextFormat.font); 
+            
+            // The format of the original text should not change!!!
+            var beginningTextFormat = rich.getTextFormat(0, 7);
+            sameFormat(initialFormat, beginningTextFormat); 
+            assertEquals(initialFormat.font, beginningTextFormat.font); 
+
+            
+            // Okay, what if we set some text? 
+            rich.setText(PLAIN_B);
+            var afterSetText = rich.getTextFormat(0, 2); 
+            sameFormat(rich.defaultformat, afterSetText); 
+            assertEquals(rich.defaultformat.font, afterSetText.font); 
+        </method>
+        
+    </class>
+    <TestSuite>
+        <Basics />
+        <AppendingToPlain /> 
+        <AppendingToHTML />
+        <ChangeAttributes />
+        <Formats />
+        <DefaultFormats id="defaultformatstest" />
+        <Toggle />
+        <TestTypingFormat />
+        <!-- TestDefaultDefault -->
+    </TestSuite>
+
+    <window y="350" width="${canvas.width-40}" resizable="true" height="100">
+    <simplelayout axis="y" />
+    <richinputtext id="rich" 
+        width="${parent.width-40}" height="${parent.height-40}" 
+        multiline="true"
+        text="" >        
+    </richinputtext>
+    </window>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

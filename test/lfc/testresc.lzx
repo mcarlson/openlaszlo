@@ -1,0 +1,34 @@
+<canvas debug="true" width="1024">
+  <view oninit="
+	debug.setx(150);
+	"/>
+    <include href="utils/layouts/alllayouts.lzx" />
+    <resource name="a" src="resc-a.swf" />
+    <resource name="b" src="resc-b.swf" />
+
+    <class name="testit" clickable="true" onmouseup="this.doOnClick()">
+        <attribute name="rescname" type="string" 
+                   setter="this.setResource( rescname)"/>
+        <method name="doOnClick">
+            Debug.write( "apply state" );
+            this.changeresc.apply();
+        </method>
+        <state name="changeresc" >
+            <method name="doOnClick">
+                Debug.write( "got click " + this );   
+            </method>
+            <attribute name="resource" value="a" />
+        </state>
+    </class>
+
+    <view>
+        <simplelayout axis="y" />
+        <testit x="20" rescname="b" />
+        <testit x="20" rescname="b" />
+        <testit x="20" resource="b" />
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

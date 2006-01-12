@@ -1,0 +1,14 @@
+<library>
+  <dataset name="myds" src="http:small-contacts.xml" request='true' 
+           ondata="Debug.write('dataset small-contacts.xml loaded')"/>
+
+<view layout="axis:y; spacing:2" id="foo" width="200" height="300" bgcolor="#cccccc">
+  <simplelayout/>
+  <view datapath="myds:/contacts/contact">
+    <view layout="axis:x; spacing:4">
+      <text width="120" datapath="summary/@firstname"/>
+      <text width="120" datapath="summary/@lastname"/>
+    </view>
+  </view>
+</view>
+</library>

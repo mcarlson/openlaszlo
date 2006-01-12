@@ -1,0 +1,17 @@
+<!-- test bug 989 -->
+<!-- a named layout should not give warnings and should be referencable -->
+<canvas>
+    <view id="testview">
+        <view bgcolor="red" width="10" height="20"/>
+        <view bgcolor="red" width="10" height="20"/>
+        <view bgcolor="red" width="10" height="20"/>
+        <view bgcolor="red" width="10" height="20"/>
+        <view bgcolor="red" width="10" height="20"/>
+        <simplelayout name="lyt" axis="x" spacing="5" />
+    </view>
+    <button name="test" onclick="testview.lyt.setAttribute('spacing',10);" y="50"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

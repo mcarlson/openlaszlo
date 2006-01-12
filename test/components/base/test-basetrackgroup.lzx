@@ -1,0 +1,69 @@
+<canvas>
+    <include href="lz/library.lzx" />
+
+    <class name="trackview" bgcolor="${mycolor}"
+        clickable="true"
+        onclick="this.bringToFront()"
+        width="80" height="40" >
+        <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
+        <attribute name="mycolor" value="0x000099"/>
+
+        <!-- regular mouse events -->
+        <method event="onmouseover">
+            setAttribute('bgcolor', 0x009900);
+        </method>
+        <method event="onmouseout">
+            setAttribute('bgcolor', this.mycolor);
+        </method>
+
+        <!-- mouse tracking events -->
+        <method event="onmousetrackover">
+            setAttribute('bgcolor', 0x00dd00);
+        </method>
+        
+        <method event="onmousetrackout">
+            setAttribute('bgcolor', this.mycolor);
+        </method>
+
+    </class>
+
+    <view x="20" y="20">
+    	<view name="clippedview" width="100" height="100" clip="true" >
+	        <basetrackgroup id="btgone" 
+	                        boundsref="${parent}"
+	                        other="5"
+	                        bgcolor="red" width="100%" >
+	            <trackview name="g1-1"/>
+	            <trackview name="g1-2"/>
+	            <trackview name="g1-3"/>
+	            <simplelayout axis="y" spacing="5" inset="5"/>
+	        </basetrackgroup>
+        </view>
+        
+		<basetrackgroup id="btgtwo">
+		    <trackview name="g2-1"/>
+		    <trackview name="g2-2" visible="false"/>
+		    <trackview name="g2-3"/>
+		    <simplelayout axis="y" spacing="5" />
+		</basetrackgroup>
+        
+        <button >activate both
+            <method event="onmousedown">
+                btgtwo.setTracking(true);
+                btgone.setTracking(true);
+            </method>
+        </button>
+        
+        <button >deactivate both groups
+            <method event="onmousedown">
+                btgtwo.setTracking(false);
+                btgone.setTracking(false);
+            </method>
+        </button>
+        <simplelayout axis="x" spacing="20" />
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

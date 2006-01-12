@@ -1,0 +1,64 @@
+<canvas width="740" height="540" title="Iron Chef">
+    <!-- nav data --> 
+    <dataset name="navdata">
+        <nav>
+            <main>Title 1
+                <title>Content One</title>
+                <subnav>
+                    <item href="">Link 1</item>
+                    <item href="">Link 2</item>
+                    <item href="">Link 3</item>
+                    <item href="">Link 4</item>
+                </subnav>
+            </main>
+            <main>Title 2
+                <title>Content Two</title>
+                <subnav>
+                    <item href="">Link 1</item>
+                    <item href="">Link 2</item>
+                    <item href="">Link 3</item>
+                    <item href="">Link 4</item>
+                </subnav>
+            </main>
+            <main>Title 3
+                <title>Content Three</title>
+                <subnav>
+                    <item href="">Link 1</item>
+                    <item href="">Link 2</item>
+                    <item href="">Link 3</item>
+                    <item href="">Link 4</item>
+                </subnav>
+            </main>
+            <main>Title 4
+                <title>Content Four</title>
+                <subnav>
+                    <item href="">Link 1</item>
+                    <item href="">Link 2</item>
+                    <item href="">Link 3</item>
+                    <item href="">Link 4</item>
+                </subnav>
+            </main>
+        </nav>
+    </dataset>    
+
+    <view name="buttons" y="100">
+        <simplelayout name="layout" axis="x" spacing="5"/>
+        <text bgcolor="0xeeeeee" datapath="navdata:/nav/main/text()" onclick="screens.show(this.datapath);"/>
+    </view>
+
+    <view id="screens" y="150" datapath="navdata:/nav[1]/main[1]">
+        <method name="show" args="dp">
+            this.datapath.setFrompointer(dp);
+        </method>
+        <text x="200" datapath="title[1]/text()"/>
+        <view>
+            <simplelayout/>
+            <text datapath="subnav[1]/item/text()"/>
+        </view>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

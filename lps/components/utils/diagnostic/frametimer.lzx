@@ -1,0 +1,43 @@
+<library>
+    <!-- This little bit of code puts a white box in the top left corner
+         that gives time to app init in milliseconds.-->
+    <class name="frametimer" visible="true" initstage="late" options="ignorelayout"
+        bgcolor="black" height="${fps_text.height+2}"
+        x="100" width="122"
+        onmousedown="this.mouseisdown=true"
+        onmouseup="this.mouseisdown=false">
+        <attribute name="fps" value="0" type="number"/>
+        <attribute name="starttime" value="0" type="number"/>
+        <attribute name="numframes" value="0" type="number"/>
+
+        <!--- @keywords private : internal flag -->
+        <attribute name="mouseisdown" value="0"/>
+
+        <!--- @keywords private : internal -->
+        <attribute name="lasttime" value="0"/>
+
+        <method event="oninit">
+            var d = new LzDelegate( this , "tellTime", LzIdle, "onidle" );
+            this.bringToFront();
+        </method>
+        <method name="tellTime" args="t">
+            this.numframes++;
+            if (this.starttime = 0) this.starttime = t;
+            var duration = (t - this.starttime) / 1000;;   // in secs
+            this.fps = this.numframes / duration;
+            fps_text.setText( 'fps: '+ this.fps );
+            var delta = t - this.lasttime;
+            if (!this.mouseisdown) time_text.setText( 'ms/frame: '+ delta );
+            this.lasttime = t;
+        </method>
+
+        <text y="1" id="fps_text" width="50" bgcolor="white"/>
+        <text y="1" name="time_text" width="70" bgcolor="white"/>
+        <simplelayout axis="x" spacing="1" inset="1"/>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

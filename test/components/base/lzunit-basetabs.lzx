@@ -1,0 +1,99 @@
+<canvas debug="true" >
+  <include href="lzunit"/>
+  <include href="lz/tabs.lzx"/>
+
+  <class name="ptab" extends="tab"/>
+  <class name="ptabpane" extends="tabpane" tabclass="ptab"/>
+
+  <TestSuite>
+
+    <TestCase name="TabClass"> <!-- originated in LPP-106 -->
+    
+      <tabs name="tabs0">
+        <tabpane text="one">
+          <text>one</text>
+        </tabpane>
+      </tabs>
+      
+      <tabs name="tabs1">
+        <tabpane text="one" tabclass="ptab">
+          <text>one</text>
+        </tabpane>
+      </tabs>
+      
+      <tabs name="tabs2">
+        <ptabpane text="one">
+          <text>one</text>
+        </ptabpane>
+      </tabs>
+      
+      <method name="testTabClassImplicit">
+        assertEquals('tab', tabs0.bar.subviews[0].classname);
+      </method>
+      
+      <method name="testTabClassDirect">
+        assertEquals('ptab', tabs1.bar.subviews[0].classname);
+      </method>
+      
+      <method name="testTabClassInherited">
+        assertEquals('ptab', tabs2.bar.subviews[0].classname);
+      </method>
+        
+    </TestCase>
+
+    <TestCase name="selectedExplicit">
+    
+      <tabs name="tabs3a">
+        <tabpane text="one" selected="false">
+          <text>one</text>
+        </tabpane>
+        <tabpane text="two" selected="true">
+          <text>one</text>
+        </tabpane>
+      </tabs>
+    
+      <tabs name="tabs3b">
+        <tabpane text="one">
+          <text>one</text>
+        </tabpane>
+        <tabpane text="two" selected="true">
+          <text>one</text>
+        </tabpane>
+      </tabs>
+    
+      <method name="testSelectedFromPath">
+        assertEquals(tabs3a.bar.subviews[1], tabs3a.bar.getSelection());
+        assertEquals(tabs3b.bar.subviews[1], tabs3b.bar.getSelection());
+      </method>
+    </TestCase>
+    
+    <TestCase name="selectedFromPath"> <!-- originated in LPP-114 -->
+      <tabs name="tabs4">
+        <dataset name="recs"> 
+          <records>
+            <record name="soln1" selected="false"/>
+            <record name="soln2" selected="true"/>
+            <record name="soln3" selected="false"/>
+          </records>
+        </dataset>
+
+        <tabpane datapath="local:parent.recs:/records/record" text="$path{'@name'}"
+                 selected="${datapath.xpathQuery('@selected') == 'true'}">
+          <text datapath="@selected"/>
+        </tabpane>
+      </tabs>
+    
+      <method name="testSelectedFromPath">
+        assertEquals(tabs4.bar.subviews[1], tabs4.bar.getSelection());
+      </method>
+    </TestCase>
+
+  </TestSuite>
+  
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

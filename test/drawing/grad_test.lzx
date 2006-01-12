@@ -1,0 +1,57 @@
+<canvas width="800" height="600">
+
+  <class name="grad" extends="drawview" width="150" height="150">
+    <attribute name="x0" type="number" value="0"/>
+    <attribute name="y0" type="number" value="0"/>
+    <attribute name="x1" type="number" value="75"/>
+    <attribute name="y1" type="number" value="75"/>
+    <method event="oninit">
+            this.beginPath();
+            this.lineTo(150, 0);
+            this.lineTo(150, 150);
+            this.lineTo(0, 150);
+            this.lineTo(0, 0);
+            this.closePath();
+            
+            var g = this.createLinearGradient(x0,y0,x1,y1)
+            //this.globalAlpha = 0;
+             g.addColorStop(0, 0x0cc888);
+            this.globalAlpha = 1;
+            g.addColorStop(1, 0xb60cc1);
+            this.fillStyle = g;
+            this.fill();
+            this.beginPath();
+            this.moveTo(x0,y0);
+            this.lineTo(x1,y1);
+
+            // this.needsWork();
+            this.lineTo( x1-5, y1-5);
+            this.lineTo( x1+5, y1+5);
+            this.lineTo( x1-5, y1+5);
+            this.lineTo( x1+5, y1-5);
+            this.strokeStyle = 0;
+            this.lineWidth = 2;
+            this.stroke();
+        </method>
+    </class>
+  <simplelayout/>
+  <view layout="axis:x">
+    <grad x0="100" y0="100" x1="50" y1="50"/>
+    <grad x0="75" y0="100" x1="75" y1="50"/>
+    <grad x0="50" y0="100" x1="100" y1="50"/>
+  </view>
+  <view layout="axis:x">
+    <grad x0="100" y0="75" x1="50" y1="75"/>
+    <text multiline="true" width="150">The line follows the gradient declaration. The "x" should always land in purple.</text>
+    <grad x0="50" y0="75" x1="100" y1="75"/>
+  </view>
+  <view layout="axis:x">
+    <grad x0="100" y0="50" x1="50" y1="100"/>
+    <grad x0="75" y0="50" x1="75" y1="100"/>
+    <grad x0="50" y0="50" x1="100" y1="100"/>
+</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

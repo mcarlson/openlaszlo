@@ -1,0 +1,56 @@
+<!--
+********************************************************
+* [[validators/basevalidator]]
+* 2005/11/06 ver.1.0.
+* togawa manabu
+* web:http://laszlo.jp
+* mail:webmaster@laszlo.jp 
+********************************************************
+-->
+<library>
+    <class name="basevalidator">
+        <attribute name="isformvalidator" type="boolean" value="true" />
+        <attribute name="errorstring" type="string" value="error" />
+        <attribute name="required" type="boolean" value="false" />
+        <attribute name="requiredErrorstring" type="string" value="this field is required." />
+        
+        <method name="doValidation" />
+        <method name="setErrorEffect" args="bool"/>
+        
+        <method name="getedittexts">
+            <![CDATA[
+            var counter = 0;
+            var rtnarr = new Array();
+            for( var i = 0; i < this.subnodes.length ; i++ ){
+                var obj = this.subnodes[i];
+                if(obj.classname == "edittext"){
+                    rtnarr[counter] = obj;
+                    counter ++;
+                }
+            }
+            return rtnarr;
+            ]]>
+        </method>
+        
+        <method name="setErrorstring" args="message">
+            parent.errorstring = message;
+            setErrorMessage();
+        </method>
+        <method name="getErrorstring">
+            return parent.errorstring;
+        </method>
+        
+        <method name="setErrorMessage" >
+            if(parent.errorstring == ""){
+                messagetext.setAttribute("text", "");
+                setErrorEffect(false);
+            }else{
+                messagetext.setAttribute("text", "  * " +  parent.errorstring);
+                setErrorEffect(true);
+            }
+        </method>
+                
+        <reverselayout axis="x" />
+        <text name="messagetext" fgcolor="red" resize="true" />
+    </class>
+</library>

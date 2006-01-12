@@ -1,0 +1,174 @@
+<canvas width="320" height="200">
+<greenstyle name="gcolors"/>
+<purplestyle name="pcolors"/>
+<bluestyle name="bcolors"/>
+
+<class name="gtab" extends="tab" style="gcolors"/>
+<class name="ptab" extends="tab" style="pcolors"/>
+<class name="btab" extends="tab" style="bcolors"/>
+
+<dataset name="dset" src="all_lzx.xml"/>
+  <!-- there are a couple of gloabls that come in off the qury params -->
+<!-- need to remeber that flash 5 is deprecated in lps-intl2 and when that goes to trunk 
+     to change the default here --> 
+
+  <node id="gvars">
+    <attribute name="fpver" type="string"/>
+    <attribute name="testCount" type="number" value="0"/>
+    <method event="oninit">
+      this.setAttribute('fpver','fp'+parseInt(LzBrowser.getVersion()));
+    </method>
+  </node>
+
+  <tabs>
+    <tabpane text="Controls" style="pcolors" tabclass="ptab">
+      <simplelayout/>
+      <view>
+	<simplelayout axis="x"/>
+	<text y="$once{(this.parent.height / 2 ) - (this.height /2)}">Navigation:</text>
+	<button onclick="func.last();">Back</button>
+	<button onclick="func.next();">Fwd</button>
+      </view>
+      <view>
+	<simplelayout axis="x"/>
+	<text y="$once{(this.parent.height / 2 ) - (this.height /2)}">Test Result:</text>
+	<button onclick="func.postResult(1)">Pass</button>
+	<button onclick="func.postResult(2)">Fail</button>
+      </view>
+      <view>
+	<simplelayout axis="x"/>
+	<button onclick="func.jumpTo(jumpNum.getText());">Jump to Test #:</button><edittext id="jumpNum" width="50">0</edittext>
+      </view>
+      <view>
+	<simplelayout axis="x"/>
+	<button onclick="func.editApp()">Edit App</button>
+	<button onclick="func.jumpTo(srcPointer.testPointer - 1);">Refresh App</button>
+	<!-- 
+	<button>
+	  <attribute name="countdown" type="number"/>
+	  <state name="idle" onapply="this.setText('Begin Autosurf')" apply="true"/>
+	  </state>
+	  <state name="asurf" onapply="this.setText('Stop autosurf ['+this.countdown+']')">
+	  </state>
+	  <method name="showText">
+	    this.fadeDelegate = new LzDelegate( this, "autoSurf" );
+	    LzTimer.addTimer( this.surfDelegate, 1000 );
+	  </method>	  
+	  <method name="autoSurf">
+	    this.myText.animate( "opacity", 0.0, 1000 );
+	  </method>
+	</button>
+	-->
+      </view>
+      <view>
+	<simplelayout axis="x"/>
+	<text y="$once{(this.parent.height / 2 ) - (this.height /2)}">Filename</text><edittext id="fName" width="200"/>
+      </view>
+      <text id="statusText"/>
+
+    </tabpane>
+
+    <tabpane text="Environment" selected="true" style="gcolors" oninit="func.freshResult()" 
+             tabclass="gtab">
+      <text>Make sure the selections below match your config</text>
+	<text y="15" x="5">OS:</text>
+	<radiogroup value="${dos}" y="30" id="os" width="110" >
+	  <radiobutton selected="${this.value == dos ? true : false}" text="Win 98"  value="'win98'"/>
+	  <radiobutton selected="${this.value == dos ? true : false}" text="Win 2K"  value="'win2k'"/>
+	  <radiobutton selected="${this.value == dos ? true : false}" text="Win XP"  value="'winxp'"/>
+	  <radiobutton selected="${this.value == dos ? true : false}" text="Linux"   value="'linux'"/>
+	  <radiobutton selected="${this.value == dos ? true : false}" text="MacOS X" value="'osx'"/>
+	  <radiobutton selected="${this.value == dos ? true : false}" text="MacOS 9" value="'os9'"/>
+	</radiogroup> 
+	<text y="15" x="115">Browser:</text>
+	<radiogroup y="30" id="browser" x="110" width="110">
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'ie5'" text="IE 5"/>
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'ie52'" text="IE 5.2"/>
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'ie6'" text="IE 6"/>
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'safari'" text="Safari"/>
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'ff'" text="FireFox"/>
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'nc7'" text="Netscape 7"/>
+	  <radiobutton selected="${this.value == dbrowser ? true : false}" value="'moz'" text="Mozilla"/>
+	</radiogroup> 
+	<text y="15" x="225">Flash Player:</text>
+	<radiogroup y="30" id="fp" x="220" value="${gvars.fpver}">
+	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 5"  value="'fp5'"/>
+	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 6"  value="'fp6'"/>
+	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 7" value="'fp7'"/>
+	</radiogroup>
+    </tabpane>
+    <tabpane text="admin" style="bcolors" tabclass="btab">
+      <simplelayout/>
+      <button onclick="func.ccache();">Clear Cache</button>
+      <checkbox id="debugCheck" value="true">Debugger</checkbox>
+      <checkbox id="proxyCheck" value="true">Proxied</checkbox>
+	<radiogroup id="runtime">
+	  <radiobutton selected="false" text="Flash 5"  value="'swf5'"/>
+	  <radiobutton selected="false" text="Flash 6"  value="'swf6'"/>
+	  <radiobutton selected="true" text="Flash 7"  value="'swf7'"/>
+	</radiogroup>
+      <view>
+      <simplelayout axis="x"/>
+	<text y="$once{(this.parent.height / 2 ) - (this.height /2)}">Auto Surf Delay Time:</text><edittext width="25">20</edittext>
+      </view>
+    </tabpane>
+  </tabs>
+
+  <!-- if we save the pointers until thhe UI has been instantiated, we get the desired behavior...-->
+
+  <node id="func">
+   <method name="popUpPage" args="url,params"><![CDATA[
+      params = 'debug='+debugCheck.getValue()+'&lzr='+runtime.getValue()+'&'+'lzproxied='+proxyCheck.getValue()+'&'+params;
+      lzBrowser.loadURL(filepath+url+'?'+params,'appArea');
+      //lzBrowser.loadURL(filepath+url,'appArea');
+      lzBrowser.loadURL('doc.jsp?src='+url,'docArea');
+      fName.setText(filepath+url);
+      statusText.setText('Test # '+(srcPointer.testPointer -1)+' of '+gvars.testCount);
+      ]]>
+    </method>
+    <method name="next">
+      srcPointer.setAttribute('testPointer',srcPointer.testPointer +1);
+      popUpPage(srcPointer.xpathQuery('@src'));
+    </method>
+    <method name="last">
+      srcPointer.setAttribute('testPointer',srcPointer.testPointer -1 );
+      popUpPage(srcPointer.xpathQuery('@src'));
+    </method>
+    <method name="jumpTo" args="dp">
+      srcPointer.setAttribute('testPointer',parseInt(dp)+1);
+      popUpPage(srcPointer.xpathQuery('@src'));
+    </method>
+    <method name="postResult" args="res"><![CDATA[
+      var index=srcPointer.testPointer -1;
+      lzBrowser.loadURL('results.jsp?offset='+index+'&result='+res+'&file='+os.value+'_'+browser.value+'_'+fp.value+'#'+index,'resArea');
+      next();
+      ]]>
+    </method>
+    <method name="freshResult"><![CDATA[
+      var index=srcPointer.testPointer -1;
+      lzBrowser.loadURL('results.jsp?offset=-1&result=0&file='+os.value+'_'+browser.value+'_'+fp.value+'_'+runtime.value+'#'+index,'resArea');
+      ]]>
+    </method>
+    <method name="editApp">
+      lzBrowser.loadURL(filepath + '/laszlo-explorer/editor.jsp?src='+srcPointer.xpathQuery('@src'),'newEditor');
+    </method>
+ 
+    <method name="ccache">
+      popUpPage('/foo.lzx','lzt=clearcache');
+    </method>
+
+  </node>
+
+  <datapointer xpath="dset:/tests/" ondata="gvars.setAttribute('testCount',this.getNodeCount())"/>
+  <datapointer id="srcPointer" xpath="${'dset:/tests/*['+testPointer+']'}" >
+    <attribute name="testPointer" value="0" type="number"/>
+    <method event="ondata">
+      //func.popUpPage(this.xpathQuery('@src'));
+    </method>
+  </datapointer>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,211 @@
+<!--
+    $Id$
+
+Debugger Tests
+-->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+     * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<library>
+  <class name="TestDebugger" extends="TestCase">
+    <method name="setUp">
+      <![CDATA[
+             // SWF6 can't handle a date this far in the past.
+             if (canvas.runtime < "swf7") {
+                 this.date = new Date();
+             } else {
+                 this.date = new Date(Date.UTC(1969, 6, 20, 20, 17, 40, 0));
+             }
+             this.dateString = this.date.toString();
+             this.array = [1, 2, 3];
+             this.object = {one: 1, two: 'too', 3: 'three'};
+             this.testString = '"String", with \'\\\' escapes';
+      ]]>
+    </method>
+
+    <method name="tearDown">
+    </method>
+
+
+    <method name="testFormat">
+      <![CDATA[
+               // The commented out tests can't be run because they
+               // print object ID's which can't be compared easily.
+               // Maybe someday lzunit will have a regexp compare
+               assertEquals('    3.14', Debug.formatToString('%8.2f', Math.PI));
+               assertEquals('    0.00', Debug.formatToString('%8.2f', 0));
+               assertEquals('   -3.14', Debug.formatToString('%8.2f', -Math.PI));
+               assertEquals('00003.14', Debug.formatToString('%08.2f', Math.PI));
+               assertEquals('00000.00', Debug.formatToString('%08.2f', 0));
+               assertEquals('-0003.14', Debug.formatToString('%08.2f', -Math.PI));
+               assertEquals('   +3.14', Debug.formatToString('%+8.2f', Math.PI));
+               assertEquals('    0.00', Debug.formatToString('%+8.2f', 0));
+               assertEquals('   -3.14', Debug.formatToString('%+8.2f', -Math.PI));
+               assertEquals('+0003.14', Debug.formatToString('%+08.2f', Math.PI));
+               assertEquals(' 0000.00', Debug.formatToString('%+08.2f', 0));
+               assertEquals('-0003.14', Debug.formatToString('%+08.2f', -Math.PI));
+               assertEquals('    3.14', Debug.formatToString('% 8.2f', Math.PI));
+               assertEquals('    0.00', Debug.formatToString('% 8.2f', 0));
+               assertEquals('   -3.14', Debug.formatToString('% 8.2f', -Math.PI));
+               assertEquals(' 0003.14', Debug.formatToString('% 08.2f', Math.PI));
+               assertEquals(' 0000.00', Debug.formatToString('% 08.2f', 0));
+               assertEquals('-0003.14', Debug.formatToString('% 08.2f', -Math.PI));
+               assertEquals('3.14    ', Debug.formatToString('%-8.2f', Math.PI));
+               assertEquals('0.00    ', Debug.formatToString('%-8.2f', 0));
+               assertEquals('-3.14   ', Debug.formatToString('%-8.2f', -Math.PI));
+               assertEquals('3.14    ', Debug.formatToString('%-08.2f', Math.PI));
+               assertEquals('0.00    ', Debug.formatToString('%-08.2f', 0));
+               assertEquals('-3.14   ', Debug.formatToString('%-08.2f', -Math.PI));
+               assertEquals('+3.14   ', Debug.formatToString('%-+8.2f', Math.PI));
+               assertEquals(' 0.00   ', Debug.formatToString('%-+8.2f', 0));
+               assertEquals('-3.14   ', Debug.formatToString('%-+8.2f', -Math.PI));
+               assertEquals('+3.14   ', Debug.formatToString('%-+08.2f', Math.PI));
+               assertEquals(' 0.00   ', Debug.formatToString('%-+08.2f', 0));
+               assertEquals('-3.14   ', Debug.formatToString('%-+08.2f', -Math.PI));
+               assertEquals(' 3.14   ', Debug.formatToString('%- 8.2f', Math.PI));
+               assertEquals(' 0.00   ', Debug.formatToString('%- 8.2f', 0));
+               assertEquals('-3.14   ', Debug.formatToString('%- 8.2f', -Math.PI));
+               assertEquals(' 3.14   ', Debug.formatToString('%- 08.2f', Math.PI));
+               assertEquals(' 0.00   ', Debug.formatToString('%- 08.2f', 0));
+               assertEquals('-3.14   ', Debug.formatToString('%- 08.2f', -Math.PI));
+               assertEquals('42     ', Debug.formatToString('%-07d', 42));
+               assertEquals('2A', Debug.formatToString('%X', 42));
+               assertEquals('2a     ', Debug.formatToString('%-07x', 42));
+               assertEquals('0X2A', Debug.formatToString('%#X', 42));
+               assertEquals('0x2a     ', Debug.formatToString('%-07#x', 42));
+               assertEquals('-42    ', Debug.formatToString('%-07d', -42));
+               assertEquals('D6', Debug.formatToString('%X', -42));
+               assertEquals('fffffd6', Debug.formatToString('%-07x', -42));
+               assertEquals('0XD6', Debug.formatToString('%#X', -42));
+               assertEquals('0xfffffd6', Debug.formatToString('%-07#x', -42));
+               // %d on string (e.g., array index)
+               assertEquals('42     ', Debug.formatToString('%-07d', '42'));
+               assertEquals('2A', Debug.formatToString('%X', '42'));
+               assertEquals('2a     ', Debug.formatToString('%-07x', '42'));
+               assertEquals('0X2A', Debug.formatToString('%#X', '42'));
+               assertEquals('0x2a     ', Debug.formatToString('%-07#x', '42'));
+               assertEquals('-42    ', Debug.formatToString('%-07d', '-42'));
+               assertEquals('D6', Debug.formatToString('%X', '-42'));
+               assertEquals('fffffd6', Debug.formatToString('%-07x', '-42'));
+               assertEquals('0XD6', Debug.formatToString('%#X', '-42'));
+               assertEquals('0xfffffd6', Debug.formatToString('%-07#x', '-42'));
+               assertEquals('Hello Laszlo!', Debug.formatToString('%s', "Hello Laszlo!"));
+               assertEquals('Hello Laszlo!', Debug.formatToString('%w', "Hello Laszlo!"));
+               assertEquals('Hello', Debug.formatToString('%.5s', "Hello Laszlo!"));
+               // non numeric
+               assertEquals('NaN    ', Debug.formatToString('%-07d', 'forty-two'));
+//                assertEquals('Hello', Debug.formatToString('%.5w', "Hello Laszlo!"));
+               assertEquals('                 Hello Laszlo!', Debug.formatToString('%30s', "Hello Laszlo!"));
+               assertEquals('                 Hello Laszlo!', Debug.formatToString('%30w', "Hello Laszlo!"));
+               assertEquals('                         Hello', Debug.formatToString('%30.5s', "Hello Laszlo!"));
+//                assertEquals('                         Hello', Debug.formatToString('%30.5w', "Hello Laszlo!"));
+               assertEquals('Hello Laszlo!', Debug.formatToString('%-s', "Hello Laszlo!"));
+               assertEquals('Hello Laszlo!', Debug.formatToString('%-w', "Hello Laszlo!"));
+               assertEquals('Hello', Debug.formatToString('%-.5s', "Hello Laszlo!"));
+//                assertEquals('Hello', Debug.formatToString('%-.5w', "Hello Laszlo!"));
+               assertEquals('Hello Laszlo!                 ', Debug.formatToString('%-30s', "Hello Laszlo!"));
+               assertEquals('Hello Laszlo!                 ', Debug.formatToString('%-30w', "Hello Laszlo!"));
+               assertEquals('Hello                         ', Debug.formatToString('%-30.5s', "Hello Laszlo!"));
+//                assertEquals('Hello                         ', Debug.formatToString('%-30.5w', "Hello Laszlo!"));
+               assertEquals('1,2,3', Debug.formatToString('%s', this.array));
+               assertEquals('[1, 2, 3]', Debug.formatToString('%w', this.array));
+               assertEquals('1,2,3', Debug.formatToString('%.5s', this.array));
+//                assertEquals('[1, 2', Debug.formatToString('%.5w', this.array));
+               assertEquals('                         1,2,3', Debug.formatToString('%30s', this.array));
+               assertEquals('                     [1, 2, 3]', Debug.formatToString('%30w', this.array));
+               assertEquals('                         1,2,3', Debug.formatToString('%30.5s', this.array));
+//                assertEquals('                         [1, 2', Debug.formatToString('%30.5w', this.array));
+               assertEquals('1,2,3', Debug.formatToString('%-s', this.array));
+               assertEquals('[1, 2, 3]', Debug.formatToString('%-w', this.array));
+               assertEquals('1,2,3', Debug.formatToString('%-.5s', this.array));
+//                assertEquals('[1, 2', Debug.formatToString('%-.5w', this.array));
+               assertEquals('1,2,3                         ', Debug.formatToString('%-30s', this.array));
+               assertEquals('[1, 2, 3]                     ', Debug.formatToString('%-30w', this.array));
+               assertEquals('1,2,3                         ', Debug.formatToString('%-30.5s', this.array));
+//                assertEquals('[1, 2                         ', Debug.formatToString('%-30.5w', this.array));
+               assertEquals('[object Object]', Debug.formatToString('%s', this.object));
+               assertEquals('{one: 1, two: too, 3: three}', Debug.formatToString('%w', this.object));
+               assertEquals('[obje', Debug.formatToString('%.5s', this.object));
+//                assertEquals('{one:', Debug.formatToString('%.5w', this.object));
+               assertEquals('               [object Object]', Debug.formatToString('%30s', this.object));
+               assertEquals('  {one: 1, two: too, 3: three}', Debug.formatToString('%30w', this.object));
+               assertEquals('                         [obje', Debug.formatToString('%30.5s', this.object));
+//                assertEquals('                         {one:', Debug.formatToString('%30.5w', this.object));
+               assertEquals('[object Object]', Debug.formatToString('%-s', this.object));
+               assertEquals('{one: 1, two: too, 3: three}', Debug.formatToString('%-w', this.object));
+               assertEquals('[obje', Debug.formatToString('%-.5s', this.object));
+//                assertEquals('{one:', Debug.formatToString('%-.5w', this.object));
+               assertEquals('[object Object]               ', Debug.formatToString('%-30s', this.object));
+               assertEquals('{one: 1, two: too, 3: three}  ', Debug.formatToString('%-30w', this.object));
+               assertEquals('[obje                         ', Debug.formatToString('%-30.5s', this.object));
+//                assertEquals('{one:                         ', Debug.formatToString('%-30.5w', this.object));
+               assertEquals('true', Debug.formatToString('%s', true));
+               assertEquals('true', Debug.formatToString('%w', true));
+               assertEquals('true', Debug.formatToString('%.5s', true));
+               assertEquals('true', Debug.formatToString('%.5w', true));
+               assertEquals('                          true', Debug.formatToString('%30s', true));
+               assertEquals('                          true', Debug.formatToString('%30w', true));
+               assertEquals('                          true', Debug.formatToString('%30.5s', true));
+               assertEquals('                          true', Debug.formatToString('%30.5w', true));
+               assertEquals('true', Debug.formatToString('%-s', true));
+               assertEquals('true', Debug.formatToString('%-w', true));
+               assertEquals('true', Debug.formatToString('%-.5s', true));
+               assertEquals('true', Debug.formatToString('%-.5w', true));
+               assertEquals('true                          ', Debug.formatToString('%-30s', true));
+               assertEquals('true                          ', Debug.formatToString('%-30w', true));
+               assertEquals('true                          ', Debug.formatToString('%-30.5s', true));
+               assertEquals('true                          ', Debug.formatToString('%-30.5w', true));
+               assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%s', this.testString));
+               assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%w', this.testString));
+               assertEquals('"Stri', Debug.formatToString('%.5s', this.testString));
+//                assertEquals('"Stri', Debug.formatToString('%.5w', this.testString));
+               assertEquals('    "String", with \'\\\' escapes', Debug.formatToString('%30s', this.testString));
+               assertEquals('    "String", with \'\\\' escapes', Debug.formatToString('%30w', this.testString));
+               assertEquals('                         "Stri', Debug.formatToString('%30.5s', this.testString));
+//                assertEquals('                         "Stri', Debug.formatToString('%30.5w', this.testString));
+               assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%-s', this.testString));
+               assertEquals('"String", with \'\\\' escapes', Debug.formatToString('%-w', this.testString));
+               assertEquals('"Stri', Debug.formatToString('%-.5s', this.testString));
+//                assertEquals('"Stri', Debug.formatToString('%-.5w', this.testString));
+               assertEquals('"String", with \'\\\' escapes    ', Debug.formatToString('%-30s', this.testString));
+               assertEquals('"String", with \'\\\' escapes    ', Debug.formatToString('%-30w', this.testString));
+               assertEquals('"Stri                         ', Debug.formatToString('%-30.5s', this.testString));
+//                assertEquals('"Stri                         ', Debug.formatToString('%-30.5w', this.testString));
+               assertEquals(this.dateString, Debug.formatToString('%s', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%w', this.date));
+               assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%.5s', this.date));
+//                assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%.5w', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%30s', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%30w', this.date));
+               assertEquals('                         '+this.dateString.substring(0, 5), Debug.formatToString('%30.5s', this.date));
+//                assertEquals('                         '+this.dateString.substring(0, 5), Debug.formatToString('%30.5w', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%-s', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%-w', this.date));
+               assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%-.5s', this.date));
+//                assertEquals(this.dateString.substring(0, 5), Debug.formatToString('%-.5w', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%-30s', this.date));
+               assertEquals(this.dateString, Debug.formatToString('%-30w', this.date));
+               assertEquals(this.dateString.substring(0, 5)+'                         ', Debug.formatToString('%-30.5s', this.date));
+//                assertEquals(this.dateString.substring(0, 5)+'                         ', Debug.formatToString('%-30.5w', this.date));
+               assertEquals('3.14159265358979', Debug.formatToString('%s', Math.PI));
+               assertEquals('3.14159265358979', Debug.formatToString('%w', Math.PI));
+               assertEquals('3.141', Debug.formatToString('%.5s', Math.PI));
+//                assertEquals('3.141', Debug.formatToString('%.5w', Math.PI));
+               assertEquals('              3.14159265358979', Debug.formatToString('%30s', Math.PI));
+               assertEquals('              3.14159265358979', Debug.formatToString('%30w', Math.PI));
+               assertEquals('                         3.141', Debug.formatToString('%30.5s', Math.PI));
+//                assertEquals('                         3.141', Debug.formatToString('%30.5w', Math.PI));
+               assertEquals('3.14159265358979', Debug.formatToString('%-s', Math.PI));
+               assertEquals('3.14159265358979', Debug.formatToString('%-w', Math.PI));
+               assertEquals('3.141', Debug.formatToString('%-.5s', Math.PI));
+//                assertEquals('3.141', Debug.formatToString('%-.5w', Math.PI));
+               assertEquals('3.14159265358979              ', Debug.formatToString('%-30s', Math.PI));
+               assertEquals('3.14159265358979              ', Debug.formatToString('%-30w', Math.PI));
+               assertEquals('3.141                         ', Debug.formatToString('%-30.5s', Math.PI));
+//                assertEquals('3.141                         ', Debug.formatToString('%-30.5w', Math.PI));
+      ]]>
+    </method>
+  </class>
+</library>

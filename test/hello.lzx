@@ -1,0 +1,4 @@
+<canvas> 
+    <text bgcolor="#ccffcc">Hello OpenLaszlo!</text>
+    <view bgcolor="red" height="20" width="20"/>
+</canvas>

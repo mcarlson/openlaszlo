@@ -1,0 +1,55 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Checkbox">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        The checkbox tag provides a simple toggle button.
+    </lzshortdesc>
+    <lztag>lz/checkbox.xml</lztag>
+</lzelement>
+
+<p>
+	The <tagname>checkbox</tagname> tag provides a simple toggle
+	button that represents a value of <code>true</code> or
+	<code>false</code>. It has a disabled state where it does not
+	respond to mouse events when <code>enabled=false</code>.
+</p>
+
+<example title="simple checkbox">
+&lt;canvas debug="true" height="160"&gt;
+  &lt;debug x="135" y="15"/&gt;
+  &lt;checkbox id="checkMe" text="Show Green Square"/&gt;
+  &lt;view visible="${checkMe.value}" bgcolor="green" width="20" height="20"/&gt;
+
+  &lt;button text="Toggle" onclick="checkMe.setAttribute('value', !checkMe.value)"/&gt;
+  &lt;button text="Disable" onclick="checkMe.setAttribute('enabled', false)"/&gt;
+  &lt;button text="Enable" onclick="checkMe.setAttribute('enabled', true)"/&gt;
+  &lt;button text="status" onclick="Debug.write('value: '+checkMe.value)"/&gt;
+  &lt;simplelayout axis="y" spacing="4"/&gt;
+&lt;/canvas&gt;
+</example>
+
+	<p>
+	Note that checkbox attributes may be used as constraints for other attributes.
+	In the example above, clicking the checkbox toggles the visibility of the
+	green square.  Whenever the value of the checkbox changes, so does the
+	visibility attribute of the green view.
+</p>
+
+<seealso>
+<component-design id="checkbox" title="Checkbox"/>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

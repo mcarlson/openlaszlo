@@ -1,0 +1,66 @@
+<canvas>
+    <include href="lzunit/lzunit.lzx" />
+    <view id="testpar">
+        <view name="b1" bgcolor="blue" width="10" height="10"/>
+        <view name="b2" bgcolor="blue" width="10" height="10"/>
+        <view name="b3" bgcolor="blue" width="10" height="10"/>
+        <simplelayout name="l1" axis="x" locked="true"/>
+        <simplelayout name="l2" axis="y" locked="true"/>
+        <constantlayout name="l3" axis="x" value="0" locked="true"/>
+        <constantlayout name="l4" axis="y" value="0" locked="true"/>
+    </view>
+    <TestSuite>
+        <TestCase>
+            <method name="test1">
+                assertEquals( 0 , testpar.b1.x );
+                assertEquals( 0 , testpar.b2.x );
+                assertEquals( 0 , testpar.b3.x );
+                
+                assertEquals( 0 , testpar.b1.y );
+                assertEquals( 0 , testpar.b2.y );
+                assertEquals( 0 , testpar.b3.y );
+                testpar.l1.setAttribute( 'locked' , false );
+                testpar.l2.setAttribute( 'locked' , false );
+
+                assertEquals( 0 , testpar.b1.x );
+                assertEquals( testpar.b1.width , testpar.b2.x );
+                assertEquals( testpar.b2.x + testpar.b2.width , 
+                                                        testpar.b3.x );
+                
+                assertEquals( 0 , testpar.b1.y );
+                assertEquals( testpar.b1.height , testpar.b2.y );
+                assertEquals( testpar.b2.y + testpar.b2.height , 
+                                                        testpar.b3.y );
+                testpar.b1.setWidth( 30 );
+                testpar.b1.setHeight( 30 );
+                assertEquals( 0 , testpar.b1.x );
+                assertEquals( testpar.b1.width , testpar.b2.x );
+                assertEquals( testpar.b2.x + testpar.b2.width , 
+                                                        testpar.b3.x );
+                
+                assertEquals( 0 , testpar.b1.y );
+                assertEquals( testpar.b1.height , testpar.b2.y );
+                assertEquals( testpar.b2.y + testpar.b2.height , 
+                                                        testpar.b3.y );
+
+                testpar.l1.setAttribute( 'locked' , true );
+                testpar.l2.setAttribute( 'locked' , true );
+                testpar.l3.setAttribute( 'locked' , false );
+                testpar.l4.setAttribute( 'locked' , false );
+
+                assertEquals( 0 , testpar.b1.x );
+                assertEquals( 0 , testpar.b2.x );
+                assertEquals( 0 , testpar.b3.x );
+                
+                assertEquals( 0 , testpar.b1.y );
+                assertEquals( 0 , testpar.b2.y );
+                assertEquals( 0 , testpar.b3.y );
+            </method>
+        </TestCase>
+    
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,52 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+  <include href="rpc/ajax.lzx" />
+
+  <script>
+    <![CDATA[
+    
+    // This implementation of AJAX gives you request object as an arg, unlike
+    // the XMLHTTPRequest that ships in IE
+    function processReqChange(request) {
+        Debug.write("processReqChange: req.readyState", request.readyState);
+        // only if request shows "loaded"
+        if (request.readyState == 4) {
+            // only if "OK"
+            if (request.status == 200) {
+                Debug.write("arg =", request);
+                Debug.write("request.status", request.status);
+                Debug.write("request.responseText:", request.responseText);
+                Debug.write("request.responseXML:", request.responseXML);
+                Debug.write("request.getAllResponseHeaders:", request.getAllResponseHeaders());
+            } else {
+                Debug.write("There was a problem retrieving the XML data:\n" +
+                            request.statusText);
+            }
+        }
+    }
+
+    
+    function loadXMLDoc(url) {
+        // branch for native XMLHttpRequest object
+        req = new XMLHttpRequest();
+        req.onreadystatechange = processReqChange;
+        req.open("GET", url, true);
+        req.setRequestHeader('X-Test', 'one');
+        req.setRequestHeader('X-Test', 'two');
+        req.send(null);
+    }
+    
+
+
+    ]]>
+  </script>
+    <simplelayout spacing="4"/>
+    <edittext id="in1">test.xml</edittext>
+    <button onclick="loadXMLDoc(in1.getText())">Load Data</button>
+
+    <button onclick="loadXMLDoc('badurl')">Test Error Handling, this should fail</button>
+
+
+
+</canvas>

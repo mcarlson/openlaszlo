@@ -1,0 +1,30 @@
+<canvas debug="true">
+
+    <simplelayout spacing="5" />
+    
+    <debug y="150"/>
+
+    <button>Complete the instantiation on deferred
+        <method event="onclick">
+            deferred.completeInstantiation();
+        </method>
+    </button>
+
+    <view name="regular">
+        <view name="bluebox" bgcolor="blue" width="250" height="50" />
+    </view>
+
+    <view name="deferred" initstage="defer" width="250" height="10"
+          oninit="Debug.write( 'init ' + this );"
+          bgcolor="yellow">
+        <attribute name="markme" value="true"/>
+        <view name="bluebox" bgcolor="blue" align="center" valign="middle" 
+              width="${parent.width-4}" 
+              height="${parent.height-4}" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

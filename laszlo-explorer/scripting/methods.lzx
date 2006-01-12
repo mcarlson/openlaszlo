@@ -1,0 +1,21 @@
+<canvas width="200">
+  <button onclick="vw.toggleSize()" 
+          text="Toggle Size" />
+  
+  <view id="vw" y="30" width="100" height="200" 
+        bgcolor="blue" >
+    <wrappinglayout spacing="10" xinset="5" yinset="5" />
+    <view bgcolor="yellow" width="20" height="20" />
+    <view bgcolor="yellow" width="20" height="20" />
+    <view bgcolor="yellow" width="20" height="20" />
+    <view bgcolor="yellow" width="20" height="20" />
+    <view bgcolor="yellow" width="20" height="20" />
+    
+    <method name="toggleSize">
+      var w = this.width;
+      var h = this.height;
+      this.setWidth(h);
+      this.setHeight(w);
+    </method>
+  </view>
+</canvas>

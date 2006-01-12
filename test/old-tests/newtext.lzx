@@ -1,0 +1,73 @@
+<canvas>   
+    <include href="redmond" />
+    <view x="50" y="50" id="holdstext">
+        
+        <view bgcolor="#002255" width="4" height="10" x="300" clickable="true"
+              onmousedown="this.startDrag()" onmouseup="this.stopDrag()" 
+              id="dragger" >
+            
+            <method name="startDrag" >
+                this.moco = new LzMouseConstraint( this , {prop:"x" } );
+            </method>
+            
+            <method name="stopDrag" >
+                this.moco.release();
+            </method>
+
+        </view>
+
+        <view bgcolor="#552200" width="10" height="4" y="300" clickable="true"
+              onmousedown="this.startDrag()" onmouseup="this.stopDrag()" 
+              id="draggerh" >
+            
+            <method name="startDrag" >
+                this.moco = new LzMouseConstraint( this , {prop:"y" } );
+            </method>
+            
+            <method name="stopDrag" >
+                this.moco.release();
+            </method>
+        </view>
+
+        <inputtext id="ttext" label="foo\nbar" multiline="true">
+            <propconstraint prop="width" refprop="x"  reference="dragger"/>
+            <propconstraint prop="height" refprop="y"  reference="draggerh"/>
+
+            
+        </inputtext> 
+         
+                
+
+
+    </view>
+    <debug/>
+
+
+    <windowtext width="200" name="addme" label="this is some text to add" />
+
+    <button label="add" onclick="this.addText()" name="addbutt">
+        <method name="addText" >
+            ttext.addText( this.parent.addme.getText() );
+            var t = ttext.font.measureText(ttext.getText());
+        </method> 
+        
+            
+        <propconstraint prop="x" refprop="width" reference="view.parent.addme"/>
+    </button>
+    <button label="testwid" x="300"
+            onclick="Debug.write( 'width: ' + holdstext.getProp( 'width' ) )">
+        
+
+    </button>
+    
+    
+        
+        
+        
+    
+    
+</canvas>   
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,16 @@
+<canvas>
+	<text fontsize="10" multiline="true" width="300">
+	There are a few hyperlinks somewhere in this text.
+	Can you guess where they are?
+	
+<p>People can subscribe to the test Google News Alerts by providing keywords related to stories they would like to receive and their e-mail address at the <a href="http://www.google.com/newsalerts">sign-up page</a>. People can limit their alerts by source and choose to receive them once a day or continuously, as Google searches the Web. There is a limit of 50 keywords per e-mail address.</p>
+
+<p>The test launch comes a couple of weeks after Google <a href="http://news.com.com/2100-1024-5051022.html?tag=nl">refined</a> its daily news search tools. It now allows visitors to scour headlines by date, location, exact phrases or publication. People can use it retrieve articles from more than 4,500 news outlets on the Web.</p>
+
+<p>Last week, Google <a href="http://news.com.com/2100-1032-5058250.html?tag=nl" >introduced</a> a sister site in India that is available in four major Indian languages, as well as in English.</p>
+	</text>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

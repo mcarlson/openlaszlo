@@ -1,0 +1,777 @@
+; NullSoft Installer Script for LPS 
+;
+; bloch@laszlosystems.com ; cribbed heavily from Tomcat4.1's script
+;; * E_LZ_COPYRIGHT_BEGIN ******************************************************
+;; * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+;; * Use is subject to license terms.                                          *
+;; * E_LZ_COPYRIGHT_END ********************************************************
+
+Name "OpenLaszlo Server @VERSIONIDUPPER@"
+OutFile "openlaszlo-@VERSIONID@-windows-dev-install.exe"
+CRCCheck off
+SetCompress force
+SetDatablockOptimize on
+
+;BGGradient 404040 808080 DDDDDD
+;InstallColors 808080 000000
+;InstProgressFlags smooth  colored
+InstProgressFlags smooth
+AllowRootDirInstall true
+
+CompletedText "Installation of OpenLaszlo Server @VERSIONIDUPPER@ succeeded"
+MiscButtonText "" "" "" "Finish"
+
+Icon installer\windows\laszlo.ico
+;UninstallIcon uninst.ico 
+;EnabledBitmap tickyes.bmp 
+;DisabledBitmap tickno.bmp
+
+LicenseText "You must read the following license before installing:"
+LicenseData LICENSE.txt
+;ComponentText "This will install the OpenLaszlo Server @VERSIONIDUPPER@"
+AutoCloseWindow false
+ShowInstDetails show
+DirText "Please select a location to install LPS @VERSIONIDUPPER@ (or use the default):"
+SetOverwrite on
+SetDateSave on
+
+InstallDir "C:\Program Files\OpenLaszlo Server @VERSIONID@"
+InstallDirRegKey HKLM "Software\Laszlo Systems, Inc.\LPS\@VERSIONID@-@RELEASEID@" ""
+
+Section "LPS"
+
+  SetOutPath $INSTDIR
+  File /r "lps-@VERSIONID@\*.*"
+  CopyFiles "$4\lib\tools.jar" "$INSTDIR\Server\tomcat-5.0.24\common\lib" 4500
+  ;File tomcat.ico
+
+  ;
+  ;WriteUninstaller "$INSTDIR\uninst-lps-@VERSIONID@.exe"
+
+  ; back up old value of .lzx
+  ReadRegStr $R1 HKCR ".lzx" ""
+  StrCmp $R1 "" Label1
+    StrCmp $R1 "LZXFile" Label1
+    WriteRegStr HKCR ".lzx" "backup_val" $R1
+
+Label1:
+
+;  StrCpy $R8 "$INSTDIR\Server\lps-@VERSIONID@\setup.var" 
+;  FileOpen $R9 $R8 "w"
+;  FileWrite $R9 "ready=yes"
+;  FileClose $R9
+;  SetFileAttributes $R8 HIDDEN
+
+  WriteRegStr HKCR ".lzx" "" "LZXFile"
+  WriteRegStr HKCR "LZXFile" "" "Laszlo XML"
+  WriteRegStr HKCR "LZXFile\shell" "" "open"
+  WriteRegStr HKCR "LZXFile\DefaultIcon" "" "$INSTDIR\Server\misc\laszlo.ico"
+  ; Query for text editor program here. XXX
+  WriteRegStr HKCR "LZXFile\shell\open\command" "" 'notepad.exe "%1"'
+
+  ; Application for LZX files
+  WriteRegStr HKU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.LZX" "Application" "notepad.exe"
+  WriteRegStr HKCU "Software\Microsoft\Windows\CurrentVersion\Explorer\FileExts\.LZX" "Application" "notepad.exe"
+
+
+
+  ; Remove old menu group
+  RMDir /r "$SMPROGRAMS\OpenLaszlo Server"
+
+  SetOutPath "$SMPROGRAMS\OpenLaszlo Server"
+
+  ; Create shortcut in desktop
+  CreateShortCut \
+    "$DESKTOP\OpenLaszlo Server.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startup.bat" "" "$INSTDIR\Server\misc\openlaszlo_explorer.ico"
+
+  ; Create shortcut in menu
+  CreateShortCut \
+    "$SMPROGRAMS\OpenLaszlo Server\OpenLaszlo Explorer.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startup.bat" "" "$INSTDIR\Server\misc\openlaszlo_explorer.ico"
+
+  ;CreateShortCut \
+  ;  "$SMPROGRAMS\OpenLaszlo Server\Laszlo Developer Zone.lnk" \
+  ;  "http://www.laszlosystems.com/devzone/"
+
+  CreateShortCut \
+    "$SMPROGRAMS\OpenLaszlo Server\My Apps.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\my-apps"
+
+  CreateShortCut  \
+    "$SMPROGRAMS\OpenLaszlo Server\Start OpenLaszlo Server.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startTomcat.bat" "" "$INSTDIR\Server\misc\start_openlaszlo_server.ico"
+
+  CreateShortCut  \
+    "$SMPROGRAMS\OpenLaszlo Server\Stop OpenLaszlo Server.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\stopTomcat.bat" "" "$INSTDIR\Server\misc\stop_openlaszlo_server.ico"
+
+  ; CreateShortCut "$SMPROGRAMS\OpenLaszlo Server\Uninstall.lnk" \
+                 ; "$INSTDIR\uninst-lps-@VERSIONID@.exe"
+
+  CreateShortCut \
+    "$INSTDIR\OpenLaszlo Explorer.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startup.bat" "" "$INSTDIR\Server\misc\openlaszlo_explorer.ico"
+
+  ; CreateShortCut \
+  ;   "$INSTDIR\Server\lps-@VERSIONID@\my-apps\Laszlo Developer Zone.lnk" \
+  ;   "http://www.laszlosystems.com/devzone/"
+
+  CreateShortCut \
+    "$INSTDIR\My Apps.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\my-apps"
+
+  CreateShortCut  \
+    "$INSTDIR\Start OpenLaszlo Server.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startTomcat.bat" "" "$INSTDIR\Server\misc\start_openlaszlo_server.ico"
+
+  CreateShortCut  \
+    "$INSTDIR\Stop OpenLaszlo Server.lnk" \
+    "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\stopTomcat.bat" "" "$INSTDIR\Server\misc\stop_openlaszlo_server.ico"
+
+
+  ;; LPS start file
+  ;;
+  FileOpen $R0 "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startup.bat" "w"
+  FileWrite $R0 "@echo off$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "rem Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.$\n"
+  FileWrite $R0 "rem Unauthorized use, duplication or distribution is strictly prohibited.$\n"
+  FileWrite $R0 "rem This software is the proprietary information of Laszlo Systems, Inc.$\n"
+  FileWrite $R0 "rem Use is subject to license terms.$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "$\n"
+
+  ; Drive letter (see bug 2971 - Dev package won't start the server from shortcut 
+  ; if installed to non-default drive letter)
+  StrCpy $R1 $INSTDIR 2
+  FileWrite $R0 "$R1$\n"  
+  FileWrite $R0 "cd $INSTDIR\Server\lps-@VERSIONID@\lps\utils$\n"
+  FileWrite $R0 "call startTomcat.bat$\n"
+  FileWrite $R0 "start startup-static.html$\n"
+  FileClose $R0
+
+  FileOpen $R0 "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startTomcat.bat" "w"
+  FileWrite $R0 "@echo off$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "rem Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.$\n"
+  FileWrite $R0 "rem Unauthorized use, duplication or distribution is strictly prohibited.$\n"
+  FileWrite $R0 "rem This software is the proprietary information of Laszlo Systems, Inc.$\n"
+  FileWrite $R0 "rem Use is subject to license terms.$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "$\n"
+  FileWrite $R0 "set JAVA_HOME=$4$\n"
+  FileWrite $R0 "set CATALINA_HOME=$INSTDIR\Server\tomcat-5.0.24$\n"
+  FileWrite $R0 "set CATALINA_BASE=$INSTDIR\Server\tomcat-5.0.24$\n"
+  FileWrite $R0 'call "%CATALINA_HOME%\bin\startup.bat"$\n'
+  FileClose $R0
+
+  FileOpen $R0 "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\stopTomcat.bat" "w"
+  FileWrite $R0 "@echo off$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "rem Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.$\n"
+  FileWrite $R0 "rem Unauthorized use, duplication or distribution is strictly prohibited.$\n"
+  FileWrite $R0 "rem This software is the proprietary information of Laszlo Systems, Inc.$\n"
+  FileWrite $R0 "rem Use is subject to license terms.$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "$\n"
+  FileWrite $R0 "set JAVA_HOME=$4$\n"
+  FileWrite $R0 "set CATALINA_HOME=$INSTDIR\Server\tomcat-5.0.24$\n"
+  FileWrite $R0 "set CATALINA_BASE=$INSTDIR\Server\tomcat-5.0.24$\n"
+  FileWrite $R0 'call "%CATALINA_HOME%\bin\shutdown.bat"$\n'
+  FileClose $R0
+
+SectionEnd
+
+Section -post
+
+  WriteRegStr HKLM "Software\Laszlo Systems, Inc.\LPS\@VERSIONID@-@RELEASEID@" "" $INSTDIR
+  ;WriteRegStr HKLM \
+      ;"Software\Microsoft\Windows\CurrentVersion\Uninstall\LPS\@VERSIONID@" \
+      ;"DisplayName" "OpenLaszlo Server (remove only)"
+  ;WriteRegStr HKLM \
+      ;"Software\Microsoft\Windows\CurrentVersion\Uninstall\LPS\@VERSIONID@" \
+      ;"UninstallString" '"$INSTDIR\uninst-lps-@VERSIONID@.exe"'
+
+  BringToFront
+
+SectionEnd
+
+
+;;------------------------------------------------------------
+;; Global Variables
+;;   $1 = flag to use JAVA_HOME or chosen JDK
+;;   $4 = JDK to use
+;;   $5 = InitOptions ini 
+;;   $8 = InitOptions DLL
+;;   $9 = counter
+;;------------------------------------------------------------
+Function .onInit
+
+  StrCpy $1 ""
+  StrCpy $4 ""
+  StrCpy $9 0
+  GetTempFileName $8
+
+  ;; XXX This file must exist
+  ;;
+  File /oname=$8 c:\NSIS\InstallOptions.dll
+
+  Call findJDK
+
+  IfErrors 0 initOk
+
+     ExecShell open 'http://java.sun.com/'
+
+     MessageBox MB_OK "The OpenLaszlo Server installer was unable to detect an installation of JDK 1.4 \
+or higher. Please set your JAVA_HOME system environment variable to the location of your JDK or \
+download one from http://java.sun.com."
+     Abort
+
+initOk:
+  Return
+
+FunctionEnd
+
+;;------------------------------------------------------------
+;; Display and run JDK options on the first page, but only if 
+;; there are options.
+;;------------------------------------------------------------
+Function .onNextPage
+
+  StrCmp $9 0 CHECK
+    IntOp $9 $9 + 1
+    Return
+
+CHECK:
+  StrCmp $1 "CHOOSE" 0 NOBACK
+    Call RunJDKOptions
+    Pop $R0
+    StrCmp $R0 "cancel" "" NOCANCEL
+      Call Cleanup
+      Quit
+
+NOCANCEL:
+  Call GetSelectedJDK
+  StrCmp $R0 "back" "" NOBACK
+    Abort
+
+NOBACK:
+  IntOp $9 $9 + 1
+FunctionEnd
+
+
+;;------------------------------------------------------------
+;; Display and run JDK options on the first page, but only if 
+;; there are options.
+;; System environment variables: 
+;;  HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\Session Manager\Environment
+;;------------------------------------------------------------
+Function .onPrevPage
+  StrCmp $9 2 CHECK
+    IntOp $9 $9 - 1
+    Return
+
+CHECK:
+  StrCmp $1 "CHOOSE" 0 BACK
+    Call RunJDKOptions
+    Pop $R0
+    StrCmp $R0 "cancel" "" NOCANCEL
+      Call Cleanup
+      Quit
+
+NOCANCEL:
+  Push $R0
+  Call GetSelectedJDK
+  Pop $R0
+  StrCmp $R0 "back" BACK
+    Abort
+
+BACK:
+  IntOp $9 $9 - 1
+
+FunctionEnd
+
+
+;;------------------------------------------------------------
+;; Installation Success
+;;------------------------------------------------------------
+Function .onInstSuccess
+
+  Call Cleanup
+
+  Exec "$INSTDIR\Server\lps-@VERSIONID@\lps\utils\startup.bat"
+
+FunctionEnd
+
+
+;;------------------------------------------------------------
+;; If user cancels, cleanup
+;;------------------------------------------------------------
+Function .onUserAbort
+  Call Cleanup
+FunctionEnd
+
+
+;;------------------------------------------------------------
+;; Check selected JDK
+;;------------------------------------------------------------
+Function GetSelectedJDK
+
+  ReadINIStr $R0 $5 "Settings" NumFields
+
+  StrCpy $R1 1
+
+LOOP:
+  IntCmp $R1 $R0 0 0 DONE
+
+  ReadINIStr $R5 $5 "Field $R1" Text
+  ReadINIStr $R6 $5 "Field $R1" State
+
+  IntCmp $R6 1 DONE
+
+  IntOp $R1 $R1 + 1
+
+  Goto LOOP
+
+DONE:
+  StrCpy $4 $R5
+
+FunctionEnd
+
+
+
+;;------------------------------------------------------------
+;; Parse and push valid JDKs from exported windows registry
+;; file format. It's pretty much in text format, except for 
+;; all the null characters regedit.exe adds to each character
+;; in the file. Damn windows!
+;;
+;; This function searches for version numbers that look
+;; like: 1.4.1, 1.4.1_02. Anything that looks like
+;; <major>.<minor> (e.g., 1.2, 1.3, 1.4) is ignored. All
+;; installed JDKs before 1.3 registered themselves as 
+;; <major>.<minor> so just ignoring these should always give
+;; us valid JDKs.
+;;------------------------------------------------------------
+Function PushValidJDK
+
+  GetTempFileName $R0
+  ExecWait 'REGEDIT.EXE /e $R0 "HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java Development Kit"'
+  FileOpen $R9 $R0 "r"
+
+LOOP:
+  StrCpy $R5 ""
+  FileRead $R9 $R1
+  StrCmp $R1 "" DONE
+
+;; Check if registry dump is just text file.
+  StrCpy $R2 $R1 59
+  StrCmp $R2 "[HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java Development Kit\" "" CHECK_REGEDIT5
+    StrCpy $R1 $R1 -1 59
+    StrLen $R6 $R1     ;; Strlen includes the carriage return.
+    IntOp $R6 $R6 - 2  ;; Get rid of ']' and carriage return.
+    StrCpy $R5 $R1 $R6
+    Goto GOT_VERSION
+
+;; Check for regedit 5 dump format that includes a null after every character.
+CHECK_REGEDIT5:
+  StrCmp $R1 "[" BEGIN LOOP
+
+BEGIN:
+  FileRead $R9 $R1
+  StrCmp $R1 "H" H LOOP
+H:
+  FileRead $R9 $R1
+  StrCmp $R1 "K" HK LOOP
+HK:
+  FileRead $R9 $R1
+  StrCmp $R1 "E" HKE LOOP
+HKE:
+  FileRead $R9 $R1
+  StrCmp $R1 "Y" HKEY LOOP
+HKEY:
+  FileRead $R9 $R1
+  StrCmp $R1 "_" HKEY_ LOOP
+HKEY_:
+  FileRead $R9 $R1
+  StrCmp $R1 "L" HKEY_L LOOP
+HKEY_L:
+  FileRead $R9 $R1
+  StrCmp $R1 "O" HKEY_LO LOOP
+HKEY_LO:
+  FileRead $R9 $R1
+  StrCmp $R1 "C" HKEY_LOC LOOP
+HKEY_LOC:
+  FileRead $R9 $R1
+  StrCmp $R1 "A" HKEY_LOCA LOOP
+HKEY_LOCA:
+  FileRead $R9 $R1
+  StrCmp $R1 "L" HKEY_LOCAL LOOP
+HKEY_LOCAL:
+  FileRead $R9 $R1
+  StrCmp $R1 "_" HKEY_LOCAL_ LOOP
+HKEY_LOCAL_:
+  FileRead $R9 $R1
+  StrCmp $R1 "M" HKEY_LOCAL_M LOOP
+HKEY_LOCAL_M:
+  FileRead $R9 $R1
+  StrCmp $R1 "A" HKEY_LOCAL_MA LOOP
+HKEY_LOCAL_MA:
+  FileRead $R9 $R1
+  StrCmp $R1 "C" HKEY_LOCAL_MAC LOOP
+HKEY_LOCAL_MAC:
+  FileRead $R9 $R1
+  StrCmp $R1 "H" HKEY_LOCAL_MACH LOOP
+HKEY_LOCAL_MACH:
+  FileRead $R9 $R1
+  StrCmp $R1 "I" HKEY_LOCAL_MACHI LOOP
+HKEY_LOCAL_MACHI:
+  FileRead $R9 $R1
+  StrCmp $R1 "N" HKEY_LOCAL_MACHIN LOOP
+HKEY_LOCAL_MACHIN:
+  FileRead $R9 $R1
+  StrCmp $R1 "E" HKEY_LOCAL_MACHINE LOOP
+HKEY_LOCAL_MACHINE:
+  FileRead $R9 $R1
+  StrCmp $R1 "\" HKEY_LOCAL_MACHINE\ LOOP
+HKEY_LOCAL_MACHINE\:
+  FileRead $R9 $R1
+  StrCmp $R1 "S" HKEY_LOCAL_MACHINE\S LOOP
+HKEY_LOCAL_MACHINE\S:
+  FileRead $R9 $R1
+  StrCmp $R1 "O" HKEY_LOCAL_MACHINE\SO LOOP
+HKEY_LOCAL_MACHINE\SO:
+  FileRead $R9 $R1
+  StrCmp $R1 "F" HKEY_LOCAL_MACHINE\SOF LOOP
+HKEY_LOCAL_MACHINE\SOF:
+  FileRead $R9 $R1
+  StrCmp $R1 "T" HKEY_LOCAL_MACHINE\SOFT LOOP
+HKEY_LOCAL_MACHINE\SOFT:
+  FileRead $R9 $R1
+  StrCmp $R1 "W" HKEY_LOCAL_MACHINE\SOFTW LOOP
+HKEY_LOCAL_MACHINE\SOFTW:
+  FileRead $R9 $R1
+  StrCmp $R1 "A" HKEY_LOCAL_MACHINE\SOFTWA LOOP
+HKEY_LOCAL_MACHINE\SOFTWA:
+  FileRead $R9 $R1
+  StrCmp $R1 "R" HKEY_LOCAL_MACHINE\SOFTWAR LOOP
+HKEY_LOCAL_MACHINE\SOFTWAR:
+  FileRead $R9 $R1
+  StrCmp $R1 "E" HKEY_LOCAL_MACHINE\SOFTWARE LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE:
+  FileRead $R9 $R1
+  StrCmp $R1 "\" HKEY_LOCAL_MACHINE\SOFTWARE\ LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\:
+  FileRead $R9 $R1
+  StrCmp $R1 "J" HKEY_LOCAL_MACHINE\SOFTWARE\J LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\J:
+  FileRead $R9 $R1
+  StrCmp $R1 "a" HKEY_LOCAL_MACHINE\SOFTWARE\Ja LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\Ja:
+  FileRead $R9 $R1
+  StrCmp $R1 "v" HKEY_LOCAL_MACHINE\SOFTWARE\Jav LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\Jav:
+  FileRead $R9 $R1
+  StrCmp $R1 "a" HKEY_LOCAL_MACHINE\SOFTWARE\Java LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\Java:
+  FileRead $R9 $R1
+  StrCmp $R1 "S" HKEY_LOCAL_MACHINE\SOFTWARE\JavaS LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaS:
+  FileRead $R9 $R1
+  StrCmp $R1 "o" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSo LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSo:
+  FileRead $R9 $R1
+  StrCmp $R1 "f" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSof LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSof:
+  FileRead $R9 $R1
+  StrCmp $R1 "t" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft:
+  FileRead $R9 $R1
+  StrCmp $R1 "\" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\ LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\:
+  FileRead $R9 $R1
+  StrCmp $R1 "J" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\J LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\J:
+  FileRead $R9 $R1
+  StrCmp $R1 "a" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Ja LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Ja:
+  FileRead $R9 $R1
+  StrCmp $R1 "v" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Jav LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Jav:
+  FileRead $R9 $R1
+  StrCmp $R1 "a" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java:
+  FileRead $R9 $R1
+  StrCmp $R1 " " HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_ LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_:
+  FileRead $R9 $R1
+  StrCmp $R1 "D" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_D LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_D:
+  FileRead $R9 $R1
+  StrCmp $R1 "e" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_De LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_De:
+  FileRead $R9 $R1
+  StrCmp $R1 "v" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Dev LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Dev:
+  FileRead $R9 $R1
+  StrCmp $R1 "e" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Deve LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Deve:
+  FileRead $R9 $R1
+  StrCmp $R1 "l" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Devel LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Devel:
+  FileRead $R9 $R1
+  StrCmp $R1 "o" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Develo LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Develo:
+  FileRead $R9 $R1
+  StrCmp $R1 "p" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Develop LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Develop:
+  FileRead $R9 $R1
+  StrCmp $R1 "m" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Developm LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Developm:
+  FileRead $R9 $R1
+  StrCmp $R1 "e" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Developme LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Developme:
+  FileRead $R9 $R1
+  StrCmp $R1 "n" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Developmen LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Developmen:
+  FileRead $R9 $R1
+  StrCmp $R1 "t" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development:
+  FileRead $R9 $R1
+  StrCmp $R1 " " HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_ LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_:
+  FileRead $R9 $R1
+  StrCmp $R1 "K" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_K LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_K:
+  FileRead $R9 $R1
+  StrCmp $R1 "i" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_Ki LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_Ki:
+  FileRead $R9 $R1
+  StrCmp $R1 "t" HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_Kit LOOP
+HKEY_LOCAL_MACHINE\SOFTWARE\JavaSoft\Java_Development_Kit:
+  FileRead $R9 $R1
+  StrCmp $R1 "\" READ_VERSION LOOP
+READ_VERSION:
+  FileRead $R9 $R1
+  StrCmp $R1 "]" GOT_VERSION
+    StrCpy $R5 "$R5$R1"
+    Goto READ_VERSION
+
+GOT_VERSION:
+  ;; All JDK version < 1.3 list themselves in the registry as "major.minor"
+  ;; We skip these because we don't have to check the version number.
+  StrLen $R6 $R5        ;; Get length of version...
+  IntCmp $R6 3 LOOP     ;; ...and if its length is 2 (i.e., M.m), skip it.
+    StrCpy $R6 $R5 1 2  ;; Get minor version number (the third character).
+    IntCmp $R6 4 0 LOOP ;; If version number is less than 4, skip it.
+      Push $R5
+
+  Goto LOOP
+
+DONE:
+  FileClose $R9
+  Delete $R0
+
+FunctionEnd
+
+
+;;------------------------------------------------------------
+;; Display JDK options in system
+;;------------------------------------------------------------
+Function findJDK
+
+  ;; $1 JAVA_HOME
+  ReadEnvStr $1 JAVA_HOME
+
+  ;; Valid JDKs + check latest version 
+  Push "DONE"    ;; marker for end of jdk version stack
+  Call PushValidJDK
+
+  ClearErrors
+
+  ;; $R2 left position
+  ;; $R3 last valid JDK
+  ;; $R4 Flag to see if we found a valid JDK
+  ;; $R6 counter for fields
+  ;; $R7 top/bottom option positions
+  ;; $R9 handle for jdk option ini file
+  ;; $5 JDK option ini file name
+
+  StrCpy $R5 0
+  StrCpy $R2 0
+  StrCpy $R4 0 
+  StrCpy $R6 0 
+  StrCpy $R7 35
+
+  GetTempFileName $5
+  FileOpen $R9 $5 "w"
+
+  StrCmp $1 "" Loop
+    ;; Add JAVA_HOME on top
+    IntOp $R6 $R6 + 1
+    StrCpy $R3 $1
+    FileWrite $R9 "[Field $R6]$\n"  ; increment by 1
+    FileWrite $R9 "Type=RadioButton$\n"
+    FileWrite $R9 "Text=$1$\n"
+    FileWrite $R9 "Left=$R2$\n"
+    Push $R2
+    IntOp $R2 $R2 + 400
+    FileWrite $R9 "Right=$R2$\n"
+    Pop $R2
+    FileWrite $R9 "Top=$R7$\n"
+    IntOp $R7 $R7 + 20
+    FileWrite $R9 "Bottom=$R7$\n"
+
+Loop:
+  ClearErrors
+
+  ;; $R0 tmp storage for JDK name
+  ;; $R1 tmp storage for JDK home
+  Pop $R0
+  StrCmp $R0 "DONE" DONE
+
+  ReadRegStr $R1 HKLM "SOFTWARE\JavaSoft\Java Development Kit\$R0" "JavaHome"
+
+  IfErrors 0 JDKFound
+
+  Goto Loop
+
+JDKFound:
+
+  StrCpy $R4 1  ; there's at least one valid JDK
+
+  ;; Verify JAVA_HOME is valid (if set) with a valid value from the registry
+  StrCmp $1 "" SKIP
+    StrCmp $1 $R1 USE_JAVA_HOME
+
+SKIP:
+  IntOp $R6 $R6 + 1
+  StrCpy $R3 $R1
+  FileWrite $R9 "[Field $R6]$\n"  ; increment by 1
+  FileWrite $R9 "Type=RadioButton$\n"
+  FileWrite $R9 "Text=$R1$\n"
+  FileWrite $R9 "Left=$R2$\n"
+  Push $R2
+  IntOp $R2 $R2 + 380
+  FileWrite $R9 "Right=$R2$\n"
+  Pop $R2
+  FileWrite $R9 "Top=$R7$\n"
+  IntOp $R7 $R7 + 20
+  FileWrite $R9 "Bottom=$R7$\n"
+
+  ;; Can have at most 8 items in one column
+  IntOp $R8 $R6 % 8
+  IntCmp $R8 0 0 SKIP_NEW_COL SKIP_NEW_COL
+    StrCpy $R7 35
+    IntOp $R2 $R2 + 150
+
+SKIP_NEW_COL:
+  ;; Select the first JDK (should be the latest) 
+  StrCmp $R6 1 0 NOTSELECT
+    FileWrite $R9 "state=1$\n$\n"
+    Goto Loop
+
+NOTSELECT:
+  FileWrite $R9 "state=0$\n$\n"
+  Goto Loop
+
+DONE:
+  IntOp $R6 $R6 + 1
+  FileWrite $R9 "[Field $R6]$\n"  ; increment by 1
+  FileWrite $R9 "Type=label$\n"
+  FileWrite $R9 "Text=We have detected the following JDKs that are \
+compatible with the OpenLaszlo Server. Select a JDK and \
+press Next to continue:$\n"
+  FileWrite $R9 "Left=0$\n"
+  FileWrite $R9 "Right=400$\n"
+  FileWrite $R9 "Top=0$\n"
+  FileWrite $R9 "Bottom=30$\n$\n"
+
+  FileWrite $R9 "[Settings]$\n"
+  FileWrite $R9 "NumFields=$R6$\n"
+  FileWrite $R9 "Title=JDK Options$\n"
+  FileWrite $R9 "CancelButtonText=Cancel$\n"
+  FileWrite $R9 "NextButtonText=Next >$\n"
+  FileWrite $R9 "BackButtonText=< Back$\n"
+
+  StrCmp $R4 1 0 FINAL_CHECK
+    IntCmp $R6 2 USE_ONLY_AVAILABLE_JDK FINAL_CHECK CHOOSE_JDK
+
+USE_JAVA_HOME:
+  StrCpy $4 $1
+;;  MessageBox MB_OK "Using JDK found in $4."
+  Goto CLEANUP
+
+USE_ONLY_AVAILABLE_JDK:
+  StrCpy $4 $R3
+;;  MessageBox MB_OK "Detected one valid JDK in $4."
+  Goto CLEANUP
+
+CHOOSE_JDK:
+  StrCpy $1 "CHOOSE"
+  Goto CLEANUP
+
+;; Even if we don't find a JDK in the registry, let user choose JDK.
+FINAL_CHECK:
+  StrCmp $1 "" ERROR
+    StrCpy $4 $1
+    MessageBox MB_OK "Using JAVA_HOME $4."
+    Goto CLEANUP
+
+ERROR:
+  SetErrors
+  Goto CLEANUP
+
+CLEANUP:
+  FileClose $R9
+  Return
+
+FunctionEnd
+
+
+;;------------------------------------------------------------
+;; List JDK options
+;;------------------------------------------------------------
+Function RunJDKOptions
+  Push $5
+  CallInstDLL $8 dialog
+FunctionEnd
+
+
+Function Cleanup
+  Delete $5  ; delete tmp JDK option ini file
+  Delete $8  ; delete tmp InstallOptions.dll
+FunctionEnd
+
+
+;UninstallText "This will un-install the OpenLaszlo Server @VERSIONIDUPPER@ from your system:"
+
+;Section Uninstall
+
+  ;SetAutoClose true
+  ;Delete "$INSTDIR\uninst-lps-@VERSIONID@.exe"
+
+  ;ReadRegStr $1 HKCR ".lzx" ""
+  ;StrCmp $1 "LZXFile" 0 NoOwn ; only do this if we own it
+    ;ReadRegStr $1 HKCR ".lzx" "backup_val"
+    ;StrCmp $1 "" 0 RestoreBackup ; if backup == "" then delete the whole key
+      ;DeleteRegKey HKCR ".lzx"
+    ;Goto NoOwn
+    ;RestoreBackup:
+      ;WriteRegStr    HKCR ".lzx" "" $1
+      ;DeleteRegValue HKCR ".lzx" "backup_val"
+  ;NoOwn:
+
+  ;ClearErrors
+
+  ;DeleteRegKey HKCR "LZXFile"
+  ;DeleteRegKey HKLM  \
+      ;"Software\Microsoft\Windows\CurrentVersion\Uninstall\LPS\@VERSIONID@\server" 
+  ;DeleteRegKey HKLM \
+      ;"Software\Laszlo Systems, Inc.\LPS\@VERSIONID@"
+  ;RMDir /r "$SMPROGRAMS\LPS"
+  ;RMDir /r "$INSTDIR"
+  ; Someday handle case of saving files that might have been added
+
+;SectionEnd

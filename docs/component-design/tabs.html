@@ -1,0 +1,47 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link href="../../lps/includes/styles.css" type="text/css" rel="STYLESHEET">
+<title>Tabs Construction</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+
+<body bgcolor="#ffffff">
+<p></p>
+<h2>Tabs </h2>
+<p><a href="../../examples/components/tabs_example.lzx?lzt=html">example</a> <br>
+  <a href="../reference/index.html?lz-tabs.html" target="test">LZX Reference</a><br>
+filename: tabs.lzx</p>
+<p>The default tabs have a height of 26 pixels and the width is determined by
+  the length of the tab text and its padding. Although the resources appear to
+  be different sizes, the selected and deselected resources are actually the
+  same height. The deselected pieces have a transparent layer that makes up the
+  difference. The type is centered on the tab face and changes its position programatically.
+  The tab is comprised of scalable vector resources which enable proportional
+  resizing without distortion. resizing the button will not alter the text size
+  or position.</p>
+<p>The tab is constructed of five views:</p>
+<p>1. The left side of the tab</p>
+<p>2. The middle stretchable section of the tab</p>
+<p>3. The right side of the tab </p>
+<p>4. The "border" of the content area.</p>
+<p>5. The content area background</p>
+<p>Each of the first three views contains multiple resource frames which change
+  based on the state of the tab. </p>
+<p>The left and right tab resources (and each of their states) are constructed
+  of vector .swf files and are designed to be used at their current size. The
+  middle piece is a vector .swf file constructed to scale horizontally as the
+  tab width increases.</p>
+<p>The border and content area are both colorized LZX views. The default border
+  is set at 1 pixel and retains that dimension as the content area grows. The
+  content area has an 8 pixel inset on all sides, so that content is automatically
+  inset.</p>
+<p><img src="images/image053.png" width="494" height="549"></p>
+<p></p>
+<p></p>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,18 @@
+<canvas width="400" height="300" debug="true">
+	<debug y="100"/>
+	<class name="test">
+		<method name="go" args="where">
+			if (!where) return
+			debug.write("we're going places")
+		</method>
+	</class>
+	
+	<view bgcolor="blue" height="50" width="100">
+		<test name="start"/>
+		<button onclick="parent.start.go(false)">Print nothing</button>
+	</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,116 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Combobox">
+    <lztier>LZ Component</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+        combobox displays a dropdown list of selectable items.
+    </lzshortdesc>
+    <lztag>lz/combobox.xml</lztag>
+</lzelement>
+
+
+<p>A <classname>combobox</classname> is a common UI element for
+displaying a pop-up list associated with a text field. The selected
+text of the combobox is displayed within the text field.  This field
+is an <classname>LzInputText</classname> field if the
+<attribute>editable</attribute> of the combobox is <code>true</code>
+(the default), or a static <classname>LzText</classname> field if it
+is <code>false</code>.</p>
+
+<p>The number of items shown in the combobox can be set using the
+<attribute>shownitems</attribute> attribute.  If there are more items
+available than are shown, a scrollbar will be created
+automatically.</p>
+
+<p>The list of items in a combobox can be created explicity using the
+<tagname>textlistitem</tagname> tag with assigned
+<attribute>text</attribute> and <attribute>value</attribute>
+attributes.</p>
+
+<example>
+&lt;canvas width="200" height="100"&gt;
+ &lt;combobox id="cbox" x="5" y="5" width="130" editable="false"&gt;
+    &lt;textlistitem text="Dark Blue"  value="0x000055"/&gt;
+    &lt;textlistitem text="Turquoise"  value="0x66dddd"/&gt;
+    &lt;textlistitem text="Light Blue" value="0xaaddff"/&gt;
+  &lt;/combobox&gt;
+  &lt;view x="150" y="5" width="20" height="20"
+        bgcolor="${cbox.value}"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p><br/></p>
+<p>
+A combobox can also be populated by assigning a
+<attribute>datapath</attribute> to a <tagname>textlistitem</tagname>'.
+Also the number of items shown can be set with the
+<attribute>shownitems</attribute> attribute.
+</p>
+
+<example>
+&lt;canvas width="200" height="130"&gt;
+  &lt;dataset name="items"&gt;
+    &lt;item value="item1"&gt;item one&lt;/item&gt;
+    &lt;item value="item2"&gt;item two&lt;/item&gt;
+    &lt;item value="item3"&gt;item three&lt;/item&gt;
+    &lt;item value="item4"&gt;item four&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;combobox x="5" y="5"
+            width="130"  
+            shownitems="3"
+            defaulttext="choose one..."  &gt;
+    &lt;textlistitem datapath="items:/item" text="$path{'text()'}"
+                  value="$path{'@value'}"/&gt;
+  &lt;/combobox&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Finally, a combox can also have custom items in its list by tending
+the <classname>listitem</classname> class. An example of this is shown
+below:</p>
+
+<example>
+&lt;canvas width="200" height="130"&gt;
+  &lt;class name="mylistitem" extends="listitem" width="100%" height="20" &gt;
+   &lt;attribute name="text" value="" type="string"/&gt;
+   &lt;!-- place a red square in the left hand side of mylistitem --&gt;
+   &lt;view bgcolor="red" width="10" height="10" x="5" y="5"/&gt;
+   &lt;!-- constrain the text to the text attribute of listitem --&gt;
+   &lt;text x="20" text="${classroot.text}" fgcolor="0x4B4B4B"&gt;
+   &lt;/text&gt;
+  &lt;/class&gt;
+
+  &lt;dataset name="items"&gt;
+    &lt;item value="item1"&gt;item one&lt;/item&gt;
+    &lt;item value="item2"&gt;item two&lt;/item&gt;
+    &lt;item value="item3"&gt;item three&lt;/item&gt;
+    &lt;item value="item4"&gt;item four&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;combobox x="5" y="5"
+            width="130" editable="false"&gt;
+    &lt;mylistitem datapath="items:/item" text="$path{'text()'}"
+                value="$path{'@value'}"/&gt;
+  &lt;/combobox&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<p>For details on how this component is constructed see the <a
+href="${dguide}using-components.html#using-components.combobox">Using the Laszlo
+Components</a> chapter of the Guide.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

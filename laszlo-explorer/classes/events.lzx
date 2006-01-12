@@ -1,0 +1,19 @@
+<canvas width="200">
+  <class name="box" height="100" width="100" bgcolor="red"/>
+  
+  <class name="borderedbox" extends="box"
+         onmouseover="this.setAttribute('width', 150)"
+         onmouseout="this.setAttribute('width', 100)">
+    <attribute name="bordersize" value="3"/>
+    <view bgcolor="yellow"
+          x="${parent.bordersize}" y="${parent.bordersize}"
+          width="${parent.width - parent.bordersize*2}"
+          height="${parent.height - parent.bordersize*2}"/>
+  </class>
+  
+  <borderedbox/>
+  <borderedbox bordersize="6"/>
+  <borderedbox bordersize="9"/>
+  
+  <simplelayout spacing="5"/>
+</canvas>

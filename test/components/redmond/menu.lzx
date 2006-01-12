@@ -1,0 +1,59 @@
+<canvas width="500" height="500" >
+    <include href="redmond"/>
+    <command id="cmd_new"
+             oninit="debug.write(this)"
+             onselect="canvas.newWindow()"
+             key="['Control','Shift','N']"/>
+
+    <command id="cmd_open"
+             onselect="canvas.openDialog()"
+             key="['Control','Shift','O']"/>
+
+    <method name="newWindow">
+       debug.write("called NewWindow");
+       new LzWindow(canvas,{width:200, height:200});
+    </method>
+
+    <view x="10" y="10" width="300" >
+        <menubar spacing="0" >
+            <menu name="file" label="File" hasbutton="true" >
+                <menuitem label="new" command="cmd_new"/>
+                <menuitem label="open..."/>
+                <menuitem label="close"/>
+                <menuseparator/>
+                <menuitem label="Save"/>
+                <menuitem label="Save All"/>
+                <menuitem label="Save as..."/>
+            </menu >
+
+            <menu name="edit" label="Edit" hasbutton="true" >
+                <menuitem label="first"/>
+                <menuitem label="whatever" />
+                    <menu name="edit" label="Edit" placement="cascade" >
+                        <menuitem label="foo"/>
+                        <menuitem disabled="true"  />
+                        <menuitem />
+                        <menuitem command="cmd_new"/>
+                        <menuitem />
+                    </menu>
+                <menuitem />
+                <menuitem command="cmd_new"/>
+                <menuitem />
+            </menu>
+
+            <menu name="view" label="View" hasbutton="true" >
+                <menuitem label="sajdjggsjagdj_z"/>
+                <menuitem  />
+                <menuitem disabled="false"/>
+                <menuitem />
+                <menuitem />
+            </menu>
+
+        </menubar>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

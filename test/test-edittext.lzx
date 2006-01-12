@@ -1,0 +1,63 @@
+<canvas bgcolor="silver" width="1024" height="600">
+    <debug x="400"/>
+    <include href="lz"/>
+    <font src="bitstream-vera-1.10/verabd.ttf" name="vera"/>
+    <font name="lzt"  src="lztahoe8.ttf" />
+    <dataset name="ds">
+        <item>first item from dataset</item>
+        <item>second item from dataset</item>
+        <item>third item from dataset</item>
+    </dataset>
+
+    <view>
+        <constantlayout axis="x" value="10"/>
+        <simplelayout spacing="10" inset="10"/>
+        <edittext id="a" 
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    >(a) text in tag</edittext>
+        <edittext id="b" text="(b) text as attribute"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    ></edittext>
+        <edittext id="c" text="(c) fixed size: width=100, height=20"
+            width="100" height="20"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    ></edittext>
+        <edittext id="d" text="(d) multiline, custom font\nfixed size: width=100, height=60" font="vera"
+            width="100" height="60" multiline="true"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    ></edittext>
+        <edittext id="e1" width="200" text="(e1) width=200 and no height"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    />
+        <edittext id="e2" height="20" text="(e2) height=20 and no width"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    />
+
+        <edittext id="f" font="lzt"
+            multiline="true"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    >(f) multiline, no width/height<br/>one<br/>two<br/>three</edittext>
+
+        <edittext text="fgcolor has no effect"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    />
+        <view>
+            <simplelayout spacing="20" axis="x"/>
+            <edittext id="d1" password="true" text="password"
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    />
+        </view>
+
+        <view datapath="ds:/">
+            <constantlayout axis="x" value="10"/>
+            <simplelayout spacing="5"/>
+            <edittext datapath="item/text()" width="200" 
+	    onfocus="this.settext( 'this.field.fixedsize = ' + this.field.fixedsize )"
+	    />
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

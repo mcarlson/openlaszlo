@@ -1,0 +1,21 @@
+<canvas width="100%" height="400" >
+
+  <script>
+    // here's a warning generated at startup
+    foo.bar = 12;
+  </script>
+
+  <view id="bar" width="100" height="100" bgcolor="red"/>
+
+  <script>
+    __LzDebug.startupConsoleRemote();
+  </script>
+
+  <simplelayout/>
+
+  <button id="debuggerbutton">Show Debugger</button>            
+
+  <method event="onclick" reference="debuggerbutton">
+    new LzDebugWindow();
+  </method>
+</canvas>

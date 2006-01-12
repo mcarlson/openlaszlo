@@ -1,0 +1,25 @@
+<canvas width="1024" height="700" bgcolor="#FFFFFF" debug="true">
+    <!-- works with spaces, not with %20 or + -->
+    <dataset name="weatherdata" src="http:weather with space.xml"
+        request="true"/>
+
+    <datapointer xpath="weatherdata:/">
+        <method event="onerror" args="msg">
+            Debug.write('Got error: ' + msg );
+        </method>
+    </datapointer>
+
+    <view datapath="weatherdata:/weather[1]" width="400" height="25">
+        <view datapath="forecast[1]/day" width="${parent.width}">
+            <text name="day" x="42" width="140" datapath="@label"> </text>
+            <text name="desc" x="42" y="14" width="140" datapath="@desc"> </text>
+            <text name="temp" x="168" datapath="@temp"> </text>
+        </view>
+        <simplelayout axis="y" spacing="10"/>
+    </view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

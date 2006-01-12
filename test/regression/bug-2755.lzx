@@ -1,0 +1,50 @@
+<canvas debug="true" width="690">
+	<debug y="300"/>
+	<class name="loader">
+        <view stretches="both" height="100" 
+              width="${(this.unstretchedwidth/this.unstretchedheight ) * 100 }"
+              name="target" bgcolor="silver">
+            <method event="onframe">
+                if ( this.frame == 2 ){
+                    Debug.write( 'check it' );
+                    this.updateResourceSize();
+                }
+            </method>
+        </view>
+        <view>
+            <text>Bytes:</text>
+            <view width="${ classroot.target.loadratio * 100}"
+                  x="90" height="10" bgcolor="blue"/>
+        </view>
+        <view>
+            <text>Frames:</text>
+            <view width="${classroot.target.framesloadratio * 100}"
+                  x="90" height="10" bgcolor="blue"/>
+        </view>
+        <edittext id="inp" width="200">resource</edittext>
+        <button onclick="classroot.target.setSource( inp.getText() ,
+                                                    
+'none');classroot.target.play()">
+            load
+        </button>
+        <simplelayout/>
+    </class>
+    <loader/>
+    <simplelayout axis="x"/>
+    <view >
+        <simplelayout/>
+        <text onclick="inp.setText( this.text )">
+            http://www.laszlosystems.com/hubble/1995-01-a-640_wallpaper.gif
+        </text>
+        <text onclick="inp.setText( this.text )">
+            http://www.laszlosystems.com/hubble/2000-10-a-640_wallpaper.jpg
+        </text>
+        <text onclick="inp.setText( this.text )">
+            http://laszlosystems.com/lps/my-apps/video/assets/dashboard.swf
+        </text>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,11 @@
+<!-- overrides an attribute with illegal changed type , this should throw an error -->
+
+<canvas width="300" height="200" bgcolor="red"> 
+  <view>
+    <attribute name="id" type="number"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

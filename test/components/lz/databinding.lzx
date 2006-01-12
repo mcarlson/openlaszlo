@@ -1,0 +1,235 @@
+<canvas bgcolor="#EAEAEA" width="800" height="1000" >
+
+    <debug y="300"/>
+
+<!--=====================================================================-->
+<!-- dataset                                                            -->
+<!--=====================================================================-->
+
+    <dataset name="blank">
+        <item>
+           <text></text>
+           <value></value>
+        </item>
+    </dataset>
+
+    <dataset name="customtextandvalue">
+        <item>
+           <text>ctv one</text>
+           <value>1111</value>
+        </item>
+        <item>
+           <text>ctv two</text>
+           <value>2222</value>
+        </item>
+        <item>
+           <text>ctv three</text>
+           <value>3333</value>
+        </item>
+    </dataset>
+
+<!--=====================================================================-->
+<!-- classes                                                             -->
+<!--=====================================================================-->
+    <class name="viewer" defaultplacement="'content'">
+        <attribute name="text" value="dataset name" type="html" />
+        <method name="setTitle" args="text">
+            this.a.b.c.title.setText(text);
+        </method>
+        <view name="a" bgcolor="0x979797" width="200" height="100">
+            <view name="b" bgcolor="0xC0C0C0" x="2" y="2"
+                  width="${parent.width - 4}" height="${parent.height - 4}">
+                <simplelayout axis="y" spacing="4" />
+                <view name="c">
+                   <text x="4" y="2" name="title" text="${classroot.text}" 
+                         resize="true" fgcolor="0xFFFFFF" >
+                        <method event="ontext">
+                            parent.setWidth(this.getTextwidth() + 10)
+                         </method>
+                   </text>
+                </view>
+                <view name="content" />
+            </view>
+        </view>
+    </class>
+
+    <class name="testborder" defaultplacement="'content'" >
+        <attribute name="text" value="test name" type="html" />
+        <view bgcolor="0x979797" width="${this.title.getTextWidth() + 10}" height="20" >
+           <text x="4" y="2" name="title" text="${classroot.text}" resize="true" fgcolor="0xFFFFFF" >
+                <method event="ontext">parent.setWidth(this.getTextwidth() + 10)</method>
+           </text>
+        </view>
+        <view bgcolor="0x979797" width="100%"  options="releaseToLayout" height="10" >
+            <view name="content" bgcolor="0xC0C0C0" x="2" y="2" 
+                  width="${parent.width - 4}" height="${parent.height - 4}" />
+        </view>
+        <resizelayout axis="y" />
+    </class>
+
+
+    <simplelayout axis="y" spacing="10"/>
+
+    <viewer x="10" >dataset: customtextandvalue
+        <simplelayout axis="x" spacing="5" />
+        <view name="display">
+            <list x="5" y="5" width="130" shownitems="3" >
+                <textlistitem datapath="customtextandvalue:/item" 
+                              text='$path{"text/text()"}'
+                              value='$path{"value/text()"}'>
+                    <method event="onselected" args="isSelected">
+                        if (isSelected) this.datapath.deleteNode();
+                    </method>
+                </textlistitem>
+            </list>
+        </view>
+        <view name="add" y="5" datapath="blank:/item">
+            <simplelayout axis="y" spacing="1" />
+            <edittext width="${parent.add.width}" datapath="value/text()">
+                <method event="oninit">
+                    if (! this.datapath.p) {
+                        var el = new LzDataElement('value')
+                        el.appendChild( new LzDataText() );
+                        this.datapath.p = el;
+                    }
+                </method>
+            </edittext>
+            <edittext width="${parent.add.width}" datapath="text/text()" >
+                <method event="oninit">
+                    if (! this.datapath.p) {
+                        var el = new LzDataElement('value')
+                        el.appendChild( new LzDataText() );
+                        this.datapath.p = el;
+                    }
+                </method>
+            </edittext>
+            <button name="add" width="50">add
+                <method event="onclick">
+                    this.parent.datapath.updateData();
+                    var dp = canvas.datasets.customtextandvalue.getPointer();
+                    dp.addNodeFromPointer( this.parent.datapath );
+                </method>
+            </button>
+        </view>
+    </viewer>
+
+    <testborder width="670" height="140" y="20" x="10" >datapath="customtextandvalue:/item"
+        <simplelayout axis="x" spacing="10"/>
+        <view>
+            <text text="${ 'value: ' + parent.rg.value }" 
+                  name="status" resize="true"/>
+            <radiogroup name="rg" y="15">
+                <radiobutton datapath="customtextandvalue:/item" 
+                             text='$path{"text/text()"}'
+                             value='$path{"value/text()"}'>
+                    <method event="onclick">
+                        parent.parent.status.setText
+                            ('value: ' + parent.value);
+                    </method>
+                </radiobutton>
+            </radiogroup>
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4"/>
+            <text text="${parent.cb.clones[0].text + ': ' + parent.cb.clones[0].value}"
+                  resize="true"/>
+            <checkbox name="cb" y="15" datapath="customtextandvalue:/item" 
+                      text='$path{"text/text()"}' value='$path{"value/text()"}' />
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4"/>
+            <view height="4" />
+            <!-- buttons don't have value -->
+            <button datapath="customtextandvalue:/item" 
+                    text='$path{"text/text()"}' />
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4"/>
+            <view height="4" />
+            <edittext datapath="customtextandvalue:/item"
+                          text='$path{"text/text()"}'/>
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4"/>
+            <text text="${ 'value: ' + parent.li.value }" 
+                  name="status" resize="true"/>
+            <list name="li" x="5" y="5" width="130" shownitems="3" >
+                <textlistitem datapath="customtextandvalue:/item" 
+                              text='$path{"text/text()"}'
+                              value='$path{"value/text()"}' >
+                    <method event="onselected" args="isSelected">
+                    <![CDATA[
+                        if (isSelected) {
+                            if (typeof(parent.value) == 'string') {
+                                parent.parent.status.setText
+                                    ('value: ' + parent.value);
+                            } else { 
+                                // array
+                                var arr = parent.value;
+                                var str = 'value: ' + arr[0];
+                                for (var i=1; i < arr.length; i++) {
+                                    str += ',' + arr[i];
+                                }
+                                parent.parent.status.setText(str);
+                            }                                   
+                        }
+                    ]]>
+                    </method>
+                </textlistitem>
+            </list>
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4" />
+            <text text="${ 'value: ' + parent.cb.value }" 
+                  name="status" resize="true"/>
+            <combobox name="cb" x="5" y="5" width="130" spacing="0" shownitems="6"
+                      defaulttext="choose one..." editable="true" >
+                <textlistitem datapath="customtextandvalue:/item"
+                              text='$path{"text/text()"}'
+                              value='$path{"value/text()"}' >
+                    <method event="onselected" args="isSelected">
+                        if (isSelected) {
+                            parent.parent.status.setText('value: ' + parent.value);
+                        }
+                    </method>
+                </textlistitem>
+            </combobox>
+        </view>
+    </testborder>
+
+    <testborder width="670" height="200" y="20" x="10" >datapath="customtextandvalue:/item"
+        <simplelayout axis="x" spacing="10"/>
+        <view>
+            <tabslider y="5" height="${parent.parent.height-30}" width="130">
+                <tabelement datapath="customtextandvalue:/item" 
+                            text='$path{"text/text()"}'
+                            value='$path{"value/text()"}' >
+                    <text>hello</text>
+                </tabelement>
+            </tabslider>
+        </view>
+        <menubar>
+            <menu x="5" y="5" height="${parent.parent.height-30}" width="130">
+                <menuitem datapath="customtextandvalue:/item" 
+                          text='$path{"text/text()"}' 
+                          value='$path{"value/text()"}' />
+            </menu>
+        </menubar>
+    </testborder>
+
+    <testborder width="670" height="140" y="20" x="10" >datapath="customtextandvalue:/item"
+        <!-- tabpane doesn't have valuedatapath -->
+        <tabs name="t" x="5" y="5">
+            <tabpane datapath="customtextandvalue:/item" 
+                     text='$path{"text/text()"}' />
+        </tabs>
+    </testborder>
+
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,117 @@
+<canvas debug="true" height="800" width="1000">
+
+    <debug x="280" width="470" height="370" />
+
+    <dataset name="amazonDset1" />
+    <dataset name="googleDset" />
+
+    <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">
+
+        <attribute name="myobject1" value="null" type="expression" />
+        <attribute name="isloaded" value="false" />
+
+        <method event="onload">
+            this.setAttribute('isloaded', true);
+
+            Debug.write('amazon soap service stub loaded');
+            this.setAttribute('myobject1', new amazon.proto.KeywordRequest());
+            this.myobject1.keyword = 'services';
+            this.myobject1.page = 1;
+            this.myobject1.mode = 'book';
+            this.myobject1.tag = 'webservices-20';
+            this.myobject1.type = 'lite';
+            this.myobject1.devtag = 'your-dev-tag';
+            this.myobject1.format = 'xml';
+            this.myobject1.version = '1.0';
+        </method>
+
+        <!-- if error isn't handled by remotecall, the error is propogated up to
+             soap -->
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+    </soap>
+
+    <soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl">
+        <attribute name="isloaded" value="false" />
+
+        <method event="onload">
+            this.setAttribute('isloaded', true);
+            Debug.write('google soap service stub loaded');
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+    </soap>
+
+    <view layout="spacing: 5" visible="${amazon.isloaded &amp;&amp; google.isloaded}">
+
+        <button text="amazon keyword search" onclick="this.myKSR1.invoke()">
+            <remotecall name="myKSR1" funcname="KeywordSearchRequest"
+                        dataobject="amazonDset1" remotecontext="$once{amazon}">
+                <param value="${canvas.amazon.myobject1}" />
+                <method event="ondata" args="value">
+                    Debug.write('amazon keyword search result:', value);
+                </method>
+            </remotecall>
+        </button>
+
+        <button text="google search" onclick="this.search.invoke()">
+            <remotecall name="search" funcname="doGoogleSearch" 
+                        dataobject="googleDset" remotecontext="$once{google}">
+
+                <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+                <param value="'sweet'" />
+                <param value="1" />
+                <param value="10" />
+                <param value="true" />
+                <param value="''" />
+                <param value="true" />
+                <param value="''" />
+                <param value="''" />
+                <param value="''" />
+
+                <method event="ondata" args="value">
+                    Debug.write('google search result:', value);
+                </method>
+
+            </remotecall>
+        </button>
+
+        <button text="google spellcheck" onclick="this.spellcheck.invoke()">
+            <remotecall name="spellcheck" funcname="doSpellingSuggestion"
+                        remotecontext="$once{google}">
+
+                <param value="'2TKUw4ZQFHJ84ByemZK0EXV0Lj+7xGOx'" />
+                <param value="'check spelling'" />  
+
+                <method event="ondata" args="value">
+                    Debug.write('spell check result:\n', value);
+                </method>
+
+                <method event="onerror" args="error">
+                    Debug.write('spell check error:\n', error);
+                </method>
+            </remotecall>
+        </button>
+
+        <view bgcolor="red" layout="axis: y" >
+            <view>
+                <datapath xpath="amazonDset1:/Details/Details" pooling="true" />
+                <text datapath="ProductName/text()" resize="true"/>
+            </view>
+        </view>
+        <view bgcolor="yellow" layout="axis: y" >
+            <view>
+                <datapath xpath="googleDset:/resultElements/item" pooling="true" />
+                <text datapath="URL/text()" resize="true"/>
+            </view>
+        </view>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

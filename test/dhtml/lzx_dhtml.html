@@ -1,0 +1,94 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+
+<html>
+<head>
+    <title>DHTML mockup</title>
+</head>
+
+<body>
+
+
+<script>
+
+// Return a pointer to the Div
+function getDiv( divId ) {
+    if ( document.documentElement ) { // W3C compliant browser
+        return window.document.getElementById( divId );
+    } else if ( document.all ) { // IE 4
+        return eval( "window.document.all." + divId );
+    } else if ( document.layers ) { // Netscape 4
+        return eval( "window.document." + divId );
+    }
+    alert( "Unknown browser" );
+}
+
+function positionHTMLArea( x, y ) {
+    var d = getDiv( "foo" );
+    if ( !document.layers ) {
+        d.style.left = x + "px";
+        d.style.top = y + "px";
+    } else {
+        d.left = x;
+        d.top = y;
+    }
+}
+function setClippingRegion( lengthTop, lengthRight, lengthBottom, lengthLeft ) {
+    var d = getDiv( "foo" );
+    if ( !document.layers ) {
+        d.style.clip = "rect( " + lengthTop + "px " + lengthRight + "px " + 
+            lengthBottom + "px " + lengthLeft + "px)";
+    } else {
+        d.clip.left = lengthLeft;
+        d.clip.right = lengthRight;
+        d.clip.top = lengthTop;
+        d.clip.bottom = lengthBottom;
+    }
+}
+
+
+</script>
+
+<p>
+<a href="#"
+   onclick="positionHTMLArea( 100, 100 ); return false;">Position HTML area</a></p>
+
+<p>
+<a href="#"
+   onclick="setClippingRegion( 10, 250, 300, 80); return false;">Set Clipping Region</a></p>
+
+<div id="foo" style="width:300px; height:400px; position: absolute; top: 150px; left: 150px; ">
+    <IFRAME id="htmlframe" height="200" width="600" src="plain-text.html"
+            marginwidth="0" marginheight="0"
+            scrolling="no"
+            frameborder="0">
+            
+</IFRAME>
+
+</div>
+
+<div id="trt">
+
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" 
+        codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,79,0"
+        width="100%" height="100%">
+<param name="movie" 
+       value="testDHTML.lzx?lzt=swf">
+<param name="quality" value="high">
+<param name="menu" value="false">
+<param name="salign" value="tl">
+<PARAM NAME="wmode" VALUE="transparent">
+<PARAM NAME="bgcolor" VALUE="#ffffff">
+<embed src="testDHTML.lzx?lzt=swf" quality="high" wmode="transparent"
+    bgcolor="#ffffff"
+    pluginspage="http://www.macromedia.com/shockwave/download/index.cgi?P1_Prod_Version=ShockwaveFlash"
+    type="application/x-shockwave-flash" width="100%" height="100%"
+    salign="tl" menu="false"></embed>
+</object>
+</div>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,64 @@
+<canvas debug="true" width="1024">
+<view oninit="Debug.setAttribute('height', 200);
+Debug.setAttribute('width', 600);
+Debug.setAttribute('x', 400);
+Debug.setAttribute('y', 0);
+Debug.setLine(0);"/>
+
+    <view name="stateview" width="300" height="200" >
+        <attribute name="myapply" value="true" />
+        <state >
+            <attribute name="apply" value="parent.myapply" when="once" />
+            <attribute name="bgcolor" value="green" />
+            <text name="title"> This is a view with states</text>
+        </state>
+        <state name="state1" onapply="Debug.write( 'Apply state 1')"
+               onremove="Debug.write( 'remove state 1')" >
+            <animator start="true" attribute="y" to="200" duration="1500" />
+            <animator start="true" attribute="width" to="50" duration="1500" 
+                      relative="true"/>
+            <text y="${parent.title.height}">Im animating!</text>
+        </state>
+        <state name="state2" pooling="true">
+            <view name="redContainer" width="${parent.width}" y="50">
+                <view name="redOne"   bgcolor="red" height="22" options="releasetolayout;"/>
+                <view name="redTwo"   bgcolor="red" height="22" options="releasetolayout;"/>
+                <view name="redThree" bgcolor="red" height="22" options="releasetolayout;"/>
+                <resizelayout axis="x" spacing="10"/>
+            </view>
+            <!--This doesn't get compiled as a reference at the moment-->
+            <attribute name="x" value="${this.y}"/>
+            <attribute name="width" value="250"/>
+        </state>
+        <state name="state3" onapply="this.parent.doMyApply()">
+            <text label="This is the mean state that kills others" y="22" />
+            <attribute name="y" value="0" />
+            <method name="doMyApply" >
+                this.state1.remove();
+                this.state2.remove();
+                this.state3.remove();
+            </method>
+        </state>
+
+    </view>
+    <view x="${stateview.width}" oninit="Debug.write( ' got inited' )">
+        <button text="state1" onclick="stateview.state1.apply()"/>
+        <button text="state2" onclick="stateview.state2.apply()"/>
+        <button text="state3" onclick="stateview.state3.apply()" />
+<!-- These last two buttons need some explaination.
+     lookForViews attempts to locate a view that is not created until state2 is applied. 
+     + should return errors and undefined if clicked before state2
+     + should return true if cleicked after state2 
+     + should return false if clicked after state2 and state3
+     + Should return errors and undefined if cliked after "destroy state2" 
+     These were added to verify that pooled states and their views are fully destroyed after LzState.destroy(); 
+-->
+        <button text="lookForViews" onclick="Debug.write('Should be true after state2 is applied:'+stateview.redContainer.visible);" />
+        <button text="destory state2" onclick="stateview.state2.destroy();" />
+        <simplelayout axis="y" spacing ="4" />
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

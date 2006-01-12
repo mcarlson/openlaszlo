@@ -1,0 +1,21 @@
+<library>
+    <include href="label.lzx"/>
+    <!-- Begin Data Label Class -->
+    <!--- Represents the data text which appears on a computerized note -->
+    <class name="datalabel" extends="label">
+
+        <!--- @keyword private -->
+        <attribute name="labelEnabled" type="boolean" value="true"/>
+        <!--- @keyword private -->
+        <attribute name="labelOut" type="boolean" value="true"/>
+
+    </class>
+<!-- End Vertical Axis Class -->
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

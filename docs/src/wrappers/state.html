@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="State">
+    <lztier>LFC</lztier>
+    <lzcategory>State</lzcategory>
+    <lzshortdesc>
+        A description of an instance hierarchy that can be applied and removed at runtime.
+    </lzshortdesc>
+    <lztag>tag-state.xml</lztag>
+    <lzapi>api-lzstate.xml</lzapi>
+</lzelement>
+
+<p>
+A state is an object that holds its children and attributes for
+creation or application at a later time &#x2014; when the state's
+<method>apply</method> method is called. In addition to representing
+visual state by adding and removing children from a view, states are
+often used to control constraints which are applied and removed at
+different times during the run of an application.
+</p>
+
+<p>For the most part, the declarative style used by Laszlo apps represents an initial state for the application. All modification to application state can be made using the script API's, but it is often convenient to declaratively describe a bit of application state which may be selectively applied or removed at runtime. The <tagname>state</tagname> tag is provided for this purpose.</p>
+
+<p>Everything within a <tagname>state</tagname> tag acts as if it were written inside the parent when the state is applied. States can contain attributes, methods, and other nodes.</p>
+
+<p>
+When a state is removed, any children or constraints created when the state was applied are then removed, but attributes that were set by the application of the state are not restored. 
+</p>
+
+<example title="Using states to represent the min/max state of a window.">
+&lt;canvas&gt;
+  &lt;window title="state demo" width="400" height="300"&gt;
+    &lt;state name="max" apply="true"&gt;
+      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
+        &lt;animator attribute="width" to="400"/&gt;
+        &lt;animator attribute="height" to="300"/&gt;
+        &lt;animator attribute="x" to="100"/&gt;
+        &lt;animator attribute="y" to="100"/&gt;
+      &lt;/animatorgroup&gt;
+      &lt;text align="center" y="20%"&gt;M a x i m i z e d&lt;/text&gt;
+    &lt;/state&gt;
+    &lt;state name="min"&gt;
+      &lt;animatorgroup duration="1000" process="simultaneous"&gt;
+        &lt;animator attribute="width" to="170"/&gt;
+        &lt;animator attribute="height" to="100"/&gt;
+        &lt;animator attribute="x" to="0"/&gt;
+        &lt;animator attribute="y" to="0"/&gt;
+      &lt;/animatorgroup&gt;
+      &lt;text align="center" valign="middle"&gt;Minimized&lt;/text&gt;
+    &lt;/state&gt;
+    &lt;button placement="title_area" align="right" height="16"&gt; Toggle
+      &lt;attribute name="isMax" value="true"/&gt;
+      &lt;method event="onclick"&gt;
+        if (this.isMax) { parent.max.remove(); parent.min.apply(); }
+        else { parent.max.apply(); parent.min.remove(); }
+        this.isMax = !this.isMax;
+      &lt;/method&gt;
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+ 
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

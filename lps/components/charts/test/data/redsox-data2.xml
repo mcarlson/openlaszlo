@@ -1,0 +1,11 @@
+<records>
+    <record year="2004" league="AL East" wins="98" losses="64" finish="WS,2" stadium="Fenway Park II" attendance="2,837,294" attend-g="35,028" attend-rank="4th out of 14" team-age-bat-pit="30.5/32.5" park-factor-bat-pit="106/105" />
+    <record year="2000" league="AL East" wins="82" losses="79" finish="2" stadium="Fenway Park II" attendance="2,625,333" attend-g="32,412" attend-rank="6th out of 14" team-age-bat-pit="30.0/30.8" park-factor-bat-pit="101/101" />
+    <record year="1994" league="AL East" wins="54" losses="61" finish="4" stadium="Fenway Park II" attendance="1,775,818" attend-g="27,747" attend-rank="7th out of 14" team-age-bat-pit="29.9/30.2" park-factor-bat-pit="105/105" />
+    <record year="1990" league="AL East" wins="73" losses="89" finish="7" stadium="Fenway Park II" attendance="2,468,574" attend-g="30,476" attend-rank="6th out of 14" team-age-bat-pit="28.9/31.5" park-factor-bat-pit="107/107" />
+    <record year="1985" league="AL East" wins="78" losses="84" finish="6" stadium="Fenway Park II" attendance="1,782,285" attend-g="22,004" attend-rank="9th out of 14" team-age-bat-pit="29.1/26.8" park-factor-bat-pit="107/107" />
+    <record year="1970" league="AL East" wins="59" losses="49" finish="" stadium="Fenway Park II" attendance="1,060,379" attend-g="20,007" attend-rank="6th out of 14" team-age-bat-pit="29.1/27.9" park-factor-bat-pit="106/106" />
+    <record year="1965" league="American Lg" wins="72" losses="90" finish="8" stadium="Fenway Park II" attendance="883,276" attend-g="10,905" attend-rank="5th out of 10" team-age-bat-pit="27.5/25.8" park-factor-bat-pit="105/106" />
+    <record year="1960" league="American Lg" wins="65" losses="89" finish="7" stadium="Fenway Park II" attendance="1,129,866" attend-g="14,674" attend-rank="5th out of 8" team-age-bat-pit="29.0/27.6" park-factor-bat-pit="104/104" />
+</records>
+

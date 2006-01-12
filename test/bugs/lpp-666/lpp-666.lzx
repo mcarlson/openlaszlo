@@ -1,0 +1,7 @@
+<canvas height="60%">
+    <view play="false" resource="http:counter.swf">
+        <method event="onframe" args="f">
+            Debug.write('frame', f);
+        </method>
+    </view>
+</canvas>

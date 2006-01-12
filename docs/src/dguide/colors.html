@@ -1,0 +1,107 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="colors">
+<head>
+  <title>Color in Laszlo Applications</title>
+</head>
+
+<body>
+
+<h1>Colors in Laszlo Applications</h1>
+<todo>
+This chapter is not written.  We expect to able to cover some of the following topics:
+ </todo>
+ 
+<pre> 
+HTML and CSS Colors
+Animating Colors
+Design Considerations
+ e.Pointer to later chapter on subclassing "layout"
+ ii.Setcolor() and sectcolorTransform()
+</pre>
+ 
+<p> </p>
+<h2>Colors and .SWF files</h2>
+<fixme>
+
+Chris from Semaphore is porting some old code that used to colorize a
+SWF. He asserts that it's not just tinting he's looking for:
+
+=================================================
+&lt;view name="some_color" resource="colorbox.swf"&gt;
+
+    &lt;method name="applyColor" args="someRGB"&gt;
+        var thisClass = this.parent;
+        this.colorControl=new Color(this.movieClipRef);
+        this.colorControl.setRGB(someRGB);
+    &lt;/method&gt;
+
+&lt;/view&gt;
+=================================================
+
+a) Does that code really affect the SWF or is it the same as
+setcolortransform?
+
+LzView.setColor is probably what he wants.  It does the same thing as the example code you have (takes an RGB and applies it as an offset.)
+
+LzView.setColorTransform allows you to set both the RGB offsets and the RGB alphas.
+
+b) What's the movieClipRef for?
+
+That's the way Flash does it.  To control the color of a clip you make a Color object that references the clip.  It's like the Color object exposes some otherwise inaccessible API.
+
+Here's the post:
+
+
+http://www.laszlosystems.com/developers/community/forums/showthread.php
+ postid=3315#post3315
+</fixme>
+<!--=========================================================================-->
+<!-- Major sub-heads in h2, etc                                                               -->
+<!--=========================================================================-->
+<h2>Overview</h2>
+
+<p>This-a-here chapter is about this subject.</p>
+
+<p>If the first h2 heading is named "Overview", it is given index 0.  Otherwise, it is given index 1.</p>
+<example class="code" title="Using setattribute to change a color">
+&lt;canvas&gt;
+   &lt;view width="60" height="60" bgcolor="red" onclick="changecolor()"&gt;
+       &lt;method name="changecolor"&gt;
+       this.setattribute(bgcolor, "red")
+       &lt;/method&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<example class="code" title="applying transform to text color">
+&lt;canvas debug="true"&gt;
+    &lt;simplelayout axis="y" spacing="10" /&gt;
+
+    &lt;view id="foo" width="400" height="200"&gt;
+        &lt;simplelayout axis="y" spacing="10" /&gt;
+        &lt;text&gt;
+            &lt;font color="#0000FF"&gt;
+            Hello world
+            &lt;/font&gt;
+        &lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;button&gt;Apply tint now
+        &lt;method event="onclick"&gt;
+            var transColor = {rb:255};
+            foo.setColorTransform( transColor );
+        &lt;/method&gt;
+    &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+<fixme>
+SetColorTransform applies a tint :-)
+
+SetColor sets an rgb color, but setColorTransform takes an argument with 8 components that lets you adjust the percentage and offset of each of the red/green/blue channels or an overall percent and offset.  It is applied as a transform to the view and all subviews.
+
+I'm no color expert, so I can't tell you how to compute the right value for a particular tint, but I'm guessing that if you wanted to tint something red, you could just apply a transform with a positive red offset.
+</fixme>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

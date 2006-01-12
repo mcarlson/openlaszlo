@@ -1,0 +1,23 @@
+
+<!-- EXPECTED BEHAVIOR: redbox1 moves right to x=200 -->
+<!-- EXPECTED BEHAVIOR: redbox2 moves right to x=100 -->
+<canvas>
+	<view id="redbox1" bgcolor="red" width="50" height="50" >
+		<animator name="anm1" attribute="x" to="100" duration="1000" start="false"/>
+		<animator name="anm2" attribute="x" to="200" duration="1000" start="false"/>
+	</view>
+	
+	<view id="redbox2" bgcolor="red" width="50" height="50" y="110">
+		<animator name="anm1" attribute="x" to="200" duration="1000" start="false"/>
+		<animator name="anm2" attribute="x" to="100" duration="1000" start="false"/>
+	</view>
+	
+	<button text="Run Test" y="200"
+	        onclick="
+				redbox1.anm1.start();redbox1.anm2.start();
+				redbox2.anm1.start();redbox2.anm2.start();"  />
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

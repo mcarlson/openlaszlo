@@ -1,0 +1,60 @@
+d<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basetabsbar">
+    <lztier>Base Component</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A non-visual container for basetab components.
+    </lzshortdesc>
+    <lztag>base/basetabsbar.xml</lztag>
+</lzelement>
+
+<p>A <classname>basetabsbar</classname> is a non-visual container
+class that uses a default x-axis <classname>simplelayout</classname>
+to lay out its <classname>basetab</classname>
+children. <classname>basetabsbar</classname> is contained in a
+<classname>basetabs</classname> component.</p>
+
+<example title="custom basetabsbar">
+&lt;canvas width="150" height="75"&gt;
+  &lt;include href="base"/&gt;
+
+  &lt;class name="aquatab" extends="basetab" 
+            width="40" height="20" bgcolor="aqua"&gt;
+    &lt;text&gt;tab&lt;/text&gt;
+  &lt;/class&gt;
+
+  &lt;class name="spacetabsbar" extends="basetabsbar" bgcolor="black" 
+         layout="class: simplelayout; axis: x; spacing: 4"&gt;
+  &lt;/class&gt;
+
+  &lt;basetabs x="10" y="10" tabclass="aquatab" barclass="spacetabsbar"&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;one&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;two&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;three&lt;/text&gt;
+    &lt;/basetabpane&gt;
+  &lt;/basetabs&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<tags>basetab basetabs</tags>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

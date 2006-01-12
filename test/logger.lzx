@@ -1,0 +1,86 @@
+<!-- these messages should be logged to the web server log -->
+
+<canvas width="1000" height="1000" debug="true">
+
+<script>
+   Debug.log("Startup log message 1");
+   Debug.log("Startup log message 2");
+   Debug.log("Startup log message 3");
+   Debug.log("Startup log message 4");
+</script>
+
+<view name="test">
+    <simplelayout axis="y" />
+    <button text="Log Msg1" onclick="Debug.log('This is a test log message.')"/>
+    <button text="Log Msg2" onclick="Debug.log('This is another log message!')"/>
+    <button text="Debug.write" onclick="Debug.write('debug.write output')"/>
+    <button text="Matrix" onclick="parent.matrix(3)"/>
+    <button text="Back To Back" onclick="parent.backtoback(10)"/>
+    <button text="line numbers" onclick="for(var i=0; i &lt; 120; i++) debug.write(i)"/>
+    <button text="forcetext" onclick="parent.forcetext()"/>
+
+
+    <text id="foo" width="200" height="600" bgcolor="#cccccc"/>
+
+    <method name="forcetext">
+     <![CDATA[
+	var j;	
+	var msg = "";
+	for (j = 0; j < 100; j++) {
+	    msg = msg + j + "<br>";
+	}
+
+	Debug.write(msg);
+	foo.settext(msg);
+	
+     ]]>
+   </method>   
+	
+
+
+
+    <method name="backtoback" args="n">
+     <![CDATA[
+	var j;
+	for (j = 0; j < n; j++) {
+	   Debug.log("log message "+j);
+        }
+     ]]>
+   </method>   
+
+
+   <method name="matrix" args="n">
+     <![CDATA[
+	var j;
+        var k;
+	for (j = 0; j < n; j++) {
+	  for (k=0 ; k < n; k++) {
+	    this.doit(j,k);
+          }
+        }
+     ]]>
+   </method>   
+
+    <method name="doit" args="m,n">
+	if (m==n) {
+          Debug.log(m+ " EQUALS "+n);
+        } else {
+          Debug.log(m+ " DOESN'T EQUAL "+n);
+      }
+    </method>
+</view>
+
+<script>
+   Debug.log("Startup log message 5");
+   Debug.log("Startup log message 6");
+   Debug.log("Startup log message 7");
+   Debug.log("Startup log message 8");
+</script>
+
+</canvas>
+ 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

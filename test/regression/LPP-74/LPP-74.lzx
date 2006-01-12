@@ -1,0 +1,14 @@
+
+<canvas width="1200" height="600" >
+  <dataset name="myds" src="http:ndata.xml" request="true"
+           proxied="false"
+           cacheable="false"
+           
+           ondata="Debug.write('gotdata', this)"/>
+  <view bgcolor="#cccccc" >
+    <simplelayout/>
+    <text resize="true" datapath="myds:/data/recordset/record/@kontakt"/>
+  </view>
+
+
+</canvas>

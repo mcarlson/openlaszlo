@@ -1,0 +1,171 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="script-compiler"
+      xmlns:d="docbook">
+
+<head>
+<title>Script Compiler</title>
+</head>
+<body>
+
+<h1>Script Compiler</h1>
+
+<h2>Overview</h2>
+
+<p>The <dfn>script compiler</dfn> compile annotated ECMAScript source code into ActionScript bytecode.  The annotation are <code>#file</code>, <code>#line</code>, and <code>#pragma</code> directives that allow the script compiler to be used as the back end of the element compilation phase in the application compiler.</p>
+
+<p>The script compiler consists of these passes:</p>
+<dl>
+<dt>Parsing</dt>
+<dd>The source text is transformed into a parse tree.</dd>
+<dt>Code Generation</dt>
+<dd>The parse tree is transformed into a sequence of objects that represent instructions.</dd>
+<dt>Assembly</dt>
+<dd>The instruction sequence is transformed into a sequence of bytes.</dd>
+</dl>
+
+<p>The script compiler supports some features and optimizations that are specific to its use within the Laszlo application compiler, or to the Flash output format:</p>
+<ul>
+<li>Source location</li>
+<li>Manipulation of the activation scope</li>
+<li>Instrumentation for debugging, profiling, and kranking</li>
+<li>Constraint compilation</li>
+<li>Flash-specific optimizations</li>
+</ul>
+
+<h2>Parsing</h2>
+<p>JavaCC is used to scan (tokenize) and parse the source text.  A post-parsing phase normalizes the parse tree to match evaluation order.  This is necessary because the parser is right-recursive, and generates flat trees for a+b+c and a.b.c.  We want right-branching trees.</p>
+
+<h2>Code Generation</h2>
+<p>The code generator uses the Visitor design pattern to transform the parse tree into a sequence of objects that represent ActionScript instructions.</p>
+
+<p>Internally, the code generator performs source transformations (parse tree to parse tree transformations) to normalize certain constructs.  These transformations are listed at the end of this chapter.  (This compilation technique similar to intentional programming, although it was more directly inspired by syntactic macros in Dylan and Scheme.)</p>
+
+<h2>Assembly</h2>
+<p>The assembler turns objects that represent ActionScript instructions into bytecode sequences, and resolves branch references into offsets.</p>
+
+<p>The assembler also performs these peephole optimizations:</p>
+
+    <ul>
+      <li>Replace adjacent <code>PUSH</code> instructions are replaced by a
+	single <code>PUSH</code> instruction with multiple arguments.
+      </li><li>Transform <code>PUSH; DUP</code> into a <code>PUSH</code>
+	with a repeated argument.
+      </li><li>Replace integer-valued floats by integers.
+    </li></ul>
+
+    <p>Note that <code>PUSH</code> merging is only valid because of
+      the treatment of labels as pseudo-instructions, which break up a
+      sequence of <code>PUSH</code>es if any but the first is a branch
+      target.  This is more conventionally done by optimizing within a
+      basic block, but the compiler doesn't currently create basic
+      blocks.</p>
+
+    <p>Note also that push merging and other optimizations may bleed
+      each other.  Since both types operations preserve program
+      semantics, either application order is valid; the current
+      implementation doesn't insure that the order is optimal.</p>
+
+<h2>Constraints</h2>
+
+
+<h2>Implementation</h2>
+
+    <p>The scanner and parser are written in Java (using JavaCC and
+    jjtree).  Subsequent stages are written in Python; the source for
+    them is compiled to JVM bytecodes via Jython.  Specific stages or
+    classes may be rewritten in Java, depending on profiling, but this
+    will take place after algorithm-level optimizatios have petered
+    out.</p>
+
+    <p>The source files are heavily commented, and should be
+      consulted as the primary reference.  This document contains
+      information that doesn't fit into the sources.</p>
+
+    <p>The compiler sources and testing infrastructure are in these files:
+    </p><dl><dt><code><a href="actions.py">actions.py</a></code></dt><dd>SWF literals
+      </dd><dt><code><a href="instructions.py">instructions.py</a></code></dt><dd>Instructions and assembler
+      </dd><dt><code><a href="compiler.py">compiler.py</a></code></dt><dd>Parser interface and compiler
+      </dd><dt><code><a href="testing.py">testing.py</a></code></dt><dd>Interactive testing fns, and testing framework
+      </dd><dt><code><a href="tests.py">tests.py</a></code></dt><dd>Test cases
+      </dd><dt><code><a href="src/org/openlaszlo/sc/Parser.jjt">Parser.jjt</a></code></dt><dd>Parser grammar
+    </dd></dl>
+
+<h2>Appendix: Source Transformations</h2>
+    <h3>Expressions</h3>
+    <table class="comparison" frame="box">
+	<tbody><tr><th>Source</th><th>Compiled As
+	</th></tr><tr><td><pre>function f(<var>args</var>) {<var>body</var>}</pre>
+	    </td><td><pre>function f(<var>args</var>) {<br/>  $$ = {...}<br/>  with (_root)<br/>    with ($$) ;{<var>body</var>}}</pre>
+	</td></tr><tr><td><pre>function (<var>args</var>) {<var>body</var>}</pre>
+	    </td><td><pre>function (<var>args</var>) {<br/>  $$ = {...}<br/>  with (_root)<br/>    with ($$) {<var>body</var>}}</pre>
+	</td></tr><tr><td><pre><var>a</var> instanceof <var>b</var></pre>
+	    </td><td><pre>$instanceof(<var>a</var>, <var>b</var>)</pre>
+	</td></tr><tr><td><pre><var>a</var> in <var>b</var></pre>
+	    </td><td><pre>$hasproperty(<var>a</var>, <var>b</var>)</pre>
+	    </td><td>Not implemented
+	</td></tr><tr><td><pre>super.m(a, b)</pre>
+	    </td><td><pre>this.callInherited('m', a, b)</pre>
+    </td></tr><tr>
+      <td valign="top">
+      <pre>super(a, b)</pre>
+      </td>
+      <td valign="top">
+      <pre>this.callInherited('constructor', a, b)</pre>
+      </td>
+      <td valign="top"><br/>
+      </td>
+    </tr>
+</tbody></table>
+
+    <p><code>$$</code> is initialized to an object that binds each argument to
+its value, each local variable to undefined, and each local function definition
+name to its function. Its purpose is to insert an object that corresponds
+to the JavaScript activation object at the front of the scope chain, in front
+of <code>_root</code>.</p>
+
+<p>The compiler generates variables beginning with "<code>$lzsc$</code>". User code shouldn't begin with this prefix. (Variable beginning with "<code>$</code>"
+in JavaScript are reserved for machine-generated code, but an lzx file could
+be machine generated, so this suffix is used as a second level of protection.)</p>
+
+<h3>Class Definitions</h3>
+
+    <table class="comparison" frame="box">
+	<tbody><tr><th>Source</th><th>Compiled As
+	</th></tr><tr><td><pre>class C {}</pre>
+	    </td><td><pre>function C() {}</pre>
+	</td></tr><tr><td><pre>class C extends B {}</pre>
+	    </td><td><pre>function C() {}<br/>Object['class']['extends'](B, C)</pre>
+	</td></tr><tr><td><pre>class C {var a}</pre>
+	    </td><td><pre>function C() {}<br/>C.prototype.a = undefined</pre>
+	</td></tr><tr><td><pre>class C {var a=1}</pre>
+	    </td><td><pre>function C() {}<br/>C.prototype.a = 1</pre>
+	</td></tr><tr><td><pre>class C extends B {var a=1}</pre>
+	    </td><td><pre>function C() {}<br/>Object['class']['extends'](B, C)<br/>C.prototype.a = 1</pre>
+	</td></tr><tr><td><pre>class C {var a=1, b=2}</pre>
+	    </td><td><pre>function C() {}<br/>C.prototype.a = 1<br/>C.prototype.b = 2</pre>
+	</td></tr><tr><td><pre>class C {function C(x) {this.x=x}}</pre>
+	    </td><td><pre>function C(x) {this.x=x}</pre>
+	</td></tr><tr><td><pre>class C extends B {function C(x) {this.x=x}}</pre>
+	    </td><td><pre>function C(x) {this.x=x}<br/>Object['class']['extends'](B, C)</pre>
+	</td></tr><tr><td><pre>class C {function f(<i>args</i>) {<i>body</i>}}</pre>
+	    </td><td><pre>function C() {}<br/>C.prototype.f = function(<i>args</i>) {<i>body</i>}</pre>
+    </td></tr></tbody></table>
+
+    <h2>References</h2>
+    <ul>
+      <li><a href="http://www.cs.princeton.edu/%7Eappel/modern/java/">Andrew W. Appel, <i>Modern Compiler Implementation in Java</i></a>
+      </li><li><a href="http://www.mozilla.org/js/language/index.html">ECMAScript Reference</a>
+      </li><li><a href="http://flasm.sourceforge.net/">Flasm manual</a>
+      </li><li><a href="http://www.opaque.net/%7Edave/swf5action.html">SWF5
+	  actions</a>
+      </li><li><a href="sc-features.html">Compiler features</a>
+      </li><li><a href="sc-tasks.html">Compiler tasks</a>
+      </li><li><a href="Parser.html">JavaCC grammar</a> (requires
+	<tt>jjdoc</tt> to build)
+    </li></ul>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,55 @@
+<library >
+    <include href="lzunit/lzunit.lzx" />
+
+    <dataset name="specopDset">
+        <root a="1">
+            <a a="2"> <b a="3"/> </a>
+            <b a="4"/>
+            <a a="5"> <b a="6"><c a="7"/></b> </a>
+        </root>
+    </dataset>
+    <class name="TestDatapathSpecialOp" extends="TestCase">
+        <view datapath="specopDset:/root/*" name="norm">
+            <view datapath="./b"               name="dot" />
+            <view datapath="/root/a[2]"        name="slash"/>
+            <view datapath="../a[2]/b"         name="dotdot"/>
+            <view datapath="*"                 name="star"/>
+        </view>
+        <method name="test1">
+            <![CDATA[
+            this.runIt( this.subviews[ 0 ] );
+            for ( var i = 0; i < this.subviews.length ; i++ ){
+                //this.runIt( this.subviews[ i ] );
+            }
+            ]]>
+        </method>
+        <method name="runIt" args="v">
+            <![CDATA[
+            assertEquals( 2, v.datapath.getNodeAttribute( 'a' ) );
+            assertEquals( 3, v.dot.datapath.getNodeAttribute( 'a' ) );
+            assertEquals( 5, v.slash.datapath.getNodeAttribute( 'a' ) );
+            assertEquals( 6, v.dotdot.datapath.getNodeAttribute( 'a' ) );
+            assertEquals( 3, v.star.datapath.getNodeAttribute( 'a' ) );
+
+            v.datapath.p.setAttr( 'a' , 22 );
+            assertEquals( 22, v.datapath.getNodeAttribute( 'a' ) );
+
+            v.dot.datapath.p.setAttr( 'a' , 33 );
+            assertEquals( 33, v.dot.datapath.getNodeAttribute( 'a' ) );
+
+            v.slash.datapath.p.setAttr( 'a' , 55 );
+            assertEquals( 55, v.slash.datapath.getNodeAttribute( 'a' ) );
+
+            v.dotdot.datapath.p.setAttr( 'a' , 66 );
+            assertEquals( 66, v.dotdot.datapath.getNodeAttribute( 'a' ) );
+
+            assertEquals( 33, v.star.datapath.getNodeAttribute( 'a' ) );
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

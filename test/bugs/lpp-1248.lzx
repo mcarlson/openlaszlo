@@ -1,0 +1,75 @@
+<canvas bgcolor="black"> 
+
+    <attribute name="totalin" value="0"/>
+    <attribute name="totalout" value="0"/>
+    
+    <dataset name="photos"> 
+        <photos> 
+            <photo color="white"/> 
+            <photo color="red"/> 
+            <photo color="black"/> 
+            <photo color="blue"/> 
+            <photo color="yellow"/> 
+            <photo color="green"/> 
+            <photo color="gray"/> 
+        </photos> 
+    </dataset> 
+    
+    <class name="icon" extends="view" width="75" height="75"> 
+        <attribute name="value" type="string" value="red"/> 
+        <attribute name="maxstartcount" value="0"/>
+        <attribute name="minstartcount" value="0"/>
+        <animatorgroup name="max" process="simultaneous" duration="500" start="false">
+            <attribute name="startcount" value="0"/>
+            <attribute name="stopcount" value="0"/>
+            <method event="onstart">
+                startcount++;
+                if (startcount > stopcount + 1) Debug.write("extra start", this, startcount - stopcount);
+                parent.maxstartcount++;
+                if (parent.maxstartcount > parent.minstartcount + 1) Debug.write("extra max start", this, parent.maxstartcount - parent.minstartcount);
+            </method>
+            <method event="onstop">
+                stopcount++;
+                if (stopcount > startcount + 1) Debug.write("extra stop", this, stopcount - startcount);
+                parent.minstartcount++;
+                if (parent.minstartcount > parent.maxstartcount + 1) Debug.write("extra min start", this, parent.minstartcount - parent.maxstartcount);
+            </method>
+            <animator name="w" attribute="width" to="150"/> 
+            <animator name="h" attribute="height" to="150"/> 
+        </animatorgroup> 
+        <animatorgroup name="min" process="simultaneous" duration="500" start="false"> 
+            <attribute name="startcount" value="0"/>
+            <attribute name="stopcount" value="0"/>
+            <method event="onstart">
+                startcount++;
+                if (startcount > stopcount + 1) Debug.write("extra start", this, startcount - stopcount);
+            </method>
+            <method event="onstop">
+                stopcount++;
+                if (stopcount > startcount + 1) Debug.write("extra stop", this, stopcount - startcount);
+            </method>
+            <animator name="w" attribute="width" to="75"/> 
+            <animator name="h" attribute="height" to="75"/> 
+        </animatorgroup> 
+        <method event="onmouseover"> 
+            canvas.totalin++;
+            if (canvas.totalin > canvas.totalout + 1) Debug.write("extra in", canvas.totalin - canvas.totalout);
+            max.doStart(); 
+        </method> 
+        <method event="onmouseout"> 
+            canvas.totalout++;
+            if (canvas.totalout > canvas.totalin + 1) Debug.write("extra out", canvas.totalout - canvas.totalin);
+            min.doStart(); 
+        </method> 
+        <view width="${parent.width}" height="${parent.height}" bgcolor="white"/> 
+        <view x="1" y="1" width="${parent.width - 2}" height="${parent.height - 2}" bgcolor="red"/> 
+    </class> 
+    
+    <view name="icons"> 
+        <simplelayout axis="x" spacing="8"/> 
+        <view name="list" datapath="photos:/photos/photo"> 
+            <icon/> 
+        </view> 
+    </view> 
+
+</canvas> 

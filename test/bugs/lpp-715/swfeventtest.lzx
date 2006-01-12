@@ -1,0 +1,27 @@
+<canvas debug="true">
+	<button text="load swf" onclick="pv.setSource('test_movie_stop.swf')" />
+	
+	<view id="pv" x="50" y="50" play="true">
+		<method event="onload" args="v" >
+			Debug.write("onload v",v);
+		</method>
+		<method event="onlastframe" args="v" >
+			Debug.write("onlastframe",v);
+		</method>
+		<method event="onstop" args="v" >
+			Debug.write("onstop",v);
+		</method>	
+	</view>
+	
+	<view id="pv2" x="50" y="200" resource="test_movie_stop.swf" play="true">
+		<method event="onload" args="v" >
+			Debug.write("onload",v);
+		</method>
+		<method event="onlastframe" args="v" >
+			Debug.write("onlastframe",v);
+		</method>
+		<method event="onstop" args="v" >
+			Debug.write("onstop",v);
+		</method>	
+	</view>
+</canvas>

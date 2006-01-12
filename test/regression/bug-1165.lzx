@@ -1,0 +1,43 @@
+<canvas>
+
+    <view x="10" y="10">
+
+        <view>
+
+            <button width="50" height="${this.width}" >
+                Button1
+            </button>
+
+            <button width="50" height="50">
+                Button2
+            </button>
+
+            <simplelayout axis="x" spacing="10" />
+
+        </view>
+
+
+        
+        <view>
+
+            <button width="${this.height}" height="50">
+                Button3
+            </button>
+
+            <button width="50" height="50">
+                Button4
+            </button>
+
+            <simplelayout axis="x" spacing="10" />
+
+        </view>
+
+        <simplelayout axis="y" spacing="10" />
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,6 @@
+<canvas width="200">
+  <simplelayout axis="y" spacing="4"/>
+  
+  <text>Where to Begin</text>
+  <view resource="cd_cover.jpg"/>
+</canvas>

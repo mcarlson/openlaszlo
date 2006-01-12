@@ -1,0 +1,20 @@
+<canvas>
+    <simplelayout/>
+    <button onclick="mylayout.animate( 'spacing' , 10 , 1000 , true )">space
+    </button>
+    <view>
+        <view bgcolor="red" width="10" height="10"/>
+        <view bgcolor="red" width="10" height="10"/>
+        <view bgcolor="red" width="10" height="10"/>
+        <view bgcolor="red" width="10" height="10"/>
+        <view bgcolor="red" width="10" height="10"/>
+        <view bgcolor="red" width="10" height="10"/>
+        <view bgcolor="red" width="10" height="10"/>
+        <simplelayout id="mylayout"/>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

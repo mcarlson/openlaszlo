@@ -1,0 +1,37 @@
+<canvas debug="true" bgcolor="#CCCCCC" width="1024">
+    <class name="btf" clickable="true" onmouseup="this.bringToFront()" />
+    <view oninit="Debug.setAttribute('y',100);"/>
+    <view >
+        <simplelayout axis="x" spacing="-5" />
+        <btf  bgcolor="red" width="29" height="31" />
+        <btf  bgcolor="purple" width="22" height="21" />
+        <btf  bgcolor="black" width="122" height="61" />
+        <view name="mtview" width="22" />
+        <btf  width="20">
+            <view bgcolor="blue" width="10" height="10" />
+            <view bgcolor="green" width="10" height="10" x="10"/>
+        </btf>
+        <view  width="200" height="60" bgcolor="red" resource="dragbar_gray.png" />
+    </view>
+    <view fontsize="22" y="33">
+        <simplelayout axis="x" spacing="-15" />
+        <text  bgcolor="red" onclick="this.sendToBack()">one</text> 
+        <text  bgcolor="purple" onclick="this.sendToBack()">two</text>
+        <text  bgcolor="white"  onclick="this.sendToBack()">three</text>
+        <view  bgcolor="purple"  onclick="this.sendToBack()">
+            <attribute name="width" value="100"/>
+            <attribute name="height" value="40"/>
+        </view>
+        <text  bgcolor="green"  onclick="this.sendToBack()">five</text>
+        <text  bgcolor="purple"  onclick="this.sendToBack()">seex</text>
+        <view  bgcolor="blue"  onclick="this.sendToBack()">
+            <attribute name="width" value="100"/>
+            <attribute name="height" value="40"/>
+        </view>
+        <text  bgcolor="red"  onclick="this.sendToBack()">even</text>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

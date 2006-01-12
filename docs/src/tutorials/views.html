@@ -1,0 +1,363 @@
+<html id="views-tutorial" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>Introduction to  Views</title>
+</head>
+
+<body>
+
+<h1>Introduction to Views</h1>
+<h2>Introduction</h2>
+
+<p> Views, the basic visual element in OpenLaszlo applications,
+allow you to specify how elements will interact with one another. In the OpenLaszlo Basics tutorial we've seen
+how to specify a top-to-bottom organization of elements (the text elements).  
+In this tutorial you'll learn how to do more complex and powerful interactions among visual elements.</p>
+
+ <p>Here's the code from the previous tutorial:</p>
+
+<example title="Simple window">
+&lt;canvas height="300" width="500"&gt;
+    &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+        &lt;simplelayout axis="y" spacing="10"/&gt;
+        &lt;text&gt;Here is some text.&lt;/text&gt;
+        &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+        &lt;button&gt;My Button&lt;/button&gt;
+    &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>We've added a button (My Button) just to remind us of how the <tagname>simplelayout</tagname> affected the sibling elements.  </p> 
+
+<p>That button would look better if it were centered. There is an attribute that we could use to do this, but just to see better how LZX works, let's
+center the button programatically. This will give you a good look at how <i>constraints</i> and <i>modifiers</i> work, 
+which will help you build more complex programs.</p>
+
+
+<h2><a name="constraints"></a>Constraints and Modifiers</h2>
+
+<p>A constraint is an object which takes responsibility for keeping a view property set to a certain value.
+ Depending on the type of constraint, that can be 'the x position of the mouse' or 'the width of the parent view' or whatever.
+ In this case, we will constrain a property to the width of the parent view.</p>
+
+
+<example title="Constraining button position relative to window">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button <em>x="${immediateparent.width / 2}" </em>&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+<todo>
+Man, this following section is a jumble.  I mixes up introduction to constraints with introduction to parent an immediate parent.
+</todo>
+<p>What we've said here is "constrain the x position of the button to half the width of its parent". 
+Actually we said "<code>immediateparent</code>", and for all intents and purposes this is what you expect the parent to be. 
+You can <i>always</i> use <code>immediateparent</code>, instead of <code>parent</code> (you just have to type those extra 9 characters). 
+In this case the <code>immediateparent</code> is the window's content area (the white bit). 
+In short we had to use <code>immediateparent</code> here because <tagname>window</tagname> is a <i>class</i>, and when you 
+instantiate it and put contents inside of it, you must use the <code>immediateparent</code> reference.</p> 
+
+<p>The modifier here is the "divide by two" operator.</p>
+ 
+<p>Notice that this code does not center the button. Rather, it constrains the position of the button to the middle of the window. 
+The problem is that the position of a view is determined by its top-left corner. In order to center the button, we need to move it
+ over by half the width of the button. One way to do that would be to just give the button an explicit width, and offset the constraint 
+by half of that.  </p>
+
+<example title="Centering the button">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+        title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button <em>width="160"</em> x="${immediateparent.width / 2 - 80}"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>That works but it's not a general solution. We want the button to always be in the middle of the window even if it changes width. 
+Here's how we do that:</p>
+
+<example title="A button that stays centered">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="<em>${(immediateparent.width / 2) 
+                       - (this.width / 2)}</em>"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>This will center the button regardless of its size. Parenthesis have been added to clarify the execution order of the code.
+To prove that, we'll add an onclick script to the button.</p>
+<p>
+For now, you don't need to understand how this works. Simply observe that when you click the button, its width grows. 
+We'll revisit this topic in the "Scripting" tutorial.</p>
+
+<example title="Growing button">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) 
+                         - (this.width / 2)}"
+      <em>onclick="this.setAttribute('width', this.getAttribute('width') + 10);" </em>&gt;
+        My Button
+      &lt;/button&gt;
+   &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Notice that as the button grows, it still stays centered.</p>
+<todo>
+The following discussion of syntax is really unfortunate.
+</todo>
+
+<p>In the above example we are using two methods of referencing properties of a view. For example, 
+we use <code>this.getAttribute('width')</code> and <code>this.width</code>. They <em>are</em> different, and there are 
+specific situations when you can and can't use the <code>this.width</code> syntax. 
+In short, <code>this.width</code> can only be used in constraints.</p>
+
+<h2>Layouts and container views</h2>
+
+<p>What if now we wanted to have a row of buttons going across the top of our window? 
+We can try adding a few buttons at the top:</p>
+
+<example title="Vertically aligned buttons">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    <em>&lt;button&gt;1&lt;/button&gt;
+    &lt;button&gt;2&lt;/button&gt;
+    &lt;button&gt;3&lt;/button&gt;</em>
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) 
+                       - (this.width / 2)}"
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>We can't change the <tagname>simplelayout</tagname> tag, because that would
+make a mess of the other elements in the window. Instead we can put all three buttons in 
+their <i>own</i> view, and that view will then become a single element in the window.</p>
+<p>Then we can apply whatever kind of layout/positioning to the button view we want:</p>
+
+<example title="Grouping buttons in a &lt;view&gt;">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+      <em>&lt;view bgcolor="#ff0000"&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;</em>
+      &lt;button&gt;1&lt;/button&gt;
+      &lt;button&gt;2&lt;/button&gt;
+      &lt;button&gt;3&lt;/button&gt;
+    <em>&lt;/view&gt;</em>
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2)
+                       - (this.width / 2)}"
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+<todo>
+mention property that we're illustrating here-- views grow to accommodate
+</todo>
+<p>That's better.  By using the attribute<code>bgcolor</code> (background
+color) attribute we can see how big the view is; It's 
+only as big as it needs to be. We haven't specified either a height or width, so it is just large
+enough to accommodate the buttons.</p>
+
+<p>What if we wanted the row to be like the toolbars at the top of your browser&#x2014;a uniform 
+color, that stretches from end to end?</p>
+
+<p>We would constrain the width of the red view to the width of its parent.</p>
+
+<example title="Constraining a width to parent's width">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="#ff0000"
+          <em>width="${parent.width}"</em>&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      &lt;button&gt;1&lt;/button&gt;
+      &lt;button&gt;2&lt;/button&gt;
+      &lt;button&gt;3&lt;/button&gt;
+    &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}"
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Now the view stretches across, but if you look at the toolbars you'll notice that they are a little bit taller than the buttons they contain. To make our buttons look the same, we could set an absolute height, but let's make it dependant on one of the buttons:</p>
+
+<example title="Constraining view to child's height">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="#ff0000"
+                  width="${parent.width}"
+                  <em>height="${this.refButton.height + 8}"</em>&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      &lt;button <em>name="refButton"</em>&gt;1&lt;/button&gt;
+      &lt;button&gt;2&lt;/button&gt;
+      &lt;button&gt;3&lt;/button&gt;
+    &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>In order to be able to reference a particular button, we had to give it a <attribute>name</attribute> attribute.</p>
+
+<p>Now the buttons are top-aligned &#x2014; they should be vertically aligned to the center of the red bar. Remember how earlier we said that there was an attribute to align stuff to the center? We're going to use it now:</p>
+
+<example title="Using the 'valign' attribute">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;view bgcolor="#ff0000"
+            width="${parent.width}"
+            height="${this.refButton.height + 8}"&gt;
+        &lt;simplelayout axis="x" spacing="5"/&gt;
+        &lt;button name="refButton" <em>valign="middle"</em>&gt;
+          1
+        &lt;/button&gt;
+        &lt;button&gt;2&lt;/button&gt;
+        &lt;button&gt;3&lt;/button&gt;
+      &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The <attribute>valign</attribute> attribute aligns the view to the center of its parent's height. It can take a value of <code>top</code>, <code>center</code> or <code>bottom</code>. There is an <attribute>align</attribute> attribute that aligns views to the x-axis. The only problem with using that here is that we'd have to give each button an <attribute>align</attribute> attribute.</p>
+
+<p>The solution is to wrap all of our buttons in a view. Then we could apply a <attribute>valign</attribute> attribute to the lot of them.</p>
+
+<example title="Applying 'valign' to container view">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="#ff0000"
+          width="${parent.width}"
+          height="<em>${this.buttons.refButton.height</em> + 8}"&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      <em>&lt;view name="buttons" valign="middle"&gt;</em>
+        &lt;button name="refButton"&gt;1&lt;/button&gt;
+        &lt;button&gt;2&lt;/button&gt;
+        &lt;button&gt;3&lt;/button&gt;
+      <em>&lt;/view&gt;</em>
+    &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>OK, we seem to have lost buttons one and two, but let's come back
+to that. You'll notice that we gave the new view a name: "buttons". We
+also had to change the address to the button's height from
+<code>this.refButton.height</code> to
+<code>this.buttons.refButton.height</code>. This was necessary because
+<varname>refButton</varname> is now inside <varname>buttons</varname>,
+which is inside the red view.</p>
+<todo>
+rewrite to deanthropomorphesize Laszlo
+</todo>
+<p>Now to get buttons one and two back! In the "buttons" view, there is nothing to tell the OpenLaszlo Runtime that it should space them out.
+ Why not? Because we forgot to transfer the <tagname>simplelayout</tagname> tag to the <varname>buttons</varname> view.</p>
+
+<example title="Using &lt;simplelayout&gt; to align buttons">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;view <em>bgcolor="#bdbdbd"</em>
+            width="${parent.width}"
+            height="${this.buttons.refButton.height + 8}"&gt;
+        &lt;view name="buttons" valign="middle"&gt;
+          <em>&lt;simplelayout axis="x" spacing="5"/&gt;</em>
+          &lt;button name="refButton"&gt;1&lt;/button&gt;
+          &lt;button&gt;2&lt;/button&gt;
+          &lt;button&gt;3&lt;/button&gt;
+        &lt;/view&gt;
+      &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>We changed the color of the view to make it look better. 
+Now that we've explored the basics of views, let's move onto the "Art Assets" tutorial.</p>
+
+<?ignore
+<h2>Further Ideas</h2>
+
+<ol>
+    <li>Build a light grey bar down the right hand side of the window, and put some text in it.</li>
+    <li>Give the grey bar a 3D look. Hint: such a look is achieved by adding a darker line below it.</li>
+    <li>Make a fourth button that's always aligned to the left of the window, but on the same row as the existing buttons.</li>    
+    <!-- <li>Build a menu system. Use elements <code>menu</span>, <code>menubar</span> and <code>menuitem</span>.</li> -->
+</ol>
+?>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

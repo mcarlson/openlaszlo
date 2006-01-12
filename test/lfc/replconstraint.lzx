@@ -1,0 +1,129 @@
+<canvas width="800">
+    <attribute name="num" value="1" />
+
+    <class name="box" height="18">
+        <attribute name="widthData" value="$path{ '@width' }"/>
+        <attribute name="width" value="${ Number( widthData ) }"/>
+        <attribute name="bgcolorName" value="$path{ '@color' }"/>
+        <attribute name="bgcolor" value="${ eval( bgcolorName ) }"/>
+        <text datapath="position()" resize="true" align="center"/>
+    </class>
+
+    <simplelayout spacing="10"/>
+    <text multiline="true" width="400">
+        Click the button to add subviews. All of the lists should be identical,
+        with the exception of the last, which should be the same length but be
+        sorted by color name.
+    </text>
+
+    <button onclick="canvas.setAttribute( 'num', canvas.num +1 )">
+        Add
+    </button>
+
+    <view datapath="dsTest:/boxes">
+        <simplelayout axis="x" spacing="10" id="pp"/>
+
+        <view layout="spacing:2">
+            <box datapath="${ '*[ 1 - ' + canvas.num + ' ]' }"/>
+        </view>
+
+        <view layout="spacing:2">
+            <box datapath="${ '*[ -' + canvas.num + ' ]' }"/>
+        </view>
+
+        <view layout="spacing:2">
+            <box>
+                <datapath xpath="${ '*[ -' + canvas.num + ' ]' }"/>
+            </box>
+        </view>
+
+        <view layout="spacing:2">
+            <box>
+                <datapath pooling="true" 
+                          xpath="${ '*[ -' + canvas.num + ' ]' }"/>
+            </box>
+        </view>
+
+        <view layout="spacing:2">
+            <box datapath="${ '*[ -' + canvas.num + ' ]' }">
+                <datapath pooling="true" />
+            </box>
+        </view>
+
+        <view layout="spacing:2" clip="true" height="${ canvas.height  - y}">
+            <view>
+                <box datapath="${ '*[ -' + canvas.num + ' ]' }">
+                    <datapath replication="lazy" spacing="2"/>
+                </box>
+            </view>
+        </view>
+
+        <view layout="spacing:2" clip="true" height="${ canvas.height  - y}">
+            <view>
+                <box datapath="${ '*[ -' + canvas.num + ' ]' }" 
+                     onclick="this.animate( 'height' , 4, 300 , true )">
+                    <datapath replication="resize" spacing="2"/>
+                </box>
+            </view>
+        </view>
+
+        <view layout="spacing:2" clip="true" height="${ canvas.height  - y}">
+            <view>
+                <box>
+                    <datapath replication="lazy" spacing="2"
+                            xpath="${ '*[ -' + canvas.num + ' ]' }"/>
+                </box>
+            </view>
+        </view>
+
+        <view layout="spacing:2" clip="true" height="${ canvas.height  - y}">
+            <view>
+                <box onclick="this.animate( 'height' , 4, 300 , true )">
+                    <datapath replication="resize" spacing="2"
+                            xpath="${ '*[ -' + canvas.num + ' ]' }"/>
+                </box>
+            </view>
+        </view>
+        <view layout="spacing:2">
+            <box datapath="${ '*[ -' + canvas.num + ' ]' }">
+                <datapath sortpath="@color" pooling="true" />
+            </box>
+        </view>
+    </view>
+
+
+    <dataset name="dsTest">
+        <boxes>
+            <box width="30" color="blue"/>
+            <box width="43" color="teal"/>
+            <box width="41" color="red"/>
+            <box width="30" color="green"/>
+            <box width="37" color="silver"/>
+            <box width="40" color="yellow"/>
+            <box width="40" color="purple"/>
+            <box width="68" color="aqua"/>
+            <box width="44" color="olive"/>
+            <box width="45" color="maroon"/>
+            <box width="50" color="aqua"/>
+            <box width="66" color="blue"/>
+            <box width="54" color="green"/>
+            <box width="44" color="olive"/>
+            <box width="38" color="purple"/>
+            <box width="31" color="red"/>
+            <box width="60" color="silver"/>
+            <box width="42" color="teal"/>
+            <box width="67" color="yellow"/>
+            <box width="65" color="maroon"/>
+            <box width="41" color="yellow"/>
+            <box width="49" color="maroon"/>
+            <box width="67" color="teal"/>
+            <box width="47" color="silver"/>
+            <box width="36" color="red"/>
+            <box width="37" color="purple"/>
+        </boxes>
+    </dataset>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

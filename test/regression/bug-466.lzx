@@ -1,0 +1,47 @@
+<canvas bgcolor="#EAEAEA"
+	    width="640" height="540" debug="true">
+    <include href="utils/layouts/alllayouts.lzx" />
+    <font src="helmetr.ttf" name="Helvetica" />
+
+    <dataset name="keys">
+        <keys>
+            <row><key><t>1</t></key><key><t>2</t></key><key><t>3</t></key></row>
+            <row><key><t>4</t></key><key><t>5</t></key><key><t>6</t></key></row>
+            <row><key><t>7</t></key><key><t>8</t></key><key><t>9</t></key></row>
+            <row><key><t>*</t></key><key><t>.</t></key><key><t>#</t></key></row>
+        </keys>
+    </dataset>
+
+    <dataset name="alphakeys">
+        <row><key>a</key><key>b</key><key>c</key></row>
+        <row><key>d</key><key>e</key><key>f</key></row>
+        <row><key>g</key><key>h</key><key>i</key></row>
+        <row><key>j</key><key>k</key><key>l</key></row>
+    </dataset>
+
+    <view x="30" y="30" oninit="Debug.write('Try to eval some things to make sure app is not hung')">
+        <view height="40" bgcolor="yellow" font="Helvetica" fontsize="20" datapath="keys:/keys/row">
+            <text name="key" width="30" datapath="key[-5]" 
+                  ondata="this.setText( this.datapath.getXPath( 't/text()' ))" />
+            <simplelayout axis="x" spacing="10"/>
+        </view>
+        <simplelayout axis="y" spacing="4"/>
+    </view>
+
+    <class name="keyClass" bgcolor="#FFBA00" width="34" height="34">
+        <text x="6" name="key" datapath="text()" />
+    </class>
+
+    <view x="200" y="30" >
+        <view height="40" bgcolor="red" font="Helvetica" fontsize="20" datapath="alphakeys:/Wow"> 
+            <keyClass datapath="key"/>
+            <simplelayout axis="x" spacing="10"/>
+        </view>
+        
+        <simplelayout axis="y" spacing="4"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,46 @@
+<canvas debug="true" width="1024" height="768">
+  <include href="lzunit" />
+
+  <script>
+    <![CDATA[
+    Debug.setAttribute('height', 400);
+    Debug.setAttribute('width', 600);
+    Debug.setAttribute('x', 0);
+    Debug.setAttribute('y', 200);
+    Debug.setLine(0);
+
+    function test ( n ) {
+      function fib ( n ) {
+        if (n <= 1) return n;
+        return fib (n - 2) + fib (n - 1);
+      }
+      return fib ( n );
+    }
+
+    function workaround ( n ) {
+      var fib = function fib ( n ) {
+        if (n <= 1) return n;
+        return arguments.callee (n - 2) + arguments.callee (n - 1);
+      }
+      return fib ( n );
+    }
+    ]]>
+  </script>
+
+  <class name="TestInnerFunctions" extends="TestCase">
+    <method name="testRecursiveInnerFunctions">
+        assertEquals(5, test(5), "recursive inner functions work");
+    </method>
+    <method name="testWorkaround">
+        assertEquals(5, workaround(5), "workaround works");
+    </method>
+  </class>
+
+  <TestSuite>
+    <TestInnerFunctions />
+  </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,96 @@
+<canvas width="800" height="800" bgcolor="silver">
+    <debug y="300" x="300"/>
+    <view valign="bottom">
+        <inittimer/> <frametimer/>
+    </view>
+    <class name="vline" bgcolor="white" height="$once{canvas.height}" width="1"/>
+    <vline x="200"/>
+    <vline x="400"/>
+    <class name="hline" bgcolor="white" width="$once{canvas.width}" height="1"/>
+    <hline y="200"/>
+    <hline y="400"/>
+<window id="w1" width="200" height="200"
+                title="w1: 200x200" resizable="true" />
+<window id="w2" y="200" width="${w1.width}" height="${w1.height}"
+                title="w2: w/h same as w1">
+    <text>this window also tests clipping, large yellow square is bigger than the window</text>
+    <view width="300" height="300" bgcolor="yellow"/>
+    <simplelayout/>
+                </window>
+
+
+<window id="t" width="200" height="200" bgcolor="teal" title="testing"
+                name="closeme"
+                resizable="true" closeable="true"
+                x="400" y="200">
+	<scrollbar/>
+</window>
+
+<window name="cherry" title="size to content" x="200" y="200" resizable="true">
+      <view resource="../testmedia/cherry.png"/>
+</window>
+
+
+<window width="200" height="200" x="200" y=".5"
+    resizable="true" closeable="true" bgcolor="white"
+    id="fw" title="Frosty the Snowman">
+    <include href="../testmedia/frosty.lzx" />
+    <scrollbar id="sb"/>
+    <scrollbar axis="x"/>
+</window>
+
+<window id="tiny" x="400" width="20" height="20"
+                title="small" closeable="true">
+    <view resource="../testmedia/plane_icon.swf" placement="icon"
+        stretches="both" width="14" height="14"/>
+</window>
+
+
+
+
+<modaldialog id="md" title="Modal Dialog" height="120">
+    <simplelayout spacing="20"/>
+    <text>Are you really sure you want to do something?</text>
+    <view align="right" layout="axis:x; spacing:20">
+        <button onclick="parent.parent.close()">Cancel</button>
+        <button onclick="parent.parent.close()" isdefault="true">OK</button>
+    </view>
+</modaldialog>
+
+<modaldialog id="mdclip" title="Modal Dialog"
+    closeable="true" width="300" height="120">
+    <simplelayout/>
+    <text>Test clipping in a modal dialog</text>
+    <text>blue square is larger than the window</text>
+    <view bgcolor="blue" height="300" width="300"/>
+</modaldialog>
+
+
+<alert id="a1">attention: this is an alert!</alert>
+<alert id="a2" width="100">This alert is 100 pixels wide. It should affect the
+size of the text and make it wrap with a 10 pixel border.  All this text will
+make it long and skinny.</alert>
+<alert id="a3" button1="Yes" button2="No">
+    This alert has "no" and "yes" buttons. Yes is the default.</alert>
+
+<alert id="a4" text_x="70" text_y="5">Attention: this is an alert with a child view that
+    uses textx="70" texty="5"
+    <view bgcolor="green" width="60" height="60"/>
+</alert>
+
+
+<view align="right" layout="spacing:20">
+<button  text="appear" onclick="closeme.setVisible(true)" />
+<button text="new simple window" onclick="new window(canvas,{title:'new', name:'anon'})" />
+<button text="open modal dialog" onclick="md.open()" />
+<button text="modal dialog clip test" onclick="mdclip.open()" />
+<button text="simple alert" onclick="a1.open()" />
+<button text="fixed width alert" onclick="a2.open()" />
+<button text="yes/no alert" onclick="a3.open()" />
+<button text="alert with child" onclick="a4.open()" />
+</view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

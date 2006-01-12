@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Menuitem">
+    <lztier>LZ Components</lztier>
+    <lzcategory>Menu and Command</lzcategory>
+    <lzshortdesc>
+        An item in a pull-down menu.
+    </lzshortdesc>
+    <lztag>lz/menuitem.xml</lztag>
+</lzelement>
+
+<p>The <tagname>menuitem</tagname> tag provides a menu item within the
+<tagname>menu</tagname> tag.  To associate a set of key commands with
+a <tagname>menuitem</tagname>, create a <classname>LzCommand</classname>
+object with an execution script
+(<code>onselect="<i>expression</i>"</code>), and then set the
+<attribute>command</attribute> attribute of the
+<tagname>menuitem</tagname> equal to the reference of that
+<classname>LzCommand</classname> object.</p>
+
+<note>Menus do not adjust their widths to the width of their widest
+<classname>menuitem</classname>, so the width of the menu needs to be
+set directly (its default width is 100 pixels). This is especially
+important with <classname>LzCommand</classname>, since the text
+associated with a comand is right justified and will overlay the text
+of the <classname>menuitem</classname> if the width of the menu is not
+large enough.</note>
+
+<example>
+&lt;canvas width="350" height="270" debug="true"&gt;
+  &lt;debug x="5" y="140"/&gt;
+
+  &lt;command id="cmd_new"
+           onselect="Debug.write('EXECUTED command new')"
+           key="['Control', 'Shift', 'N']"/&gt;
+
+  &lt;menubar width="200"&gt;
+    &lt;menu text="Menu 1" width="160"&gt;
+      &lt;menuitem text="New..." onselect="canvas.whichOne(this);" command="cmd_new"/&gt;
+      &lt;menuitem text="Item 2" onselect="canvas.whichOne(this);"/&gt;
+      &lt;menuitem text="Item 3" onselect="canvas.whichOne(this);"/&gt;
+      &lt;menuseparator/&gt;           
+      &lt;menuitem text="Item 4" onselect="canvas.whichOne(this);"/&gt;   
+    &lt;/menu&gt; 
+    &lt;menu text="Menu 2" width="100"&gt;
+      &lt;menuitem text="More items..." onselect="canvas.whichOne(this);"/&gt;  
+    &lt;/menu&gt;
+  &lt;/menubar&gt;
+
+  &lt;method name="whichOne" args="vThis"&gt;
+    Debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+  &lt;/method&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes>menu menubar menuseparator LzCommand</classes>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

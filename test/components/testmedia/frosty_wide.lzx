@@ -1,0 +1,29 @@
+<view name="frosty">
+    <method event="oninit">
+        //debug.write("Frosty's parent: " + this.parent);
+    </method>
+<view width="50" height="100%" bgcolor="yellow"/>
+<text multiline="true"
+      width="360">
+<pre>
+Frosty the Snowman, was a jolly happy soul,
+With a corncob pipe and a button nose, and two eyes made of coal.
+Frosty the Snowman, is a fairytale, they say.
+He was made of snow, but the children know he came to life one day.
+There must have been some magic in that old silk hat they found,
+For when they placed it on his head, he began to dance around!
+Ohhhhhhh, Frosty, the Snowman, was a live as he could be;
+and the children say he could laugh and play,
+just the same as you and me.
+</pre>
+</text>
+
+    <view width="50" height="100%" bgcolor="yellow"/>
+    <view width="50" height="100%" bgcolor="teal"/>
+    <view width="50" height="100%" bgcolor="blue"/>
+    <simplelayout spacing="10" axis="x"/>
+</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

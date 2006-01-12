@@ -1,0 +1,11 @@
+<library>
+  <script>
+    var blah = 0xff0000;
+    function foo() {
+       Debug.write('foo!');
+    }
+
+    new LzView(canvas, {width: 50, height: 50, bgcolor: blah});
+    new LzView(canvas, {width: 50, height: 50, bgcolor: canvas.greencolor});
+  </script>
+</library>

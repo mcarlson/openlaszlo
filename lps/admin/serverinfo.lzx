@@ -1,0 +1,204 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- serverinfo.lzx                                                        -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <dataset type="http" name="stds" src="console.lzx" />
+
+    <class name="serverinfo">
+
+        <datapointer xpath="stds:/*[1]">
+            <method event="ondata">
+                var nn = this.getNodeName();
+                if (nn == "stat") {
+                    parent.mt.setVisible(false);
+                    parent.servertab.setVisible(true);
+                    this.handleData();
+                } else if (nn == "lps-error") {
+                    parent.mt.setVisible(true);
+                    parent.servertab.setVisible(false);
+                    this.handleError();
+                } else {
+                    parent.mt.setVisible(true);
+                    parent.servertab.setVisible(false);
+                    parent.mt.setText('error: server info request node is ' + nn);
+                }
+            </method>
+            <method name="handleData">
+                var stat = this.dupePointer();
+                var info = this.dupePointer();
+                info.setXPath('info[1]');
+                parent.servertab.info.info.handleData(stat, info);
+            </method>
+            <method name="handleError">
+                var err = this.xpathQuery('text()');
+                if (err.indexOf('status="403"') != -1) {
+                    parent.mt.setText("Forbidden: server info request (bad password).");
+                } else {
+                    parent.mt.setText(err);
+                }
+            </method>
+            <method event="onerror" args="ds">
+                parent.mt.setVisible(true);
+                parent.servertab.setVisible(false);
+                parent.mt.setText(ds.getErrorString());
+            </method>
+            <method event="ontimeout" >
+                parent.mt.setVisible(true);
+                parent.servertab.setVisible(false);
+                parent.mt.setText("Server info request timed out.");
+            </method>
+        </datapointer>
+
+        <method name="request">
+            this.mt.setVisible(true);
+            this.servertab.setVisible(false);
+            this.mt.setText('Requesting...');
+            stds.setQueryParams( { lzt: "stat", pwd: pwd.getText() } );
+            stds.doRequest();
+        </method>
+
+        <simplelayout axis="y" spacing="2"/>
+        <button onclick="parent.request()">Refresh</button>
+
+        <text name="mt" font="monob" fontsize="10" width="400"
+              selectable="true" multiline="true" />
+
+        <tabs name="servertab" visible="false" width="560" height="400">
+            <tabpane name="info" text="info">
+                <text name="info" font="monob" fontsize="10" 
+                      selectable="true" multiline="true" width="400">
+                    <method name="handleData" args="stat,info">
+                    <![CDATA[
+                        var str;
+                        var sAttrs = stat.getNodeAttributes();
+                        var iAttrs = info.getNodeAttributes();
+
+                        var max; // longest string
+                        for (var k in sAttrs) {
+                            if (max < k.length)
+                                max = k.length;
+                        }
+                        for (var k in iAttrs) {
+                            if (max < k.length)
+                                max = k.length;
+                        }
+
+                        for (var k in sAttrs) {
+                            var len = max - k.length;
+                            var indent = ' ';
+                            for (var i=0; i < len; i++)
+                                indent += ' ';
+                            str += k + ':' + indent + sAttrs[k] + '\n';
+                        }
+                        for (var k in iAttrs) {
+                            var len = max - k.length;
+                            var indent = ' ';
+                            for (var i=0; i < len; i++)
+                                indent += ' ';
+                            str += k + ':' + indent + iAttrs[k] + '\n';
+                        }
+                        this.setText(str.slice(0, str.length-1));
+                    ]]>
+                    </method>
+                </text>
+            </tabpane>
+            <tabpane name="load" text="load">
+                <view name="v" >
+                    <simplelayout axis="y" spacing="10" />
+                    <displayload name="app" header="application"
+                        datapath="stds:/stat[1]/load[1]/application[1]" />
+                    <displayload name="media" header="media" 
+                        datapath="stds:/stat[1]/load[1]/media[1]"/>
+                    <displayload name="data" header="data" 
+                        datapath="stds:/stat[1]/load[1]/data[1]" />
+                    <displayload name="all" header="all" 
+                        datapath="stds:/stat[1]/load[1]/all[1]" />
+                </view>
+            </tabpane>
+        </tabs>
+
+    </class> <!-- class serverinfo -->
+
+    <class name="displayload" bgcolor="#efefef">
+        <attribute name="header" value="none" type="string" />
+        <attribute name="headerwidth" value="100" />
+        <attribute name="cellwidth" value="130" />
+
+        <view>
+            <simplelayout axis="y" spacing="2" />
+            <view>
+                <simplelayout axis="x" spacing="5" />
+                <view width="20" />
+                <text resize="true" text="${classroot.header}"/>
+                <view>
+                    <simplelayout axis="x" spacing="2" />
+                    <view>
+                        <simplelayout axis="x" />
+                        <text width="50" text="(active: " />
+                        <text resize="true" datapath="@active-requests"/>
+                        <text>,</text>
+                    </view>
+                    <view>
+                        <simplelayout axis="x" />
+                        <text width="80" text="total requests: " />
+                        <text resize="true" datapath="total[1]/@requests"/>
+                        <text>,</text>
+                    </view>
+                    <view>
+                        <simplelayout axis="x" />
+                        <text width="90" text="total responses: " />
+                        <text resize="true" datapath="total[1]/@responses"/>
+                        <text>)</text>
+                    </view>
+                </view>
+            </view>
+            <view>
+                <simplelayout axis="x" spacing="5" />
+                <view width="${classroot.cellwidth}" />
+                <text width="${classroot.cellwidth}">requests</text>
+                <text width="${classroot.cellwidth}">requests/sec</text>
+                <text width="${classroot.cellwidth}">avg response (ms)</text>
+            </view>
+            
+            <view width="${classroot.cellwidth}">
+                <simplelayout axis="x" spacing="5" />
+                <view width="${parent.width}">
+                    <simplelayout axis="y" spacing="2" />
+                    <text width="${parent.width}">1 minute load</text>
+                    <text width="${parent.width}">5 minute load</text>
+                    <text width="${parent.width}">15 minute load</text>
+                </view>
+                <view width="${classroot.cellwidth}">
+                    <simplelayout axis="y" spacing="2" />
+                    <text width="${parent.width}" datapath="one[1]/@requests" />
+                    <text width="${parent.width}" datapath="five[1]/@requests" />
+                    <text width="${parent.width}" datapath="fifteen[1]/@requests" />
+                </view>
+                <view width="${classroot.cellwidth}">
+                    <simplelayout axis="y" spacing="2" />
+                    <text width="${parent.width}" datapath="one[1]/@requests-per-second" />
+                    <text width="${parent.width}" datapath="five[1]/@requests-per-second" />
+                    <text width="${parent.width}" datapath="fifteen[1]/@requests-per-second" />
+                </view>
+                <view width="${classroot.cellwidth}">
+                    <simplelayout axis="y" spacing="2" />
+                    <text width="${parent.width}" datapath="one[1]/@avg-response-time" />
+                    <text width="${parent.width}" datapath="five[1]/@avg-response-time" />
+                    <text width="${parent.width}" datapath="fifteen[1]/@avg-response-time" />
+                </view>
+            </view>
+        </view>
+    </class> <!-- class displayload -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

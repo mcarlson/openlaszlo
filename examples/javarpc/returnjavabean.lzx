@@ -1,0 +1,49 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- returnjavabean.lzx                                                      -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas width="700" height="500" debug="true">
+
+    <debug x="170" y="20" width="500" height="400" />
+
+    <security>
+        <allow>
+            <pattern>^examples.ReturnJavaBeanExample</pattern>
+        </allow>
+    </security>
+
+    <!-- Java source and class file can be found in WEB-INF/class/examples -->
+    <javarpc name="returnjavabean" scope="none" objectreturntype="javabean"
+             classname="examples.ReturnJavaBeanExample">
+        <method event="onload">
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        </method>
+
+        <remotecall funcname="getJavaBean">
+            <param value="'laszlo'"/>
+            <param value="'san francisco'"/>
+            <param value="'ca'"/>
+            <param value="'this is a secret (do not return value)'"/>
+            <method event="ondata" args="bean">
+                Debug.write('------------------------------');
+                Debug.write('got bean object (secret is not returned):');
+                Debug.inspect(bean);
+            </method>
+        </remotecall>
+
+    </javarpc>
+
+    <button x="10" y="10" onclick="returnjavabean.getJavaBean.invoke()" 
+            text="get java bean object" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

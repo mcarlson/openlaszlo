@@ -1,0 +1,18 @@
+<!--=======================================================================-->
+<!-- noauth.lzx                                                            -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas bgcolor="#EAEAEA">
+
+    <connection authenticator="none" />
+
+    <include href="noauthlib.lzx" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

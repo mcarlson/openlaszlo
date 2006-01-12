@@ -1,0 +1,23 @@
+<canvas debug="true">
+  <debug y="10%" height="85%" />
+  <view id="v4" resource="${this.zot}" visible="true" >
+    <method event="oninit" args="o">
+      // Monitor loader state
+      LzLoadQueue.__LZmonitorState = true; LzLoader.__LZmonitorState = true;
+      LzLoadQueue.__LZinit();
+      // Start a media loader
+      this.setSource('http:foo/bar.bletch');
+      // Override that, noticing that the loader never recovers
+      this.setAttribute('zot', "empty");
+    </method>
+    <method event="onload">
+      Debug.error("%w.onload", this);
+    </method>
+    <method event="onerror">
+      Debug.error("%w.onerror", this);
+    </method>
+    <method event="ontimeout">
+      Debug.error("%w.timeout", this);
+    </method>
+  </view>
+</canvas>

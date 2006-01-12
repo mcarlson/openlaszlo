@@ -1,0 +1,11 @@
+<canvas width="1000" height="800" debug='true' bgcolor="#cccccc">
+<debug x="100" height="400" width="600"/> 
+  <simplelayout inset="10" spacing="10"/>
+  <constantlayout value="10"/>
+ <inputtext id="foo" width="200" height="150" bgcolor="white" multiline="true">this is some text</inputtext>
+ <button onclick="foo.setAttribute('enabled', !foo.enabled)">toggle enabled</button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

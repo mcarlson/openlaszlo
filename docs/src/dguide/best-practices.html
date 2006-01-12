@@ -1,0 +1,841 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="best-practices">
+<head>
+    <title>Best Practices</title>
+</head>
+
+<body>
+
+<h1>Best Practices in Laszlo Application Development</h1>
+<todo>
+This chapter is very rough and may not make it into this version of the Dguide.
+Its intent is to go beyond simple mechanics of LZX and get at how one becomes
+a professional-grade Laszlo Developer.  It's "how to think in LZX." About 25% done.
+</todo>
+ 
+<h2>Thinking in LZX</h2>
+<h3>Conceptualizing the Client-Server Relationship</h3>
+<h3>When to use Tags and When to Use Script</h3>
+<h3>Rethinking User Interface Design</h3>
+<h4>No Page Refresh</h4>
+<h4>No Back Button</h4>
+<h3>Media: when to use which format</h3>
+<h3>How to organize classes, files, and projects</h3>
+<h3>Prototyping</h3>
+<h3>How to debug</h3>
+<h2>Team Development</h2>
+<todo> the section below needs to be fleshed out </todo>
+
+<h3>Package/Directory Structure</h3>
+
+<table summary="Standard Directories">
+  <tr>
+    <td>assets</td>
+    <td>Any art/sound assets used for this specific project.</td>
+  </tr>
+  <tr>
+    <td>lzmodules</td>
+    <td>Code that could be repurposed in any way for another
+    project. It's better to be liberal putting items in
+    lzmodules.</td>
+  </tr>
+  <tr>
+    <td>lzmodules/assets</td>
+    <td>Assets that may be repurposed for other projets, or assets
+    used specifically by code in lzmodules</td>
+  </tr>
+</table>
+
+<h3>Standard Files</h3>
+<table>
+  <tr>
+    <td>main.lzx</td>
+    <td>minimal code; includes all modules</td>
+  </tr>
+  <tr>
+    <td>resource.lzx</td>
+    <td>font and resource declarations</td>
+  </tr>
+  <tr>
+    <td>data.lzx</td>
+    <td>contains main data declarations</td>
+  </tr>
+  <tr>
+    <td>globals.lzx</td>
+    <td>defines global attributes in a node with an id of 'globalData'</td>
+  </tr>
+</table>
+
+<h4>Naming Conventions</h4>
+<p>
+          File Naming Conventions</p>
+<ul>
+   <li>all lower case</li>
+   <li>underscores to separate words</li>
+</ul>
+<p> Class, Variable, Method Naming</p>
+<ul>
+  <li>camelCase for id, names, methods</li>
+  <li>Capitalized user-defined class names</li>
+  <li>Constants in ALL_CAPS using underscores</li>
+</ul>
+
+
+<p>File Naming Conventions</p>
+<ul>
+  <li>all lower case</li>
+  <li>underscores to separate words</li>
+</ul>
+
+    
+<h4>Code style and structure</h4>
+ 
+
+<p>Class, Variable, Method Naming</p>
+<ul>
+  <li>camelCase for id, names, methods</li>
+  <li>Capitalized user-defined class names</li>
+  <li>Constants in ALL_CAPS using underscores</li>
+</ul>
+
+     <p>Always use explicit <code>this.varName</code> or <code>parent.varName</code></p>
+     <p>Convention for wrapping multiple classes/views/methods that are related</p>
+          <p>related classes should be encapsulated in the same file as appropriate</p>
+     <p>When to include as a class vs. included view? </p>
+<todo>(open issue)</todo>
+     <p>Class/view code layout order:</p>
+<ol>
+    <li>datapaths</li>
+    <li>attributes</li>
+    <li>animators</li>
+    <li>methods</li>
+    <li>views</li>
+ </ol>
+
+
+       <p>
+Methods should generally declare CDATA in method nodes
+</p>
+<h4>Code style and structure</h4>
+<ul>
+  <li>Always use explicit this.varName or parent.varName</li>
+  <li>Convention for wrapping multiple classes/views/methods that are related.
+  <p>Related classes should be encapsulated in the same file as appropriate</p></li>
+  <li>When to include as a class vs. included view? (open issue)</li>
+  <li>Class/view code layout order:
+  <ol>
+    <li>datapaths</li>
+    <li>attributes</li>
+    <li>animators</li>
+    <li>methods</li>
+    <li>views</li>
+  </ol>
+  </li>
+</ul>
+           <ul>
+    <li> Increases awareness of CDATA usage</li>
+    <li> Consistency</li>
+</ul>
+<p>Methods should generally declare CDATA in method nodes:</p>
+<ul>
+  <li>Increases awareness of CDATA usage</li>
+  <li>Consistency</li>
+</ul>
+
+<h4>Comments</h4>
+ 
+<p>
+Do not enclose ecmascript pre and post increments within XML comments. . .
+</p>
+<ul>
+
+    <li>Comment definition style: e.g., &lt;!-- comment --&gt;, javadoc style</li>
+    <li> /* */ and //</li>
+    <li>Every file has a description if it contains multiple classes</li>
+    <li>Every class has a comment describing:</li>
+</ul>
+
+<h4>Comments</h4>
+<p>Do not enclose ecmascript pre and post increments within XML comments...</p>
+<p>Comment definition style: e.g., <code>&lt;!-- comment --&gt;</code>, javadoc style, <code>/* */</code> and <code>//</code></p>
+ 
+<p>Every file has a description if it contains multiple classes.</p>
+
+<p>Every class has a comment describing:</p>
+<ul>
+  <li>class description</li>
+  <li>public attributes</li>
+  <li>public methods w/short description</li>
+</ul>
+
+<p>Every method has</p>
+<ul>
+  <li>general description</li>
+  <li>args description</li>
+  <li>usage</li>
+</ul>
+
+<p>Every method has a description.</p>
+
+<p>If an lzx file contains only one object, the name of the file 
+should match the name or id of that single object.</p>
+
+<p>Examples</p>
+
+<p>Directory Layout Example:</p>
+
+<pre>
+       projectdir
+           o main.lzx
+           o resource.lzx
+           o data.lzx
+           o
+
+             lzmodules
+                 + assets
+           o assets
+ </pre>
+
+
+<h2>Seven Degrees of Laszlo Separation</h2>
+<todo>
+Write an introduction for this section.
+</todo>
+ <p>
+This section is an exploration of Laszlo style.</p> 
+
+<p>In LZX, the <code>xmlns</code> declaration is optional (although
+supported).  This makes it easier to write small test cases and do
+exploratory programming, by reducing the amount of boilerplate.  The
+boilerplate is still available for large programs and for tooling.</p>
+
+<p>Approach 5 uses a <tagname link="true">method</tagname> child to
+define the code that handles a click.  This is the same as the
+<attribute>onclick</attribute> attribute, but makes it more convenient
+to handle long code.  Approach 6 defines a method local to the button,
+and calls it.  Although you can do this in a separate file, this
+allows you to take advantage of the declarative syntax to do in the
+same file as well.  Approach 6 defines a new button class,
+<classname link="false">conversionButton</classname>, and uses this as a tag.</p>
+
+<p>
+
+Another difference, not shown in these samples, is that the Laszlo components (<tagname>button</tagname> and <tagname>simpleinputtext</tagname>) are written in declarative XML, and the source is included in the product.  This (1) lets you customize these components and use them as a basis for your own, (2) lets them server as example code, and (3) demonstrates that Laszlo XML is powerful enough to write components in.</p>
+
+
+<example class="code" title="Approach 1">
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;button text="Convert"
+     onclick="celsius.setText((fahrenheit.getText()-32)/1.8)"/&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+&lt;/canvas&gt;
+</example>
+
+ <p>
+ 
+- In Laszlo, </p>
+ 
+<ul>
+    <li>&lt;?xml&gt; and xmlns= are optional; we choose to show without them.  </li>
+    <li>- Laszlo requires &lt;font name="vera" and font="vera", since the default font doesn't scale up well.</li>
+    <li>- Laszlo requires celsius.setText() instead if celsius.text=.  This is for compatability with Flash 5.</li>
+    <li>- Laszlo requires layout="y", otherwise everything gets smushed on top of each other.</li>
+ 
+ 
+</ul>
+
+
+<example class="code" title="Approach 2"> 
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  
+  &lt;script&gt;
+    function calculate() {
+      celsius.setText((fahrenheit.getText()-32)/1.8);
+    }
+  &lt;/script&gt;
+  
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;button text="Convert" onclick="calculate()"/&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<example class="code" title="Approach 3">
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  
+  &lt;script src="sample3.js"/&gt;
+  
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;button text="Convert" onclick="calculate()"/&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<example executable="false" title="sample3.js" filename="sample3.js">
+function calculate() {
+  celsius.setText((fahrenheit.getText()-32)/1.8);
+}
+</example>
+
+<example class="code" title="Approach 4">
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;button id="myButton" text="Convert"/&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+  
+  &lt;script src="sample4.js"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<example executable="false" title="sample4.js" filename="sample4.js">
+function calculate() {
+  celsius.setText((fahrenheit.getText()-32)/1.8);
+}
+
+myButton.calculate = calculate;
+myButton.clickDelegate = new LzDelegate(myButton, "calculate");
+myButton.clickDelegate.register(myButton, "onclick");
+</example>
+
+ 
+<p>Differences:</p>
+<ul>
+    <li> &lt;script&gt; has to go below &lt;button id="myButton"&gt;</li>
+    <li> Details of how to register a handler are different.</li>
+ 
+</ul>
+
+
+
+<example class="code" title="Approach 5">
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;button text="Convert"&gt;
+    &lt;method event="onclick"&gt;
+      celsius.setText((fahrenheit.getText()-32)/1.8);
+    &lt;/method&gt;
+  &lt;/button&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<example class="code" title="Approach 6">
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;button text="Convert" onclick="calculate()"&gt;
+    &lt;method name="calculate"&gt;
+      celsius.setText((fahrenheit.getText()-32)/1.8);
+    &lt;/method&gt;
+  &lt;/button&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<example class="code" title="Approach 7">
+&lt;canvas layout="y"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;class name="conversionButton" extends="button" text="Convert"&gt;
+    &lt;attribute name="offset" value="32"/&gt;
+    &lt;attribute name="scale" value="1/1.8"/&gt;
+    &lt;attribute name="target"/&gt;
+    &lt;method event="onclick"&gt;
+      celsius.setText((fahrenheit.getText()-offset)*scale);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;text text="Temperature in Fahrenheit:"/&gt;
+  &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
+  &lt;conversionButton/&gt;
+  &lt;text text="Temperature in Celsius:"/&gt;
+  &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<h2>Guidelines for Clear code</h2>
+ 
+
+<h3>Format carefully</h3>
+
+<p>This may sound like a bit of frivolous advice, but our experience
+here at Laszlo has shown again and again that badly formatted code
+yields errors. The best example of this is that people use indenting
+to count parents, so if you have code that looks like this:</p>
+<p>
+This may sound like a bit of frivolous advice, but our experience here at Laszlo has shown again and again that
+ badly formatted code yields errors. The best example of this is that people use indenting to count parents, so if 
+you have code that looks like this: </p>
+
+
+<example extract="false" title="poorly formatted code">
+&lt;view name="foo" width="20"&gt;
+&lt;view&gt;
+    &lt;view width="parent.parent.foo"&gt;
+    &lt;!-- WRONG! foo view is parent.parent! --&gt; 
+</example>
+<p>
+You're likely to make an error. If possible use an editor that is XML aware and use its auto-align feature. 
+</p>
+ 
+
+<p>Extremely long attribute lists on a node can make your program hard
+to read too. Don't require that someone viewing your program set their
+editor to 200 columns wide, and <i>don't use hard tabs</i> &#x2014;
+other people's editors may have different tabstop settings than
+you do!</p>
+
+<p>Finally, in cases where you are writing really long event handlers
+such as this:</p>
+
+<code>
+ 
+&lt;view oninit="parent.dosomething(); this.aFancyMethodWhichTakesAnArg(
+this.parent.otherthing.height); Debug.write('called init for' + this);"/&gt;
+</code>
+
+<p>Consider rewriting it to use the <code>&lt;method
+event="<i>eventname</i>"&gt;</code> syntax.</p>
+
+<code>
+&lt;view&gt;
+  &lt;method event="oninit"&gt;
+    parent.dosomething(); 
+    this.aFancyMethodWhichTakesAnArg(this.parent.otherthing.height);
+    Debug.write('called init for ' + this);
+  &lt;/method&gt; 
+</code>
+
+<p>
+Remember: Cleanly formatted code is the sign of a cleanly formatted mind. 
+</p>
+<h3>Use the debugger</h3>
+<p>The debugger is your friend. When you turn on debugging in your application, you get a whole bunch of stuff for free &#x2014; warnings for undefined references, warnings about calling undefined or non-function type methods, and warnings about data problems (which are automatically printed to the debugger.) 
+</p>
+
+<p>You can use the <method>Debug.write</method> call to
+send a message to the debugger to make sure you're executing a given
+block of code when you think you should be or to check the value of a
+variaible.</p>
+
+<p>Make use of the interactive eval capabilities of the debugger. It
+can be a real help when you're just stuck. One of the most common
+problems is that you want to poke an instance which is deep inside
+some replicated structure or there's no easy way to attach an
+<attribute>id</attribute> to it in your app. One simple workaround for
+this is to just use <attribute>id</attribute> for the purposes of
+debugging and know that the value pointed to by the id will be the
+last instance of the object that was created.</p>
+
+<p>Another option is to type the string that refers to your object and
+then assign that value to a global identifier.  The important thing
+here is that you must use the keyword global. For example:
+<code>global.testme =
+canvas.subviews[2].subviews[3].foo.bar.slop.subivews[5]</code>.  After
+that, you can just write <code>testme.whatever()</code> . If you can
+see the object you want to poke at, another option is to write some
+code in its click handler to set a global identifier to point to it,
+and then poke at it from the debugger. Again, don't forget to use the
+global keyword, e.g: <code>onclick="global.testme = this;"</code>.</p>
+
+
+<h3>Avoid changing a view's resource at runtime </h3>
+ 
+
+<p>
+Changing a view's resource at runtime is a slow and costly operation, and it only works when the view doesn't have any children (i.e. it's a leaf node in your view hierarchy.) 
+</p>
+<todo>
+Put in a link to the media resources chapter
+</todo>
+<p>
+In this case it would be better to use a multi-frame resource for your view, like this: 
+</p>
+<pre class="code">
+&lt;resource name="myresource"&gt;
+  &lt;frame src="myrsc_normalstate.png"&gt;
+  &lt;frame src="myrsc_overstate.png"&gt;
+  &lt;frame src="myrsc_downstate.png"&gt;
+&lt;/resource&gt;
+...
+&lt;view resource="myresource"
+      onmouseover="this.setResourceNumber( 2 )"
+      onmouseout="this.setResourceNumber( 1 )"
+      onmousedown="this.setResourceNumber( 3 )"
+      onmouseupoutside="this.setResourceNumber( 1 )"
+      onmclick="this.setResourceNumber( 2 )" &gt; 
+</pre>
+
+
+<p>If what you're trying to do is to is to show normal, mouseover and mouesdown states for a resource, there's already a 
+component that does this: <tagname link="true">basebutton</tagname>. So the view above could have been written 
+<code>&lt;basebutton resource="myresource"&gt; </code></p>
+ 
+<p>
+You can control which of the frames is displayed by setting the view's <attribute>frame</attribute> attribute or calling the view's 
+
+<method>setResourceNumber</method> method. </p>
+<p>
+
+
+If you're going to need to change resources at runtime, but you don't
+know what the possible replacements are, refer to the view's resource
+using the relative http request syntax (<code>http:filename</code>)
+<fixme>link</fixme> or call <method>setSource</method> on the view
+(they do the same thing). Even if you load the resource multiple
+times, by default it'll be stored in the client's cache (and the
+server's cache too) so it shouldn't be too costly to load it multiple
+times. <fixme> some kind of way to analyze cost? Link to perf
+chapter?</fixme>
+</p>
+
+
+<p>
+If the resources really belong in the compiled application and you don't want to load them at runtime, 
+consider using multiple views and hiding all but the appropriate one. 
+If this makes your application too slow or if you don't want to pay the cost of instantiating all those extra views,
+ use <tagname link="true">state</tagname> s to instantiate only the views you need. See <xref linkend="states">the <a href="${dguide}states.html">States</a>
+chapter</xref> for a detailed discussion of states.
+</p>
+
+
+<h3>Use attributes and events </h3>
+<p>
+Laszlo's attribute constraint and event system is very powerful  and it has been carefully optimized.
+Constraints are often the best way to solve your problem -- whatever it is. 
+You can create arbitrary attributes that work in constraints and send events just like the built-in attributes
+ (such as width and height.) Just declare your attribute and (possibly) its initial value or a constraint. 
+</p>
+ 
+<fixme>put in more discussion perhaps, but at least a link to constraints and attributes chapters</fixme>
+<p>
+Attributes use Laszlo's event system to notify the rest of the system that the attribute has changed. 
+This is convenient, because it means that you can listen for changes to that attribute not only with constraints,
+ but with the <code>method event=</code> syntax. Here's a little example that puts these concepts together to 
+sketch out how you might implement a minimized state for a window. 
+</p>
+<pre class="code">
+&lt;view name="mywindow"&gt;
+  &lt;attribute name="miminized"
+  ...
+  &lt;view name="maximizebutton" visible="${parent.opened}"
+          onclick="parent.setAttribute( 'minimized' , false)"&gt;
+  &lt;view name="minimizebutton" visible="${!parent.opened}"
+          onclick="parent.setAttribute( 'minimized' , true)"&gt;
+  &lt;view name="content" &gt;
+    &lt;method event="onminimized" reference="parent" args="ismin"&gt;
+      if (ismin)    //shrink
+        else        //grow
+    &lt;/method&gt; 
+</pre>
+<p>
+
+Here's what happens when you call <method>setAttribute</method> in this example: </p>
+<ul>
+    <li>first, the parent sets this.minimized = [new value] </li>
+    <li>then the parent sends an event called onminimized with a single argument: the new value for the minimized attribute. </li>
+</ul>
+<p>
+That's the magic of attributes in lzx: because of the event system, you can easily respond to these changes in attribute values.</p>
+
+<p>Don't forget to call <method>setAttribute</method> ! Weird things will happen if you write <code>mywindow.minimized = true</code>
+when you meant <code>mywindow.setAttribute('minimized', true)</code>.</p>
+
+<h4>Setters</h4>
+<p>Use of a setter is rarely necessary. Because the default behavior of <code>setAttribute </code>is relatively robust, it's easy to 
+run arbitrary code in response to a change in an attribute. Setters are only necessary when: </p>
+ 
+
+<ul>
+    <li>You want to change a setter defined in a superclass. </li>
+    <li>You want to alter a value for an attribute before it is passed on to the rest of the system.</li>
+</ul>
+  
+ 
+
+<pre class="code">
+&lt;class name="constrainedview"&gt;
+  &lt;attribute name="x" setter="this.setX( calcX( x ) )" /&gt;
+  &lt;attribute name="y" setter="this.setY( calcY( y ) )" /&gt;
+  &lt;method name="calcX" args="x"&gt;
+    var newx = x &lt; 0 ? 0 : x;
+    return newx + this.width &gt; parent.width ? parent.width - this.width : newx;
+  &lt;/method&gt;
+
+  &lt;method name="calcY" args="y"&gt;
+    var newy = y &lt; 0 ? 0 : y;
+    return newy + this.height &gt; parent.height ? parent.height - this.height : newy;
+  &lt;/method&gt; 
+</pre> 
+
+ <p>You want to set a property that can't be directly accessed. For
+instance, you may want to allow an outside object to set a flag on
+your object, but you don't necessarily want to expose the value of
+that last call because it may have other dependencies that you want to
+process before just setting the attribute.  You want to change the
+attribute-event association &#x2014; e.g. setting foo sends onbar.</p>
+
+
+<p>If you use a setter, remember that you are responsible for setting the attribute on the instance
+ (if you want it set) and for sending the event (also, if you want it sent.) None of this will be done for 
+you. Note that you can currently only use the setter attribute  inside a class definition. 
+This is just an unfortunate limitation in the implementation, not some kind of religious best-practices thing.
+ There is also no way to directly call an inherited setter. To do this, call a method from your setter and then 
+override that in your subclass.</p>
+
+<todo>
+Change all examples that use foo and bar to something more appropriate1
+</todo>
+ 
+ 
+<h3>Use <tagname>state</tagname></h3>
+
+<p>States are an advanced feature of lzx, and since there's no obvious
+corollary in other languages, many coders who are new to lzx avoid
+them. Don't! States allow you to take advantage of the terseness of
+lzx's declaritive lanuage by specifying structures that can change at
+runtime. There are two main reasons you may want to use a state: to
+express changes that can be applied at runtime, or to optimize
+application performance.</p>
+
+<p>The first use is the one for which states were originally
+intended. A simple example of this is a case where you have a
+constraint on a property that you want to remove and apply in response
+to user-input or data changes in the app at runtime. Simply write your
+constraint in an attribute tag, and wrap the attribute tag in a
+state. When the state is applied, the constraint will be in
+effect. When the state is removed, the constraint will be gone.</p>
+
+<p>States can also provide a useful optimization. If you have a view
+that can take on a complex look that requires an additional set of
+views and layouts, but only in certain situations, consider wrapping
+those views and layouts in a state. This will save instantiation time
+(and, potentially, response time) because the system will not have to
+make the additional objects until they're needed. When you need them,
+you can simply apply the state.</p>
+
+<p>A word of caution: states can be tricky. Remember that the
+<tagname>state</tagname> tag itself doesn't represent a node of normal
+hierarchy in your app. The parent of a view that appears inside a
+state will be the state's parent when the state is applied (and the
+view won't exist at all when the state isn't applied.) Also bear in
+mind that the onapply and onremove handlers run in the context of the
+state itself, so in that context you'd use parent to refer to the view
+that the state is being applied to.</p>
+
+<p>Similarly, some unexpected things will happen when you subclass a
+state. For the most part, if you have a state that contains some views
+and some attributes, you can just change that state instance to a
+class, and it will keep working as you expect. However, if you wanted
+to add functionality to the state itself (e.g. mySpecialApply method,)
+you'll find that you can't. You'll probably be confused, though,
+because that method will be available in the parent when the state is
+applied.</p>
+
+<h3>Think databinding, not data processing</h3>
+<p>
+Laszlo's unique data-binding system requires a bit of getting used to. It's usually pretty easy to see how you'd replicate a view based on a dataset, or how you may want to display text or retrieve urls based on data. However, the data-binding system goes far beyond this, and it's often possible to bind other view attributes directly to external data, in a way that yields shorter code and faster programs 
+
+For instance, let's say you want to draw a simple bar graph to represent some relevant data nodes, so you write a view like this: 
+</p>
+<pre class="code">
+&lt;view name="bar" datapath="row"&gt;
+  &lt;view name="rectangle"/&gt; 
+  &lt;text datapath="@type"/&gt;
+  &lt;simplelayout/&gt;
+&lt;/view&gt; 
+</pre>
+<p>
+For data like this: 
+</p>
+<pre class="code">
+&lt;row type="C++ Users" satisfactionlevel="3.3" category="compiled" /&gt; 
+    &lt;row type="LZX Users" satisfactionlevel="4.8" category="markup" /&gt; 
+</pre>
+<p>
+Now, let's say you want the height of each view to reflect the satisfactionlevel attribute. Your first stab might be to go through the data separately and assign heights to your replicated views. This would be a real hassle, and maybe more importantly, would result in another trip through the data. Instead, why not constrain the height directly to the attribute, like this: 
+</p>
+<pre class="code">
+&lt;view name="bar" datapath="row"&gt;
+  &lt;attribute name="height" 
+               value="${ ( datapath.getXPath( '@satisfactionlevel' ) /5 ) *
+                           parent.height }/&gt; 
+</pre>
+<p>
+Assuming that satisfaction levels range from 0-5, you now have a perfectly respectable bar chart that should be very efficient. Of course, you haven't said anything about the color of your bars, so they won't be visible yet. Let's say again that you want the color of the bars to reflect the categories in the data. Again, this is easy, and can be done with a direct constraint to the data. 
+</p>
+<pre class="code">
+&lt;view name="bar" datapath="row"&gt;
+  &lt;attribute name="bgcolor" 
+           value="${ colortable[ datapath.getXPath( '@category' ) ]}"/&gt; 
+</pre>
+<p>
+Assuming, of course, that there's a global color table that contains a mapping of categories to colors. </p>
+
+<p>Hopefully, this simple example will give you a sense of what's
+possible using direct datamappings. An extension of this technique is
+to map the data to a declared attribute of the view, and then to use
+that attribute in other constraint expressions, or to inform the
+view's internal data.</p>
+
+<p>In general, if you find yourself writing long methods in response
+to your view's ondata events, consider refactoring to use this
+approach. You will find that the ondata event runs frequently
+(probably more than it should) and that the databindings will yield
+less code and run faster.</p>
+
+<p>
+
+In general, if you find yourself writing long methods in response to your view's <code>ondata</code> events, consider refactoring 
+to use this approach. You will find that the <code>ondata</code> event runs frequently (probably more than it should) and that the 
+databindings will yield less code and run faster.</p> 
+<p>
+If it's possible to sensibly break a databinding over more levels of view hierarchy, its often worth doing. Datapath change processing 
+is fairly sophisticated, so datapaths will only pass changes on to their dependents if there's a good reason to believe that the 
+change applies to them.For instance, it's usually better to do this: 
+</p>
+ 
+<pre class="code">
+&lt;!-- good --&gt;
+&lt;view datapath="node"&gt;
+  &lt;view datapath="row"&gt; 
+</pre>
+<p>
+Than this: 
+</p>
+<pre class="code">
+&lt;!-- not so good --&gt;
+&lt;view&gt;
+  &lt;view datapath="node/row"&gt; 
+</pre>
+<p>
+This applies to the types of attribute bindings discussed above, too. It's usually better to do this: </p>
+<pre class="code">
+&lt;!-- good --&gt;
+&lt;view datapath="row" height="${sub.heightForParent}"&gt;
+  &lt;view name="sub" datapath="subrow"&gt;
+    &lt;attribute name="heightForParent" 
+               value="${datapath.getXPath( '@percentcomplete' }/&gt; 
+</pre>
+<p>
+
+Than this: </p>
+<pre class="code">
+&lt;!--NOT recommended --&gt;
+&lt;view datapath="row" 
+      height="${datapath.getXPath( 'subrow/@percentcomplete'}"&gt;
+  &lt;view name="sub" datapath="subrow"&gt; 
+</pre>
+ 
+
+<p>assuming that the extra level of hierarchy for "sub" is required anyway.</p>
+
+<h3>Use the text optimizations</h3>
+ 
+<todo>which text optimizations?</todo>
+
+<todo>Use the datareplication optimizations</todo>
+
+<todo>Write a layout</todo>
+
+<h3>Use constraints carefully </h3>
+<p>
+Laszlo's constraint system is a powerful abstraction that can make for some very elegant constructs. But, as Uncle Ben 
+would say, with that power comes some responsibility. It's easy to run a ton of code in response to an attribute change (
+by, say, calling a method in a constraint) or to write a bunch of similar but different constraints on the same attribute and then use a complicated state system to make sure that the right one is applied. It's almost too easy. Usually, convoluted webs of constriants or long functions that apply them are a good sign of code that can be profitably refactored. 
+</p>
+<p>
+It is sometimes helpful to take a step back and think about the real constraint in abstract terms and then to make the implementation match that. Here's a little example that we encountered developing one of our sample apps. The dashboard contains a little media player which has a scrub bar on it. We originally wrote the scrub bar so that it had a lot of internal state to tell it whether it was simply reflecting the play progress of the media (as it normally is, when the user isn't dragging it) or whether it was controlling the media in response to user dragging. This worked fairly well, but it was a lot of code, and there were still cases where you could trick it into the wrong internal state and then nothing would really work. To sketch it out, the scrub bar was written something like this: 
+</p>
+<pre class="code">
+&lt;view resource="scrubtrack"&gt;
+  &lt;view name="scrubbar"
+      onmousedown="srubbing.apply()"
+      onmouseup="srubbing.remove()"&gt;
+    &lt;state name="scrubbing" onapply="parent.normal.remove()
+           onremove="parent.normal.apply()"&gt;
+      &lt;dragx/&gt;
+      &lt;method name="updateScrub" event="onx"&gt;
+          //update media based on new x position 
+          ...
+      &lt;/method&gt;
+    &lt;/state&gt;
+    &lt;state name="normal"&gt;
+        &lt;attribute name="x" 
+                   value="${ ( media.frame/media.totalframes ) * parent.width}"/&gt;
+    &lt;/state&gt; 
+</pre>
+<p>
+Coming back to the same component a few months later (and shaping it up for release as sample code) we had a nice insight: the scrub bar always reflects the current frame of the media, it's just that when the mouse is down, the mouse is controlling the frame that the media is on. We rewrote the scrub bar so that this constraint was always in effect, and then added a state that directly constrained the media's frame to the position of the mouse. The scrub bar would then appear to be dragged when the user moved the mouse; not because its x position was being manipulated, but because the frame of the media was changing. This guaranteed that the scrub bar would always be in sync with the meda, and it removed the annoying 'udpateScrub' method which was somewhat complex and prone to error. Here's a sketch of what we did: 
+</p>
+<pre class="code">
+&lt;view resource="scrubtrack"&gt;
+  &lt;view name="scrubbar"
+          onmousedown="srubbing.apply()"
+          onmouseup="srubbing.remove()"&gt;
+    &lt;state name="scrubbing"&gt;
+      &lt;method name="updateMedia" event="onidle" refencence="LzIdle"&gt;
+          //update media's frame based on mouse xposition
+      &lt;/method&gt;
+    &lt;/state&gt;
+    &lt;attribute name="x" 
+                value="${ ( media.frame/media.totalframes ) * parent.width}"/&gt; 
+</pre>
+<p>
+Another real life experience taught us about some of the limits of constraints. Work on the calendar sample app had been dragging on a bit, and every time we'd squash a bug, one or two more would pop up in its place. Worse, the app's performance was unacceptable. Carefully looking through the code, we found that there were a number of constraints that weren't being used at all (those attributes were ultimately being set a different way) and a bunch of cases where a constriant function was called tens or even hundreds of times more often than it needed to be. With some simple refactoring and the judicious addition of a few methods, we were able to fix all the bugs and make it perform a lot better. Discussing what had happened after the fact, we realized that the calendar may have suffered a bit from trying to be too fancy -- there are some cases where a method is really the best way to handle an update, or where an additional object to broker the communication between two others can take the place of elaborate declarative constraint webs. Stated another way, the best lzx program isn't necessarily the one that contains the least script; it's the one that contains only the script it needs. 
+
+and 5 solutions to common problems </p>
+<pre>
+Abstract objects 
+
+Meta-constraints 
+
+Finding the view associated with a piece of data 
+
+Constraints down the hierarchy 
+
+Performance 
+</pre>
+ 
+<fixme>
+When to use jpegs vs. swfs, etc. Or maybe this goes into media chapter
+</fixme>
+
+
+<!-- See other chapters in the D3 guide and also the wiki for more informtion on formatting chapters --> 
+<!-- Here is a list of some topics you may want to discuss in this chapter-->
+<todo>
+The general topic is what constitutes "good style" in LZX coding.
+ Design pattern for optimal user experience (somewhat counterintuitive):
+ User action --&gt; animation --&gt; http request --&gt; response --&gt;show data
+I got this pattern from Max.  He can elaborate.
+Other design patterns:
+    State machines &amp; event programming
+        Singletons (global function or &lt;script&gt;)
+</todo>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

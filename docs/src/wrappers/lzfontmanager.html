@@ -1,0 +1,112 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+<lzelement title="LzFontManager">
+    <lztier>Service</lztier>
+    <lzcategory>Media</lzcategory>
+    <lzshortdesc>
+    Font manager.
+    </lzshortdesc>
+    <lzapi>api-lzfontmanager.xml</lzapi>
+</lzelement>
+<p>
+This object provides a hash of named font objects.  Each named font object
+represents a single font name. Each font object has a slot for the
+available styles of that font name.
+</p>
+<p>
+This service provides information about fonts.
+See also the runtime <a href="font.html">LzFont</a> object as
+well as the <tagname link="true">font</tagname> tag for importing fonts.
+</p> 
+
+<p>
+Example that displays information about a font:
+</p>
+
+<example title="Font metrics" id="lzfontmanager-1">
+&lt;canvas debug="true" oninit="showArioso()" &gt;
+  &lt;debug height="300"/&gt;
+  &lt;font src="ariosor.ttf" name="arioso"/&gt;
+
+  &lt;method name="showArioso" &gt;
+    var f = LzFontManager.getFont("arioso", "plain");
+    Debug.write("height:  " + f.height);
+    Debug.write("style:   " + f.style);
+    Debug.write("ascent:  " + f.ascent);
+    Debug.write("descent: " + f.descent);
+    Debug.write("leading: " + f.leading);
+
+    for (var i = "A".charCodeAt(0) ; i &amp;lt; "z".charCodeAt(0); i++) {
+        Debug.write("Char " + String.fromCharCode(i) + ": " + f.advanceTable[i]);
+    }
+  &lt;/method&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+Below is another example that displays some text and aligns visual elements
+based on the font:
+</p>
+
+<example title="Using font ascent and descent" id="lzfontmanager-2">
+&lt;canvas height="1000" width="1600" &gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;font name="lztahoe8" src="lztahoe8.ttf"/&gt;
+  &lt;font name="timmons" src="timmonsr.ttf"/&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;simplelayout axis="y"/&gt;
+
+  &lt;class name="lines" width="${canvas.width}" &gt;
+    &lt;!-- LPS fontmetrics are for the default fontsize of 8 --&gt; 
+    &lt;attribute name="defaultsize" value="8"/&gt;
+    &lt;!-- External leading is a constant in the LPS 2 pixels --&gt; 
+    &lt;attribute name="leading"     value="2"/&gt;
+    &lt;!-- LFC font metrics are for the default font size; must multiply by factor --&gt;
+    &lt;attribute name="factor" value="${this.tview.fontsize/defaultsize}"/&gt;
+    &lt;attribute name="lzfont" value="${this.tview.font}"/&gt; 
+
+    &lt;!-- external leading --&gt;
+    &lt;view name="v1" bgcolor="red" 
+        height="${classroot.leading/2}" width="${canvas.width}"/&gt;
+    &lt;!-- ascent --&gt;
+    &lt;view name="v2" bgcolor="green" 
+        height="${classroot.lzfont.ascent*classroot.factor}" width="${canvas.width}" 
+        y="${classroot.v1.height + classroot.v1.y}"/&gt;
+    &lt;!-- descent --&gt;
+    &lt;view name="v3" bgcolor="blue" 
+        height="${classroot.lzfont.descent*classroot.factor}" 
+        width="${canvas.width}" 
+        y="${classroot.v2.height + classroot.v2.y}"/&gt;
+    &lt;!-- 1 pixel on bottom --&gt;
+    &lt;view name="v4" bgcolor="red" 
+        height="${classroot.leading/2}" width="${canvas.width}" 
+        y="${classroot.v3.height + classroot.v3.y}"/&gt;
+
+    &lt;!-- For now, we must create a text view to get font attributes --&gt;
+    &lt;text name="tview" multiline="true" width="${canvas.width}"  
+              text="${this.fontname + ' abcdefghijklmnopqrstyuvwxyzAM'}"/&gt;
+  &lt;/class&gt;
+
+  &lt;class name="tester" &gt;
+    &lt;view width="${canvas.width}" &gt;
+      &lt;simplelayout axis="y"/&gt;
+      &lt;lines/&gt;
+      &lt;lines/&gt;
+      &lt;lines/&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;tester font="helmet" fontsize="20"/&gt;
+  &lt;tester font="timmons" fontsize="56"/&gt;
+  &lt;tester font="lztahoe8" fontsize="56"/&gt;
+  &lt;tester font="vera" fontsize="56"/&gt;
+&lt;/canvas>
+
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

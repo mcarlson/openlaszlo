@@ -1,0 +1,11 @@
+<library>
+  <font src="uni-5-plain-expanded-s.ttf" name="myfont"/>
+  <simplelayout/>
+  <view bgcolor="red" width="20" height="20"/>
+  <text font="myfont">myfont is oh-so good!</text>
+  <text>This is a default font though</text>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

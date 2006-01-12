@@ -1,0 +1,54 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- music.lzx                                                             -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas bgcolor="#EAEAEA" width="640" height="540" >
+    <include href="redmond" />
+    
+    <view id="audioplayer" x="30" y="30 " play="true"
+        resource="http:music.mp3"
+        oninit="new LzDelegate( this, 'lastoff', this, 'onlastframe'); 
+                new LzDelegate( this, 'stopped', this, 'onstop')">
+        <attribute name="vol" value="100" />
+        <button label="rewind" onclick="audioplayer.play(1);" />
+        <button label="rew" onclick="audioplayer.seek( -2 );" />
+        <button label="stop" onclick="audioplayer.stop()" />
+        <button label="play" onclick="audioplayer.play()" />
+        <button label="ffw" onclick="audioplayer.seek( 2 );" />
+
+        <button label="quieter"   
+                onclick="audioplayer.setVolume( audioplayer.getVolume() -10)"/>
+        <button label="louder"    
+                onclick="audioplayer.setVolume( audioplayer.getVolume() +10)"/>
+        <button label="pan left"  onclick="audioplayer.setPan( audioplayer.getPan() - 10 );" />
+        <button label="pan right" onclick="audioplayer.setPan( audioplayer.getPan() + 10 );" />
+
+        <simplelayout axis="x" spacing="4"/>
+        <method name="lastoff">
+            Debug.write("Got last");
+        </method>
+        <method name="stopped">
+            Debug.write("Got stopped");
+        </method>
+
+        <view name="background" bgcolor="black" width="202" height="22" y="50" options="ignorelayout;">
+            <view name="loadbar" bgcolor="#3300ff" width="${audioplayer.loadratio * 200}" height="20" x="1" y="1">
+            <view name="playbar" bgcolor="yellow" x="${audioplayer.frame/audioplayer.totalframes * 180}" width="20" height="20" />
+            </view>
+        </view>
+    </view>
+</canvas>    
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

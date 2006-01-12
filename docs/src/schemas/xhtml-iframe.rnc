@@ -1,0 +1,18 @@
+# Iframe Module
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+iframe = element iframe { iframe.attlist, Flow.model }
+iframe.attlist =
+  Core.attrib,
+  attribute longdesc { URI.datatype }?,
+  attribute src { URI.datatype }?,
+  attribute frameborder { "1" | "0" }?,
+  attribute width { Length.datatype }?,
+  attribute height { Length.datatype }?,
+  attribute marginwidth { Pixels.datatype }?,
+  attribute marginheight { Pixels.datatype }?,
+  attribute scrolling { "yes" | "no" | "auto" }?
+Inline.class |= iframe

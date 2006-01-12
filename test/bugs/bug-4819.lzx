@@ -1,0 +1,20 @@
+<canvas height="500" debug="true">
+  <debug y="300"/>
+  <dataset name="recs">
+    <records>
+      <record name="soln1" selected="false"/>
+      <record name="soln2" selected="true"/>
+      <record name="soln3" selected="false"/>
+    </records>
+  </dataset>
+  <simplelayout axis="y"/>
+  <tabs>
+    <tabpane datapath="recs:/records/record" text="$path{'@name'}"
+             selected="${datapath.xpathQuery('@selected') == 'true'}">
+      <text 
+          resize="true"
+          text="${'selected is: ' + parent.selected + ' should be: ' + (parent.datapath.xpathQuery('@selected') == 'true')}"
+          />
+    </tabpane>
+  </tabs>
+</canvas>

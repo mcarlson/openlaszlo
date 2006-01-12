@@ -1,0 +1,396 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="editing-lzx"
+      xmlns:d="docbook">
+<head>
+    <title>Editing</title>
+</head>
+
+<body>
+
+<h1>Editing</h1>
+<h2>Overview</h2>
+
+<p>LZX source files are text files.  A standard text editor such as
+Notepad (on Windows) or TextEdit (on MacOS) can be used to edit
+them.</p>
+
+<h3>XML Editors</h3>
+
+<p>LZX source files are a particular type of text file: they are XML
+files.  An <em>XML-aware editor</em> such as <a
+href="http://www.eclipse.org">Eclipse</a>, <a
+href="http://www.barebones.com/products/bbedit/index.shtml">BBEdit</a>,
+or <a href="http://www.gnu.org/software/emacs/emacs.html">Emacs</a>
+(with <code><a
+href="http://www.lysator.liu.se/projects/about_psgml.html">psgml-mode</a></code>
+or <code><a
+href="http://www.thaiopensource.com/download/">nxml-mode</a></code>)
+will provide additional editing facilities such as automatic
+indentation, syntax highlighting (coloring markup characters such as
+<code>&lt;</code> and tag names such as <tagname>canvas</tagname>),
+and well-formedness checking (letting you know when you have an
+unbalanced <code>&lt;</code> or quotation mark).</p>
+
+<p>To configure an XML-aware editor to edit lzx files, it must be
+configured to edit these files in XML mode.  This is done by
+registering the <code>lzx</code> extension with the XML mode of the
+editor.  How to do this depends on the exact editor; this chapter
+gives instructions for some popular editors.</p>
+
+<h2>XML Schema</h2>
+
+<p>An <dfn>XML schema</dfn> lists the tag and attribute names that can
+occur within an XML document.  Many XML editing tools are
+<dfn>schema-aware</dfn>.  These tools can associate an XML document
+with a schema file, and use the schema file for <dfn>code
+completion</dfn> (to complete a tag or attribute name, or suggest a
+list of valid attribute values) and <dfn>validation</dfn> (to indicate
+invalid tag or attribute names within the editor, so that you don't
+have to wait until you compile the file).</p>
+
+<p>The method for associating an XML document with a schema file
+depends on the editor.  This chapter gives instructions for some
+popular editors.</p>
+
+<h3>Types of Schema</h3>
+
+<p>There are three types of schemas in popular use: DTDs, XSD, and RNG
+(and its associated format RNC).  The LZX schema is distributed in
+each of these formats. They can be found in the <tt>lps/tools</tt> directory.</p>
+
+<p>A <dfn>Document Type Definition</dfn> (DTD) is the oldest type, and
+is recognized by the most editors.  Unfortunately, the DTD format is
+very weak compared with the other schema description languages, and
+can't indicate certain contextual information such as that a
+<tagname>dataset</tagname> can contain arbitrary XML.  A DTD should
+only be used in an editor that doesn't support the other formats.</p>
+
+<p>W3 and OASIS are standards bodies.  The W3 standard for describing
+XML documents is the XML Schema Definition (XSD).  The OASIS standard
+is RELAXNG.  RNG and RNC files are RELAXNG files that contain schema
+definitions.  RNG files are in XML; RNC files are intended to be
+human-readable.</p>
+
+
+
+<h2>Eclipse</h2>
+<p>
+Eclipse in an open source development environment created and maintained by IBM. You can use different "Eclipse plugins" to develop LZX programs.</p>
+<h3>IDE for Laszlo</h3>
+<note>The following discussion is derived from the <a href="http://www.alphaworks.ibm.com/tech/ide4laszlo">Eclipse Alphaworks website.</a> Be sure to consult that site for the latest information.</note>
+<p>
+IDE for Laszlo is an Eclipse-based development environment for creating, editing, debugging, and testing applications based on the LZXdeclarative mark-up language. This technology is part of the Emerging Technologies Toolkit (ETTK), a special collection of emerging technologies from IBM's software development and research labs.</p>
+<p>
+The IDE consists of a set of plug-ins that allow creation and testing of Laszlo applications, all within the Eclipse platform. These applications can then be deployed and run on a Web server. IDE for Laszlo also provides a rich editing environment for the LZX mark-up language. Its editing features include XML- and script-based content assistance, XML syntax highlighting, and XML code formatting.</p>
+<p>
+In addition, IDE for Laszlo allows you to preview the resulting application without deployment, within the Eclipse environment. It supports markers for reflecting compilation and syntactical errors. When development is complete, the applications created can then be deployed and run.
+</p>
+<p>
+The editor is also supported by a set of views:</p>
+<ul>
+<li>The Palette View enables developer to drag and drop new LZX elements into the editor.</li>
+<li>The Properties View is used to edit the attributes of the selected LZX element in the editor.</li>
+<li>The Outline View presents the LZX document as a tree, allowing you to make changes to the document's structure.</li>
+</ul>
+<p>
+The development environment's debugging capabilities include:</p>
+<ul>
+	<li>Variables can be inspected at run time.</li>
+	<li>Object properties can be changed.</li>
+	<li>Script expressions can be evaluated.</li>
+	<li>Debugging output is made available in a console window.</li>
+</ul>
+
+
+
+<h3>XMLBuddy</h3>
+<p>There are four steps to using Eclipse with XMLBuddy</p>
+<ul>
+  <li><p>Step 1: Download Eclipse</p>
+  
+  <p>Download Eclipse from <a
+  href="http://www.eclipse.org/downloads/index.php"></a>.  </p>
+  </li>
+  
+  <li><p>Step 2: Download XMLBuddy, an XML plugin for Eclipse</p>
+  
+  <p>Download XMLBuddy from <a
+  href="http://www.xmlbuddy.com">http://www.xmlbuddy.com</a>.  Get the
+  right version for your Eclipse.</p>
+  
+  <p>Installation is simple. After you unzip XMLBuddy, just drag the
+  folder into your eclipse/plugins folder.</p></li>
+  
+  <li><p>Step 3: Configure Eclipse to use XMLBuddy for
+  <code><i>*</i>.lzx</code> files</p>
+  
+  <p>In Eclipse:</p>
+  <img class="screenshot" src="images/eclipse-preferences.png"
+       title="Configuring Eclipse for XMLBuddy"/>
+  <ol>
+    <li>Go to menu: Window -> Preferences</li>
+    <li>Twist down "Workbench", and select "File Associations"</li>
+    <li>Click "Add" next to the "File Types" box and enter
+    <code>*.lzx</code></li>
+    <li>Click "Add" next to the "Associated Editors" box and select XMLBuddy</li>
+  </ol>
+  </li>
+  <li><p>Step 4: Configure XMLBuddy to use the LZX schema for <code>canvas</code> files</p>
+  <ol>
+    <li>Go to menu: Window -> Preferences</li>
+    <li>Twist down XMLBuddy, and then XML, and then Validation</li>
+    <li>Click on DTD</li>
+    <li>Click "New..."</li>
+    <li>In the "New Default DTD" dialog, enter:
+    <pre>Root Name: canvas
+    PUBLIC Id: -//Laszlo Systems, Inc.//DTD LZX 2003/05//EN
+    SYSTEM Id: http://www.laszlosystems.com/lps/tools/lzx.dtd</pre>
+    </li>
+  </ol>
+  </li>
+  <li>Step 5: Configure XMLBuddy to use the LZX schema for <code>library</code> files
+  <p>Repeat steps (4-5), but with a Root Name of "library".</p>
+  </li>
+</ul>
+
+<h2>GNU Emacs</h2>
+<p>For GNUEmacs, an XML mode that understands RELAX-NG schemas at <a href="http://www.thaiopensource.com/download/">http://www.thaiopensource.com/download/</a> and a discussion group for this package at <a href="http://groups.yahoo.com/group/emacs-nxml-mode/">http://groups.yahoo.com/group/emacs-nxml-mode/</a>.</p>
+
+<fixme>Describe how to install this mode.</fixme>
+
+<h3>XEmacs and PSGML-Mode</h3>
+
+<p>The <code>lzx.el</code> file tells emacs to recognize
+<code><i>*</i>.lzx</code> files as XML files.  With the DTD, this
+provides syntax-directed editing and validation of XML entities in LZX
+files.</p>
+
+<p>If mmm-mode is installed, this file will also create an mmm submode
+to recognize the content of <tagname>method</tagname> and
+<tagname>script</tagname> tags as Javascript, and direct mmm to use
+this submode for <code><i>*</i>.lzx</code> files.  This provides
+syntax coloring and intelligent indentation and navigation for
+Javascript code within LZX files.</p>
+
+<h4>Installation</h4>
+
+<p>Copy lzx.el into a directory on the load-path, optionally
+byte-compile it (using M-x byte-compile-file), and place the
+following lines into your .emacs:</p>
+
+<pre>
+    (add-to-list 'load-path "path/to/mmm-mode-0.4.7")
+    (load-library "mmm-mode")
+    (require 'mmm-mode)
+    (require 'lzx)
+</pre>
+
+<p>(If you don't wish to use mmm mode, only the last line is
+required.)</p>
+
+<p>If you want mmm mode to be invoked automatically when you open a
+file, add the following line to your .emacs file:</p>
+
+<pre>
+    (mmm-add-find-file-hook)
+</pre>
+
+
+<h2>VIM</h2>
+<p>Install the lzx.vim syntax file.</p>
+
+<fixme>See lzx.vim syntax file in //depot/adam/sandbox</fixme>
+
+<h3>Marks and cursor position</h3>
+
+<table summary="VIM Editing Keys">
+  <tr>
+    <td>
+      <code>`[mark]</code>
+    </td>
+    <td>will jump you to the appropriate column where the mark was set</td>
+  </tr>
+  <tr>
+    <td>
+      <code>'[mark]</code>
+    </td>
+    <td>will only jump you to the beginning of the correct line.</td>
+  </tr>
+</table>
+
+<p>Also, the mark "[" is set to the point where you last entered insert mode. I often have the problem that I want to leave insert mode where editing began. I can now do this with the following remapping</p>
+<pre>
+    imap ^D &lt;ESC>`[
+</pre>
+<p>Now, if I hit control-D in insert mode, I leave where I entered the insert mode.</p>
+
+<p>Even more useful is the ability to repeat a previous command without changing the cursor position. Since this is pretty much always the behavior I want, I remapped ".", but you could use some other combination.</p>
+
+<pre>
+    noremap . .`[
+</pre>
+
+<h2>Developing Laszlo Applications with IntelliJ</h2>
+
+<p>IntelliJ by JetBrains (<a
+href="http://www.jetbrains.com/">www.jetbrains.com</a>) is currently
+one of the most popular Java IDEs. IntelliJ also provides very good
+support for XML, and is therefore an excellent tool for developing
+Laszlo applications. IntelliJ is particularly well suited for Java
+developers who want to manage the full life-cycle of an application
+using a single development environment.</p>
+
+<p>This document describes the steps required to optimize the IntelliJ environment for the development of Laszlo applications.</p>
+
+<h3>Step 1: Define the lzx file type</h3>
+
+<ol>
+  <li>In the main menu, select Options>IDE Settings>File Types</li>
+  <li>Select XML files in the Recognized File Types box</li>
+  <li>Click Add for the Registered extensions box</li>
+  <li>Type lzx as the new extension and click OK</li>
+  <li>Click OK to close the IDE settings dialog box</li>
+</ol>
+
+<img class="screenshot" src="images/intelliij_1.gif" alt="Define the lzx file type" width="449" height="328"
+     title="Defining the LZX file type in IntelliJ"/>
+
+<h3>Step 2: Declare the LZX DTD</h3>
+
+<ol>
+  <li>In IntelliJ, create a new file with the lzx extension, for exemple test.lzx</li>
+  <li>Type the following declaration as the first line of the file:<p><span class="code">&lt;!DOCTYPE canvas SYSTEM "http://laszlosystems.com/lps-v1/tools/lzx.dtd"&gt;</span></p></li>
+  <li>The dtd URL appears in red. Click anywhere in the URL: a light bulb appears to the left of the line</li>
+  <li>Click the light bulb and select Fetch External Resource from the popup window. The DTD is fetched into an IntelliJ system file:<p>
+  <img class="screenshot" src="images/intelliij_2.gif" alt="Declare the LZX DTD" width="449" height="77"
+    title="Declaring the LZX DTD in IntelliJ"/>
+  </p>
+  </li>
+  <li>You are now ready to develop your Laszlo application, leveraging the rich XML and code completion features provided by IntelliJ.</li>
+</ol>
+
+<h3>Step 3: Develop your application</h3>
+
+<ol>
+  <li>Type the following line as the first line of your .lzx source
+  files:<p><span class="regular">&lt;!DOCTYPE canvas SYSTEM
+  "http://laszlosystems.com/lps-v1/tools/lzx.dtd"&gt;</span></p></li>
+  <li>Enjoy IntelliJ rich code completion features. For example:
+  <ul>
+    <li>Type the &lt; character: a list of available LZX tags is
+    displayed in a drop down list. Select the tag you want to
+    insert.<p><img class="screenshot" src="images/intelliij_3.gif"
+    alt="Auto-complete features" width="180" height="178"/></p></li>
+    <li>After typing an LZX tag name, a list of LZX tag attributes is
+    displayed in a drop down list. Select the attribute you want to
+    insert.<p><img class="screenshot" src="images/intelliij_4.gif"
+    alt="Auto-complete attributes" width="158" height="192"/></p></li>
+    <li>You can press CTRL+SPACE to display a popup window with a list
+    of LZX tag attributes</li>
+  </ul>
+  </li>
+</ol>
+
+<h3>Step 4: Validate your application</h3>
+
+<ol>
+  <li>In the main menu select Tools>Validate</li>
+  <li>If your XML document is not well formed or not valid (not
+  compliant with the DTD), errors are reported in the Validate panel
+  that opens at the bottom of the screen. Double-click an error in the
+  list to position the cursor at the location of the error in the
+  code.</li>
+</ol>
+
+<img class="screenshot" src="images/intelliij_5.gif" alt="Validate your application" width="449" height="323"/>
+
+<?ignore
+
+<p>See the <a href="http://www.laszlosystems.com/developers/development/intellij.php">instructions on the web site</a>. Those instructions may supplant everything here.</p>
+
+<p>In IDE Settings > Resources Add to the top pane (External Resources):</p>
+
+<pre>
+  URI: http://www.laszlosystems.com/lzx.dtd
+  Path: c:\lzx.dtd.xml
+</pre>
+
+<note>local path *must* end in .xml</note>
+
+<p>Begin your file with:</p>
+<pre>
+&lt;!DOCTYPE canvas PUBLIC "LZX" "http://www.laszlosystems.com/lzx.dtd">
+</pre>
+
+<p>Notice that code hinting is provided for schema types.</p>
+?>
+
+<h3>Namespaces and OpenLaszlo Schema</h3>
+<p>
+Laszlo applications  can be written with a namespace:</p>
+<pre>
+  &lt;canvas xlmns="http://www.laszlosystems.com/2003/05/lzx"&gt;...&lt;/canvas&gt;
+</pre>
+<p>
+or without:</p>
+<pre>
+  &lt;canvas&gt;...&lt;/canvas&gt;
+</pre>
+
+<p>
+If there is no namespace, the compiler defaults it to the LZX namespace (<a href="http://www.laszlosystems.com/2003/05/lzx">http://www.laszlosystems.com/2003/05/lzx"</a>).
+</p>
+<p>
+As of OpenLaszlo release 3.1, the schema in <tt>lax.rnc </tt>has three deficiencies:</p>
+<ul>
+	<li>- It only works for sources that include the namespace declaration; e.g. it won't validate &lt;canvas/&gt; because it doesn't declare any elements in the empty namespace.</li>
+	<li>- It only knows about the foundation classes, not the components; e.g. it won't validate &lt;canvas xmlns="..."&gt;&lt;button/&gt;&lt;/canvas&gt; because &lt;button&gt; isn't a foundation class.</li>
+	<li>- It isn't aware of tags that are defined in the application or its libraries; e.g. &lt;canvas xmlns="..."&gt;&lt;class name="myclass"/&gt;&lt;myclass/&gt;&lt;/canvas&gt;</li>
+</ul>
+<p>
+The difficulty is that the &lt;class&gt; tag in LZX actually extends the
+schema by adding new tags and attributes.  We have a hand-written
+basic schema (WEB-INF/lps/schema/lzx.rnc) which is used to start with,
+but then user and system component libraries can extend the schema,
+depending on the applicatio.
+</p>
+<p>
+<tagname>window</tagname>, for example, is defined in a source library in
+lps/components/lz/window.lzx, so it is not in the base schema. So it
+is difficult to use a static RNG schema, because it needs to be
+modified as the app defines new classes.
+</p>
+<p>
+The IBM Eclipse IDE parses the source code on the fly and extends its own schema, but we don't have any good solution for using,for example, Emacs. The LZX compiler can beasked to give you the RNG schema from a source file, so something might be able to be hooked up to keep regenerating the schema from the source file, although it would be hard because the sources are often in an inconsistent state as you develop your app, so the parser has to be very forgiving about badly formed XML.</p>
+<p>
+We have worked around the first problem with a transform of that schema that strips out the namespace declaration.  That's <tt>tools/lzx+libraries-nons.rnc</tt>.
+We have worked around the second problem with a script that makes a copy of the schema and adds the components.  This is <tt>tools/lzx+libraries.rnc</tt>.  
+The third problem can't be fixed without modifying nxml-mode to either add declarations for &lt;class&gt; declarations that it sees, or request the schema for an application from the compiler.  (From the command line, the --schema option does this.)  OpenLaszlo does neither of these.
+</p>
+<p>
+The LZX tag set is defined in a relax.ng schema located in the <tt>lps/tools</tt> directory.  </p>
+<p>
+If you are going to use the schema, </p>
+<ul>
+	<li>Use <tt>tools/lzx+libraries.rnc</tt> for files that include the XML namespace declaration  </li>
+	<li>Use <tt>tools/lzx+libraries-nons.rnc</tt> for files that don't include a namespace declaration.</li>
+</ul>
+<h3>Emacs note</h3>
+<p>
+nxml-mode can be set to choose between these schemes automatically by pointing it at the schema locator file in tools/nxml-schemas.xml:</p>
+<pre>
+  (setq rng-schema-locating-files
+      (append
+       (list (substitute-env-vars "$LPS_HOME/tools/nxml-schemas.xml"))
+       rng-schema-locating-files))
+</pre>
+<note>
+(SUBSTITUTE-ENV-VARS isn't a standard gnu emacs functions; it's just a hack that we use in the .init file that has a few environment variables hardwired.)
+</note>
+<todo>Other Editors: notepad, bbedit</todo>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

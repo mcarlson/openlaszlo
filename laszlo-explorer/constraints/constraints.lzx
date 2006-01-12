@@ -1,0 +1,14 @@
+<canvas width="200" >
+  <view width="140" height="140" bgcolor="black">
+    <view x="1" y="1" 
+          width="${parent.width - 2}" 
+          height="${parent.height - 2}" >
+      <simplelayout axis="y"/>
+      
+      <view width="${parent.width*.25}" height="20" bgcolor="red" />
+      <view width="${parent.width*.50}" height="20" bgcolor="green"/>
+      <view width="${parent.width*.75}" height="20" bgcolor="blue"/>
+      <view width="${parent.width}"     height="20" bgcolor="yellow"/>
+    </view>
+  </view>
+</canvas>

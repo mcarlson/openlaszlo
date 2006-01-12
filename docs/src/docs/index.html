@@ -1,0 +1,89 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      Doc Tool Documentation
+    </title>
+  </head>
+  <body>
+    <h1>Doc Tool Documentation</h1>
+    <p>This is the documentation for the doc tools themselves.
+    User-visible documentation is in other subdirectories of the
+    docs/src directory, and in the the docs directory.</p>
+    
+    <p>See <a href="markup.html">here</a> for a list of tags available
+    to mark up doc sources.</p>
+    
+    <h2>Building the Docs</h2>
+    <p>In docs/src:</p>
+      <dl>
+        <dt><tt>ant</tt></dt>
+        <dd>This builds all the docs (html versions for the product
+        only).</dd>
+        
+        <dt><tt>ant <var>xxx</var></tt></dt>
+        <dd>Where <var>xxs</var> is one of <code>dguide</code>,
+        <code>reference</code>, or <code>tutorials</code>.</dd>
+        
+        <dt><tt>ant clean</tt></dt>
+        <dd>Cleans everything.</dd>
+        
+        <dt><tt>ant clean-<var>xxx</var></tt></dt>
+        <dd>Where <var>xxx</var> is one of <code>dguide</code>,
+        <code>reference</code>, or <code>tutorials</code>.</dd>
+        
+        <dt><tt>ant old-dguide</tt>, <tt>ant old-tutorials</tt></dt>
+        <dd>Builds the non-docbook versions of the dguide and
+        tutorials, into <code>docs/old-dguide</code> and
+        <code>docs/old-tutorials</code>.  Deprecated.</dd>
+        
+        <dt><tt>ant fast-dguide</tt></dt>
+        <dd>Builds a fast version of the dguide, with broken
+        cross-references (marked as "???"), into
+        <code>docs/fast-dguide</code>.  This is actually slower to
+        build the first time, but faster after that if you only change
+        a file or two.  Deprecated unless you tell me (Oliver) that
+        you find it useful.</dd>
+      </dl>
+      
+      <p>The display of <code>&lt;todo&gt;</code> and
+      <code>&lt;fixme&gt;</code> items is controlled by the
+      <code>${LPS_HOME}/build.properties</code> "<code>release</code>"
+      property controls.  If this property has a value of
+      <code>Release</code>, neither todos nor fixmes are displayed.
+      If it has a value of <code>Internal</code>, both todos and
+      fixmes are displayed.  If it has any other value, todos are
+      displayed but fixmes are not.  This is intended for alpha and
+      beta releases.
+      </p>
+      
+      <h2>Doc Sources</h2>
+      <p>The dguide sources are in <code>docs/src/dguide</code>.
+      Tutorials sources are in <code>docs/src/tutorials</code>.
+      Reference sources are in <code>docs/src/wrappers</code>,
+      <code>docs/src/hardpages</code>, the schema, the components
+      sources, and the LFC sources.</p>
+      
+      <h2>Markup</h2>
+      <p>Doc source pages are in XML.  They use a tagset similar to
+      (X)HTML, with extensions for language-specific constructs such
+      as <code>tagname</code>, <code>method</code>, etc.  The dguide
+      and tutorials use an additional set of tags for
+      cross-references, index entries, and other "book"-type markup.
+      See <a href="markup.html">here</a> for additional information
+      about the tag set available.
+      </p>
+      
+      <h2>Additional Documentation</h2>
+      <ul>
+        <li><a href="markup.html">Source Markup Documentation</a></li>
+        <li><a href="reference.html">LZX Reference Internal Documentation</a></li>
+        <li>Wiki (href TBD)</li>
+      </ul>
+  </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

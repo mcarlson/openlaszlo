@@ -1,0 +1,710 @@
+<html>
+<head>
+<!-- #BeginEditable "doctitle" --> 
+<title>WebGain | Products : JavaCC : The TokenManager MiniTutorial</title>
+<!-- #EndEditable --> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<META name="description" content="">
+<META name="keywords" content="studio, visualcafe, visual cafe, visual page, structurebuilder, structure builder, toplink, top link, java, javabeans, cafe, enterprise suite, expert edition, standard edition, the object people, tendril, symantec, webgain, visual, ejb, jsp, debugging, distributed debugging, enterprise, enterprise edition, top">
+<link rel="stylesheet" type="text/css" href="../../libs/fonts.css">
+<script language="JavaScript" src="../../libs/mainlib.js">
+</script>
+<script language="javascript">
+preload('sbarrowObj','../../pics/common/sidebar_arrow_off.gif','sbarrow_moObj','../../pics/common/sidebar_arrow_on.gif','buyObj','../../pics/toolbar/buy.gif','buy_moObj','../../pics/toolbar/buy_mo.gif','downloadObj','../../pics/toolbar/download.gif','download_moObj','../../pics/toolbar/download_mo.gif','registerObj','../../pics/toolbar/register.gif','register_moObj','../../pics/toolbar/register_mo.gif','salesObj','../../pics/toolbar/sales.gif','sales_moObj','../../pics/toolbar/sales_mo.gif','arrowObj','../../pics/products/inset_arrow_on.gif','arrowOffObj','../../pics/products/inset_arrow_off.gif','sendObj','../../pics/common/send_print/send.gif','send_moObj','../../pics/common/send_print/send_roll.gif','printObj','../../pics/common/send_print/print.gif','print_moObj','../../pics/common/send_print/print_roll.gif');
+if (document.layers) onresize = function () { history.go(0) }
+var siteurl="../../";
+</script>
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!-- #BeginLibraryItem "/Libraries/top_products.lbi" -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#000000"> 
+    <td><img src="../../pics/common/interface/mast.gif" width="780" height="14" alt="" border="0" usemap="#mast"></td></tr>
+  <tr> 
+    <td> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td valign="bottom"><a href="../../index.html"><img src="../../pics/common/interface/logo.gif" width="157" height="50" alt="WebGain" border="0"></a><br>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td><a href="../../company" onMouseOver="setTimeout('window.showMenu(window.company, 1, 86)',100);  WM_changeVisibility('companyspacer', visible);"><img src="../../pics/navbar/company.gif" width="52" height="19" border="0" alt="Company"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../news_and_events" onMouseOver="window.showMenu(window.news, 53, 86); WM_changeVisibility('newsspacer', visible);"><img src="../../pics/navbar/news_events.gif" width="96" height="19" border="0" alt="News and Events"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../products" onMouseOver="window.showMenu(window.products, 149, 86); WM_changeVisibility('productsspacer', visible);"><img src="../../pics/navbar/products_active.gif" width="56" height="19" border="0" alt="Products"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../services" onMouseOver="window.showMenu(window.services, 206, 86); WM_changeVisibility('servicesspacer', visible);"><img src="../../pics/navbar/services.gif" width="52" height="19" border="0" alt="Services"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../support" onMouseOver="window.showMenu(window.support, 259, 86); WM_changeVisibility('supportspacer', visible);"><img src="../../pics/navbar/support.gif" width="51" height="19" border="0" alt="Support"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../partners" onMouseOver="window.showMenu(window.partners, 311, 86); WM_changeVisibility('partnersspacer', visible);"><img src="../../pics/navbar/partners.gif" width="57" height="19" border="0" alt="Partners"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../careers" onMouseOver="window.showMenu(window.careers, 369, 86); WM_changeVisibility('careersspacer', visible);"><img src="../../pics/navbar/careers.gif" width="50" height="19" border="0" alt="Careers"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../communities" onMouseOver="window.showMenu(window.community, 420, 86); WM_changeVisibility('communityspacer',visible);"><img src="../../pics/navbar/communities.gif" width="72" height="19" border="0" alt="Communities"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><img src="../../pics/navbar/right_edge.gif" width="42" height="19"></td></tr>
+            </table></td><td valign="bottom" width="99%"> 
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+              <form action="http://search.webgain.com/query.html" method="get">
+                <tr> 
+                  <td> 
+                    <table border="0" cellspacing="0" cellpadding="3">
+                      <tr> 
+                        <td><img src="../../pics/common/spacer.gif" width="55" height="1" alt="" border="0"></td><td><img src="../../pics/common/interface/search.gif" width=45 height=14 border=0 alt="Search"></td><td> 
+                          <input type="text" name="qt" size="10" class="leftnavreg">
+                        </td><td>
+                          <input TYPE="IMAGE" SRC="../../pics/common/go_button.gif" border="0" WIDTH="18" HEIGHT="16">
+                        </td></tr>
+                    </table></td></tr>
+              </form><tr> 
+                <td><a href="../../purchase" onMouseOver="changeImage(null,'buy','buy_moObj');" onMouseOut="changeImageBack('buyObj');" ><img src="../../pics/toolbar/buy.gif" name="buy" width="44" height="29" border="0" alt="Buy"></a><a href="../../download" onMouseOver="changeImage(null,'download','download_moObj');" onMouseOut="changeImageBack('downloadObj');" ><img src="../../pics/toolbar/download.gif" width="75" height="29" border="0" name="download" alt="Download"></a><a href="../../register" onMouseOver="changeImage(null,'register','register_moObj');" onMouseOut="changeImageBack('registerObj');" ><img src="../../pics/toolbar/register.gif" width="68" height="29" border="0" name="register" alt="Register"></a><a href="../../sales" onMouseOver="changeImage(null,'sales','sales_moObj');" onMouseOut="changeImageBack('salesObj');" ><img src="../../pics/toolbar/sales.gif" width="54" height="29" border="0" name="sales" alt="Sales"></a></td></tr>
+              <tr bgcolor="#CC0033"> 
+                <td><img src="../../pics/common/spacer.gif" width="1" height="7" alt="" border="0"></td></tr>
+            </table></td></tr>
+      </table></td></tr>
+  <tr bgcolor="#660033"> 
+    <td><img src="../../pics/common/spacer.gif" width="1" height="3" border="0" alt=""></td></tr>
+</table><!-- #EndLibraryItem --> 
+<table border="0" cellspacing="0" cellpadding="0" width="780">
+  <tr> 
+    <td valign="top"><!-- #BeginEditable "left_nav" --><!-- #BeginLibraryItem "/Libraries/Left_Nav/products/java_cc/products_java_cc.lbi" --><table border="0" cellspacing="0" cellpadding="0" width="157">
+  <tr> 
+    <td bgcolor="#CCCCFF"> 
+      <table border="0" cellspacing="0" cellpadding="2">
+        <tr> 
+          <td rowspan="3"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="-" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="-" border="0"></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/breadcrumb_arrow.gif" width="8" height="8" alt="-" border="0"></td><td><a href="../../index.html" class="breadcrumb">HOME PAGE</a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/breadcrumb_arrow.gif" width="8" height="8" alt="-" border="0" vspace="2"></td><td><a href="../../products" class="breadcrumb">PRODUCTS</a></td></tr>
+        <tr>
+          <td>&nbsp;</td><td valign="top"><img src="../../pics/common/breadcrumb_arrow.gif" width="8" height="8" alt="-" border="0" vspace="2"></td><td><a href="../java_cc" class="breadcrumb">JAVACC</a></td></tr>
+        <tr> 
+          <td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td bgcolor="#666699"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="-" border="0"></td></tr>
+  <tr> 
+    <td><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+  <tr> 
+    <td><img src="../../pics/sidetabs/products.gif" width="157" height="18" alt="Products Index" border="0"></td></tr>
+  <tr> 
+    <td>
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../../products" class="linkalt">Overview</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr>
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="5"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../webgain_studio" class="linkalt">WebGain Studio</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../webgain_studio/standard_edition" class="linkalt">Standard Edition</a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../webgain_studio/professional_edition" class="linkalt">Professional Edition</a></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="6"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../visual_cafe" class="linkalt">VisualCaf&#233;</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../visual_cafe/standard_edition" class="linkalt">Standard Edition</a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../visual_cafe/expert_edition" class="linkalt">Expert 
+            Suite </a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../visual_cafe/enterprise_edition" class="linkalt">Enterprise 
+            Suite </a></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="3"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../structure_builder" class="linkalt">StructureBuilder</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="3"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../toplink" class="linkalt">TopLink</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../application_composer" class="linkalt">Application Composer</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../quality_analyzer" class="linkalt">Quality Analyzer</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../business_designer" class="linkalt">Business Designer</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../java_cc" class="linkaltactive">JavaCC</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+</table><!-- #EndLibraryItem --><!-- #EndEditable --></td>
+    <td valign="top" class="tableborder"><img src="../../pics/common/spacer.gif" width="1" height="1" border="0" alt=""></td>
+    <td valign="top"><!-- #BeginEditable "banner" --> 
+      <table width="622" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td rowspan="2" width="435"><img src="../../pics/banners/products/java_cc/index_new.gif" width="435" height="45"></td>
+          <td height="27" valign="bottom"><!-- #BeginLibraryItem "/Libraries/banner/banner.lbi" --> <table border="0" cellspacing="0" cellpadding="0">
+  <form name="emailthis" method="post" action="/cgi-bin/emailthis.pl">
+    <tr>
+      <input type="hidden" name="title" value="document.write(document.title);">
+      <script language="JavaScript">
+       document.emailthis.title.value=document.title;
+	   function openSendPage() {
+	   	var url = document.emailthis.action +"?mytitle="+ escape(document.title) +"&myurl=" + document.location;
+			popupWin = window.open(url,name,'scrollbars=no,resizable=no,status=no,personal=no,menu=no,location=yes,toolbar=no,width=225,height=540,left=20,top=20')
+		}
+    </script>
+      <td align="right" nowrap> <a href="javascript:void(0)" onClick="openSendPage()" onMouseOver="changeImage(null,'send','send_moObj');" onMouseOut="changeImageBack('sendObj');"><img src="../../pics/common/send_print/send.gif" name="send" width="110" height="19" border="0" alt="Send To A Friend"></a><a href="../../cgi-bin/printer_friendly.cgi" onMouseOver="changeImage(null,'print','print_moObj');" onMouseOut="changeImageBack('printObj');" ><img src="../../pics/common/send_print/print.gif" name="print" width="52" height="19" border="0" alt="Print"></a></td></tr>
+  </form></table><!-- #EndLibraryItem --></td>
+        </tr>
+        <tr> 
+          <td valign="bottom" height="18"><img src="../../pics/common/send_print/subhead_right.gif" width="187" height="18"></td>
+        </tr>
+      </table>
+      <!-- #EndEditable --> 
+      <table cellpadding="0" cellspacing="0" border="0" width="622">
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="16" height="1" alt="" border="0"></td>
+          <td class="smallprint"> 
+            <p> 
+              <!-- Content:Start -->
+            <!-- #BeginEditable "content" --> 
+            <p><span class="title">The TokenManager MiniTutorial</span> </p>
+            <p>The JavaCC lexical specification is organized into a set of "lexical 
+              states". Each lexical state is named with an identifier. There is 
+              a standard lexical state called DEFAULT. The generated token manager 
+              is at any moment in one of these lexical states. When the token 
+              manager<br>
+              is initialized, it starts off in the DEFAULT state, by default. 
+              The starting lexical state can also be specified as a parameter 
+              while constructing a token manager object.<br>
+              <br>
+              Each lexical state contains an ordered list of regular expressions, 
+              this order is derived from the order of occurrence in the input 
+              file. There are four kinds of regular expressions: SKIP, MORE, TOKEN, 
+              and SPECIAL_TOKEN.<br>
+              <br>
+              All regular expressions that occur as expansion units in the grammar 
+              are considered to be in the DEFAULT lexical state and their order 
+              of occurrence is determined by their position in the grammar file.<br>
+              <br>
+              A token is matched as follows: All regular expressions in the current 
+              lexical state are considered as potential match candidates. The 
+              token manager consumes the maximum number of characters from the 
+              input stream possible that match one of these regular expressions. 
+              That is, the token manager prefers the longest possible match. If 
+              there are<br>
+              multiple longest matches (of the same length), the regular expression 
+              that is matched is the one with the earliest order of occurrence 
+              in the grammar file.<br>
+              <br>
+              As mentioned above, the token manager is in exactly one state at 
+              any moment. At this moment, the token manager only considers the 
+              regular expressions defined in this state for matching purposes 
+              After a match, one can specify an action to be executed as well 
+              as a new lexical state to move to. If a new lexical state is not 
+              specified, the token manager remains in the current state.<br>
+              <br>
+              The regular expression kind specifies what to do when a regular 
+              expression has been successfully matched:</p>
+            <ul>
+              <li>SKIP: Simply throw away the matched string (after executing 
+                any lexical action).<br>
+              </li>
+              <li>MORE: Continue (to whatever the next state is) taking the matched 
+                string along. This string will be a prefix of the new matched 
+                string.<br>
+              </li>
+              <li>TOKEN: Create a token using the matched string and send it to 
+                the parser (or any caller).<br>
+              </li>
+              <li>SPECIAL_TOKEN: Creates a special token that does not participate 
+                in parsing. Already described earlier.</li>
+            </ul>
+            <p>(The mechanism of accessing special tokens is at the end of this 
+              page)<br>
+              <br>
+              Whenever the end of file &lt;EOF> is detected, it causes the creation 
+              of an &lt;EOF> token (regardless of the current state of the lexical 
+              analyzer). However, if an &lt;EOF> is detected in the middle of 
+              a match for a regular expression, or immediately after a MORE regular 
+              expression has been matched, an error is reported.<br>
+              <br>
+              After the regular expression is matched, the lexical action is executed. 
+              All the variables (and methods) declared in the TOKEN_MGR_DECLS 
+              region (see below) are available here for use. In addition, the 
+              variables and methods listed below are also available for use.<br>
+              <br>
+              Immediately after this, the token manager changes state to that 
+              specified (if any).<br>
+              <br>
+              After that the action specified by the kind of the regular expression 
+              is taken (SKIP, MORE, ... ). If the kind is TOKEN, the matched token 
+              is returned. If the kind is SPECIAL_TOKEN, the matched token is 
+              saved to be returned along with the next TOKEN that is matched.<br>
+              <br>
+              -------------------------------------------------------------------<br>
+              <br>
+              The following variables are available for use within lexical actions:</p>
+            <ol>
+              <li>StringBuffer image (READ/WRITE):<br>
+                <br>
+                "image" (different from the "image" field of the matched token) 
+                is a StringBuffer variable that contains all the characters that 
+                have been matched since the last SKIP, TOKEN, or SPECIAL_TOKEN. 
+                You are free to make whatever changes you wish to it so long as 
+                you do not assign it to null (since this variable is used by the 
+                generated token manager also). If you make changes to "image", 
+                this change is passed on to<br>
+                subsequent matches (if the current match is a MORE). The contents 
+                of "image" *does not* automatically get assigned to the "image" 
+                field of the matched token. If you wish this to happen, you must 
+                explicitly assign it in a lexical action of a TOKEN or SPECIAL_TOKEN 
+                regular expression.<br>
+                <br>
+                Example:<br>
+                <br>
+                &lt;DEFAULT> MORE : { "a" : S1 }<br>
+                <br>
+                &lt;S1> MORE :<br>
+                {<br>
+                "b"<br>
+                { int l = image.length()-1; image.setCharAt(l, image.charAt(l).toUpperCase()); 
+                }<br>
+                ^1 ^2<br>
+                : S2<br>
+                }<br>
+                <br>
+                &lt;S2> TOKEN :<br>
+                {<br>
+                "cd" { x = image; } : DEFAULT<br>
+                ^3<br>
+                }<br>
+                <br>
+                In the above example, the value of "image" at the 3 points marked 
+                by<br>
+                ^1, ^2, and ^3 are:<br>
+                <br>
+                At ^1: "ab"<br>
+                At ^2: "aB"<br>
+                At ^3: "aBcd"<br>
+                <br>
+              </li>
+              <li>int lengthOfMatch (READ ONLY):<br>
+                <br>
+                This is the length of the current match (is not cumulative over 
+                MORE's). See example below. You should not modify this variable.<br>
+                <br>
+                Example:<br>
+                <br>
+                Using the same example as above, the values of "lengthOfMatch" 
+                are:<br>
+                <br>
+                At ^1: 1 (the size of "b")<br>
+                At ^2: 1 (does not change due to lexical actions)<br>
+                At ^3: 2 (the size of "cd")<br>
+                <br>
+              </li>
+              <li> int curLexState (READ ONLY):<br>
+                <br>
+                This is the index of the current lexical state. You should not 
+                modify<br>
+                this variable. Integer constants whose names are those of the 
+                lexical<br>
+                state are generated into the ...Constants file, so you can refer 
+                to<br>
+                lexical states without worrying about their actual index value.<br>
+                <br>
+              </li>
+              <li> inputStream (READ ONLY):<br>
+                <br>
+                This is an input stream of the appropriate type (one of<br>
+                ASCII_CharStream, ASCII_UCodeESC_CharStream, UCode_CharStream, 
+                or<br>
+                UCode_UCodeESC_CharStream depending on the values of options<br>
+                UNICODE_INPUT and JAVA_UNICODE_ESCAPE). The stream is currently 
+                at<br>
+                the last character consumed for this match. Methods of inputStream<br>
+                can be called. For example, getEndLine and getEndColumn can be 
+                called<br>
+                to get the line and column number information for the current 
+                match.<br>
+                inputStream may not be modified.<br>
+                <br>
+              </li>
+              <li> Token matchedToken (READ/WRITE):<br>
+                <br>
+                This variable may be used only in actions associated with TOKEN 
+                and<br>
+                SPECIAL_TOKEN regular expressions. This is set to be the token 
+                that<br>
+                will get returned to the parser. You may change this variable 
+                and<br>
+                thereby cause the changed token to be returned to the parser instead<br>
+                of the original one. It is here that you can assign the value 
+                of<br>
+                variable "image" to "matchedToken.image". Typically that's how 
+                your<br>
+                changes to "image" has effect outside the lexical actions.<br>
+                <br>
+                Example:<br>
+                <br>
+                If we modify the last regular expression specification of the<br>
+                above example to:<br>
+                <br>
+                &lt;S2> TOKEN :<br>
+                {<br>
+                "cd" { matchedToken.image = image.toString(); } : DEFAULT<br>
+                }<br>
+                <br>
+                Then the token returned to the parser will have its ".image" field<br>
+                set to "aBcd". If this assignment was not performed, then the<br>
+                ".image" field will remain as "abcd".<br>
+                <br>
+              </li>
+              <li> void SwitchTo(int):<br>
+                <br>
+                Calling this method switches you to the specified lexical state. 
+                This<br>
+                method may be called from parser actions also (in addition to 
+                being<br>
+                called from lexical actions). However, care must be taken when 
+                using<br>
+                this method to switch states from the parser since the lexical<br>
+                analysis could be many tokens ahead of the parser in the presense 
+                of<br>
+                large lookaheads. When you use this method within a lexical action,<br>
+                you must ensure that it is the last statement executed in the 
+                action<br>
+                (otherwise, strange things could happen). If there is a state 
+                change<br>
+                specified using the ": state" syntax, it overrides all switchTo 
+                calls,<br>
+                hence there is no point having a switchTo call when there is an<br>
+                explicit state change specified. In general, calling this method<br>
+                should be resorted to only when you cannot do it any other way. 
+                Using<br>
+                this method of switching states also causes you to lose some of 
+                the<br>
+                semantic checking that JavaCC does when you use the standard syntax.<br>
+                <br>
+              </li>
+            </ol>
+            <p>Lexical actions have access to a set of class level declarations. 
+              These declarations are introduced within the JavaCC file using the 
+              following syntax:<br>
+              <br>
+              token_manager_decls ::=<br>
+              "TOKEN_MGR_DECLS" ":"<br>
+              "{" java_declarations_and_code "}"<br>
+              <br>
+              These declarations are accessible from all lexical actions.<br>
+              <br>
+              <br>
+              EXAMPLES<br>
+              --------<br>
+              <br>
+              Example 1: Comments<br>
+              <br>
+              SKIP :<br>
+              {<br>
+              "/*" : WithinComment<br>
+              }<br>
+              <br>
+              &lt;WithinComment> SKIP :<br>
+              {<br>
+              "*/" : DEFAULT<br>
+              }<br>
+              <br>
+              &lt;WithinComment> MORE :<br>
+              {<br>
+              &lt;~[]><br>
+              }<br>
+              <br>
+              <br>
+              Example 2: String Literals with actions to print the length of the 
+              string:<br>
+              <br>
+              TOKEN_MGR_DECLS :<br>
+              {<br>
+              int stringSize;<br>
+              }<br>
+              <br>
+              MORE :<br>
+              {<br>
+              "\"" {stringSize = 0;} : WithinString<br>
+              }<br>
+              <br>
+              &lt;WithinString> TOKEN :<br>
+              {<br>
+              &lt;STRLIT: "\""> {System.out.println("Size = " + stringSize);} 
+              : DEFAULT<br>
+              }<br>
+              <br>
+              &lt;WithinString> MORE :<br>
+              {<br>
+              &lt;~["\n","\r"]> {stringSize++;}<br>
+              }<br>
+              <br>
+              <br>
+              <br>
+              HOW SPECIAL TOKENS ARE SENT TO THE PARSER:<br>
+              <br>
+              Special tokens are like tokens, except that they are permitted to 
+              appear anywhere in the input file (between any two tokens). Special 
+              tokens can be specified in the grammar input file using the reserved 
+              word "SPECIAL_TOKEN" instead of "TOKEN" as in:<br>
+              <br>
+              SPECIAL_TOKEN :<br>
+              {<br>
+              &lt;SINGLE_LINE_COMMENT: "//" (~["\n","\r"])* ("\n"|"\r"|"\r\n")><br>
+              }<br>
+              <br>
+              Any regular expression defined to be a SPECIAL_TOKEN may be accessed 
+              in a special manner from user actions in the lexical and grammar 
+              specifications. This allows these tokens to be recovered during 
+              parsing while at the same time these tokens do not participate in 
+              the parsing.<br>
+              <br>
+              JavaCC has been bootstrapped to use this feature to automatically 
+              copy relevant comments from the input grammar file into the generated 
+              files.<br>
+              <br>
+              Details:<br>
+              <br>
+              The class Token now has an additional field:<br>
+              <br>
+              Token specialToken;<br>
+              <br>
+              This field points to the special token immediately prior to the 
+              current token (special or otherwise). If the token immediately prior 
+              to the current token is a regular token (and not a special token), 
+              then this field is set to null. The "next" field's of regular tokens 
+              continue to have the same meaning - i.e., they point to the next 
+              regular token except in the case of the EOF token where the "next" 
+              field is null. The "next" field of special tokens point to the special 
+              token immediately following the current token. If the token immediately 
+              following the current token is a regular token, the "next" field 
+              is set to null.<br>
+              <br>
+              This is clarified by the following example. Suppose you wish to 
+              print all special tokens prior to the regular token "t" (but only 
+              those that are after the regular token before "t"):<br>
+              <br>
+              if (t.specialToken == null) return;<br>
+              // The above statement determines that there are no special tokens<br>
+              // and returns control to the caller.<br>
+              Token tmp_t = t.specialToken;<br>
+              while (tmp_t.specialToken != null) tmp_t = tmp_t.specialToken;<br>
+              // The above line walks back the special token chain until it<br>
+              // reaches the first special token after the previous regular<br>
+              // token.<br>
+              while (tmp_t != null) {<br>
+              System.out.println(tmp_t.image);<br>
+              tmp_t = tmp_t.next;<br>
+              }<br>
+              // The above loop now walks the special token chain in the forward<br>
+              // direction printing them in the process.</p>
+            <p> 
+              <!-- Content:End -->
+            </p>
+            <!-- #EndEditable --> <br>
+            <img src="../../pics/common/spacer.gif" width="536" height="1" alt="" border="0"></td>
+          <td><img src="../../pics/common/spacer.gif" width="70" height="1" alt="" border="0"></td>
+        </tr>
+        <tr> 
+          <td colspan="3"><img src="../../pics/common/spacer.gif" width="622" height="1" alt="" border="0"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td></td>
+    <td class="tableborder"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td>
+    <td align="center"><!-- #BeginLibraryItem "/Libraries/footer.lbi" -->
+<img src="../../pics/common/spacer.gif" width="614" height="1" alt="" border="0"><br><br><span class="smallprint">
+              <a class="footer" href="file:///F%7C/corp_website/company">Company</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/news_and_events">News and Events</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/products">Products</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/services">Services</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/support">Support</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/partners">Partners</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/careers">Careers</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/communities">Communities</a><br>
+<a class="footer" href="javascript:openCopyrightWindow('http://www.webgain.com/copyright.html','credits')"> 
+&copy; 2000-2002 WebGain, Inc.</a> | <a class="footer" href="file:///F%7C/corp_website/company/privacy_statement.html">Privacy 
+Statement</a> | <a class="footer" href="file:///F%7C/corp_website/company/legal.html">Legal</a> | <a class="footer" href="file:///F%7C/sitemap">Site 
+Map</a> | <a class="footer" href="file:///F%7C/corp_website/contact_us">Contact</a> <br>
+<br></span><!-- #EndLibraryItem --></td>
+  </tr>
+</table>
+<div id="blank" style="visibility: hidden; position: absolute; left: 24; top: 43; width:75px; height:120px; z-index:0;"> 
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td></td>
+    </tr>
+  </table>
+</div>
+<div id="companyspacer" style="visibility:hidden; position:absolute; left:0; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('companyspacer',toggle); window.hideMenu(window.company);"><img src="../../pics/common/spacer.gif" width="55" height="58" border="0" alt=""></a><br>
+        <a href="../../company/"><img src="../../pics/navbar/company_mo.gif" width="52" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="52" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('companyspacer',toggle); window.hideMenu(window.company);"><img src="../../pics/common/spacer.gif" width="55" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('companyspacer',toggle); window.hideMenu(window.company);"><img src="../../pics/common/spacer.gif" width="470" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="newsspacer" style="visibility:hidden; position:absolute; left:0; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="53" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="100" height="58" alt="" border="0"></a><br>
+        <a href="../../news_and_events/"><img src="../../pics/navbar/news_events_mo.gif" width="96" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="96" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="100" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="productsspacer" style="visibility:hidden; position:absolute; left:100; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="56" height="58" alt="" border="0"></a><br>
+        <a href="../../products/"><img src="../../pics/navbar/products_active.gif" width="56" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="56" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="56" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="servicesspacer" style="visibility:hidden; position:absolute; left:157; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="52" height="58" alt="" border="0"></a><br>
+        <a href="../../services/"><img src="../../pics/navbar/services_mo.gif" width="52" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="52" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="52" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="supportspacer" style="visibility:hidden; position:absolute; left:210; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="51" height="58" alt="" border="0"></a><br>
+        <a href="../../support/"><img src="../../pics/navbar/support_mo.gif" width="51" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="51" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="51" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="partnersspacer" style="visibility:hidden; position:absolute; left:262; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="57" height="58" alt="" border="0"></a><br>
+        <a href="../../partners/"><img src="../../pics/navbar/partners_mo.gif" width="57" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="57" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="57" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="400" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="careersspacer" style="visibility:hidden; position:absolute; left:320; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="50" height="58" alt="" border="0"></a><br>
+        <a href="../../careers/"><img src="../../pics/navbar/careers_mo.gif" width="50" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="50" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="50" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="345" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="communityspacer" style="visibility:hidden; position:absolute; left:371; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="72" height="58" alt="" border="0"></a><br>
+        <a href="../../communities/"><img src="../../pics/navbar/communities_mo.gif" width="72" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="72" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="72" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="270" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<map name="mast"> 
+  <area alt="Site Map" coords="715,1,774,12" href="../../sitemap">
+  <area alt="Contact" coords="651,1,706,12" href="../../contact_us">
+  <area alt="Login" coords="595,1,642,12" href="../../../login/">
+</map>
+<script language="JavaScript1.2">
+//For IE
+if (document.all || document.getElementById) {
+    onLoad();
+}
+loaded=true;
+</script>
+</body>
+</html>

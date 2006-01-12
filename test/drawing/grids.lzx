@@ -1,0 +1,44 @@
+ <canvas width="800" height="600">
+<include href="utils/performance" />
+  <class name="drawLines"  extends="drawview" onmousedown="this.dragger.apply()" oninit="this.update()" onmouseup="this.dragger.remove()" width="200" height="200">
+    <attribute name="it" type="number" value="200"/>
+    <attribute name="iv" type="number" value="5"/>
+
+    <dragstate name="dragger"/>
+    <method name="update"><![CDATA[
+        this.clear();
+        this.beginPath();
+           for (var i=0; i <= this.it +this.iv ; i+=this.iv){
+
+                //this.moveTo(x, y);
+                this.moveTo(0, i);
+                //this.lineTo(x,y);
+                this.lineTo((this.it -i > 0 ? this.it -i : 0 ),0);
+
+//Debug.write(i);
+             
+           }
+                      this.globalAlpha = .1;
+
+                this.strokeStyle = 0xff0000;
+                this.lineWidth = 1;
+                this.stroke();  
+    ]]></method>
+  </class>
+<drawLines id="dv" x="100"/>
+<view>
+<simplelayout/>
+<slider minvalue="1" value="10">
+    <method event="onvalue">
+       dv.setAttribute('it',this.value*10);
+       dv.update();
+    </method>
+</slider>
+<slider minvalue="1" value="10">
+    <method event="onvalue">
+       dv.setAttribute('iv',this.value);
+       dv.update();
+    </method>
+</slider>
+</view>
+</canvas>

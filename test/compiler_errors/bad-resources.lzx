@@ -1,0 +1,23 @@
+<!-- Expect warnings that the files can't be included. -->
+<canvas>
+<resource name="r1" src="../includes/bad.jpeg"/>
+<resource name="r2" src="../includes/bad.jpg"/>
+<resource name="r3" src="../includes/bad.mp3"/>
+<resource name="r4" src="../includes/bad.png"/>
+<resource name="r5" src="../includes/bad.gif"/>
+<resource name="r6" src="../includes/bad.swf"/>
+<resource name="r7" src="../includes/bad.bad"/>
+
+<view resource="../includes/bad.jpeg"/>
+<view resource="../includes/bad.jpg"/>
+<view resource="../includes/bad.mp3"/>
+<view resource="../includes/bad.png"/>
+<view resource="../includes/bad.gif"/>
+<view resource="../includes/bad.swf"/>
+<view resource="../includes/bad.bad"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

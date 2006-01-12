@@ -1,0 +1,111 @@
+<library>
+
+<include href="tooltipview.lzx"/>
+<!--- This class allows you to show a floating "tooltip" on any
+    view.  To use it you make it a child of a view.  For example:
+
+    @START_CODE
+        <button text="OK">
+            <tooltip>This is a tip.</tooltip>
+        </button>
+    @END_CODE
+
+    The appearance of the tooltip is determined by a view on the canvas
+    which must be named "tooltipview" and have a setText method and
+    options="ignorelayout"
+-->
+<class name="tooltip" initstage="late">
+    <!--- text that appears in the tooltip.  null or empty string means tooltip will not show. -->
+    <attribute name="text" type="text"/>
+    <!--- @keywords private -->
+    <attribute name="_mousein" value="false" type="boolean"/>
+    <!--- @keywords private -->
+    <attribute name="_checkdel" value="null"/>
+    <!--- @keywords private -->
+    <attribute name="_lastmousex" value="0"/>
+    <!--- @keywords private -->
+    <attribute name="_lastmousey" value="0"/>
+    <!--- offset of tooltip from parent view-->
+    <attribute name="p_yoffset" value="15" />
+    <!--- values = "'right',''" 
+          attribute to align a tooltip 'right' so that it's right edge is flush 
+          with it's parent's right edge ( minus 10 pixel inset ).   -->
+    <attribute name="tipalign" value="" type="string" />
+    
+    <!--- @keywords private -->
+    <method event="oninit">
+        this.overdel = new LzDelegate(this, "startCheck", parent, "onmouseover");
+        this.outdel = new LzDelegate(this, "hideTip", parent, "onmouseout");
+        this.outdel.register(parent, "onclick");
+    </method>
+
+    <!--- @keywords private -->
+    <method name="startCheck">
+        <![CDATA[
+        if (this.text != null && this.text != "") {
+            this._mousein = true;
+            if (!this._checkdel) this._checkdel = new LzDelegate(this, "checkTip");
+            this._lastmousex = canvas.getMouse('x');
+            this._lastmousey = canvas.getMouse('y');
+            this.lasttime = new Date();
+
+            LzIdle.callOnIdle(this._checkdel);
+        }
+        ]]>
+    </method>
+
+    <!--- @keywords private -->
+    <method name="checkTip">
+        if (!this._mousein) return;
+        var now = new Date();
+        var newmousex = canvas.getMouse('x');
+        var newmousey = canvas.getMouse('y');
+        var timediff = now.getTime() - this.lasttime.getTime();
+
+        if ((this._lastmousex != newmousex) || (this._lastmousey != newmousey)) {
+            this._lastmousex = newmousex;
+            this._lastmousey = newmousey;
+            this.lasttime = now;
+        }
+        if (timediff > 500) {
+            this.showTip();
+        } else {
+            LzIdle.callOnIdle(this._checkdel);
+        }
+    </method>
+
+    <!--- @keywords private -->
+    <method name="showTip"> <![CDATA[
+        canvas.tooltipview.setText(this.text);
+        
+        var py = parent.getAttributeRelative( 'y', canvas )
+        var tipy = this._lastmousey + 25;
+        var tipx = canvas.width;
+        if ( tipalign == 'right' ) {
+            tipx = parent.getAttributeRelative( 'x', canvas ) + parent.width;
+        }
+
+        tipx = Math.min(tipx - canvas.tooltipview.width - 10, this._lastmousex - 5);
+
+
+        var pointerontop = true;
+        if (tipy > canvas.height - 30) {
+          tipy = this._lastmousey - 25;
+          pointerontop = false;
+        }
+
+        canvas.tooltipview.setX( tipx );
+        canvas.tooltipview.setY( tipy );
+        canvas.tooltipview.setPointerX( this._lastmousex, pointerontop );
+        canvas.tooltipview.bringToFront( this.text );
+        canvas.tooltipview.setVisible( true );
+    ]]></method>
+
+    <!--- @keywords private -->
+    <method name="hideTip">
+        this._mousein = false;
+        canvas.tooltipview.setVisible( false );
+    </method>
+</class>
+
+</library>

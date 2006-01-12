@@ -1,0 +1,139 @@
+# File: reference.rnc
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+# This is the schema for the intermediate XML files that are used in
+# the production of the Laszlo Reference.  These are the "combined
+# XML" files, that combine the HTML wrapper pages, the schema and LZX
+# description files, and the ECMAScript class description files.
+
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+
+start = elementDef
+
+#
+# Attribute Values
+#
+
+filename = string
+
+## text that contains escaped HTML markup.  For example, <b>bold</b> is
+## represented as &lt;b&gt;bold&lt;/b&gt;.
+escapedHTMLText = text
+
+## An XML datatype.  This is one of the type names that can be used
+## as the value of attribute/@type in an LZX program.
+tagType = token
+
+## An ECMAScript type, either built in or defined in the LFC or a tag.
+jsType = token
+
+## See element.category.
+elementCategoryValue = "Animation" | "base classes" | "components" | "Data" | "Development" | "Event" | "HTML Markup" | "Layout" | "layout" | "Media" | "Menu and Command" | "Persistent Connection" | "Scripting" | "State" | "Structure" | "View Basics" | "View"
+
+
+#
+# Element Definitions
+#
+
+## This is the document root for a reference xml document.
+## The tag child describes the XML tag (its attributes.  
+elementDef = element \element {
+  ## This is the name of the section in the Reference that this
+  ## element occurs in.
+  attribute category { elementCategoryValue } &
+  ## Not currently used.
+  attribute tier { string } &
+  ## The wrapper page that contains the description and metadata.
+  attribute filename {filename} &
+  ## The filename of the wrapper page for the class that this
+  ## class extends.
+  attribute extends {filename}? &
+  ## The component library that defines this class (e.g. "base" or "lz")
+  attribute library {token}? &
+  ## The title of the reference page.
+  attribute title {string} &
+  
+  ## One-line description
+  description &
+  element longdescription { escapedHTMLText } &
+  
+  ## Combined XML attributes and ECMAScript properties
+  element attributes { combinedAttribute* }? &
+  ## Information about the ECMAScript class
+  api? &
+  ## Information about the XML tag
+  element tag {
+    attribute name {token} &
+    attribute src {filename} &
+    description?
+  }?
+}
+
+api = element api {
+  attribute name { token } & 
+  attribute extends { token }? &
+  attribute src { filename }? &
+  description? &
+  element methods { method* }? &
+  element attributes {
+     element attribute {
+      attribute name { token } &
+      attribute type { jsType }? &
+      description?
+    }*
+  }? &
+  element events {
+     element event {
+      attribute name { token } &
+      description?
+    }*
+  }? &
+  element fields {
+    element field {
+      attribute name { token } &
+      attribute type { jsType }? &
+      description?
+    }*
+  }?
+}
+
+combinedAttribute = element attribute {
+  attribute name { token } &
+  attribute type { jsType }? &
+  description? &
+  ## The datatype of the XML attribute, e.g. "string"
+  attribute tagtype { tagType }? &
+  ## The type defined in the api tag
+  attribute apitype { jsType }?
+  ## See the definitions in the Reference.
+  attribute category { "setter"| "final" | "eventhandler" | "readonly" } &
+  attribute default { string }? &
+  ## Did the description come from the api tag
+  attribute descfromapi { xsd:boolean }? &
+  ## Is this attribute valid in XML?  False for attributes
+  ## that represent ECMAScript properties without an XML analogue.
+  attribute isvalidintag { xsd:boolean }
+}
+
+method = element method {
+  attribute name { token } &
+  description? &
+  element parameters {
+    element param {
+      attribute name { token } &
+      attribute required { xsd:boolean } &
+      attribute type { jsType } &
+      description?
+    }*
+  }? &
+  element return {
+    attribute type { jsType } &
+    description?
+  }?
+}
+
+description =
+  element desc { escapedHTMLText }

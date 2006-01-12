@@ -1,0 +1,21 @@
+<!--
+    textstyle.lzx
+
+    Copyright 2005 Laszlo Systems, Inc.  All Rights Reserved.
+    Unauthorized use, duplication or distribution is strictly prohibited.
+    This software is the proprietary information of Laszlo Systems, Inc.
+    Use is subject to license terms.
+-->
+<library>
+    <!-- TEXT STYLES -->
+    <!--- Simple class that adds font attributes to style class (for usage, see /lzmodules/framework/styledtext.lzx)
+        @START_CODE
+        <textstyle font="futura" fontsize="12" fontstyle="bold" />
+        @END_CODE
+    -->
+    <class name="textstyle" extends="style">
+        <attribute name="font" value="arial" type="string" />
+        <attribute name="fontsize" value="11" type="number" />
+        <attribute name="fontstyle" value="plain" type="string" />
+    </class>    
+</library>

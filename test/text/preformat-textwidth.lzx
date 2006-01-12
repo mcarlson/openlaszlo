@@ -1,0 +1,16 @@
+<canvas width="1000" height="1000">
+<text id="ttext" multiline="true" name="debugme" bgcolor="#ffcccc">
+The bounding box of this text view should exactly contain the text.
+<pre>
+  This is a preformat region. It is very nice to have it here, with all those
+  nice linebreaks.
+  It has three lines of text!
+</pre>
+And this is after the preformat element.
+</text>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

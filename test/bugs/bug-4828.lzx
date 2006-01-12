@@ -1,0 +1,15 @@
+<canvas width="600" >
+    <view x="10" y="10">
+        <simplelayout spacing="20" />
+        <text width="400"
+              multiline="true" >TEST- First, click in the edittext box to set the focus, then press tab to move to the checkbox. Now, Press the spacebar a few times.</text>
+        <text width="400"
+              multiline="true" >PROBLEM- Both the edittext and checkbox have the focus simultaneously, therefore spaces are being entered into the edittext while the checkbox is being toggled</text>
+        <edittext/>
+        <checkbox text="test" />
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,35 @@
+<canvas height="500">
+	<window width="300" height="200" title="Window with correctly placed menubar" resizable="true">
+		<menubar placement="menubar" width="${immediateparent.width}">
+			<menu text="Menu 1" width="100">
+				<menuitem/>
+			</menu>
+			<menu text="Menu 2" width="100">
+			    <menuitem text="More items..."/>  
+			</menu>
+		</menubar>
+
+		<text fontstyle="bold" fontsize="16" text="I'm in the right place"/>
+	</window>
+
+	<window width="300" height="200" y="250" title="Menubar erroneously in content area">
+		<menubar width="200">
+			<menu text="Menu 1" width="100">
+			    <menuitem text="More items..."/>  
+			</menu>
+			<menu text="Menu 2" width="100">
+				<menuitem/>
+			</menu>
+		</menubar>
+
+		<text fontstyle="bold" fontsize="16" text="This sucks"/>
+	</window>
+
+	<method name="whichOne" args="vThis">
+		debug.write(vThis.parent.owner.text + " - "+ vThis.text);
+	</method>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

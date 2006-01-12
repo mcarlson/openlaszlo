@@ -1,0 +1,72 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Constantboundslayout">
+    <lztier>Utility Component</lztier>
+    <lzcategory>layout</lzcategory>
+    <lzshortdesc>
+        Arranges a set of views to a constant 'x' or 'y' value with a bounding rect
+    </lzshortdesc>
+    <lztag>utils/layouts/constantboundslayout.xml</lztag>
+</lzelement>
+
+
+
+
+<p>A <tagname>view</tagname> can have an
+<attribute>xoffset</attribute> and a
+<attribute>yoffset</attribute>. These offsets allow the view to be placed
+relative to the point (<attribute>xoffset</attribute>,
+<attribute>yoffset</attribute>).  (Otherwise the view is placed using
+the view's top left corner as a reference point.)  If a view has an
+offset, then this will effect how layouts position it relative to
+other views.</p>
+<p>
+The easiest way to see how constantboundslayout works is to contrast it with <tagname>constantlayout</tagname>
+as shown here.
+</p>
+<p>The example below shows three views, one with an
+<attribute>xoffset</attribute> value of five.  When using just a
+<classname>constantlayout</classname> the yellow view is shifted left
+five pixels because of its xoffset.</p>
+
+<example>
+&lt;canvas height="85"&gt;
+  &lt;view bgcolor="red" &gt;
+    &lt;view width="80" height="80" bgcolor="yellow" <em>xoffset="5"</em>/&gt;       
+    &lt;view width="60" height="60" bgcolor="silver"/&gt; 
+    &lt;view width="40" height="40" bgcolor="green"/&gt;           
+    <em>&lt;constantlayout axis="x" value="10"/&gt;</em> 
+  &lt;/view &gt;
+&lt;/canvas&gt;
+</example>
+
+<p>With a <classname>constantboundslayout</classname> that offset is
+effectively ignored, meaning only the bounds of the view matters in
+the layout process. The example below shows all of the subviews now
+aligned with the use of a <varname>constantboundslayout</varname>.</p>
+
+<example>
+&lt;canvas height="85"&gt;
+  &lt;include href="utils/layouts/constantboundslayout.lzx"/&gt;
+  &lt;view bgcolor="red"&gt;
+    &lt;view width="80" height="80" bgcolor="yellow" <em>xoffset="5"</em>/&gt;       
+    &lt;view width="60" height="60" bgcolor="silver"/&gt; 
+    &lt;view width="40" height="40" bgcolor="green"/&gt;           
+    <em>&lt;constantboundslayout axis="x" value="10"/&gt;</em>
+  &lt;/view &gt;
+&lt;/canvas&gt;
+</example>
+
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

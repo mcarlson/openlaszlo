@@ -1,0 +1,64 @@
+<library>
+<class name="stableborderlayout" extends="layout" >
+    <!--- The axis in which this layout operates. One of 'x' or 'y'. -->
+    <attribute name="axis" setter="this.setAxis( axis )" type="string" />
+    <!--- @keywords private -->
+    <attribute name="dontupdate" value="true" />
+
+    <!--- @keywords private -->
+    <method name="reset">
+        if ( this.locked || this.subviews.length &lt; 2 ) { return; }
+        this.subviews[ 1 ].setAttribute(this.axis ,
+                            this.subviews[ 0 ][(this.sizeAxis )] );
+        this.update();
+    </method>
+    
+    <!--- This method is usually only called when the size of the parent 
+          changes. This means that stableborderlayout is not really designed
+          for use in situations where the size of the views controlled by the
+          layout changes after init time. However, this method may be called
+          directly to force the layout to update. 
+          @param Number n: unknown - check in review -->
+    <method name="update" args="n">
+        if ( this.locked || this.dontupdate ) { return; }
+        var newsize = n > 0 ? n : this.immediateparent[( this.sizeAxis )];
+        //this is the function for when the parent size changes
+        if ( this.locked || this.subviews.length &lt; 3 ) { return; }
+        this.lock();
+        var re = this.subviews[ 2 ][( this.sizeAxis )];
+        this.subviews[ 2 ].setAttribute( this.axis , newsize - re );
+        this.subviews[ 1 ].setAttribute( this.sizeAxis , newsize - re -
+                                    this.subviews[ 1 ] [ this.axis ] );
+        this.locked = false;
+    </method>
+
+    <!--- @keywords private -->
+    <method name="addSubview" args="sd">
+        super.addSubview( sd );
+        if (this.subviews.length == 2 ){
+            // this is the second subview
+            this.subviews[ 1 ].setAttribute(this.axis ,
+                                this.subviews[ 0 ][(this.sizeAxis )] );
+            // sd['hasset'+this.sizeAxis] = true;
+            sd.setAttribute(this.sizeAxis,0);
+        }else if ( this.subviews.length > 2 ){
+            this.dontupdate = false;
+            this.update();
+        }
+    </method>
+
+    <!--- @keywords private -->
+    <method name="setAxis" args="a" >
+        this.axis = a;
+        this.sizeAxis = a == "x" ? "width" : "height"
+        this.updateDelegate.register( this.immediateparent, 
+                                      "on" + this.sizeAxis ); 
+    </method>
+
+</class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

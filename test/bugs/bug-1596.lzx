@@ -1,0 +1,16 @@
+<canvas>
+<class name="box" opacity='.1' width='50' height='50' bgcolor="red"/>
+
+<view width="20" height="20" bgcolor="olive" name="masked">
+	<method event="oninit">
+		for (var n = 0; n &lt; 10; ++n)
+			new box(this)
+	</method>
+</view>
+
+<button y="100" text="Add another" onclick="new box(masked)"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

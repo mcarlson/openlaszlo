@@ -1,0 +1,74 @@
+<canvas bgcolor="#EAEAEA" width="660">
+  <debug x="300" y="300" height="150" width="200"/>
+    <include href="utils/layouts/wrappinglayout.lzx"/>
+
+
+    <view x="40" y="40">
+        <view>
+            <view>
+                 <text>simple radio group</text>
+                 <radiogroup id="r1">
+                     <radiobutton value="1">one</radiobutton>
+                     <radiobutton id="r1b" value="2" selected="true">two</radiobutton >
+                     <radiobutton  value="3">three</radiobutton>
+                 </radiogroup>
+                <text text="${'value: ' + r1.value}"/>
+                 <simplelayout axis="y" spacing="4"/>
+             </view>
+
+            <view>
+                <text>with x positions</text>
+                <radiogroup y="15">
+                    <radiobutton value="1" text="one"/>
+                    <radiobutton x="10" value="2" text="two"/>
+                    <radiobutton x="20" value="3" text="three"/>
+                </radiogroup>
+                <simplelayout axis="y" spacing="4"/>
+            </view>
+            <view>
+                <text>without automatic layout</text>
+                <radiogroup y="15" layout="class:none">
+                    <radiobutton value="1" text="one"/>
+                    <radiobutton x="10" y="15" value="2" text="two"/>
+                    <radiobutton x="20" y="30" value="3" text="three"/>
+                    <radiobutton x="10" y="45" value="4" text="four"/>
+                    <radiobutton x="0" y="60" value="5" text="five"/>
+                </radiogroup>
+                <simplelayout axis="y" spacing="4"/>
+            </view>
+            <simplelayout axis="y" spacing="20" inset="20"/>
+        </view>
+        <view>
+             <view>
+                    <text>horizontal axis</text>
+                    <radiogroup layout="axis:x; spacing:20" y="15">
+                        <radiobutton text="Check me A1" />
+                        <radiobutton text="Check me A2"/>
+                        <radiobutton text="Check me A3"/>
+                    </radiogroup>
+                    <simplelayout axis="y" spacing="4"/>
+            </view>
+            <view>
+                    <text>wrapping layout</text>
+                    <radiogroup id="rgw" y="15"
+                        height="60" layout="class: wrappinglayout">
+                        <radiobutton value="1" text="one"/>
+                        <radiobutton value="2" text="two"/>
+                        <radiobutton value="3" text="three"/>
+                        <radiobutton value="4" text="four"/>
+                        <radiobutton value="5" text="five"/>
+                        <radiobutton value="6" text="six"/>
+                    </radiogroup>
+                    <simplelayout axis="y" spacing="4"/>
+            </view>
+            <simplelayout axis="y" spacing="20" inset="20"/>
+        </view>
+        <simplelayout axis="x" spacing="20"/>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

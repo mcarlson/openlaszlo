@@ -1,0 +1,45 @@
+<!-- check that input text defaults to the correct things;
+    + input text with compile-time constant width and height will default to fixedsize,
+    + single line input text defaults to resizable (fixedsize=false)
+
+-->
+
+<canvas width="1000" height="800">
+
+    <font name="Helvetica">
+	<face src="helmetcb.ttf"  style="bold" />
+	<face src="helmetcbi.ttf" style="bold italic" />
+	<face src="helmetci.ttf"  style="italic" />
+	<face src="helmetcr.ttf" />
+    </font>
+
+<view id="v1">
+  <simplelayout spacing="4" axis="y" />
+   <edittext name="t0"  width="89" id="t0" > [0] single line,  should be resizable</edittext>
+  <inputtext name="t1" bgcolor="#ffcccc">[1] single line, should be resizable</inputtext>
+  <inputtext name="t2" width="200" height="64" multiline="true" resizable="true" bgcolor="#afcccc">[2] multiline should be resizable. Vestibulum sodales wisi id turpis. Integer non velit vitae ipsum suscipit imperdiet. Aenean eget mi ac lorem viverra eleifend. Phasellus tincidunt sodales tellus. Proin luctus hendrerit urna. Duis pretium congue enim. Pellentesque at neque sed elit rutrum ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam vestibulum magna. Ut sagittis diam. Integer vel elit. Ut nec lorem nec magna imperdiet ullamcorper. Quisque neque. Ut ipsum. Pellentesque aliquet lectus ac leo. Integer euismod interdum justo.
+</inputtext>
+  <inputtext font="Helvetica" fontsize="12" name="t3" width="200" height="64" multiline="true"  bgcolor="#fffccc">[3] multiline should be fixed. Vestibulum sodales wisi id turpis. Integer non velit vitae ipsum suscipit imperdiet. Aenean eget mi ac lorem viverra eleifend. Phasellus tincidunt sodales tellus. Proin luctus hendrerit urna. Duis pretium congue enim. Pellentesque at neque sed elit rutrum ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam vestibulum magna. Ut sagittis diam. Integer vel elit. Ut nec lorem nec magna imperdiet ullamcorper. Quisque neque. Ut ipsum. Pellentesque aliquet lectus ac leo. Integer euismod interdum justo.
+</inputtext>
+  <inputtext font="Helvetica" fontsize="12" name="t4" width="200" height="64" resizable="true"  multiline="true" bgcolor="#c0cccf">[4] multiline should be resizable. Vestibulum sodales wisi id turpis. Integer non velit vitae ipsum suscipit imperdiet. Aenean eget mi ac lorem viverra eleifend. Phasellus tincidunt sodales tellus. Proin luctus hendrerit urna. Duis pretium congue enim. Pellentesque at neque sed elit rutrum ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Nullam vestibulum magna. Ut sagittis diam. Integer vel elit. Ut nec lorem nec magna imperdiet ullamcorper. Quisque neque. Ut ipsum. Pellentesque aliquet lectus ac leo. Integer euismod interdum justo.
+</inputtext>
+   <edittext resizable="false"  name="t5"  width="100" height="48" multiline="true" > [0] multiline line,  should be fixed
+Vestibulum sodales wisi id turpis. Integer non velit vitae ipsum suscipit imperdiet. Aenean eget mi ac lorem viverra eleifend. Phasellus tincidunt sodales tellus. Proin luctus hendrerit urna. Duis pretium congue enim. Pellentesque at neque sed elit rutrum ultrices. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
+</edittext>
+  <button onclick='parent.growstuff()'>Grow Things</button>
+  <button onclick='debug.write("hello")'>Show Debugger</button>
+  <method name="growstuff">
+       var views = [this.t0, this.t1, this.t2, this.t3, this.t4, this.t5];
+       for (i in views) {
+         views[i].animate('width', 60, 333,true); 
+         views[i].animate('height', 60, 333,true); 
+    }
+  </method>
+
+
+</view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

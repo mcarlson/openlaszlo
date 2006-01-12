@@ -1,0 +1,87 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- scrollbar.lzx                                                         -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<!--
+
+  Demonstrates the use of the lztextscroller widget
+
+-->
+
+<canvas width="1000" height="800" >
+
+<include href="lz/lztextscroller.lzx" />
+
+<view id="v1"  y="40" x="30" name="outer" width="400" height="400">
+   <resizelayout axis="y" />
+
+   <view name="top"  height="8"
+      bgcolor="#888888"
+      stretches="width"
+      width="parent.width"/>
+
+   <view id="v2" name="inner" width="parent.width" options="releasetolayout">
+      <resizelayout axis="x" />
+      <view name="left" width="8"
+         bgcolor="#888888"
+              stretches="height"
+              height="parent.height"/>
+       <lztextscroller id="content"
+               bgcolor="#FFFFFF"
+               options="releasetolayout"
+               height="parent.height" />
+       <view name="right" width="8"
+         bgcolor="#888888"
+              stretches="height"
+               height="parent.height" />
+   </view>
+
+   <view name="bottom" height="8"
+      bgcolor="#888888"
+      stretches="width"
+      width="parent.width"/>
+</view>
+
+<view id="v3" width="100" bgcolor="#0000cc" x="450"
+	 oninit='Debug.setAttribute("x", 450); Debug.setAttribute("y", 400);' >
+  <simplelayout axis="y" spacing="3" />
+  <button width="100" text="Add Text" onclick="parent.addTest()" />
+  <button width="100" text="Clear Text" onclick="content.clear()" />
+  <button width="100" text="Scroll To End" onclick="content.scrollToEnd()" />
+  <button width="100" text="Scroll To Line 40" onclick="content.setLine(40)" />
+  <button width="100" text="Set Height 200" onclick="v1.setHeight(200)" />
+  <button width="100" text="Set Height 400" onclick="v1.setHeight(400)" />
+  <method name="addTest" >
+      <![CDATA[
+	// Example of setText()
+	content.setText("This is a string\nwith three lines of text.\nIt has newline chars to make linebreaks.\n");
+
+	// Example of addText()
+
+        content.addText("I'm adding another line with &lt;, &amp; and &gt; chars\n");
+        content.addText("<b>And this line is bold</b>\n");
+
+	for(i=0; i < 200; i++) {
+           content.addText("This is line number "+i+"\n");
+	}
+       ]]>
+  </method>
+
+</view>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

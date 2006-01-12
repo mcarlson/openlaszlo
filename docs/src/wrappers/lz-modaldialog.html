@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Modaldialog">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A modal dialog.
+    </lzshortdesc>
+    <lztag>lz/modaldialog.xml</lztag>
+</lzelement>
+
+
+<p>The <tagname>modaldialog</tagname> tag creates a moveable floating
+view.  When opened, the user cannot interact with any other part of
+the application until the dialog is closed.  A modal dialog is
+typically declared on the canvas.  It is automatically centered
+horizontally and appears vertically at the top third of the screen.
+The position can be altered by setting an explicit x and y position in
+the tag.</p>
+
+<example title="Modaldialog">
+&lt;canvas height="300"&gt;
+  &lt;modaldialog name="mydialog" width="300" height="200"&gt;
+    &lt;text&gt;Are you really sure you want to do something?&lt;/text&gt;
+    &lt;view align="right" layout="axis:x; spacing:20"&gt;
+      &lt;button onclick="parent.parent.close()"&gt;Cancel&lt;/button&gt;
+      &lt;button onclick="parent.parent.close()" isdefault="true"&gt;OK&lt;/button&gt;
+    &lt;/view&gt;
+    &lt;simplelayout spacing="5"/&gt;
+  &lt;/modaldialog&gt;
+
+  &lt;button onclick="canvas.mydialog.open()"&gt;Open Dialog&lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes>modaldialog alert</classes>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

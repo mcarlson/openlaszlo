@@ -1,0 +1,332 @@
+<canvas width="1000" height="1000" debug="true">
+
+    <debug x="280" y="10" height="300" />
+    <attribute name="defaultstyle" value="${goldstyle}"/>
+
+    <include href="lz" />
+
+    <dataset name="customtextandvalue">
+        <item>
+           <text>ctv one</text>
+           <value>1111</value>
+        </item>
+        <item>
+           <text>ctv two</text>
+           <value>2222</value>
+        </item>
+        <item>
+           <text>ctv three</text>
+           <value>3333</value>
+        </item>
+    </dataset>
+
+    <class name="mytab" extends="tab" bgcolor="black" padding="8" />
+
+    <class name="mytabsbar" extends="basetabsbar" itemclassname="tab"
+        bgcolor="black"
+        layout="class: simplelayout; axis: x; spacing: 15">
+    </class>
+
+    <class name="mytabscontent" extends="basetabscontent" bgcolor="#000000">
+<!--
+        <attribute name="defaultplacement" value="borderedcontent" type="string" />
+-->
+        <view name="borderedcontent"
+            x="${parent.parent.bordersize+4}"
+            y="${parent.parent.bordersize}"
+            width="${parent.width-(2*parent.parent.bordersize)-8}"
+            height="${parent.height-(2*parent.parent.bordersize)}"
+            clip="true" bgcolor="#0000ff"/>
+    </class>
+
+
+    <view x="5">
+        <simplelayout axis="y" spacing="10" />
+
+        <text multiline="true" width="350">
+            (id=base1) basetabs: no tabclass, no barclass, no contentclass
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="base1">
+                <basetabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=base2) basetabs:tabclass=tab, no barclass, no contentclass
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="base2" tabclass="tab" initstage="late">
+                <basetabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+
+        <text multiline="true" width="350">
+            (id=base3) basetabs: tabclass=tab, barclass=tabsbar, no contentclass
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="base3" tabclass="tab" barclass="tabsbar">
+                <basetabpane name="one" initstage="late" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two" initstage="late" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" initstage="late" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" initstage="late" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" initstage="late" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=base4) basetabs: 
+            tabclass=tab, 
+            barclass=mytabsbar extends basetabsbar 
+            (w/layout spacing 2 and bgcolor=black), no contentclass
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="base4" tabclass="tab" barclass="mytabsbar">
+                <basetabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two" initstage="late" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" initstage="late" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=base5) basetabs: tabclass=tab, barclass=tabsbar, 
+            contentclass=mytabscontent extends basetabscontent
+            (border on left and right should be 4)
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <tabs id="base5" tabclass="tab" barclass="tabsbar" 
+                      contentclass="mytabscontent" >
+                <basetabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </tabs>
+        </view>
+    </view>
+
+    <view x="425">
+        <simplelayout axis="y" spacing="10" />
+
+        <text multiline="true" width="350">
+            (id=one) basetabs: no tabclass, no barclass, no contentclass, 
+            mixed tabpane and basetabpane
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="one">
+                <tabpane name="one" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </tabpane>
+                <basetabpane name="two" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <tabpane name="xx" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </tabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=two) basetabs: tabclass=tab, no barclass, no contentclass,
+            mixed tabpane and basetabpane
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="two" tabclass="tab">
+                <tabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </tabpane>
+                <basetabpane name="two" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <tabpane name="three" text="${this.name}">
+                    <text text="${parent.name}" />
+                </tabpane>
+                <basetabpane name="four" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="five" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=three) basetabs: tabclass=tab, barclass=tabsbar, no contentclass,
+            mixed tabpane and basetabpane
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="three" tabclass="tab" barclass="tabsbar">
+                <tabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </tabpane>
+                <basetabpane name="two" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <tabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </tabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=four) basetabs: tabclass=tab, barclass=tabsbar,
+             contentclass=tabscontent, mixed tabpane and basetabpane
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="four" tabclass="tab" barclass="tabsbar" 
+                      contentclass="tabscontent">
+                <basetabpane name="one" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two" text="${this.name}" >
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+
+        <text multiline="true" width="350">
+            (id=five) basetabs: tabclass=tab, barclass=tabsbar,  
+            tabpanes, reverselayout=axis: y
+        </text>
+        <view>
+            <swatchview height="100%" width="100%" bgcolor="red" />
+            <basetabs id="five" tabclass="tab" barclass="tabsbar" 
+                      layout="class: reverselayout; axis: y">
+                <basetabpane tabclass="mytab" name="one">ONE
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="two">TWO
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="xx" text="${this.name}" selected="true">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="yy" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+                <basetabpane name="zz" text="${this.name}">
+                    <text text="${parent.name}" />
+                </basetabpane>
+            </basetabs>
+        </view>
+        <text multiline="true" width="350">
+            (id=reptabs) tabs: replicated data
+        </text>
+        <tabs id="reptabs1" x="5" y="5">
+            <tabpane text='$path{"text/text()"}' 
+                     datapath="customtextandvalue:/item" datacontrolsvisibility="false">
+                 <text datapath="value/text()"/>
+            </tabpane>
+        </tabs>
+        <tabs id="reptabs2" x="5" y="5">
+            <basetabpane name="xxx" text="HELLO">
+                <text text="${parent.text}" />
+            </basetabpane>
+            <tabpane text='$path{"text/text()"}' 
+                     datapath="customtextandvalue:/item" datacontrolsvisibility="false">
+                 <text datapath="value/text()"/>
+            </tabpane>
+            <basetabpane name="yyy" text="GOODBYE">
+                <text text="${parent.text}" />
+            </basetabpane>
+            <tabpane name="zzz" text="HMM">
+                <text text="${parent.text}" />
+            </tabpane>
+        </tabs>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,23 @@
+<!--
+  Verify that the work-around in LzKeys.as for Bug 1918 does not break
+  key handling.
+-->
+
+<canvas width="2000" height="2000" debug="true">
+  <debug x="75" y="75" width="400" height="200" />
+
+  <script>
+    Debug.write("Manual test: select the window, press the '-' key, expect output");
+  </script>
+
+  <command name="test" onselect="Debug.write('- key still works')" key="['-']" />
+  <command name="test" onselect="Debug.write('= key still works')" key="['=']" />
+  <command name="test" onselect="Debug.write('0 key still works')" key="['0']" />
+  <command name="test" onselect="Debug.write('p key still works')" key="['p']" />
+  <command name="test" onselect="Debug.write('[ key still works')" key="['[']" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

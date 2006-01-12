@@ -1,0 +1,8 @@
+<canvas debug="true">
+	<view width="200" height="100" clickable="true" bgcolor="0xccaa00" 
+		onmousemove="Debug.write('tracking...');"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

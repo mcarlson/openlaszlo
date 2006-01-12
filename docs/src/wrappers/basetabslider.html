@@ -1,0 +1,70 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basetabslider">
+    <lztier>Base Component</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+        A non-visual container that animates and coordinates the sliding of
+        basetabelements
+    </lzshortdesc>
+    <lztag>base/basetabslider.xml</lztag>
+</lzelement>
+
+<p>A <classname>basetabslider</classname> coordinates the opening and
+closing of its <classname>basetabelement</classname>s contained within
+its scope <todo>what is "its
+scope"?</todo>. <classname>basetabslider</classname> and
+<classname>basetabelement</classname> have no visual aspects. The
+<classname>tabslider</classname> class (which extends
+<classname>basetabslider</classname>) does contain a visual UI and
+shows how <classname>basetabslider</classname> can be extended to
+create your own visual framework for a unique tab slider.</p>
+
+<p>An example of the use of these classes is shown below. In order to
+make the base classes visible, background colors have been assigned to
+them.</p>
+
+<example>
+&lt;canvas height="220"&gt;
+  &lt;include href="base/basetabslider.lzx"/&gt;
+  &lt;basetabslider bgcolor="yellow" width="100" 
+                height="200" mintabheight="40" 
+                spacing="2" slideduration="300"&gt;
+    &lt;basetabelement clickable="true" bgcolor="red" width="100%"/&gt;
+    &lt;basetabelement clickable="true" bgcolor="red" width="100%"/&gt;
+    &lt;basetabelement clickable="true" bgcolor="red" width="100%"/&gt;
+  &lt;/basetabslider&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The <attribute>mintabheight</attribute> specified for a
+<classname>basetabslider</classname> applies to all of its
+<classname>basetabelement</classname>s except those
+<classname>basetabelement</classname>s that define it for themselves,
+as demonstrated in the following example.</p>
+
+<example>
+&lt;canvas height="220"&gt;
+  &lt;include href="base/basetabslider.lzx"/&gt;
+  &lt;basetabslider bgcolor="yellow" width="100" 
+                height="200" mintabheight="40" 
+                spacing="2" slideduration="300"&gt;
+    &lt;basetabelement clickable="true" bgcolor="red" width="100%"/&gt;
+    &lt;basetabelement clickable="true" bgcolor="red" width="100%" minheight="15"/&gt;
+    &lt;basetabelement clickable="true" bgcolor="red" width="100%"/&gt;
+  &lt;/basetabslider&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

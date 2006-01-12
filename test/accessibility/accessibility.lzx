@@ -1,0 +1,24 @@
+<canvas proxied="false" accessible="true">
+    <include href="base/basebutton.lzx"/>
+    <simplelayout spacing="4"/>
+    <method event="oninit">
+        //LzBrowser.setClipboard('foo!');
+        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
+        LzTimer.addTimer(upddel, 500);
+    </method>
+    <text>This page tests tab ordering and labeling of buttons</text>
+    <text width="200" aasilent="true" oninit="this.setText('accessibility on: ' + LzBrowser.isAAActive())"/>
+    <text name="lastsel" width="200" aasilent="true"/>
+    <!-- this is the correct method -->
+    <view width="100" height="20" bgcolor="blue" aaname="aaaa" focusable="true" onclick="parent.lastsel.setText('aaaa')"/>
+    
+    <!-- This still works because the label is silent-->
+    <view width="100" height="20" bgcolor="blue" aaname="bbbb" focusable="true" onclick="parent.lastsel.setText('bbbb')"><text aasilent="true">unread label</text></view>
+
+    <!-- This attempts to rely on the text, which is silent-->
+    <view width="100" height="20" bgcolor="red" focusable="true" onclick="parent.lastsel.setText('cccc')"><text aasilent="true">cccc</text></view>
+
+    <!-- This is potentially confusing because the text label isn't always applied to the button and isn't silent.-->
+    <view width="100" height="20" bgcolor="red" focusable="true" onclick="parent.lastsel.setText('dddd')"><text>dddd</text></view>
+
+</canvas>

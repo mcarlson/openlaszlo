@@ -1,0 +1,12 @@
+<canvas>
+  <simplelayout spacing="2"/>
+  <inputtext bgcolor="#cccccc" >default input</inputtext>
+  <inputtext bgcolor="#cccccc" selectable="false">nonselectable input</inputtext>
+  <inputtext bgcolor="#cccccc" selectable="true">selectable input</inputtext>
+  <inputtext oninit="setAttribute('selectable', true)" 
+             bgcolor="#cccccc">selectable input setter</inputtext>
+  <text bgcolor="#ffcccc">&lt;text&gt; default not selectable</text>
+  <text selectable="true" bgcolor="#ffcccc">&lt;text&gt; selectable</text>
+  <text oninit="setAttribute('selectable', true)" bgcolor="#ffcccc">&lt;text&gt; selectable</text>
+
+</canvas>

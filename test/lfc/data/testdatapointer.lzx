@@ -1,0 +1,164 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- xpath.lzx                                                             -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="800" height="600" debug="true">
+    <!-- setup local datasource -->
+    <script>
+        function assert( cond , msg ){
+            if ( ! cond ){
+                Debug.write( msg );
+            }
+        }
+    </script>
+    <dataset name="keys">
+        <row a="a"><key>7</key><key>8</key><key>9</key></row>
+        <row a="b"><key>4</key><key>5</key><key>6</key></row>
+        <row a="c"><key>1</key><key>2</key><key>3</key></row>
+        <row a="d"><key>0</key><key>.</key><key>Enter</key></row>
+    </dataset>
+
+    <dataset name="manip1">
+        <row a="a">A<key>7</key><key>8</key><key>9</key></row>
+        <row a="b">B<key>4</key><key>5</key><key>6</key></row>
+        <row a="c">C<key>1</key><key>2</key><key>3</key></row>
+        <row a="d">D<key>0</key><key>.</key><key>Enter</key></row>
+    </dataset>
+    <dataset name="manip2">
+        <row a="a">A<key>7</key><key>8</key><key>9</key></row>
+        <row a="c" b="4">C<key>1</key><key>3</key></row>
+        <row a="e">D<key>0</key><key>.</key><key>WasEnter</key></row>
+    </dataset>
+
+    <simplelayout axis="x" spacing="10" />
+    <button>setXpath test
+        <datapointer name="mydp" >
+            <method event="onclick" reference="parent">
+                <![CDATA[
+                var mya = [ "keys:/row[1]" , null ,
+                            "key[1]" , null ,
+                            "/row[1-3]" , null ,
+                            "/row[1]/@a" , "a" ,
+                            "/row[1]/key[2]/text()" , 8 ,
+                            "/row[1]/key[2]/name()" , "key" ,
+                             "/row[2]/key[3]" , null ];
+                for ( var i = 0; i < mya.length; i+=2 ){
+                    this.setXPath( mya[i] );
+                    assert( this.data ==  mya[ i+ 1], mya[ i ] );
+                }
+                    
+                ]]>
+            </method>
+        </datapointer>
+    </button>
+
+    <button>Anon dataset
+        <datapointer name="mydp" xpath="new:/">
+            <method event="onclick" reference="parent">
+                <![CDATA[
+                var mya = [ [ "a" , "text1" , { a : 1 , b: "a"} ],
+                            [ "b" , "text2" , { a : 2 , b: "b"} ],
+                            [ "a" , "text3" , { a : 3 , b: "c"} ],
+                            [ "b" , "text4" , { a : 4 , b: "d"} ] ];
+
+                for ( var i = 0; i < mya.length; i++ ){
+                    this.addNode( mya[ i ][ 0 ] , mya[ i ][ 1 ] , mya[i][ 2 ]);
+                }
+
+                this.selectChild();
+                assert( "a" == this.getNodeName() , "Select child");
+
+                this.selectNext(2);
+                assert( "a" == this.getNodeName() , "Select Next (2) " );
+
+                this.selectNext();
+                assert( "a" == this.getNodeName() , "This should print" );
+                assert( "text4" == this.getNodeText() , "get text" );
+                assert( "4" == this.getNodeAttribute( 'a' ) , "Get attribute" );
+
+                this.selectPrev();
+                assert( "3" == this.getNodeAttribute( 'a' ) , "Select prev" );
+
+                for ( var i = 0; i < mya.length; i++ ){
+                    this.addNode( mya[ i ][ 0 ] , mya[ i ][ 1 ] + "s" , mya[i][ 2 ]);
+                    this.selectChild();
+                }
+                this.selectParent( 3 );
+                assert( "text1s" == this.getNodeText() , "selectParent3" );
+                this.selectParent( );
+                assert( "text3" == this.getNodeText() , "selectParent" );
+                this.selectParent( );
+
+                Debug.write( this.Serialize() );
+
+                //delete
+                //add
+                //modify
+
+                ]]>
+            </method>
+        </datapointer>
+    </button>
+    <button>test selection
+        <datapointer name="mydp" xpath="keys:/">
+            <method name="testPathParse" >
+                <![CDATA[
+                Debug.write( "hi -- dp is " + this );
+                var mya = [ "../nodea/nodeb[2]/@foo" ,
+                            "nodea/nodeb[2]/@*" ,
+                            "./nodea/nodeb[2-]/text()" ,
+                            "/nodea/nodeb[8]/*" ,
+                            "keys:/nodea/nodeb[-8]" ,
+                            "local:keys:/nodea/nodeb[2-8]" ];
+                for ( var i = 0; i < mya.length;i++ ){
+                    var o = this.parsePath( mya[i] );
+                    o.debugWrite();
+                }
+
+                ]]>
+            </method>
+            <method name="processData" event="onclick" reference="parent" >
+                // Test next, prev, parent, child
+                Debug.write("Dataset is : " + this.getDataset());
+                Debug.write("Load time: " + this.getDataset().getLoadTime());
+                
+                assert("Next", this.selectNext(), true );
+                assert("Child", this.selectChild());
+                assert("Parent", this.selectParent());
+                assert("Next", this.selectNext(), true);
+                assert("Child", this.selectChild());
+                assert("Next 2", this.selectNext(2));
+                assert("Prev", this.selectPrev());
+                assert("Prev 2", this.selectPrev(2));
+                assert("Child", this.selectChild());
+                assert("Child", this.selectChild(), true);
+                assert("Next", this.selectNext());
+                assert("Next", this.selectNext());
+                assert("Next", this.selectNext(), true);
+                assert("Prev", this.selectPrev());
+                assert("Parent", this.selectParent());
+                assert("Parent", this.selectParent(), true);
+            </method>
+            <method name="assert" args="label, result, shouldfail">
+                if (!result) {
+                    if (shouldfail) return;
+                    Debug.write(label + ": " + result + " n: " + this.getName() + " o: " + this.getOffset());
+                    //Debug.write("    Warning - result returned false");
+                }
+            </method>
+        </datapointer>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

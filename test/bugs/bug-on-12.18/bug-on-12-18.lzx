@@ -1,0 +1,31 @@
+<!-- A bug was not filed for this but the '100%' constraint failed for a build on 12/17 -->
+<canvas width="640" height="480" debug="false"  >
+	
+    <class name="borderedrect" width="10" height="10" >
+    	<attribute name="bordersize" 	value="1" />
+    	<attribute name="bordercolor" 	value="0xFFFFFF" />
+    	<attribute name="fillcolor"   	value="0xFF5533" />
+    	<attribute name="bgcolor"   	init="this.bordercolor" />
+
+    	<view name="interior" x="parent.bordersize" 
+              y="parent.bordersize" width="parent.width - 2*parent.bordersize"  
+              height="parent.height - 2*parent.bordersize">
+    		<attribute name="bgcolor" value="parent.fillcolor" when="once" />
+    	</view>
+    	<attribute name="defaultplacement" value="interior" type="string"/>    	
+   </class>
+   
+    <view height="400" bgcolor="red" width="400" >
+        <borderedrect name="br1" width="184" bordersize="2" 
+                      bordercolor="0x0000FF" fillcolor="0xFFFFFF"  
+                      height="100%" />
+        <borderedrect name="br2" width="184" bordersize="2" 
+                      bordercolor="0x0000FF" fillcolor="0xFFFFFF"  
+                      height="100" />
+        <simplelayout axis="x" spacing="2" />
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

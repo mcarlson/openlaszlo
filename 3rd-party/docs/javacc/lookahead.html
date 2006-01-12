@@ -1,0 +1,1205 @@
+<html>
+<head>
+<!-- #BeginEditable "doctitle" --> 
+<title>WebGain | Products : JavaCC : The LOOKAHEAD MiniTutorial</title>
+<!-- #EndEditable --> 
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<META name="description" content="">
+<META name="keywords" content="studio, visualcafe, visual cafe, visual page, structurebuilder, structure builder, toplink, top link, java, javabeans, cafe, enterprise suite, expert edition, standard edition, the object people, tendril, symantec, webgain, visual, ejb, jsp, debugging, distributed debugging, enterprise, enterprise edition, top">
+<link rel="stylesheet" type="text/css" href="../../libs/fonts.css">
+<script language="JavaScript" src="../../libs/mainlib.js">
+</script>
+<script language="javascript">
+preload('sbarrowObj','../../pics/common/sidebar_arrow_off.gif','sbarrow_moObj','../../pics/common/sidebar_arrow_on.gif','buyObj','../../pics/toolbar/buy.gif','buy_moObj','../../pics/toolbar/buy_mo.gif','downloadObj','../../pics/toolbar/download.gif','download_moObj','../../pics/toolbar/download_mo.gif','registerObj','../../pics/toolbar/register.gif','register_moObj','../../pics/toolbar/register_mo.gif','salesObj','../../pics/toolbar/sales.gif','sales_moObj','../../pics/toolbar/sales_mo.gif','arrowObj','../../pics/products/inset_arrow_on.gif','arrowOffObj','../../pics/products/inset_arrow_off.gif','sendObj','../../pics/common/send_print/send.gif','send_moObj','../../pics/common/send_print/send_roll.gif','printObj','../../pics/common/send_print/print.gif','print_moObj','../../pics/common/send_print/print_roll.gif');
+if (document.layers) onresize = function () { history.go(0) }
+var siteurl="../../";
+</script>
+</head>
+<body bgcolor="#FFFFFF" leftmargin="0" topmargin="0" marginwidth="0" marginheight="0">
+<!-- #BeginLibraryItem "/Libraries/top_products.lbi" -->
+<table width="100%" border="0" cellspacing="0" cellpadding="0">
+  <tr bgcolor="#000000"> 
+    <td><img src="../../pics/common/interface/mast.gif" width="780" height="14" alt="" border="0" usemap="#mast"></td></tr>
+  <tr> 
+    <td> 
+      <table width="100%" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td valign="bottom"><a href="../../index.html"><img src="../../pics/common/interface/logo.gif" width="157" height="50" alt="WebGain" border="0"></a><br>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr> 
+                <td><a href="../../company" onMouseOver="setTimeout('window.showMenu(window.company, 1, 86)',100);  WM_changeVisibility('companyspacer', visible);"><img src="../../pics/navbar/company.gif" width="52" height="19" border="0" alt="Company"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../news_and_events" onMouseOver="window.showMenu(window.news, 53, 86); WM_changeVisibility('newsspacer', visible);"><img src="../../pics/navbar/news_events.gif" width="96" height="19" border="0" alt="News and Events"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../products" onMouseOver="window.showMenu(window.products, 149, 86); WM_changeVisibility('productsspacer', visible);"><img src="../../pics/navbar/products_active.gif" width="56" height="19" border="0" alt="Products"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../services" onMouseOver="window.showMenu(window.services, 206, 86); WM_changeVisibility('servicesspacer', visible);"><img src="../../pics/navbar/services.gif" width="52" height="19" border="0" alt="Services"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../support" onMouseOver="window.showMenu(window.support, 259, 86); WM_changeVisibility('supportspacer', visible);"><img src="../../pics/navbar/support.gif" width="51" height="19" border="0" alt="Support"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../partners" onMouseOver="window.showMenu(window.partners, 311, 86); WM_changeVisibility('partnersspacer', visible);"><img src="../../pics/navbar/partners.gif" width="57" height="19" border="0" alt="Partners"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../careers" onMouseOver="window.showMenu(window.careers, 369, 86); WM_changeVisibility('careersspacer', visible);"><img src="../../pics/navbar/careers.gif" width="50" height="19" border="0" alt="Careers"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><a href="../../communities" onMouseOver="window.showMenu(window.community, 420, 86); WM_changeVisibility('communityspacer',visible);"><img src="../../pics/navbar/communities.gif" width="72" height="19" border="0" alt="Communities"></a></td><td bgcolor="#660033"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td><img src="../../pics/navbar/right_edge.gif" width="42" height="19"></td></tr>
+            </table></td><td valign="bottom" width="99%"> 
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+              <form action="http://search.webgain.com/query.html" method="get">
+                <tr> 
+                  <td> 
+                    <table border="0" cellspacing="0" cellpadding="3">
+                      <tr> 
+                        <td><img src="../../pics/common/spacer.gif" width="55" height="1" alt="" border="0"></td><td><img src="../../pics/common/interface/search.gif" width=45 height=14 border=0 alt="Search"></td><td> 
+                          <input type="text" name="qt" size="10" class="leftnavreg">
+                        </td><td>
+                          <input TYPE="IMAGE" SRC="../../pics/common/go_button.gif" border="0" WIDTH="18" HEIGHT="16">
+                        </td></tr>
+                    </table></td></tr>
+              </form><tr> 
+                <td><a href="../../purchase" onMouseOver="changeImage(null,'buy','buy_moObj');" onMouseOut="changeImageBack('buyObj');" ><img src="../../pics/toolbar/buy.gif" name="buy" width="44" height="29" border="0" alt="Buy"></a><a href="../../download" onMouseOver="changeImage(null,'download','download_moObj');" onMouseOut="changeImageBack('downloadObj');" ><img src="../../pics/toolbar/download.gif" width="75" height="29" border="0" name="download" alt="Download"></a><a href="../../register" onMouseOver="changeImage(null,'register','register_moObj');" onMouseOut="changeImageBack('registerObj');" ><img src="../../pics/toolbar/register.gif" width="68" height="29" border="0" name="register" alt="Register"></a><a href="../../sales" onMouseOver="changeImage(null,'sales','sales_moObj');" onMouseOut="changeImageBack('salesObj');" ><img src="../../pics/toolbar/sales.gif" width="54" height="29" border="0" name="sales" alt="Sales"></a></td></tr>
+              <tr bgcolor="#CC0033"> 
+                <td><img src="../../pics/common/spacer.gif" width="1" height="7" alt="" border="0"></td></tr>
+            </table></td></tr>
+      </table></td></tr>
+  <tr bgcolor="#660033"> 
+    <td><img src="../../pics/common/spacer.gif" width="1" height="3" border="0" alt=""></td></tr>
+</table><!-- #EndLibraryItem --> 
+<table border="0" cellspacing="0" cellpadding="0" width="780">
+  <tr> 
+    <td valign="top"><!-- #BeginEditable "left_nav" --><!-- #BeginLibraryItem "/Libraries/Left_Nav/products/java_cc/products_java_cc.lbi" --><table border="0" cellspacing="0" cellpadding="0" width="157">
+  <tr> 
+    <td bgcolor="#CCCCFF"> 
+      <table border="0" cellspacing="0" cellpadding="2">
+        <tr> 
+          <td rowspan="3"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="-" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="-" border="0"></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/breadcrumb_arrow.gif" width="8" height="8" alt="-" border="0"></td><td><a href="../../index.html" class="breadcrumb">HOME PAGE</a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/breadcrumb_arrow.gif" width="8" height="8" alt="-" border="0" vspace="2"></td><td><a href="../../products" class="breadcrumb">PRODUCTS</a></td></tr>
+        <tr>
+          <td>&nbsp;</td><td valign="top"><img src="../../pics/common/breadcrumb_arrow.gif" width="8" height="8" alt="-" border="0" vspace="2"></td><td><a href="../java_cc" class="breadcrumb">JAVACC</a></td></tr>
+        <tr> 
+          <td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td bgcolor="#666699"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="-" border="0"></td></tr>
+  <tr> 
+    <td><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+  <tr> 
+    <td><img src="../../pics/sidetabs/products.gif" width="157" height="18" alt="Products Index" border="0"></td></tr>
+  <tr> 
+    <td>
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../../products" class="linkalt">Overview</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr>
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="5"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../webgain_studio" class="linkalt">WebGain Studio</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../webgain_studio/standard_edition" class="linkalt">Standard Edition</a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../webgain_studio/professional_edition" class="linkalt">Professional Edition</a></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="6"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../visual_cafe" class="linkalt">VisualCaf&#233;</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../visual_cafe/standard_edition" class="linkalt">Standard Edition</a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../visual_cafe/expert_edition" class="linkalt">Expert 
+            Suite </a></td></tr>
+        <tr> 
+          <td valign="top"><img src="../../pics/common/spacer.gif" alt="" width="9" height="9" border="0" vspace="2"></td><td><a href="../visual_cafe/enterprise_edition" class="linkalt">Enterprise 
+            Suite </a></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="3"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../structure_builder" class="linkalt">StructureBuilder</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="3"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../toplink" class="linkalt">TopLink</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../application_composer" class="linkalt">Application Composer</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../quality_analyzer" class="linkalt">Quality Analyzer</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../business_designer" class="linkalt">Business Designer</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+  <tr> 
+    <td><img src="../../pics/home/sidebar/divider.gif" width="157" height="1" alt="" border="0" vspace="5"></td></tr>
+  <tr> 
+    <td> 
+      <table border="0" cellspacing="0" cellpadding="1">
+        <tr> 
+          <td rowspan="7"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td><td colspan="2"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td></tr>
+        <tr> 
+          <td colspan="2" class="leftnavbold"><a href="../java_cc" class="linkaltactive">JavaCC</a></td></tr>
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="9" height="1" alt="" border="0"></td><td><img src="../../pics/common/spacer.gif" width="141" height="1" alt="" border="0"></td></tr>
+      </table></td></tr>
+</table><!-- #EndLibraryItem --><!-- #EndEditable --></td>
+    <td valign="top" class="tableborder"><img src="../../pics/common/spacer.gif" width="1" height="1" border="0" alt=""></td>
+    <td valign="top"><!-- #BeginEditable "banner" --> 
+      <table width="622" border="0" cellspacing="0" cellpadding="0">
+        <tr> 
+          <td rowspan="2" width="435"><img src="../../pics/banners/products/java_cc/index_new.gif" width="435" height="45"></td>
+          <td height="27" valign="bottom"><!-- #BeginLibraryItem "/Libraries/banner/banner.lbi" --> <table border="0" cellspacing="0" cellpadding="0">
+  <form name="emailthis" method="post" action="/cgi-bin/emailthis.pl">
+    <tr>
+      <input type="hidden" name="title" value="document.write(document.title);">
+      <script language="JavaScript">
+       document.emailthis.title.value=document.title;
+	   function openSendPage() {
+	   	var url = document.emailthis.action +"?mytitle="+ escape(document.title) +"&myurl=" + document.location;
+			popupWin = window.open(url,name,'scrollbars=no,resizable=no,status=no,personal=no,menu=no,location=yes,toolbar=no,width=225,height=540,left=20,top=20')
+		}
+    </script>
+      <td align="right" nowrap> <a href="javascript:void(0)" onClick="openSendPage()" onMouseOver="changeImage(null,'send','send_moObj');" onMouseOut="changeImageBack('sendObj');"><img src="../../pics/common/send_print/send.gif" name="send" width="110" height="19" border="0" alt="Send To A Friend"></a><a href="../../cgi-bin/printer_friendly.cgi" onMouseOver="changeImage(null,'print','print_moObj');" onMouseOut="changeImageBack('printObj');" ><img src="../../pics/common/send_print/print.gif" name="print" width="52" height="19" border="0" alt="Print"></a></td></tr>
+  </form></table><!-- #EndLibraryItem --></td>
+        </tr>
+        <tr> 
+          <td valign="bottom" height="18"><img src="../../pics/common/send_print/subhead_right.gif" width="187" height="18"></td>
+        </tr>
+      </table>
+      <!-- #EndEditable --> 
+      <table cellpadding="0" cellspacing="0" border="0" width="622">
+        <tr> 
+          <td><img src="../../pics/common/spacer.gif" width="16" height="1" alt="" border="0"></td>
+          <td> 
+            <p> 
+              <!-- Content:Start -->
+            <!-- #BeginEditable "content" --> 
+            <p><span class="title">The LOOKAHEAD MiniTutorial</span><b><font color=#009900> 
+              </font></b> </p>
+            <p> This minitutorial is under preparation. This tutorial refers to 
+              examples that are available in the Lookahead directory under the 
+              examples directory of the release. Currently, this page is a copy 
+              of the contents of the README file within that directory. 
+            <p> </p>
+            <p><br>
+              This directory contains the tutorial on LOOKAHEAD along with all 
+              examples used in the tutorial.<br>
+              <br>
+              We assume that you have already taken a look at some of the simple 
+              examples provided in the release before you read this section.</p>
+            <ol>
+              <li><span class="stf"> WHAT IS LOOKAHEAD?<br>
+                </span><br>
+                The job of a parser is to read an input stream and determine whether 
+                or not the input stream conforms to the grammar.<br>
+                <br>
+                This determination in its most general form can be quite time 
+                consuming. Consider the following example (file Example1.jj): 
+                <blockquote> 
+                  <p>void Input() :<br>
+                    {}<br>
+                    {<br>
+                    "a" BC() "c"<br>
+                    }<br>
+                    <br>
+                    void BC() :<br>
+                    {}<br>
+                    {<br>
+                    "b" [ "c" ]<br>
+                    }</p>
+                </blockquote>
+              </li>
+              <p>In this simple example, it is quite clear that there are exactly 
+                two strings that match the above grammar, namely:</p>
+              <blockquote> 
+                <p>abc<br>
+                  abcc</p>
+              </blockquote>
+              <p>The general way to perform this match is to walk through the 
+                grammar based on the string as follows. Here, we use "abc" as 
+                the input string:</p>
+              <ol>
+                <li>There is only one choice here - the first input character<br>
+                  must be 'a' - and since that is indeed the case, we are OK.</li>
+                <li>We now proceed on to non-terminal BC. Here again, there is<br>
+                  only one choice for the next input character - it must be 'b'. 
+                  The<br>
+                  input matches this one too, so we are still OK.<br>
+                </li>
+                <li>We now come to a "choice point" in the grammar. We can either<br>
+                  go inside the [...] and match it, or ignore it altogether. We 
+                  decide<br>
+                  to go inside. So the next input character must be a 'c'. We 
+                  are<br>
+                  again OK.</li>
+                <li>Now we have completed with non-terminal BC and go back to<br>
+                  non-terminal Input. Now the grammar says the next character 
+                  must be<br>
+                  yet another 'c'. But there are no more input characters. So 
+                  we have<br>
+                  a problem.<br>
+                </li>
+                <li>When we have such a problem in the general case, we conclude<br>
+                  that we may have made a bad choice somewhere. In this case, 
+                  we made<br>
+                  the bad choice in Step 3. So we retrace our steps back to step 
+                  3 and<br>
+                  make another choice and try that. This process is called<br>
+                  "backtracking".</li>
+                <li> We have now backtracked and made the other choice we could<br>
+                  have made at Step 3 - namely, ignore the [...]. Now we have 
+                  completed<br>
+                  with non-terminal BC and go back to non-terminal Input. Now 
+                  the<br>
+                  grammar says the next character must be yet another 'c'. The 
+                  next<br>
+                  input character is a 'c', so we are OK now.<br>
+                </li>
+              </ol>
+              <p>We realize we have reached the end of the grammar (end of non-terminal 
+                Input) successfully. This means we have successfully matched the 
+                string "abc" to the grammar.<br>
+                <br>
+                <br>
+                As the above example indicates, the general problem of matching 
+                an input with a grammar may result in large amounts of backtracking 
+                and making new choices and this can consume a lot of time. The 
+                amount of time taken can also be a function of how the grammar 
+                is written. Note that many grammars can be written to cover the 
+                same set of inputs - or the same language (i.e., there can be 
+                multiple equivalent grammars for the same input language).<br>
+                <br>
+                ----------------------------------------------------------------<br>
+                <br>
+                For example, the following grammar would speed up the parsing 
+                of the<br>
+                same language as compared to the previous grammar:</p>
+              <blockquote> 
+                <p>void Input() :<br>
+                  {}<br>
+                  {<br>
+                  "a" "b" "c" [ "c" ]<br>
+                  }<br>
+                </p>
+              </blockquote>
+              <p>while the following grammar slows it down even more since the 
+                parser<br>
+                has to backtrack all the way to the beginning:</p>
+              <blockquote> 
+                <p>void Input() :<br>
+                  {}<br>
+                  {<br>
+                  "a" "b" "c" "c"<br>
+                  |<br>
+                  "a" "b" "c"<br>
+                  }</p>
+              </blockquote>
+              <p>One can even have a grammar that looks like the following:</p>
+              <blockquote> 
+                <p>void Input() :<br>
+                  {}<br>
+                  {<br>
+                  "a" ( BC1() | BC2() )<br>
+                  }<br>
+                  <br>
+                  void BC1() :<br>
+                  {}<br>
+                  {<br>
+                  "b" "c" "c"<br>
+                  }<br>
+                  <br>
+                  void BC2() :<br>
+                  {}<br>
+                  {<br>
+                  "b" "c" [ "c" ]<br>
+                  }<br>
+                </p>
+              </blockquote>
+              <p>This grammar can match "abcc" in two ways, and is therefore considered 
+                "ambiguous".<br>
+                <br>
+                The performance hit from such backtracking is unacceptable for 
+                most systems that include a parser. Hence most parsers do not 
+                backtrack in this general manner (or do not backtrack at all), 
+                rather they make decisions at choice points based on limited information 
+                and then commit to it.<br>
+                <br>
+                Parsers generated by Java Compiler Compiler make decisions at 
+                choice points based on some exploration of tokens further ahead 
+                in the input stream, and once they make such a decision, they 
+                commit to it. i.e., No backtracking is performed once a decision 
+                is made.<br>
+                <br>
+                The process of exploring tokens further in the input stream is 
+                termed "looking ahead" into the input stream - hence our use of 
+                the term "LOOKAHEAD".<br>
+                <br>
+                Since some of these decisions may be made with less than perfect 
+                information (JavaCC will warn you in these situations, so you 
+                don't have to worry), you need to know something about LOOKAHEAD 
+                to make your grammar work correctly.<br>
+                <br>
+                The two ways in which you make the choice decisions work properly 
+                are:</p>
+              <ul>
+                <li>Modify the grammar to make it simpler.<br>
+                </li>
+                <li> Insert hints at the more complicated choice points to help 
+                  the<br>
+                  parser make the right choices.<br>
+                  <br>
+                </li>
+              </ul>
+              <li><span class="stf">CHOICE POINTS IN JAVACC GRAMMARS<br>
+                </span><br>
+                There are 4 different kinds of choice points in JavaCC: 
+                <ul>
+                  <li> An expansion of the form: ( exp1 | exp2 | ... ). In this 
+                    case, the generated parser has to somehow determine which 
+                    of exp1, exp2, etc. to select to continue parsing.<br>
+                  </li>
+                  <li> An expansion of the form: ( exp )?. In this case, the generated 
+                    parser must somehow determine whether to choose exp or to 
+                    continue beyond the ( exp )? without choosing exp. Note: ( 
+                    exp )? may also be written as [ exp ].<br>
+                  </li>
+                  <li>An expansion of the form ( exp )*. In this case, the generated 
+                    parser<br>
+                    must do the same thing as in the previous case, and furthermore, 
+                    after<br>
+                    each time a successful match of exp (if exp was chosen) is 
+                    completed,<br>
+                    this choice determination must be made again.<br>
+                    <br>
+                  </li>
+                </ul>
+                <p> An expansion of the form ( exp )+. This is essentially similar 
+                  to the previous case with a mandatory first match to exp.<br>
+                  <br>
+                  Remember that token specifications that occur within angular 
+                  brackets &lt;...&gt; also have choice points. But these choices 
+                  are made in different ways and are the subject of a different 
+                  tutorial.</p>
+              </li>
+              <li> 
+                <p> <span class="stf">THE DEFAULT CHOICE DETERMINATION ALGORITHM<br>
+                  </span><br>
+                  The default choice determination algorithm looks ahead 1 token 
+                  in the input stream and uses this to help make its choice at 
+                  choice points.<br>
+                  <br>
+                  The following examples will describe the default algorithm fully:<br>
+                  <br>
+                  <br>
+                  Consider the following grammar (file Example2.jj):<br>
+                  <br>
+                </p>
+                <blockquote> 
+                  <p>void basic_expr() :<br>
+                    {}<br>
+                    {<br>
+                    &lt;ID&gt; "(" expr() ")" // Choice 1<br>
+                    |<br>
+                    "(" expr() ")" // Choice 2<br>
+                    |<br>
+                    "new" &lt;ID&gt; // Choice 3<br>
+                    }</p>
+                </blockquote>
+                <p>The choice determination algorithm works as follows:</p>
+                <blockquote> 
+                  <p>if (next token is &lt;ID&gt;) {<br>
+                    choose Choice 1<br>
+                    } else if (next token is "(") {<br>
+                    choose Choice 2<br>
+                    } else if (next token is "new") {<br>
+                    choose Choice 3<br>
+                    } else {<br>
+                    produce an error message<br>
+                    }</p>
+                </blockquote>
+                <p>In the above example, the grammar has been written such that 
+                  the default choice determination algorithm does the right thing. 
+                  Another thing to note is that the choice determination algorithm 
+                  works in a top to bottom order - if Choice 1 was selected, the 
+                  other choices are not even considered. While this is not an 
+                  issue in this example (except for performance), it will become 
+                  important later below when local ambiguities require the insertion 
+                  of LOOKAHEAD hints.<br>
+                  <br>
+                  Suppose the above grammar was modified to (file Example3.jj):</p>
+                <blockquote> 
+                  <p>void basic_expr() :<br>
+                    {}<br>
+                    {<br>
+                    &lt;ID&gt; "(" expr() ")" // Choice 1<br>
+                    |<br>
+                    "(" expr() ")" // Choice 2<br>
+                    |<br>
+                    "new" &lt;ID&gt; // Choice 3<br>
+                    |<br>
+                    &lt;ID&gt; "." &lt;ID&gt; // Choice 4<br>
+                    }</p>
+                </blockquote>
+                <p>Then the default algorithm will always choose Choice 1 when 
+                  the next input token is &lt;ID&gt; and never choose Choice 4 
+                  even if the token following &lt;ID&gt; is a ".". More on this 
+                  later.<br>
+                  <br>
+                  You can try running the parser generated from Example3.jj on 
+                  the input<br>
+                  "id1.id2". It will complain that it encountered a "." when it 
+                  was<br>
+                  expecting a "(". Note - when you built the parser, it would 
+                  have<br>
+                  given you the following warning message:</p>
+                <blockquote> 
+                  <p>Warning: Choice conflict involving two expansions at line 
+                    25, column 3 and line 31, column 3 respectively. A common 
+                    prefix is: &lt;ID&gt;<br>
+                    Consider using a lookahead of 2 for earlier expansion.</p>
+                </blockquote>
+                <p>Essentially, JavaCC is saying it has detected a situation in 
+                  your grammar which may cause the default lookahead algorithm 
+                  to do strange things. The generated parser will still work using 
+                  the default lookahead algorithm - except that it may not do 
+                  what you expect of it.<br>
+                  <br>
+                  Now consider the following example (file Example 4.jj):<br>
+                </p>
+                <blockquote> 
+                  <p>void identifier_list() :<br>
+                    {}<br>
+                    {<br>
+                    &lt;ID&gt; ( "," &lt;ID&gt; )*<br>
+                    }<br>
+                  </p>
+                </blockquote>
+                <p>Suppose the first &lt;ID&gt; has already been matched and that 
+                  the parser has reached the choice point (the (...)* construct). 
+                  Here's how the choice determination algorithm works:<br>
+                  <br>
+                  while (next token is ",") {<br>
+                  choose the nested expansion (i.e., go into the (...)* construct)<br>
+                  consume the "," token<br>
+                  if (next token is &lt;ID&gt;) consume it, otherwise report error<br>
+                  }<br>
+                  <br>
+                  In the above example, note that the choice determination algorithm 
+                  does not look beyond the (...)* construct to make its decision. 
+                  Suppose there was another production in that same grammar as 
+                  follows<br>
+                  (file Example5.jj):</p>
+                <blockquote> 
+                  <p>void funny_list() :<br>
+                    {}<br>
+                    {<br>
+                    identifier_list() "," &lt;INT&gt;<br>
+                    }</p>
+                </blockquote>
+                <p>When the default algorithm is making a choice at ( "," &lt;ID&gt; 
+                  )*, it will always go into the (...)* construct if the next 
+                  token is a ",". It will do this even when identifier_list was 
+                  called from funny_list and the token after the "," is an &lt;INT&gt;. 
+                  Intuitively, the right thing to do in this situation is to skip 
+                  the (...)* construct and return to funny_list. More on this 
+                  later.<br>
+                  <br>
+                  As a concrete example, suppose your input was "id1, id2, 5", 
+                  the parser will complain that it encountered a 5 when it was 
+                  expecting an &lt;ID&gt;. Note - when you built the parser, it 
+                  would have given you the following warning message:</p>
+                <blockquote> 
+                  <p>Warning: Choice conflict in (...)* construct at line 25, 
+                    column 8.<br>
+                    Expansion nested within construct and expansion following 
+                    construct<br>
+                    have common prefixes, one of which is: ","<br>
+                    Consider using a lookahead of 2 or more for nested expansion.</p>
+                </blockquote>
+                <p>Essentially, JavaCC is saying it has detected a situation in 
+                  your grammar which may cause the default lookahead algorithm 
+                  to do strange things. The generated parser will still work using 
+                  the default lookahead algorithm - except that it may not do 
+                  what you expect of it.<br>
+                  <br>
+                  We have shown you examples of two kinds of choice points in 
+                  the examples above - "exp1 | exp2 | ...", and "(exp)*". The 
+                  other two kinds of choice points - "(exp)+" and "(exp)?" - behave 
+                  similarly to (exp)* and we will not be providing examples of 
+                  their use here.</p>
+              </li>
+              <li> <span class="stf">MULTIPLE TOKEN LOOKAHEAD SPECIFICATIONS</span><br>
+                <br>
+                So far, we have described the default lookahead algorithm of the<br>
+                generated parsers. In the majority of situations, the default<br>
+                algorithm works just fine. In situations where it does not work<br>
+                well, Java Compiler Compiler provides you with warning messages 
+                like<br>
+                the ones shown above. If you have a grammar that goes through<br>
+                Java Compiler Compiler without producing any warnings, then the<br>
+                grammar is a LL(1) grammar. Essentially, LL(1) grammars are those<br>
+                that can be handled by top-down parsers (such as those generated<br>
+                by Java Compiler Compiler) using at most one token of LOOKAHEAD.<br>
+                <br>
+                When you get these warning messages, you can do one of two things.<br>
+                <br>
+                <span class="bold">Option 1</span> 
+                <blockquote> 
+                  <p>You can modify your grammar so that the warning messages 
+                    go away.<br>
+                    That is, you can attempt to make your grammar LL(1) by making 
+                    some<br>
+                    changes to it.<br>
+                    <br>
+                    The following (file Example6.jj) shows how you may change 
+                    Example3.jj<br>
+                    to make it LL(1):</p>
+                  <blockquote> 
+                    <p>void basic_expr() :<br>
+                      {}<br>
+                      {<br>
+                      &lt;ID&gt; ( "(" expr() ")" | "." &lt;ID&gt; )<br>
+                      |<br>
+                      "(" expr() ")"<br>
+                      |<br>
+                      "new" &lt;ID&gt;<br>
+                      }</p>
+                  </blockquote>
+                  <p>What we have done here is to factor the fourth choice into 
+                    the first choice. Note how we have placed their common first 
+                    token &lt;ID&gt; outside the parentheses, and then within 
+                    the parentheses, we have yet another choice which can now 
+                    be performed by looking at only one token in the input stream 
+                    and comparing it with "(" and ".". This process of modifying 
+                    grammars to make them LL(1) is called "left factoring".<br>
+                    <br>
+                    The following (file Example7.jj) shows how Example5.jj may 
+                    be changed to make it LL(1):</p>
+                  <blockquote> 
+                    <p>void funny_list() :<br>
+                      {}<br>
+                      {<br>
+                      &lt;ID&gt; "," ( &lt;ID&gt; "," )* &lt;INT&gt;<br>
+                      }</p>
+                  </blockquote>
+                  <p>Note that this change is somewhat more drastic.</p>
+                </blockquote>
+                <p><span class="bold">Option 2</span></p>
+                <blockquote> 
+                  <p>You can provide the generated parser with some hints to help 
+                    it out in the non-LL(1) situations that the warning messages 
+                    bring to your attention.<br>
+                    <br>
+                    All such hints are specified using either setting the global 
+                    LOOKAHEAD<br>
+                    value to a larger value (see below) or by using the LOOKAHEAD(...) 
+                    construct to provide a local hint.<br>
+                    <br>
+                    A design decision must be made to determine if Option 1 or 
+                    Option 2 is the right one to take. The only advantage of choosing 
+                    Option 1 is that it makes your grammar perform better. JavaCC 
+                    generated parsers can handle LL(1) constructs much faster 
+                    than other constructs. However, the advantage of choosing 
+                    Option 2 is that you have a simpler grammar - one that is 
+                    easier to develop and maintain - one that focuses on human-friendliness 
+                    and not machine-friendliness.<br>
+                    <br>
+                    Sometimes Option 2 is the only choice - especially in the 
+                    presence of user actions. Suppose Example3.jj contained actions 
+                    as shown below:</p>
+                  <blockquote> 
+                    <p>void basic_expr() :<br>
+                      {}<br>
+                      {<br>
+                      { initMethodTables(); } &lt;ID&gt; "(" expr() ")"<br>
+                      |<br>
+                      "(" expr() ")"<br>
+                      |<br>
+                      "new" &lt;ID&gt;<br>
+                      |<br>
+                      { initObjectTables(); } &lt;ID&gt; "." &lt;ID&gt;<br>
+                      }</p>
+                  </blockquote>
+                  <p>Since the actions are different, left-factoring cannot be 
+                    performed.<br>
+                  </p>
+                </blockquote>
+                <p><span class="stf">4.1. SETTING A GLOBAL LOOKAHEAD SPECIFICATION<br>
+                  </span><br>
+                  You can set a global LOOKAHEAD specification by using the option 
+                  "LOOKAHEAD" either from the command line, or at the beginning 
+                  of the grammar file in the options section. The value of this 
+                  option is an integer which is the number of tokens to look ahead 
+                  when making choice decisions. As you may have guessed, the default 
+                  value of this option is 1 - which derives the default LOOKAHEAD 
+                  algorithm described above.<br>
+                  <br>
+                  Suppose you set the value of this option to 2. Then the LOOKAHEAD 
+                  algorithm derived from this looks at two tokens (instead of 
+                  just one token) before making a choice decision. Hence, in Example3.jj, 
+                  choice 1 will be taken only if the next two tokens are &lt;ID&gt; 
+                  and "(", while choice 4 will be taken only if the next two tokens 
+                  are &lt;ID&gt; and ".". Hence, the parser will now work properly 
+                  for Example3.jj. Similarly, the problem with Example5.jj also 
+                  goes away since the parser goes into the (...)* construct only 
+                  when the next two tokens are "," and &lt;ID&gt;.<br>
+                  <br>
+                  By setting the global LOOKAHEAD to 2, the parsing algorithm 
+                  essentially becomes LL(2). Since you can set the global LOOKAHEAD 
+                  to any value, parsers generated by Java Compiler Compiler are 
+                  called LL(k) parsers.<br>
+                  <br>
+                  <span class="stf"> 4.2. SETTING A LOCAL LOOKAHEAD SPECIFICATION<br>
+                  </span><br>
+                  You can also set a local LOOKAHEAD specification that affects 
+                  only a specific choice point. This way, the majority of the 
+                  grammar can remain LL(1) and hence perform better, while at 
+                  the same time one gets the flexibility of LL(k) grammars. Here's 
+                  how Example3.jj is modified with local LOOKAHEAD to fix the 
+                  choice ambiguity problem (file Example8.jj):</p>
+                <blockquote> 
+                  <p>void basic_expr() :<br>
+                    {}<br>
+                    {<br>
+                    LOOKAHEAD(2)<br>
+                    &lt;ID&gt; "(" expr() ")" // Choice 1<br>
+                    |<br>
+                    "(" expr() ")" // Choice 2<br>
+                    |<br>
+                    "new" &lt;ID&gt; // Choice 3<br>
+                    |<br>
+                    &lt;ID&gt; "." &lt;ID&gt; // Choice 4<br>
+                    }</p>
+                </blockquote>
+                <p>Only the first choice (the first condition in the translation 
+                  below) is affected by the LOOKAHEAD specification. All others 
+                  continue to use a single token of LOOKAHEAD:</p>
+                <blockquote> 
+                  <p>if (next 2 tokens are &lt;ID&gt; and "(" ) {<br>
+                    choose Choice 1<br>
+                    } else if (next token is "(") {<br>
+                    choose Choice 2<br>
+                    } else if (next token is "new") {<br>
+                    choose Choice 3<br>
+                    } else if (next token is &lt;ID&gt;) {<br>
+                    choose Choice 4<br>
+                    } else {<br>
+                    produce an error message<br>
+                    }</p>
+                </blockquote>
+                <p>Similarily, Example5.jj can be modified as shown below (file 
+                  Example9.jj):</p>
+                <blockquote> 
+                  <p>void identifier_list() :<br>
+                    {}<br>
+                    {<br>
+                    &lt;ID&gt; ( LOOKAHEAD(2) "," &lt;ID&gt; )*<br>
+                    }</p>
+                </blockquote>
+                <p>Note, the LOOKAHEAD specification has to occur inside the (...)* 
+                  which<br>
+                  is the choice is being made. The translation for this construct 
+                  is<br>
+                  shown below (after the first &lt;ID&gt; has been consumed):</p>
+                <blockquote> 
+                  <p>while (next 2 tokens are "," and &lt;ID&gt;) {<br>
+                    choose the nested expansion (i.e., go into the (...)* construct)<br>
+                    consume the "," token<br>
+                    consume the &lt;ID&gt; token<br>
+                    }</p>
+                </blockquote>
+                <p>We strongly discourage you from modifying the global LOOKAHEAD 
+                  default. Most grammars are predominantly LL(1), hence you will 
+                  be unnecessarily degrading performance by converting the entire 
+                  grammar to LL(k) to facilitate just some portions of the grammar 
+                  that are not LL(1). If your grammar and input files being parsed 
+                  are very small, then this is okay.<br>
+                  <br>
+                  You should also keep in mind that the warning messages JavaCC 
+                  prints when it detects ambiguities at choice points (such as 
+                  the two messages shown earlier) simply tells you that the specified 
+                  choice points are not LL(1). JavaCC does not verify the correctness 
+                  of your local LOOKAHEAD specification - it assumes you know 
+                  what you are doing, in fact, it really cannot verify the correctness 
+                  of local LOOKAHEAD's as the following example of if statements 
+                  illustrates (file<br>
+                  Example10.jj):</p>
+                <blockquote> 
+                  <p>void IfStm() :<br>
+                    {}<br>
+                    {<br>
+                    "if" C() S() [ "else" S() ]<br>
+                    }<br>
+                    <br>
+                    void S() :<br>
+                    {}<br>
+                    {<br>
+                    ...<br>
+                    |<br>
+                    IfStm()<br>
+                    }</p>
+                </blockquote>
+                <p>This example is the famous "dangling else" problem. If you 
+                  have a program that looks like:</p>
+                <blockquote> 
+                  <p>"if C1 if C2 S1 else S2"</p>
+                </blockquote>
+                <p>The "else S2" can be bound to either of the two if statements. 
+                  The standard interpretation is that it is bound to the inner 
+                  if statement (the one closest to it). The default choice determination 
+                  algorithm happens to do the right thing, but it still prints 
+                  the following warning message:</p>
+                <blockquote> 
+                  <p>Warning: Choice conflict in [...] construct at line 25, column 
+                    15.<br>
+                    Expansion nested within construct and expansion following 
+                    construct<br>
+                    have common prefixes, one of which is: "else"<br>
+                    Consider using a lookahead of 2 or more for nested expansion.</p>
+                </blockquote>
+                <p>To suppress the warning message, you could simply tell JavaCC 
+                  that you know what you are doing as follows:</p>
+                <blockquote> 
+                  <p>void IfStm() :<br>
+                    {}<br>
+                    {<br>
+                    "if" C() S() [ LOOKAHEAD(1) "else" S() ]<br>
+                    }</p>
+                </blockquote>
+                <p>To force lookahead ambiguity checking in such instances, set 
+                  the option FORCE_LA_CHECK to true.<br>
+                  <br>
+                  ----------------------------------------------------------------<br>
+                  <br>
+                </p>
+              </li>
+              <li> <span class="stf"> SYNTACTIC LOOKAHEAD<br>
+                </span><br>
+                Consider the following production taken from the Java grammar: 
+                <blockquote> 
+                  <p>void TypeDeclaration() :<br>
+                    {}<br>
+                    {<br>
+                    ClassDeclaration()<br>
+                    |<br>
+                    InterfaceDeclaration()<br>
+                    }</p>
+                </blockquote>
+                <p>At the syntactic level, ClassDeclaration can start with any 
+                  number of "abstract"s, "final"s, and "public"s. While a subsequent 
+                  semantic check will produce error messages for multiple uses 
+                  of the same modifier, this does not happen until parsing is 
+                  completely over. Similarly, InterfaceDeclaration can start with 
+                  any number of "abstract"s and "public"s.<br>
+                  <br>
+                  What if the next tokens in the input stream are a very large 
+                  number of "abstract"s (say 100 of them) followed by "interface"? 
+                  It is clear that a fixed amount of LOOKAHEAD (such as LOOKAHEAD(100) 
+                  for example) will not suffice. One can argue that this is such 
+                  a wierd situation that it does not warrant any reasonable error 
+                  message and that it is okay to make the wrong choice in some 
+                  pathalogical situations. But suppose one wanted to be precise 
+                  about this.<br>
+                  <br>
+                  The solution here is to set the LOOKAHEAD to infinity - that 
+                  is set no bounds on the number of tokens to look ahead. One 
+                  way to do this is to use a very large integer value (such as 
+                  the largest possible integer) as follows:</p>
+                <blockquote> 
+                  <p>void TypeDeclaration() :<br>
+                    {}<br>
+                    {<br>
+                    LOOKAHEAD(2147483647)<br>
+                    ClassDeclaration()<br>
+                    |<br>
+                    InterfaceDeclaration()<br>
+                    }</p>
+                </blockquote>
+                <p>One can also achieve the same effect with "syntactic LOOKAHEAD". 
+                  In syntactic LOOKAHEAD, you specify an expansion to try out 
+                  and it that succeeds, then the following choice is taken. The 
+                  above example is rewritten using syntactic LOOKAHEAD below:</p>
+                <blockquote> 
+                  <p>void TypeDeclaration() :<br>
+                    {}<br>
+                    {<br>
+                    LOOKAHEAD(ClassDeclaration())<br>
+                    ClassDeclaration()<br>
+                    |<br>
+                    InterfaceDeclaration()<br>
+                    }</p>
+                </blockquote>
+                <p>Essentially, what this is saying is:</p>
+                <blockquote> 
+                  <p>if (the tokens from the input stream match ClassDeclaration) 
+                    {<br>
+                    choose ClassDeclaration()<br>
+                    } else if (next token matches InterfaceDeclaration) {<br>
+                    choose InterfaceDeclaration()<br>
+                    } else {<br>
+                    produce an error message<br>
+                    }</p>
+                </blockquote>
+                <p>The problem with the above syntactic LOOKAHEAD specification 
+                  is that the LOOKAHEAD calculation takes too much time and does 
+                  a lot of unnecessary checking. In this case, the LOOKAHEAD calculation 
+                  can stop as soon as the token "class" is encountered, but the 
+                  specification forces the calculation to continue until the end 
+                  of the class declaration has been reached - which is rather 
+                  time consuming. This problem can be solved by placing a shorter 
+                  expansion to try out in the syntactic LOOKAHEAD specification 
+                  as in the following example:</p>
+                <blockquote> 
+                  <p>void TypeDeclaration() :<br>
+                    {}<br>
+                    {<br>
+                    LOOKAHEAD( ( "abstract" | "final" | "public" )* "class" )<br>
+                    ClassDeclaration()<br>
+                    |<br>
+                    InterfaceDeclaration()<br>
+                    }</p>
+                </blockquote>
+                <p>Essentially, what this is saying is:</p>
+                <blockquote> 
+                  <p>if (the nest set of tokens from the input stream are a sequence 
+                    of<br>
+                    "abstract"s, "final"s, and "public"s followed by a "class") 
+                    {<br>
+                    choose ClassDeclaration()<br>
+                    } else if (next token matches InterfaceDeclaration) {<br>
+                    choose InterfaceDeclaration()<br>
+                    } else {<br>
+                    produce an error message<br>
+                    }</p>
+                </blockquote>
+                <p>By doing this, you make the choice determination algorithm 
+                  stop as soon as it sees "class" - i.e., make its decision at 
+                  the earliest possible time.<br>
+                  <br>
+                  You can place a bound on the number of tokens to consume during 
+                  syntactic lookahead as follows:</p>
+                <blockquote> 
+                  <p>void TypeDeclaration() :<br>
+                    {}<br>
+                    {<br>
+                    LOOKAHEAD(10, ( "abstract" | "final" | "public" )* "class" 
+                    )<br>
+                    ClassDeclaration()<br>
+                    |<br>
+                    InterfaceDeclaration()<br>
+                    }</p>
+                </blockquote>
+                <p>In this case, the LOOKAHEAD determination is not permitted 
+                  to go beyond<br>
+                  10 tokens. If it reaches this limit and is still successfully 
+                  matching ( "abstract" | "final" | "public" )* "class", then 
+                  ClassDeclaration is selected.<br>
+                  <br>
+                  Actually, when such a limit is not specified, it defaults to 
+                  the largest integer value (2147483647).</p>
+              </li>
+              <li> <span class="stf"> SEMANTIC LOOKAHEAD<br>
+                </span><br>
+                Let us go back to Example1.jj: 
+                <blockquote> 
+                  <p>void Input() :<br>
+                    {}<br>
+                    {<br>
+                    "a" BC() "c"<br>
+                    }<br>
+                    <br>
+                    void BC() :<br>
+                    {}<br>
+                    {<br>
+                    "b" [ "c" ]<br>
+                    }</p>
+                </blockquote>
+                <p>Let us suppose that there is a good reason for writing a grammar 
+                  this way (maybe the way actions are embedded). As noted earlier, 
+                  this grammar recognizes two string "abc" and "abcc". The problem 
+                  here is that the default LL(1) algorithm will choose the [ "c" 
+                  ] everytime it sees a "c" and therefore "abc" will never be 
+                  matched. We need to specify that this choice must be made only 
+                  when the next token is a "c", and the token following that is 
+                  not a "c". This is a negative statement - one that cannot be 
+                  made using syntactic LOOKAHEAD.<br>
+                  <br>
+                  We can use semantic LOOKAHEAD for this purpose. With semantic 
+                  LOOKAHEAD, you can specify any arbitrary boolean expression 
+                  whose evaluation determines which choice to take at a choice 
+                  point. The above example can be instrumented with semantic LOOKAHEAD 
+                  as follows:</p>
+                <blockquote> 
+                  <p>void BC() :<br>
+                    {}<br>
+                    {<br>
+                    "b"<br>
+                    [ LOOKAHEAD( { getToken(1).kind == C && getToken(2).kind != 
+                    C } )<br>
+                    &lt;C:"c"&gt;<br>
+                    ]<br>
+                    }</p>
+                </blockquote>
+                <p>First we give the token "c" a label C so that we can refer 
+                  to it from the semantic LOOKAHEAD. The boolean expression essentially 
+                  states the desired property. The choice determination decision 
+                  is therefore:</p>
+                <blockquote> 
+                  <p>if (next token is "c" and following token is not "c") {<br>
+                    choose the nested expansion (i.e., go into the [...] construct)<br>
+                    } else {<br>
+                    go beyond the [...] construct without entering it.<br>
+                    }</p>
+                </blockquote>
+                <p>This example can be rewritten to combine both syntactic and 
+                  semantic LOOKAHEAD as follows (recognize the first "c" using 
+                  syntactic LOOKAHEAD and the absence of the second using semantic 
+                  LOOKAHEAD):</p>
+                <blockquote> 
+                  <p>void BC() :<br>
+                    {}<br>
+                    {<br>
+                    "b"<br>
+                    [ LOOKAHEAD( "c", { getToken(2).kind != C } )<br>
+                    &lt;C:"c"&gt;<br>
+                    ]<br>
+                    }</p>
+                </blockquote>
+              </li>
+              <li><span class="stf"> GENERAL STRUCTURE OF LOOKAHEAD<br>
+                </span><br>
+                We've pretty much covered the various aspects of LOOKAHEAD in 
+                the previous sections. A couple of advanced topics follow. However, 
+                we shall now present a formal language reference for LOOKAHEAD 
+                in Java Compiler Compiler:<br>
+                <br>
+                The general structure of a LOOKAHEAD specification is: 
+                <blockquote> 
+                  <p>LOOKAHEAD( amount,<br>
+                    expansion,<br>
+                    { boolean_expression }<br>
+                    )</p>
+                </blockquote>
+                <p>"amount" specifies the number of tokens to LOOKAHEAD,"expansion" 
+                  specifies the expansion to use to perform syntactic LOOKAHEAD, 
+                  and boolean_expression" is the expression to use for semantic 
+                  LOOKAHEAD.<br>
+                  <br>
+                  At least one of the three entries must be present. If more than 
+                  one are present, they are separated by commas. The default values 
+                  for each of these entities is defined below:<br>
+                  <br>
+                  "amount":<br>
+                  - if "expansion is present, this defaults to 2147483647.<br>
+                  - otherwise ("boolean_expression" must be present then) this<br>
+                  defaults to 0.<br>
+                  <br>
+                  Note: When "amount" is 0, no syntactic LOOKAHEAD is performed. 
+                  Also,<br>
+                  "amount" does not affect the semantic LOOKAHEAD.<br>
+                  <br>
+                  "expansion":<br>
+                  - defaults to the expansion being considered.<br>
+                  <br>
+                  "boolean_expression":<br>
+                  - defaults to true.</p>
+              </li>
+            </ol>
+            <p>
+              <!-- Content:End -->
+            </p>
+            <!-- #EndEditable --> <br>
+            <img src="../../pics/common/spacer.gif" width="536" height="1" alt="" border="0"></td>
+          <td><img src="../../pics/common/spacer.gif" width="70" height="1" alt="" border="0"></td>
+        </tr>
+        <tr> 
+          <td colspan="3"><img src="../../pics/common/spacer.gif" width="622" height="1" alt="" border="0"></td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+  <tr> 
+    <td></td>
+    <td class="tableborder"><img src="../../pics/common/spacer.gif" width="1" height="1" alt="" border="0"></td>
+    <td align="center"><!-- #BeginLibraryItem "/Libraries/footer.lbi" -->
+<img src="../../pics/common/spacer.gif" width="614" height="1" alt="" border="0"><br><br><span class="smallprint">
+              <a class="footer" href="file:///F%7C/corp_website/company">Company</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/news_and_events">News and Events</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/products">Products</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/services">Services</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/support">Support</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/partners">Partners</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/careers">Careers</a> | 
+              <a class="footer" href="file:///F%7C/corp_website/communities">Communities</a><br>
+<a class="footer" href="javascript:openCopyrightWindow('http://www.webgain.com/copyright.html','credits')"> 
+&copy; 2000-2002 WebGain, Inc.</a> | <a class="footer" href="file:///F%7C/corp_website/company/privacy_statement.html">Privacy 
+Statement</a> | <a class="footer" href="file:///F%7C/corp_website/company/legal.html">Legal</a> | <a class="footer" href="file:///F%7C/sitemap">Site 
+Map</a> | <a class="footer" href="file:///F%7C/corp_website/contact_us">Contact</a> <br>
+<br></span><!-- #EndLibraryItem --></td>
+  </tr>
+</table>
+<div id="blank" style="visibility: hidden; position: absolute; left: 24; top: 43; width:75px; height:120px; z-index:0;"> 
+  <table border="0" cellspacing="0" cellpadding="0">
+    <tr> 
+      <td></td>
+    </tr>
+  </table>
+</div>
+<div id="companyspacer" style="visibility:hidden; position:absolute; left:0; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('companyspacer',toggle); window.hideMenu(window.company);"><img src="../../pics/common/spacer.gif" width="55" height="58" border="0" alt=""></a><br>
+        <a href="../../company/"><img src="../../pics/navbar/company_mo.gif" width="52" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="52" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('companyspacer',toggle); window.hideMenu(window.company);"><img src="../../pics/common/spacer.gif" width="55" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('companyspacer',toggle); window.hideMenu(window.company);"><img src="../../pics/common/spacer.gif" width="470" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="newsspacer" style="visibility:hidden; position:absolute; left:0; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="53" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="100" height="58" alt="" border="0"></a><br>
+        <a href="../../news_and_events/"><img src="../../pics/navbar/news_events_mo.gif" width="96" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="96" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="100" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('newsspacer',toggle); window.hideMenu(window.news);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="productsspacer" style="visibility:hidden; position:absolute; left:100; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="56" height="58" alt="" border="0"></a><br>
+        <a href="../../products/"><img src="../../pics/navbar/products_active.gif" width="56" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="56" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="56" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('productsspacer',toggle); window.hideMenu(window.products);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="servicesspacer" style="visibility:hidden; position:absolute; left:157; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="52" height="58" alt="" border="0"></a><br>
+        <a href="../../services/"><img src="../../pics/navbar/services_mo.gif" width="52" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="52" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="52" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('servicesspacer',toggle); window.hideMenu(window.services);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="supportspacer" style="visibility:hidden; position:absolute; left:210; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="51" height="58" alt="" border="0"></a><br>
+        <a href="../../support/"><img src="../../pics/navbar/support_mo.gif" width="51" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="51" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="51" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('supportspacer',toggle); window.hideMenu(window.support);"><img src="../../pics/common/spacer.gif" width="465" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="partnersspacer" style="visibility:hidden; position:absolute; left:262; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="57" height="58" alt="" border="0"></a><br>
+        <a href="../../partners/"><img src="../../pics/navbar/partners_mo.gif" width="57" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="57" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="57" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('partnersspacer',toggle); window.hideMenu(window.partners);"><img src="../../pics/common/spacer.gif" width="400" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="careersspacer" style="visibility:hidden; position:absolute; left:320; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="50" height="58" alt="" border="0"></a><br>
+        <a href="../../careers/"><img src="../../pics/navbar/careers_mo.gif" width="50" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="50" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="50" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('careersspacer',toggle); window.hideMenu(window.careers);"><img src="../../pics/common/spacer.gif" width="345" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<div id="communityspacer" style="visibility:hidden; position:absolute; left:371; top:0; z-index:1;"> 
+  <table border="0" cellpadding="0" cellspacing="0">
+    <tr> 
+      <td><a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="50" height="300" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="72" height="58" alt="" border="0"></a><br>
+        <a href="../../communities/"><img src="../../pics/navbar/communities_mo.gif" width="72" height="19" alt="" border="0"></a><br>
+        <img src="../../pics/common/spacer.gif" width="72" height="3" alt="" border="0"><br>
+        <a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="72" height="207" alt="" border="0"></a></td>
+      <td><a href="#" onMouseOver="WM_changeVisibility('communityspacer',toggle); window.hideMenu(window.community);"><img src="../../pics/common/spacer.gif" width="270" height="300" alt="" border="0"></a></td>
+    </tr>
+  </table>
+</div>
+<map name="mast"> 
+  <area alt="Site Map" coords="715,1,774,12" href="../../sitemap">
+  <area alt="Contact" coords="651,1,706,12" href="../../contact_us">
+  <area alt="Login" coords="595,1,642,12" href="../../../login/">
+</map>
+<script language="JavaScript1.2">
+//For IE
+if (document.all || document.getElementById) {
+    onLoad();
+}
+loaded=true;
+</script>
+</body>
+</html>

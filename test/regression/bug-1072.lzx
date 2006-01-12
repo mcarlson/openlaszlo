@@ -1,0 +1,11 @@
+<canvas debug="true">
+        <method name="onkeydown" event="onkeydown" reference="LzKeys" >
+            keys = LzKeys.downKeysArray;
+            for(i = 0; i &lt; keys.length; i++) {
+                Debug.write("key " + keys[i] + " down" );
+        </method>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

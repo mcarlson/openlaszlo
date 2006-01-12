@@ -1,0 +1,33 @@
+<library>
+  <greenstyle name="gcolors"
+    basecolor="0x66ca46"
+    />
+  <goldstyle name="rcolors"
+    basecolor="0xf0c947"
+    />
+  <purplestyle name="pcolors"
+    basecolor="0xa776c4"
+    />
+  <silverstyle name="scolors"     
+    basecolor="0x808080"
+    />
+  <goldstyle name="dcolors"     
+    basecolor="0xc3c072"
+    />
+
+  <greenstyle name="lgcolors"
+    basecolor="0x77db57"
+    />
+  <goldstyle name="lrcolors"
+    basecolor="0xffda58"
+    />
+  <purplestyle name="lpcolors"
+    basecolor="0xc897e5"
+    />
+  <silverstyle name="lscolors"     
+    basecolor="0x808080"
+    />
+  <goldstyle name="ldcolors"     
+    basecolor="0xd4d183"
+    />
+</library>

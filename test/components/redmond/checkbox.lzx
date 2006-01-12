@@ -1,0 +1,40 @@
+<canvas debug="true">
+    <include href="redmond"/>
+
+    <debug y="250"/>
+<view>
+    <checkbox id="a" name="cb1" label="(a) this has a really long name"/>
+
+    <checkbox id="a2">(a2) this name is inside the tag</checkbox>
+
+    <checkbox id="b" name="cb2"  amChecked="true" label="(b) checked by default"/>
+    <checkbox id="c" name="cb3"  amActive="false" label="(c) disabled"/>
+
+    <checkbox id="d" name="green" label="(d) show green square"/>
+
+    <view width="80" height="80" bgcolor="green">
+        <attribute name="visible" value="$always{d.amChecked}"/>
+    </view>
+
+<simplelayout spacing="20"/>
+        </view>
+
+    <view>
+        <text>sample code from the reference</text>
+        <checkbox id="checkMe" label="Check me" />
+
+        <button label="Toggle" onclick= "checkMe.gotPress();"/>
+        <button label="Disable" onclick= "checkMe.setActive();"/>
+        <button label="Enable" onclick= "checkMe.setActive(true);"/>
+        <button label="status" onclick= "debug.write('amChecked: '+checkMe.amChecked);"/>
+        <simplelayout axis="y" spacing="4"/>
+
+    </view>
+    <simplelayout axis="x" spacing="20"/>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

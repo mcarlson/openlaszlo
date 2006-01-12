@@ -1,0 +1,46 @@
+/* * Stylesheet for LPS console */
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+body {
+  margin: 0;
+}
+
+#krank-header {
+  background-color: #bbb;
+  height: 34;
+  border: 1px solid;
+}
+
+#krank-header img {
+  float: left;
+  margin-right: 15pt;
+}
+
+#krank-header .status {
+  color: black;
+  display: block;
+  padding-top: 7px;
+}
+
+#footer {
+  background-color: #bbb; 
+  height: 70; 
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+
+#footer-large {
+  background-color: #bbb; 
+  height: 370; 
+  border-top: 1px solid;
+  border-bottom: 1px solid;
+}
+
+
+.error, .warning, .info {
+  font-family: sans-serif;
+  font-size: smaller;
+}

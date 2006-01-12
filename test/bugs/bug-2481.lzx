@@ -1,0 +1,67 @@
+<canvas font="verity" width="500">
+	<font name="verity">
+		<face style="plain" src="verity/verity11.ttf"/>
+		<face style="bold" src="verity/verity11bold.ttf"/>
+	</font>
+	
+	<dataset name="sizes">
+		<size>8</size>
+		<size>9</size>
+		<size>10</size>
+		<size>11</size>
+		<size>12</size>
+		<size>14</size>
+		<size>16</size>
+		<size>18</size>
+	</dataset>
+	
+	<text name="texta" fontstyle="bold" bgcolor="aqua"> Here is some fun text </text>  
+	<text name="textb" bgcolor="aqua"> Even better text here </text>
+
+	<button text="Change font"> 
+		<method event="onclick">
+			texta.setAttribute('fontstyle', 'plain');
+			texta.setAttribute('fontsize', '18');
+			textb.setAttribute('fontstyle', 'bold');
+			textb.setAttribute('fontsize', '18');
+		</method>
+	</button>
+	
+    <class name="classtext" bgcolor="yellow">
+    	<attribute name="fs" />
+    	<text fontsize="${parent.fs}">
+			Premeasured text inside a class
+    	</text>
+    </class>
+    
+    
+    <class name="classattrtext" bgcolor="yellow">
+    	<attribute name="text" type="text" value="''"/>
+    	<text name="msg" text="${parent.text}" resize="true"/>
+    </class>
+    
+    <simplelayout spacing="10"/>
+    
+	<view>
+		<simplelayout axis="x" spacing="20"/>
+		<view>
+		    <simplelayout spacing="10"/>
+			<classtext datapath="sizes:/size" fs="$path{'text()'}"/>
+		</view>
+		<view>
+		    <simplelayout spacing="10"/>
+			<classattrtext datapath="sizes:/size">
+				<method event="oninit">
+					this.msg.setAttribute('fontsize', datapath.getNodeText())
+					this.setAttribute('text', "Text constrained to class attribute")
+				</method>
+			</classattrtext>
+			
+		</view>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

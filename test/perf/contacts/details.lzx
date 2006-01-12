@@ -1,0 +1,485 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- details.lzx                                                           -->
+<!--                                                                       -->
+<!--    This is the details window for Laszlo Contacts.                    -->
+<!-- It is used to display a single contact and allow one to edit that     -->
+<!-- contact.                                                              -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+
+<!-- DETAILS WINDOW FOR CONTACTS DEMO -->
+<window title="Details" name="details" x="100" y="100" width="503" 
+        height="424" resizable="false" closeable="true"
+        visible="false" id="details" fgcolor="#ccc" 
+        initstage="late"
+        oninit="new LzDelegate( this , 'closeWindow' , 
+                                      this.datapath, 'onerror')">
+
+    <datapath rerunxpath="false"/>
+
+    <!-- VIEWS of details window -->
+    <tabpanelview width="485" height="354" x="5" y="10" name="tabs">
+        <!--VIEWS-->
+        <tabview label="Summary" width="60" name="summary">
+            <!--VIEWS-->
+            <view x="10" y="15" resource="summary.png"/>
+            <text x="62" y="25">Summary of information about this contact</text>
+            <view x="10" y="52" 
+                  width="immediateparent.width - 20" 
+                  resource="separator" 
+                  stretches="width">
+            </view>
+            <view x="10" y="60" name="summarydata" layout="axis: x; spacing: 2">
+                <view width="105" layout="axis: y; spacing: 2">
+                    <text>Name:</text>
+                    <text>Address:</text>
+                    <text>Home Phone:</text>
+                    <text>Pager:</text>
+                    <text>Mobile:</text>
+                    <text>Personal Web Page:</text>
+                    <text>Business Phone:</text>
+                    <text>Business Fax:</text>
+                </view>
+                <view width="200" name="items" layout="axis: y; spacing: 2">
+                    <text datapath="@displayname" width="parent.width" />
+                    <text datapath="@home_address" width="parent.width" />
+                    <text datapath="@home_phone" width="parent.width" />
+                    <text datapath="@home_pager" width="parent.width" />
+                    <text datapath="@home_mobile" width="parent.width" />
+                    <text datapath="@home_webpage" width="parent.width" />
+                    <text datapath="@work_phone" width="parent.width" />
+                    <text datapath="@work_fax" width="parent.width" />
+                </view>
+            </view>
+        </tabview>
+
+        <tabview label="Name and E-mail" name="nameAndEmail">
+            <!-- VIEWS -->
+            <view x="10" y="15" resource="name.png"/>
+
+            <text x="62" y="25">
+                Enter name and e-mail information about this contact here
+            </text>
+
+            <view x="10" y="52" 
+                  width="immediateparent.width - 20" 
+                  resource="separator" 
+                  stretches="width">
+            </view>
+
+            <view x="10" y="60" id="namesView">
+                <text x="0" y="14">First:</text>
+                <windowtext x="55" y="12" width="89" 
+                            name="first" datapath="@firstname">John</windowtext>
+                <text x="151" y="14">Middle:</text>
+                <windowtext x="202" y="12" width="100" 
+                            name="middle" datapath="@middlename">Doe</windowtext>
+                <text x="308" y="14">Last:</text>
+                <windowtext x="361" y="12" width="100" 
+                            name="last" datapath="@lastname">Smith</windowtext>
+                <text x="0" y="42">Title:</text>
+                <windowtext x="55" y="40" width="38" name="display" 
+                        datapath="@title">Mr</windowtext>
+                <text x="100" y="42">Display:</text>
+                <combobox x="150" y="40" width="152" shownitems="4" 
+                          itemfield="nameList:/contents/text()" 
+                          datapath="@displayname" 
+                          name="mycombo"> 
+
+                   <method name="isEmpty" args="str">
+                     return str == null || str == "";
+                   </method>
+
+                   <method name="getNameCombo" args="a0,a1,a2,doComma">
+                     var str = "";
+                     if (! this.isEmpty(a0)) {
+                       str += a0;
+                       if (! this.isEmpty(a1) || ! this.isEmpty(a2))
+                         str += (doComma?",":"") + " ";
+                     }
+
+                     if (! this.isEmpty(a1)) {
+                       str += a1;
+                     }
+
+                     if (! this.isEmpty(a2)) {
+                       if (! this.isEmpty(a1))
+                         str += " ";
+                       str += a2;
+                     }
+                     return str;
+                   </method>
+
+                   
+                   <method name="setOpen" args="amopen">
+                     if ( amopen ){
+                        //generate the data
+                        var dp = canvas.datasets.nameList.getPointer();
+                        if ( dp.selectChild() ){
+                            do {
+                                dp.deleteNode();
+                            } while ( dp.isValid() );
+                        }
+                       
+                        var dp = canvas.datasets.nameList.getPointer();
+                        // Name fields.
+                        var fn = namesView.first.getText();     // first name
+                        var mn = namesView.middle.getText();    // middle name
+                        var ln = namesView.last.getText();      // last name
+                        
+                        var lines = [ this.top.field.getText(),
+                                        this.getNameCombo(fn, ln, mn) ,
+                                        this.getNameCombo(ln, fn, mn) ,
+                                        this.getNameCombo(ln, fn, mn, true) ,
+                                        this.parent.nickname.getText() ]
+
+                        var ldict = {}
+                        for ( var i = 0; i &lt; lines.length; i++ ){
+                            var cline = lines[ i ];
+                            if ( ldict[ cline ] || this.isEmpty( cline ) ){
+                                continue;
+                            }
+                            ldict[ cline ] = true;
+                            dp.addNode( "contents" , lines[ i ] );
+                        }
+                     }
+                     super.setOpen( amopen );  
+                       
+                   </method>
+
+                </combobox>
+
+                <text x="308" y="42">nickname:</text>
+                <windowtext x="361" y="40" width="100" 
+                            name="nickname" datapath="@nickname"/>
+
+                <view id="emailsbox" y="91" datapath="@email">
+                    <text y="2">E-Mail Addresses</text>
+                    <windowtext x="112" width="243" 
+                            name="email"/>
+                    <button name="Add_Email" x="361" width="102" 
+                            label="Add" 
+                            onclick="this.requestAdd();">
+                        <method name="requestAdd">
+                            if (  emailsbox.email.getText() != "" ){
+                                maillist.addRecord( emailsbox.email.getText() );
+                                emailsbox.email.clearText();
+                            }
+                        </method>
+                    </button>
+
+                    <windowframe y="32" width="356" height="100" id="maillist"
+                                 selectiontype="toggle" datapath="@email"
+                                 layout="axis: y">
+                        <method name="applyData" args="el"> 
+                            <![CDATA[
+                             this.parent.email.clearText();
+
+                            var dp = canvas.datasets.emailList.getPointer();
+                            var existing = dp.getXPath( "emails" );
+                            if ( existing != null && !existing.length ){
+                                //treat it as an array for simplicity
+                                existing = [ existing ];
+                            }
+
+                            for ( var i = 0; i< existing.length; i++ ){
+                                existing[ i ].deleteNode();
+                            }
+
+                            var ellist = el.split( ';' );
+                            for ( var i = 0; i < ellist.length ; i++ ){
+                                dp.addNode( "emails" , ellist[ i ] );
+                            } 
+                            ]]>
+                        </method>
+                       <method name="retrieveData">
+                            <![CDATA[
+                             var ret = "";
+                             var dp = canvas.datasets.emailList.getPointer();
+                             
+                             if ( dp.selectChild() ){
+                               do {
+                                   var t = dp.getNodeText();
+                                   if ( t != null ){
+                                      ret += t + ";";
+                                   }
+                               } while( dp.selectNext());
+                             }
+
+                             if (  emailsbox.email.getText() != "" ){
+                                 ret += emailsbox.email.getText();
+                                 emailsbox.email.clearText();
+                             } else {
+                                 ret = ret.substring( 0 , ret.length -1 );
+                             }
+                             return ret;
+                            ]]>
+                        </method>
+                    
+                        <selectionmanager name="selector" toggle="true"/>
+
+                        <view name ="listitem" clickable="true" 
+                              width="immediateparent.width"
+                              height="15" bgcolor="#FFFFFF"
+                              datapath="emailList:/emails" 
+                              onmousedown="maillist.selector.select( this );" >
+            
+
+                            <text name="address" width="400" 
+                                  datapath="text()"/>
+                            <method name="setSelected" args="amselected">
+                                if ( amselected ) {
+                                  var txtColor = 0xFFFFFF;
+                                  var bgcolor = 0x0A246A;
+                                } else {
+                                  var txtColor = 0x000000;
+                                  var bgcolor = 0xFFFFFF;
+                                }
+                                this.setBGColor( bgcolor );
+                                this.address.setColor( txtColor );
+                            </method>
+                        </view>
+
+                        <method name="editSelected">
+                            var csel = this.selector.getSelection()[ 0 ];
+                            if ( csel != null ){
+                                emailsbox.email.setText( csel.address.getText() );
+                                csel.datapath.deleteNode();
+                                this.selector.clearSelection();
+                            }
+                        </method>
+                        <method name="removeSelected">
+                            var csel = this.selector.getSelection()[ 0 ];
+                            if ( csel != null ){
+                                csel.datapath.deleteNode();
+                                this.selector.clearSelection();
+                            }
+                        </method>
+                        <method name="addRecord" args="em" >
+                            var dp = canvas.datasets.emailList.getPointer();
+                            dp.addNode( "emails" , em );
+                        </method>
+                    </windowframe>
+
+                    <view x="361" y="34" layout="axis: y; spacing: 5">
+                        <button name="Edit_Email" width="102"
+                                label="Edit"
+                                onclick="maillist.editSelected();"/>
+                        <button name="Remove_Email" width="102" 
+                                label="Remove" 
+                                onclick="maillist.removeSelected();"/>
+                    </view>
+
+                </view>
+
+    
+                <!-- **TODO: Is the empty onclick value necessary? -->
+                <checkbox name="send_em_plain" x="0" y="250" 
+                          label="Send E-Mail plain text only"
+                          onclick="" datapath="@home_default">
+                </checkbox>
+
+           </view>
+        </tabview>
+
+        <tabview label="Home" width="45">
+            <!--VIEWS-->
+            <view x="10" y="15" resource="home.png"/>
+
+            <text x="62" y="25">
+                Enter home-related information about this contact here
+            </text>
+
+            <view x="10" y="52" 
+                  width="immediateparent.width - 20" resource="separator" 
+                  stretches="width">
+            </view>
+
+            <view x="10" y="60">
+                <text x="0" y="12">Street Address:</text>
+                <windowtext x="94" y="12" width="141" height="52" 
+                            name="address" datapath="@home_address"/>
+                <text x="0" y="71">City</text>
+                <windowtext x="94" y="69" width="141" 
+                            name="city" datapath="@home_city"/>
+                <text x="0" y="99">State/Province</text>
+                <windowtext x="94" y="97" width="141" 
+                            name="state" datapath="@home_state"/>
+                <text x="0" y="126">Zip Code</text>
+                <windowtext x="94" y="124" width="141" 
+                            name="zip" datapath="@home_zip"/>
+                <text x="0" y="153">Country/Region</text>
+                <windowtext x="94" y="151" width="141" 
+                            name="country" datapath="@home_country"/>
+                <checkbox name="default" x="94" y="185" label="Default"
+                          onclick="">
+                </checkbox>
+
+                <button name="viewmap" x="168" y="179" width="67" 
+                                            label="View Map"/>
+
+
+                <text x="252" y="14">Phone:</text>
+                <windowtext x="319" y="12" width="141" 
+                            name="phone" datapath="@home_phone"/>
+                <text x="252" y="43">Fax:</text>
+                <windowtext x="319" y="41" width="141" 
+                            name="fax" datapath="@home_fax"/>
+                <text x="252" y="71">Mobile:</text>
+                <windowtext x="319" y="69" width="141" 
+                            name="mobile" datapath="@home_mobile"/>
+                <text x="0" y="246">Web Page</text>
+                <windowtext x="94" y="244" width="333"
+                            name="webpage" datapath="@home_webpage"/>
+                <button name="Go" x="432" y="243" width="27" 
+                        label="Go" 
+                        onclick="LzBrowser.loadURL( this.parent.webpage.getText() , 'browsewin' )" />
+            </view>
+        </tabview>
+
+        <tabview label="Work" width="45">
+            <!--VIEWS-->
+            <view x="10" y="15" resource="work.png"/>
+            <text x="62" y="25">Enter work-related information about this contact here</text>
+            <view x="10" y="52" 
+                  width="immediateparent.width - 20" 
+                  resource="separator" 
+                  stretches="width">
+            </view>
+            <view x="10" y="60">
+                <text x="0" y="12">Company:</text>
+                <text x="0" y="38">Street Address:</text>
+                <text x="0" y="92">City:</text>
+                <text x="0" y="118">State</text>
+                <text x="0" y="146">Zip</text>
+                <text x="0" y="174">Country</text>
+                <view x="94" y="10" layout="axis: y; spacing: 6">
+                    <windowtext width="141" name="company" 
+                                datapath="@work_company"/>
+                    <windowtext width="141" height="47" name="address"
+                                datapath="@work_address"/>
+                    <windowtext width="141" name="city"
+                                datapath="@work_city"/>
+                    <windowtext width="141" name="state"
+                                datapath="@work_state"/>
+                    <windowtext width="141" name="zip"
+                                datapath="@work_zip"/>
+                    <windowtext width="141" name="country"
+                                datapath="@work_country"/>
+                </view>          
+                <view x="252" y="11" layout="axis: y; spacing: 12">
+                    <text>Job Title:</text>
+                    <text>Department:</text>
+                    <text>Office:</text>
+                    <text>Phone:</text>
+                    <text>Fax:</text>
+                    <text>Pager:</text>
+                    <text>IP Phone:</text>
+                </view>          
+                <view x="319" y="9" layout="axis: y; spacing: 6">
+                    <windowtext width="141" name="title"
+                                datapath="@work_title"/>
+                    <windowtext width="141" name="department"
+                                datapath="@work_dept"/>
+                    <windowtext width="141" name="office"
+                                datapath="@work_office"/>
+                    <windowtext width="141" name="phone"
+                                datapath="@work_phone"/>
+                    <windowtext width="141" name="fax"
+                                datapath="@work_fax"/>
+                    <windowtext width="141" name="pager"
+                                datapath="@work_pager"/>
+                    <windowtext width="141" name="ip phone"
+                                datapath="@work_ipphone"/>
+                </view>          
+                <checkbox name="default" x="94" y="206" label="Default"
+                          datapath="@work_default"/>
+                <button name="viewmap" x="168" y="200" width="67" 
+                        label="View Map"/>
+                <text x="0" y="246">Web Page</text>
+                <windowtext x="94" y="244" width="333" name="webpage" 
+                            datapath="@work_webpage"/>
+                <button name="Go" x="432" y="243" width="27" 
+                        label="Go" 
+                        onclick="LzBrowser.loadURL( this.parent.webpage.getText() , 'browsewin' )" />
+            </view>
+        </tabview>
+
+        <tabview label="Personal" width="60">
+            <view x="10" y="15" resource="personal.png"/>
+            <text x="62" y="25">Enter personal information about this contact here</text>
+            <view x="10" y="52" 
+                  width="immediateparent.width - 20" 
+                  resource="separator" 
+                  stretches="width">
+            </view>
+            <view x="10" y="60">
+                <text x="0" y="14">Notes</text>
+                <windowtext x="0" y="32" width="465" height="234" 
+                            datapath="@notes"/>
+            </view>
+        </tabview>
+
+        <tabview label="Other" width="45">
+            <view x="10" y="15" resource="summary.png"/>
+            <text x="62" y="25">
+                Enter other related information about this contact here
+            </text>
+            <view x="10" y="52" 
+                  width="immediateparent.width - 20" 
+                  resource="separator" 
+                  stretches="width">
+            </view>
+            <view x="10" y="60">
+            </view>
+        </tabview>
+
+    </tabpanelview>
+
+    <view x="immediateparent.width - this.width - 10"
+          y="369" layout="axis: x; spacing: 5">
+        <button name="abutton" width="60" label="OK"
+                onclick="details.updateRecord()"/>
+        <button name="abutton" width="60" label="Cancel"
+                onclick="details.closeWindow()"/>
+    </view>
+
+    <!-- METHODS of details window -->
+    <method name="insertRecord">
+        this.openWindow( );
+        this.datapath.setXPath("new:/result" );
+        this.tabs.setSelected( this.tabs.nameAndEmail );
+        this.setTitle( "New contact" );
+        this.havenewrecord = true;
+    </method>
+    <method name="openRecord" args="n">
+        this.openWindow( );
+        this.datapath.setFromPointer( n );
+        this.tabs.setSelected( this.tabs.summary );
+        this.setTitle( this.datapath.getXPath( "@displayname"  ) );
+        this.havenewrecord = false;
+    </method>
+    <method name="updateRecord">
+        if ( this.havenewrecord ){
+            var dp = canvas.datasets.localdata.getPointer();
+            this.datapath.retrieveData();
+            dp.selectChild();
+            dp.addNodeFromPointer( this.datapath );
+            //point to result set
+        } else {
+            this.datapath.retrieveData( );
+        }
+        this.closeWindow();
+    </method>
+    <method name="openWindow" >
+        this.completeInstantiation();
+        super.openWindow();
+    </method>
+
+  			
+</window>

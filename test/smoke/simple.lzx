@@ -1,0 +1,25 @@
+<canvas debug="true">
+  <debug />
+
+  <include href="lzunit" />
+  <include href="compiler.lzl" />
+  <include href="lzunit-test.lzl" />
+  <include href="debugger.lzl" />
+
+  <TestSuite>
+    <TestCompiler />
+    <!-- LZUnit Tests: verify it is working first -->
+    <Tautologies /> 
+    <JavaScriptSemantics />
+    <ActionScriptSemantics />
+    <IntentionalFailures />
+    <IntentionalErrors />
+    <!-- end of LZUnit Tests -->
+    <TestDebugger />
+  </TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

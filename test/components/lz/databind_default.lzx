@@ -1,0 +1,236 @@
+<canvas bgcolor="#EAEAEA" width="800" height="1000" >
+
+    <debug y="300"/>
+
+    <dataset name="blank">
+        <item>
+           <text></text>
+           <value></value>
+        </item>
+    </dataset>
+
+    <dataset name="ds">
+        <item attr1="a1" attr2="a2">
+           <text>ctv one</text>
+           <value>1111</value>
+        </item>
+        <item>
+           <text>ctv two</text>
+           <value>2222</value>
+        </item>
+        <item>
+           <text>ctv three</text>
+           <value>3333</value>
+        </item>
+    </dataset>
+
+
+    <class name="testborder" defaultplacement="'content'" >
+        <attribute name="text" value="test name" type="html" />
+        <view bgcolor="0x979797" 
+              width="${this.title.width + 10}" height="20" >
+           <text x="4" y="2" name="title" text="${classroot.text}" 
+                 resize="true" fgcolor="0xFFFFFF" >
+           </text>
+        </view>
+        <view bgcolor="0xC0C0C0" width="${content.width+10}" 
+              height="${content.height+10}">
+            <view name="content" x="5" y="5"/>
+        </view>
+        <simplelayout/>
+    </class>
+
+
+    <simplelayout axis="y" spacing="10" inset="20"/>
+    <constantlayout axis="x" value="20"/>
+
+    <testborder> Data viewer
+        <simplelayout/>
+        <view>
+            <datapath pooling="true" xpath="ds:/item" />
+            <text datapath="text/text()" />
+            <text datapath="value/text()" />
+            <text datapath="@attr1" />
+            <text datapath="@attr2" />
+            <simplelayout axis="x"/>
+        </view>
+    </testborder>
+
+    <testborder> Control
+        <simplelayout axis="x" spacing="5" />
+        <view name="display">
+            <list x="5" y="5" width="130" shownitems="3" >
+                <textlistitem value='$path{"../value/text()"}'> 
+                    <datapath pooling="true" xpath="ds:/item/text/text()" />
+                    <method event="onselected" args="isSelected">
+                        if (isSelected) ds.removeChild( datapath.p.parentNode );
+                    </method>
+                </textlistitem>
+            </list>
+        </view>
+        <view name="add" y="5" datapath="blank:/item">
+            <simplelayout axis="y" spacing="1" />
+            <view>
+                <text text="value" width="60"/>
+                <edittext datapath="value/text()"/>
+                <simplelayout axis="x"/>
+            </view>
+            <view>
+                <text text="text" width="60"/>
+                <edittext datapath="text/text()" />
+                <simplelayout axis="x"/>
+            </view>
+            <button name="add" width="50">add
+                <method event="onclick">
+                    this.parent.datapath.updateData();
+                    var dp = canvas.datasets.ds.getPointer();
+                    dp.addNodeFromPointer( this.parent.datapath );
+                </method>
+            </button>
+        </view>
+    </testborder>
+
+    <testborder width="670" height="140" y="20" x="10" >
+        Standard
+        <simplelayout axis="x" spacing="10"/>
+        <view>
+            <text text="${ 'value: ' + parent.rg.value }"  width="100" />
+            <radiogroup name="rg" y="15">
+                <radiobutton>
+                    <datapath xpath="ds:/item/text/text()" pooling="true"/>
+                </radiobutton>
+            </radiogroup>
+        </view>
+        <view>
+            <simplelayout/>
+            <text text="${'value: ' + parent.cb.clones[0].value }" width="100"/>
+            <checkbox name="cb" y="15">
+                <datapath xpath="ds:/item/text/text()" pooling="true"/>
+            </checkbox>
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4"/>
+            <view height="4" />
+            <!-- buttons don't have value -->
+            <button> 
+                <datapath xpath="ds:/item/text/text()" pooling="true"/>
+            </button>
+        </view>
+        <view datapath="ds:/">
+            <simplelayout axis="y" spacing="4"/>
+            <view height="4" />
+            <edittext> 
+                <datapath xpath="item/text/text()" pooling="true"/>
+            </edittext> 
+            <button onclick="parent.datapath.updateData()">update</button>
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4"/>
+            <text text="${ 'value: ' + parent.li.value }" />
+            <list name="li" x="5" y="5" width="130" shownitems="3" >
+                <textlistitem> 
+                    <datapath xpath="ds:/item/text/text()" pooling="true"/>
+                </textlistitem>
+            </list>
+        </view>
+        <view>
+            <simplelayout axis="y" spacing="4" />
+            <text text="${ 'value: ' + parent.cb.value }" />
+            <combobox name="cb" x="5" y="5" width="130" spacing="0" shownitems="6"
+                      defaulttext="choose one..." editable="true" >
+                <textlistitem>
+                    <datapath xpath="ds:/item/text/text()" pooling="true"/>
+                </textlistitem>
+            </combobox>
+        </view>
+    </testborder>
+
+    <testborder>
+        Exotic
+        <simplelayout axis="x" spacing="10"/>
+        <view>
+            <tabslider y="5" height="200" width="130">
+                <tabelement> 
+                    <text>hello</text>
+                    <datapath xpath="ds:/item/text/text()" />
+                </tabelement>
+            </tabslider>
+        </view>
+        <menubar width="200">
+            <menu y="5" height="${parent.parent.height-30}" width="130">
+                <menuitem>
+                    <datapath pooling="true" xpath="ds:/item/text/text()" />
+                </menuitem>
+            </menu>
+        </menubar>
+        <view layout="class: simplelayout; axis: y; spacing: 5">
+            <text selectable="true" multiline="true" width="200">
+            Wrong tabpane will be displayed because of datacontrolsvisibility.
+            See bug 3057 for more details.
+            </text>
+            <tabs name="t" y="5" >
+                <tabpane>
+                    <datapath xpath="ds:/item/text/text()"/>
+                    <text datapath="../value/text()"/>
+                </tabpane>
+            </tabs>
+        </view>
+    </testborder>
+
+    <testborder >
+        record editor
+
+        <datapath id="tryme" 
+                  xpath="${'ds:/item[' + parent.holder.et.text + ']'}" >
+            <attribute name="datacontrolsvisibility" value="false"/>
+        </datapath>
+
+        <simplelayout spacing="4"/>
+
+        <view name="holder">
+            <simplelayout axis="x"/>
+            <text>Record Number</text>
+            <edittext width="40" name="et">1
+                <method event="onkeyup" args="k">
+                    if ( k == 13 ){
+                        this.updateText();
+                    }
+                </method>
+            </edittext>
+        </view>
+
+        <view>
+            <simplelayout axis="x"/>
+            <text width="60">Text:</text>
+            <edittext datapath="text/text()"></edittext>
+        </view>
+        <view>
+            <simplelayout axis="x"/>
+            <text width="60">Value:</text>
+            <combobox datapath="value/text()">
+                <textlistitem>
+                    <datapath xpath="ds:/item/value/text()" pooling="true"/>
+                </textlistitem>
+            </combobox>
+        </view>
+        <view>
+            <simplelayout axis="x"/>
+            <text width="60">attr1:</text>
+            <checkbox value="$path{ '@attr1' }">is stupid?</checkbox>
+        </view>
+        <view>
+            <simplelayout axis="x"/>
+            <text width="60">attr2:</text>
+            <radiogroup name="rg" y="15" datapath="@attr2">
+                <radiobutton>
+                    <datapath xpath="ds:/item/text/text()" pooling="true"/>
+                </radiobutton>
+            </radiogroup>
+        </view>
+        <button onclick="parent.datapath.updateData()"> submit</button>
+    </testborder>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,20 @@
+<library>
+  <text>[loaded dataset library]</text>
+  <dataset name="mylibdset">
+    <items>
+      <item> Lorem ipsum dolor sit amet</item>
+      <item> consectetuer adipiscing elit</item>
+      <item> Aliquam a purus</item>
+      <item> Vestibulum ante ipsum primis</item>
+      <item> in faucibus orci luctus et ultrices</item>
+      <item> posuere cubilia Curae</item>
+      <item> Cum sociis natoque penatibus et magnis</item>
+      <item> dis parturient montes, nascetur ridiculus mus</item>
+      <item> Morbi dictum mauris varius enim.</item>
+      <item> Proin aliquet. Duis odio lacus, feugiat hendrerit,</item>
+      <item> fermentum ac, pulvinar nec, magna.</item>
+      <item> Donec scelerisque leo</item>
+      <item> sed odio. Cras leo.</item>
+    </items>
+  </dataset>
+</library>

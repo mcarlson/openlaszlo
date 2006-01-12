@@ -1,0 +1,23 @@
+<canvas layout="axis: y">
+  <dataset name="dset">
+    <phonebook>
+      <employee>
+        <firstName>John</firstName>
+        <lastName>Smith</lastName>
+        <phone>617-536-7855</phone>
+      </employee>
+      <employee>
+        <firstName>Lisa</firstName>
+        <lastName>Jones</lastName>
+        <phone>617-536-5216</phone>
+      </employee>
+    </phonebook>
+  </dataset>
+  
+  <view datapath="dset:/phonebook/employee" 
+        layout="axis: x">
+    <text datapath="firstName/text()"/>
+    <text datapath="lastName/text()"/>
+    <text datapath="phone/text()"/>
+  </view>
+</canvas>

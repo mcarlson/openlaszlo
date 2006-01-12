@@ -1,0 +1,102 @@
+<canvas bgcolor="silver" height="500">
+  <debug x="300" y="300" height="150" width="200"/>
+    <include href="utils/layouts/wrappinglayout.lzx"/>
+
+    <view x="200" >
+        <simplelayout axis="y" spacing="20" inset="20"/>
+        <view>
+            <view>
+                <text>r3a: with x positions</text>
+                <radiogroup y="15" id="r3a">
+                    <radiobutton value="1" text="yes"/>
+                    <radiobutton x="10" value="2" text="no"/>
+                    <radiobutton x="20" value="3" text="maybe"/>
+                </radiogroup>
+            </view>
+            <view x="150">
+                <text>r3b: with no layout</text>
+                <radiogroup y="15" id="r3b" layout="class:none">
+                    <radiobutton value="1" text="one"/>
+                    <radiobutton y="15" x="10" value="2" text="two"/>
+                    <radiobutton x="50" value="3" text="three"/>
+                    <radiobutton y="15" x="60" value="3" text="four"/>
+                </radiogroup>
+            </view>
+        </view>
+        <view>
+            <simplelayout axis="y"/>
+            <text>dynamically create a radiobutton group</text>
+            <view>
+                <inputtext bgcolor="white" name="itemname">name</inputtext>
+                <inputtext bgcolor="white" name="itemvalue">value</inputtext>
+                <button text="Add Item">
+                    <method event="onclick">
+                         mygroup.addItem(parent.itemname.getText(), parent.itemvalue.getText());
+                    </method>
+                </button>
+                <simplelayout axis="x"  spacing="6"/>
+            </view>
+            <radiogroup id="mygroup" oninit="this.addItem('first item', 1)"/>
+        </view>
+    </view>
+  <class name="showselection" extends='button'
+        text="show selected"
+        onclick="debug.write(r.getSelection(), r.value)">
+      <attribute name="r" value="0" when="always"/>
+ </class>
+    <view>
+        <constantlayout axis="x" value="20"/>
+        <simplelayout axis="y" spacing="20" inset="20"/>
+     <view>
+         <text>radios with text in tag</text>
+         <radiogroup id="r1">
+             <radiobutton value="1">one</radiobutton>
+             <radiobutton id="r1b" value="2" selected="true">two (selected)</radiobutton >
+             <radiobutton  value="3">three</radiobutton>
+         </radiogroup>
+         <showselection r="r1"/>
+         <simplelayout axis="y" spacing="4"/>
+     </view>
+      <view>
+          <text>radios with label attribute<br/>(none selected)</text>
+          <radiogroup id="r2">
+              <radiobutton value="1" text="one"/>
+              <radiobutton value="2" text="two"/>
+              <radiobutton value="3" text="three"/>
+          </radiogroup>
+          <simplelayout axis="y" spacing="4"/>
+          <showselection r="r2"/>
+
+      </view>
+
+      <view>
+            <text>from the v1 reference (modified for Krank)</text>
+            <radiogroup layout="axis:x; spacing:20">
+                <radiobutton text="Check me A1" />
+                <radiobutton text="Check me A2"/>
+                <radiobutton text="Check me A3"/>
+            </radiogroup>
+
+            <radiogroup layout="axis:x">
+                <radiobutton text="Check me B1" />
+                <radiobutton text="Check me B2"/>
+                <radiobutton text="Check me B3"/>
+            </radiogroup>
+            <simplelayout axis="y" spacing="10"/>
+      </view>
+        <radiogroup id="rgw"
+            height="60" layout="class: wrappinglayout">
+            <radiobutton value="1" text="one"/>
+            <radiobutton value="2" text="two"/>
+            <radiobutton value="3" text="three"/>
+            <radiobutton value="4" text="four"/>
+            <radiobutton value="5" text="five"/>
+            <radiobutton value="6" text="six"/>
+        </radiogroup>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

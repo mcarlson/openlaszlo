@@ -1,0 +1,38 @@
+<canvas debug="true">
+
+    <debug y="230" />
+
+    <!-- click on the red square. window should display mousedown then mouseup,
+         but bug shows mousedown, still down, mouseup because mouse doesn't have
+         priority over time event. -->
+
+    <view x="20" y="20" height="200" width="200" bgcolor="red">
+        <attribute name="isMouseDown" value="false" />
+
+        <method name="stillDown">
+            if (this.isMouseDown) {
+                Debug.write('still down');
+                LzTimer.addTimer( this.downDel, 50 );
+            }
+        </method>
+
+        <method event="onmousedown"><![CDATA[
+            Debug.write('mousedown');
+            this.isMouseDown = true;
+            if ( ! this['downDel'] ) {
+                this.downDel = new LzDelegate( this, 'stillDown' );
+            }
+            LzTimer.addTimer( this.downDel, 500 );
+
+            // busy loop
+            for (var i=0; i < 900000; i++) ;
+            ]]>
+        </method>
+
+        <method event="onmouseup">
+            Debug.write('mouseup');
+            this.isMouseDown=false;
+        </method>
+    </view>
+
+</canvas> 

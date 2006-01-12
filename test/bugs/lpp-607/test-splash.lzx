@@ -1,0 +1,16 @@
+<canvas width="100%" height="100%" title="splash test" proxied="false">
+    <splash persistent="true">
+        <view center="true" ratio="0.5" resource="loader.swf"/>
+    </splash>
+
+    <simplelayout axis="y"/>
+
+    <view>
+        <simplelayout axis="x"/>
+        <view width="50" height="50" bgcolor="red"/>
+        <view width="50" height="50" bgcolor="blue"/>
+        <view width="50" height="50" bgcolor="yellow"/>
+        <view width="50" height="50" bgcolor="green"/>
+        <view width="50" height="50" bgcolor="red"/>
+    </view>
+</canvas>

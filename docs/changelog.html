@@ -1,0 +1,1381 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<html>
+<head>
+  <title>OpenLaszlo 3.1 Change Log</title>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=iso-8859-1">
+  <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css">
+  <link rel="SHORTCUT ICON"
+ href="http://www.laszlosystems.com/images/laszlo.ico">
+</head>
+<body class="release-notes">
+<h1><b>
+Change Log for OpenLaszlo 3.1</b> </h1>
+<p class="bodytext">
+This document describes the past version changes in the OpenLaszlo Server (or Laszlo Presentation Server, "LPS"). Please see the  <a href="release-notes.html">release notes</a> for information regarding the current release.</p>
+<ul>
+  <li>Changes in:
+    <ul>
+      <li><a href="#Changes3.1">3.1</a></li>
+      <li><a href="#Changes3.0.1">3.0.2</a></li>
+      <li><a href="#Changes3.0">3.0.1</a></li>
+      <li><a href="#Changes2.2.1">3.0</a></li>
+      <li><a href="#Changes2.2">2.2.1</a></li>
+      <li><a href="#Changes2.1.3">2.2</a></li>
+      <li><a href="#Changes2.1.2">2.1.3</a></li>
+      <li><a href="#Changes2.1.1">2.1.2</a></li>
+      <li><a href="#Changes2.1">2.1.1</a></li>
+      <li><a href="#Changes2.0">2.1</a></li>
+      <li><a href="#Changes2.0B2">2.0 Preview</a></li>
+      <li><a href="#Changes2.0B1">2.0 Beta2</a></li>
+      <li><a href="#Changes1.0.3">2.0 Beta1</a></li>
+      <li><a href="#Changes1.0.2">1.0.3</a></li>
+      <li><a href="#Changes1.0.1">1.0.2</a></li>
+      <li><a href="#Changes">1.0.1</a></li>
+    </ul>
+  </li>
+  <li>Defects fixed in:
+    <ul>
+       <li><a href="#Defects3.1">3.1</a></li>
+	  <li><a href="#Defects3.0.1">3.0.2</a></li>
+	  <li><a href="#Defects3.0">3.0.1</a></li>
+	  <li><a href="#Defects2.2.1">3.0</a></li>
+	  <li><a href="#Defects2.2">2.2.1</a></li>
+	  <li><a href="#Defects2.1.3">2.2</a></li>
+	  <li><a href="#Defects2.1.2">2.1.3</a></li>
+	  <li><a href="#Defects2.1.1">2.1.2</a></li>
+	  <li><a href="#Defects2.1">2.1.1</a></li>
+	  <li><a href="#Defects2.0">2.1</a></li>
+	  <li><a href="#Defects1.0.3">2.0</a></li>
+	  <li><a href="#Defects1.0.2">1.0.3</a></li>
+	  <li><a href="#Defects1.0.1">1.0.2</a></li>
+	  <li><a href="#Defects">1.0.1</a></li>
+	</ul>
+      </li>
+    </ul>
+ <h1><a name="Changes3.1">Changes in 3.1<br>
+</a></h1> 
+<a name="key-features">New Features since OpenLaszlo 3.0.2</a></h1> 
+<ul>
+	<li>Charting and Graphing Components</li>
+	<li>Flash 8 file generation</li>
+	<li>XMLHttpRequest ("ajax") API</li>
+    <li>Rich Text Class</li>
+	<li>New components: hbox, vbox, and image</li>
+	<li>Local datasets</li>
+	<li>Applications default to window size</li>
+	<li>"View source" menu item</li>
+    <li>Browser history integration: the default HTML wrappers now include support for browser history and setcanvasAttribute()</li>
+    <li>setcanvasAttribute() Javascript function can optionally add browser history events</li>
+     <li>Tutorial introduction to Drawview</li>
+	<li>Version detection</li>
+	<li>Developer console enhancements</li>
+    <li>Global "hand cursor" parameter</li>
+    <li>Backtrace facility in the debugger</li>
+	<li>Other debugger improvements</li>
+     <li>Splash screen takes percentages</li>
+     <li>New goodies in the incubator</li>
+</ul>  
+
+<h1><a name="Changes3.0.1">Changes in 3.0.2<br>
+</a></h1>
+<ul>
+    <li>OpenLaszlo 3.0.2 is a maintenance release only. See <a href="#Defects3.0.1">Fixed Defects</a> section for details.</li>
+</ul>
+
+<h1><a name="Changes3.0">Changes in 3.0.1<br>
+</a></h1>
+<ul>
+    <li>OpenLaszlo 3.0.1 is a maintenance release only. See <a href="#Defects3.0">Fixed Defects</a> section for details.</li>
+</ul>
+
+<h1><a name="Changes2.2.1">Changes in 3.0<br>
+</a></h1>
+<ul>
+
+<h1><a name="key-features">Key New Features</a></h1>
+<p>LPS 3.0 introduces several new features:</p>
+
+<ul>
+	<li>SOLO deployment</li>
+	<li>Smaller file sizes (using internal gzip compression)</li>
+	<li>Dynamic libraries</li>
+	<li>Unicode support</li>
+	<li>Optimized for Flash Player versions 6 and 7</li>
+	<li>Settable timeouts</li>
+	<li>Drawing API</li>
+	<li>Client fonts</li>
+	<li>Resizeable canvas</li>
+	<li>Integration with browser JavaScript</li>
+	<li>Support for browser back button</li>
+    <li>Support for ("right click") context menu</li>
+	<li>Support for mouse wheel</li>
+    <li>Text maxlength and restriction</li>
+	<li>Debugging improvements</li>
+	<li>Performance enhancements</li>
+	<li>Separate Designer and Deployer guides</li>
+	<li>The name of the product is now "OpenLaszlo"</li>
+</ul>
+<p>
+Most of the new features are described in the product documentation. For others (timeouts, fonts) these notes constitute the primary documentation.
+</p>
+
+
+<h2>SOLO Deployment</h2>
+<p>
+Laszlo applications can be made available on the web, or <i>deployed</i> in either of two ways:
+</p>
+<p>
+<ol>
+	<li>Deploy SOLO (Standalone OpenLaszlo Output) from any HTTP Web server</li>
+	<li>Deploy with OpenLaszlo Server</li>
+</ol>
+<p>
+With SOLO deployment, the LZX source is pre-compiled into a stand-alone SWF
+file that can be placed within the HTML docs directory of a common HTTP Web
+Server (such as Apache or IIS). SOLO deployments are simple to manage, and
+supported by nearly any Web hosting service. </p>
+<p>
+With SOLO deployment, the OpenLaszlo Server is not required for operation of the application (although the Server is
+required for developing the application).
+</p>
+<p>
+With OpenLaszlo Server deployment, the LZX source is placed within the
+Web-apps directory of the OpenLaszlo Server, and is dynamically compiled.
+OpenLaszlo Server deployment requires a Java Application Server or servlet
+container. It provides additional capabilities dependent on the server,
+including support for SOAP, XML-RPC, Java-RPC and persistent connections.
+The OpenLaszlo Server is also required for applications that use some media formats that are not
+natively supported by the Flash player. The OpenLaszlo sever transcodes these media files "on the fly"
+into formats supported by the Flash player.
+</p>
+<p>
+See the "Proxied and Solo Applications" chapter of the Developer's Guide for more information.
+</p>
+<h2>Internal compression</h2>
+<p>
+The compiler now employs internal gzip compression. This results in substantially smaller object file sizes.
+</p>
+<h2>Dynamic Libraries</h2>
+
+<p>
+A dynamic library is a portion of a program that can be loaded after the main application execution file has loaded. The goal for dynamic
+ libraries is to reduce the initial download size of a Laszlo application. This is important because initial download size (including all 
+requests that precede initial user interaction) is used to evaluate web applications. Reducing the initial download size has 
+the additional benefits of reducing the time to first interaction (although there are other ways of doing this), and of reducing 
+bandwidth costs in the case where an optional feature of the application is not used.
+</p>
+<p>
+See the Program Structure chapter of the Software Developer's Guide for details.
+</p>
+<h2>Unicode</h2>
+
+<p>Unicode fonts such as CJK fonts are now supported in <code>&lt;text&gt;</code> and <code>&lt;inputtext&gt;</code> fields.  Unicode is supported:</p>
+<ul>
+	<li>In Laszlo source files.  The text in a <code>&lt;text&gt;</code> and <code>&lt;inputtext&gt;</code> tag and within string literals in JavaScript code may be unicode</li>
+	<li>In the user interface.  Text and Inputtext views can display unicode text, and take unicode input.</li>
+	<li>In the data compiler.  XML data that is compiled into an application, or request at runtime, may contain unicode text, if the XML source file uses the <code>encoding</code> attribute to the XML processing directive (below).</li>
+</ul>
+
+<p>The Laszlo components, such as <code>&lt;button&gt;</code>, do not work with unicode fonts.  (They are fixed-height, and the default height is incorrect for most fonts.)  Only the core classes, <code>&lt;text&gt;</code> and <code>&lt;inputtext&gt;</code>, are automatically sized for unicode fonts.</p>
+
+<h3>Encoding</h3>
+<p>By default, LZX now expects text to be UTF-8.   You can specify a different 
+encoding within an <code>&lt;?xml?&gt;</code> processing directive at the beginning of an application source file or an XML data file:</p>
+<pre>
+&lt;?xml encoding="UTF-16"?&gt;
+&lt;canvas&gt;&hellip;&lt;/canvas&gt;
+</pre>
+
+<pre>
+&lt;?xml encoding="ISO-8859-1"?&gt;
+&lt;data&gt;&hellip;&lt;/data&gt;
+</pre>
+<h2>Swf6 and Swf7 support</h2>
+<p>
+The compiler now outputs, and has been optimized for, swf6 and swf7 binaries.  Swf6 is the default;the swf7 target is available as an option.  
+Swf5 format is no longer supported.
+</p>
+
+<h2>Settable Timeouts</h2>
+<p>
+Settable Timeouts is a mechanism for setting the timeout of a request.  There are global settings for data request and media request 
+timeouts, and per-dataset requests.
+</p>
+<h3>API</h3>
+<p>
+New canvas attributes:
+</p>
+<table summary="Canvas Attributes">
+  <tr><th>name</th><th>type</th><th>default</th><th>description</th></tr>
+  <tr>
+    <td><code>dataloadtimeout</code></td>
+    <td>number</td>
+    <td>30000 (30s)</td>
+    <td>timeout time in milliseconds for data requests</td>
+  </tr>
+  <tr>
+    <td><code>medialoadtimeout</code></td>
+    <td>number</td>
+    <td>30000 (30s)</td>
+    <td>timeout time in milliseconds for media requests</td>
+  </tr>
+  
+</table>
+
+<p>
+
+<code>dataloadtimeout</code> is the defaults for newly created datasets.  
+Changing it doesn't have an effect on dataasets that already exist.
+</p>
+<p>
+New dataset attribute:
+</p>
+<table summary="Canvas Attributes">
+  <tr><th>name</th><th>type</th><th>default</th><th>description</th></tr>
+  <tr>
+    <td><code>dataloadtimeout</code></td>
+    <td>number</td>
+    <td>30000 (30s)</td>
+    <td>timeout time in milliseconds for this dataset</td>
+  </tr>
+  
+</table>
+
+<p>
+The timeout time can be changed at runtime, and that will affect any subsequent requests made on behalf of the dataset.
+</p>
+<p>
+</p>
+
+
+<h2>Drawing API</h2>
+<p>
+LZX now includes a subset of the <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics">WHAT-WG graphics API .</a>
+</p>
+<p>
+A new class DrawView extends <code>LzView.</code> See the LZX Reference Manual for description of this class.
+</p>
+
+
+
+<h2>Client fonts</h2>
+<p>
+A client font is a font that is located on the client machine.  Text that uses client fonts is faster, and avoids the size penalty of an embedded 
+font (a font that is compiled into the application).  This is particularly important with CJK fonts, which are many megabytes.</p>
+
+<p>Previous versions of OpenLaszlo could only use embedded fonts.  This release can also use client fonts:</p>
+
+<p>The value of the font attribute is the name of a font.  This may be the name of an embedded font 
+(one that has been declared with the &lt;font&gt; tag), or a client font (one that is available on the client operating system).</p>
+
+<p>
+There are three always-defined client fonts, which can be accessed by special names.  (These names will probably change prior to the final release.)</p>
+<ul>
+	<li><code>sans-serif</code></li>
+	<li><code>serif</code></li>
+	<li><code>monospace</code></li>
+</ul>
+<!--j
+<p>
+See the Developer's Guide, <a href="./guide/fonts.html">Fonts,</a> for details.
+</p>
+-->
+<p>There are also two Japanese fonts, the
+equivalent of <code>_sans</code> and <code>_serif</code>, whose names can
+only be written in Unicode.
+</p>
+<h2>Resizable Canvas</h2>
+<p>
+The canvas width and height can be specified as a percentage (e.g. <code>&lt;canvas width="50%"&gt;</code>).  
+When the canvas dimension are a percentage value, the application is scaled according to the size of the HTML page.   
+In this, <code>onheight</code> and <code>onwidth</code> events on the canvas are generated when embedding HTML page is resized.
+</p>
+
+<h2>Communication with browser JavaScript</h2>
+<p>
+A new service LzHistory(), and a new JavaScript function LzSetCanvasAttribute(), allow two-way communication between the a Laszlo
+application and the browser's Javascript engine.  
+</p>
+You can access the javascript engine in the browser using the loadJS method on LzBrowser:
+</p>
+<code>
+LzBrowser.loadJS(<var>js</var>, <var>target</var>)
+</code>
+<p>
+</p>
+
+<table summary="Table title">
+  <tr><th>argument</th><th>value</th></tr>
+  <tr>
+    <td><code><var>js</var></code></td>
+    <td>JavaScript string to execute</td>
+  </tr>
+  <tr>
+    <td><code><var>target</var></code></td>
+    <td>Optionally specifies a named frame in which to execute the JavaScript expression.</td>
+  </tr>
+  
+</table>
+<p>
+</p>
+
+<p>
+By default, the JavasSript expression specified in <code><var>js</var></code> is executed in the current browser frame.
+</p>
+<p>
+See the Browser Integration chapter of the Software Developer's Guide for more information and examples.
+</p>
+<h2>Browser Back Button support</h2>
+<p>
+The LzHistory mechanism makes it possible for Laslzo applications to capture program states and move among them using the browswer's "back" button.  
+See the "Browser Integration" chapter of the Developer's Guide for details.
+
+</p>
+
+<h2>Performance Improvements</h2>
+<p>Several architectural changes have been made to improve performance:</p>
+
+<dl>
+    <dt>Register allocation</dt>
+	<dd>The compiler now uses registers. The user-visible effect of this is a significant speed-up in the generated code.</dd>
+    <dt>Clipped views are faster</dt>
+	<dd>Clipping uses swf6 primitives. The user-visible effect is better performance for clipped views.</dd>
+    <dt>Faster compiler</dt>
+	<dd>Assembler now implemented in Java rather than Python.  The user-visible effect is that Laszlo apps compile faster.</dd>
+    <dt>Internal file compression</dt>
+    <dd>Application files are compressed internally, regardless of http encoding.
+This results in smaller transfer sizes on clients that don't accept the gzip encoding, as well as a smaller application size
+ in the browser cache.</dd>
+    <dt>Client fonts</dt>
+   <dd>Text fields that use client fonts are significantly faster than those that use embedded fonts.</dd>
+<dt>Inlined classes.</dt>
+<dd>An inlined class is a class that is applied to an instance when an application is compiled, rather than when the application is instantiated. An inlined class has the same semantics as a regular class, except that the class cannot be instantiated or otherwise referred to by name in script code. 
+An inlined class is similar to an inline function, or a macro, in other languages.</dd>
+</dl>
+<h2>Text maxlength and restrictions</h2>
+<p>
+Text fields have new attributes
+<p>
+<pre>
+<em>maxlength:</em>  max number of chars you can add to an text field
+<em>pattern:</em>  whitelist or blacklist of chars that can be added to a text field
+</pre>
+<p>
+which follow the same semantics as the Flash TextField object fields of the same names
+</p>
+<h2>Debugging improvements</h2>
+<p>  Inspecting objects is more robust and readable.  
+The size of a string or array is now included as part of its type.  This can be useful when deciding whether 
+to inspect a string or array that has been abbreviated (i.e., if you inspect a gigantic string, the debugger 
+will print the full string, which may take a long time.)
+</p>
+
+<h2>ECMAScript changes</h2>
+<p>
+When it can, the compiler will warn about mis-matched case for JavaScript tokens.  This is in anticipation of full ECMAScript compatibility
+ which enforces case-sensitivity.</p>
+
+<h2>Support for ("right click") context menu</h2>
+<p>
+The right click "context" menu is now supported. Documentation forthcoming in the next release.  Here is a sample
+program that demonstrates the API:
+</p>
+<pre>
+&lt;canvas debug="true" width="1800" height="800"&gt;
+  &lt;method event="oninit"&gt;
+    Debug.showInternalProperties = true;
+  &lt;/method&gt;
+
+  &lt;debug x="200" fontsize="14" width="600" height="400"/&gt;
+&lt;script&gt;
+
+function rightclick_handler (obj, menuobj) {
+  Debug.write("rightclick context menu", obj, menuobj);
+} 
+
+function my_itemhandler(obj, item) {
+   Debug.write("menu item selected", obj, item);
+}
+
+var cm1 = new ContextMenu(rightclick_handler);
+cm1.hideBuiltInItems();
+cm1.addItem(new ContextMenuItem("LZX Canvas Custom Item!", my_itemhandler));
+canvas.setContextMenu(cm1);
+
+var cm2 = new ContextMenu(rightclick_handler);
+cm2.hideBuiltInItems();
+cm2.addItem(new ContextMenuItem("View Custom Item 1", my_itemhandler));
+cm2.addItem(new ContextMenuItem("View Custom Item 2", my_itemhandler));
+cm2.addItem(new ContextMenuItem("View Custom Item 3", my_itemhandler));
+
+
+var cm3 = new ContextMenu(rightclick_handler);
+cm3.hideBuiltInItems();
+cm3.addItem(new ContextMenuItem("Text Custom Item 1", my_itemhandler));
+cm3.addItem(new ContextMenuItem("Text Custom Item 2", my_itemhandler));
+
+&lt;/script&gt;
+&lt;simplelayout/&gt;
+&lt;text id="foo"  fontsize="26"
+      oninit="setContextMenu(cm3)"&gt;FOOBAR&lt;/text&gt;
+&lt;view id="pp"  
+      width="200" height="200" bgcolor="blue" 
+      oninit="setContextMenu(cm2)"/&gt;
+&lt;/canvas&gt; 
+
+</pre>
+
+
+<h2>Mouse wheel Support</h2>
+<p>
+OL 3.0 has an event called LzKeys.onmousewheeldelta. See the Reference Manual.
+</p>
+<h2>Documentation restructuring</h2>
+<p>
+The Developer's Guide ("Guide to Designing, Developing and Deploying Laszlo Applications") has been trifurcated into Developer's, Designer's and Deployer's Guides 
+in order to 
+tailor information to different audiences.
+</p>
+<h2>Name Change: Goodbye "Laszlo Presentation Server", hello "OpenLaszlo Server"</h2>
+<p>
+With this release the Laszlo Presentation Server ("LPS") has been renamed the OpenLaszlo Server. Accordingly the 
+"Start Laszlo Presentation Server" menu item and alias has been renamed to "Start OpenLaszlo Server", and similarly for "Stop".
+The Laszlo Explorer and documentation have been edited to reflect this change, although their are many places where the old
+nomenclature persists.  Over time the documentation and user-visible artifacts will be transitioned to OpenLaszlo, although 
+in the code the LPS terminology is likely to persist indefinitely (for example, in directory names).</p>
+<h2>Significant Bug Fixes since LPS 2.2</h2>
+<p>
+Since 2.2 many bugs have been remedied. Among the more significant:
+<ul>
+	<li>XML Data from non-English locales no longer generate "unparseable date" errors.</li>
+	<li>Drawing API LzDrawview (added in 3.0b2) is now in the LZX Reference.</li>
+</ul>
+<p>
+See below for a cumulative list.
+</p>
+
+<h1><a name="incompatible">Backwards-incompatible Changes in 3.0</a></h1>
+<p>
+New functionality in OpenLaszlo 3.0 has necessitated a few backwards-incompatible changes from prior releases.
+</p>
+<ul>
+    <li>Default font is client font, not embedded font
+        <ul>
+           <li>The default font is now the client font "verdana".  Client fonts cannot be rotated and their opacity cannot be 
+varied. You can change the default by using a &lt;font&gt; on the canvas.
+           </li>
+       </ul>
+     </li>
+   <li>Change in behavior of &lt;font&gt; tag<ul>
+        <li> You cannot  mix embedded fonts and device fonts in the same text object. It must be one or the other. This fact subtly changes the behavior of the
+&lt;font&gt; tag. 
+For example the following program works correctly in earlier releases, but does not in 3.0:
+<pre>
+ &lt;canvas height="70"&gt; 
+     &lt;font name="helmet" src="helmetr.ttf"/&gt; 
+     &lt;font name="arioso" src="ariosor.ttf"/&gt; 
+     &lt;text fontsize="20"&gt; 
+         &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
+         &lt;font face="arioso"&gt;arioso&lt;/font&gt; 
+     &lt;/text&gt; 
+ &lt;/canvas&gt; 
+</pre>
+<p>
+
+ The "embedfonts" argument to a textfield will specify whether it uses embedded fonts or not. 
+It will also be calculated automatically based on the font in effect on the text object, so for example 
+</p>
+<pre>
+&lt;text fontsize="20" font="helmet"&gt; 
+    &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
+    &lt;font face="arioso"&gt;arioso&lt;/font&gt; 
+&lt;/text&gt; 
+</pre>
+<p>
+Would work because it would set set the embed flag implicitly.</p>
+<p>In the original example, the text clip thinks it is using a device font, because that is what is the "current font" is when it is instantiated. 
+It doesn't look inside and see the embedded fonts used in the HTML, and even if it did, you cannot mix device and embedded fonts in the same text object. 
+</p>
+<p>
+To get the expected (2.2) behavior, use
+</p>
+<pre>
+
+ &lt;text embedfonts="true"&gt; .
+</pre>..
+
+   </li>
+</ul>
+<li>Case Sensitivity <ul>
+    <li>In earlier versions of LZX, case didn't  matter, and now it does.
+        In particular, the normative case for many properties has changed;
+        for example, childNodes -> childnodes, releaseToLayout -> releasetolayout. 
+        <p>
+        This has been done for forwards compatability with swf7.
+        </p>
+        <p>
+        Here are some other instances:
+        </p>
+
+        <ul>
+	        <li> LzUrl -> LzURL </li>
+	        <li> getLoadUrlAsLzUrl -> getLoadURLAsLzURL </li>
+	         <li> immediateParent -> immediateparent </li>
+	         <li> setXscroll -> setXScroll</li>
+        </ul>
+   </ul>
+</li>
+<p></p>
+<li>Arrays that had been null are now empty<ul>
+    <li><p>When a view is built, <code>subviews[] </code>is initialized to an empty array. In releases before OpenLaszlo 3.0 it was null. If your program 
+depended on testing for null, you will need to modify it --for example, by testing for subviews.length == 0.
+    </li>
+</ul>
+
+
+</ul>
+
+<h1><a name="Changes2.2">Changes in 2.2.1<br>
+</a></h1>
+<ul>
+    <li>LPS-2.2.1 is a maintenance release only. See <a href="#Defects2.2">Fixed Defects</a> section for details.</li>
+</ul>
+
+<h1><a name="Changes2.1.3">Changes in 2.2<br>
+</a></h1>
+<ul>
+    <li><b>LPS no longer supports 1.3 JREs/JDKs.</b></li>
+    <li>LPS requires container support for the 2.3 (or later) version of the servlet specification</li>
+    <li>The provided fonts and components were moved from $LPS_HOME/WEB-INF/lps/{fonts,components} to $LPS_HOME/lps/{fonts,components}.
+    (The default include directories for the compiler were changed to match)</li>
+    <li>The provided includes and assets were moved from $LPS_HOME/{assets,includes} to $LPS_HOME/lps/{assets,includes}.</li>
+    <li>The provided administrator console moved to $LPS_HOME/lps/admin/console.lzx.</li>
+    <li>The default location of the LPS caches and logs moved to $LPS_HOME/WEB-INF/lps/work</li>
+    <li>The <code>?lzrecompile=true</code> can be used to force a recompile when the lps.properties compMgrDependencyOption is set
+    to <code>never</code>.</li>
+    <li>The LPS server statistics now display maximum request times for the 1, 5, and 15 minute periods.</li>
+    <li>The default location of the LPS cache directories is now underneath the web application's WEB-INF directory.</li>
+    <li>There are now separate hscrollbar and vscrollbar components that
+    can be used to minimize application size.</li>
+    <li>Setting width (or height) to null unsets the width (or height).</li>
+    <li>There is a new defaultRequestType lps configuration property (in
+    lps.properties) for controlling the what the LPS does with 
+    urls that end in .lzx that don't have an lzt query string.</li>
+    <li>There is a sample deployment configuration provided at WEB-INF/lps/config-deploy.</li>
+
+</ul>
+<h1><a name="Changes2.1.2">Changes in 2.1.3<br>
+</a></h1>
+<ul>
+    <li>The LPS server statistics now display maximum request times for the 1, 5, and 15 minute periods.</li>
+</ul>
+<h1><a name="Changes2.1.1">Changes in 2.1.2<br>
+</a></h1>
+<ul>
+      <li>Updated lzx.dtd verified for use with Eclipse</li>
+    <li>LPS-2.1.2 is a maintenance release. See <a href="#Defects2.1.1">Fixed Defects</a> section for details.</li>
+</ul>
+
+<h1><a name="Changes2.1">Changes in 2.1.1<br>
+</a></h1>
+<ul>
+    <li>LPS-2.1.1 is a maintenance release only. See <a href="#Defects2.1">Fixed Defects</a> section for details.</li>
+</ul>
+
+<h1><a name="Changes2.0">Changes in 2.1<br>
+</a></h1>
+<ul>
+    <li>New component: <code>grid</code></li>
+    <li>New license key format.  Existing 2.0 license keys must be upgraded to 2.1 keys in
+    order for them to work with 2.1.  Please contact 
+    <a href="mailto:sales@laszlosystems.com">sales@laszlosystems.com</a>.</li>
+</ul>
+
+<h1><a name="Changes2.0P">Changes in 2.0<br>
+</a></h1>
+<ul>
+    <li>New components: <code>tree</code> and <code>slider</code> </li>
+    <li>New animation tutorial.</li>
+    <li>Faster initial compile of applications that use components.</li>
+    <li>The baseline and some character advances were modified in the
+default (verity) fonts.
+If you are porting an application from 2.0p to 2.0 that was laid out
+pixel-accurately by hand,
+you may need to re-make adjustments.</li>
+  <li>The compilation cache is now optimized to avoid recompiles when
+all that is needed is a re-encode (from gzip to uncompressed
+or vice-versa).</li>
+</ul>
+
+<h1><a name="Changes2.0B2">Changes in 2.0 Preview<br>
+</a></h1>
+<ul>
+  <li>Developer packages now only include gzip encoded versions of LZX
+files in the pre-populated cache. This will cause browsers which do not
+support gzip encoding to compile sample code and will result in slower
+startup times for the welcome application and other samples.</li>
+</ul>
+
+<h1><a name="Changes2.0B1">Changes in 2.0 Beta2<br>
+</a></h1>
+<p class="bodytext">
+The LPS 2.0 Beta2 release also has a limited number of changes that are
+incompatible
+with the Beta1 release.</p>
+<ul>
+  <li>Some components that were released in 2.0 Beta1 have been
+renamed:
+    <pre>    inputtextbox -&gt; edittext<br>    baselistcomponent -&gt; baselist<br>    baseformcomponent -&gt; baseformitem<br>    basedatacomponent -&gt; basevaluecomponent</pre>
+  </li>
+  <li>The "valuedatapath" and "textdatapath" attributes introduced in
+Beta1 have been removed; simply use "$path" if you want to specify a
+different datapath for a component's value. For example:
+    <pre>   &lt;list&gt;<br>       &lt;textlistitem datapath="mydata:/list/item" text="$path{ 'text()' }" value="$path{ '@value' }"/&gt;<br>   &lt;/list&gt;<br></pre>
+  </li>
+  <li>There is a new "dataoption" attribute on baselist. You can optimize
+list or combobox, but setting dataoption="lazy" for lazy replication of
+list items, or dataoption="pooling" for pooling.</li>
+  <li>The sections below describing changes in 2.0 and bugs fixed since
+2.0B1 are now complete and accurate.</li>
+  <li>See also the list of <a href="#Defects1.0.3">defects fixed since
+1.0.3</a>.</li>
+</ul>
+
+<h1><a name="Changes1.0.3">Changes in 2.0 Beta1<br>
+</a></h1>
+<p class="bodytext">Laszlo Presentation Server 2.0 Beta 1 introduces
+numerous new features, LZX language changes, and
+LFC API changes. A limited number of these changes are incompatible
+with previous releases. </p>
+<ul>
+  <li>New features:
+    <p> </p>
+    <ul>
+      <li> The Laszlo Component Set <br>
+Laszlo Presentation Server 2.0 introduces the Laszlo (lz) component
+set: <code>combobox, edittext, scrollbar, menu, menuitem, tabs,
+tabslider, radiobutton, radiogroup, checkbox, window, modaldialog,
+alert, button, form, submit, style</code>, and base classes. To get a
+feel for what the components do and how to use them, click on the new
+"Components" tab on the <a href="../../lz-utils/welcome.html">"Welcome"</a>
+page. These components support keyboard navigation. You can tab between
+components, and use arrow keys within the components (e.g. within items
+in a radio group or a list). There are visual focus brackets that shows
+you where the focus is. <b>Note</b>: The Laszlo (lz) component set is
+now the default component set. To get the redmond components, insert <code>&lt;include
+href="redmond"/&gt;</code> into your application source. 
+      <p> </p>
+      </li>
+      <li>Krank Optimization
+        <p>Laszlo Presentation Server 2.0 introduces a new feature,
+called <i>Krank</i>, for optimizing the startup time of an
+application. Krank allows you, without changing the source code, to
+construct an application that doesn't need to run any initialization
+code when it starts. <i>Kranking</i> an application thus can often
+result in a dramatic improvement in user-perceived startup time.</p>
+        <p>Read more about the Krank feature <a
+ href="guide/krank.html">here</a>.</p>
+        <p> </p>
+      </li>
+      <li>LFC LzTrack service (see reference guide for documentation)
+      <p></p>
+      </li>
+    </ul>
+  </li>
+
+  <li>LFC Data API features:
+    <ul>
+      <li>Support for http POST.</li>
+      <li>XPath attribute predicates [@foo] and <code>[@foo='bar'].</code></li>
+      <li>XPath position() and last() operators.</li>
+      <li>Selection of multiple intermediate nodes (e.g. <code>*/*/*</code>
+)</li>
+      <li><code>$path</code> bindings for datapath. A node
+attribute can be bound directly to a data attribute using this syntax:<br>
+        <pre> &lt;attribute name="myattr" value="$path{ somexpath }"&gt;</pre>
+where somexpath can be a literal xpath or the value of a variable to
+resolved at init time. This is a two-way binding between the attribute
+and the data. Setting the attribute by other means will update the
+data. </li>
+      <li>New LFC classes for runtime XML data access: 3 new
+classes: LzDataNode (abstract), LzDataElement and LzDataText<br>
+The APIs for these classes are currently undocumented, but here are the
+most useful parts of that API:
+        <pre>      LzDataNode.ownerDocument   <br>      LzDataNode.parentNode      <br>      LzDataNode.getPreviousSibling <br>      LzDataNode.getNextSibling     <br>      LzDataText.setData <br>      LzDataText.data <br>      LzDataElement.childNodes      <br>      LzDataElement.insertBefore <br>      LzDataElement.replaceChild <br>      LzDataElement.removeChild <br>      LzDataElement.appendChild <br>      LzDataElement.cloneNode <br>      LzDataElement.getAttr <br>      LzDataElement.setAttr <br>      LzDataElement.setChildNodes <br>        </pre>
+A datapointer's .p slot points to an LzDataNode, or a subclass thereof,
+and that attribute can be set directly as well. </li>
+    </ul>
+  </li>
+
+  <li>User-defined text tags
+    <p>The <code>attribute</code> element can be used to <a
+ href="reference/index.html?class.html#text-classes">define tags</a>
+that contain text or XHTML. (Tags that extend <code><a
+ href="reference/index.html?text.html">text</a></code> and <code><a
+ href="reference/index.html?inputtext.html">inputtext</a></code>
+continue to accept XHTML and plain text, respectively.)</p>
+  </li>
+
+  <li>Optimized inputtext views
+    <p><a
+ href="reference/index.html?inputtext.html#fixedsize-optimization">Optimized
+    <code>inputtext</code> views</a> are more responsive to keyboard
+input at large sizes and on slow machines.</p>
+  </li>
+
+  <li>Documentation
+    <p>This release includes the beginning of the <a
+ href="guide">Laszlo Developer's Guide</a>. Check the <a
+ href="http://www.laszlosystems.com/developers/">Developer Zone</a> of
+the Laszlo web site for updates and forthcoming chapters.</p>
+    <p>There are shiny new examples for:</p>
+    <ul>
+      <li>LzModeManager </li>
+      <li>XML Data (nee httpdata.lzx)</li>
+    </ul>
+  </li>
+
+  <li>Server administration (linked from the welcome page):
+
+    <ul>
+      <li>There is a new LPS administrative console application (see
+the welcome application <i>Administration</i> section).</li>
+      <li><code>?lzt=cacheinfo&amp;details=1</code> server cache
+statistics</li>
+      <li>Improved <code>?lzt=stat</code> server load statistics</li>
+    </ul>
+  </li>
+
+
+<li>LZX language changes:
+  <ul>
+    <li><code>x, y, width, height</code> now expect <code>${...}</code>
+syntax for expressions, old syntax is deprecated and warnings are given</li>
+    <li>the recommended way to test for undefined attributes is to
+declare them in your class with an initial value of null. For example, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;attribute
+name="foo" value="null
+/&gt;</code><br>
+then later you can write:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>if (this.foo) ....</code><br>
+This is faster and easier to read than: <code>if (typeof(this.foo) ==
+"undefined")
+...</code></li>
+  </ul>
+</li>
+<li>LFC changes:
+  <ul>
+    <li>Inputtext: new APIs
+are documented in the reference
+      <ul>
+        <li>getSelectionPosition()</li>
+        <li> getSelectionSize()</li>
+        <li>setSelection() </li>
+      </ul>
+    </li>
+  <li>Node
+    <ul>
+      <li>initialize -&gt; construct (there will be a warning for this,
+but it may not be in yet)</li>
+      <li>thaw -&gt; createChildren</li>
+      <li>deleteNode -&gt; destroy<br>
+deleteNode is deprecated</li>
+      <li>searchimmediateParents -&gt;searchParents<br>
+searchimmediateParents deprecated</li>
+      <li>setProp has been officially deprecated<br>
+use setAttribute instead</li>
+      <li>retrieveData -&gt; updateData (retrieveData deprecated), also
+renamed on datapath</li>
+      <li>getXPath is deprecated, use XpathQuery instead</li>
+    </ul>
+  </li>
+  <li>Services
+    <ul>
+      <li>The LzAudio service is deprecated. Use the audio APIs on
+LzView instead.</li>
+    </ul>
+  </li>
+  <li>View
+    <ul>
+      <li>LzView now sports two shiny new attributes "xoffset" and
+"yoffset", and a method called getBounds which returns the bounds of
+the view when it has been rotated. There's also a couple of
+bounds-based layouts in components/utils/layouts. getBounds() can be
+used in constraints. </li>
+      <li>layout attribute: now has JavaScript support for setting at
+run-time. Also classes may override all or part of the attribute. (You
+can make the layout go away with class:none) <br>
+Tag syntax:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;view
+layout="axis:x; spacing:20"&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;view bgcolor="red"
+width="20" height="20"/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;view bgcolor="red"
+width="20" height="20"/&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;view bgcolor="red"
+width="20" height="20" /&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &lt;/view&gt; <br>
+JavaScript syntax:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myview.setLayout(
+{class: 'wrappinglayout, axis: 'y' } )<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;myview.setAttribute(
+"layout" , {class: 'wrappinglayout, axis: 'y' } );</li>
+      <li>new methods: sendbehind, sendinfront (documented in refrence)</li>
+      <li>new property: framesloadratio (documented in refrence)</li>
+      <li>loadperc, renamed loadratio</li>
+      <li>new updateResourceSize method <br>
+Since views which use a multi-frame resource base their size on the
+size of the resource's first frame, the LFC may incorrectly measure the
+intended size of a resource. This method can be called at any time to
+recalcuate the resource size.</li>
+      <li>New behavior for views with a constraint on their size<br>
+In previous releases, a view that had a constraint on its size would be
+sized to its contents until the constraint was applied. Now, the view
+will not have any size until the constraint is applied. This changes
+the behavior of some apps -- mostly due to erroneous code that worked
+in previous releases.</li>
+      <li>Different time for data application<br>
+In previous releases, a view would receive its data whenever that data
+was present. This meant that data could be received by a view before
+init time, as early as construct time. Now a view will not receive its
+data until <i>after</i> it inits.</li>
+    </ul>
+  </li>
+  <li>ModeManager plays better with LzFocus</li>
+</ul>
+<li>Components changes:
+  <ul>
+    <li>Layouts
+      <ul>
+        <li>simplelayout and wrapping layout now have "inset" param,
+to create left or top margin</li>
+        <li>wrappinglayout was included in the build, but not
+documented. Now it is. <br>
+Changed "animated" parameter -&gt; "duration" (default is 0, which
+causes it to not animate) horiz_spacing and vert_spacing changed to x
+and yspacing. It also works better now.<br>
+        </li>
+      </ul>
+    </li>
+    <li>The Laszlo component set doesn't use the <code>label</code>
+attribute for text content. Use the <code>text</code> attribute
+instead. </li>
+    <li>The LZ component set name for a radio button is <code>&lt;radiobutton&gt;</code>
+instead of <code>&lt;radio&gt;</code>.</li>
+    <li>The default font has changed. The old default font can be
+included by using <code>&lt;font name="yourfont"
+src="lztahoe8.ttf"/&gt;</code> If you want your entire application to
+use this font, you can redefine the canvas's font like &lt;canvas
+font="yourfont"&gt; at the top of your LZX program.</li>
+    <li>Each included font takes roughly 30% more space in an compiled
+binary</li>
+  </ul>
+</li>
+<li>Deprecated APIs
+  <ul>
+    <li>LzNode
+      <ul>
+        <li>initialize</li>
+        <li>thaw</li>
+        <li>deleteNode</li>
+        <li>searchimmediateParents</li>
+        <li>setProp</li>
+        <li>retrieveData</li>
+        <li>getXPath</li>
+      </ul>
+    </li>
+    <li>LzText
+      <ul>
+        <li>label</li>
+      </ul>
+    </li>
+    <li>LzAnimatorGroup
+      <ul>
+        <li>start</li>
+      </ul>
+    </li>
+    <li>LzDatapointer
+      <ul>
+        <li>getXPath</li>
+        <li>getNodeOffset</li>
+      </ul>
+    </li>
+    <li>LzDataset
+      <ul>
+        <li>getStatusCode</li>
+        <li>lockFromUpdate</li>
+        <li>unlockFromUpdate</li>
+        <li>setURL</li>
+      </ul>
+    </li>
+    <li>global
+      <ul>
+        <li>inspect</li>
+      </ul>
+    </li>
+  </ul>
+</ul>
+
+
+<h1><a name="Changes1.0.2">Changes in 1.0.3<br>
+</a></h1>
+<ul>
+  <li>1.0.3 was a bug fix release. See <a href="#Defects1.0.2">defects
+fixed in 1.0.3</a>.</li>
+</ul>
+
+<h1><a name="Changes1.0.1">Changes in 1.0.2<br>
+</a></h1>
+<ul>
+  <li>There are individual properties for specifying http back-end
+timeouts. See lps.properties.</li>
+  <li>The default timeout for back end http requests is now 5 seconds.
+(In previous releases the default timeout was infinite.)</li>
+  <li>LPS statistics collection can be controlled via values in the
+lps.properties file.</li>
+  <li>LPS statistics collection of unique urls now strips the query
+string from the url.</li>
+</ul>
+
+<h1> <a name="Changes">Changes in 1.0.1</a><br/>
+</h1>
+<ul>
+  <li>LZX source for redmond components refactored and made more
+readable.</li>
+  <li>New Redmond horizontal scroll bar<br>
+  </li>
+  <li>Server statistics request</li>
+</ul>
+<hr/>
+<h1><a name="Defects3.1">Defects fixed in 3.1</a></h1>
+<p>
+More than a hundred bugs have been fixed since the 3.0.2 release.  Consult <a href="http://www.openlaszlo.org/jira/ ">JIRA</a> for complete information.  Among the more significant fixes are the following: 
+</p>
+<ul>
+<li>mp3 files now correctly work in SOLO mode. <a href="http://www.openlaszlo.org/jira/browse/LPP-487">LPP-487</a></li>
+
+<li>The font in the LZX reference is now embedded&#8212;looks good in all browsers. <a href="http://www.openlaszlo.org/jira/browse/LPP-335">LPP-335</a></li>
+<li>Increased memory consumption reported in some nightly builds has been fixed. <a href="http://www.openlaszlo.org/jira/browse/LPP-714">LPP-714</a></li>
+<li>Debugger issues with swf6 have been cleaned up. <a href="http://www.openlaszlo.org/jira/browse/LPP-753">LPP-753</a></li>
+<li>Javascript issues with Internet Explorer have been cleaned up. <a href="http://www.openlaszlo.org/jira/browse/LPP-657">LPP-657</a></li>
+<li>All international character sets work correctly with XML-RPC. <a href="http://www.openlaszlo.org/jira/browse/LPP-716">LPP-716</a></li>
+<li>Various errors in Laszlo Explorer have been fixed. <a href="http://www.openlaszlo.org/jira/browse/LPP-513">LPP-513</a></li>
+<li>"onlastframe" events now work correctly in mac browsers. <a href="http://www.openlaszlo.org/jira/browse/LPP-715">LPP-715</a></li>
+<li>Setting <code>appendChild()</code> directly on a dataset no longer breaks replication. <a href="http://www.openlaszlo.org/jira/browse/LPP-692">LPP-692</a></li>
+</ul>
+ 
+<h1><a name="Defects3.0.1">Defects fixed in 3.0.2</a></h1>
+<ul>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-234'>LPP-234</a>] - SOAP schema forward base type references cause exception</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-283'>LPP-283</a>] - Can't pass array of xsd:strings in SOAP rpc call</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-300'>LPP-300</a>] - SOAP only parses first service and port</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-408'>LPP-408</a>] - persistent connection agent stacktrace when sending messages</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-424'>LPP-424</a>] - SOAP simple types not XML escaped when serialized to server</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-432'>LPP-432</a>] - remove "file:" type for data and media requests, replace with http</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-441'>LPP-441</a>] - Type of arrayitem is sometimes set incorrectly in SOAP</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-456'>LPP-456</a>] - amazon-soap gets warning in compiler</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-457'>LPP-457</a>] - WSDL stopped working in 3.0.2cr1</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-425'>LPP-425</a>] - rpc.invoke() should return sequence # in return object</li>
+
+</ul>
+<h1><a name="Defects3.0">Defects fixed in 3.0.1</a></h1>
+<ul>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-227'>LPP-227</a>] - Fix source location bug "missing some sourceLocations"</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-231'>LPP-231</a>] - Error messages aren't sent to remote debugger</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-86'>LPP-86</a>] - Embed source location</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-228'>LPP-228</a>] - Compiler/runtime support for distinguishing instance and class contents</li>
+<li>[<a href='http://www.openlaszlo.org/jira/browse/LPP-229'>LPP-229</a>] - Autoinclude support file</li>
+
+</ul>
+<h1><a name="Defects2.2.1">Defects fixed in 3.0</a></h1>
+<ul>
+
+<li>Error message no longer thrown for TTF fonts missing TTF name table.</li>
+<li>Compiler now correctly recognizes LZX files named with numbers as their first
+character in the filename.</li>
+<li>LPS Error log now includes WARN messages if cache directories are not writable.</li>
+<li>Windows installer includes more information when it fails to detect an installed
+JDK</li>
+<li>LPS is now compatible with ATG Dynamo</li>
+
+<li>LZX Reference now includes grid, basegrid, and related components.</li>
+<li>Two defects in lzo serving were fixed. The first could cause lzo serving to use
+unnecessary server cpu. The second was a race condition that could cause the
+server to introduce corruption into the lzo file.</li>
+
+
+<li>Denied requests are now logged.</li>
+<li>LPS no longer holds an HTTP socket open when the backend uses http-keepalive and
+the response was an error condition.</li>
+<li>LPS no longer requires that the xalan jar be in Java's endorsed directory list.
+ LPS installation and initialization issues with Java 1.4.2 and/or Tomcat 5.0
+are repaired.</li>
+
+<li>http.maxUsers property in lps.properties works correctly.</li>
+
+
+
+<li>Visible gets set to false when opacity is set to 0 if visibility hasn't been
+explicitly declared. This may cause some unexpected behavior with regards to
+layouts and constraints.</li>
+<li>Setting the visible property on a view which has a datapath may have
+unpredictable results, since the datapath uses setVisible to control whether the
+view is visible due to the presence or absence of mapped data. To work around,
+either be sure to set the visible after the ondata event or wrap the data-mapped
+view in an extra view.</li>
+<li>lps now has the ability to force compilation when compmgrdependencyoption = never</li>
+<li>LPS now includes a sample deployment configuration with recommended parameters
+set for live deployment. See $LPS_HOME/WEB-INF/lps/config-deploy.</li>
+
+<li>comboboxes and menus can be closed by pressing the 'ESC' key</li>
+<li>In order to see the logging done by the httpclient library on behalf of the
+LPS running inside Tomcat 5, you need to copy 
+<pre>
+$LPS_HOME/WEB-INF/lib/commons-logging.jar and
+$LPS_HOME/WEB-INF/lib/log4j.jar
+
+to $TOMCAT_HOME/common/lib
+</pre>
+and restart tomcat5.  The copy of Tomcat5 that comes with LPS already contains
+these jars installed in the correct location.</li>
+<li>Disabled editext now displays its contents
+<pre>
+&lt;edittext width="100" name="txt" text="foobar" enabled="false"/&gt;
+</pre>
+works as expected</li>
+
+<li>javadatasource has been completely deprecated and removed</li>
+<li>WSDLs are now correctly fetched over HTTPs</li>
+
+<li>Attributes used as an 'lvalue' (the target of an assignment) in a
+method body may now be referred to as simply &lt;attribute&gt;. Explicitly using
+this.&lt;attribute&gt; or this["&lt;attribute&gt;"] is no longer required.</li>
+
+
+<li>^M in CDATA no longer results in blank text.</li>
+<li>The Tree component now works with scrollbar when built with remote data.</li>
+<li>Resizable canvas: the canvas width and height may now be expressed as a
+proportion of the browser window dimensions. The canvas will send onwidth and
+onheight events. Views may be constrained to the width and height of the canvas.
+For example:
+<pre>
+&lt;canvas width="100%" height="100%"&gt;
+	&lt;view width="${parent.width}" height="${parent.height/4}" ...
+</pre></li>
+<li>The API for specifying Client Fonts has been finalized.</li>
+
+<li>This release adds a dialog box that allows the developer to set debugger
+options.  This dialog box is available under both the swf5 and swf6 targets, 
+but most of the options only have an effect in a swf6 target.</li>
+<li>The size profiler and the size summary at the bottom of the app console has been
+updated to properly support swf6 and the internal compression.</li>
+<li>This release creates applications that require version 6.0r79 or greater of the
+Flash Player.  The HTML 
+pages that the server generates force an update from Flash Player 5.  This
+means that if you view the 
+default HTML pages on a browser with Flash Player 5 installed, the application
+will generate an update dialog. This is currently only implemented for Internet
+Explorer on Windows</li>
+<li>Applications no longer display unexplained compiler warnings.</li>
+<li>In previous releases, the default font was an embedded font called "Verity". in
+this release the default font is a client font whose appearance is dependant on
+the installed font in your environment. The default font is currently "Verdana".
+Some systems do not include this font and may have an undesirable appearance. 
+This will change in a future release.</li>
+
+<li>In previous releases, the default font was an embedded font called "Verity". in
+this release the default font is a client font whose appearance is dependant on
+the installed font in your environment. The default font is currently "Verdana".
+Some systems do not include this font and may have an undesirable appearance. A
+font fallback mechanism is in place which attempts to select the best font
+available.</li>
+<li>Multiline text no longer has a default width of 0.</li>
+
+
+
+<li>The KRANK feature is now implemented for the swf6 target. Kranked swf6
+applications are fully functional.</li>
+
+
+
+</ul>
+
+<h1><a name="Defects2.2">Defects fixed in 2.2.1</a></h1>
+
+<li>You can now pass datasets for request headers and document style calls instead
+of XML strings. Note that datasets aren't namespace aware so, for the time
+being, using datasets is not reccomended.
+You can now access response headers by setting a local dataset in the SOAP object.
+	
+	For example:
+<pre>
+&lt;soap requestheaders="dset1" responseheaders="dset2"&gt;
+  &lt;remotecall funcname="docstylefunc"&gt;
+    &lt;param value="dset3" /&gt;
+  &lt;/remotecall&gt;
+&lt;/soap&gt;
+
+</pre></li>
+<li>The SOAP scalability issues have been addressed.</li>
+<h1><a name="Defects2.1.3">Defects fixed in 2.2 (since 2.1.3)</a></h1>
+<ul>
+
+<li>Visible gets set to false when opacity is set to 0 if visibility hasn't been
+explicitly declared. This may cause some unexpected behavior with regards to
+layouts and constraints.</li>
+<li>Setting the visible property on a view which has a datapath may have
+unpredictable results, since the datapath uses setVisible to control whether the
+view is visible due to the presence or absence of mapped data. To workaround,
+either be sure to set the visible after the ondata event or wrap the data-mapped
+view in an extra view.</li>
+<li>lps now has the ability to force compilation when compmgrdependencyoption = never</li>
+<li>LPS now includes a sample deployment configuration with reccomended parameters
+set for live deployment. See $LPS_HOME/WEB-INF/lps/config-deploy.</li>
+<li>comboboxes and menus can be closed by pressing the 'ESC' key</li>
+<li>In order to see the logging done by the httpclient library on behalf of the
+LPS running inside Tomcat 5, you need to copy 
+<pre>
+$LPS_HOME/WEB-INF/lib/commons-logging.jar and
+$LPS_HOME/WEB-INF/lib/log4j.jar
+
+to $TOMCAT_HOME/common/lib
+</pre>
+and restart tomcat5.  The copy of Tomcat5 that comes with LPS already contains
+these jars installed in the correct location.</li>
+
+<li>Disabled editext now displays its contents
+<pre>
+&lt;edittext width="100" name="txt" text="foobar" enabled="false"/&gt;
+</pre>
+works as expected</li>
+<li>Verified fixed in lps-2.2 (lps-components), closing.</li>
+<li>javadatasource has been completely deprecated and removed</li>
+
+
+</ul>
+<h1><a name="Defects2.1.2">Defects fixed in 2.1.3 (since 2.1.2)
+</a></h1>
+<ul>
+    <li>Under load, single long back-end requests no longer lock the entire media or data cache.</li>
+</ul>
+
+<h1><a name="Defects2.1.1">Defects fixed in 2.1.2 (since 2.1.1)
+</a></h1>
+<ul>
+<li>LPS no longer requires that the xalan jar be in Java's endorsed directory list.  LPS installation and initialization issues with Java 1.4.2 and/or Tomcat 5.0 are repaired.</li>  
+<li>The compiler uses the correct font when "default" font is redefined and canvas
+font is *not* redefined.
+<pre>
+    &lt;canvas&gt;
+        &lt;font src="helmetr.ttf" name="default" /&gt;
+
+        &lt;text&gt;helmet&lt;/text&gt;
+    &lt;/canvas&gt;
+</pre>
+Works as expected.</li>
+<li>Denied requests are now logged.</li>
+<li>LPS no longer holds an HTTP socket open when the backend uses http-keepalive and
+the response was an error condition.</li>
+<li>http.maxUsers property in lps.properties works correctly.</li>
+<li>combobox sends keycode with key events correctly.</li>
+<li>The <code>javadatasource</code> is deprecated and will be replaced in a future release.</li>
+</ul>
+
+<h1><a name="Defects2.1">Defects fixed in 2.1.1 (since 2.1)
+</a></h1>
+<ul>
+    <li>LZX Reference now includes grid, basegrid, and related components.</li>
+    <li>Two defects in lzo serving were fixed.  The first could cause lzo serving to use unnecessary server cpu.  The second was a race condition that could cause the server to introduce corruption into the lzo file.</li>
+</ul>
+
+<h1><a name="Defects2.0">Defects fixed in 2.1 (since 2.0)
+</a></h1>
+<ul>
+<li>Error message no longer thrown for TTF fonts missing TTF name table.</li>
+<li>Compiler now correctly recognizes LZX files named with numbers as their first
+character in the filename.</li>
+<li>LPS Error log now includes WARN messages if cache directories are not writable.</li>
+<li>Windows installer includes more information when it fails do detect an installed
+JDK</li>
+
+<li>LPS is now compatible with ATG Dynamo</li>
+</ul>
+<h1><a name="Defects1.0.3">Defects fixed in 2.0 (since 1.0.3)
+</a></h1>
+<ul><li>A resource whose name begins with a number, such as &lt;resource name="2c" src="..."/&gt;, cannot be referenced.  An attempt to refer to it, such as &lt;view resource="2c"/&gt;, will instead attempt to import the file named "2c".</li>
+<li>When the compiler issues warnings for missing file and resource errors, they 
+may display the absolute pathname of the file on disk, rather than pathnames 
+relative to the base application URL, as other compiler warnings do.</li>
+
+<li>A minor optimization was made to the way in which constraints are 
+resolved that has changed the order in which they are applied. This normally 
+shouldn't matter, but in some edge cases (especially deeply circular 
+constraints and program errors).</li>
+<li>The LFC's xpath parser does not properly interpret whitespace 
+between /'s and []'s.</li>
+<li>
+>If you set a font is set as an attribute of the canvas and any of the redmond 
+components are used, the following compiler error will be generated:
+<pre>
+Error: ../WEB-INF/lps/components/redmond/redmondcombobox.lzx:119:55: Can't find font nicefont ; compilation aborted 
+</pre>
+Workaround: set the font attribute on all of the top-level views or explicitly 
+include the redmond component or the whole library, for example:
+<pre>
+&lt;include href="/redmond/library.lzx"/&gt;
+   or
+&lt;include href="/redmond/redmondbutton.lzx"/&gt;</pre></li>
+<li>Multi-line string literals (or an unclosed string literal) are errors
+but the compiler does not generate a warning for them and may generate incorrect
+error locations as a result.</li>
+<li>Fixed that thing that was busted last time.</li>
+<li>A view with pixellock="true" will stop updating its size to the size 
+of its contents, even if it doesn't have an explicit width and height.</li>
+<li>Long animators (with a duration of about eight seconds ) may not end at the
+coorect value.</li>
+<li>The reference lists 'resizable' as a view attribute, but this attribute is unused.</li>
+<li>
+If you are deploying the LPS inside Tomcat (or other servlet
+containers) running against j2sdk (or j2re) 1.4.2, you will need to 
+make sure the LPS version of xalan.jar is used.  For Tomcat you
+can copy $LPS_HOME/WEB-INF/lib/xalan.jar to $TOMCAT_HOME/common/endorsed. 
+See you servlet container documentation specific details here.
+</li>
+<li>A mistake with the capitalization of attribute or event names may lead to compiler errors which are hard to pinpoint. XML is casensitive, be sure to check the proper se-case of  attribute names (they will all be lowercase in the library lzx components).</li>
+<li>
+Error messages of the form:
+<pre>
+  contactslib.lzx:320:44: element "tagname" from namespace "http://www.laszlosystems.com/2003/05/lzx" not allowed in this context
+</pre>
+mean simply that that "tagname" is not a known tag name.  The bits about the
+namespace and "in this context" can be ignored.</li>
+<li>No compiler warning given when a resource is undefined. So for example
+this code will not warn that the resource identifier "fake" is undeclared. 
+<pre>
+    &lt;view resource="fake"/&gt;</pre></li>
+<li>Testing for undefined properties using 'typeof(o.p) == "undefined"' will
+generate a warning in the debugger.  The warning can be avoided if necessary by
+using 'typeof(o[""+(p)]) == "undefined"'.  If 'p' is known at compile time, the
+string conversion forced by '""+' can be omitted.  Best practice is to tolerate
+the warning, which will not occur in a future release, rather than obfuscate
+your code in this fashion.</li>
+<li>lztabslider panels display "clickable" cursor when the area is not designated as clickable</li>
+<li>Warnings about tag 0x19 are harmless and can be ignored.</li>
+<li>The font "italic lztahoe8" is not compiled into the application swf file by 
+default. This 
+means that if you try to use italic style text in Javascript code, it will be 
+invisible. Workaround is to manually include the font using a &lt;font&gt; tag in 
+the app, or to include static text in the XML which uses italic style.</li>
+
+<li>Changing motion attribute on an animatorgroup has no effect.</li>
+<li>Constraining an attribute to one or more values which are themselves 
+constraints may produce debugger warnings about undefined references, even 
+though this is perfectly valid. Ignore these warnings.</li>
+<li>There may be cases where calls to Debug.write don't result in debugger 
+output, even though the method is being called. This is known to happen for the 
+onaddsubview event and the addSubview methods when they are called by a 
+replicated node that is a class which has children.</li>
+<li>Too many consecutive fonts will cause the compiler to emit bad code.  As a
+workkaround, use fewer fonts or intersperse an innocuous '&lt;script&gt;' block.</li>
+<li>Laszlo applications may misrender a PNG with an alpha channel.</li>
+<li>subviews containing subviews which are added to a class which has defaultplacement attribute set do not trigger onaddsubview or addsubview to get called</li>
+<li>Can't restart an animator onstop</li>
+<li>Calling stop() on an animator which isn't running will cause problems. The animator destroy() method calls stop, so animators in states may not work correctly.</li>
+<li>Layouts, constraints, and LzView.setAttributeRelative don't currently
+work properly with views that are rotated.</li>
+<li>When data is imported the runtime, only xml element nodes are treated
+as children of a given data node. All text nodes are coalesced through
+concatenation and can be referred to as the text() property of the node. When
+the node is serialized, all of the text will be written as the last (text)
+element of the node.</li>
+<li>For compatibility with the DR release, http headers come back with 
+every data response by default. This allows for the client to introspect header 
+information. Given that this is usually not necessary, the default results in 
+extra data traffic between the client and the LPS. The response headers can be 
+turned off by using the dataset attribute getresponseheaders="false"</li>
+
+<li>Remaking a request of a dataset which is mapped to a view replication 
+which does not use pooling results in a brief display problem where the views 
+from both the old request and the new request are visible at the same time. Use 
+the pooling option to work around this if possible, or hide the replicated 
+views when resubmitting the request.</li>
+<li>>Datapaths which match multiple nodes can only do so on the last node 
+in their xpath. Always map the multiple match to the view which replicates.</li>
+<li>selectParent will select bogus nodes that are not inside the dataset 
+which a datapointer is pointing to, and it will return true (indiciating that 
+it successfully selected a parent node) in this case.</li>
+<li>Although calling setFromPointer() on a datapath will work when the 
+call is made, the datapath may not properly process further changes to the 
+underlying data after the call is made. If the datapath needs to update as the 
+data changes, compose an xpath that points to the new data and call the 
+datapath's setXPath routine with that value.</li>
+<li>Once applied, a $path constraint inside a state will not be removed when the state is removed.</li>
+<li>Calling super.otherMethod() from inside thisMethod won't work as 
+expected. This generally isn't best practice, but it is spec'ed to work in the 
+ECMAScript standard. Because of this bug, super should only be used when 
+calling the superclass version of the same method.</li>
+<li>The getVolume call doesn't work properly</li>
+<li>The LFC doesn't properly interpret the width and height of rotated 
+views -- transformations to their width and height happen in their parents (non-
+rotated) coordinate system. To manipulate the width and height of a rotated 
+view, create an extra layer of hierarchy and embed the resizing view inside the 
+rotated one.</li>
+<li>The deleteNode() method of LzNode (and the overrides by the subclasses 
+of LzNode, such as LzView) are incomplete and do not free all the memory used 
+by the node. When possible, reuse is preferable to delete/new because of this 
+problem and because node instantiation is slow.</li>
+<li>Saving an XML file from NotePad or Visual Studio .NET with UTF-8 encoding may 
+insert a "byte order mark" at the beginning of the text.  LPS will 
+report this error: 
+<pre>
+Error: broken.lzx:1:1: Content is not allowed in prolog.</pre></li>
+</ul>
+
+<h1><a name="Defects1.0.2">Defects fixed in 1.0.3<br>
+</a></h1>
+<ul>
+  <li>In previous releases running against Sun JVM 1.4 or greater,
+because of a JVM bug, the server can throw a StackOverFlow Exception
+when validating the LZX code for certain applications. When this
+occurs, in 1.0.3, the server will generate a compiler warning, disable
+validation for the compilation, and continue to compile the
+application. </li>
+</ul>
+
+<h1><a name="Defects1.0.1">Defects fixed in 1.0.2<br>
+</a></h1>
+<ul>
+  <li>The LPS now properly flushes http requests to the back-end. This
+will result in fewer warnings in the detailed lps log about
+RecoverableHttpExceptions. </li>
+  <li>Numerous typographical errors in the comments in the default
+lps.properties were fixed.</li>
+  <li>Individual back-end requests can no longer hang the server cache.</li>
+  <li>The request toggles in lps.properties now work correctly.</li>
+</ul>
+
+<h1><a name="Defects">Defects fixed in 1.0.1<br>
+</a></h1>
+<ul>
+  <li>Improved client performance<br>
+  </li>
+  <li>Bloch got married.</li>
+  <li>iPaq compatibility restored.<br>
+  </li>
+  <li>Redmond window has visible non-focus state.</li>
+  <li>Combobox and menus can now be used in clipped views.</li>
+  <li>Checkbox can be used in constraints. <br>
+  </li>
+</ul>
+<p class="bodytext">&copy; Copyright 2002-2005 <a
+ href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a> All rights reserved. Unauthorized use, duplication or distribution is strictly prohibited.</p>
+</body>
+</html>

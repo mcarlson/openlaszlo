@@ -1,0 +1,22 @@
+<!-- tests recursive expansion.  This should get (marginally) bigger when any of the inlines is changed to false -->
+
+<canvas>
+  <?lzc classes="c1" inline-only="true"?>
+  <?lzc classes="c2" inline-only="true"?>
+  <?lzc classes="c3" inline-only="true"?>
+  
+  <class name="c1" height="10" bgcolor="red"/>
+  <class name="c2" height="10" bgcolor="red"/>
+
+  <class name="c3">
+    <c1 width="10"/>
+  </class>
+  
+  <c3>
+    <c2 width="10"/>
+  </c3>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,83 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Selectionmanager">
+    <lztier>LFC</lztier>
+    <lzcategory>Menu and Command</lzcategory>
+    <lzshortdesc>
+        Manages selection among a series of objects.
+    </lzshortdesc>
+    <lztag>tag-selectionmanager.xml</lztag>
+    <lzapi>api-lzselectionmanager.xml</lzapi>
+</lzelement>
+
+<p>Selection managers manage selection among a series of objects. They
+enable standard control and shift click modifiers to aid range
+selection. Selection managers provide methods to manipulate, add to
+and clear the selection.  For example:</p>
+
+<example>
+&lt;canvas&gt;
+  &lt;dataset name="fruits"&gt;
+    &lt;fruit&gt;Oranges&lt;/fruit&gt;
+    &lt;fruit&gt;Apples&lt;/fruit&gt;
+    &lt;fruit&gt;Bananas&lt;/fruit&gt;
+    &lt;fruit&gt;Grapes&lt;/fruit&gt;
+    &lt;fruit&gt;Kiwis&lt;/fruit&gt;
+    &lt;fruit&gt;Papayas&lt;/fruit&gt;
+    &lt;fruit&gt;Watermelon&lt;/fruit&gt;
+    &lt;fruit&gt;Strawberries&lt;/fruit&gt;
+    &lt;fruit&gt;Cherries&lt;/fruit&gt;
+  &lt;/dataset&gt;
+  
+  &lt;simplelayout/&gt;
+  
+  &lt;text&gt;Select a series of items below. The control and shift-click modifiers 
+  help select ranges.&lt;/text&gt;
+  
+  &lt;view name="fruitlist"&gt;
+    &lt;selectionmanager name="selector" toggle="true"/&gt;
+    &lt;simplelayout/&gt;
+    
+    &lt;view name ="listitem"
+          datapath="fruits:/fruit" 
+          onclick="parent.selector.select(this);"&gt;
+      &lt;text name="txt" datapath="text()"/&gt;
+
+      &lt;method name="setSelected" args="amselected"&gt;
+        if (amselected) {
+          var txtColor = 0xFFFFFF;
+          var bgcolor = 0x999999;
+        } else {
+          var txtColor = 0x000000;
+          var bgcolor = 0xFFFFFF;
+        }
+        this.setBGColor( bgcolor );
+        this.txt.setAttribute('fgcolor', txtColor);
+      &lt;/method&gt;
+    &lt;/view&gt;
+    
+    &lt;method name="deleteSelected"&gt;
+    &lt;![CDATA[
+      var csel = this.selector.getSelection();
+      for (var i = 0; i &lt; csel.length; i++) {
+        csel[i].destroy();
+      }
+      this.selector.clearSelection();
+    ]]&gt;
+    &lt;/method&gt;
+  &lt;/view&gt;
+  &lt;button onclick="fruitlist.deleteSelected();"&gt;Delete selection&lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

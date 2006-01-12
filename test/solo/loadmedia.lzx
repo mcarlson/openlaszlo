@@ -1,0 +1,67 @@
+<!-- snarfed from examples/dataimage2.lzx -->
+<canvas width="1000" height="1000" proxied="false" debug="true">
+
+    <debug x="300" width="500" />
+
+    <view id="control" width="1000" height="1000" >
+
+        <attribute name="curImage" value="1" />
+
+        <view x="10" y="10" layout="axis:y">
+            <button text="switch image" onclick="control.loadImage(true)" />
+            <button text="same image"   onclick="control.loadImage(false)" />
+        </view>
+
+        <view name="img" x="100" y="100" bgcolor="#EFFFFF"
+              resource="http://www.laszlosystems.com/hubble/2000-10-a-640_wallpaper.jpg" 
+              clickable="true" >
+        </view>
+
+        <method name="loadImage" args="switchImage" ><![CDATA[
+
+            var url;
+
+            if (switchImage) {
+                Debug.write("switching image");
+                this.curImage = ((this.curImage) % 6) + 1;
+            }
+
+            switch (this.curImage) {
+            case 1:
+                Debug.write("Loading JPEG");
+                url = "http://www.laszlosystems.com/hubble/2000-10-a-640_wallpaper.jpg";
+                break;
+            case 2:
+                Debug.write("Loading GIF - should error");
+                url = "http://www.laszlosystems.com/hubble/1995-01-a-640_wallpaper.gif";
+                break;
+            case 3:
+                Debug.write("Loading PNG - should error");
+                url = "http://www.laszlosystems.com/hubble/2002-05-a-640_wallpaper.png";
+                break;
+            case 4:
+                Debug.write("Loading SWF");
+                // Note: This SWF has the wrong size baked into it so the background may
+                // show up incorrectly.
+                url = "http://www.oddtodd.com/wordup.swf";
+                break;
+            case 5:
+                Debug.write("Loading GIF - should error");
+                url = "http://www.laszlosystems.com/img/h_head_logo.gif"
+                break;
+            case 6:
+                Debug.write("Loading relative file url - should error");
+                url = "file:logo.swf"
+                break;
+             default:
+                 break;
+            } 
+
+            Debug.write("url",url);
+            this.img.setSource(url);
+
+        ]]></method>
+    </view>
+<!-- Space images from http://hubble.stsci.edu/ -->
+<!-- see http://hubble.stsci.edu/copyright/copyright/ for copyright info -->
+</canvas>    

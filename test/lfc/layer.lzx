@@ -1,0 +1,78 @@
+<canvas width="700">
+    <debug y="350"/>
+    <attribute name="a" value="null"/>
+    <attribute name="b" value="null"/>
+
+    <resource name="rlogo" src="logo.gif"/>
+    
+    <class name="logo" resource="rlogo" opacity=".5" clickable="true"
+           fontsize="20" >
+        <text name="a" bgcolor="white" visible="${canvas.a == parent}">A</text>
+        <text name="b" bgcolor="white" visible="${canvas.b == parent}">B</text>
+        <method event="onclick">
+            if ( !canvas.A || canvas.B ){
+                canvas.setAttribute( "a" , this );
+                canvas.setAttribute( "b" , null );
+            } else {
+                canvas.setAttribute( "b" , this );
+            }
+        </method>
+        <view align="right" width="20" height="20" bgcolor="black"
+              onclick="parent.animate( 'y' , 100 , 1000 );"/>
+            
+    </class>
+
+    <logo name="la" bgcolor="blue"/>
+    <logo name="lb" bgcolor="teal"/>
+    <logo name="lc" bgcolor="yellow"/>
+    <logo name="ld" bgcolor="red"/>
+    <logo name="le" bgcolor="green"/>
+    <logo name="lf" bgcolor="purple"/>
+    <logo name="lg" bgcolor="white"/>
+    <view y="200" options="ignorelayout">
+        <button >Toggle
+            <method event="onclick">
+                if (tlayout.spacing > -la.width ){
+                    tlayout.animate( "spacing" , -la.width , 1000 );
+                } else {
+                    tlayout.animate( "spacing" , -120 , 1000 );
+                    blayout.update();
+                }
+            </method>
+        </button>
+        <button>A infrontof B
+            <method event="onclick">
+                canvas.a.sendInFrontOf( canvas.b );
+            </method>
+        </button>
+        <button>A behind B
+            <method event="onclick">
+                canvas.a.sendBehind( canvas.b );
+            </method>
+        </button>
+        <button>A to front
+            <method event="onclick">
+                canvas.a.bringToFront();
+            </method>
+        </button>
+        <button>A to back
+            <method event="onclick">
+                canvas.a.sendToBack();
+            </method>
+        </button>
+        <simplelayout/>
+    </view>
+
+
+    <simplelayout axis="x" spacing="-120" id="tlayout">
+    </simplelayout>
+
+    <constantlayout axis="y" value="0" id="blayout"/>
+    <attribute name="targ" value="null"/>
+
+        
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

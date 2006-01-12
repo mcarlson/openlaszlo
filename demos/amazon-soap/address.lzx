@@ -1,0 +1,123 @@
+<library>
+
+    <class name="addressmanager" clip="true">
+
+        <addresslist name="list" width="${parent.width}" height="${parent.height}">
+            <method name="newAddress">
+                parent.form.form.setDatapath("new:/address");
+                parent.form.setAttribute("mode", "new");
+                this.setAttribute("height", 0);
+                parent.form.setAttribute("height", parent.height);
+            </method>
+            <method name="editAddress" args="clonenbr">
+                parent.form.setAttribute("mode", "edit");
+                this.setAttribute("height", 0);
+                parent.form.setAttribute("height", parent.height);
+                parent.form.form.setDatapath("dsAddressList:/addresslist/address["+(clonenbr+1)+"]");
+            </method>
+        </addresslist>
+        <addressform name="form" width="${parent.width}" height="0">
+            <method name="done">
+                this.setAttribute("height", 0);
+                parent.list.setAttribute("height", parent.height);
+            </method>
+        </addressform>
+
+    </class>
+
+    <class name="addresslist" clip="true"  bgcolor="#FFFFFF">
+        <sel name="addressSelection"/>
+        <view name="scrollpane" clip="true" width="${parent.width}" height="${parent.height}">
+            <view width="${parent.width-50}">
+                <view x="10" y="10" name="addressList" width="${parent.width}">
+                    <simplelayout axis="y"/>
+                    <view datapath="dsAddressList:/addresslist/address" width="${parent.width}">
+                        <simplelayout axis="y" spacing="2"/>
+                        <view name="addressView" width="${parent.width}">
+                            <simplelayout axis="x" spacing="4"/>
+                            <radiobutton name="rb" selectionobject="${classroot.addressSelection}"/>
+                            <view width="${parent.width}">
+                                <simplelayout axis="y"/>
+                                <text datapath="@fullname" width="${parent.width}"/>
+                                <text datapath="@address" width="${parent.width}"/>
+                                <text datapath="@city" width="${parent.width}"/>
+                            </view>
+                        </view>
+                        <view align="right">
+                            <simplelayout axis="x" spacing="2"/>
+                            <linktext width="20" onclick="classroot.editAddress(parent.parent.clonenumber)">
+                                edit
+                            </linktext>
+                            <text width="4">|</text>
+                            <linktext width="32" onclick="parent.parent.datapath.deleteNode();">delete</linktext>
+                        </view>
+                        <view height="1" width="${parent.width}" bgcolor="#666699"/>
+                        <view height="1"/>
+                    </view>
+                </view>
+                <mouseview x="10" height="40" resource="add_address" y="${parent.addressList.y+parent.addressList.height+8}" onclick="parent.parent.parent.newAddress();"/>
+
+            </view>
+            <scrollbar/>
+        </view>
+    </class>
+
+
+    <class name="addressform" x="10" y="10" clip="true" bgcolor="#FFFFFF" >
+        <attribute name="mode" type="string" value="new"/>
+        <simplelayout axis="y" spacing="4"/>
+        <text fontstyle="bold" fontsize="12" fgcolor="#666699" 
+              width="${parent.width}" 
+              text="${parent.mode=='new'?'Enter new address:':'Edit address:'}"/>
+        <view name="form">
+            <simplelayout axis="y" spacing="2"/>
+            <view width="${parent.parent.width}">
+                <simplelayout axis="y" spacing="1"/>
+                <text width="${parent.width}" fgcolor="#666699">Fullname:</text>
+                <windowtext width="180" datapath="@fullname" />
+            </view>
+            <view width="${parent.width}">
+                <simplelayout axis="y" spacing="1"/>
+                <text width="${parent.width}" fgcolor="#666699">Address:</text>
+                <windowtext width="180" datapath="@address" />
+            </view>
+            <view width="${parent.width}">
+                <simplelayout axis="y" spacing="1"/>
+                <text width="${parent.width}" fgcolor="#666699">City:</text>
+                <windowtext width="180" datapath="@city" />
+            </view>
+            <view width="${parent.width}">
+                <simplelayout axis="y" spacing="1"/>
+                <text width="${parent.width}" fgcolor="#666699">State:</text>
+                <windowtext width="50" datapath="@state" />
+            </view>
+            <view width="${parent.width}">
+                <simplelayout axis="y" spacing="1"/>
+                <text width="${parent.width}" fgcolor="#666699">Zip:</text>
+                <windowtext width="80" datapath="@zip" />
+            </view>
+
+        </view>
+        <view height="6"/>
+        <view>
+            <simplelayout axis="x" spacing="4"/>
+            <mouseview resource="ok_butt">
+                <method event="onclick">
+                    parent.parent.form.datapath.updateData();
+                    if (parent.parent.mode=="new") {
+                        var dp=canvas.datasets.dsAddressList.getPointer();
+                        dp.selectChild();
+                        dp.addNodeFromPointer( parent.parent.form.datapath );
+                    }
+                    parent.parent.done();
+                </method>
+            </mouseview>
+            <mouseview resource="cancel_butt" onclick="parent.parent.done();"/>
+        </view>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

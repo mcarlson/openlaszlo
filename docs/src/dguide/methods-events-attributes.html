@@ -1,0 +1,876 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="methods-events-attributes">
+<head>
+    <title>Methods, Events, and Attributes</title>
+</head>
+
+<body>
+<fixme>
+  We also have developers resorting to the idiom of declaring an event as an attribute (to avoid debug warnings when they send an event and there are no listeners).
+Currently, users can attach an anonymous method to an event and then are mystified how to override it. 
+</fixme>
+<h1>Methods, Events, and Attributes</h1>
+
+<h2> Overview </h2>
+
+<p> 
+
+Event-driven programming is ideal for programs that respond directly to a user's interactions 
+with a user interface.  The event-driven programming model is used
+extensively in LZX applications.  
+</p>
+<p>
+In LZX you use events, methods and attributes to describe how your application responds to user input or other changes.
+In general, and to a first approximation, when an<em>attribute</em> changes value, it generates an <em>event </em>. 
+Your application's response to that event is determined by the associated<glossterm>event handler</glossterm>, which is
+usually defined in a <em>method.</em>
+</p>
+<p>
+An event handler is simply javascript code that is executed whenever the associtated event occurs.
+</p>
+<p>
+Methods, events and attributes are the only concepts you need for many kinds of applications.  Certain kinds of more
+subtle event-driven situations require a fourth concept, <em>delegates</em>, which are described in <xref linkend="delegates"/>.
+</p>
+<h2> Defining methods </h2>
+
+<p>
+Methods may be defined inside any Node or View.   When defining a method, you must specify
+a value for the <attribute>name</attribute> and/or <attribute>event</attribute> attributes. The value of the 
+<attribute>name</attribute> attribute represents the name by which you will call this method in script.  In the
+following example, the <method link="false">doSomething</method> method is defined in the only node in the example.  To
+invoke this method from a script, you would write <code>myNode.doSomething();</code>
+</p>
+
+<example executable="false" title="Defining a method">
+&lt;canvas&gt; 
+  &lt;node id="myNode"&gt; 
+    &lt;method name="doSomething"&gt;
+      Debug.write('doSomething called');          
+    &lt;/method&gt;
+  &lt;/node&gt; 
+  &lt;simplelayout axis="y"/&gt; 
+&lt;/canvas&gt;
+</example>
+
+<h3>Naming methods</h3>
+<p>
+Choose method names carefully. Names should be descriptive, to help you and
+other readers of your code understand what they do. You need also to keep in mind that when you extend a class,
+your new class inherits the methods of the class from which it was extended. If you give a new method the name of
+ already existing
+method, the original method will be overridden. To avoid such "naming collisions" you should consult the 
+LZX Reference, which 
+lists all methods for all OpenLaszlo Runtime Library classes.
+</p>
+<p>
+It is possible to have methods that do not have names. However, a method must have a name in order to be overwritten, as explained in <xref linkend="class-inheritance"/>.
+</p>
+<h4>Overriding Methods</h4>
+<p>
+When you create a class by extending another one, the new class inherits all the methods of the original.  You can then give a new definition to any of the inherited methods; this is called overriding.  See <xref linkend="class-inheritance"/> for a complete discussion.
+</p>
+
+<h3>Simple Arguments</h3> 
+
+<p>
+The method attribute <attribute>'args'</attribute> is used to pass arguments to a method.  The value of the 'args' attribute is a 
+string containing variable names separated by commas. In the following example, two arguments
+'a' and 'b' are declared in the args attribute of the method named 'add'.  To call this method in
+script to add two numbers, you would write <code>myNode.add(1, 2);</code> 
+</p>
+
+<example title="Defining a method with arguments">
+&lt;canvas debug="true"&gt;
+  &lt;node id="myNode"&gt;
+    &lt;method name="add" args="a,b"&gt;
+      var sum = a + b;
+      Debug.write('a + b = ' + sum);          
+    &lt;/method&gt;
+  &lt;/node&gt;
+&lt;/canvas&gt; 
+</example>
+
+<h3> Return Values </h3>
+
+<p>
+Sometimes when you write a method, you want the result to be returned to the calling script for
+further processing.  In the following example, the init method makes a call to the <code>add</code> method,
+and the <code>add</code> method returns the result using the 'return' keyword.  
+</p>
+
+<example  title="Returning data from a method">
+&lt;canvas debug="true"&gt;
+  &lt;node id="myNode"&gt;
+    &lt;method name="init"&gt;
+      super.init();  // it's generally correct to call init() on the super class.
+
+      var newVal = this.add(1, 1);             
+      Debug.write("The result of adding 1 to 1 is: " + newVal) 
+    &lt;/method&gt; 
+
+    &lt;method name="add" args="a,b"&gt;
+      var sum = a + b;
+      Debug.write('a + b = ' + sum);          
+      return sum;
+    &lt;/method&gt;
+  &lt;/node&gt;
+&lt;/canvas&gt; 
+</example>
+
+
+<h3>Implicit and built-in events</h3>
+
+
+<p>
+Any defined attribute has an associated event called
+ "on" plus the name of the attribute. Whenever the value of any
+attribute is updated, its associated "on" event is generated. For example, the "height" attribute of a view has an 
+associated "onheight" event that
+is generated whenever the view's height changes. (These events are implicit in the sense that they are build into the system.
+Later sections explain how you can also generate "custom" events.)
+</p>
+<p>
+The default behavior of the <method>setAttribute</method> method is to set the named property and send the event. 
+For instance, when a view changes its x position, it sends the event <event>onx</event> with the new
+ value for its x property. 
+</p>
+<p>
+In addition to the implicit event associated with each named attribute, OpenLaszlo Runtime Library classes have a variety of 
+additional
+events associated with them.  For example, the <tagname>view</tagname> tag has an <attribute>onclick</attribute> event
+that is generated whenever the user clicks the mouse while the cursor is positioned over the view.  See the <a href="${reference}">LZX Reference Manual</a> for a complete
+list of events associated with OLRL classes.
+</p>
+<p>
+The following sections show how to use these events in the context of an application.
+</p>
+
+
+<h2>Event handler syntaxes</h2>
+<p>
+There are two syntaxes that you can use to define handlers:</p>
+<ul>
+<li>"onevent" in the node creation tag</li>
+<li>using the <tagname>method</tagname></li>
+</ul>
+<p>
+For convenience, you can use the onevent syntax for short handlers. For readability, however, the <tagname link="false">
+method</tagname> syntax is often better.
+</p>
+<h3>"Onevent" syntax"</h3>
+<p>
+The "onevent" syntax is available for attributes that correspond to the CSS event model&#8212;onclick, onmouseover, and so
+forth. For such events, the simplest way to declare an event handler is simply to include it in the definition tag of the node that contains the
+attribute.  This syntax does not work for other events generated by class attributes; for those you must use the <tagname>
+method</tagname> syntax.
+</p>
+<p> 
+ In the example below, the event handler for the event generated by the user mouseclick changes
+the views's color from red to blue.
+</p>
+<example title="Simple event handler">
+&lt;canvas height="50"&gt;
+   &lt;view height="30" width="30" bgcolor="red" onclick="setAttribute('bgcolor', blue)"/&gt;
+&lt;/canvas&gt;
+</example>
+<h3>&lt;method&gt; syntax </h3>
+<p>
+The <tagname>method</tagname> tag can also be used to define code that is executed when an event is fired. 
+Event handlers defined in this way can be either by name, or by use of the <attribute>event</attribute> attribute.
+</p>
+
+<h3>&lt;method name="doSomething" event="oninit"&gt;</h3> 
+
+<p>
+
+ The following exampleshows how you might handle a user's clicking a button with the mouse: 
+</p>
+
+<example title="Defining a method in an event">
+&lt;canvas height="40"&gt;
+  &lt;button text="not clicked"&gt;
+    &lt;method event="onclick"&gt;
+      this.setAttribute('text', 'clicked'); 
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt; 
+</example> 
+
+
+
+<h2>An introduction to Attributes</h2>
+
+<p>Attributes can be an element of a tag or a property of a JavaSctipt
+  class.  Attributes are declared and set in tags, but they can also
+  be set and read in script.  However, not <em>all</em> attributes can be set in script,
+  similarly not all attributes can be in tags. Attributes are
+  characterized based on this behaviour into five categories. See below for more information on the various
+  categories.</p>
+
+<p>An attribute can be declared in a tag header as follows:</p>
+
+<example title="Setting an attribute value in the tag header">&lt;canvas height="20"&gt;
+  &lt;view <span class="redText">width="20"</span> height="20" bgcolor="red"/&gt;
+&lt;/canvas&gt;</example>
+
+<p>An alternative way to set the attribute is
+using the <tagname link="true">attribute</tagname> tag as a child of
+the tag whose attribute is being set:</p>
+
+<example title="Using the attribute element to set an attribute value">&lt;canvas height="20"&gt;
+  &lt;view&gt;
+    <span class="redText">&lt;attribute name="width" type="number" value="20"/&gt;</span>
+    &lt;attribute name="height" type="number" value="20"/&gt;
+    &lt;attribute name="bgcolor" type="color" value="red"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;</example>
+
+<p>This second example is the same as saying &lt;view width="20" height="20" bgcolor="red"/&gt;. 
+The <tagname>attribute</tagname> tag is useful for writing classes as well as for performing complicated
+ constraints of existing attributes.</p>
+
+<p>In script, the values of most attributes are can be retrieved using
+dot syntax:</p>
+
+<example title="Using dot syntax to retrieve an attribute value">&lt;canvas height="20"&gt;
+  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
+
+  &lt;script&gt;
+    var myAttributeValue = <span class="redText">myView.x</span>;
+    // myAttributeValue now has the value 20
+  &lt;/script&gt;
+&lt;/canvas&gt;</example>
+
+<p>Attributes can also be read using the
+<method>getAttribute</method> method. This is unnecessary most of the
+time, but can be useful for retrieving the value of an arbitrary
+attribute, whose name is represented by a string.</p>
+
+<example title="Using getAttribute to retrieve an attribute value">&lt;canvas height="20"&gt;
+  &lt;view name="myView" width="20" height="20" bgcolor="red"/&gt;
+
+  &lt;script&gt;
+    var myAttributeName = "x";
+    var myAttributeValue = <span class="redText">myView.getAttribute(myAttributeName)</span>;
+    // myAttributeValue now has the value 20
+  &lt;/script&gt;
+&lt;/canvas&gt;</example>
+
+<p>All attributes that are settable in script (see below) can be set
+using the <method>setAttribute</method> method:</p>
+
+<example title="Using setAttribute to set an attribute value">&lt;canvas height="20"&gt;
+  &lt;view width="20" height="20" bgcolor="red"
+      oninit="<span class="redText">this.setAttribute('width', 50);</span>"/&gt;
+&lt;/canvas&gt;</example>
+
+
+<h3>Categories of Attributes</h3>
+<p>
+Attributes can be placed into five categories according to how they are set, read, and modified.
+</p>
+<ul>
+  <li>Attributes (with setter)</li>
+  <li>Attributes (without setter)</li>
+  <li>Event Handler (script may
+      be defined in XML tag)</li>
+  <li>Final Attributes (defined only in XML tag)</li>
+  <li>Read-only Attributes (JavaScript fields)</li> 
+</ul>
+<p>These are described briefly in the following sections.</p>
+<h4>Attributes (with setter)</h4>
+<p>These are built-in attributes which have setters that may be modified at runtime
+and used in constraint expressions. When <method>setAttribute</method>
+is called, the appropriate setter is called automatically. The
+value of an attribute can be retrieved through script using dot
+syntax, for example, <code> myView.opacity</code>. </p>
+
+<p>For example:</p>
+<example title="Using setAttribute to update a constraint">&lt;canvas height="20"&gt;
+  &lt;view id="myView" onclick="setAttribute('opacity', 1.5 - this.opacity)" bgcolor="red"&gt;
+    &lt;text text="${'My opacity is ' + myView.opacity + 'x  Click to change it.'}"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;</example>
+
+
+<h4>Attributes (without setter)</h4>
+<p>Some attributes are usable in a tag, but do not have a predefined
+setter method. Instead they use the default setter method
+(<method>setAttribute</method>) to set their values at
+run-time. Typically they are custom attributes that have been declared
+in components using the <tagname>attribute</tagname> tag. Therefore they can be
+declared and set in tags too.</p>
+
+<example title="An attribute without a setter method">
+&lt;canvas height="200" width="600" &gt;
+    &lt;window height="50" width="200" <span class="redText">title="My Window"</span> onclick="this.setAttribute('title', 'Hello World');"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<h4>Event Handler Attributes</h4>
+<p>Event Handler attributes are instructions for what to perform when a particular event happens. They always contain script, and cannot be changed at run-time (i.e. from script). Their values cannot (and do not need to) be retrieved from script.</p>
+
+<span class="code">
+&lt;canvas debug="true" height="400"&gt;
+    &lt;debug y="200"/&gt;
+    &lt;view width="50" height="50" bgcolor="red" <span class="redText">onclick="Debug.write('Hello, World!');"</span> /&gt;
+&lt;/canvas&gt;
+</span>
+
+
+<h4>Final Attributes</h4>
+<p>Final attributes are declared and set in the tag, but cannot be changed in using script. 
+Good examples of final attributes are <attribute>name</attribute> and <attribute>id</attribute>. They can be read from script using dot syntax (e.g. myView.name).</p>
+
+
+<h4>Read Only Attributes (Fields)</h4>
+<p>Read Only attributes, sometimes called "Fields", are only available through
+  the element's API. Since they are read-only, they cannot be set in a &lt;tag&gt;.
+  Their values can be retrieved using dot syntax (e.g. myView.subviews).</p>
+
+<h2>The <tagname>attribute</tagname> tag</h2>
+
+<p>The <tagname>attribute</tagname> tag has two uses.</p>
+
+<p>In a class definition, the <tagname>attribute</tagname> tag
+defines attributes that can be set in instances of the class.  For
+example:</p>
+
+<example title="Defining an attribute in a class">
+&lt;canvas height="36"&gt;
+  &lt;class name="diamond" width="${this.size}" height="${this.size}" rotation="45"&gt;
+    &lt;attribute name="size" type="number"/&gt;
+  &lt;/class&gt;
+  &lt;diamond size="25" x="36" bgcolor="red"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>In an instance, the <tagname>attribute</tagname> element sets the attribute of the object that it is attached to.  
+In this use, the <tagname>attribute</tagname> element is equivalent to the use of an attribute in a tag header.  
+For example, the following program uses a tag element to set the width of the view, and an <tagname>attribute</tagname> tag to set 
+its height.</p>
+
+<example title="Defining an attribute in a view">
+&lt;canvas height="25"&gt;
+  &lt;view width="25" bgcolor="red"&gt;
+    &lt;attribute name="height" value="25"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+In the example above the width is set in the tag header and the height is set using the <tagname>attribute</tagname> tag.
+These syntaxes are functionally evquivalent for attributes that are defined in the LZX schema&#8212;that is, attributes
+that are part of LZX. As we will show later, using the <tagname link="false">attribute</tagname>
+can increase readability.  
+</p>
+<p>
+You can also define new attributes. For these you must use the <tagname link="false">attribute</tagname> tag.</p>
+<h3>Attributes and Constraints</h3>
+<p>Attributes can be <i>constrained</i> to the value of other attributes.  
+
+See the <xref linkend="constraints"/> for details.
+</p>
+<h3>Attribute types</h3>
+<p>
+By default attributes are typed as "expression," which means JavaScript expression. In many cases this is not what you want.
+In this example no labels are displayed:
+</p>
+<example title="Incorrect: attribute has no effect" >
+&lt;canvas height="300"&gt;
+    &lt;simplelayout spacing="5"/&gt;
+    &lt;class name="box" height="100" width="100" bgcolor="red"&gt;
+       &lt;attribute name="label" value="Label"/&gt;
+       &lt;text text="${parent.label}" /&gt;
+    &lt;/class&gt;
+
+    &lt;box label="Box1"/&gt;
+    &lt;box/&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+To make sure attributes do what you want them to do, type your attributes when you declare them:
+</p>
+<example title="Declaring attribute type">
+&lt;canvas height="300"&gt;
+    &lt;simplelayout spacing="5"/&gt;
+    &lt;class name="box" height="100" width="100" bgcolor="red"&gt;
+       &lt;attribute name="label" value="Label" <em> type="string"</em>/&gt;
+       &lt;text text="${parent.label}" /&gt;
+    &lt;/class&gt;
+
+    &lt;box label="Box1"/&gt;
+    &lt;box/&gt;
+&lt;/canvas&gt;
+</example>
+
+<h4>Using the <tagname>type</tagname> option</h4>
+
+<p>
+    The <code>type</code> option specifies the type of the attribute's value and affects how a value expression will be parsed: 
+</p>
+<dl>
+    <dt>
+        string 
+    </dt>
+    <dd>
+        An XML <glossterm>string</glossterm>. To assign the value of an expression that yields a JavaScript <classname>String</classname>, use <code>value="${<var>expression</var>}"</code>. 
+    </dd>
+    <dt>
+        color 
+    </dt>
+    <dd>
+       A colorLiteral (see table below). To assign the value of a JavaScript expression, 
+use <code>value="${<var>expression</var>}"</code>. The expression must yield a numeric color value. 
+    </dd>
+<dt>boolean</dt>
+<dd>"true" or "false"</dd>
+<dt>expression</dt>
+<dd>An ECMAScript expression.</dd>
+<dt>number</dt>
+<dd>A numberLiteral, or an ${<var>expression</var>} which evaluates to a number.</dd>
+<dt>size</dt>
+<dd>A sizeLiteral, or an ${<var>expression</var>} which evaluates to a non-negative number.</dd>
+<dt>text</dt>
+<dd>plain unicode text or html </dd>
+<dt>html</dt>
+<dd>html-encoded text</dd>
+</dl> 
+
+<p>
+    All other types (boolean, expression, number, size, text) are parsed as expressions of the specified type. 
+</p>
+<fixme>ype='boolean | color | expression | number | size | string | text | html' </fixme>
+<p>
+Note that in XML, types are specified in lower case, e.g., <code>string</code>. In JavaScript, types are capitalized, e.g., <code>String</code> .
+The two types are equivalent in LZX, but you must use the XML name in XML constructs and the JavaScript name in JavaScript constructs. 
+</p>
+
+<h4>Summary of color literals</h4>
+<p>Colors can have the following values:</p>
+<dl>
+<dt>colorLiteral</dt>
+<dd>A color of the form <literal>#hhh</literal>, <literal>#hhhhhh</literal>, <literal>rgb(rv, gv, bv)</literal> or a CSS color name, where <var>h</var> is a hexadecimal digit, <var>rv</var>, <var>gv</var>, and <var>bv</var> are numbers between 0.0 and 1.0 inclusive, and the CSS color names are from the table below.</dd>
+</dl>
+
+<table border="0">
+<tr><td>black</td><td>000000</td><td style="background-color: #000000"></td></tr>
+<tr><td>green</td><td>008000</td><td style="background-color: #008000"></td></tr>
+<tr><td>silver</td><td>C0C0C0</td><td style="background-color: #C0C0C0"></td></tr>
+<tr><td>lime</td><td>00FF00</td><td style="background-color: #00FF00"></td></tr>
+<tr><td>gray</td><td>808080</td><td style="background-color: #808080"></td></tr>
+<tr><td>olive</td><td>808000</td><td style="background-color: #808000"></td></tr>
+<tr><td>white</td><td>FFFFFF</td><td style="background-color: #FFFFFF"></td></tr>
+<tr><td>yellow</td><td>FFFF00</td><td style="background-color: #FFFF00"></td></tr>
+<tr><td>maroon</td><td>800000</td><td style="background-color: #800000"></td></tr>
+<tr><td>navy</td><td>000080</td><td style="background-color: #000080"></td></tr>
+<tr><td>red</td><td>FF0000</td><td style="background-color: #FF0000"></td></tr>
+<tr><td>blue</td><td>0000FF</td><td style="background-color: #0000FF"></td></tr>
+<tr><td>purple</td><td>800080</td><td style="background-color: #800080"></td></tr>
+<tr><td>teal</td><td>008080</td><td style="background-color: #008080"></td></tr>
+<tr><td>fuchsia</td><td>FF00FF</td><td style="background-color: #FF00FF"></td></tr>
+<tr><td>aqua</td><td>00FFFF</td><td style="background-color: #00FFFF"></td></tr>
+</table>
+
+
+
+
+
+<h4>JavaScript attribute types</h4>
+<p>JavaScript types start with a capital letter. These may be one of the native
+  JavaScript types, listed below or an LZX class. </p>
+<table width="100%" border="0" cellspacing="2">
+  <tr valign="top">
+    <td colspan="3"><p>Native JavaScript types</p></td>
+  </tr>
+  <tr valign="top">
+    <td width="5%"><p></p></td>
+    <td width="11%"><p>Boolean</p></td>
+    <td width="84%"><p>true or false</p></td>
+  </tr>
+  <tr valign="top">
+    <td><p></p></td>
+    <td><p>String</p></td>
+    <td><p>single or double quotes may be used to specify a sequence of characters
+        (e.g. var s = 'test' or var s = &quot;test&quot;</p></td>
+  </tr>
+  <tr valign="top">
+    <td><p></p></td>
+    <td><p>Number</p></td>
+    <td><p>used to specify simple values (e.g. var n = 4 or var n=4.2). Number
+        type is also commonly used to specify a color, for which it is often
+        convenient to use hexadecimal notation (e.g. var c = 0xFFFFFF for white,
+        or 0x0099BB for turquoise)</p></td>
+  </tr>
+  <tr valign="top">
+    <td><p></p></td>
+    <td><p>Array</p></td>
+    <td><p>an ordered list of elements. The elements may be of any type and need
+        not be of the same type.</p></td>
+  </tr>
+  <tr valign="top">
+    <td colspan="3"><p></p>
+    <p>Notes on documentation:</p></td>
+  </tr>
+  <tr valign="top">
+    <td><p></p></td>
+    <td><p>[LzNode]</p></td>
+    <td><p>An LZX class enclosed in brackets indicates an Array of these types.</p>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td><p></p></td>
+    <td><p>dictionary</p></td>
+    <td><p>Also known as a hash, or JavaScript Object, the dictionary type indicates
+        an unordered collection of name-value pairs. For example: {width:100,
+        height:50, title:&quot;my title&quot;}</p>
+    </td>
+  </tr>
+  <tr valign="top">
+    <td><p></p></td>
+    <td><p>any</p></td>
+    <td><p>JavaScript APIs will often allow a parameter of any type. This is indicated
+      by the word &quot;any&quot; in the type column. </p>
+      </td>
+  </tr>
+</table>
+
+
+<h3>Attribute evaluation time</h3>
+
+<p>
+    The value of an attribute, whether set in an attribute element or start tag, is evaluated according to the attribute <code>when</code> option.  <code>when</code> can be one of the following: 
+</p>
+<dl>
+    <dt>
+        <code>immediately</code>
+    </dt>
+    <dd>
+        initializes the attribute to the value of the expression when the enclosing element is defined. The value must be a constant expression and cannot depend on any other objects. <code>immediately</code> is currently the default value for <code>when</code>, but will be deprecated in a future release. 
+    </dd>
+    <dt>
+        <code>once </code>
+    </dt>
+    <dd>
+        initializes the attribute to the value of the expression when the enclosing element is initialized. The expression cannot depend on the value of any other property of the element, nor can it depend on being evaluated in any particular order with respect to any other attributes: use an <code>init</code> method if ordered evaluation is required. 
+    </dd>
+    <dt>
+        <code>always</code> 
+    </dt>
+    <dd>
+        updates the attribute any time the value of the expression changes: the attribute is <i>constrained</i> to follow the value of the expression. 
+    </dd>
+</dl>
+<p>
+    The declared evaluation time of an attribute can be overridden when assigning a value by using <code>value="$<var>when</var>{<var>expression</var>}"</code> (or in a start tag by <code>&lt;<var>tag</var> <var>attribute</var>="$<var>when</var>{<var>expression</var>}"&gt;</code>), where <var>when</var> is one of the possible <code>when</code> options. If omitted, <var>when</var> defaults to <code>always</code>. 
+</p>
+<p>
+    <code>when</code> is a declaration and applies to any setting of the tag, not just the initial one.  For example, the <code>width</code> and <code>height</code> attributes of <code>view</code> are declared <code>when="always"</code>: any time you set width or height, it creates a constraint, even if you don't say <code>${<var>expression</var>}</code>.  (The compiler optimizes constant constraints to only evaluate once). 
+</p>
+<p>
+    <code>${<var>expression</var>}</code> can be used to override the declaration at any site where you are setting the value of an attribute. For example, the <code>title</code> attribute of <code>view</code> is declared <code>when="once"</code>, so if you want to have a dynamically updating title, you need to say <code>title=${<var>some.reference</var>}</code> to constrain it to follow <var>some.reference</var>. 
+</p>
+<p>
+    Note that an attribute that is not given an initial value will not be created in the element by default: it should either be initialized in the <code>init</code> method using <code>this.<var>attrName</var>=<var>expression</var></code> or made a required attribute using the <code>required="true"</code> option. 
+</p>
+
+
+<h3>Accessing attribute values from JavaScript</h3>
+
+<p>
+    Attributes can normally be referred to in class methods and expressions by their name except when being initialized as above, 
+in which case they must be referred to using <code>this.</code>, in order to create the attribute in the element. 
+</p>
+<p>
+    For example: 
+</p>
+<example executable="false" title="attribute for internal flags">
+&lt;class name="myclass"&gt;
+  &lt;!-- 'foo' has an initial value of 1 --&gt;
+  &lt;attribute name="foo" value="1"/&gt;
+  &lt;!-- 'thing' is always four more than 'foo' --&gt;
+  &lt;attribute name="thing" value="foo + 4" when="always"/&gt;
+  &lt;!-- 'bar' is only declared, initialized below --&gt;
+  &lt;attribute name="bar"/&gt;
+
+  &lt;method event="oninit"&gt;
+    &lt;!--
+      the attribute 'bar' will be created in the instance
+      sets its value to true
+      is appropriate for internal script flags
+    --&gt;
+    this.bar= true; 
+    &lt;!-- 
+      probably a mistake...
+      sets the value of attribute 'foo' to 4,
+      but does not update the constraint on 'thing'
+      use setAttribute, as below
+    --&gt;
+    this.foo = 4;            
+  &lt;/method&gt;
+
+  &lt;method name="dothis"&gt;
+    if (bar) {
+      &lt;!--
+        sets the value of 'foo' to 6             
+        sends the event 'onfoo'
+        (which causes dependent constraints to be evaluated)
+        as a result 'thing' will equal 10
+      --&gt;
+      this.setAttribute("foo", 6);
+    }                
+  &lt;/method&gt;
+&lt;/class&gt;
+</example> 
+
+
+<h3> Defining <tagname>attribute</tagname> setters </h3>
+<p>
+In many cases, specific code operations need to take place when an attribute is
+set.  For example, when the <attribute>width</attribute> attribute of a <tagname>view</tagname> is set,
+the view needs to update the width of the parent view if clipping is set to
+false.  Though it is very convenient to simply handle the <event>onwidth</event> event to execute the required code, the is no 
+guarantee as to order events will be called. This task is instead accomplished best in the <method>setWidth</method>
+method of <tagname>view</tagname>, which is designated as the setter for <attribute>width</attribute>.
+</p>
+
+<p>
+In the following example, the time between clicks is shown on a button.   For every click, the current time 
+in milliseconds is stored in the time attribute.  The custom setter, <method>setTime</method>, has been defined for the
+ <attribute>time</attribute> attribute. 
+</p>
+
+<p>
+Normally, when an attribute is set by invoking <method>setAttribute</method>, <method>setAttribute</method> handles the tasks of setting the value of 
+the attribute, and sending the onattribute event.  When defining a custom setter for an attribute, you are responsible for
+ setting the value and sending the onattribute event, as shown in the example below.  If the <code>on<var>attribute</var></code> event isn't sent in the
+ custom defined settter, registered <code>on<var>attribute</var></code> events wont fire, and constraints 
+tied to the attribute will not be updated when the value of the attribute is changed.
+</p>
+
+
+<example title="Defining an explicit setter method">
+&lt;canvas height="40"&gt; 
+  &lt;button text="click me"&gt;
+    &lt;attribute name="time" setter="setTime(time)"/&gt; 
+    &lt;attribute name="ontime" value="null"/&gt; 
+
+    &lt;method event="onclick"&gt; 
+      Debug.write('inited:' + this.isinited); 
+      var now = (new Date()).getTime();
+      this.setAttribute("time", now); 
+    &lt;/method&gt; 
+
+    &lt;method name="setTime" args="t"&gt; 
+      if (!this.isinited) {                                          //catch the case where this.time is being 
+        this.time = t;                                               //initialized during object instantiation
+        return;
+      } 
+
+      if (typeof this.time == "undefined" || this.time == null) {    //handle first set of time
+        this.setAttribute("text", "first click registed");
+      } 
+      else {
+        var diff = t - this.time;                                    //handle any additional setting of time
+        this.setAttribute("text", diff + " milliseconds between clicks");             
+      } 
+      this.time = t;                                                 //as this is the declared setter for 
+                                                                     //this.time, we have to set it
+
+      if (ontime)                                                    //required to update constraints and 
+        this.ontime.sendEvent();                                     //fire ontime event 
+    &lt;/method&gt; 
+  &lt;/button&gt; 
+&lt;/canvas&gt; 
+</example>
+
+
+
+
+<h3>oninit event vs init method</h3>
+
+<p> 
+Instances and subclasses of <classname>LzNode</classname>, including <classname>LzView</classname> and classes defined using
+<tagname>class</tagname>, have both an <method>init</method> method and an <event>oninit</event> event.  
+Since you do not have control over the order that events are fired, you should put all initialization code in the <method>init</method> method. 
+</p>
+
+<p>
+If you declare an <method>init</method> method in a view or class, you are effectively overriding the <method>init</method> method
+in that object's super class.  The <tagname>view</tagname> tag and all its subclasses have
+important initialization code in the init method, and it is essential that this code is executed
+when overriding <method>init</method>.  This is accomplished by using the <code>super</code> keyword, which is a
+reference to the superclass.  In the example below, we override the init method in the
+<classname>button</classname>
+class.  Notice the call to <code>super.init()</code>, which executes initialization code for the
+button.  The <method>init</method> method for <classname>button</classname> subsequently invokes
+<code>super.init</code> on basebutton, and so on up to the execution of <method>LzNode.init</method>.
+</p> 
+
+<example title="init() method vs oninit event ">
+&lt;canvas height="40"&gt;
+  &lt;button&gt;
+    &lt;method name="init"&gt;
+      super.init(); //best practice to always call super.innt() when declaring 
+                    //an init method
+      //do some init code here
+    &lt;/method&gt;
+    
+    &lt;method event="oninit"&gt;
+      //this isn't fired in any particular order 
+      //use the init method instead
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt; 
+</example>
+
+
+
+<h2>Subtleties of setting values</h2>
+
+<h3> Always use <code>this</code> when setting attributes local to the current class or view </h3> 
+
+<p>
+When setting variables local to the current class, node, or view, it is essential to always refer
+to those variables using <code>this</code>.
+</p> 
+<example title="Using &quot;this&quot; keyword">
+&lt;canvas height="50"&gt;
+   &lt;view x=" 10" height="30" width="30" bgcolor="red"
+   onclick="this.bringToFront()"/&gt;
+   &lt;view  height="30" width="30" bgcolor="blue"
+   onclick="this.bringToFront()"/&gt; 
+&lt;/canvas&gt;
+</example>
+<p>
+ Not using <code>this</code> can result in unpredictable results.  
+</p>
+
+<h3> Different ways to get and set attributes </h3>
+
+<p>
+There are three ways of getting and setting attributes in LZX, each with its own associated benefits and drawbacks.:</p>
+<ul>
+<li>Using <method>setAttribute()</method> and <method>getAttribute()</method></li>
+<li>Using predefined "setters" for certain attributes</li>
+<li>Reading and writing attributes directly</li>
+</ul>
+
+
+<h4> setAttribute() and getAttribute() </h4>
+
+<p>
+The most reliable way to set and get attributes is by invoking <method>getAttribute</method> or <method>setAttribute</method>
+on the view, class, or node that contains the target attribute.  Invoking <method>setAttribute</method>
+automatically fires the associated 'on' event for the attribute in question.  Having the
+associated event fire is required for constraints tied to the attribute in question to function
+correctly. 
+</p>
+
+<p>
+Performance wise, using <method>getAttribute</method> and <method>setAttribute</method> are the slowest way to have access to
+attributes.   The reasons for this slowness is twofold:</p>
+
+<ul>
+    <li> Method calls are generally considered slow when compared to making no method call at
+    all</li>
+    <li> <method>setAttribute</method> fires the associated <code>on<var>attribute</var></code> event, and updates 
+constraints on the target attribute. </li>  
+</ul>
+
+
+<example executable="false" title="Example of setAttribute()">
+&lt;view&gt;
+  &lt;attribute name="foo"/&gt;
+
+  &lt;method name="doSomething"&gt;
+    this.setAttribute('width', 10); 
+    Debug.write('width' + this.getAttribute('width'));        
+  &lt;/method&gt; 
+&lt;/view&gt;
+</example>
+
+
+<h4> Explicit attribute setter methods </h4>
+
+<p> Some attributes of LFC classes have explicit getter and setter methods defined for them.  
+The <classname>LzView</classname> class has several of these such as <method>setX</method>, <method>setWidth</method>, etc.
+Performance wise and functionally, the use of these methods is essentially the same as making
+calls to <method>setAttribute</method> or <method>getAttribute</method>.  For consistency, use of these methods is discouraged: Use
+<method>setAttribute</method> and <method>getAttribute</method> instead.
+</p>
+
+<example executable="false" title="Using a setter method">
+&lt;node&gt;
+  &lt;attribute name="foo"/&gt;
+  
+  &lt;method name="doSomething"&gt;
+    this.setWidth(10); 
+    Debug.write('width' + this.getWidth());        
+  &lt;/method&gt; 
+&lt;/node&gt;
+</example> 
+
+<p> If you write your own setter or getter method, it will not automatically be invoked by
+<method>setAttribute</method> or <method>getAttribute</method>, thus this practice is not recommended.  Instead, the best
+practice for executing specific code when an attribute is set is to handle the associated 
+onattribute event.  </p> 
+
+<h4> Getting and setting attributes directly </h4>
+
+<p> It is also possible to get and set attributes directly without invoking any method at all,
+however, this practice is generally discouraged as it may result in unexpected behavior.  
+Since no method call is made, the associated onattribute events will not be fired.  Any
+constraints tied to the attribute also will not be updated.  When setting attributes on LFC
+objects, it is definitely a bad idea to set attributes  directly as their explicit setter
+methods, which contain important processing code, won't be called. 
+</p>
+
+
+<example executable="false" title="Setting attributes directly">
+&lt;node&gt;
+  &lt;attribute name="foo"/&gt;
+  
+  &lt;method name="doSomething"&gt;
+    this.width = 10;
+    Debug.write('width' + this.width);
+  &lt;/method&gt;
+&lt;/node&gt;
+</example> 
+
+<p>
+For these reasons, performance wise, setting directly &#8212;for example, <code>setX</code>&#8212;is the
+fastest way to modify an attribute, and may be appropriate in a limited set of situations,
+though is not considered "safe".   
+Getting attributes directly is safe.   Getting attributes
+directly, and setting attributes using <method>setAttribute</method>, while seemingly the ideal
+ solution, is
+inconsistent, and may cause confusion or errors when new developers unfamiliar with LZX are
+brought on to a project.  Consider these choices carefully when
+setting coding standards for your LZX project.
+</p> 
+<?ignore
+<h2>Delegates</h2>
+ 
+
+
+
+<h2>Tables: list of events for LzNode and LzView</h2>
+
+<fixme>
+Here is an example of a custom event from the email app and illustrates the style we use here to avoid debugger warnings.
+
+        &lt;attribute name="loginstate" setter="setLoginstate(loginstate)"/&gt;
+        &lt;attribute name="onloginstate" value="null"/&gt;
+        &lt;method name="setLoginstate" args="newstate"&gt;
+            ...
+            if (this.onloginstate) this.onloginstate.sendEvent(loginstate);
+        &lt;/method&gt;
+</fixme>
+?>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

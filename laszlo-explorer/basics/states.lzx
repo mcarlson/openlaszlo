@@ -1,0 +1,32 @@
+<canvas>
+  <window title="Single-state window" bgcolor="yellow">
+    <simplelayout axis="y"/>
+    <text multiline="true" width="100%">A window with static contents.</text>
+    <button onclick="msw.setAttribute('visible', true)">Next</button>
+  </window>
+  
+  <window title="Multi-state window" y="100" id="msw" visible="false">
+    <!-- initial state -->
+    <state name="s1" apply="true">
+      <!-- same as the content of the single-state window above -->
+      <attribute name="bgcolor" value="yellow"/>
+      <simplelayout axis="y"/>
+      <text multiline="true" width="100%">A window with two states.
+      The content of each &lt;state&gt; looks like the content of a
+      static window.</text>
+      <button onclick="parent.setstate(parent.s2)">Forward</button>
+    </state>
+    
+    <state name="s2">
+      <attribute name="bgcolor" value="white"/>
+      <simplelayout axis="x"/>
+      <button onclick="parent.setstate(parent.s1)">Back</button>
+      <text>A second state with a horizontal layout and a different
+      background color.</text>
+    </state>
+    
+    <method name="setstate" args="s">
+      s1.remove(); s2.remove(); s.apply();
+    </method>
+  </window>
+</canvas>

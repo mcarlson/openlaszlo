@@ -1,0 +1,22 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<ol>
+<li>On startup verify that:
+<ul>
+<li>No debugger warnings are displayed on startup
+<li>the current month and year are displayed
+<li> some data is displayed in some days on the main display
+</li></ul></li>
+<li>Click on add event and verify that:
+	<ul><li>the calendar day display makes room for the event window panel sliding in on the right
+<li>you can grab the item on day display and drag it to another day
+<li>dropping the item on a different day updates the day in event info panel
+<li>clicking on week works
+<li>clicking on day view works
+<li>clicking on add event multiple times creates new events that can be dragged
+</ul></li>
+</ol>
+

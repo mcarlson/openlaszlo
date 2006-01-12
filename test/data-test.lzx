@@ -1,0 +1,166 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- data-test.lzx                                                         -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas width="1024" height="600" debug="true" >
+    <splash/>
+    <font name="helmet"   src="helmetr.ttf"  /> 
+    <debug font="helmet" fontsize="12" x="0" y="100" height="400" width="500" />
+    <datasource name="http">
+        <dataset name="data" request="true"
+                 src="../examples/xmldata/swatch.xml"/>
+    </datasource>
+    
+    <view name="dataTest" >
+        <datapointer name="data" xpath="data:/" ondata="this.processData();" 
+                     onerror="this.showError();" 
+                     oninit="Debug.write( 'dataset for ', this, ' : ', this.getDataset() )" >
+    
+            <!-- When data is recieved from the datasource, do this -->
+            <method name="processData">
+                Debug.write("Response received for: ", this);
+                if (this.getDataset().getStatusCode() != 200) {
+                    return;
+                }
+    
+                Debug.write("Load time: ", this.getDataset().getLoadTime());
+                Debug.write("HTTP status: ", this.getDataset().getStatusCode());
+                Debug.write("Load counter: ", this.getDataset().getLoadCount());
+                Debug.write(" ");
+                var h = this.getDataset().getAllResponseHeaders();
+                if (true) {
+                    Debug.write("HTTP headers ");
+                    for (var i in h) {
+                        Debug.write("  ", i, " = ", h[i]);
+                    }
+                }
+                Debug.write(" ");
+                // this.selectChild();
+                // this.list();
+                Debug.write(this.serialize());
+            </method>
+    
+            <method name="showError">
+                Debug.write("Error: ", this.getDataset().getErrorString());
+            </method>
+
+            <!-- List nodes heirarchically - like XML, with indentation -->
+            <method name="list">
+                <!-- List myself and all my children in Debug window -->
+                Debug.write( this.serialize() );
+            </method>
+    
+            <method name="publish">
+                <!-- Publish myself and all my children -->
+                var ds = this.getDataset();
+                ds.setAutorequest(false);
+                ds.setSrc("test-suites.xml");
+                ds.setQueryType('POST')
+                ds.setAutorequest(true);
+                ds.setQueryString({data: this.serialize()})
+            </method>
+        </datapointer>
+
+        <attribute name="cacheable" value="false" />
+        <attribute name="encodings" value="false" />
+        <attribute name="headers" value="true" />
+
+        <button text="List data" onclick="this.parent.data.list();"/>
+
+        <button text="Publish data" onclick="this.parent.data.publish();"/>
+        
+        <button text="Change query" onclick="this.setQuery();">
+            <method name="setQuery">
+                var ds = canvas.dataTest.data.getDataset();
+                ds.setAutorequest(false);
+                ds.setSrc("../examples/xmldata/swatch.xml");
+                ds.setAutorequest(true);
+                ds.setQueryType('POST')
+                ds.setQueryString('name=value1')
+                ds.setQueryString('name=value2')
+                ds.setQueryString('name=value3')
+                ds.setQueryString('name=value4')
+                ds.setQueryString('name=value5')
+                ds.setQueryString('name=value6')
+                ds.setQueryString('name=value7')
+                ds.setQueryString('name=value8')
+                ds.setQueryString('name=value9')
+                ds.setQueryString('name=value10')
+            </method>
+        </button>
+
+        <button text="Abort Load" onclick="this.abort();">
+            <method name="abort">
+                canvas.dataTest.data.getDataset().abort();
+            </method>
+        </button>
+
+        <button text="Change URL" onclick="this.setURL();">
+            <method name="setURL">
+                var ds = canvas.dataTest.data.getDataset();
+                ds.setAutorequest(false);
+                ds.setSrc('../examples/xmldata/xmldata.lzx');
+                ds.setAutorequest(true);
+                ds.setQueryString('lzt=xml')
+                ds.setQueryType('GET')
+                ds.doRequest();
+            </method>
+        </button>
+
+        <button text="Toggle headers" onclick="this.toggleHeaders();">
+            <method name="toggleHeaders">
+                var ds = canvas.dataTest.data.getDataset();
+                if (parent.headers == false) {
+                    parent.headers = true;
+                } else {
+                    parent.headers = false;
+                }
+                ds.setAttribute('sendheaders', parent.headers);
+                ds.doRequest();
+            </method>
+        </button>
+
+        <button text="Toggle encodings" onclick="this.toggleEncodings();">
+            <method name="toggleEncodings">
+                var ds = canvas.dataTest.data.getDataset();
+                if (parent.encodings == false) {
+                Debug.write('setting enc to true');
+                    parent.encodings = true;
+                } else {
+                Debug.write('setting enc to false');
+                    parent.encodings = false;
+                }
+                ds.setAttribute('acceptencodings', parent.encodings);
+                ds.doRequest();
+            </method>
+        </button>
+
+        <button text="Toggle cacheable" onclick="this.toggleCacheable();">
+            <method name="toggleCacheable">
+                var ds = canvas.dataTest.data.getDataset();
+                if (parent.cacheable == false) {
+                    parent.cacheable = true;
+                    parent.headers = false;
+                } else {
+                    parent.cacheable = false;
+                }
+                ds.setAttribute('sendheaders', parent.headers);
+                ds.setAttribute('cacheable', parent.cacheable);
+                ds.setAutorequest(true);
+                ds.setSrc("../examples/swatch.xml");
+                // ds.doRequest();
+                ds.setAutorequest(false);
+            </method>
+        </button>
+
+        <simplelayout axis="x" spacing="3"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

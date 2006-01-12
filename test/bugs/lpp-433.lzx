@@ -1,0 +1,9 @@
+<canvas width="100%" height="100%" debug="true">
+  <debug  fontsize="12"/>
+
+  <text bgcolor="#cccccc"  id="foo" resize="true">foo</text>
+  <simplelayout/>
+  <button onclick="foo.setText(' '); Debug.write('text view height =',foo.height)">Click to set text to " "</button>
+
+
+</canvas>

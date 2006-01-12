@@ -1,0 +1,29 @@
+<canvas>
+    <script>
+        var relocnt = 0
+        var waitDel = undefined;
+                
+        function waitnload()
+        {
+        <![CDATA[
+            if (typeof(waitDel) == "undefined") 
+            	waitDel = new LzDelegate(memhog, 'doRequest');
+            counter.setText(relocnt++)
+            LzTimer.addTimer(waitDel, 1000);
+        ]]>
+		}
+    </script>
+
+
+    <dataset name="memhog" src="testdata.xml" type="http" 
+             getresponseheaders="false" request="true" 
+             ondata="waitnload();"/>
+    
+    <text name="counter"/>
+    
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

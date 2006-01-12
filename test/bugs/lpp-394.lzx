@@ -1,0 +1,35 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+
+  <font name="helmet" src="helmetb.ttf"/>
+  
+  <simplelayout axis="y" spacing="8"/>
+  
+  <inputtext id="t" font="helmet"
+        fontsize="20"
+        fgcolor="#175DDE">Where to Begin</inputtext>
+  
+  <button onclick="t.setFontSize(10)">set size</button>
+  <button onclick="t.setText('hello')">set text</button>
+
+
+    <simplelayout spacing="20" inset="20" />
+    <constantlayout axis="x" value="20" />
+
+    <view width="300" height="300" bgcolor="black">
+        <inputtext id="inp" multiline="true" x="1" y="1" bgcolor="white"
+            width="$once{parent.width-2}" height="$once{parent.height-2}" />
+    </view>
+
+    <button text="add count">
+        <attribute name="count" value="0" />
+        <method event="onclick">
+            var t = inp.getText();
+            inp.setText(t + '\n\n' + (count++));
+        </method>
+    </button>
+
+
+
+</canvas>

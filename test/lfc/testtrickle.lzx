@@ -1,0 +1,79 @@
+
+<canvas debug="true" >
+    <include href="utils/layouts/alllayouts.lzx" />
+    <class name="heavyinside" width="20" height="20" bgcolor="red"
+           oninit="
+           //for( var i = 100000; i > 0; i--){}
+           " valign="center" />
+
+    <class name="heavybox" bgcolor="blue" opacity=".70" clickable="true" 
+           onmousedown="" height="40" >
+    </class>
+
+    <view>
+        <simplelayout axis="y" />
+        <heavybox>
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <heavybox visible="false">
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <heavybox visible="false" >
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <heavybox visible="false" >
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <heavybox visible="false" >
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <heavybox visible="false" >
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <heavybox visible="false" >
+           <simplelayout axis="x" spacing="2"/>
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+           <heavyinside />
+        </heavybox>
+        <button text="show one" onclick="this.parent.subviews[ this.cs++].setVisible( true ); " >
+            <attribute name="cs" value="1" />
+        </button>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

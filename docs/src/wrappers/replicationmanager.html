@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzReplicationManager">
+    <lztier>LFC</lztier>
+    <lzcategory>Data</lzcategory>
+    <lzshortdesc>
+        The controller for views replicated by data.
+    </lzshortdesc>
+    <lzapi>api-lzreplicationmanager.xml</lzapi>
+</lzelement>
+
+<p>
+When a view's datapath matches more than one data node, one instance
+of the view is created for each match. The replicated views are
+referred to as <glossterm>clones</glossterm>' When this happens, a
+<glossterm>replication manager</glossterm> (or a subclass of
+<classname>LzReplicationManager</classname>) is created to manage the
+clones. Replication managers are never directly instantiated &#x2014;
+they are created when a datapath makes multiple matches.</p>
+
+<p>If the replicated view was named, the clone manager takes over the
+named spot in the parent. The example below demonstrates this, and
+shows how to reference individual clones.</p>
+
+<p>In the example that follows, a view, called
+<varname>replView</varname> is bound to a dataset
+<varname>somedata</varname>. For each matching node in the dataset, a
+new view is created. These views contain the text of the dataset.  In
+other words, the single line</p>
+
+<pre>
+&lt;view name="replView" datapath="somedata:/*"&gt;
+</pre>
+
+<p>causes the creation of five views (because there were five elements
+in the dataset that matched the selection criteria). These "cloned"
+views are numbered successively, starting with zero. The highlited
+section of the code below shows how to use the
+<method>getCloneNumber</method> method to access each replicated
+view.</p>
+
+<example>
+&lt;canvas height="140"&gt;
+  &lt;dataset name="somedata"&gt;
+    &lt;one/&gt; &lt;two/&gt; &lt;three/&gt; &lt;four/&gt; &lt;five/&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout/&gt;
+  &lt;button onclick="moveClone()"&gt;
+    Move clone 
+    <em>&lt;method name="moveClone"&gt;&lt;![CDATA[
+      var nextClone = replView.getCloneNumber(this.cnum++);
+      if (nextClone == null) {
+        this.cnum = 0;
+        var nextClone = replView.getCloneNumber(this.cnum++);
+      }
+      nextClone.setAttribute('x', nextClone.x + 10);
+    ]]&gt;&lt;/method&gt;</em>
+    &lt;attribute name="cnum" value="0"/&gt;
+  &lt;/button&gt;
+  &lt;view name="replView" datapath="somedata:/*"&gt;
+    &lt;text datapath="name()"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+ 
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

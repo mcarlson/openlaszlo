@@ -1,0 +1,139 @@
+<!--=======================================================================-->
+<!-- newtabslider.lzx                                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+    
+    <!-- CLASS: tabelement  =============================================== -->
+    <!-- ================================================================== -->
+    <class name="newtabelement" clickable="true" 
+           width="${parent.width}"
+           onmouseup="this.parent.openTab(this,true)"  >
+           
+        <!-- ATTRIBUTES -->
+        <attribute name="minheight" value="20" setter="this.setMinHeight(minHeight)" />
+        <attribute name="height" value="this.minheight" when="always" />
+        <attribute name="contentvisible" value="false" />
+
+        <!-- METHODS -->
+        <method name="open" args="h,d,withAnimation" >
+            var hgt = this.adjustHeight(h);
+            if( withAnimation ) {
+               var anm = this.animate("height",hgt,d,true);
+               this.dlo.register(anm,"onstop");
+            } else {
+                this.setAttribute("height",hgt);
+            }
+            this.setAttribute( "contentvisible" , true );
+        </method>
+ 
+        <method name="setMinHeight" args="mh">
+            if (mh) {
+                this.minHeight = mh;
+            } else {
+                this.minHeight = parent.minTabHeight;
+            }
+        </method>
+
+        <method name="openned">
+            this.onopenned.sendEvent();
+        </method>
+
+        <method name="close" args="h,d">
+            var hgt = this.adjustHeight(h);
+            var anm = this.animate("height",-hgt,d,true);
+            this.onclosing.sendevent();
+            this.dlc.register(anm,"onstop");
+        </method>
+
+        <method name="closed">
+            //this.setvisiblestate.sendEvent(false);
+            this.onclosed.sendEvent();
+            this.dlc.unregisterall();
+            this.setAttribute( "contentvisible" , false );
+        </method>
+        
+        <method name="init" >
+            super.init();
+            this.parent.update();  //update the tabSlider
+            this.dlc = new LZDelegate(this,"closed");
+            this.dlo = new LZDelegate(this,"openned");
+        </method>
+        
+        <method name="adjustHeight" args="h" >
+            return h;
+        </method>
+                
+    </class>
+
+    <!-- CLASS: tabslider  ================================================ -->
+    <!-- ================================================================== -->
+    <class name="newtabslider" >
+
+        <!-- ATTRIBUTES -->
+        <attribute name="slideDuration" value="1000" />
+        <attribute name="spacing" value="0" />
+        <attribute name="minTabHeight" value="20" />
+        <attribute name="opennedTab" value="null" />
+        <!-- <attribute name="openHeight" value="null"/> -->
+        
+        <!-- LAYOUTS -->
+        <simplelayout axis="y"/>
+
+        <!-- METHODS -->
+        <method name="init" >
+            this.dl = new LzDelegate(this,"update",this,"onheight");
+            super.init();
+            this.reset();
+         </method>
+
+        <method name="reset" >
+            this.layouts[0].spacing = this.spacing; 
+            this.layouts[0].reset();
+            this.calcAvailableHeight();
+        </method>
+
+        <method name="update" >
+            <![CDATA[
+            this.calcAvailableHeight();
+            //this.opennedTab.setAttribute("height",this.opennedTab.minheight + this.availableHeight);
+            ]]>            
+        </method>
+               
+        <method name="openTab" args="tabelement,withAnimation" >
+            <![CDATA[
+            if (this.opennedTab != tabelement) {
+                tabelement.open(this.availableHeight,this.slideDuration,withAnimation);
+                if ( typeof(this.opennedTab) == "object" ) {
+                    this.opennedTab.close(-this.availableHeight,this.slideDuration);
+                    //this.opennedTab.close(-this.opennedTab.height+this.opennedTab.minheight,this.slideDuration);
+                }
+                this.opennedTab = tabelement;
+            } else {
+                //TAB IS ALREADY OPENNED SO SEND EVENT
+                this.opennedTab.onopenned.sendEvent();
+            }
+            ]]>
+        </method>
+
+        <method name="calcAvailableHeight" >
+            <![CDATA[
+            this.availableHeight = 0;
+            if ( typeof( this.subviews ) == "object" ) {
+                for( var m=0; m < this.subviews.length; m++) {
+                    this.availableHeight += this.subviews[m].minheight + this.spacing;
+                }
+            }
+            this.availableHeight = Math.max(0,this.getAttribute("height") -     
+                                   this.availableHeight + this.spacing);
+            ]]>            
+        </method>
+        
+   </class> 
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

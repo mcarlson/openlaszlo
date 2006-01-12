@@ -1,0 +1,8 @@
+<!-- Clicking on "link" should redirect to the Laszlo home page -->
+<canvas>
+  <text>A <a href="http://www.laszlosystems.com">link</a>.</text>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

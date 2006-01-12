@@ -1,0 +1,41 @@
+<canvas width="1200" height="600">
+    <include href="redmond"/>
+    <inittimer/>
+    <dataset name="testtdata">
+        <myXML>
+            <item>blah 1</item>
+            <item>blah 2</item>
+            <item>blah 3</item>
+            <item>blah 4</item>
+            <item>blah 5</item>
+            <item>blah 6</item>
+            <item>blah 7</item>
+            <item>blah 8</item>
+            <item>blah 9</item>
+            <item>blah 10</item>
+        </myXML>
+    </dataset>
+
+    <include href="redmond/redmondcombobox.lzx" />
+    <include href="utils/layouts/wrappinglayout.lzx" />
+
+    <view  bgcolor="red" width="600" height="50" clip="true">
+        <simplelayout axis="x" spacing="5"/>
+        <combobox id="showall" width="100" y="10" datapath="testtdata:/myXML/item[1]/text()" itemfield="testtdata:/myXML/item/"/>
+        <combobox id="show4" width="100" y="10" datapath="testtdata:/myXML/item[1]/text()" itemfield="testtdata:/myXML/item/" shownitems="4"/>
+        <combobox id="show5" width="100" y="10" datapath="testtdata:/myXML/item[1]/text()" itemfield="testtdata:/myXML/item/" shownitems="5"/>
+        <combobox id="show6" width="100" y="10" datapath="testtdata:/myXML/item[1]/text()" itemfield="testtdata:/myXML/item/" shownitems="6"/>
+        <combobox id="show10" width="100" y="10" datapath="testtdata:/myXML/item[1]/text()" itemfield="testtdata:/myXML/item/" shownitems="10"/>
+    </view>
+    <inputtext>click here to test mode</inputtext>
+    <view bgcolor="red" width="300" height="50" clip="true">
+        <combobox id="testvalign" width="100" y="10" datapath="testtdata:/myXML/item[1]/text()" itemfield="testtdata:/myXML/item/" valign="middle" align="center"/>
+    </view>
+
+    <simplelayout spacing="20"/>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

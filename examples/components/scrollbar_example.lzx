@@ -1,0 +1,78 @@
+<canvas height="600" width="600" bgcolor="0xeaeaea">
+    <resource name="cherry" src="testmedia/cherry.png"/>
+    
+    <class name="scrollview" defaultplacement="content" clip="true">
+        <attribute name="scrollto" value="0" type="number"/>
+        <view x="${-parent.scrollto}" name="content"/>
+        <scrollbar name="sbx" axis="x"/>
+        <scrollbar name="sby"/>
+    </class>
+    
+    <class name="testoldstyle" clip="true" height="250" width="200" >
+        <view options="releasetolayout">
+            <include href="testmedia/frosty.lzx" />
+        </view>
+        <scrollbar height="${parent.height}" axis="y"/>
+        <resizelayout axis="x"/>
+    </class>
+    
+    <view x="40" y="40">
+        <view>
+            <view>
+                <view bgcolor="0x848484" width="200" height="100">
+                    <scrollview id="sv1" width="${parent.width-2}"
+                         height="${parent.height-2}" x="1" y="1" 
+                         scrollto="50" bgcolor="white">
+                        <include href="testmedia/frosty.lzx" />
+                </scrollview>
+                </view>
+                <view>
+                    <view bgcolor="0x4D4D4D" width="60" height="22">
+                        <inputtext id="scrolltopos" bgcolor="0xF2F2F2" width="${parent.width-2}"
+                             height="${parent.height-2}" x="1" y="1">0</inputtext>
+                    </view>
+                    <button onclick="Debug.write(Number(scrolltopos.getText()));
+                            sv1.setAttribute('scrollto',Number(scrolltopos.getText()))">set scroll</button>
+                    <simplelayout axis="x" spacing="10"/>
+                </view>
+                <simplelayout axis="y" spacing="10"/>
+            </view>
+            <view bgcolor="0x848484" height="100" width="100">
+                <scrollview id="sv2"  bgcolor="white"  width="${parent.width-2}"
+                    height="${parent.height-2}" x="1" y="1">
+                    <view name="pic" resource="cherry" clip="true"/>
+                </scrollview>
+            </view>
+        
+            <view>
+            <view bgcolor="0x4D4D4D" width="60" height="22">
+                <inputtext id="w" bgcolor="0xF2F2F2" width="${parent.width-2}"
+                     height="${parent.height-2}" x="1" y="1">20</inputtext>
+            </view>
+            <button onclick="sv2.pic.setAttribute('width', Number(w.getText()))">set width</button>
+            <button onclick="Debug.write('width='+sv2.pic.width);
+                            sv2.pic.animate('width', Number(w.getText()), 1000);
+                            Debug.write('width='+sv2.pic.getExpectedAttribute('width'));">anim width</button>
+            <simplelayout axis="y" spacing="8"/>
+            </view>
+            <simplelayout axis="x" spacing="20"/>
+        </view>
+        
+        <view>
+            <view bgcolor="0x848484" height="200" width="200" >
+                <scrollview id="sv3" bgcolor="white" width="${parent.width-2}"
+                    height="${parent.height-2}" x="1" y="1">
+                <include href="testmedia/frosty.lzx" />
+            </scrollview>
+            </view>
+            <simplelayout axis="x" spacing="20"/>
+        </view>
+        <simplelayout axis="y" spacing="20"/>
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

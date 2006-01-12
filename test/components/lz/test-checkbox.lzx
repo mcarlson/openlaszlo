@@ -1,0 +1,58 @@
+<canvas debug="true">
+
+    <debug y="250"/>
+    <view>
+        <checkbox id="a" name="cb1" text="(a) this has a really long name" />
+
+        <checkbox id="a2">(a2) this name is inside the tag</checkbox>
+
+        <checkbox id="b" name="cb2"  value="true" text="(b) checked by default"/>
+        <checkbox id="c" name="cb3"  enabled="false" text="(c) disabled"/>
+
+        <checkbox id="d" name="green" text="(d) show green square"/>
+
+        <view width="80" height="80" bgcolor="green" visible="${d.value}"/>
+
+        <simplelayout spacing="20"/>
+     </view>
+
+    <view>
+        <checkbox id="checkMe" text="Check me" />
+
+        <button text="Toggle" onclick= "checkMe.setAttribute('value', !checkMe.value);"/>
+        <button text="Disable" onclick= "checkMe.setAttribute('enabled', false);"/>
+        <button text="Enable" onclick= "checkMe.setAttribute('enabled', true)"/>
+        <button text="status" onclick= "debug.write('value: '+checkMe.value);"/>
+        <simplelayout axis="y" spacing="4"/>
+
+    </view>
+    <view layout="spacing:2">
+        <text>text should show "true" or "false"</text>
+        <text>representing the value of the checkbox</text>
+        <view layout="axis:x">
+            <text text="${test2.value}"/>
+            <checkbox id="test2" value="22" text="22"/>
+        </view>
+        <view layout="axis:x">
+            <text text="${test1.value}"/>
+            <checkbox id="test1" value="0" text="0"/>
+        </view>
+        <view layout="axis:x">
+            <text text="${test3.value}"/>
+            <checkbox id="test3" value="'true'" text="'true'"/>
+        </view>
+        <view layout="axis:x">
+            <text text="${test4.value}"/>
+            <checkbox id="test4" value="'false'" text="'false'"/>
+        </view>
+
+    </view>
+    <simplelayout axis="x" spacing="15" inset="15"/>
+    <constantlayout axis="y" value="20"/>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

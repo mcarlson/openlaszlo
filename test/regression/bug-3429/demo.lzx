@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!--=======================================================================-->
+<!-- acis.lzx                                                              -->
+<!--                                                                       -->
+<!-- ACIS Application (DEMO) written using the Laszlo Application Language -->
+<!-- Created by Christien Lomax (clomax@coemergence.com)                   -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas bgcolor="white" width="980" height="540" oninit="debug.setX(630);debug.setY(380)" >
+
+	<!-- Classes =========================================================================== -->
+	<class name="MenuHandler">
+		<method name="open">
+            <![CDATA[
+				// show window containing saved searches
+				debug.write('EXECUTED command open');
+				win_savedSearch.open();
+            ]]>
+           </method>
+
+		<method name="save">
+            <![CDATA[
+				// show save window
+            ]]>
+		</method>
+
+	</class>
+
+	<MenuHandler name="menuHandler"/>
+
+	<class name="Search">
+		<method name="getStringCriteria" args="name">
+			<![CDATA[
+				// show window to select string criteria... (ie: USB)
+				debug.write('Showing String criteria for window [' + name + ']');
+				win_searchCriteria_string.setAttribute( "title", name );
+				win_searchCriteria_string.open();
+			]]>
+		</method>
+	</class>
+
+	<Search name="search"/>
+
+    <class name="ExtendedListItem" extends="listitem" height="20">
+        <attribute name="color" value="0x000000" when="once"/>
+        <view x="4" y="5" width="10" height="10" bgcolor="${parent.color}"/>
+        <text x="18"  width="300" text="${parent.text}"/>
+    </class>
+	<!-- Windows ============================================================================ -->
+	<class name="ExtendedWindow" extends="window">
+        <dragstate name="_windowdrag"
+                drag_min_x="0"
+                drag_max_x="$once{canvas.width - this.width}"
+                drag_min_y="0"
+                drag_max_y="$once{canvas.height - this.height}"/>
+    </class>
+
+	<ExtendedWindow id="win_savedSearch" x="10" y="10" width="300"
+		title="Open a Saved Search" resizable="true" closeable="true" visible="false">
+		<list spacing="2" shownitems="6" width="300">
+			<ExtendedListItem color="iceblue2">Item 1</ExtendedListItem>
+			<ExtendedListItem color="iceblue2">Item 2</ExtendedListItem>
+			<ExtendedListItem>Item 3</ExtendedListItem>
+			<ExtendedListItem>Item 4</ExtendedListItem>
+			<ExtendedListItem>Item 5</ExtendedListItem>
+			<ExtendedListItem>Item 6</ExtendedListItem>
+		</list>
+	</ExtendedWindow>
+
+	<ExtendedWindow id="win_searchCriteria_string" x="10" y="10" width="300"
+		title="----" resizable="true" closeable="true" visible="false">
+		<form>
+			<statictext>Search String:</statictext>
+			<edittext id="searchString" isdefault="true" height="20" width="120"/>
+		</form>
+	</ExtendedWindow>
+
+
+	<!-- Commands =========================================================================== -->
+	<command id="cmd_new"
+	   onselect="debug.write('EXECUTED command new')"
+	   key="['Control','Shift','N']"/>
+
+	<command id="cmd_view"
+	   onselect="debug.write('EXECUTED command view')"
+	   key="['Control','Shift','V']"/>
+
+	<command id="cmd_save"
+	   onselect="debug.write('EXECUTED command save')"
+	   key="['Control','Shift','S']"/>
+
+	<command id="cmd_saveas"
+	   onselect="debug.write('EXECUTED command save as')"
+	   key="['Control','Shift','A']"/>
+
+	<command id="cmd_open"
+	   onselect="menuHandler.open()"
+	   key="['Control','Shift','O']"/>
+
+
+	<!-- Resources ========================================================================== -->
+<!--	<resource name="logo" src="images/header_top.gif"/>-->
+<!--	<resource name="options" src="images/header_options.gif"/>-->
+
+	<view width="980" height="60" bgcolor="silver">
+<!--		<view resource="logo" x="0" y="0"/>-->
+<!--		<view resource="options" x="862" y="0"/>-->
+	</view>
+
+
+
+	<tabs x="0" y="40" width="980" height="480">
+
+		<tabpane text="Home" inset_left="0" inset_top="0">
+
+
+			<simplelayout/>
+
+
+        </tabpane>
+
+        <tabpane text="Tab 2">
+            <text>Some text is here.</text>
+        </tabpane>
+
+        <tabpane text="Tab 3">
+            <text>Some text is here.</text>
+        </tabpane>
+
+        <tabpane text="Tab 4">
+            <text>Some text is here.</text>
+        </tabpane>
+
+        <tabpane text="Tab 5">
+
+			<menubar width="980" x="-8" y="-8" >
+		        <menu text="Search" width="175">
+		            <menuitem text="New" command="cmd_new"/>
+		            <menuitem text="View" command="cmd_view"/>
+		            <menuitem text="Save" command="cmd_save" enabled="false"/>
+		            <menuitem text="Save As..." command="cmd_saveas" enabled="false"/>
+		            <menuitem text="Open" command="cmd_open"/>
+		        </menu>
+		        <menu text="Reports" width="100">
+		            <menuitem text="Matrix"/>
+		        </menu>
+		    </menubar>
+
+
+			<view x="10" y="80">
+	            <text>Choose your search criteria on the left....</text>
+			</view>
+
+			<tabslider x="-8" y="10" id="ts1" width="200" height="420" bordersize="1" >
+
+				<tabelement text="Master Criteria 1" selected="true" inset_left="0" inset_top="0" inset_right="0" inset_bottom="0">
+					<scrollbar x="180" scrolltarget="list_projects"/>
+					<list id="list_projects" width="180" >
+						<ExtendedListItem>Criteria 1</ExtendedListItem>
+						<ExtendedListItem>Criteria 2</ExtendedListItem>
+						<ExtendedListItem>Criteria 3</ExtendedListItem>
+						<ExtendedListItem color="iceblue2">Criteria 4
+							<menu name="menu_criteria4" attach="right" >Document
+								 <menuitem text="SubCriteria 1" onselect="search.getStringCriteria('Name')"/>
+								 <menuitem text="SubCriteria 2" >
+									 <menu name="SubCriteria 3" >Document
+										 <menuitem text="SubCriteria 3.1" />
+										 <menuitem text="SubCriteria 3.2" />
+									 </menu>
+							   </menuitem>
+							</menu>
+							<method event="onmouseover">
+								this.menu_criteria4.setOpen(true);
+							</method>
+						</ExtendedListItem>
+						<ExtendedListItem>Criteria 5</ExtendedListItem>
+						<ExtendedListItem>Criteria 6</ExtendedListItem>
+						<ExtendedListItem>Criteria 7</ExtendedListItem>
+						<ExtendedListItem>Criteria 8</ExtendedListItem>
+						<ExtendedListItem>Criteria 9</ExtendedListItem>
+						<ExtendedListItem>Criteria 10</ExtendedListItem>
+						<ExtendedListItem>Criteria 11</ExtendedListItem>
+						<ExtendedListItem>Criteria 12</ExtendedListItem>
+						<ExtendedListItem>Criteria 13</ExtendedListItem>
+						<ExtendedListItem>Criteria 14</ExtendedListItem>
+						<ExtendedListItem color="iceblue2">Criteria 15
+							<menu name="menu_criteria15" attach="right" >Document
+								 <menuitem text="SubCriteria 1" onselect="search.getStringCriteria('Name')"/>
+								 <menuitem text="SubCriteria 2" >
+									 <menu name="SubCriteria 3" >Document
+										 <menuitem text="SubCriteria 3.1" />
+										 <menuitem text="SubCriteria 3.2" />
+									 </menu>
+							   </menuitem>
+							</menu>
+							<method event="onmouseover">
+								this.menu_criteria15.setOpen(true);
+							</method>
+						</ExtendedListItem>
+						<ExtendedListItem color="iceblue2">Criteria 16
+							<menu name="menu_criteria16" attach="right" >Document
+								 <menuitem text="SubCriteria 1" onselect="search.getStringCriteria('Name')"/>
+								 <menuitem text="SubCriteria 2" >
+									 <menu name="SubCriteria 3" >Document
+										 <menuitem text="SubCriteria 3.1" />
+										 <menuitem text="SubCriteria 3.2" />
+									 </menu>
+							   </menuitem>
+							</menu>
+							<method event="onmouseover">
+								this.menu_criteria16.setOpen(true);
+							</method>
+						</ExtendedListItem>
+						<ExtendedListItem>Criteria 17</ExtendedListItem>
+						<ExtendedListItem color="iceblue2">Criteria 18
+							<menu name="menu_criteria18" attach="right" >Document
+								 <menuitem text="SubCriteria 1" onselect="search.getStringCriteria('Name')"/>
+								 <menuitem text="SubCriteria 2" >
+									 <menu name="SubCriteria 3" >Document
+										 <menuitem text="SubCriteria 3.1" />
+										 <menuitem text="SubCriteria 3.2" />
+									 </menu>
+							   </menuitem>
+							</menu>
+							<method event="onmouseover">
+								this.menu_criteria18.setOpen(true);
+							</method>
+						</ExtendedListItem>
+						<ExtendedListItem color="iceblue2">Criteria 19
+							<menu name="menu_criteria19" attach="right" >Document
+								 <menuitem text="SubCriteria 1" onselect="search.getStringCriteria('Name')"/>
+								 <menuitem text="SubCriteria 2" >
+									 <menu name="SubCriteria 3" >Document
+										 <menuitem text="SubCriteria 3.1" />
+										 <menuitem text="SubCriteria 3.2" />
+									 </menu>
+							   </menuitem>
+							</menu>
+							<method event="onmouseover">
+								this.menu_criteria19.setOpen(true);
+							</method>
+						</ExtendedListItem>
+						<ExtendedListItem color="iceblue2">Criteria 20
+							<menu name="menu_criteria20" attach="right" >Document
+								 <menuitem text="SubCriteria 1" onselect="search.getStringCriteria('Name')"/>
+								 <menuitem text="SubCriteria 2" >
+									 <menu name="SubCriteria 3" >Document
+										 <menuitem text="SubCriteria 3.1" />
+										 <menuitem text="SubCriteria 3.2" />
+									 </menu>
+							   </menuitem>
+							</menu>
+							<method event="onmouseover">
+								this.menu_criteria20.setOpen(true);
+							</method>
+						</ExtendedListItem>
+						<ExtendedListItem>Criteria 21</ExtendedListItem>
+						<ExtendedListItem>Criteria 22</ExtendedListItem>
+					</list>
+				</tabelement>
+
+
+				<tabelement text="Master Criteria 2" >
+				   <view bgcolor="0x3A75A3" x="10" y="10" width="50" height="50"/>
+				</tabelement>
+
+				<tabelement text="Master Criteria 3" >
+				   <view bgcolor="0x3A75A3" x="10" y="10" width="50" height="50"/>
+				</tabelement>
+
+				<tabelement text="Master Criteria 4" >
+				   <view bgcolor="0x3A75A3" x="10" y="10" width="50" height="50"/>
+				</tabelement>
+
+			</tabslider>
+        </tabpane>
+
+        <tabpane text="Tab 6">
+            <text>Some text is here.</text>
+        </tabpane>
+
+	</tabs>
+
+
+</canvas>
+
+<!--                                                                       -->
+<!-- Copyright 2001-2004 Coemergence Inc.  All Rights Reserved.            -->
+<!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
+<!-- This software is the proprietary information of Coemergence Inc.      -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

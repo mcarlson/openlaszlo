@@ -1,0 +1,124 @@
+<canvas width="1000" height="900" debug="false">    
+    <include href="chartstyle.lzx"/>    
+    <include href="charts/addon/zoomarea.lzx"/>
+    <include href="charts/addon/slider/slider.lzx"/> 
+    
+    <dataset name="baseball" src="../../data/simple-redsox-data.xml"/>
+    <font name="myverity" src="verity/verityplus11.ttf"/>
+
+    <simplelayout axis="y" spacing="10"/>   
+    
+    <view>
+        <simplelayout axis="x" spacing="10"/>
+        <button>undo
+            <method event="onclick">
+                chart1.undo(500);
+            </method>
+        </button>
+        <button x="100"> show all points
+            <method event="onclick">
+                chart1.changeBound(chart1.defaultminx, chart1.defaultminy, 
+                    chart1.defaultmaxx,chart1.defaultmaxy, 1000, true);
+            </method>
+        </button> 
+    </view>
+    
+    <rangeslider x="100" id="slider"  minlimit="0" maxlimit="18"  startlabel="2004" endlabel="1987">
+        <method event="onminvalue">
+            if(chart1.initdone)
+            {
+                chart1.changeBound(chart1.minx, this.minvalue, chart1.maxx, this.maxvalue); 
+            }                       
+        </method>
+        <method event="onmaxvalue">
+            if(chart1.initdone)
+            {
+                chart1.changeBound(chart1.minx, this.minvalue, chart1.maxx, this.maxvalue);             
+            }
+        </method>
+    </rangeslider>
+        
+     <!-- Chart Title -->      
+      <view name="title"  y="10">
+        <text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF">Bar Chart</text>      
+     </view>
+
+    <!-- Bar Chart -->     
+    <barchart id="chart1" width="500" height="500" datatipEnabled="true" datatipColumn="tooltip" 
+    style="defaultchartstyle05" datalabelEnabled="true" datalabelColumn="label" zoomEnabled="false">
+
+        <dataseries datapath="baseball:/records" >
+            <datacolumn name="y"  columndatapath="record/@year" datatype="number"/>
+            <datacolumn name="label" columndatapath="record/@wins"/>
+            <dataseries label="wins">                
+                <datacolumn  name="x" columndatapath="record/@wins" datatype="number"/>
+                <datacolumn name="tooltip" columndatapath="record">
+                    <method name="processData" args="v">
+                        return  "year: " + v.attributes.year + "  wins: " + v.attributes.wins;
+                    </method>
+                </datacolumn>
+            </dataseries>
+            
+            <dataseries label="losses">                
+                    <datacolumn name="x" columndatapath="record/@losses" datatype="number"/>
+                    <datacolumn name="tooltip" columndatapath="record">
+                        <method name="processData" args="v">
+                            return  "year: " + v.attributes.year + "  losses: " + v.attributes.losses;
+                        </method>
+                    </datacolumn>
+            </dataseries>    
+                                 
+        </dataseries> 
+        
+        <barchartplotarea name="plotarea" clip="true"/>
+        
+        <horizontalaxis name="haxis" 
+                        title="Values" 
+                        type="linear" 
+                        interval="3"
+                        columnName="x" 
+                        tickMarksLabelsEnabled="true" 
+                        titleLocation="default" >
+        </horizontalaxis>
+        
+        <verticalaxis name="vaxis" 
+                      title="Years" 
+                      type="categorical" 
+                      columnName="y" 
+                      minimum="1960"
+                      maximum="1985"
+                      titleX="${chart1.height/2}" 
+                      titleY="10" 
+                      tickMarksLabelsEnabled="true" 
+                      majorTickEnabled="false">
+        </verticalaxis>        
+     <zoomarea/>        
+    </barchart>
+    
+    <legend name="legendbox" 
+            legendFontsize="15" 
+            legendborder="true" 
+            borderWidth="2" 
+            chart="${chart1}" 
+            x="${chart1.x + chart1.width}" 
+            y="${(chart1.y + chart1.height)/2}" 
+            options="ignorelayout" 
+            fillColor="0xFFFFCC" 
+            legendFontcolor="0x000000" 
+            direction="vertical">
+          <method event="onitemmouseclick" args="item">
+              var topseries = this.chart.getDataSeries();
+
+              topseries.getDataSeries(item.identifier).enabled = item.linevisible;
+              this.chart.renderPlotArea();
+              item.linevisible = !item.linevisible;
+          </method> 
+    </legend>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

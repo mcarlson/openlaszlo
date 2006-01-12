@@ -1,0 +1,53 @@
+<canvas>
+  <include href="lz/tree.lzx" />
+  
+  <dataset name="gridData" src="http:griddata.xml" request="true"/>
+  <dataset name="treedata" src="http:treedata.xml" request="true"/>
+  
+  <tabs>
+    <tabpane>Form Components
+      <simplelayout axis="x" spacing="20" inset="10"/>
+      <view layout="spacing: 10">
+        <text>A full set of components</text>
+        <radiogroup>
+          <radiobutton>Check</radiobutton>
+          <radiobutton>Debit</radiobutton>
+          <radiobutton>Credit card</radiobutton>
+        </radiogroup>
+        <combobox width="120" editable="false">
+          <textlistitem text="AmEx"/>
+          <textlistitem text="Visa" selected="true"/>
+          <textlistitem text="Mastercard"/>
+          <textlistitem text="Discover"/>
+          <textlistitem text="Diner's Club"/>
+        </combobox>
+        <combobox width="120">
+          <textlistitem text="Home" selected="true"/>
+          <textlistitem text="Office"/>
+        </combobox>
+        <checkbox>Remember me</checkbox>
+        <view layout="axis: x; spacing: 10">
+          <button isdefault="true">Okay</button>
+          <button>Cancel</button>
+        </view>
+      </view>
+      <view layout="spacing: 20">
+        <view resource="../images/laszlo_explorer_logo.png"/>
+        <datepicker earliestdate="new Date(2003, 9, 5)" 
+                    latestdate="new Date(2005, 1, 5)"
+                    selecteddate="new Date(2004, 3, 20)"/>
+      </view>
+    </tabpane>
+    
+    <tabpane>Grid
+      <grid datapath="gridData:/*"/>
+    </tabpane>
+
+    <tabpane>Tree
+      <tree datapath="treedata:/basket" text="$path{'@name'}" open="true">
+        <tree datapath="*" text="$path{'@name'}" isleaf="$path{'@isleaf'}"/>
+      </tree>
+    </tabpane>
+    
+  </tabs>
+</canvas>

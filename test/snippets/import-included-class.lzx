@@ -1,0 +1,9 @@
+<canvas>
+  <import name="lib" href="class-include-library.lzx"
+          stage="late"
+          onload="canvas.doLoaded()"/>
+  <method name="doLoaded">
+    new myclass(canvas, {fontsize: 8, text: 'fontsize 8 [1] loaded myclass'});
+  </method>
+  <simplelayout spacing="2" />
+</canvas>

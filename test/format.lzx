@@ -1,0 +1,41 @@
+<canvas width="100%" height="100%" debug="true" font="monospace">
+  <debug y="100" height="400" width="600" />
+  <simplelayout axis="y"/>
+  <view name="theView">
+    <method event="onclick" reference="doit">
+      __LzDebug.format("This is a control string with no conversions.\n");
+      __LzDebug.format("Here is a control string with only %%'s in it.\n");
+      __LzDebug.format("Here is a `%%s'\n -> `%s'\n", 'whee');
+      __LzDebug.format("Here is a `%%d'\n -> `%d'\n", 42);
+      __LzDebug.format("Testing %%1$s. 3 copies: %1$s %1$s %1$s\n", 1, 2, 3);
+      var justification = ['', '-'];
+      var sign = ['', '+', ' '];
+      var padding = ['', '0'];
+      for (var i = 0; i &lt; justification.length; i++) {
+        for (var j = 0; j &lt; sign.length; j++) {
+          for (var k = 0; k &lt; padding.length; k++) {
+            var format = justification[i] + sign[j] + padding[k] + '8.2f';
+            __LzDebug.format("format('%%" + format +"', %#w)\n -> %1$" + format + "\n", Math.PI);
+            __LzDebug.format("format('%%" + format +"', %#w)\n -> %1$" + format + "\n", 0);
+            __LzDebug.format("format('%%" + format +"', %#w)\n -> %1$" + format + "\n", -Math.PI);
+          }
+        }
+      }
+      var things = [42, -42];
+      var formats = ['-07d', 'X', '-07x', '#X', '-07#x'];
+      for (var i = 0; i &lt; things.length; i++) {
+        for (var j = 0; j &lt; formats.length; j++) {
+          __LzDebug.format("format('%%" + formats[j] +"', %#w)\n -> %1$" + formats[j] + "\n", things[i]);
+        }
+      }
+      var things = ['Hello Laszlo!', this, [1,2,3], {one: 1, two: 'too', 3: 'three'}, new Boolean(), new String('String Object'), new Date()];
+      var formats = ['s', 'w'];
+      for (var i = 0; i &lt; things.length; i++) {
+        for (var j = 0; j &lt; formats.length; j++) {
+          __LzDebug.format("format('%%" + formats[j] +"', %#w)\n -> %1$" + formats[j] + "\n", things[i]);
+        }
+      }
+    </method>
+  </view>
+  <button name="doit">Do It</button>
+</canvas>

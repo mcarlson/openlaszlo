@@ -1,0 +1,10 @@
+<canvas fontsize="30">
+    <font name="foo" style="bold" src="ariosob.ttf" />
+    <text fontstyle="bold" >  
+        <font face="foo"> <u> underlineme </u> </font>
+   </text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,12 @@
+   <!--- Should compile without warnings to an application size that
+indicates it is not including the components, display a red square, and
+write 'passed = true' -->
+<canvas debug="true">
+  <class name="button" oninit="Debug.write('passed = ', this.passed)" width="10" height="10"
+         bgcolor="red">
+    <attribute name="passed" value="false"/>
+  </class>
+  <import name="mylib" href="override-autoinclude-instance.lzx" oninit="mylib.load()" stage="late"/>
+</canvas>
+
+

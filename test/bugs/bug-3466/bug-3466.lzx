@@ -1,0 +1,23 @@
+<canvas>
+
+    <resource name="plusminus">
+        <frame src="plus.gif"/>
+        <frame src="minus.gif"/>
+    </resource>
+
+    <class name="myview">
+        <attribute name="myresource" value="plusminus" type="string" />
+        <attribute name="isminus" value="true" type="boolean" />
+        <view resource="${parent.myresource}" clickable="true">
+            <attribute name="frame" value="${ parent.isminus ? 2 : 1 }"/>
+        </view>
+    </class>
+
+    <!-- This should display a minus, but we get a plus -->
+    <myview />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

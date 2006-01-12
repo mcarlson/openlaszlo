@@ -1,0 +1,66 @@
+<canvas debug="true" width="1000">
+
+    <debug x="500" height="365" />
+
+    <dataset name="mydata">
+        <data>
+            00abcdefghijklmnopqrstuvwxyz0123456789
+            01abcdefghijklmnopqrstuvwxyz0123456789
+            02abcdefghijklmnopqrstuvwxyz0123456789
+            03abcdefghijklmnopqrstuvwxyz0123456789
+            04abcdefghijklmnopqrstuvwxyz0123456789
+            05abcdefghijklmnopqrstuvwxyz0123456789
+            06abcdefghijklmnopqrstuvwxyz0123456789
+            07abcdefghijklmnopqrstuvwxyz0123456789
+            08abcdefghijklmnopqrstuvwxyz0123456789
+            09abcdefghijklmnopqrstuvwxyz0123456789
+            10abcdefghijklmnopqrstuvwxyz0123456789
+            11abcdefghijklmnopqrstuvwxyz0123456789
+            12abcdefghijklmnopqrstuvwxyz0123456789
+            13abcdefghijklmnopqrstuvwxyz0123456789
+            14abcdefghijklmnopqrstuvwxyz0123456789
+            15abcdefghijklmnopqrstuvwxyz0123456789
+            16abcdefghijklmnopqrstuvwxyz0123456789
+            17abcdefghijklmnopqrstuvwxyz0123456789
+            18abcdefghijklmnopqrstuvwxyz0123456789
+            19abcdefghijklmnopqrstuvwxyz0123456789
+            20abcdefghijklmnopqrstuvwxyz0123456789
+            21abcdefghijklmnopqrstuvwxyz0123456789
+            22abcdefghijklmnopqrstuvwxyz0123456789
+            23abcdefghijklmnopqrstuvwxyz0123456789
+            24abcdefghijklmnopqrstuvwxyz0123456789
+            25abcdefghijklmnopqrstuvwxyz0123456789
+            26abcdefghijklmnopqrstuvwxyz0123456789
+            27abcdefghijklmnopqrstuvwxyz0123456789
+            28abcdefghijklmnopqrstuvwxyz0123456789
+            29abcdefghijklmnopqrstuvwxyz0123456789
+            30abcdefghijklmnopqrstuvwxyz0123456789
+            31abcdefghijklmnopqrstuvwxyz0123456789
+            32abcdefghijklmnopqrstuvwxyz0123456789
+            33abcdefghijklmnopqrstuvwxyz0123456789
+            34abcdefghijklmnopqrstuvwxyz0123456789
+            35abcdefghijklmnopqrstuvwxyz0123456789
+            36abcdefghijklmnopqrstuvwxyz0123456789
+            37abcdefghijklmnopqrstuvwxyz0123456789
+            38abcdefghijklmnopqrstuvwxyz0123456789
+            39abcdefghijklmnopqrstuvwxyz0123456789
+            40abcdefghijklmnopqrstuvwxyz0123456789
+        </data>
+    </dataset>
+
+    <text x="25" y="25" fgcolor="red" width="400" multiline="true">
+        Evals don't seem to work in debugger.
+        Also, scrolling jumps from long string to long string. 
+    </text>
+
+    <method event="oninit">
+        debug.write(mydata.serialize());
+        debug.write(mydata.serialize());
+        debug.write(mydata.serialize());
+    </method>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

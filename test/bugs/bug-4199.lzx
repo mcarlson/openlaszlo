@@ -1,0 +1,26 @@
+<canvas debug="true">
+    <include href="lzunit"/>
+    
+    <script>
+        var f = false
+    </script>
+
+    <method event="onconstruct">
+        f = true
+    </method>
+
+    <class name="bug_4199" extends="TestCase">
+        <method name="testOnconstruct">
+            assertTrue(f, "canvas.onconstruct not sent!")
+        </method>
+    </class>
+    
+    <TestSuite>
+        <bug_4199/>
+    </TestSuite>
+    
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

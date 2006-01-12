@@ -1,0 +1,9 @@
+<canvas debug="true">
+    <view id="V1" bgcolor="blue" width="100" height="100" clickable="true" onclick="Debug.write('x=' + V2.getMouse('x'))" />
+    <view id="V2" bgcolor="red" width="100" height="100" x="200" />
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

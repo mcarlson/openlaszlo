@@ -1,0 +1,48 @@
+<canvas width="800" height="500">
+    <debug width="400" height="100" x="0" y="100"/>
+    <dataset name="sml" src="settext-small.xml" type="file" />
+    <dataset name="big" src="settext-big.xml"   type="file" />
+
+    <include href="../lps/components/incubator/scrollinputtext.lzx"/>
+
+    <simplelayout axis="y"/>
+
+    <view>
+        <simplelayout axis="x" spacing="10"/>
+        <button>small
+            <method event="onclick">
+                <![CDATA[
+                 var txt = sml.getPointer().xpathQuery("/text/text()")
+                 itext.setText(txt);
+                ]]>
+            </method>
+        </button>
+
+        <button>big
+            <method event="onclick">
+                <![CDATA[
+                 var txt = big.getPointer().xpathQuery("/text/text()")
+                 itext.setText(txt);
+                ]]>
+            </method>
+        </button>
+
+        <button>clear
+            <method event="onclick">
+                <![CDATA[
+                var t1 = new Date();
+                itext.setText("");
+                var t2 = new Date();
+                var el = t2 - t1;
+                Debug.write("elapsed:", el);
+                ]]>
+            </method>
+        </button>
+    </view>
+
+
+<!--    <scrollinputtext id="itext" height="75%" width="100%"/>-->
+    <inputtext id="itext" height="75%" width="100%" bgcolor="yellow"/>
+
+
+</canvas>

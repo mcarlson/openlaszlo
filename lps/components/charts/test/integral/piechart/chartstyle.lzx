@@ -1,0 +1,219 @@
+<library>  
+     <include href="charts/styles/chartstyle.lzx"/>
+             
+     <chartstyle name="defaultchartstyle01">
+          <plotstyle name="plot" linesize="5" linecolor="0x00FF00" fillcolor="0xFFFF99" opacity=".5"/>
+          <chartbgstyle name="chartbgstyle">
+              <linestyle name="line" size="3" color="0x0000ff"/>
+              <regionstyle name="region" color="0x99CCFF"/>
+          </chartbgstyle>
+          <datastylelist name="datastyles">
+               <datastyle>
+                    <pointstyle name="point" width="10" height="10" image="../../images/master.gif"/>
+                    <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
+                    <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
+                    linecolor="0x0000ff" fillcolor="0xFF00FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="8" height="8" color="0x66B3FF" opacity="1" shape="square"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFF99CC" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff"
+                    linecolor="0x0000ff" fillcolor="0xFF99CC" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xAA99DD" size="3" opacity="1"/>
+                    <regionstyle name="region" color="0x9999FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x9999FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1"  />
+                    <regionstyle name="region" color="0xFF99FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFF99FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xFFFF00" size="3" opacity="1" />
+                    <regionstyle name="region" color="0x6666FF" opacity="1" gradient="radial" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x6666FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFFCC33" opacity="1" gradient="linear"/>
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFFCC33" linesize="1" fontangle="0"/>
+               </datastyle>              
+          </datastylelist>
+     </chartstyle>
+    
+     <chartstyle name="defaultchartstyle02">
+          <plotstyle name="plot" linesize = "3" linecolor = "0x000000" fillcolor = "0xffeeff" opacity = "1"/>
+          <chartbgstyle name="chartbgstyle">
+              <linestyle name="line" size="5" color="0x800000"/>
+              <regionstyle name="region" color="0x42518A" gradient="radial" opacity="0.8"/>
+          </chartbgstyle>
+          <datastylelist name="datastyles">
+               <datastyle>
+                    <pointstyle name="point" width="12" height="12" image="../../images/master.gif"/>
+                    <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
+                    <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
+                    linecolor="0x0000ff" fillcolor="0xFF00FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="8" height="8" color="0x66B3FF" opacity="1" shape="square"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFF99CC" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff"
+                    linecolor="0x0000ff" fillcolor="0xFF99CC" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="4" height="4" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xAA99DD" size="3" opacity="1"/>
+                    <regionstyle name="region" color="0x9999FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x9999FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="8" height="8" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1"  />
+                    <regionstyle name="region" color="0xFF99FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFF99FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="12" height="12" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xFFFF00" size="3" opacity="1" />
+                    <regionstyle name="region" color="0x6666FF" opacity="1" gradient="radial" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x6666FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFFCC33" opacity="1" gradient="linear"/>
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFFCC33" linesize="1" fontangle="0"/>
+               </datastyle>              
+          </datastylelist>
+     </chartstyle>
+    
+     <chartstyle name="defaultchartstyle03">
+          <plotstyle name="plot" linesize = "3" linecolor = "0x000000" fillcolor = "0xffeeff" opacity = "1"/>
+          <chartbgstyle name="chartbgstyle">
+              <linestyle name="line" size="3" color="0x800000"/>
+              <regionstyle name="region" image="../../images/background.gif"/>
+          </chartbgstyle>
+          <datastylelist name="datastyles">
+               <datastyle>
+                    <pointstyle name="point" width="10" height="10" image="../../images/master.gif"/>
+                    <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
+                    <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
+                    linecolor="0x0000ff" fillcolor="0xFF00FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="8" height="8" color="0x66B3FF" opacity="1" shape="square"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFF99CC" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff"
+                    linecolor="0x0000ff" fillcolor="0xFF99CC" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xAA99DD" size="3" opacity="1"/>
+                    <regionstyle name="region" color="0x9999FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x9999FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1"  />
+                    <regionstyle name="region" color="0xFF99FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFF99FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xFFFF00" size="3" opacity="1" />
+                    <regionstyle name="region" color="0x6666FF" opacity="1" gradient="radial" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x6666FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFFCC33" opacity="1" gradient="linear"/>
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFFCC33" linesize="1" fontangle="0"/>
+               </datastyle>              
+          </datastylelist>
+     </chartstyle>
+    
+     <chartstyle name="defaultchartstyle04">
+          <plotstyle name="plot" linesize = "0" linecolor = "0x000000" fillcolor = "0xffeeff" opacity = "0"/>
+          <chartbgstyle name="chartbgstyle">
+              <linestyle name="line" size="5" color="0x800000" opacity="0"/>
+              <regionstyle name="region" color="0x42518A" opacity="0"/>
+          </chartbgstyle>
+          <datastylelist name="datastyles">
+               <datastyle>
+                    <pointstyle name="point" width="10" height="10" image="../../images/master.gif"/>
+                    <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
+                    <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
+                    linecolor="0x0000ff" fillcolor="0xFF00FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="8" height="8" color="0x66B3FF" opacity="1" shape="square"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFF99CC" opacity="1" gradient="radial"/>
+                    <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff"
+                    linecolor="0x0000ff" fillcolor="0xFF99CC" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xAA99DD" size="3" opacity="1"/>
+                    <regionstyle name="region" color="0x9999FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x9999FF" linesize="3" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1"  />
+                    <regionstyle name="region" color="0xFF99FF" opacity="1" gradient="none" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFF99FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0xFFFF00" size="3" opacity="1" />
+                    <regionstyle name="region" color="0x6666FF" opacity="1" gradient="radial" />
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0x6666FF" linesize="1" fontangle="0"/>
+               </datastyle>
+               <datastyle>
+                    <pointstyle name="point" width="6" height="6" color="0x00FF00" opacity="1"/>
+                    <linestyle name="line" color="0x000000" size="3" opacity="1" />
+                    <regionstyle name="region" color="0xFFCC33" opacity="1" gradient="linear"/>
+                    <labelstyle name="label" font="myverity" fontsize="8" fontcolor="0x000000"
+                    linecolor="0x000000" fillcolor="0xFFCC33" linesize="1" fontangle="0"/>
+               </datastyle>              
+          </datastylelist>
+     </chartstyle>
+    
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@    -->

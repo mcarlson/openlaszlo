@@ -1,0 +1,27 @@
+<canvas>
+
+<view width="100" height="100" id="v">
+    <attribute name="initialstate" value="true"/>
+    <state name="s1" apply="${parent.initialstate}">
+        <attribute name="bgcolor" value="silver"/>
+
+        <view width="50" height="50" bgcolor="green"/>
+        <button onclick="parent.setAttribute('initialstate',false);
+            debug.write('end');"
+            >remove state</button>
+    </state>
+    <state name="s2" apply="${!parent.initialstate}">
+        <attribute name="bgcolor" value="yellow"/>
+        <method event="onapply">
+            Debug.write( "applied yellow box" );
+        </method>
+
+    </state>
+    <simplelayout spacing="20"/>
+</view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

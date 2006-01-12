@@ -1,0 +1,108 @@
+<canvas width="700" height="700" bgcolor="#eaeaea">
+    <bluestyle name="bluecolors" canvascolor="null"/>
+
+    <view x="40" y="40">
+    
+    <view layout="spacing:10">
+        <tabslider id="t" width="250" height="300" inset_left="20" inset_top="20">
+            <tabelement id="te1" text="Numbers" layout="spacing:8" selected="true">
+                <radiogroup>
+                    <radiobutton>One</radiobutton>
+                    <radiobutton>Two</radiobutton>
+                    <radiobutton>Three</radiobutton>
+                </radiogroup>
+                <checkbox>Do Something Else</checkbox>
+                <button isdefault="true"
+                        onclick="parent.parent.selectNext();
+                        Debug.write( 'first next' )">
+                    Next
+                </button>
+            </tabelement>
+            <tabelement id="te2" text="Fruit" layout="spacing:8">
+                <attribute name="defaultbuttongroup" value="true"/>
+                <radiogroup>
+                    <radiobutton>Apple</radiobutton>
+                    <radiobutton>Orange</radiobutton>
+                    <radiobutton>Pear</radiobutton>
+                </radiogroup>
+                <checkbox>Peeled</checkbox>
+                <button onclick="a.open()">Help</button>
+                <combobox>
+                    <textlistitem text="Papaya"/>
+                    <textlistitem text="Cantelope"/>
+                    <textlistitem text="Kiwi"/>
+                </combobox>
+                <checkbox>I would like berries with that</checkbox>
+                <button isdefault="true"
+                        onclick="parent.parent.selectNext();
+                        Debug.write( 'second next' )">
+                    Next
+                </button>
+            </tabelement>
+            <tabelement id="te3" text="Pets" layout="spacing:8">
+                <attribute name="defaultbuttongroup" value="true"/>
+                <radiogroup>
+                    <radiobutton>Lizard</radiobutton>
+                    <radiobutton>Dog</radiobutton>
+                    <radiobutton>Gerbil</radiobutton>
+                </radiogroup>
+                <checkbox>Please Recommend Pet Stores</checkbox>
+                <button isdefault="true"
+                    onclick="Debug.write('Submit')">Submit</button>
+            </tabelement>
+        </tabslider>
+        <view>
+            <simplelayout spacing="20"/>
+            <button onclick="t.selectNext()">Open Next Tab</button>
+            <button onclick="t.selectPrev()">Open Prev Tab</button>
+        </view>
+    </view>
+    <view layout="spacing:10">
+        <text width="170" multiline="true">Blue style, header graphics,
+        border and spacing</text>
+        <tabslider id="ts2" width="200" height="160"
+                   style="bluecolors"
+                   bordersize="2"
+                   spacing="2"
+                   bordercolor="0x3A75A3"
+                   mintabheight="20" >
+    
+            <tabelement text="Section One" selected="true"
+                        text_x="20">
+               <view bgcolor="0xDD9C1E" placement="header" 
+                     width="10" height="12" x="5" y="5" />
+               <view bgcolor="0xDD9C1E" 
+                     x="10" y="10"
+                     width="50" height="50"/>
+            </tabelement>
+            
+            <tabelement text="Section Two" text_x="20"  >
+               <view bgcolor="0x3A75A3" placement="header" 
+                     width="10" height="12" x="5" y="5" />
+               <view bgcolor="0x3A75A3" 
+                      x="10" y="10"
+                     width="50" height="50"/> 
+            </tabelement>
+            
+            <tabelement text="Section Three" text_x="20" >
+               <view bgcolor="0x6BAC6B" placement="header" 
+                     width="10" height="12" x="5" y="5" />
+               <view bgcolor="0x6BAC6B" 
+                      x="10" y="10"
+                     width="50" height="50"/> 
+            </tabelement>
+            
+        </tabslider>
+    </view>
+    <simplelayout axis="x" spacing="40"/>
+        
+    </view>
+
+    <alert id="a" text="Sorry, no help here."/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

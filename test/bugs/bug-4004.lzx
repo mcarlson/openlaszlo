@@ -1,0 +1,36 @@
+<canvas debug="true">
+    <include href="lzunit"/>
+    
+    <debug y="200"/>
+    
+    <dataset name="house">
+        <floor level="ground">rats, mice</floor>
+        <floor level="first">people, animals</floor>
+        <floor level="second">more people</floor>
+        <floor level="roof"><attic>toys</attic></floor>
+    </dataset>
+    
+    <TestSuite>
+        <TestCase>
+        
+            <datapointer name="dp" xpath="house:/"/>
+            <method name="testSelect">
+                assertTrue(dp.selectChild())
+                assertTrue(dp.selectNext())
+                assertFalse(dp.selectNext(3))
+                assertTrue(dp.selectNext(2))
+                assertTrue(dp.selectChild())
+                assertFalse(dp.selectParent(3))
+                
+                assertEquals('toys', dp.getNodeText())
+                assertFalse(dp.selectChild(), 'selectChild() returned true')
+                debug.write(dp.getNodeName())
+            </method>
+            
+        </TestCase>
+    </TestSuite>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,674 @@
+<library>
+
+    <!-- fonts -->
+    <include href="redmondfonts.lzx" />
+
+    <!-- resources -->
+    <resource name="bkgndlft" src="resources/lzwinstdbtnl_rsc.swf" />
+    <resource name="bkgndmid" src="resources/lzwinstdbtnm_rsc.swf" />
+    <resource name="bkgndrgt" src="resources/lzwinstdbtnr_rsc.swf" />
+
+    <!-- includes -->
+    <include href="lineartracker.lzx"/> <!-- rename to simpletracker -->
+
+
+    <!-- classes -->
+
+    <!-- class: panel +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- this is a beveled panel used as the background of a menu           -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="panel" >
+        <attribute name="color" value="0xBDBDBD"/>
+        <view name="top" width="100%" >
+            <view name="l" resource="resources/lzwinframetl_rsc.swf" />
+            <view name="m" resource="resources/lzwinframetm_rsc.swf" stretches="width" />
+            <view name="r" resource="resources/lzwinframetr_rsc.swf" />
+            <stableborderlayout axis="x"/>
+        </view>
+        <view name="mid" width="100%" >
+            <view name="l" resource="resources/lzwinframeml_rsc.swf" height="100%" stretches="height"/>
+            <view bgcolor="${classroot.color}"  height="100%" />
+            <view name="r" resource="resources/lzwinframemr_rsc.swf"  height="100%" stretches="height"/>
+            <stableborderlayout axis="x"/>
+        </view>
+        <view name="bot" width="100%">
+            <view name="l" resource="resources/lzwinframebl_rsc.swf" />
+            <view name="m" resource="resources/lzwinframebm_rsc.swf"  stretches="width"/>
+            <view name="r" resource="resources/lzwinframebr_rsc.swf" />
+            <stableborderlayout axis="x"/>
+       </view>
+       <stableborderlayout axis="y"/>
+    </class>
+
+    <!-- class: basemenuitem ++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- this base class sends an event to its paret that it has been       -->
+    <!-- inited, so that it parent can adjust when this inited late.        -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="basemenuitem" >
+         <method event="oninit" >
+            // a menuitme is in a view that is linked to menu but is nt a subview
+            // so tell its menu that it has been inited
+            if (this['ondofirst']) this.ondofirst.sendEvent(); //custom event to secure order of execution
+            this.parent.menuref.oninitsubvew.sendEvent(this);
+        </method>
+    </class>
+ 
+
+    <!-- class: menuseparator +++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- the visual element that separates the menuItems in a menu          -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- class: menuseparator -->
+    <class name="menuseparator" extends="basemenuitem" height="10"  width="10" > 
+        <!-- width="100%" -->
+         <attribute name="inset" value="3" />
+        <view x="${parent.inset}" y="5" bgcolor="0x777777"  
+              width="${parent.width-2*parent.inset}" height="1"/>
+        <view x="${parent.inset}" y="6" bgcolor="white"     
+              width="${parent.width-2*parent.inset}" height="1" />
+    </class>
+
+    <!-- class: menuitem ++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="menuitem" extends="basemenuitem" height="15" font="lztahoe8"
+           fontsize="8" >
+        <attribute name="label"             value="menu item" type="string" />
+        <attribute name="disabled"          value="false" 
+                   setter="this.setDisabled(disabled)"/>
+        <attribute name="basecolor"         value="0xBDBDBD"  /> 
+        <attribute name="hilitecolor"       value="0x0A246A"  /> <!-- ECEEE9 -->
+        <attribute name="textcolor"         value="0x000000" />
+        <attribute name="texthilitecolor"   value="0xFFFFFF" />
+        <attribute name="textdisabledcolor" value="0x777777" />
+        <attribute name="yoffset"           value="0" />
+        <attribute name="inset"             value="${parent.inset}" />
+        <attribute name="command"           value="null" 
+                   setter="this.setCommand(command)"   when="once" />
+        <attribute name="hassubmenu"        value="false" />
+        <attribute name="releaseonmouseout" value="true" />
+        <attribute name="initcomplete"      value="false" />
+        <attribute name="commandOffset"     value="130"               
+                   setter="this.setCommandOffset(commandOffset)"/>
+
+        <!-- views -->
+
+        <view resource="resources/arrow.swf"
+              visible="${classroot.hassubmenu}"
+              y="4" x="${classroot.width - width - 5}" />
+
+        <text name="cmdkeys_shdw" 
+              fgcolor="0xEEEEEE" y="${classroot.yoffset}" width="90" visible="false" />
+
+        <text name="cmdkeys" 
+              y="${classroot.yoffset}" width="90" visible="false" />
+
+        <text name="label_tx_shdw" text="${classroot.label}" x="${classroot.inset + 1}"
+              fgcolor="0xEEEEEE"  y="${classroot.yoffset + 1}"
+              selectable="false" width="200" visible="false" />
+
+        <text name="label_tx" text="${classroot.label}" x="${classroot.inset}"
+              fgcolor="$once{classroot.textcolor}"  y="${classroot.yoffset}"
+              selectable="false" width="200" />
+
+        <!-- more views -->
+        <!-- "cascade" is a helper view for heirarchical menu placement -->
+        <view name="cascade" />
+
+        <!-- METHODS: instantiation -->
+
+        <method event="ondofirst" > <!-- custom event sent by baseclass 
+                                         to secure order of execution -->
+            // the following is need to let
+            this.initcomplete = true;
+            this.setDisabled( this.disabled );
+            if ( command ) this.setCommand( this.command );
+
+        </method>
+
+        <method name="determinePlacement" args="asub, placement, args" >
+            // the only valid subview of a menutiem is another menu
+            // so go ahead and set that flag for now. make more general later.
+            this.setAttribute('hassubmenu',true);
+            return super.determinePlacement(asub, placement, args);
+        </method>
+        
+        <!-- METHODS: setters -->
+
+        <method name="setCommand" args="cmd" >
+            this.command = cmd;
+            if (!this.initcomplete) return;
+            if ( this.command ) {
+                // force the appplication of this state
+                // because order of execution demands it.
+                // this.commandstate.apply(true);
+
+                 var t = command.keysToString();
+                this.cmdkeys_shdw.setText(t);
+                this.cmdkeys.setText(t);
+
+                if ( disabled ) {
+                    this.cmdkeys.setAttribute('fgcolor',this.textdisabledcolor);
+                    this.cmdkeys_shdw.setVisible(true);
+                    this.cmdkeys.setVisible(true);
+                } else {
+                    this.cmdkeys.setAttribute('fgcolor',this.textcolor);
+                    this.cmdkeys.setVisible(true);
+                    this.cmdkeys_shdw.setVisible(false);
+                }
+                if (disabled) this.cmdkeys_shdw.setVisible(true);
+            }
+        </method>
+
+        <method name="setDisabled" args="torf" >
+            this.disabled = torf;
+            if (!this.initcomplete) return;
+            if ( !torf )  {
+                this.label_tx.setAttribute('fgcolor',this.textcolor);
+                this.label_tx_shdw.setVisible(false);
+                 if ( this['commmand'] ) {
+                    this.cmdkeys.setAttribute('fgcolor',this.textcolor);
+                    this.cmdkeys_shdw.setVisible(false);
+                }
+            } else {
+                this.label_tx.setAttribute('fgcolor',this.textdisabledcolor);
+                this.label_tx_shdw.setVisible(true);
+                 if (  this['commmand'] ) {
+                    this.cmdkeys.setAttribute('fgcolor',this.textdisabledcolor);
+                    this.cmdkeys_shdw.setVisible(false);
+                }
+            }
+        </method>
+
+
+        <method name="setHilited" args="ishilited" >
+            // if (disabled) return;
+            if ( ishilited ) {
+                if (!this.parent.menuref.mymenucontent.visible) return;
+                this.setBGColor(this.hilitecolor); 
+                if ( disabled ) {
+                    // change bgcolor and color of text
+                    this.label_tx.setAttribute('fgcolor',this.textdisabledcolor);
+                    this.label_tx_shdw.setVisible(false);
+
+                    if (  this['command'] ) {
+                        this.cmdkeys.setAttribute('fgcolor',this.textdisabledcolor);
+                        this.cmdkeys_shdw.setVisible(false);
+                    }
+                } else {
+                    // change bgcolor and color of text
+                    this.label_tx.setAttribute('fgcolor',this.texthilitecolor);
+                    this.label_tx_shdw.setVisible(false);
+                    
+                    if (  this['command'] ) {
+                        this.cmdkeys.setAttribute('fgcolor',this.texthilitecolor);
+                    }
+
+                }
+                this.showSubmenu(true);
+            } else {
+                this.setBGColor(this.basecolor); 
+                if ( disabled ) {
+                    // change bgcolor and color of text
+                    this.label_tx.setAttribute('fgcolor',this.textdisabledcolor);
+                    this.label_tx_shdw.setVisible(true);
+
+                    if (  this['command'] ) {
+                        this.cmdkeys.setAttribute('fgcolor',this.textdisabledcolor);
+                        this.cmdkeys_shdw.setVisible(true);
+                    }
+                } else {
+                    // change bgcolor and color of text
+                    this.label_tx.setAttribute('fgcolor',this.textcolor);
+                    this.label_tx_shdw.setVisible(false);
+                    
+                    if (  this['command'] ) {
+                        this.cmdkeys.setAttribute('fgcolor',this.textcolor);
+                    }
+
+                }
+                this.showSubmenu(false);
+            }
+        </method>
+
+
+        <method name="setSelected" args="isSelected" >
+            if (disabled) return;
+            this.setHilited(isSelected);
+            if (this['mymenucontent']) this.mymenucontent.setVisible(isSelected);
+        </method>
+
+        <method name="setCommandOffset" args="o" >
+            if (!this['command']) return;
+            this.cmdkeys_shdw.setX(this.width - o + 1);
+            this.cmdkeys.setX(this.width - o);
+        </method>
+
+
+        <!-- METHODS: other -->
+
+        <method name="showSubmenu" args="torf">
+            if ( this['menuref'] ) {
+                this.menuref.mymenucontent.setVisible(torf);
+                if ( torf ) {
+                    this.menuref.mymenucontent.setX(this.getAttributeRelative('x',canvas) + width);
+                    this.menuref.mymenucontent.setY(this.getAttributeRelative('y',canvas));
+                    this.menuref.mymenucontent.bringToFront();
+                }
+            } 
+        </method>
+
+        <!-- called by a tracker -->
+        <method name="execute">
+            if ( this.parent.menuref ) this.parent.menuref.close();
+            if (this['menuref']) this.menuref.setVisible(false);
+            if (disabled) return;
+            //send events
+            if (this['onselect']) this.onselect.sendEvent();
+            if (this.parent.parent['onselectitem'])
+                this.parent.parent.onselectitem.sendEvent( this );
+            if (this['command']) this.command.execute();
+        </method>
+
+        <method name="setLabel" args="lbl" >
+            this.setAttribute('label',lbl);
+        </method>
+
+        <method name="getLabel" >
+            return this.getAttribute('label');
+        </method>
+
+    </class>
+
+
+
+    <!-- class: menucontent +++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- this view is that part of the menu that is instantiated on the     -->
+    <!-- canvas so thatit overlays other views                              -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="menucontent" initstage="late" bgcolor="purple"> <!--  initstage="late"-->
+        <attribute name="defaultplacement" value="content" type="string"/>
+        <attribute name="visible"          value="false" />
+        <attribute name="closeonselect"    value="true" />
+        <attribute name="inset"            value="15" /> <!-- constrained to inset of menu class -->
+        <!-- attribute name="rightinset"       value="10" /-->
+        <attribute name="menuref"          value="null" />
+
+        <!-- an array of submenus that belong to certain menutiems -->
+        <attribute name="submenuarray"     value="[]" />
+
+        <!-- the width of the max menuitem -->
+        <attribute name="maxwidth"         value="0" />
+
+        <!-- private: a flag taht is set if any menuitem has a submenu -->
+        <attribute name="hassubmenus"      value="false" />
+
+        <!-- private: the maximum text length of all the menuitem labels -->
+        <attribute name="maxlabel"         value="0" />
+
+        <!-- private: the maximum text length of all the menuitem commands -->
+        <attribute name="maxcommand"       value="0" />
+
+        <!-- private: the commandOffset  -->
+        <attribute name="commandOffset"    value="80" />
+
+        <!-- private: a flag to calc the needed textwidth if width of menu is not declared  -->
+        <attribute name="calcwidth"        value="true" />
+
+        <!-- views -->
+
+        <!-- beveled rectangle -->
+        <panel name="bkgnd" width="100%" height="100%" />
+
+        <!-- transparent view that handles the mouse tracking and -->
+        <!-- the selecting of its subviews                        -->
+        <lineartracker name="content" axis="y" x="2" y="2" mumaxcount="0"  >
+            <simplelayout axis="y"/>
+        </lineartracker>
+
+        <method name="reset" >
+            this.content.reset(); //reset the tracker
+
+        </method>
+
+        <method name="setVisible" args="torf"> <![CDATA[
+            if (torf) {
+                //force instantiation of me and my children 
+                this.completeInstantiation();
+            }
+            super.setVisible(torf);
+            if (this['content']){
+                this.content.registerDelegates(torf);
+                if(!torf) { // if false make sure to hide submenus
+                  if ( this.content['targetview'] && this.content.targetview['menuref'] )           
+                        this.content.targetview.menuref.close();
+                  this.content.reset();
+                }           
+            }
+        ]]> </method>
+
+        <!-- method: subviewInited
+         because the menuItems are contructed on a delay and this menucontent
+         was not, I cannot know when all of its menuItems have been instantiated
+         so I have to adjust its dimensions after each new menuitem gets added 
+         -->
+        <method name="subviewInited" args="s" > <![CDATA[
+            if( calcwidth ){ 
+                if (s['command']) s.setCommand(s.command);
+                // this is only calculated if the width of menu is undefined
+                this.hassubmenus  = this.hassubmenus && s['hassubmenu'];
+                if (s['label_tx']) {
+                    this.maxlabel     = Math.max(this.maxlabel,s.label_tx['getTextWidth']());
+                }
+                if (s['cmdkeys']) {
+                    this.maxcommand   = Math.max(this.maxcommand,s.cmdkeys['getTextWidth']());
+                }
+                var mw = this.maxlabel + this.maxcommand + 2*inset;
+                if ( this.maxcommand > 1) mw += 20; //spacing between label and cmd text
+                if( mw > this.maxwidth ) {
+                    //reset maxwidth
+                    this.maxwidth = mw;
+
+                    // grow the width of the entire menu
+                    this.setWidth(this.maxwidth + 4);
+
+                    // reset other menu items
+                    var L = this.content.subviews.length - 1;
+                    var sv; var i;
+                    for ( i in this.content.subviews) {
+                             sv = this.content.subviews[i];
+                             sv.setWidth(this.maxwidth);
+                             // menuseparator does not have this method so check
+                             if (sv['setCommandOffset']) 
+                                sv.setCommandOffset(maxcommand + inset);
+                        }
+                } else { // its width less then the maxwidth so set it to maxwidth
+                    s.setWidth(this.maxwidth);
+                    if (s['setCommandOffset']) 
+                        s.setCommandOffset(this.maxcommand + inset);
+                }
+            } else { // width is defined fro menucontent so use that instead
+                this.maxwidth = this.width - 4; //2 pixel bevel on each side
+                s.setWidth(this.maxwidth);
+                if (s['setCommandOffset']) 
+                    s.setCommandOffset(this.commandOffset);
+            }
+            // and now set the width of this menuitem
+
+            // adjust the height of menucontent
+            this.setHeight(this.content.height + 4);
+
+            // if there is a submenu make sure menucontent knows
+            if (s['hassubmenu']) {
+                //s is a menuitem so push its attached submenu
+                if (s.cascade['subviews'] && (s.cascade.subviews.length > 0)) {
+                    var submenu = s.cascade.subviews[0];
+                    this.submenuarray.push(submenu);
+                    submenu.parentmenu = this.menuref;
+                }
+            }
+
+        ]]> </method>
+
+        <!--
+        <method name="recalcSize" > <![CDATA[
+            var maxw = 0;
+            var maxlabel = 0;
+            var maxcommand = 0;
+            var menu_item = null;
+            var mt = 0;
+            var hassubmenus = false;
+            var L = this.content.subviews.length;
+            for ( var i = 0; i <=L; i++ ) {
+                menu_item = this.content.subviews[i];
+                hassubmenus = hassubmenus && menu_item.hassubmenu;
+                if (menu_item['label_tx']) {
+                    maxlabel = Math.max(maxlabel,menu_item.label_tx['getTextWidth']());
+                }
+                if (menu_item['keys']) {
+                    maxcommand = Math.max(maxcommand,menu_item.keys['getTextWidth']());
+                }
+                mt = maxlabel + maxcommand;
+                if (maxcommand > 1) mt += 20
+                mt += 2*inset;
+                maxw = Math.max(maxw, mt);
+            }
+            if (hassubmenus) maxw + 15; //width of arrow?
+            this.maxwidth = maxw;
+            for (i = 0; i <=L; i++){
+                this.content.subviews[i].setWidth(this.maxwidth);
+            }
+            this.setWidth(maxw + 4); //4 is 2*2 widths of borders
+            this.setHeight(this.content.height + 4);
+            // used to close then menu when user clicks outside it.
+            // this.clickedOtherDL = new LzDelegate(this,"changeFocus");
+        ]]> </method>
+        -->
+
+    </class>
+
+    <!-- class: menubutton ++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="menubutton" height="${parent.height-6}" y="3" >
+
+        <attribute name="text"    value="menu-button" type="string" setter="this.mysetText(text)"/>
+        <attribute name="inset"   value="6" />
+        <attribute name="menuref" value="null" />
+        <attribute name="enabled" value="true" />
+
+        <view name="bkgnd" width="100%" height="100%" visible="false" >
+            <view name="lft" resource="bkgndlft" stretches="height" height="100%"/>
+            <view name="mid" resource="bkgndmid" stretches="both"   height="100%"/>
+            <view name="rgt" resource="bkgndrgt" stretches="height" height="100%"/>
+            <stableborderlayout axis="x" />
+            <method name="setmyResourceNumber" args="rn">
+                this.lft.setResourceNumber(rn);
+                this.mid.setResourceNumber(rn);
+                this.rgt.setResourceNumber(rn);
+            </method>
+        </view>
+
+        <text name="label" x="${parent.inset - 2}" y="1"
+              text="${parent.text}"
+              resize="true">
+             <method event="ontext">
+                parent.setWidth(this.width + 2*parent.inset - 2); //getTextWidth()
+             </method>
+        </text>
+
+        <!-- methods -->
+
+        <method name="mysetText" args="t">
+            this.text =  t;
+            //this.ontext.sendEvent();
+        </method>
+
+
+        <!-- called by tracker view -->
+        <method name="setHilited" args="torf">
+            if (!enabled) return;
+            if (torf) this.bkgnd.setmyResourceNumber(1);
+            this.bkgnd.setVisible(torf);
+            this.showMenu(false);
+        </method>
+
+        <!-- called by tracker view -->
+        <method name="setSelected" args="torf">
+            if (!enabled) return;
+            if (torf) {
+                this.bkgnd.setVisible(true);
+                this.bkgnd.setmyResourceNumber(2);
+                this.showMenu(true);
+            } else {
+                this.bkgnd.setVisible(false);
+                this.bkgnd.setmyResourceNumber(1);
+                this.showMenu(false);
+            }
+        </method>
+
+        <!-- called by tracker view -->
+        <method name="execute" >
+            this.setSelected(false);
+            if (this['command']) this.command.execute();
+        </method>
+
+        <method name="toString" >
+            var idstring = "";
+            var namestring = "";
+            if (this.id != null) idstring = "  id="+this.id;
+            if (this.name != null) namestring = " named \""+this.name+"\"";
+            return "menubutton" + namestring + idstring;
+        </method>
+
+        <method name="setMenu" args="mn" >
+            this.menuref = mn;
+        </method>
+
+        <method name="showMenu" args="torf" >
+            if (torf) {
+                this.menuref.setX(this.getAttributeRelative('x',canvas));
+                this.menuref.setY(this.getAttributeRelative('y',canvas) + this.height + 1);
+                this.menuref.bringToFront();
+            }
+            this.menuref.setVisible(torf);
+        </method>
+    </class> <!-- end menubutton -->
+
+    <!-- CLASS: menu ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- This class has no visibel views but creates two views in other targets.-->
+    <!-- One view is a menubutton ( if it has one ) with menubar as its target. -->
+    <!-- The other view is the menucontent which holds the menutiems and is     -->
+    <!-- placed in the canvas, so that it can be overlayed over all other views -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="menu" placement="overlay" font="lztahoe8" 
+           fontsize="8" >
+        <attribute name="hasbutton"        value="false" />
+        <attribute name="label"            value="menu"    type="string"/>
+        <!-- attribute name="defaultplacement" value="content" type="string"/-->
+        <attribute name="maxwidth"         value="0" />
+        <attribute name="visible"          value="false" />
+        <attribute name="closeonselect"    value="true" />
+        <attribute name="inset"            value="15" />
+        <attribute name="rightinset"       value="10" />
+        <attribute name="commandOffset"    value="50" />
+
+        <!-- METHODS -->
+        <method name="determinePlacement" args="asub, placement, args" >
+            // super.determinePlacement(asub, placement, args);
+            // since all subviews of menu will be placed in the
+            // menucontent view on the canvas, always return a reference
+            // to that menucontent view
+            return this.mymenucontent.content;
+        </method>
+
+        <method event="onconstruct"  >
+            // construct a button and put it in the menubar
+            // this is assuming that parent is a menubar
+            if ( this.hasbutton ) {
+                this.mbtn = new menubutton(this.parent,{text:this.label})
+                this.mbtn.setMenu(this);
+            }
+        </method>
+
+        <method event="oninit"  >
+            parent.menuref = this;
+            if (parent.parent['menuref']) this.parentmenu = parent.parent.menuref;
+        </method>
+
+        <method name="createChildren" args="carr" > <![CDATA[
+            args = {axis:'y', x:300,mucounter:0, inset:this.inset}
+            if ( this['hassetwidth'] && this.hassetwidth ) {
+                args['width'] = this.width; // this won't work if constraint
+                args['calcwidth'] = false;
+            }
+            this.mymenucontent = new menucontent(canvas,args,carr,true);
+            this.mymenucontent.menuref = this;
+            if (this['mbtn']) this.mbtn.setMenu(this.mymenucontent);
+            ]]>
+        </method>
+
+        <method event="oninitsubvew" args="s" >
+            // let mymenucontent know that a new subview has been inited
+            mymenucontent.subviewInited(s);
+        </method>
+
+        <method name="setVisible" args="torf" >
+            super.setVisible(torf);
+            if (this['mymenucontent']){
+                if (!torf) this.mymenucontent.reset();
+                this.mymenucontent.content.registerDelegates(torf);
+            }
+        </method>
+
+        <method name="changeFocus" args="v" >
+            this.close();
+        </method>
+
+        <method name="close" >
+            this.setVisible(false);
+            this.mymenucontent.setVisible(false);
+            if (hasbutton) {
+                this.mbtn.setSelected(false);
+                this.mbtn.parent.reset(); //reset menubar
+            }
+            if (this['parentmenu']) this.parentmenu.close();
+        </method>
+
+    </class>
+
+
+
+    <!-- CLASS: menubar -->
+    <!-- menubar -->
+                                        <!-- width="100%" if not defined-->
+    <class name="menubar" height="24"  font="lztahoe8" 
+           fontsize="8" > 
+        <attribute name="defaultplacement" value="mbarcontent" type="string" />
+        <attribute name="spacing" value="0" />
+        <attribute name="inset"   value="3" />
+        <attribute name="mouserefview"   value="null" />
+
+        <state name="widthConstraint">
+            <attribute name="width" value="100%"/>
+        </state>
+
+        <view name="bkgnd" width="100%" >
+            <view resource="bkgndlft"/>
+            <view resource="bkgndmid" stretches="width" />
+            <view resource="bkgndrgt" />
+            <stableborderlayout axis="x"  />
+        </view>
+
+       <view name="overlay" />
+
+       <lineartracker name="mbarcontent" width="100%" height="100%" x="${parent.inset}"
+          keephilite="true">
+           <simplelayout axis="x" spacing="${classroot.spacing}" />
+
+           <method name="changedfocus" args="v" >
+                this.clickedOtherDL.unregisterAll();
+                this.reset();
+           </method>
+       </lineartracker>
+
+       <method name="reset">
+            this.mbarcontent.reset();
+       </method>
+
+       <method event="oninit">
+            if (!hassetwidth) {
+                this.widthConstraint.apply();
+            }
+       </method>
+
+       <method name="setHeight">
+            //force the height to stay at a value of 24
+            super.setHeight(24);
+       </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,435 @@
+<library>
+    <!--
+        Class: scrollbar
+         a scrollbar manipulates the x or y position of a target view that is
+         clipped by its parent, creating a scrolling effect when the user
+         clicks up/down arrows, clicks on the "scroll track" or drags the
+         "thumb."
+
+         Attributes
+          scrolltarget: controlled view;
+                        if not specified then pick first sibling in view
+
+          scrollmax: max scroll value;
+                        if unspecified, use scrolltarget height/width
+
+          use scrolltarget.immediateparent.height (width) as default mask size
+
+          scrollattr: the attribute to set/read to scroll the window
+                  defaults to "x" or "y" of the scrolltarget
+    -->
+
+    <include href="../base/basebuttonrepeater.lzx" />
+
+    <resource name="LRLzScrollButtonBack_rsc" src="./resources/lrlzscrollbuttonback_rsc.swf" />
+    <resource name="LRLzScrollButtonForward_rsc" src="./resources/lrlzscrollbuttonforward_rsc.swf" />
+    <resource name="LRLzScrollTop_rsc" src="./resources/lrlzscrolltop_rsc.swf" />
+    <resource name="LRLzScrollMiddle_rsc" src="./resources/lrlzscrollmiddle_rsc.swf" />
+    <resource name="LRLzScrollBottom_rsc" src="./resources/lrlzscrollbottom_rsc.swf" />
+
+    <resource name="UDLzScrollButtonBack_rsc" src="./resources/udlzscrollbuttonback_rsc.swf" />
+    <resource name="UDLzScrollButtonForward_rsc" src="./resources/udlzscrollbuttonforward_rsc.swf" />
+    <resource name="UDLzScrollTop_rsc" src="./resources/udlzscrolltop_rsc.swf" />
+    <resource name="UDLzScrollMiddle_rsc" src="./resources/udlzscrollmiddle_rsc.swf" />
+    <resource name="UDLzScrollBottom_rsc" src="./resources/udlzscrollbottom_rsc.swf" />
+
+<!--
+    subclasses are expected to define this.thumb and this.scrolltrack to
+     reference the views that perform those functions
+-->
+<class name="basescrollbar">
+    <!-- scrolltarget: the view that is controlled by the scrollbar -->
+    <attribute name="scrolltarget" value="0" type="expression" when="always"/>
+    <!-- axis = "x" or "y" -->
+    <attribute name="axis" value="y" type="string"/>
+
+    <attribute name="scrollattr" type="string" value=""/>
+    <attribute name="scrollmax" type="number" value="null"/>
+    <attribute name="stepsize" value="10"/>
+
+    <!-- private: if scrollmax is not defined, use the target height
+                  or width to determine scrollmax -->
+    <attribute name="usetargetsize" value="false"/>
+
+    <!-- private: reference to the other scrollbar, if there is one
+                  these values are set in oninit -->
+    <attribute name="othersb" value="0"/>
+
+    <!-- if the scrollbar is vertical and the developer has not set a height
+         then the scrollbar should be its parent's height, see oninit -->
+    <state name="heightConstraint">
+        <attribute name="height"
+            value="${othersb ? (immediateparent.height - othersb.height) :
+                                immediateparent.height}"/>
+    </state>
+
+    <!-- if the scrollbar is horizontal and the developer has not set a width
+         then the scrollbar should be its parent's width, see oninit -->
+    <state name="widthConstraint">
+        <attribute name="width"
+            value="${othersb ? immediateparent.width - othersb.width :
+                               immediateparent.width }"/>
+    </state>
+
+    <method event="oninit">
+        <![CDATA[
+        this.sizeAxis = (this.axis == "x") ? "width" : "height"
+        this.otherSizeAxis = (this.axis == "x") ? "height" : "width"
+
+        // if no 'scrolattr' attribute, use 'x' or 'y' from 'axis' attribute
+        if (this.scrollattr == "" ){
+            this.scrollattr = this.axis;
+        }
+
+        // if no scrolltarget defined,
+        // let's find one in our parent's subview list
+        if (!this.scrolltarget) {
+            subcount = immediateparent.subviews.length;
+            for (var i = 0; i < subcount; i++) {
+               var s = immediateparent.subviews[i];
+               if (s instanceof LzView) {
+                  if (! (s instanceof basescrollbar)){
+                    // first non-scrollbar view is the scrolltarget
+                    if (!this.scrolltarget) this.scrolltarget = s;
+                  } else {
+                    // we'll need to make room for the other scrollbar
+                    if (s != this) {
+                        this.setAttribute('othersb',s);
+                    }
+                  }
+               }
+            }
+            // only auto-align if there developer did not specify a target
+            if (this.axis == 'y') {
+                this.setAlign('right');
+            } else {
+                this.setValign('bottom');
+            }
+
+        }
+
+        // set width or height if not defined for sizeAxis
+        if (this.sizeAxis == 'width') {
+            if (!hassetwidth) {
+                this.widthConstraint.apply();
+            }
+        }
+
+        if (this.sizeAxis == 'height') {
+            if (!hassetheight) {
+                this.heightConstraint.apply();
+            }
+        }
+
+
+        this.clipSizeDel = new LzDelegate( this , "scrollbarSizeUpdate",
+            this.scrolltarget.immediateparent, "on" + this.sizeAxis);
+
+        // if 'scrollmax' is undefined, use target size
+        if (this.scrollmax == null ){
+            this.usetargetsize = true;
+            this.targetHeightDel = new LzDelegate( this , "targetSizeUpdate",
+                this.scrolltarget, "on" + this.sizeAxis);
+            this.scrollmax = scrolltarget[this.sizeAxis];
+        }
+
+        eventname = "on" + this.scrollattr;
+        this.targetPosDel = new LzDelegate( this , "targetPosUpdate",
+            this.scrolltarget, eventname);
+
+        // register for scrolltrack height changes, not for this.height
+        // assumes that scrolltrack height is always a function of this.height
+        this.heightDel = new LzDelegate( this , "scrollbarSizeUpdate",
+            this.scrolltrack, "on" + this.sizeAxis);
+
+        scrollbarSizeUpdate();
+        ]]>
+    </method>
+
+    <method name="targetSizeUpdate">
+          this.scrollmax = this.scrolltarget[this.sizeAxis];
+          this.scrollbarSizeUpdate();
+    </method>
+
+    <method event="onscrollmax">
+        this.scrollbarSizeUpdate();
+    </method>
+    <method name="scrollbarSizeUpdate">
+    <![CDATA[
+        // should hide thumb if the target view is smaller than the scrollbar
+        // Calendar does not need this feature, so it is unimplemented
+        this.updateThumbSize();    // need to do before thumb.updateY
+
+
+        if (this.scrolltarget.immediateparent[this.sizeAxis] - this.scrollmax >= 0) {
+            // scrollbar is inactive, thumb invisible
+            return;
+        }
+        visible_size = this.scrolltarget[this.scrollattr] + this.scrollmax;
+        if (visible_size < this.scrolltarget.immediateparent[this.sizeAxis]) {
+            // if the target view is offset because of the shift in height/width
+            // update the scroll position of the target view
+            var newpos = this.scrolltarget.immediateparent[this.sizeAxis]
+                            - this.scrollmax;
+            this.scrolltarget.setAttribute(this.scrollattr, newpos);
+        }  else {
+            this.updateThumbPos();
+        }
+    ]]>
+    </method>
+
+    <method name="targetPosUpdate">
+       // when the position of the target view changes then update
+       //  the thumb position, not called when thumb is dragging
+       this.updateThumbPos();
+    </method>
+
+    <method name="updateThumbPos">
+        var new_pos = Math.ceil((-this.scrolltarget[this.scrollattr]/this.scrollmax)
+                   *this.scrolltrack[this.sizeAxis]);
+        this.thumb.setAttribute(this.axis, new_pos);
+    </method>
+
+
+    <method name="updateThumbSize">
+        <![CDATA[
+        // make thumb appear or not
+        if (this.scrollmax <= this.scrolltarget.immediateparent[this.sizeAxis]) {
+            if (this.scrolltrack.visible) {
+                // make thumb invisible, reset scroll pos
+                this.scrolltrack.setAttribute('visible', false);
+                this.scrolltarget.setAttribute(this.scrollattr, 0);
+            }
+            return;
+        } else {
+            if (!scrolltrack.visible) scrolltrack.setAttribute('visible', true);
+       }
+
+          var newsize = Math.floor(
+            (this.scrolltarget.immediateparent[this.sizeAxis]/this.scrollmax)
+                *scrolltrack[this.sizeAxis]);
+          if (newsize < 7) newsize = 7;
+          thumb.setAttribute(this.sizeAxis, newsize);
+        ]]>
+    </method>
+
+    <!-- set the scrolltarget position                                    -->
+    <!-- change: change in position, note: positive number scrolls down -->
+    <method name="setPosRelative" args="change">
+    <![CDATA[
+
+        var newpos = this.scrolltarget[this.scrollattr] - change;
+
+        if (newpos > 0) newpos=0;
+
+        maxdistance =
+            Math.max(this.scrollmax - this.scrolltarget.immediateparent[this.sizeAxis], 0);
+        if (newpos < -maxdistance) newpos = -maxdistance;
+
+        this.scrolltarget.setAttribute(this.scrollattr, newpos);
+    ]]>
+    </method>
+     <!-- step(1) to move ahead, step(-1) to move back -->
+    <method name="step" args="n">
+        this.setPosRelative(n*this.stepsize);
+    </method>
+
+    <!-- page(1) to page ahead, page(-1) to back back -->
+    <method name="page" args="n">
+        this.setPosRelative(n*this[this.sizeAxis]);
+    </method>
+</class>
+
+
+
+
+<script>
+    <![CDATA[
+Math.limit = function(value, min, max) {
+    if (value > max)
+        return max;
+
+    if (value < min)
+        return min;
+
+    return value;
+
+}
+    ]]>
+</script>
+
+<!-- scrollbarthumb expects to be within a basescrollbar (or its subclass)
+     in other words, its "classroot" must be a scrollbar
+-->
+<class name="scrollbarthumb"
+       onmousedown="classroot.targetPosDel.disable(); this.startDrag = true;
+                    this[classroot.axis+'thumbdrag'].apply()"
+       onmouseup="this[classroot.axis+'thumbdrag'].remove();
+                  classroot.targetPosDel.enable();">
+   <method event="oninit">
+       classroot.thumb = this;
+   </method>
+
+    <state name="ythumbdrag">
+        <attribute name="doffset" value="this.getMouse( 'y' )" when="once" />
+        <attribute name="y"
+            value="${this.thumbControl(this.immediateparent.getMouse( 'y' ))}"/>
+    </state>
+
+    <state name="xthumbdrag">
+        <attribute name="doffset" value="this.getMouse( 'x' )" when="once" />
+        <attribute name="x"
+            value="${this.thumbControl(this.immediateparent.getMouse( 'x' ))}"/>
+    </state>
+
+    <method name="thumbControl" args="mousepos">
+        // thumbControl method becomes a method of 'thumb'
+        // when the state is applied
+        //this.inthumbdrag = true;
+        if (this.startDrag) {
+          // calculate temp var for what doesn't change while dragging
+            var sizeAxis = classroot.sizeAxis;
+            this.target = classroot.scrolltarget;
+            this.axis = classroot.axis;
+            this.trackscroll = this.immediateparent[sizeAxis] - this[sizeAxis];
+            this.targetscroll = classroot.scrollmax -
+                classroot.scrolltarget.immediateparent[sizeAxis];
+            this.startDrag = false;
+        }
+        pos = Math.round(-this[this.axis] /  this.trackscroll * this.targetscroll);
+
+
+        this.target.setAttribute(classroot.scrollattr, pos);
+
+        thumbpos = Math.limit(mousepos - this.doffset,
+               0, this.trackscroll);
+
+       // this.inthumbdrag = false;
+
+        return thumbpos;
+    </method>
+
+
+</class> <!-- scrollbarthumb -->
+
+<class name="scrollbararrow" extends="basebuttonrepeater">
+        <attribute name="direction" value="1"/> <!-- set to -1 for back -->
+        <method event="onmousedown">
+            classroot.step(this.direction);
+        </method>
+        <method event="onmousestilldown">
+            classroot.step(this.direction);
+        </method>
+    </class>
+
+<class name="scrollbartrack" extends="basebuttonrepeater">
+    <attribute name="direction" value="1"/> <!-- set to -1 for back -->
+    <method event="onmousedown">
+        setAttribute('bgcolor', 0x000000);
+        classroot.page(this.direction);
+    </method>
+    <method event="onmousestilldown">
+        classroot.page(this.direction);
+    </method>
+    <method event="onmouseup">
+        setAttribute('bgcolor', 0xdedede);
+    </method>
+</class>
+
+<class name="scrollbar" extends="basescrollbar"  bgcolor="0xdedede">
+    <state apply="${parent.axis == 'y'}">
+        <!-- up arrow -->
+        <scrollbararrow name="toparrow"
+            resource="UDLzScrollButtonBack_rsc"
+            direction="-1">
+        </scrollbararrow>
+
+        <view name="scrolltrack">
+            <!-- top of the scroll track -->
+            <scrollbartrack name="top"
+                direction="-1">
+                <attribute name="height" value="${parent.thumb.y}"/>
+                <attribute name="width" value="${parent.width}"/>
+            </scrollbartrack>
+
+            <!-- thumb -->
+             <scrollbarthumb name="thumb">
+                 <view resource="UDLzScrollTop_rsc"/>
+                 <view resource="UDLzScrollMiddle_rsc" stretches="both"/>
+                 <view resource="UDLzScrollBottom_rsc"/>
+                 <stableborderlayout axis="y"/>
+            </scrollbarthumb>
+
+            <!-- bottom of the scroll track -->
+            <scrollbartrack name="bottom">
+                <attribute name="y" value="${parent.thumb.y+parent.thumb.height}"/>
+                <attribute name="height"
+                    value="${parent.height - parent.thumb.y - parent.thumb.height}"/>
+                <attribute name="width" value="${parent.width}"/>
+            </scrollbartrack>
+
+
+        </view>     <!-- scrolltrack -->
+
+        <!-- down arrow -->
+        <scrollbararrow name="bottomarrow"
+            resource="UDLzScrollButtonForward_rsc"/>
+
+        <stableborderlayout axis="y"/>
+     </state>
+
+    <state apply="${parent.axis == 'y' &amp;&amp; parent.othersb}">
+        <view y="${parent.height}"
+            width="${parent.bottomarrow.width}"
+            height="${parent.bottomarrow.height}"
+            bgcolor="#bdbdbd"/>
+    </state>
+
+    <state apply="${parent.axis == 'x'}">
+        <!-- up arrow -->
+        <scrollbararrow name="toparrow"
+            resource="LRLzScrollButtonBack_rsc"
+            direction="-1">
+        </scrollbararrow>
+
+        <view name="scrolltrack">
+            <!-- top of the scroll track -->
+            <scrollbartrack name="top"  clickable="true"
+                direction="-1">
+                <attribute name="width" value="${parent.thumb.x}"/>
+                <attribute name="height" value="${parent.height}"/>
+            </scrollbartrack>
+
+            <!-- thumb -->
+             <scrollbarthumb name="thumb">
+                 <view resource="LRLzScrollTop_rsc"/>
+                 <view resource="LRLzScrollMiddle_rsc" stretches="both"/>
+                 <view resource="LRLzScrollBottom_rsc"/>
+                 <stableborderlayout axis="x"/>
+            </scrollbarthumb>
+
+            <!-- bottom of the scroll track -->
+            <scrollbartrack name="bottom">
+                <attribute name="x" value="${parent.thumb.x+parent.thumb.width}"/>
+                <attribute name="width"
+                    value="${parent.width - parent.thumb.x - parent.thumb.width}"/>
+                <attribute name="height" value="${parent.height}"/>
+            </scrollbartrack>
+
+
+        </view>     <!-- scrolltrack -->
+
+        <!-- right arrow -->
+        <scrollbararrow name="bottomarrow"
+            resource="LRLzScrollButtonForward_rsc"/>
+
+        <stableborderlayout axis="x"/>
+     </state>
+
+</class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

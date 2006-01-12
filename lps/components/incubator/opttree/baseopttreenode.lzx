@@ -1,0 +1,54 @@
+<library>
+    <class name="baseopttreenode">
+        <!--- @keywords private -->
+        <attribute name="dopen" value="$path{ parent.openattrpath }"/>
+        <!--- A boolean value representing whether or not this node
+              is open. -->
+        <attribute name="open" value="${ dopen == 'true' }"/>
+
+        <!--- @keywords private -->
+        <attribute name="ddepth" value="$path{ parent.depthattrpath }"/>
+        <!--- A 0-based depth number that indicates the depth of this
+              element in the tree. -->
+        <attribute name="depth" value="${ Number( ddepth ) }"/>
+
+        <!--- If true, this element is selected -->
+        <attribute name="highlight" value="null"/>
+
+        <!--- The amount, in pixels, to indent each element of the tree.-->
+        <attribute name="indent" value="10"/>
+
+        <!--- @keywords private -->
+        <attribute name="x" value="${ depth * indent }"/>
+
+        <datapath replication="lazy"/>
+
+        <attribute name="startdragdel" value="null"/>
+        <attribute name="dragging" value="false"/>
+
+        <method event="onmousedown">
+            if ( !this.startdragdel ){
+                this.startdragdel = new LzDelegate( this, 'startDrag' );
+            }
+            LzTimer.resetTimer( startdragdel, startdragdelay);
+            this._ix = this.getMouse( 'x' );
+            this._iy = this.getMouse( 'y' );
+        </method>
+
+        <attribute name="startdragdelay" value="800"/>
+
+        <method name="startDrag">
+            this.setAttribute( "dragging", true );
+            parent.beginDrag( this , _ix, _iy );
+        </method>
+
+        <method event="onmouseup">
+            LzTimer.removeTimer( startdragdel );
+            if ( dragging ){
+                parent.endDrag( this );
+                this.setAttribute( "dragging", false );
+            }
+        </method>
+
+    </class>
+</library>

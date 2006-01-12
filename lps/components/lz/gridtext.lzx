@@ -1,0 +1,116 @@
+<library>
+    <include href="gridcolumn.lzx" />   
+    <include href="lz/edittext.lzx" />
+
+    <class name="gridtext" extends="gridcolumn">
+        <!--- The datapath attribute for a grid text is used for the text that
+              is displayed in the rows. -->
+        <attribute name="datapath" 
+                   setter="this.setAttribute( 'rowdp', datapath )"/>
+        <!--- @keywords private -->
+        <attribute name="rowdp" value="" type="string"/>
+        <!--- If set to false, the field will not be editable. -->
+        <attribute name="editable" value="true" type="boolean"/>
+        <!--- @keywords private -->
+        <attribute name="_textcolor" value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_texthilitecolor" value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_textselectedcolor" value="null"/>
+
+        <!--- @keywords private -->
+        <method name="_inferSortpath">
+            return this.rowdp;
+        </method>
+
+        <method name="_applystyle" args="s">
+            super._applystyle( s );
+            this.setAttribute( '_textcolor' , s.textcolor );
+            this.setAttribute( '_texthilitecolor' , s.texthilitecolor );
+            this.setAttribute( '_textselectedcolor' , s.textselectedcolor );
+        </method>
+
+
+        <view height="24" clickable='${parent.editable}'
+              onmouseover="immediateparent.domouseover()"
+              onmouseout="immediateparent.domouseout()"
+              y="${immediateparent.height/2 - height/2}">
+            <attribute name="editing" value="false"/>
+            <attribute name="focusable" value="${!editing &amp;&amp; 
+                                                  parent.editable}"/>
+
+            <method name="init">
+                if ( parent.editable ){
+                    this.editDel = new LzDelegate( this, 'startEditing' );
+                    this.editDel.register( this , 'onmousedown' );
+                    this.editDel.register( this , 'onfocus' );
+                }
+                super.init();
+            </method>
+
+            <method name="startEditing">
+                immediateparent.select();
+                this.setAttribute( 'editing' , true );
+                LzFocus.setFocus( editbox );
+            </method>
+
+            <text visible="${!parent.editing}" width="${parent.width}"
+                  y="$once{ parent.height /2 - this.height/2}"
+                  fgcolor="${ parent.immediateparent.selected ? 
+                                    classroot._textselectedcolor:
+                                    (parent.immediateparent.highlighted ?
+                                                classroot._texthilitecolor:
+                                                classroot._textcolor)}"
+                  datapath="$once{parent.parent.rowdp}"/>
+
+            <state pooling="true" apply="${parent.editing}" 
+                   onremove="parent.editbox.datapath.updateData()">
+                <edittext datapath="$once{parent.parent.rowdp}" 
+                          name="editbox" width="${parent.width}">
+                    <method name="init">
+                        this.globalMouseDel = new LzDelegate( this, 
+                                                              "checkMouse" );
+                        super.init();
+                    </method>
+                    <datapath>
+                        <attribute name="datacontrolsvisibility" value="false"/>
+                    </datapath>
+                    <method name="applyData" args="d">
+                        //because of the monkeying with init that this
+                        //componentdoes, the data for this thing can sometimes
+                        //get set before it's ready for it
+                        if ( !this._initcomplete ) {
+                            this.setText( d );
+                        } else {
+                            super.applyData(d);
+                        }
+                    </method>
+                    <method event="onfocus">
+                        this.globalMouseDel.register( LzGlobalMouse, 
+                                                      "onmousedown" );
+                    </method>
+                    <method event="onblur">
+                        parent.setAttribute( 'editing' , false );
+                    </method>
+                    <method name="checkMouse" args="who">
+                        if ( !this.containsPt( this.getMouse( 'x' ) , 
+                                              this.getMouse( 'y' ) ) ){
+                            parent.setAttribute( 'editing' ,false );
+                        }
+                    </method>
+                    <method event="onkeyup" args="k">
+                        if ( k == 13 ){
+                            parent.setAttribute( "editing" , false );
+                            LzFocus.setFocus(parent.immediateparent.ownerGrid);
+                        }
+                    </method>
+                </edittext>
+            </state>
+        </view>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

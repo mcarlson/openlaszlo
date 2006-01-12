@@ -1,0 +1,525 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="introductory-classes">
+<head>
+    <title>Classes</title>
+</head>
+
+<body>
+
+<h1>Classes</h1>
+<p>
+This chapter begins with a concise summary of basic features of our class system, and concludes with an essay 
+about how LZX allows you to develop efficiently.</p>
+
+
+<p>This chapter explains the essential concepts of object oriented
+programming in OpenLaszlo applications, and the <tagname
+link="true">class</tagname> tag in particular.</p>
+
+
+<h2>Overview</h2>
+<p>
+Classes are at the heart of LZX programming. Depending on your background, you may consult any of several
+discussions in the OpenLaszlo documentation to learn how to use classes effectively in your applications.
+</p>
+
+<p>To get a feel for how to use classes in OpenLaszlo applications, you
+may want to start with the <a href="${tutorials}classes-tutorial.html">Class
+tutorial</a>.  That's the best place to start learning, especially if
+you've never done any <glossterm>object oriented</glossterm> ("OO")
+programming.</p>
+
+<p>The chapter you're now reading contains a more concise exposition
+of Laszlo classes and explains LZX in relation to other OOP systems.
+In particular, this chapter assumes that you've mastered the concepts
+covered in the tutorial. In this chapter we'll go beyond some of the
+mechanics of how to create and extend classes and explore how the
+design of LZX supports rapid application development.</p>
+
+<p><xref linkend="class-inheritance"/> is for more experienced
+developers.  It explains advanced techniques.</p>
+
+<h2>Summary of Class syntax</h2>
+
+<p>In its simplest form, a class can be used as a macro, where a
+complex structure can be reduced to a single tag. The following
+example defines a class square, and instantiates it twice.</p>
+
+<example title="Defining a new tag">
+&lt;canvas height="20"&gt;
+  &lt;class name="square" width="20" height="20" bgcolor="red"/&gt;
+  &lt;square/&gt;
+  &lt;square x="30"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>This program is equivalent to the following program, but is shorter
+and easier to maintain.</p>
+
+<example title="Without the class tag">&lt;canvas height="20"&gt;
+  &lt;view width="20" height="20" bgcolor="red"/&gt;
+  &lt;view x="30" width="20" height="20" bgcolor="red"/&gt;
+&lt;/canvas&gt;</example>
+
+<p>In addition, the class definition in the first program can be moved
+to a separate file, through the use of the <tagname
+link="true">library</tagname> and <tagname
+link="true">include</tagname> tags:</p>
+
+<example title="Defining a tag in a library file">
+&lt;canvas height="20"&gt;
+  &lt;include href="square.lzx"/&gt;
+  &lt;square/&gt;
+  &lt;square x="30"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<example filename="square.lzx" executable="false">
+&lt;library&gt;
+  &lt;class name="square" width="20" height="20" bgcolor="red"/&gt;
+&lt;/library&gt;
+</example>
+
+<h3>Attributes</h3>
+
+<p>The attributes of the class are the default attributes for each instance.  The instance can override these attributes by supplying its own attributes:</p>
+
+<example title="Overriding a class attribute">&lt;canvas height="20"&gt;
+  &lt;include href="square.lzx"/&gt;
+  &lt;square/&gt;
+  &lt;square x="30" bgcolor="green"/&gt;
+&lt;/canvas&gt;</example>
+
+<p>A class can introduce a new attribute with the <tagname
+link="true">attribute</tagname> element:</p>
+
+<example title="Defining an attribute">&lt;canvas height="20"&gt;
+  &lt;class name="square" width="${this.size}" height="${this.size}" bgcolor="red"&gt;
+    &lt;attribute name="size" value="20"/&gt;
+  &lt;/class&gt;
+  &lt;square/&gt;
+  &lt;square size="15" x="30"/&gt;
+  &lt;square size="10" x="50"/&gt;
+&lt;/canvas&gt;</example>
+
+<p>For more information about attributes and class definitions, see
+the <tagname link="true">attribute</tagname> tag and the <a
+href="${tutorials}classes-tutorial.html">Class tutorial</a>.</p>
+
+<h3>Children</h3>
+<p>If a class definition contains children, these children are copied
+for each instance:</p>
+
+<example title="Class children">
+&lt;canvas height="20"&gt;
+  &lt;class name="myframe" width="20" height="20" bgcolor="red"&gt;
+    &lt;view x="2" y="2" width="16" height="16" bgcolor="blue"/&gt;
+  &lt;/class&gt;
+  &lt;myframe/&gt;
+  &lt;myframe x="30"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<example title="Using attributes and class children together" id="class-1">
+&lt;canvas height="40"&gt;
+  &lt;class name="myframe" extends="view"<co><p>
+    The <attribute>extends</attribute> is optional here.  The default base class is <classname>LzView</classname>.</p></co>&gt;
+    &lt;attribute name="bgcolor" value="red"/&gt;
+    &lt;view x="5" y="5" width="${parent.width-10}" 
+          height="${parent.height-10}" 
+          bgcolor="blue"/&gt;
+  &lt;/class&gt;
+  
+  &lt;myframe width="40" height="40"/&gt;<co><p>
+    Create an instance of <classname link="false">myframe</classname>.</p></co>
+&lt;/canvas&gt;
+</example>
+
+<h3><a name="methods"/>Methods</h3>
+
+<p>Methods defined within classes are available to all instances of
+the class, and the over-ridden superclass methods can be called with
+the <code>super</code> keyword.</p>
+
+<p>Unlike many other OO systems, Laszlo allows you to override class
+methods in an instance.</p>
+
+<h3><a name="text-classes"/>Text Classes</h3>
+
+<p>The <tagname link="true">text</tagname> and <tagname
+link="true">inputtext</tagname> tags are unique among the built in
+classes in that they can hold textual content:</p>
+
+<example title="Built-in text classes">
+&lt;canvas height="50" layout="y"&gt;
+  &lt;inputtext&gt;plain text&lt;/inputtext&gt;
+  &lt;text&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/text&gt;
+&lt;/canvas&gt;</example>
+
+<p>The <tagname link="true">text</tagname> may contain character text,
+as well as certain XHTML markup tags (<xref linkend="text"/>).  The
+<tagname link="true">inputtext</tagname> tag may contain character
+text.</p>
+
+<p>Classes that extend the <tagname link="true">text</tagname> and
+<tagname link="true">inputtext</tagname> classes may contain XHTML and
+plain text, respectively.  The text content is available as the
+<attribute>text</attribute> attribute of such a class.</p>
+
+<example title="Extending the built-in text classes">
+&lt;canvas height="50" layout="y"&gt;
+  &lt;class name="mytext" extends="text"/&gt;
+  &lt;class name="myinputtext" extends="inputtext"/&gt;
+  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
+  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>A tag may also contain text if it defines an attribute named
+<attribute>text</attribute> with a value of <code>text</code> (for
+plain text) or <code>html</code> (for XHTML text), or if it extends a
+class that does so.  This technique may be used to define a tag that
+contains text but does not extend <tagname link="true">text</tagname>
+or <tagname link="true">inputtext</tagname>.</p>
+
+<example title="Defining new text classes">
+&lt;canvas height="50" layout="y"&gt;
+  &lt;class name="mytext"&gt;
+    &lt;attribute name="text" type="html"/&gt;
+    &lt;text text="${parent.text}"/&gt;
+  &lt;/class&gt;
+  &lt;class name="myinputtext"&gt;
+    &lt;attribute name="text" type="html"/&gt;
+    &lt;inputtext text="${parent.text}"/&gt;
+  &lt;/class&gt;
+  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
+  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
+&lt;/canvas&gt;
+</example>
+
+<h3><a name="placement"/>Placement</h3>
+
+<p>The internal structure of a class is generally not visible to its
+hierarchical children. By default, instances which appear inside a
+class are made children of the top level instance of the class. This
+is generally not desirable for container classes. e.g.:</p>
+
+<example title="Default placement of children in a class" id="class-2">
+&lt;canvas height="50"&gt;
+  &lt;class name="myframe" extends="view"&gt;
+    &lt;attribute name="bgcolor" value="red"/&gt;
+    &lt;view x="5" y="5" width="${parent.width-10}"
+          height="${parent.height-10}"
+          bgcolor="#FFFFCC" /&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- Create an instance of myframe with text inside it--&gt;
+  &lt;myframe width="220" height="20"&gt;
+    <b>&lt;text&gt;This is some text&lt;/text&gt;</b>
+  &lt;/myframe&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>This behavior can be changed using the
+<attribute>node.defaultplacement</attribute> attribute or the
+<method>LzNode.determinePlacement</method> method. Using
+<attribute>defaultplacement</attribute> is simple &#x2014; this is a
+class attribute that identifies by name the subview where a child
+should be attached.  In this example, the interior view is named and
+the defaultplacement attribute is given that name.</p>
+
+<warning>Known bug: Values for the
+<attribute>defaultplacement</attribute> attribute must be double
+quoted.</warning>
+
+<example title="Using placement within a class" id="class-3">
+&lt;canvas height="50"&gt;
+  &lt;class name="myframe" extends="view"&gt;
+    &lt;attribute name="bgcolor" value="red"/&gt;
+    <em>&lt;attribute name="defaultplacement" value="'insideview'"/&gt;</em>
+    &lt;view x="5" y="5" width="${parent.width-10}" <em>name='insideview'</em>
+          height="${parent.height-10}" 
+          bgcolor="#FFFFCC"/&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- Create an instance of myframe with text inside it--&gt;
+  &lt;myframe width="220" height="50"&gt;
+    &lt;text&gt;This is some text&lt;/text&gt;
+  &lt;/myframe&gt;
+&lt;/canvas&gt;
+</example>  
+<h2>Constraints in class definitions</h2>
+<p>
+Constraints are a general mechanism for relating the value of one attribute to that of another, as explained in <xref linkend="constraints"/>.
+</p>
+<p>
+Take care when using constraints in class definitions.  Depending on the syntax you use to specify the constraint, you will either 
+cause the creation of:
+</p> 
+<ul>
+	<li>a single entity to be shared among all instances of the class, or </li>
+	<li>a unique entity for each instance of the class.</li>
+</ul>
+<h3>Creating objects to be shared</h3>
+<p>
+If, in a class definition, you say any of:</p>
+<pre>
+value="[]"
+value="new Array()"
+value="{}"
+value="new Object()"
+</pre>
+<p>
+you will get a single array or object that is shared by all instances.
+</p>
+<fixme>
+Need examples!
+</fixme>
+<h3>Creating unique objects for each instance</h3>
+<p>
+If, in a class definition, you say any of:
+</p>
+<pre>
+value="${[]}"
+value="${new Array()}"
+value="${{}}"
+value="${new Object()}"
+</pre>
+<p>each instance will get its own array or object.
+</p>
+<p>
+Note that <code>
+ ${}</code> is equivalent to <code>$always{}</code>, but since the expression inside has no dependencies, it is also equivalent to 
+<code>$once{}</code>. It's therefore perhaps more "honest" (and also marginally more efficient), to use the <code>$once{}</code> syntax. 
+This will also improve readability.
+</p>
+
+<h2>Creating objects from script</h2>
+
+<p>LZX is designed to be a declarative language, so instantiating
+views from script is not the recommended method for creating Laszlo
+applications. Of course, from time to time you need to create views
+on-the-fly, and that's why it is supported.  You want to know how to
+pass pointers to views around in LZX.  There's a couple of ways you
+could do that in this scenario:</p>
+
+<ol>
+<li><p>The "right" way. In the <classname
+link="false">PopupWindow</classname> class declare an attribute that
+will be a pointer to some view:</p>
+
+<example extract="false" title="Defining a pointer in a class definition">
+&lt;class name="PopupWindow"
+       extends="windowpanel"
+       width="160"
+       height="160"&gt;
+  &lt;attribute name="viewToAffect" type="expression"/&gt;
+  &#x2014;
+</example> 
+
+<fixme>
+The following paragraph is pretty jargonny!
+</fixme>
+
+<p>Then when you instantiate that class, pass a pointer to the view into its constructor function:</p>
+
+<example title="passing a pointer in constructor function" extract="false">
+var c = new PopupWindow(canvas, {title:'popupbutton', 
+                                 height:200, 
+                                 width:200, viewToAffect: RootWindow.winbutton}); 
+</example>
+
+<p>Then you could reference the view that was passed in from anywhere
+in the <classname>PopupWindow</classname> class:</p>
+
+<pre>classroot.viewToAffect.setAttribute('text', newText);</pre>
+
+<p>Now if you had just instantiated the <classname link="false">RootWindow</classname> class, you could pass the variable <varname>b</varname> into the constructor function for the PopupWindow:</p>
+
+<example extract="false" title="passing a parameter to a constructor function">
+var b = new window(canvas, {height:80,width:80});
+var c = new PopupWindow(canvas, {title:'popupbutton',
+                                 height:200,
+                                 width:200,
+                                 viewToAffect: b}); 
+</example>
+</li>
+
+<li>
+<p>The quick and easy way: You could always store a pointer as a global variable, e.g.</p>
+
+<pre>canvas.targetWindow = new window(canvas, {height:80,width:80});</pre>
+
+<p>or</p>
+
+<pre>canvas.targetWindow = RootWindow.winbutton;</pre>
+</li>
+</ol>
+
+<h3>Reference views by name</h3>
+
+<p>
+You can also give a view a name no matter how you instantiate it (whether you use the constructor function or the tag), and reference it as follows: 
+</p>
+
+<example title="accessing views by name">
+&lt;canvas debug="true"&gt;
+  &lt;script&gt;
+    var foo = new LzView(canvas, {width: 50, height: 50, 
+                                  x: 50, y: 100,
+                                  bgcolor: 0,
+                                  name: "myview"});
+  &lt;/script&gt;
+  
+  &lt;button&gt;Make window red
+    &lt;method event="onclick"&gt;
+      var nameOfView = "myview";
+      canvas[nameOfView].setAttribute('bgcolor', 0xff0000);
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt; 
+</example>
+
+<h2>A Prototype-based language</h2>
+
+<p>
+LZX is a prototype-based language: any attribute that can be attached to a class definition, can be attached to an instance of that 
+class instead.  
+This is handy in UI programming, where there are a number of objects with one-off behaviors.  It is also handy in prototyping and 
+incremental program development, where it creates the possibility for a novel kind of refactoring.</p>
+
+<p>The following two XML documents are complete LZX applications.  Each defines a view named <varname>myview</varname>, that contains a method named <method link="false">f</method>.  Evaluating <code>myview.f()</code> in either application will result in <code>100</code>.</p>
+
+<example extract="false" title="A trivial method">
+&lt;canvas&gt;
+  &lt;view id="myview"&gt;
+    &lt;method name="f"&gt;return 100;&lt;/method&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;</example>
+
+<example extract="false" title="A trivial method in a class" >
+&lt;canvas&gt;
+  &lt;class name="myclass"&gt;
+    &lt;method name="f"&gt;return 100;&lt;/method&gt;
+  &lt;/view&gt;
+  
+  &lt;myclass id="myview"/&gt;
+&lt;/canvas&gt;</example>
+
+<h3>Instance-First Development</h3>
+
+<p>The equivalence between the two programs above supports a development strategy we call <dfn>instance-first development</dfn>.  
+In instance-first development, you implement functionality for a single instance, and then "refactor" the instance into a class that 
+supports multiple instances.</p>
+
+<h4>Global variables</h4>
+
+<p>One instance-first development technique is to use global variables.  It is often easier to develop and debug a program that 
+stores state in global variables than it is to attach variables to a state, session, or user object.  
+This avoids threading the state object through all the API calls, and it makes it easier to find and manipulate the state during 
+interactive debugging (<xref linkend="debugging"/>).</p>
+
+<fixme>
+Can we make this a little less abstract, please? Some code, maybe?
+</fixme> 
+
+<p>Eventually you can refactor the globals into members of a state
+object, but this refactoring is relatively easy, especially if you
+have written the program with the knowledge that this would eventually
+happen.</p>
+
+<p>This technique is cheaper than maintaining the state threading and
+writing the extra access during all the other refactoring of the
+program (as extra parameter to each method that is added or
+refactored).  This is a special case of the principle that if you are
+going to refactor a program anyway, you can optimize the order in
+which the refactorings are applied, and where within the development
+pipeline they occur.</p>
+
+<p>In the global variable approach to instance-first development, the entire program is an instance.  Prototype-based programming supports 
+another approach, that doesn&#8217;t rely on global variables.  With prototype-based programming, you can add functionality to and interact 
+with a single instance of an object, refactoring its members and functionality into a class when another instance with the same or 
+similar functionality is called for.   This avoids a pitfall of programming, <dfn>premature abstraction</dfn>, where behavior is generalized 
+too early and has to be rewritten at the framework level, where it&#8217;s difficult to reason and expensive to debug, rather than at 
+the level of the specific instance.  <em>It&#8217;s easier to generalize from two examples than from one.</em></p>
+
+<p>In a language without prototypes, you can apply this strategy for instance-driven development by implementing "singleton" classes.  
+Prototypes simply cut out the middleman, reducing the line count, the abstraction, and the indirection that is necessary during development. 
+ This is particularly useful during user interface programming, where there may be a number of one-off visual objects.  
+Using a singleton class for each of these can increase the size of a program (and therefore the development time) substantially, 
+but you want the freedom to rapidly refactor any these into classes.  Prototypes in a language that also supports classes lets you seamlessly
+ move between these representations.</p>
+
+<p>Instance-first development is similar to test-driven development, but is orthogonal to it. 
+(Instance-first development can be used independently from test-driven development, or to complement it.)  
+In test-driven development, you incrementaly add test-specific functionality to encompass a growing test suite.  
+In instance-first development, you add instance-specific functionality to an instance and then generalizes from it.  
+Both are cases of implementing specific cases first and then generalizing from them.</p>
+
+<h3>The Instance Substitution Principal</h3>
+
+<p>In LZX, classes are user-defined XML tags that have functionality  
+ equivalent to class definitions in non-XML languages.  However, LZX already has methods and attributes (similar to fields or properties in other languages) 
+on instances definitions, so class definitions look like instance definitions.</p>
+<fixme>
+Is the above redaction true? Would some code help?
+</fixme>
+
+<p>In understanding the semantics of LZX class definitions, you may find the following principle useful:</p>
+
+<blockquote>
+  <p><dfn>Instance substitution principal</dfn>: An instance of a class can be replaced by the definition of the instance,
+  without changing the program semantics.</p>
+</blockquote>
+
+<p>The two programs at the beginning of this entry illustrate the instance substitution principle.</p>
+
+<p>The instance substitution principle can be applied at the level of semantics, or at the level of syntax. 
+ At the level of semantics, it means that a member can equivalently be attached either to a class or its instance. 
+ At the level of syntax, it means that the means of defining a class member and an instance member are syntactically parallel.</p>
+
+<h3>Comparison of LZX to other languages</h3>
+
+<p>Many prototype-based languages don't obey the instance substitution
+principle, either because they don't have classes, or because class
+and instance definitions are not parallel.  (Typically there's not a
+declarative means for defining an instance member.)  JavaScript
+versions 1.0 through 1.5 (the versions in browsers) is also a
+prototype-based language, but lacks classes as a first-class syntactic
+entity, and lacks the hierarchical syntax that Java, C++, and LZX use
+to define class members.  JavaScript 2.0, JScript.NET, and Python have
+a class definition syntax, but don&#8217;t use the same syntax to
+define instance members.  For example, contrast the following two
+Python programs, which parallel the LZX programs above.</p>
+
+<example extract="false">
+myobject = object()
+myobject.f = lambda f: 100
+</example>
+
+<example extract="false">
+class MyClass(object):
+  def f():
+    return 100
+myobject = MyClass()
+</example>
+
+<p>The syntactic version of the instance substitution principle makes a class look like a function or a macro.  
+Class, function, and macro definitions 
+are all mechanisms for abstracting program structure so that it can be reused. 
+ </p>
+
+<p>
+ Some languages hide this, because they're missing mechanisms to the specific or general case.  
+ For example, the instance substitution principle only makes sense in a language with both prototypes and classes; 
+the derivation of a function definition from a sequence of statements is muddier in a language such as C++ or Java that 
+is missing anonymous functions to represent the intermediate step.</p>
+
+ 
+
+ 
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

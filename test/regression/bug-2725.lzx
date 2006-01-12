@@ -1,0 +1,21 @@
+<canvas>
+<debug/>
+<dataset name="fred"/>
+  <method event="oninit"> <![CDATA[
+    debug.write("adding two params");
+    canvas.fred.setQueryParam("thing1","stuff1");
+    canvas.fred.setQueryParam("thing2","stuff2");
+
+    var params = canvas.fred.getParams();
+    debug.write("params: ",canvas.fred.getParams().d);
+    debug.write("calling setQueryParams(null)");
+    canvas.fred.setQueryParams(null);
+
+    debug.write("params: ",canvas.fred.getParams().d);
+  ]]>
+  </method>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

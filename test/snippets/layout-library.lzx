@@ -1,0 +1,6 @@
+<library>
+  <simplelayout/>
+  <text>Foo</text>
+  <text>Bar</text>
+  <text>Baz</text>
+</library>

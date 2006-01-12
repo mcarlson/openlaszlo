@@ -1,0 +1,7 @@
+<library>
+  <view layout="axis:x;spacing:2;">
+    <text>Foo</text>
+    <text>Bar</text>
+    <text>Baz</text>
+  </view>
+</library>

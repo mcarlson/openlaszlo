@@ -1,0 +1,10 @@
+<canvas>
+  <view name="asound" resource="../../examples/ping.mp3" play="true"/>
+  <!-- This works...
+  <view name="bsound" resource="ping.swf" play="true"/>
+  -->
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

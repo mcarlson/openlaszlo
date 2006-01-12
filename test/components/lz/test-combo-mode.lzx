@@ -1,0 +1,73 @@
+<canvas width="420" height="662">
+
+<debug x="0" y="200" width="420" height="300" />
+
+    <dataset name="dsPopupEditHours">
+        <list>
+            <item value="1">1</item>
+            <item value="2">2</item>
+            <item value="3">3</item>
+            <item value="4">4</item>
+            <item value="5">5</item>
+            <item value="6">6</item>
+
+            <item value="7">7</item>
+            <item value="8">8</item>
+            <item value="9">9</item>
+            <item value="10">10</item>
+            <item value="11">11</item>
+            <item value="12">12</item>
+        </list>
+    </dataset>
+    <dataset name="dsPopupEditMinutes">
+        <list>
+            <item value="00">00</item>
+            <item value="15">15</item>
+            <item value="30">30</item>
+            <item value="45">45</item>
+        </list>
+    </dataset>
+
+<view name="Popup_StartTime" width="260" height="111" x="10" y="10" visible="true" >
+
+
+         <!-- TIME -->
+        <combobox id="cboHours" x="70" y="35" width="50" editable="false"
+shownitems="3" dataoption="lazy">
+            <textlistitem datapath="dsPopupEditHours:/list/item"
+text="$path{'text()'}" value="$path{'@value'}"/>
+        </combobox>
+
+        <combobox id="cboMinutes" x="130" y="35" width="42" editable="true"
+shownitems="3" dataoption="lazy">
+            <textlistitem datapath="dsPopupEditMinutes:/list/item"
+text="$path{'text()'}" value="$path{'@value'}"/>
+        </combobox>
+
+        <combobox id="cboAMPM" x="182" y="35" width="54" editable="false">
+            <textlistitem text="AM" value="'AM'" />
+            <textlistitem text="PM" value="'PM'" />
+        </combobox>
+
+        <!-- CANCEL BUTTON -->
+        <button x="65" y="80">Cancel
+            <method event="onclick">
+                LzModeManager.release( this.parent );
+                this.parent.setBGColor(null);
+            </method>
+        </button>
+
+        <!-- Save -->
+        <button name="Save" x="145" y="80">Make Modal
+            <method event="onclick">
+                LzModeManager.makeModal( this.parent );
+                this.parent.setBGColor(yellow);
+            </method>
+        </button>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

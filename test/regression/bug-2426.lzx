@@ -1,0 +1,11 @@
+<canvas bgcolor="silver">
+    <simplelayout inset="20" spacing="10"/>
+    <view id="v" bgcolor="red" width="20" height="20"/>
+
+    <button onclick="v.setbgcolor(null)">remove bgcolor</button>
+    <button onclick="v.setbgcolor(0x0000ff)">set blue</button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

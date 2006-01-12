@@ -1,0 +1,113 @@
+<library>
+
+    <class name="cardmanager" clip="true">
+
+        <cardlist name="list" width="${parent.width}" height="${parent.height}">
+            <method name="newCard">
+                parent.form.form.setDatapath("new:/creditcard");
+                parent.form.setAttribute("mode", "new");
+                this.setAttribute("height", 0);
+                parent.form.setAttribute("height", parent.height);
+            </method>
+            <method name="editCard" args="clonenbr">
+                parent.form.setAttribute("mode", "edit");
+                this.setAttribute("height", 0);
+                parent.form.setAttribute("height", parent.height);
+                parent.form.form.setDatapath("dsCreditCardList:/creditcardlist/creditcard["+(clonenbr+1)+"]");
+            </method>
+        </cardlist>
+        <cardform name="form" width="${parent.width}" height="0">
+            <method name="done">
+                this.setAttribute("height", 0);
+                parent.list.setAttribute("height", parent.height);
+            </method>
+        </cardform>
+
+    </class>
+
+    <class name="cardlist" clip="true"  bgcolor="#FFFFFF">
+        <view name="scrollpane" clip="true" width="${parent.width}" height="${parent.height}">
+            <view width="${parent.width-50}">
+                <view name="cardList" x="10" y="10" width="${parent.width}">
+                    <simplelayout axis="y" spacing="6"/>
+                    <view resource="creditcard"/>
+                    <sel name="cardSelection"/>
+                    <view datapath="dsCreditCardList:/creditcardlist/creditcard" width="${parent.width}">
+                        <simplelayout axis="y" spacing="1"/>
+                        <view width="${parent.width}">
+                            <simplelayout axis="x" spacing="4"/>
+                            <radiobutton selectionobject="${parent.parent.parent.cardSelection}"/>
+                            <view width="${parent.width}">
+                                <simplelayout axis="y"/>
+                                <text datapath="@number" width="${parent.width}"/>
+                                <text datapath="@type" width="${parent.width}"/>
+                                <text datapath="@holder" width="${parent.width}"/>
+                            </view>
+                        </view>
+                        <view align="right">
+                            <simplelayout axis="x" spacing="2"/>
+                            <linktext width="20" onclick="parent.parent.parent.parent.parent.parent.editCard(parent.parent.clonenumber)">
+                                edit
+                            </linktext>
+                            <text width="4">|</text>
+                            <linktext width="32" onclick="parent.parent.datapath.deleteNode();">delete</linktext>
+                        </view>
+                        <view height="1" width="${parent.width}" bgcolor="#666699"/>
+                    </view>
+                </view>
+                <mouseview resource="add_card" x="10" y="${parent.cardList.y+parent.cardList.height+20}" height="40" onclick="parent.parent.parent.newCard();"/>
+            </view>
+            <scrollbar/>
+        </view>
+    </class>
+
+    <class name="cardform" x="10" y="10" clip="true" bgcolor="#FFFFFF">
+        <attribute name="mode" type="string" value="new"/>
+        <simplelayout axis="y" spacing="8"/>
+        <text fontstyle="bold" fontsize="12" fgcolor="#666699" width="${parent.width}" text="${parent.mode=='new'?'Enter new card:':'Edit card:'}"/>
+        <view name="form">
+            <text y="0" width="${parent.width}" fgcolor="#666699">Type:</text>
+            <!-- #TODO: use new combobox -->
+            <?xxx
+            <combobox y="15" width="120" shownitems="6" itemfield="dsCreditCard:/card/@name" datapath="@type" name="mycombo"/>
+            ?>
+            <text y="45" width="${parent.width}" fgcolor="#666699">Number:</text>
+            <!-- #TODO-->
+            <?xxx
+            <windowtext y="60" width="180" datapath="@number"/>
+            ?>
+            <text y="90" width="${parent.width}" fgcolor="#666699">Holder Name:</text>
+            <!-- #TODO-->
+            <?xxx
+            <windowtext y="105" width="180" datapath="@holder"/>
+            ?>
+            <text y="135" width="${parent.width}" fgcolor="#666699">Expiration:</text>
+            <!-- #TODO-->
+            <?xxx
+            <windowtext y="150" datapath="@expiration" width="70"/>
+            ?>
+        </view>
+        <view>
+            <simplelayout axis="x" spacing="4"/>
+            <mouseview resource="ok_butt">
+                <method event="onclick">
+                    parent.parent.form.datapath.retrieveData();
+                    if (parent.parent.mode=="new") {
+                        Debug.write("new");
+                        var dp=canvas.datasets.dsCreditCardList.getPointer();
+                        dp.selectChild();
+                        dp.addNodeFromPointer( parent.parent.form.datapath );
+                    }
+                    parent.parent.done();
+                </method>
+            </mouseview>
+            <mouseview resource="cancel_butt" onclick="parent.parent.done();"/>
+        </view>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

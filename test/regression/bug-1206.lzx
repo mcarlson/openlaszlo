@@ -1,0 +1,16 @@
+<canvas width="800" height="800">
+    <font name="serifFont">
+        <face src="timmonsr.ttf" />
+        <face src="timmonsb.ttf" style="bold" />
+    </font>
+
+    <class name="SpecialText" font="serifFont" fontsize="20" extends="text" />
+    <view width="67" height="10" bgcolor="blue"/>
+    <text>Hello, <b>World!</b></text>
+    <SpecialText>Hello, <b>World!</b></SpecialText>
+    <simplelayout axis="y"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

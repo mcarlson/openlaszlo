@@ -1,0 +1,383 @@
+<canvas debug="true" >
+  <include href="lzunit" />
+
+  <!-- These unit tests verify order of invocation of four initialize-related 
+       method/events: construct, onconstruct, init, and oninit. We do this for 
+       a complex-enough node hierarchy over all the initstage values (although 
+       currently it doesn't capture a difference between immediate and normal).
+       
+       Doing this properly is actually not as easy as it sounds, since objects 
+       at construct time are only partially constructed. The solution I came up 
+       with may not be the simplest, but it does work. Essentially we log 
+       events to an XML structure at the canvas level (which is fully
+       constructed), and then compare that XML structure to a known XML tree.
+
+    -->
+  
+  <dataset name="testresult">
+  </dataset>
+  
+  <method name="logitem" args="testCase, logname, item">
+    var trp = testresult.getPointer().dupePointer();
+    var tn = trp.xpathQuery("test[@name=\'" + testCase + "\']/");
+    if (tn == null) {
+      tn = trp.addNode("test", null, { name: testCase });
+    }
+    trp.setPointer(tn);
+    // shouldn't need to check for array here
+    var cn = trp.xpathQuery("case[@name=\'" + logname + "\']/");
+    if (cn == null) {
+      cn = trp.addNode("case", null, { name: logname });
+    }
+    trp.setPointer(cn);
+    trp.addNode("node", null, { name: item });
+  </method>
+  
+  <class name="inode" extends="node">    
+    <method name="logitem" args="logname,item">
+      parent.logitem(logname, item);
+    </method>
+    <method name="construct" args="parent,args">
+      super.construct(parent,args);
+      logitem('constructorder', args['name']);
+      logitem('sequence', 'construct' + args['name']);
+    </method>
+    <method event="onconstruct">
+      logitem('onconstructorder', this.name);
+      logitem('sequence', 'onconstruct' + this.name);
+    </method>
+    <method name="init">
+      super.init();
+      logitem('initorder', this.name);
+      logitem('sequence', 'init' + this.name);
+    </method>
+    <method event="oninit">
+      logitem('oninitorder', this.name);
+      logitem('sequence', 'oninit' + this.name);
+    </method>
+  </class>
+  
+  <class name="ClassInitTestCase" extends="TestCase">
+      <method name="logitem" args="logname,item">
+        canvas.logitem(this.name, logname, item);
+      </method>
+
+      <method name="compareCase" args="casename"><![CDATA[
+        var testname = this.name;
+        var cn = testresult.getPointer().xpathQuery("test[@name=\'" + testname + "\']/case[@name=\'" + casename + "\']/");
+        if (cn == null)
+          return false;
+        var cn2 = expectedresult.getPointer().xpathQuery("case[@name=\'" + casename + "\']/");
+        if (cn2 == null)
+          return false;
+        if (cn2.serialize() != cn.serialize()) {
+          Debug.format("%w:%w expected %w\n", testname, casename, cn2);
+          Debug.format("%w:%w got      %w\n", testname, casename, cn);
+        }
+        return (cn2.serialize() == cn.serialize());
+      ]]></method>
+      
+      <method name="testConstruct">
+        assertTrue(compareCase('constructorder'));
+      </method>
+      
+      <method name="testOnConstruct">
+        assertTrue(compareCase('onconstructorder'));
+      </method>
+      
+      <method name="testInit">
+        assertTrue(compareCase('initorder'));
+      </method>
+      
+      <method name="testOnInit">
+        assertTrue(compareCase('oninitorder'));
+      </method>
+      
+      <method name="testInitializationSequence">
+        assertTrue(compareCase('sequence'));
+      </method>
+      
+  </class>
+  
+  <TestSuite>
+  
+    <ClassInitTestCase name="testClassNormalInit">
+    
+      <inode name="c">
+        <inode name="a">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <dataset name="expectedresult">
+        <case name="constructorder">
+          <node name="c"/><node name="a"/><node name="d"/><node name="b"/>
+        </case>
+        <case name="onconstructorder">
+          <node name="c"/><node name="a"/><node name="d"/><node name="b"/>
+        </case>
+        <case name="initorder">
+          <node name="d"/><node name="a"/><node name="b"/><node name="c"/>
+        </case>
+        <case name="oninitorder">
+          <node name="d"/><node name="a"/><node name="b"/><node name="c"/>
+        </case>
+        <case name="sequence">
+          <node name="constructc"/><node name="onconstructc"/>
+          <node name="constructa"/><node name="onconstructa"/>
+          <node name="constructd"/><node name="onconstructd"/>
+          <node name="constructb"/><node name="onconstructb"/>
+          <node name="initd"/><node name="oninitd"/>
+          <node name="inita"/><node name="oninita"/>
+          <node name="initb"/><node name="oninitb"/>
+          <node name="initc"/><node name="oninitc"/>
+        </case>
+      </dataset>
+
+    </ClassInitTestCase>
+
+    <ClassInitTestCase name="testClassImmediateInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="immediate">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <dataset name="expectedresult">
+        <case name="constructorder">
+          <node name="c"/><node name="a"/><node name="d"/><node name="b"/>
+        </case>
+        <case name="onconstructorder">
+          <node name="c"/><node name="a"/><node name="d"/><node name="b"/>
+        </case>
+        <case name="initorder">
+          <node name="d"/><node name="a"/><node name="b"/><node name="c"/>
+        </case>
+        <case name="oninitorder">
+          <node name="d"/><node name="a"/><node name="b"/><node name="c"/>
+        </case>
+        <case name="sequence">
+          <node name="constructc"/><node name="onconstructc"/>
+          <node name="constructa"/><node name="onconstructa"/>
+          <node name="constructd"/><node name="onconstructd"/>
+          <node name="constructb"/><node name="onconstructb"/>
+          <node name="initd"/><node name="oninitd"/>
+          <node name="inita"/><node name="oninita"/>
+          <node name="initb"/><node name="oninitb"/>
+          <node name="initc"/><node name="oninitc"/>
+        </case>
+      </dataset>
+
+    </ClassInitTestCase>
+
+    <ClassInitTestCase name="testClassEarlyInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="early">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <dataset name="expectedresult">
+        <case name="constructorder">
+          <node name="c"/><node name="a"/><node name="d"/><node name="b"/>
+        </case>
+        <case name="onconstructorder">
+          <node name="c"/><node name="a"/><node name="d"/><node name="b"/>
+        </case>
+        <case name="initorder">
+          <node name="d"/><node name="a"/><node name="b"/><node name="c"/>
+        </case>
+        <case name="oninitorder">
+          <node name="d"/><node name="a"/><node name="b"/><node name="c"/>
+        </case>
+        <case name="sequence">
+          <node name="constructc"/><node name="onconstructc"/>
+          <node name="constructa"/><node name="onconstructa"/>
+          <node name="constructd"/><node name="onconstructd"/>
+          <node name="initd"/><node name="oninitd"/>
+          <node name="inita"/><node name="oninita"/>
+          <node name="constructb"/><node name="onconstructb"/>
+          <node name="initb"/><node name="oninitb"/>
+          <node name="initc"/><node name="oninitc"/>
+        </case>
+      </dataset>
+
+    </ClassInitTestCase>
+
+    <ClassInitTestCase name="testClassLateInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="late">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <dataset name="expectedresult">
+        <case name="constructorder">
+          <node name="c"/><node name="a"/><node name="b"/><node name="d"/>
+        </case>
+        <case name="onconstructorder">
+          <node name="c"/><node name="a"/><node name="b"/><node name="d"/>
+        </case>
+        <case name="initorder">
+          <node name="b"/><node name="c"/><node name="d"/><node name="a"/>
+        </case>
+        <case name="oninitorder">
+          <node name="b"/><node name="c"/><node name="d"/><node name="a"/>
+        </case>
+        <case name="sequence">
+          <node name="constructc"/><node name="onconstructc"/>
+          <node name="constructa"/><node name="onconstructa"/>
+          <node name="constructb"/><node name="onconstructb"/>
+          <node name="initb"/><node name="oninitb"/>
+          <node name="initc"/><node name="oninitc"/>
+          <node name="constructd"/><node name="onconstructd"/>
+          <node name="initd"/><node name="oninitd"/>
+          <node name="inita"/><node name="oninita"/>
+        </case>
+      </dataset>
+
+    </ClassInitTestCase>
+
+    <ClassInitTestCase name="testClassDeferInit">
+    
+      <inode name="c">
+        <inode name="a" initstage="defer">
+          <inode name="d"/>
+        </inode>
+        <inode name="b"/>
+      </inode>
+      
+      <dataset name="expectedresult">
+        <case name="constructorder">
+          <node name="c"/><node name="a"/><node name="b"/>
+        </case>
+        <case name="onconstructorder">
+          <node name="c"/><node name="a"/><node name="b"/>
+        </case>
+        <case name="initorder">
+          <node name="b"/><node name="c"/>
+        </case>
+        <case name="oninitorder">
+          <node name="b"/><node name="c"/>
+        </case>
+        <case name="sequence">
+          <node name="constructc"/><node name="onconstructc"/>
+          <node name="constructa"/><node name="onconstructa"/>
+          <node name="constructb"/><node name="onconstructb"/>
+          <node name="initb"/><node name="oninitb"/>
+          <node name="initc"/><node name="oninitc"/>
+        </case>
+      </dataset>
+
+    </ClassInitTestCase>
+
+    <TestCase name="testInstOrderProto">
+
+      <node id="n2">
+      
+        <attribute name="sequenceorder" type="string" value=""/>
+        <attribute name="constructorder" type="string" value=""/>
+        <attribute name="onconstructorder" type="string" value=""/>
+        <attribute name="initorder" type="string" value=""/>
+        <attribute name="oninitorder" type="string" value=""/>
+        
+        <method name="construct" args="parent, args">
+          super.construct(parent, args);
+          constructorder = constructorder + ',' + this.id;
+          sequenceorder = sequenceorder + ',' + 'construct';
+        </method>
+        
+        <method event="onconstruct">
+          onconstructorder = onconstructorder + ',' + this.id;
+          sequenceorder = sequenceorder + ',' + 'onconstruct';
+        </method>
+        
+        <method name="init">
+          super.init();
+          initorder = initorder + ',' + this.id;
+          sequenceorder = sequenceorder + ',' + 'init';
+        </method>
+        
+        <method event="oninit">
+          oninitorder = oninitorder + ',' + this.id;
+          sequenceorder = sequenceorder + ',' + 'oninit';
+        </method>
+        
+        <node name="a">
+          <method name="construct" args="parent,args">
+            super.construct(parent,args);
+            n2.constructorder = n2.constructorder + ',' + this.name;
+          </method>
+          <method event="onconstruct">
+            n2.onconstructorder = n2.onconstructorder + ',' + this.name;
+          </method>
+          <method name="init">
+            super.init();
+            n2.initorder = n2.initorder + ',' + this.name;
+          </method>
+          <method event="oninit">
+            n2.oninitorder = n2.oninitorder + ',' + this.name;
+          </method>
+        </node>
+        
+        <node name="b">
+          <method name="construct" args="parent,args">
+            super.construct(parent,args);
+            n2.constructorder = n2.constructorder + ',' + this.name;
+          </method>
+          <method event="onconstruct">
+            n2.onconstructorder = n2.onconstructorder + ',' + this.name;
+          </method>
+           <method name="init">
+            super.init();
+            n2.initorder = n2.initorder + ',' + this.name;
+          </method>
+         <method event="oninit">
+            n2.oninitorder = n2.oninitorder + ',' + this.name;
+          </method>
+        </node>
+      </node>
+      
+      <method name="testConstructProto">
+        <!-- construct overrides don't appear because construct is
+             called before n2's attributes are applied - so no construct
+             method is available to call. -->
+        assertEquals("", n2.constructorder);
+      </method>
+      
+      <method name="testOnConstructProto">
+        assertEquals(",n2,a,b", n2.onconstructorder);
+      </method>
+      
+      <method name="testInitProto">
+        assertEquals(",a,b,n2", n2.initorder);
+      </method>
+      
+      <method name="testOnInitProto">
+        assertEquals(",a,b,n2", n2.oninitorder);
+      </method>
+      
+      <method name="testInitializationSequenceProto">
+        <!-- construct overrides don't appear because construct is
+             called before n2's attributes are applied - so no construct
+             method is available to call. -->
+        assertEquals(",onconstruct,init,oninit", n2.sequenceorder);
+      </method>
+      
+    </TestCase>
+    
+    <TestCase name="testCompleteInstantiation">
+    
+    </TestCase>
+
+    
+  </TestSuite>
+  
+</canvas>

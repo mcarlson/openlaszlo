@@ -1,0 +1,63 @@
+<canvas width="500" height="500">
+    <include href="lzunit"/>
+    <include href="/extensions/views/richinputtext.lzx" />
+    <include href="/extensions/views/LzTextFormat.lzx" />
+
+    <debug x="20" y="230" width="440" height="500" />
+
+    <window y="0" resizable="true" height="200" width="200">
+        <richinputtext 
+                id="rte"
+                width="${parent.width-10}" height="${parent.height-10}" 
+                multiline="true"
+                font="Monaco"
+                fontsize="8"
+        >                        
+
+            <!--- The font returned here should match the font attribute of the richinputtext. -->
+            <method name="test1">            
+                rte.reset(); 
+                rte.setText("Many secrets are known by the uninitiated. The truth is spreading.");
+                var theFormat = this.getTextFormat(10,11); 
+                output.setText("font is " + theFormat.font);                 
+            </method>
+
+            <method name="test2">
+                rte.reset();
+                this.defaultformat = new LzTextFormat(this, {font: "Arial", size: 18}); 
+                Debug.write("faked a default val for defaultformat:", this['defaultformat']);
+                
+                rte.setText("Many secrets are known by the uninitiated. The truth is spreading.");
+                var theFormat = this.getTextFormat(10,11); 
+                output.setText("font is " + theFormat.font);                 
+            </method>
+        </richinputtext>
+    </window>
+
+    <view x="20" y="200" >
+        
+        <simplelayout axis="x" spacing="5" />
+        <text id="output">(output goes here)
+        </text>
+        <button id="bplain" text="plain" onclick="rte.setText('Underlying all questions of etiology is the fundamental query: who started it? And did they know what they were doing, at the time?');"/>
+        <button id="bhtml" text="html">
+            <method name="doClick" event="onclick">
+                rte.setHTMLText('There once was a small fish in a small pond. The small pond was at the base of a little hill. Far, far away was the sea. The small fish found a stream leading away from  his small pond, and he swam into that stream. The stream flowed down the side of a big hill.');
+            </method>
+        </button>
+        
+        <button id="bhtmlparas" text="paragraphs">
+            <method name="doClick" event="onclick">
+                rte.setHTMLText('Aha!\nOmbudsman\n\n\ne e cummings\nReluctant Charging Buffalo');
+            </method>
+        </button>
+        
+        <button text="reset" onclick="rte.reset()"/>
+    </view>
+    <view x="20" y="250" width="200">
+        <simplelayout axis="x" spacing="5" />
+        <button text="test1" onclick="rte.test1()" />
+        <button text="test2" onclick="rte.test2()" />
+    </view>
+
+</canvas>

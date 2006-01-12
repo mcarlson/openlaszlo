@@ -1,0 +1,104 @@
+<canvas debug="true">
+    <simplelayout/>
+    <text text="${LzHistory.offset}"/>
+    <attribute name="foo" value="null"/>
+    <method event="onfoo" args="f">
+        Debug.write('external call', f); 
+    </method>
+
+    <class name="histinputtext" extends="inputtext">
+        <method event="oninit">
+            LzHistory.save(this, 'text', this.getText())
+        </method>
+        <method event="onblur">
+            LzHistory.save(this, 'text', this.getText())
+        </method>
+    </class>
+    <histinputtext>A value</histinputtext>
+    <histinputtext>Another value</histinputtext>
+    
+    <view layout="axis: x">
+        <button onclick="LzHistory.prev()">Prev</button>
+        <button onclick="LzHistory.next()">Next</button>
+        <button onclick="LzHistory.commit()">Save</button>
+    </view>
+
+    <button onclick="LzBrowser.loadJS('alert(\'hi folks!\');')">Call javaScript alert in browser</button>
+
+    <!--view id="history">
+        <attribute name="persist" value="false"/>
+        <attribute name="offset" value="0" type="number"/>
+        <attribute name="__lzdirty" value="false"/>
+        <attribute name="__lzhistq" value="[]"/>
+        <attribute name="__lzcurrstate" value="{}"/>
+        <method event="oninit">
+            if (this.persist) {
+                if (! this._persistso) {
+                    var lu = LZBrowser.getLoadUrlAsLzUrl();
+                    lu.query = null;
+                    this._persistso = LzBrowser.getPersist('historystate');
+                }
+                //this.__lzhistq = this._persistso.data;
+            }
+        </method>
+        <method event="onhistory" args="o" reference="LzBrowser">
+            //Debug.write('onhistory ', o); 
+            o *= 1;
+            if (! o) o = 0;
+            if (o > this.__lzhistq.length - 1) o = this.__lzhistq.length;
+            this.setAttribute('offset', o);
+
+            var h = this.__lzhistq[o];
+            for (u in h) {
+                var o = h[u];
+                //Debug.write('restoring state ', o); 
+                o.c.setAttribute(o.n, o.v);
+            }
+        </method>
+        <method name="register" args="who, prop, val">
+            // strip off __ so keys can be listed
+            var u = who.getUID().substr(2);
+            if (val == null) val = who[prop];
+            this.__lzcurrstate[u] = {c: who, n: prop, v: val};
+            this.__lzdirty = true;
+            //Debug.write('set state ',this.__lzcurrstate); 
+        </method>
+        <method name="save">
+            if (! this.__lzdirty) return;
+            this.__lzhistq[this.offset] = this.__lzcurrstate;
+            //Debug.write('Stored state ', this.__lzcurrstate); 
+            this.__lzhistq.length = this.offset + 1;
+
+            if (this.persist) {
+                if (! this._persistso) {
+                    var lu = LZBrowser.getLoadUrlAsLzUrl();
+                    lu.query = null;
+                    this._persistso = LzBrowser.getPersist('historystate');
+                }
+                //Debug.write('_persistso: ', this._persistso); 
+                //this._persistso.data = this.__lzhistq;
+            }
+            
+            this.__lzcurrstate = {};
+            this.__lzdirty = false;
+        </method>
+        <method name="move" args="by">
+            this.save();
+            if (! by) by = 1;
+            var o = this.offset + by;
+            if (0 >= o) o = 0;
+            //Debug.write('Move to: ', o); 
+            if (this.__lzhistq.length >= o) LzBrowser.setHistory(o);
+        </method>
+        <method name="next">
+            this.move(1);
+        </method>
+        <method name="prev">
+            this.move(-1);
+        </method>
+    </view-->
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

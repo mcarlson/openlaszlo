@@ -1,0 +1,85 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- LPS Test suites -->
+
+<test-suites>   
+    <suite name="Tests"
+           directory="qa/test"
+           test="html" />
+    <suite name="Regression"
+           directory="qa/test/regression"
+           test="html" />
+    <suite name="Checkin smoke Tests"
+           directory="qa/test/smoke"
+           test="html" />
+    <suite name="Apple Animation Test"
+           directory="qa/test/apple-animation-test"
+           test="html" />
+    <suite name="LZ Components"
+           directory="qa/test/components/lz"
+           test="html" />
+    <suite name="Redmond Components"
+           directory="qa/test/components/redmond"
+           test="html" />
+    <suite name="examples"
+           directory="examples"
+           test="html" />
+    <suite name="chat"
+           directory="sample-apps/chat"
+           test="html"/>
+    <suite name="noughts"
+           directory="sample-apps/noughts"
+           test="html"/>
+    <suite name="weather"
+           directory="sample-apps/weather"
+           test="html"/>
+    <suite name="contacts"
+           directory="sample-apps/contacts"
+           test="html"/>
+    <suite name="Welcome Support Frame"
+           directory="lz-utils/welcome_support"
+           test="html"/>
+    <suite name="Welcome Support Cover"
+           directory="lz-utils/welcome_support/coverpages"
+           test="html"/>
+    <suite name="Welcome Support Headers"
+           directory="lz-utils/welcome_support/headers"
+           test="html"/>
+<!--
+    <suite name="Bugs"
+           directory="test/bugs"
+           test="html"/>
+-->
+    <suite name="Window Tutorial"
+           directory="test/tutorials/window"
+           test="html"/>
+    <suite name="Calculator Tutorial"
+           directory="qa/test/tutorials/calculator"
+           test="html"/>
+    <suite name="Scripting Tutorial"
+           directory="qa/test/tutorials/scripting"
+           test="html"/>
+
+    <suite name="calendar"
+           directory="sample-apps/calendar"
+           test="html"/>
+    <suite name="dashboard"
+           directory="sample-apps/dashboard"
+           test="html"/>
+<!--
+    <suite name="messenger"
+           directory="sample-apps/messenger"
+           test="html"/>
+-->
+
+    <suite name="Compiler JavaScript Generation"
+           directory="server/test/jsgen"
+           test="js" />
+<!--
+    <suite name="Compiler Errors"
+           directory="test/compiler_errors"
+           test="html" />
+-->
+</test-suites>

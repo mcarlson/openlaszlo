@@ -1,0 +1,73 @@
+<canvas width="100%" height="100%" debug="true"> 
+<debug x="10" y="300" width="800" height="300" /> 
+
+<import name="form_tenforty_snippet" 
+href="1040/form_tenforty.lzx" stage="defer" 
+onload="mybutt.handleTenFortyLoad()" /> 
+
+<button name="mybutt">Load 1040 now 
+<!-- The instance of the form --> 
+<attribute name="f" value="null" /> 
+<attribute name="is_tenforty_loaded" value="false" /> 
+<method event="onclick"> 
+if ( this.is_tenforty_loaded ) { 
+instantiateTenForty(); 
+} else { 
+form_tenforty_snippet.load(); 
+} 
+</method> 
+
+<method name="handleTenFortyLoad"> 
+this.is_tenforty_loaded = true; 
+instantiateTenForty(); 
+</method> 
+
+<method name="instantiateTenForty"> 
+//this.f = new form_tenforty( canvas, {x:40,y:40}); 
+this.f = new form_tenforty( this, {x:40,y:40}); 
+</method> 
+</button> 
+
+<button x="130">Remove 1040 now 
+<method event="onclick"> 
+mybutt.f.destroy(); 
+mybutt.setAttribute("f", null); 
+delete mybutt.f; 
+delete form_tenforty_snippet; 
+//mybutt.f = null; 
+//canvas.f.destroy(); 
+//canvas.f = null; 
+</method> 
+</button> 
+
+<button x="280">markObjects 
+<method event="onclick"> 
+__LzDebug.markObjects(); 
+</method> 
+</button> 
+
+
+<button x="390">findNewObjects 
+<method event="onclick"> 
+__LzDebug.findNewObjects(); 
+</method> 
+</button> 
+
+
+<button x="520">whyAlive 
+<method event="onclick"> 
+var foo = __LzDebug.whyAlive(); 
+//foo.toString(); 
+Debug.write("Why Alive: ", foo, foo.toString()); 
+</method> 
+</button> 
+
+<!-- 
+<button x="610">backtrace 
+<method event="onclick"> 
+Debug.backtrace(); 
+</method> 
+</button> 
+--> 
+</canvas> 
+

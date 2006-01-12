@@ -1,0 +1,78 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basetree">
+    <lztier>Base Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        An abstract base class to build tree controls.
+    </lzshortdesc>
+    <lztag>base/basetree.xml</lztag>
+</lzelement>
+
+<p>You can subclass <classname>basetree</classname> to build a tree
+control with your own look and feel. Basetree has two content areas:
+<varname>item</varname> and <varname>children</varname>. The
+<varname>item</varname> view is where the visual component of the tree
+should be placed. Any view that you want to place in the tree node
+should be placed in <varname>item</varname>. You can use
+<code>placement="item"</code>. The <varname>children</varname> view is
+the defaultplacement for basetree.</p>
+
+<p>The following diagram demonstrates how <varname>item</varname> and
+<varname>children</varname> are associated in tree. Since
+<classname>basetree</classname> has no visual component,
+<classname>tree</classname> is used here for demonstration
+purposes.</p>
+
+<img src="images/basetree/basetree-diagram.png"/>
+
+<example title="Basetree subclass with echoed text node">
+&lt;canvas width="200" height="200"&gt;
+  &lt;include href="base/basetree.lzx"/&gt;
+
+  &lt;class name="echotree" extends="basetree"&gt;
+    &lt;view placement="item" layout="axis: x; spacing: 2" 
+          bgcolor="${classroot.selected
+                    ? classroot.style.selectedcolor 
+                    : classroot.parent.bgcolor}"&gt;
+      &lt;method event="onclick"&gt;
+        classroot.changeFocus();
+        if (! classroot.isleaf) {
+          classroot.setAttribute("open", ! classroot.open);
+        }
+      &lt;/method&gt;
+      &lt;text text="${classroot.text}" resize="true" /&gt;
+      &lt;text text="${classroot.text}" resize="true" /&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;view x="20" y="20" layout="axis: x; spacing: 10"&gt;
+    &lt;echotree&gt;paragraph
+      &lt;echotree&gt;sentence
+        &lt;echotree&gt;words
+          &lt;echotree isleaf="true"&gt;letter&lt;/echotree&gt;
+          &lt;echotree isleaf="true"&gt;number&lt;/echotree&gt;
+          &lt;echotree isleaf="true"&gt;punctuation&lt;/echotree&gt;
+        &lt;/echotree&gt;
+      &lt;/echotree&gt;
+    &lt;/echotree&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes>tree</classes>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

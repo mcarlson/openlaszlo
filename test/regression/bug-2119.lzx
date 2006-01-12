@@ -1,0 +1,21 @@
+<canvas debug="true">
+	<debug y="100"/>
+	<class name="tabtrapper" extends="edittext">
+		<attribute name="fgcolor" value="white"/>
+		
+		<method event="onkeydown" args="k">
+			if (k == 9) debug.write(this.name + ' losing focus')
+		</method>
+	
+	</class>
+	
+	<tabtrapper name="greenbox" bgcolor="0x00dd00" width="150" oninit="LzFocus.setFocus(this)">
+		Tab between these fields
+	</tabtrapper>
+	<tabtrapper name="bluebox" bgcolor="0x0000dd" width="100"/>
+	<simplelayout axis="x" spacing="10"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

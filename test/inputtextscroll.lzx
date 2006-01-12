@@ -1,0 +1,38 @@
+<canvas>
+    <class name="scrollinputtext" clip="true">
+        <attribute name="text" type="html" value=""/>
+        <method name="getText">
+            return inp.getText();
+        </method>
+        <method name="setText" args="t">
+            inp.setText(t);
+        </method>
+        <inputtext name="inp" id="me" height="${parent.height}" width="${parent.width - 20}" multiline="true" text="${parent.text}">
+            <attribute name="lineheight" value="$once{this.getTextHeight()/this.maxscroll}"/>   <!-- fix this -->
+            <attribute name="maxheight" value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
+            <attribute name="onpos" value="null"/>
+            <attribute name="pos" value="0" setter="setPos(pos);"/>
+            <method event="oninit">
+                Debug.write('oninit imp', this, this.maxscroll, this.scroll);
+            </method>
+            <method event="onmaxscroll">
+                Debug.write('onmaxscroll');
+            </method>
+
+            <method name="setPos" args="p">
+                this.setScroll(1 - (p / this.lineheight));
+                this.pos = p;
+                if (this.onpos) this.onpos.sendEvent(p);
+            </method>
+            <method event="onscroll">
+                this.setPos(-this.lineheight * (this.scroll - 1), true);
+            </method>
+        </inputtext>
+        <scrollbar axis="y" scrollattr="pos" scrollmax="${parent.inp.maxheight}"/>
+    </class>
+
+    <simplelayout spacing="20"/>
+    <scrollinputtext height="100" width="200" name="scin">Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit edit eedit wcit Edit edit eedit wcit Edit edit eedit wcit Edit edit</scrollinputtext>
+
+     <button>test</button>
+</canvas>

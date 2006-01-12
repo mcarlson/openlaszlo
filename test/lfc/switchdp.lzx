@@ -1,0 +1,48 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- local.lzx                                                             -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!--=======================================================================-->
+
+<canvas width="1280" height="1024" debug="true">
+  <view oninit="debug.setx(100);"/>
+  <include href="utils/layouts/alllayouts.lzx" />
+  <include href="redmond" />
+  <font src="helmetr.ttf" name="Helvetica" />
+  
+  <dataset name="keys">
+    <keys>
+      <row><key><t>7</t></key><key><t>8</t></key><key><t>9</t></key></row>
+      <row><key><t>4</t></key><key><t>5</t></key><key><t>6</t></key></row>
+      <row><key><t>1</t></key><key><t>2</t></key><key><t>3</t></key></row>
+      <row><key><t>0</t></key><key><t>.</t></key><key><t>Enter</t></key></row>
+    </keys>
+  </dataset>
+  
+  <view>
+    <view height="40" bgcolor="yellow" font="Helvetica" fontsize="20" 
+	  id="switcher">
+      <attribute name="mypath" value="keys:/keys/row[1]" type="string"/>
+      <datapath >
+	<attribute name="xpath" value="parent.mypath" when="always" />
+      </datapath>
+      
+      <text name="key" width="30" datapath="key[1]/t/text()" />
+      <simplelayout axis="x" spacing="10"/>
+    </view>
+    <simplelayout axis="y" spacing="4"/>
+  </view>
+  <button label="switchit" y="40"
+	  onclick="switcher.setAttribute( 'mypath' ,'keys:/keys/row[2]')" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

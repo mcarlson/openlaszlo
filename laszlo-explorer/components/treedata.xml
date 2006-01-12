@@ -1,0 +1,35 @@
+    <basket name="basket" isopen="true">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+      <product name="fruits" isopen="true">
+        <apples name="apples" isopen="true">
+          <type name="red delicious apple" isleaf="true" 
+                url="http://www.nyapplecountry.com/reddelicious.htm" />
+          <type name="fuji apple" isleaf="true" 
+                url="http://www.nyapplecountry.com/fuji.htm" />
+          <type name="braeburn apple" isleaf="true" 
+                url="http://www.nyapplecountry.com/braeburn.htm" />
+          <type name="honey crisp" isleaf="true" 
+                url="http://www.nyapplecountry.com/honey.htm" isopen="true" />
+        </apples>
+        <oranges name="oranges">
+          <type name="valencia orange" isleaf="true" />
+          <type name="blood orange" isleaf="true" />
+          <type name="navel orange" isleaf="true" />
+        </oranges>
+      </product>
+      <product name="dairy">
+        <dairy name="eggs">
+          <type name="organic eggs" isleaf="true" />
+          <type name="free-range eggs" isleaf="true" />
+        </dairy>
+        <dairy name="milk">
+          <type name="skim milk" isleaf="true" />
+          <type name="1% milk" isleaf="true" />
+          <type name="whole milk" isleaf="true" />
+        </dairy>
+        <dairy name="yogurt" />
+      </product>
+    </basket>

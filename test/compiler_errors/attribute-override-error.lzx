@@ -1,0 +1,29 @@
+<!-- override attribute with illegal changed type , this should throw an error -->
+
+<canvas width="300" height="200" bgcolor="red"> 
+    <window title="Window 1" x="10" y="10" width="200" height="200" >
+        <view>
+	<text>This is some
+text with a couple
+of linebreaks in it.
+</text>
+        </view>
+    </window>
+
+   <class name="mywindow">
+      <attribute name="bgcolor" value="39" type="number" 
+               setter="this.applyWindowColor( bgcolor)"/>
+
+      <attribute name="fluffy" value="birdie" type="string" 
+               setter="this.foofer(fluffy)"/>
+      <text>Basewindow Text</text>
+   </class>
+
+   <mywindow bgcolor="yellow" fluffy="parrot food">
+   </mywindow>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

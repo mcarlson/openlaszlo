@@ -1,0 +1,50 @@
+<canvas debug="true">
+    <debug width="500" height="500"/>
+    <include href="lzunit/lzunit.lzx" />
+    <dataset name="ds">
+        <record a="1"> Some text.</record>
+    </dataset>
+
+    <script>
+        var gtextpath = "text()";
+    </script>
+
+
+    <TestSuite>
+        <TestCase>
+            <view id="testme" datapath="ds:/record">
+                <attribute name="textpath" value="text()" type="string"/>
+                <attribute name="bada1" value="$path{   @a   }"/>
+                <attribute name="bada2" value="$path{  '@a  }"/>
+                <attribute name="bada3" value="$path{  @a'  }"/>
+                <attribute name="gooda" value="$path{   ' @a' }"/>
+                <attribute name="goodt" value="$path{  '  text()' }"/>
+                <attribute name="reft" value="$path{   textpath }"/>
+                <attribute name="reft2" value="$path{ gtextpath  }"/>
+                <attribute name="badref" value="$path{ foo.bar }"/>
+                <attribute name="aselect1" 
+                           value="$path{ ' .[@a = &apos;1&apos;] '}"/>
+                <attribute name="aselect2" 
+                           value="$path{ ' .[@a = &quot;2&quot;] '}"/>
+            </view>
+
+            <method name="test1">
+                assertEquals( null, testme.bada1 );
+                assertEquals( null, testme.bada2 );
+                assertEquals( null, testme.bada3 );
+                assertEquals( "1" , testme.gooda );
+                assertEquals( "Some text.", testme.goodt );
+                assertEquals( "Some text.", testme.reft );
+                assertEquals( "Some text.", testme.reft2 );
+                assertEquals( null , testme.badref );
+                assertEquals( ds.getFirstChild() , testme.aselect1 );
+                assertEquals( null , testme.aselect2 );
+            </method>
+        </TestCase>
+    </TestSuite>
+        
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

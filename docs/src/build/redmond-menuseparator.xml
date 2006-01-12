@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element category="Menu and Command" extends="view.xml" filename="menuseparator.html" tier="Redmond Component" title="Menuseparator">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<desc>A horizontal separator for pull-down menus.</desc><longdescription>
+&lt;p&gt;
+Note: Redmond components are deprecated.  Please consider using LZ Components.
+If you use this component, you must explicitly include the redmond library: &lt;br/&gt;
+&amp;lt;include href="redmond"/&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Description:&lt;/b&gt;&lt;br/&gt;
+	The &lt;tt&gt;menuseparator&lt;/tt&gt; tag provides a horizontal separator for pull-down menus. This tag must reside within a &lt;tt&gt;menu&lt;/tt&gt; tag.
+&lt;/p&gt;
+	&lt;b&gt;Example:&lt;/b&gt;&lt;br/&gt;
+	&lt;pre&gt;
+&amp;lt;canvas height="160" debug="true"&amp;gt;
+    &amp;lt;include href="redmond"/&amp;gt;
+    &amp;lt;menubar width="200" height="25"&amp;gt;
+        &amp;lt;menu label="Menu" hasbutton="true"  &amp;gt;
+            &amp;lt;menuitem label="item 1" /&amp;gt;  
+            &amp;lt;menuitem label="item 2" /&amp;gt;  
+            &amp;lt;menuseparator/&amp;gt;  
+            &amp;lt;menuitem label="item 3" /&amp;gt;  
+        &amp;lt;/menu&amp;gt;
+    &amp;lt;/menubar&amp;gt;
+&amp;lt;/canvas&amp;gt;&lt;/pre&gt;
+&lt;p&gt;
+	&lt;b&gt;See also:&lt;/b&gt;&lt;br/&gt;
+	&lt;TT&gt;command, menu, menubar, menuitem&lt;/TT&gt;
+&lt;/p&gt;
+</longdescription>
+    <attributes>
+        <attribute category="setter" isvalidintag="true" name="inset" tagtypetoken="Number" type="Number">
+			<desc> The number of pixels the separartor line is inset on both the left and right sides of a menu. The default value for the inset is 3 pixels. </desc>
+	    </attribute>
+	</attributes>
+<tag name="menuseparator" src="tag-menuseparator.xml"/></element>

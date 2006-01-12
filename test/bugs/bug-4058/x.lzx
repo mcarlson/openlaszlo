@@ -1,0 +1,17 @@
+<canvas debug="true">
+  <dataset name="data" src="x.xml" />
+  <simplelayout axis="y" />
+  <view datapath="data:/data/string">
+  <simplelayout axis="x" />
+  <text datapath="@id" />
+  <text datapath="text()">
+    <method name="applydata" args="d">
+       setText(d.length)
+      </method>
+  </text>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

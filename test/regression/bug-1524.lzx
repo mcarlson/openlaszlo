@@ -1,0 +1,64 @@
+<canvas debug="true">
+    <include href="lzunit"/>
+	<dataset name="bug1524">
+        <data num="555">Partly Cloudy</data>
+    </dataset>
+    
+    <class name="bug-1524" extends="TestCase" fontsize="11">
+        <view name="static">
+            <text name="num">555</text>
+            <text name="str">Partly Cloudy</text>
+            <simplelayout axis="x"/>
+        </view>
+		<view name="dataview">
+			<text name="num" datapath="bug1524:/data/@num"/>
+			<text name="str" datapath="bug1524:/data/text()"/>
+			<simplelayout axis="x"/>
+		</view>
+        <view name="rdataview">
+            <text name="num" resize="true" datapath="bug1524:/data/@num"/>
+            <text name="str" resize="true" datapath="bug1524:/data/text()"/>
+            <simplelayout axis="x"/>
+		</view>
+      
+        <view name="container">
+            <text name="num"/>
+            <text name="str"/>
+            <simplelayout axis="x"/>
+        </view>
+        <view name="container2">
+            <text resize="true" name="num"/>
+            <text resize="true" name="str"/>
+            <simplelayout axis="x"/>
+        </view>
+        
+        <method name="testServerTextMeasure">
+        	AssertEquals(static.num.getTextWidth(), dataview.num.getTextWidth())
+        	AssertEquals(static.str.getTextWidth(), dataview.str.getTextWidth())
+
+        	AssertEquals(rdataview.num.getTextWidth(), dataview.num.getTextWidth())
+        	AssertEquals(rdataview.str.getTextWidth(), dataview.str.getTextWidth())
+        </method>
+        
+        <method name="testClientTextMeasure">
+			container.num.setText('555');
+			container.str.setText('Partly Cloudy');
+			container2.num.setText('555');
+			container2.str.setText('Partly Cloudy');
+        	
+        	AssertEquals(container.num.getTextWidth(), container2.num.getTextWidth())
+        	AssertEquals(container.str.getTextWidth(), container2.str.getTextWidth())
+        	
+        	AssertEquals(container.num.getTextWidth(), dataview.num.getTextWidth())
+        	AssertEquals(container.str.getTextWidth(), dataview.str.getTextWidth())
+        </method>
+    </class>
+    
+    <TestSuite>
+    	<bug-1524/>
+    </TestSuite>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzLoadQueue">
+    <lztier>Service</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        Manages the loading of data and media at runtime.
+    </lzshortdesc>
+    <lzapi>api-lzloadqueue.xml</lzapi>
+</lzelement>
+
+<p>The LzLoadQueue controls the queue of outbound data and media requests made by a running Laszlo app. The debugger also uses the LzLoadQueue to send requests for evaluation to the server.</p>
+
+<example>
+&lt;canvas height="100"&gt;
+  &lt;dataset name="weatherdata" queuerequests="true"
+           ondata="status.update();content.display(this.getFirstChild())"
+           src="http://www.laszlosystems.com/cgi-pub/weather.cgi"/&gt;
+
+  &lt;simplelayout/&gt;
+  &lt;button&gt; Start Load 
+    &lt;attribute name="loadCount" value="10"/&gt;
+    &lt;method event="onclick"&gt;
+      weatherdata.setQueryParam('zip', '940' + this.loadCount++);
+      weatherdata.doRequest();
+      status.update();
+    &lt;/method&gt; 
+  &lt;/button&gt;
+
+  &lt;text resize="true" name="status" oninit="this.update()"&gt;
+    &lt;method name="update"&gt;
+      var op = <em>LzLoadQueue.openConx</em>;
+      this.setText("Open connections: " + op);
+    &lt;/method&gt;
+  &lt;/text&gt;
+  &lt;text width="480" name="content" oninit="this.display(null)"&gt;
+    &lt;method name="display" args="what"&gt;
+      if (!what) var str = '';
+      else {
+        var str = what.nodeName;
+        for (var k in what.attributes)
+          str += ' ' + k + '="' + what.attributes[k] + '"'
+      }
+      this.setText("Data: " + str);
+    &lt;/method&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

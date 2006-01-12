@@ -1,0 +1,12 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time. One is known on startup.</i></p>
+<ol>
+<li>On startup verify that:
+<ul>
+<li>contacts window present
+</ul></li>
+</ol>
+TODO: MD Finish this app test plan

@@ -1,0 +1,161 @@
+
+<canvas>
+
+    <include href="redmond" />
+
+    <font name="lzsans8" src="lzsans8.ttf" />
+    <font name="lzsans8" style="bold" src="lzsans8b.ttf" />
+
+    <font src="ceriph-5-plain-expanded.ttf" name="ceriph5e" />
+    <font src="ceriph-5-bold-expanded.ttf" name="ceriph5e" style="bold" />
+    <font src="ceriph-5-plain-expanded-s.ttf" name="ceriph5e-s" />
+    <font src="ceriph-5-bold-expanded-s.ttf" name="ceriph5e-s" style="bold" />
+    <font src="ceriph-7-plain-regular.ttf" name="ceriph7" />
+    <font src="ceriph-7-bold-regular.ttf" name="ceriph7" style="bold" />
+    <font src="ceriph-7-plain-regular-s.ttf" name="ceriph7-s" />
+    <font src="ceriph-7-bold-regular-s.ttf" name="ceriph7-s" style="bold" />
+    <font src="copy-8-plain-regular.ttf" name="copy8" />
+    <font src="copy-8-bold-regular.ttf" name="copy8" style="bold"/>
+    <font src="copy-8-plain-regular-s.ttf" name="copy8-s" />
+    <font src="copy-8-bold-regular-s.ttf" name="copy8-s" style="bold"/>
+    <font src="hooge-4-plain-regular.ttf" name="hooge4" />
+    <font src="hooge-4-bold-regular.ttf" name="hooge4" style="bold"/>
+    <font src="hooge-4-plain-regular-s.ttf" name="hooge4-s" />
+    <font src="hooge-4-bold-regular-s.ttf" name="hooge4-s" style="bold"/>
+    <font src="hooge-5-plain-expanded.ttf" name="hooge5e" />
+    <font src="hooge-5-bold-expanded.ttf" name="hooge5e" style="bold"/>
+    <font src="hooge-5-plain-expanded-s.ttf" name="hooge5e-s" />
+    <font src="hooge-5-bold-expanded-s.ttf" name="hooge5e-s" style="bold"/>
+    <font src="hooge-5-plain-regular.ttf" name="hooge5" />
+    <font src="hooge-5-bold-regular.ttf" name="hooge5" style="bold"/>
+    <font src="hooge-5-plain-regular-s.ttf" name="hooge5-s" />
+    <font src="hooge-5-bold-regular-s.ttf" name="hooge5-s" style="bold"/>
+    <font src="kroeger-4-plain-regular.ttf" name="kroeger4" />
+    <font src="kroeger-4-bold-regular.ttf" name="kroeger4" style="bold"/>
+    <font src="kroeger-4-plain-regular-s.ttf" name="kroeger4-s" />
+    <font src="kroeger-4-bold-regular-s.ttf" name="kroeger4-s" style="bold"/>
+    <font src="kroeger-5-plain-expanded.ttf" name="kroeger5e" />
+    <font src="kroeger-5-bold-expanded.ttf" name="kroeger5e" style="bold"/>
+    <font src="kroeger-5-plain-expanded-s.ttf" name="kroeger5e-s" />
+    <font src="kroeger-5-bold-expanded-s.ttf" name="kroeger5e-s" style="bold"/>
+    <font src="kroeger-5-plain-regular.ttf" name="kroeger5" />
+    <font src="kroeger-5-bold-regular.ttf" name="kroeger5" style="bold"/>
+    <font src="kroeger-5-plain-regular-s.ttf" name="kroeger5-s" />
+    <font src="kroeger-5-bold-regular-s.ttf" name="kroeger5-s" style="bold"/>
+    <font src="mono-7-plain-regular.ttf" name="mono7" />
+    <font src="mono-7-bold-regular.ttf" name="mono7" style="bold"/>
+    <font src="mono-7-plain-regular-s.ttf" name="mono7-s" />
+    <font src="mono-7-bold-regular-s.ttf" name="mono7-s" style="bold"/>
+    <font src="standard-7-plain-expanded.ttf" name="standard7e" />
+    <font src="standard-7-bold-expanded.ttf" name="standard7e" style="bold"/>
+    <font src="standard-7-plain-expanded-s.ttf" name="standard7e-s" />
+    <font src="standard-7-bold-expanded-s.ttf" name="standard7e-s" style="bold"/>
+    <font src="standard-7-plain-regular.ttf" name="standard7" />
+    <font src="standard-7-bold-regular.ttf" name="standard7" style="bold"/>
+    <font src="standard-7-plain-regular-s.ttf" name="standard7-s" />
+    <font src="standard-7-bold-regular-s.ttf" name="standard7-s" style="bold"/>
+    <font src="standard-9-plain-regular.ttf" name="standard9" />
+    <font src="standard-9-bold-regular.ttf" name="standard9" style="bold"/>
+    <font src="standard-9-plain-regular-s.ttf" name="standard9-s" />
+    <font src="standard-9-bold-regular-s.ttf" name="standard9-s" style="bold"/>
+
+    <!-- Font tester classes -->
+
+    <class name="fonttester" width="400" oninit="doit()" >
+        <simplelayout axis="y" spacing="10" />
+        <text name="fn" width="100"> </text>
+        <text pixellock="true">
+            abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"
+        </text>
+        <text pixellock="true">
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"
+        </text>
+        <text pixellock="true">
+            <b>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"</b>
+        </text>
+        <text pixellock="true">
+            <b>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"</b>
+        </text>
+        <text pixellock="true" fgcolor="#00FF00"><font color="#00FF00">
+            Green
+        </font></text>
+        <windowtext pixellock="true">Redmond input text</windowtext>
+        <inputtext pixellock="true">Base input text</inputtext>
+        <method name="doit" > 
+            this.fn.setText(this.fontname);
+        </method>
+
+    </class>
+
+    <window title="Fonts are fun!" width="400" height="400" resizable="true" >
+        <view width="500">
+        <simplelayout axis="y" spacing="10" />
+
+        <fonttester font="lztahoe8"  />
+        <fonttester font="lzsans8"  />
+
+        <fonttester font="ceriph5e" />
+        <fonttester font="ceriph5e" />
+        <fonttester font="ceriph5e-s" />
+        <fonttester font="ceriph5e-s" />
+        <fonttester font="ceriph7" />
+        <fonttester font="ceriph7" />
+        <fonttester font="ceriph7-s" />
+        <fonttester font="ceriph7-s" />
+        <fonttester font="copy8" />
+        <fonttester font="copy8" />
+        <fonttester font="copy8-s" />
+        <fonttester font="copy8-s" />
+        <fonttester font="hooge4" />
+        <fonttester font="hooge4" />
+        <fonttester font="hooge4-s" />
+        <fonttester font="hooge4-s" />
+        <fonttester font="hooge5e" />
+        <fonttester font="hooge5e" />
+        <fonttester font="hooge5e-s" />
+        <fonttester font="hooge5e-s" />
+        <fonttester font="hooge5" />
+        <fonttester font="hooge5" />
+        <fonttester font="hooge5-s" />
+        <fonttester font="hooge5-s" />
+        <fonttester font="kroeger4" />
+        <fonttester font="kroeger4" />
+        <fonttester font="kroeger4-s" />
+        <fonttester font="kroeger4-s" />
+        <fonttester font="kroeger5e" />
+        <fonttester font="kroeger5e" />
+        <fonttester font="kroeger5e-s" />
+        <fonttester font="kroeger5e-s" />
+        <fonttester font="kroeger5" />
+        <fonttester font="kroeger5" />
+        <fonttester font="kroeger5-s" />
+        <fonttester font="kroeger5-s" />
+        <fonttester font="mono7" />
+        <fonttester font="mono7" />
+        <fonttester font="mono7-s" />
+        <fonttester font="mono7-s" />
+        <fonttester font="standard7e" />
+        <fonttester font="standard7e" />
+        <fonttester font="standard7e-s" />
+        <fonttester font="standard7e-s" />
+        <fonttester font="standard7" />
+        <fonttester font="standard7" />
+        <fonttester font="standard7-s" />
+        <fonttester font="standard7-s" />
+        <fonttester font="standard9" />
+        <fonttester font="standard9" />
+        <fonttester font="standard9-s" />
+        <fonttester font="standard9-s" />
+        
+        </view>
+
+        <scrollbar axis="y"/>
+    </window>
+
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

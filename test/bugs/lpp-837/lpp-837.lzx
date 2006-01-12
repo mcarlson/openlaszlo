@@ -1,0 +1,70 @@
+<canvas width="100%" height="80%" debug="true">
+<!--
+
+Bug: network locks up when resource view is instantiated/destroyed twice in 
+quick succession
+
+To reproduce the bug:
+
+"Just click buttons new,destroy, new,destroy quickly and be sure you not see the resource loaded. Then click do request, it does not work. "
+
+-->
+
+
+
+  <debug  fontsize="12"/>
+
+
+  <class name="ResourceView"
+         width="100" height="100"
+         clip="true" bgcolor="gray">
+    <view name="v" resource="http:delay.jsp"/>
+    <method event="oninit">
+      Debug.write("ResourceView created");
+    </method>
+
+    <method name="destroy">
+      super.destroy();
+      Debug.write("ResourceView destroyed");
+    </method>
+    
+  </class>
+  
+  
+  
+  <dataset name="dsTest" src="http:foo.xml"
+             request="false"
+             ondata="Debug.write('dsTest ondata',this)"
+             onerror="Debug.write('dsTest onerror')"
+             ontimeout="Debug.write('dsTest ontimeout')"/>
+    <button text="new">
+      <method event="onclick">
+        new ResourceView(canvas,{name:"resourceView",x:10,y:30});
+        Debug.write("LzLoadQueue.openConx", LzLoadQueue.openConx)
+      </method>
+    </button>
+  
+    <button x="60" text="destroy">
+      <method event="onclick">
+        canvas.resourceView.destroy();
+        Debug.write("LzLoadQueue.openConx", LzLoadQueue.openConx)
+      </method>
+    </button>
+  
+    <button x="150" text="do request">
+      <method event="onclick">
+        dsTest.doRequest();
+        Debug.write("LzLoadQueue.openConx", LzLoadQueue.openConx)
+      </method>                 
+    
+      <button x="250" onclick='Debug.write("LzLoadQueue.openConx", LzLoadQueue.openConx)'>
+        openConx
+      </button>
+
+  </button>
+  
+  
+  
+
+
+</canvas>

@@ -1,0 +1,72 @@
+<canvas bgcolor="silver" height="1200" >
+    <debug x="250"/>
+
+    <dataset name="surveydataset" type="http" src="http:testform.jsp"/>
+
+    <class name="label" fontstyle="bold" extends="statictext"/>
+
+    <form id="f" width="300" height="300" bgcolor="red" >
+        <submit name="survey" data="${surveydataset}"/>
+        <label>radiogroup</label>
+        <radiogroup name="place" id="rg">
+            <radiobutton id="r1" value="0">Hawaii</radiobutton>
+            <radiobutton id="r2" value="1">Paris</radiobutton>
+            <radiobutton id="r3" value="2">Jamaica</radiobutton>
+        </radiogroup>
+        <label>toggle</label>
+        <checkbox name="toggle">toggle</checkbox>
+        <view>
+            <simplelayout />
+            <label>nested toggle </label>
+            <checkbox name="toggle">toggle again</checkbox>
+        </view>
+        <button id="help" placement="content">help</button>
+        <label>cbox</label>
+        <combobox  name="cbox"
+                   x="5" y="5"
+                   width="100"  shownitems="6"
+                   defaulttext="choose one...">
+            <textlistitem  name="LI_one"   value="1" >one</textlistitem>
+            <textlistitem  name="LI_two"   value="2" >two</textlistitem>
+            <textlistitem  name="LI_three" value="3" >three</textlistitem>
+            <textlistitem  name="LI_four"  value="4" >four</textlistitem>
+        </combobox>
+        <label>edittext</label>
+        <edittext name="itext" width="100">your text here</edittext >
+        <label>list</label>
+        <list name="ilist">
+            <textlistitem  selected="true"
+                           name="LI_one"   value="1" >one</textlistitem>
+            <textlistitem  name="LI_two"   value="2" >two</textlistitem>
+            <textlistitem  name="LI_three" value="3" >three</textlistitem>
+            <textlistitem  name="LI_four"  value="4" >four</textlistitem>
+        </list>
+        <label>multi-select list</label>
+        <list multiselect="true" name="imlist">
+            <textlistitem  selected="true"
+                           name="LI_one"   value="1" >one</textlistitem>
+            <textlistitem  selected="true" 
+                           name="LI_two"   value="2" >two</textlistitem>
+            <textlistitem  name="LI_three" value="3" >three</textlistitem>
+            <textlistitem  name="LI_four"  value="4" >four</textlistitem>
+        </list>
+        <button isdefault="true"
+            onclick="parent.survey.submit()">submit</button>
+    </form>
+
+    <view y="10" x="${f.width + 10}" 
+          name="results" datapath="surveydataset:/response">
+        <view datapath="formcomponent">
+             <text datapath="@name"/>
+             <text datapath="text()"/>
+                <simplelayout axis="x"/>
+         </view>
+
+        <simplelayout axis="y"/>
+
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

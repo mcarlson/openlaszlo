@@ -1,0 +1,29 @@
+<canvas>
+    <text name="one">
+        <attribute name="text" value="text attribute recommended"/>
+    </text>
+
+
+    <text name="two">
+        <attribute name="label" value="'label attribute, double quotes works'"/>
+    </text>
+
+    <text name="three">
+        <attribute name="label" value="label attribute, single quotes worked in DR"/>
+    </text>
+
+    <class name="thing">
+        <attribute name="label" type="string"/>
+        <text name="mytext">
+             <attribute name="text" value="parent.label" when="always"/>
+         </text>
+    </class>
+
+    <thing label="foo" bgcolor="yellow"/>
+
+    <simplelayout spacing="20"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

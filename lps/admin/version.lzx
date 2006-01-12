@@ -1,0 +1,32 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- version.lzx                                                           -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <class name="version">
+
+        <attribute name="width" value="500" />
+
+        <method event="oninit">
+            msg.setText("LPS Version:  " + canvas.lpsversion + "\n" +
+                        "LPS Release:  " + canvas.lpsrelease + "\n" +
+                        "LPS Build:    " + canvas.build + "\n" +
+                        "Flash Player: " + LzBrowser.getVersion());
+        </method>
+
+        <text id="msg" width="300" font="monob" fontsize="10" 
+              multiline="true" selectable="true" />
+
+    </class> <!-- class diagnostics -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

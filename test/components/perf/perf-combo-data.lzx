@@ -1,0 +1,72 @@
+<canvas>
+    <inittimer/>
+    <dataset name="itemlist0" src="ten-items.xml"/>
+    <dataset name="itemlist1" src="ten-items.xml"/>
+    <dataset name="itemlist2" src="ten-items.xml"/>
+    <dataset name="itemlist3" src="ten-items.xml"/>
+    <dataset name="itemlist4" src="ten-items.xml"/>
+    <dataset name="itemlist5" src="ten-items.xml"/>
+    <dataset name="itemlist6" src="ten-items.xml"/>
+    <dataset name="itemlist7" src="ten-items.xml"/>
+    <dataset name="itemlist8" src="ten-items.xml"/>
+    <dataset name="itemlist9" src="ten-items.xml"/>
+
+    <view x="20" layout="spacing:10;inset:40">
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist0:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist1:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist2:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist3:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist4:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+    </view>
+    <view x="300" layout="spacing:10;inset:40">
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist5:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist6:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist7:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist8:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+        <combobox editable="false" dataoption="lazy" shownitems="4">
+            <textlistitem datapath="itemlist9:/list/item"
+                              text="$path{ 'text()' }"
+                              value="$path{ '@value' }"/>
+        </combobox>
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

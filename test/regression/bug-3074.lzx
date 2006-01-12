@@ -1,0 +1,62 @@
+<canvas>
+    <dataset name="mydata">
+        <date>
+            <day>1</day>
+            <day>2</day>
+            <day>3</day>
+            <day>4</day>
+            <day>5</day>
+            <day>6</day>
+            <day>7</day>
+            <day>8</day>
+            <day>9</day>
+            <day>10</day>
+            <day>11</day>
+            <day>12</day>
+            <day>13</day>
+            <day>14</day>
+            <day>15</day>
+            <day>16</day>
+            <day>17</day>
+            <day>18</day>
+            <day>19</day>
+            <day>20</day>
+            <day>21</day>
+            <day>22</day>
+            <day>23</day>
+            <day>24</day>
+            <day>25</day>
+            <day>26</day>
+            <day>27</day>
+            <day>28</day>
+            <day>29</day>
+            <day>30</day>
+            <day>31</day>
+        </date>
+    </dataset>
+
+    <view id="v" y="140" height="100" clip="true" width="100" bgcolor="silver">
+        <view name="sub" width="100%">
+            <dataselectionmanager name="selector"/>
+            <view  clickable="true" width="100%" bgcolor="white">
+                <datapath xpath="mydata:/date/day/" replication="lazy"/>
+                <text name="t" datapath="text()" width="30"/>
+                <method name="setselected" args="is_selected">
+                    if (is_selected) this.setBGColor(0xffffaa);
+                    else this.setBGColor(0xffffff);
+                </method>
+                <method event="onclick">
+                    parent.selector.select(this);
+                </method>
+            </view>
+            <simplelayout spacing="2"/>
+        </view>
+        <scrollbar/>
+    </view>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

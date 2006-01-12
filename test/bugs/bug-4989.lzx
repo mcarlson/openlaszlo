@@ -1,0 +1,14 @@
+<canvas debug="true" width="1200">
+  <tabs x="10">
+    <tabpane text="A Tab">
+      <tabslider width="200" height="200">
+    <tabelement text="A TabSlider" selected="true">
+      <simplelayout/>
+      <button>A Button</button>
+        <edittext>An Edit Text</edittext>
+    </tabelement>
+      </tabslider>
+    </tabpane>
+
+</tabs>
+</canvas>

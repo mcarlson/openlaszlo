@@ -1,0 +1,240 @@
+<library>
+    <!--- Implements XMLHttpRequest 
+          http://developer.apple.com/internet/webcontent/xmlhttpreq.html
+
+          http://www.whatwg.org/specs/web-apps/current-work/#scripted-http
+
+    Incompatibilites with spec:
+
+    Proxied: 
+
+    SOLO:
+
+    + Cannot set HTTP headers (except maybe content-type?)
+    + Cannot access response headers
+    + Cannot send raw POST data(?)
+         - but we could eventually send verbatim XML POST data payload
+           using XML.sendAndLoad().
+           Q: Does XML.sendAndLoad() handle a single text content node
+              with no tags around it? 
+
+    + Cannot send repeated query args in a POST using LoadVars
+
+    + Username/password HTTP Auth args to send() not supported.
+      Can user/password be sent in URL? We cannot set our own auth headers in SOLO mode...
+
+    Questions: 
+     In the spec, when you use XMLHTTPRequest.send(string), what is it supposed to
+     do when the content is a string? 
+     Is it supposed to send the text verbatim as the POST content body?
+    -->
+
+    <class name="XMLHttpRequest" extends="node">
+
+      <!--- readyState  Object status integer:
+          0 Uninitialised
+              The initial value. 
+          1 Open
+              The open() method has been successfully called. 
+          2 Sent
+              The send() method has been successfully called, but no data has yet been received. 
+          3 Receiving
+              Data is being received, but the data transfer is not yet complete. 
+          4 Loaded
+              The data transfer has been completed.
+
+       -->
+        <attribute name="readyState" value="0" type="number"/>
+
+        <!-- Event handler for an event that fires at every state change
+             onreadystatechange -->
+        <attribute name="onreadystatechange" value="null" type="expression"/>
+
+        <!--- responseText
+              String version of data returned from server process -->
+        <attribute name="responseText" value="" type="string"/>
+
+        <!--- responseXML
+              DOM-compatible document object of data returned from server process -->
+        <attribute name="responseXML" />
+
+        <!--- status
+              Numeric code returned by server, such as 404 for "Not Found" or 200 for "OK" -->
+        <attribute name="status" />
+
+        <!--- statusText
+             String message accompanying the status code -->
+        <attribute name="statusText" />
+
+
+        <!--- @keywords private -->
+        <attribute name="dataset" value="null" />
+
+        <method event="oninit">
+            if (this.dataset == null) {
+                 this.dataset = new LzDataset(this);
+            }
+
+            this.dataset.getresponseheaders = true;
+
+            // register a delegate for when the dataset has loaded
+            this.ondataDelegate = new LzDelegate( this , "ondataHandler" , 
+                                                  this.dataset, "ondata" );
+            this.onerrorDelegate = new LzDelegate( this , "onerrorHandler" , 
+                                                  this.dataset, "onerror" );
+        </method>
+
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- abort() 
+             Stops the current request -->
+        <method name="abort">
+            req.dataset.abort();
+        </method>
+
+
+        <!--- getAllResponseHeaders() 
+             Returns complete set of headers (labels and values) as an LzParam -->
+        <method name="getAllResponseHeaders">
+            return this.dataset.getAllResponseHeaders()
+        </method>
+
+
+        <!--- getResponseHeader("headerLabel")    
+             Returns the string value of a single header label -->
+        <method name="getAllResponseHeader" args="hname">
+            return this.dataset.getResponseHeader(hname);
+        </method>
+
+
+        <!--- open("method", "URL"[, asyncFlag[, "userName"[, "password"]]])  
+             Assigns destination URL, method, and other optional attributes of a pending request -->
+        <method name="open" args="method,url,async,uname,password">
+          <![CDATA[
+                 this.responseText = "";
+                 this.responseXML = null;
+                 this.url = url;
+                 this.method = method;
+                 this.async = async;
+                 if (!async) {
+                     Debug.write("warning: XMLHttpRequest.open('"+method+"','"+url+"','"+async+"') does not support synchronous mode");
+                 }
+                 this.uname = uname;
+                 this.password = password;
+                 if (uname != null || password != null) {
+                     Debug.write("warning: XMLHttpRequest.open() does not support HTTP authentication");
+                 }
+                 if (method.toLowerCase() == "get") {
+                     this.dataset.setQueryType("GET");
+                 } else if (method.toLowerCase() == "post") {
+                     this.dataset.setQueryType("POST");
+                 } else {
+                     Debug.write("XMLHttpRequest.open: method '"+method+"' not supported, use GET or POST");
+                 }
+                 if (!this.async) {
+                     Debug.write("XMLHttpRequest.open: only async request mode is supported");
+                 }
+                 this.setAttribute('readyState', 1); // open
+                 if (this.onreadystatechange != null) {
+                     this.onreadystatechange(this);
+                 }
+          ]]>
+        </method>
+
+        <method name="ondataHandler">
+           // Currently raw text response is only available for serverless requests
+           if (this.dataset['rawtext']) {
+                this.responseText = this.dataset['rawtext'];
+           }
+           this.responseXML = this.dataset;
+           this.status = 200; // maybe we need something a little more Laszlo-specific?
+           this.statusText = "OK";
+           this.setAttribute('readyState', 4); // 'receiving' (well, received...)
+            if (this.onreadystatechange != null) {
+                  this.onreadystatechange(this);
+            }
+        </method>
+
+
+        <method name="onerrorHandler">
+            <![CDATA[
+           // Currently raw text response is only available for serverless requests
+            this.responseText = "";
+            this.responseXML = null;
+            // If the load was proxied, we can actually dig in the headers and get the
+            // real response.
+            if (this.dataset.parent.isProxied() && this.dataset.errorstring != null) {
+                //data source error for http://localhost:8080/lps-dev/test/ajax/echo.jsps: HTTP Status code: 404:Not Found
+                var err = req.dataset.errorstring;
+                var marker = 'HTTP Status code: ';
+                var ind = err.indexOf(marker);
+                if (ind >= 0) {
+                    var code = err.substring(ind+(marker.length), ind+(marker.length)+3);
+                    this.status = Number(code);
+                    this.statusText = err.substring(ind+4+(marker.length));
+                }
+            } else {
+                // serverless mode gives us basically no info on what happened, so fake it
+                this.status = 500; // 
+                this.statusText =  "Error";
+            }
+
+            this.setAttribute('readyState', 4); // 'receiving' (well, received...)
+            if (this.onreadystatechange != null) {
+                  this.onreadystatechange(this);
+            }
+            ]]>
+        </method>
+
+
+        <!--- send(content)   
+             Transmits the request, optionally with postable string or DOM object data
+
+         + In serverless mode, there''s no Flash API to post a raw data string in the POST body.
+
+         + doesn''t support "content" arg yet for serverless operation
+
+         -->
+        <method name="send" args="content">
+          <![CDATA[
+                 if (method.toLowerCase() == "get" || method.toLowerCase() == "post") {
+                     this.setAttribute('readyState', 2); // sent
+                     this.dataset.setSrc(this.url);
+
+                     // Try to handle content arg, as best we can
+                     // given the extremely lame Flash 6/7 HTTP APIs.
+                     if (content != null && this.dataset.parent.isProxied()) {
+                         // Raw POST mechanism is only supported in proxied mode
+                         if (typeof(content) == 'string') {
+                             this.dataset.setQueryParam('lzpostbody', content);
+                         } else {
+                             // if it's not a string, and not null, assume it's XML
+                             this.dataset.setQueryParam('lzpostbody', content.serialize());
+                         }
+                     }
+                     this.dataset.doRequest();
+                 } else {
+                     Debug.write("XMLHttpRequest.send: method '"+method+"' not supported, use GET or POST");
+                 }
+                 ]]>
+        </method>
+
+        <!--- setRequestHeader("label", "value")  
+             Assigns a label/value pair to the header to be sent with a request -->
+        <method name="setRequestHeader" args="key,val">
+          this.dataset.setHeader(key,val);
+        </method>
+
+
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

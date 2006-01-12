@@ -1,0 +1,26 @@
+<!-- Examine generated javascript for these, make sure that textwidth is being calculated appropriately.  Or, these could be turned into lzunit tests that programmatically inspected the textwidth and textheights of the generated instances. -->
+
+<canvas>
+
+<class name="mytext1">
+  <attribute name="text" type="text"/>
+</class>
+<mytext1>this is some text</mytext1>
+
+
+<class name="mytext2">
+  <attribute name="text" type="text"/>
+</class>
+<mytext2 text="this is some text"/>
+
+<class name="myclass">
+  <attribute name="text" type="number"/>
+</class>
+<!-- the following instance should *not* have a textheight or textwidth attribute -->
+<myclass text="123"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,239 @@
+<library>
+
+    <include href="base/baseformitem.lzx" />
+
+    <resource name="lzedittext_bezel_inner_rsc">
+        <frame src="resources/bezel_inner_dn.swf" />
+        <frame src="resources/outline_dsbl.swf" />
+    </resource>
+    <resource name="lzedittext_bezel_outer_rsc">
+        <frame src="resources/bezel_outer_dn.swf" />
+        <frame src="resources/transparent.swf" />
+    </resource>
+
+
+    <!-- @keywords private
+         class for use in windowtext takes its parent's arguments
+         when it constructs -->
+    <class name="_internalinputtext" extends="inputtext">
+        <method name="construct" args="parent, args">
+            // args from parent
+            if ( parent['textwidth'] != null ) args.textwidth = parent.textwidth;
+            if ( parent['_initialtext'] != null ) args.text = parent._initialtext;
+            if ( parent['password'] != null ) args.password = parent.password;
+            if ( parent['multiline'] != null ) args.multiline = parent.multiline;
+            super.construct(  parent, args );
+        </method>
+    </class>
+
+
+    <!--- This component provides the look and feel for user editable text, data
+          binding, and focus events. -->
+    <class name="edittext" extends="baseformitem"
+           focusable="false">
+        <!--- The text that appears in the component. -->
+        <attribute name="text" type="text" setter="setText(text)"/>
+
+        <!--- Set to true for multiple lines, default: false.
+              @keywords final -->
+        <attribute name="multiline" value="false"/>
+
+        <!--- Set to true for a password field. Text will appear as ****,
+              default: false.
+              @keywords final -->
+        <attribute name="password" value="false" />
+
+        <!--- Set to true if you plan to change the width or height of the
+              component at run-time, default: false.
+              @keywords final -->
+        <attribute name="resizable"/>
+
+        <!--- The height of the edit text box, default: 24. -->
+        <attribute name="height" value="26"/>
+        <!--- The width of the edit text box, default: 106. -->
+        <attribute name="width" value="106"/>
+
+        <!--- the y position of the text. default: centered, unless it is mutltiline -->
+        <attribute name="text_y"
+            value="${multiline ? 2:this.height/2 - this.field.getTextHeight()/2 - 3}" type="number"/>
+
+        <!--- The maximum number of chars that can be entered. -->
+        <attribute name="maxlength" value="null" type="number"/>
+
+        <!--- An expression for a set of characters to restrict entry to. -->
+        <attribute name="pattern" type="string" value=""/>
+
+        <!--- @keywords private
+        setting the fgcolor of text has the unfortunate effect of setting
+        the hilite color as well, so it is disabled here-->
+        <attribute name="fgcolor" setter="" value="#000000"/>
+
+        <!--- @keywords private -->
+        <attribute name="_fgcolor" value="0"/>
+
+        <!--- @keywords private -->
+        <attribute name="_initialtext" value="" type="string"/>
+
+        <!--- @keywords private -->
+        <method name="init">
+            <![CDATA[
+            if (!this.hassetwidth) {
+                if (typeof(this.textwidth) == "undefined") {
+                    this.textwidth = 100;
+                }
+                setAttribute('width', this.textwidth + 6);
+            }
+            super.init();
+            if ( this._initialtext != null ){
+                this.setText( this._initialtext );
+            }
+
+            field.setMaxLength(this.maxlength);
+            field.setPattern(this.pattern);
+
+            ]]>
+        </method>
+
+        <!--- @keywords private -->
+        <method name="setText" args="t">
+            this.text = t;
+            if (this._initcomplete) {
+                this.field.setText(t);
+                if (this['ontext']) this.ontext.sendEvent();
+            } else {
+                this._initialtext = t;
+            }
+        </method>
+
+        <!--- Clears the text field. -->
+        <method name="clearText" >
+            this.setText("");
+        </method>
+
+        <!-- Sets the maxmimum number of characters which can be entered. -->
+        <method name="setMaxlength" args="n">
+          this.setAttribute('maxlength', n);
+          field.setMaxlength(n);
+        </method>
+
+
+        <!-- Set the characters which can be entered into a text field. -->
+        <method name="setPattern" args="r">
+          this.setAttribute('pattern', r);
+          field.setPattern(r);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="getFocusRect"  >
+           var fx = this.getAttributeRelative('x',canvas);
+           var fy = this.getAttributeRelative('y',canvas);
+           var fw = this.getAttributeRelative('width',canvas);
+           var fh = this.getAttributeRelative('height',canvas);
+           return [fx,fy,fw,fh];
+        </method>
+
+        <view name="_outerbezel" resource="lzedittext_bezel_outer_rsc"
+            width="${parent.width-1}" height="${parent.height-1}" stretches="both"/>
+        <view name="_innerbezel" resource="lzedittext_bezel_inner_rsc"
+            x="1" y="1" width="${parent.width-3}" height="${parent.height-3}" stretches="both"/>
+        <view name="_face"
+            x="2" y="2" width="${parent.width-4}" height="${parent.height-4}"/>
+
+
+        <_internalinputtext name="field"
+            password="$once{parent.password}"
+            x="3" y="${classroot.text_y}"
+            width="${parent.width - 4}"
+            height="${parent.height - y - 2}" > <!-- -2 to account for border of edittext -->
+            
+            <method event="onfocus" args="s">
+                 if (parent['onfocus']) parent.onfocus.sendEvent(s);
+            </method>
+            <method event="onblur" args="s">
+                 parent.updateText();
+                 if (parent['onblur']) parent.onblur.sendEvent(s);
+            </method>
+            <method event="onkeyup" args="kc"> <![CDATA[
+                  if (parent['onkeyup']) parent.onkeyup.sendEvent(kc);
+                  if (kc == 13 && parent.doesenter) parent.doEnterUp();
+                  ]]>
+            </method>
+            <method event="onkeydown" args="kc"> <![CDATA[
+                  if (parent['onkeydown']) parent.onkeydown.sendEvent(kc);
+                  if (kc == 13 && parent.doesenter) parent.doEnterDown();
+                  ]]>
+            </method>
+
+            <method name="getFocusRect" >
+                return parent.getFocusRect();
+            </method>
+
+         </_internalinputtext>
+
+        <!--- Returns the string displayed in this component, like getValue().
+              @return String: the string displayed. -->
+        <method name="getText">
+            if (this._initcomplete) {
+                 return this.field.getText();
+            } else {
+                return this._initialtext;
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="applyData" args="d">
+            this.field.applyData( d );
+        </method>
+
+        <!--- @keywords private -->
+        <method name="updateData">
+            this.updateText();
+            return this.text;
+        </method>
+
+        <!-- Updates the text property of the component to the text that is
+             entered in its input field. -->
+        <method name="updateText">
+            this.setText( this.field.getText() );
+        </method>
+
+        <!--- Returns string displayed in this component, like getText().
+              @return String: the string displayed. -->
+        <method name="getValue">
+            return  this.field.getText();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_showEnabled">
+            if (_enabled) {
+                this.field.setAttribute('enabled', true);
+                this.field.setAttribute('fgcolor', this.style != null ? this.style.textcolor : null);
+                this._face.setAttribute( 'opacity', 1 );
+                this._outerbezel.setResourceNumber( 1 );
+                this._innerbezel.setResourceNumber( 1 );
+            } else {
+                this.field.setAttribute('enabled', false);
+                this.field.setAttribute('width', this.width - 6);
+                this.field.setAttribute('height', this.height - 6);
+                this.field.setAttribute('fgcolor', this.style != null ? this.style.textdisabledcolor : null);
+                this._face.setAttribute( 'opacity', .65 );
+                this._outerbezel.setResourceNumber( 2 );
+                this._innerbezel.setResourceNumber( 2 );
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                field.setAttribute('bgcolor',s.textfieldcolor);
+                _face.setAttribute('bgcolor',s.textfieldcolor);
+            }
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

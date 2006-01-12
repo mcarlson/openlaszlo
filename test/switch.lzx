@@ -1,0 +1,37 @@
+<!-- Debugger shows lines xxx: xxx, where both xxx's are the same -->
+<canvas debug="true">
+<script>
+function f(x) {
+  switch (x) {
+    case 1: return 'one';
+    case 2: return 'two';
+    default: return 'default';
+  }
+}
+
+Debug.write('one: ' + f(1))
+Debug.write('two: ' + f(2))
+Debug.write('default: ' + f(3))
+
+function g(x) {
+  var a = 0;
+  switch (x) {
+    case 0: break;
+    case 1: a++;
+    case 2: a++;
+    default: a++;
+  }
+  return a;
+}
+
+Debug.write('0: ' + g(0))
+Debug.write('3: ' + g(1))
+Debug.write('2: ' + g(2))
+Debug.write('1: ' + g(3))
+
+</script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

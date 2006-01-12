@@ -1,0 +1,11 @@
+<canvas>
+    <hbox spacing="10">
+        <method event="onclick">
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        </method>
+        <text>click</text>
+        <text>to</text>
+        <text>animate</text>
+        <text>spacing</text>
+    </hbox>
+</canvas>

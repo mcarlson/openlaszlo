@@ -1,0 +1,5 @@
+<canvas width="1400" height="600" debug="false">
+  <!-- this text should the same before and after kranking -->
+  <!-- UTF8 == e3 82 b4  == code point 0x30b4-->
+    <text id="foo" fontsize="24">JAPANESE: &#19977;&#x6708;&#12468;</text>
+</canvas>

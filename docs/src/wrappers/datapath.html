@@ -1,0 +1,73 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Datapath">
+    <lztier>LFC</lztier>
+    <lzcategory>Data</lzcategory>
+    <lzshortdesc>
+        The binder between data and nodes.
+    </lzshortdesc>
+    <lztag>tag-datapath.xml</lztag>
+    <lzapi>api-lzdatapath.xml</lzapi>
+</lzelement>
+
+<p>
+Datapaths are used to merge data hierarchies with the hierarchy of a
+Laszlo application. This is done using the the XPath syntax supported
+by <classname>LzDatapointer</classname>.  When a node is given a
+<attribute link="true">datapath</attribute> attribute, a datapath with
+the given value as its XPath is created. If the datapath retrieves a
+node (<i>i.e.</i> it doesn't terminate in an attribute getter or a
+<code>()</code> operator) then the node is mapped to that data context
+and all child nodes will implicitly share the datacontext, but no
+further action is taken. If the datapath retrieves data, rather than
+just a node, a few extra things happen. First, the node's
+<attribute>data</attribute> property is set and the node's
+<event>ondata</event> event is sent. Second, the node's
+<method>applyData</method> method is called with the data as the
+argument. In cases where a datapath matches more than one data node,
+the view with the matching datapath is replicated once for each data
+node that matches, and a <a href="replicationmanager.html">replication
+manager</a> takes over the view's spot in its parent.
+</p>
+
+<p>
+A node can only have one datapath, and datapaths always have the name
+<code>datapath</code>.  Additional options available on datapath such
+as <a href="#attr-pooling">pooling</a> and <a
+href="#attr-replication">lazy replication</a> are specified by writing
+the <tagname>datapath</tagname> tag as a separate node.
+</p>
+
+<example title="Mapping data to views using datapaths.">
+&lt;canvas height="120"&gt;
+  &lt;dataset name="testdata"&gt;
+    &lt;Monday temp="Hi 48"&gt; Partly Cloudly &lt;/Monday&gt;
+    &lt;Tuesday temp="Hi 60"&gt; Showers Likely &lt;/Tuesday&gt;
+    &lt;Wednesday temp="Hi 63"&gt; Chance Showers &lt;/Wednesday&gt;
+    &lt;Thursday temp="Hi 58"&gt; Mostly Sunny &lt;/Thursday&gt;
+    &lt;Friday temp="Hi 50"&gt; Clear and Cold &lt;/Friday&gt;
+  &lt;/dataset&gt;
+  &lt;simplelayout spacing="5"/&gt;
+  &lt;view datapath="testdata:/*"&gt;
+    &lt;view&gt;
+      &lt;simplelayout axis="x"/&gt;
+      &lt;text <em>datapath="name()"</em>/&gt;
+      &lt;text <em>datapath="text()"</em>/&gt;
+      &lt;text <em>datapath="@temp"</em>/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

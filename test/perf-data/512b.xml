@@ -1,0 +1,9 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<resultset>
+<result id="x92" work_default="101010101010x0" work_office="x617-555-1212" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x93" displayname="xOliver Steele" email="xsteele@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x124" firstname="xVoicemail" lastname="xHome" displayname="xVoicemail Home" home_default="x0" work_default="x0" work_office="x(415) 555-1212" work_webpage="xhttp://www.laszlosystems.com/" />
+</resultset>

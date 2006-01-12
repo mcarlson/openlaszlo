@@ -1,0 +1,152 @@
+<canvas width="100%" height="80%" debug="true">
+    <include href="lzunit/lzunit.lzx" />
+    <script>
+        <![CDATA[
+        global.foo1 = false;
+        global.foo2 = false;
+        global.foo3 = false;
+        global.foo4 = false;
+        ]]>
+    </script>
+
+    <!-- Tests simple handler form -->
+    <class name="TestEventHandler1" extends="TestCase">
+      <handler name="onblah">
+        Debug.write("handling onblah event");
+        global.foo1 = true;
+      </handler>
+
+      <method name="test1">
+           <![CDATA[
+            this.onblah.sendEvent();
+
+            var thisInst = this;
+            var myclosure = {checkfoo: function () {
+                thisInst.assertEquals( true, global.foo1 );
+                   }
+            }
+
+            var mydel = new LzDelegate(myclosure, 'checkfoo');
+            LzTimer.addTimer(mydel,300);
+
+
+            ]]>
+        </method>
+    </class>
+
+    <!-- declare handler with no body; check for no debugger warning -->
+    <class name="TestEventHandler2" extends="TestCase">
+
+      <handler name="onblah"/>
+
+      <method name="test1">
+           <![CDATA[
+            this.onblah.sendEvent();
+
+            var thisInst = this;
+            var myclosure = {checkfoo: function () {
+                thisInst.assertEquals( true, global.foo2 );
+                   }
+            }
+
+            var mydel = new LzDelegate(myclosure, 'checkfoo');
+            LzTimer.addTimer(mydel,300);
+
+
+            ]]>
+        </method>
+    </class>
+
+
+
+    <!-- tests handler which references a method -->
+    <class name="TestEventHandler3" extends="TestCase">
+      <handler name="onblah" method="mymethod"/>
+
+      <method name="mymethod">
+        Debug.write("TestEventHandler3: mymethod handling onblah event");
+        global.foo3 = true;
+      </method>
+
+
+      <method name="test1">
+           <![CDATA[
+            this.onblah.sendEvent();
+
+            var thisInst = this;
+            var myclosure = {checkfoo: function () {
+                thisInst.assertEquals( true, global.foo3 );
+                   }
+            }
+
+            var mydel = new LzDelegate(myclosure, 'checkfoo');
+            LzTimer.addTimer(mydel,300);
+
+
+            ]]>
+        </method>
+    </class>
+
+
+    <!-- this view is used to generate a "onblah" event, which is used to test the
+      'reference' option to <handler>  in the TestEventHandler4 below -->
+      <view id="foobaz">
+         <event name="onblah"/> 
+         <handler name="oninit">
+            var thisInst = this;
+            var myclosure = {sendonblah: function () {
+                thisInst.onblah.sendEvent();
+              }
+            }
+            var mydel = new LzDelegate(myclosure, 'sendonblah');
+            LzTimer.addTimer(mydel,100);
+        </handler>
+
+
+      </view>
+
+
+    <!-- tests handler which which uses the 'reference' keyword -->
+    <class name="TestEventHandler4" extends="TestCase">
+
+      <handler name="onblah"  reference="foobaz" method="mymethod"/>
+
+      <method name="mymethod">
+        Debug.write("TestEventHandler4: mymethod handling onblah event");
+        global.foo4 = true;
+      </method>
+
+
+
+
+      <method name="test1">
+           <![CDATA[
+            var thisInst = this;
+            var myclosure = {checkfoo: function () {
+                thisInst.assertEquals( true, global.foo4 );
+                   }
+            }
+
+            var mydel = new LzDelegate(myclosure, 'checkfoo');
+            LzTimer.addTimer(mydel,400);
+
+
+            ]]>
+        </method>
+    </class>
+
+
+
+
+
+    <TestSuite>
+      <TestEventHandler1/>
+      <TestEventHandler2 onblah="Debug.write('TestHandler2 got onblah'); global.foo2 = true;"/>
+      <TestEventHandler3/>
+      <TestEventHandler4/>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

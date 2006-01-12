@@ -1,0 +1,33 @@
+<canvas debug="true">
+ <debug height="400" width="600" x="0" y="200" />
+ <script><![CDATA[
+
+ Debug.write("Expect an error on line 22");
+
+ var test=1000;
+
+ function foo() {
+
+   // This is the correct way to write the expression that will fail
+   // below:
+   test > 4800 ? (test = 4800) : (test = test);
+
+   // Alternatively, this also works:
+   test = test > 4800 ? 4800 : test;
+
+   // This does not and will yield "Invalid reference expression" (You
+   // can't assign test to the conditional 'test>4800?test=4800:test';
+   // the precedence of '?:' is higher than '=' so this parses as
+   // '(test>4800?test=4800:test)=test'
+   test > 4800 ? test = 4800 : test = test;
+
+   main.setText("clickme: "+ test);
+ }]]>
+ </script>
+ <text name="main" onclick="test+=1000;foo();" oninit="foo();"/>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

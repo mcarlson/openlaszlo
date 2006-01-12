@@ -1,0 +1,5 @@
+<canvas>
+  <text multiline="true" height="300">
+    <img src="horse-3.jpg"/>
+  </text>
+</canvas>

@@ -1,0 +1,17 @@
+<canvas width="100%" height="80%" >
+  <debug oninit="this.setWrapLines(true)"/>
+  <resource name="horse3" src="horse-3.jpg"/>
+
+  <method event="oninit">
+        //LzBrowser.setClipboard('foo!');
+        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
+        LzTimer.addTimer(upddel, 500);
+  </method>
+
+  <text multiline="true" height="300" width="300" id="bar">
+    This is a horse, you see on your right. <img align="right" src="horse-2.jpg" alt="A pretty horsey"/>
+    Several line breaks. <br/><br/><br/><br/><br/><br/><br/><br/>. And then some more stuff.
+  </text>
+
+
+</canvas>

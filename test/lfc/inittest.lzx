@@ -1,0 +1,26 @@
+<view bgcolor="white" >
+    <simplelayout/>
+    <method event="oninit" reference="canvas">
+        var d = new LzDelegate( timef , "tellTime" );
+        LzIdle.callOnIdle( d );
+        this.bringToFront();
+        //created nodes doesn't account for nodes created from script,
+        //so it isn't good for apps that make vnnodes from script
+        numnodes.setText( "nodes: " +_root.canvas.creatednodes  );
+        //if that's  the case, I add a line like this to the node constructor
+        //constructor
+        //_root.mvncnt++;
+        //and uncomment this line
+        //numnodes.setText( "nodes: " +_root.mvncnt  );
+    </method>
+    <text name="timef" width="100">
+        <method name="tellTime" args="t">
+            this.setText( "Time taken: " + t );
+        </method>
+    </text>
+    <text name="numnodes" width="100"/>
+</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

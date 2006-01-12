@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element category="View" extends="view.xml" filename="combobox.html" tier="Redmond Component" title="Combobox">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<desc>A pull-down selection.</desc><longdescription>
+&lt;p&gt;
+Note: Redmond components are deprecated.  Please consider using LZ Components.
+If you use this component, you must explicitly include the redmond library: &lt;br/&gt;
+&amp;lt;include href="redmond"/&amp;gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+	&lt;b&gt;Description:&lt;/b&gt;&lt;br/&gt;
+	The combobox tag provides a basic redmond style combobox with an editable text field and
+	a drop-down list. The &lt;TT&gt;datapath&lt;/TT&gt; attribute sets the text for the editable text field, and the &lt;TT&gt;itemfield&lt;/TT&gt; attribute is the path to an item of a dataset to be displayed in the drop-down list. When the list is visible it will show all of its items unless the attribute &lt;TT&gt;shownitems&lt;/TT&gt; is set to a number less than that.
+&lt;/p&gt;
+	&lt;b&gt;Example:&lt;/b&gt;&lt;br/&gt;
+&lt;pre&gt;
+&amp;lt;canvas height="160"&amp;gt;
+    
+    &amp;lt;include href="redmond" /&amp;gt;
+
+    &amp;lt;dataset name="namelist" &amp;gt;
+        &amp;lt;item&amp;gt;Susan&amp;lt;/item&amp;gt;
+        &amp;lt;item&amp;gt;Bob&amp;lt;/item&amp;gt;
+        &amp;lt;item&amp;gt;Carol&amp;lt;/item&amp;gt;
+        &amp;lt;item&amp;gt;Steven&amp;lt;/item&amp;gt;
+        &amp;lt;item&amp;gt;Anne&amp;lt;/item&amp;gt;
+    &amp;lt;/dataset&amp;gt;
+    
+    &amp;lt;combobox x="10" y="50" width="152" shownitems="4" 
+              itemfield="nameList:/item/text()" 
+              datapath="nameList:/item[1]/text()" 
+              name="mycombo" &amp;gt; 
+    &amp;lt;/combobox&amp;gt;
+
+&amp;lt;/canvas&amp;gt;
+&lt;/pre&gt;
+
+</longdescription>
+  <attributes>
+    <attribute category="setter" isvalidintag="true" name="shownitems" tagtype="integer" type="integer"><desc>The maximum number items to show in the list that drops down.  If
+the number of items in the list is greater than shownitems, the
+list scrolls.</desc>
+  </attribute>
+  <attribute category="setter" isvalidintag="true" name="itemfield" tagtype="string" type="string">
+	<desc>The path to an item from a dataset that will be displayed in the list.</desc>
+  </attribute>
+  </attributes>
+  <tag name="combobox" src="tag-combobox.xml"/></element>

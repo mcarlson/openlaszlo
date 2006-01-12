@@ -1,0 +1,64 @@
+<canvas debug="true" width="900">
+
+    <debug y="20" x="650" width="220" height="364" />
+
+    <dataset name="dictDset" />
+
+    <soap name="dictionary" wsdl="http://services.aonaware.com/DictService/DictService.asmx?WSDL">
+        <method event="onload">
+            Debug.write('dictionary soap service stub loaded');
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+
+        <remotecall name="define" funcname="Define" dataobject="dictDset">
+            <param>
+                <method name="getValue">
+                <![CDATA[
+                    var ns = "http://services.aonaware.com/webservices/";
+                    return '<Define xmlns="' + ns + '">' +
+                           '<word>' + word.getText() + '</word>' +
+                           '</Define>';
+                ]]>
+                </method>
+            </param>
+        </remotecall>
+
+    </soap>
+
+
+
+    <view x="20" y="20">
+        <text name="t" width="35" text="word:" />
+        <edittext id="word" y="-3" x="$once{parent.t.width+5}" text="sweet"/>
+        <button x="${word.x + word.width + 10}" 
+                y="-3" text="define" onclick="dictionary.define.invoke()" />
+    </view>
+
+    <tabs id="definitions" x="20" y="85" height="300" width="550"
+          datapath="dictDset:/item[1]/DefineResponse/DefineResult/Definitions" >
+        <tabpane datapath="Definition">
+            <method event="ondata">
+                var pos = this.datapath.xpathQuery('position()');
+                var word = this.datapath.xpathQuery('Word/text()');
+                this.setAttribute('text', pos + '. ' + word.toLowerCase());
+
+            </method>
+            <view width="${parent.parent.width - 20}" 
+                  height="$once{parent.parent.height - 50}" clip="true">
+                <text datapath="WordDefinition[1]/text()" multiline="true" 
+                      width="$once{parent.width}" selectable="true" />
+                <scrollbar />
+            </view>
+        </tabpane>
+    </tabs>
+
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

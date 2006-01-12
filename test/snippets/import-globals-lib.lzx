@@ -1,0 +1,16 @@
+<library>
+  <script>
+    var blah = 0xff0000;
+    function foo() {
+        Debug.write('This is a message from a snippet script function');
+    }
+
+    new LzView(_root.canvas, {width: 50, height: 50, bgcolor: blah});
+    new LzView(_root.canvas, {width: 50, height: 50, bgcolor: canvas.greencolor});
+  </script>
+  <view bgcolor="yellow" width="50" height="50" id="libview"
+        oninit="Debug.write('This is a message from a snippet method')">
+    <text>snippet</text>
+  </view>
+  <text text="${canvas.sometext}" resize="true"/>
+</library>

@@ -1,0 +1,141 @@
+<library>
+    <include href="base/basetree.lzx" />
+
+    <!--- Arrow expander resource:
+          frame 1 (right arrow), frame 2 (down arrow), frame 3 (transparent) -->
+    <resource name="lztree_arrow_rsc">
+        <frame src="resources/tree/arrow_closed.swf"/>
+        <frame src="resources/tree/arrow_opened.swf"/>
+        <frame src="resources/tree/arrow_transparent.swf"/>
+    </resource>
+
+    <!--- Plus and minus expander resource:
+          frame 1 (plus), frame 2 (minus), frame 3 (transparent) -->
+    <resource name="lztree_plusminus_rsc">
+        <frame src="resources/tree/plus_icon.swf"/>
+        <frame src="resources/tree/minus_icon.swf"/>
+        <frame src="resources/tree/plusminus_transparent.swf"/>
+    </resource>
+
+    <!--- Folder/file icon resource:
+          frame 1 (open folder), frame 2 (closed folder), frame 3 (file) -->
+    <resource name="lztree_folder_rsc">
+        <frame src="resources/tree/folder_closed.swf"/>
+        <frame src="resources/tree/folder_opened.swf"/>
+        <frame src="resources/tree/document.swf"/>
+    </resource>
+
+    <!--- A tree controller component. A tree's node is comprised of an expander
+          resource, an icon resource, and a label. The default layout of a
+          tree's child views is "class: simplelayout; axis: y; spacing: 5". -->
+    <class name="tree" extends="basetree" xindent="27" yindent="25" 
+           layout="spacing: 5">
+           
+        <!--- The resource for the expanding icon:
+              frame 1 (closed), frame 2 (opened), frame 3 (leaf).
+              Default is lztree_arrow_rsc defined in lz/tree.lzx.
+              @keywords final -->
+        <attribute name="expander" value="lztree_arrow_rsc" type="string" />
+
+        <!--- The resource for the item icon:
+              frame 1 (closed), frame 2 (opened), frame 3 (leaf) 
+              Default is lztree_folder_rsc defined in lz/tree.lzx.
+              @keywords final -->
+        <attribute name="icon" value="lztree_folder_rsc" type="string" />
+
+        <!--- Double-clicking on the icon or text triggers this event. -->
+        <attribute name="onactivate" value="null" type="expression" />
+
+        <!--- Clicking on the icon or text triggers this event. -->
+        <attribute name="onclick" value="null" />
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+        <![CDATA[
+            if (this.style != null && this['treeitem'] != null) {
+                treeitem.text.setAttribute('fgcolor',s.textcolor);
+                if (treeitem.expander != null) {
+                    setTint(treeitem.expander.expander, s.basecolor);
+                }
+                if (treeitem.icon != null) {
+                    setTint(treeitem.icon.icon, s.basecolor);
+                }
+            }
+        ]]>
+        </method>
+
+        <!--- Focus the tree and toggle open, if this tree is not a leaf and is
+              not being multiselected. -->
+        <method name="toggleOpenAndFocus">
+        <![CDATA[
+            this.changeFocus();
+            this.setAttribute('selected', true);
+            if (! this.isleaf) {
+                if (! LzKeys.isKeyDown("control") &&
+                    ! LzKeys.isKeyDown("shift")) {
+                        this.setAttribute("open", ! this.open);
+                }
+            }
+        ]]>
+        </method>
+
+        <!-- The item for tree.  -->
+        <view name="treeitem" placement="item" layout="axis: x; spacing: 5">
+            <!-- Do this to get around resource and frame (constrained) onclick 
+                 view problem. (b 3466) -->
+            <view name="expander">
+                <method event="onclick">
+                    if (! classroot.isleaf) {
+                        classroot.setAttribute("open", ! classroot.open);
+                    }
+                </method>
+                <view name="expander"
+                      resource="$once{classroot.expander}"  
+                      frame="${classroot.isleaf ? 3
+                             :(classroot.open ? 2 : 1)}" />
+            </view>
+            <view name="icon">
+                <method event="onclick">
+                    classroot.toggleOpenAndFocus()
+                    if (classroot.onclick) classroot.onclick.sendEvent();
+                </method>
+                <method event="ondblclick">
+                <![CDATA[
+                    if (classroot.onactivate) {
+                        classroot.onactivate.sendEvent();
+                    }
+                ]]>
+                </method>
+                <view name="icon" 
+                      resource="$once{classroot.icon}"
+                      frame="${classroot.isleaf ? 3
+                             :(classroot.open ? 2 : 1)}" />
+            </view>
+            <text name="text" text="${classroot.text}" resize="true"
+                  bgcolor="${classroot.selected
+                           ? classroot.style['selectedcolor'] 
+                           : (classroot.focused  
+                              ? classroot.style['hilitecolor']
+                              : classroot.parent.bgcolor ) }">
+                <method event="onclick">
+                    classroot.toggleOpenAndFocus()
+                    if (classroot.onclick) classroot.onclick.sendEvent();
+                </method>
+                <method event="ondblclick">
+                <![CDATA[
+                    if (classroot.onactivate) {
+                        classroot.onactivate.sendEvent();
+                    }
+                ]]>
+                </method>
+            </text>
+        </view>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

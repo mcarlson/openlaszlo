@@ -1,0 +1,36 @@
+<canvas debug="true" >
+
+    <dataset name="imageset">
+        <cliplist>
+            <clip src="bush.jpg" />
+            <clip src="bush.jpg" />
+            <clip src="bush.jpg" />
+            <clip src="bush.jpg" />
+            <clip src="bush.jpg" />
+        </cliplist>
+    </dataset>
+
+    <view>
+        <view width="20" datapath="imageset:/cliplist/clip/@src" >
+            <!-- this view (cover) breaks the example... -->
+            <view name="cover" 
+                  width="parent.width" height="parent.height"
+                  bgcolor="red" />
+
+            <!-- ...but this view does not: -->
+            <!-- view name="cover" visible="false" /-->
+
+            <method name="applyData" args="d">
+                Debug.write( "setSource: " + d );
+                this.setSource( d );
+            </method>
+        </view>
+        <simplelayout axis="x" spacing="10" />
+    </view>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

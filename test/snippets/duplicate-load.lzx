@@ -1,0 +1,32 @@
+<canvas width="1024" debug="true">
+  <!-- Tests  to make sure a library is included just once. 
+
+       The text string 'common-library mynumber = 1' should appear once.
+       If it appears again with the counter incremented ( 'common-library mynumber = 2' )
+       then the common-library.lzx has been included twice, which is an error.
+  -->
+
+  <script>
+    Debug.write("The string 'common-library mynumber = 1' should appear just once.");
+    var mynumber = 0;
+  </script>
+  <include href="common-library.lzx"/>
+
+  <import name="lib" href="duplicate-library.lzx" 
+          stage="late"
+      onload="canvas.doLoaded()"/>
+
+  <method name="doLoaded">
+    Debug.write('mynumber = ', mynumber);
+  </method>
+
+  <simplelayout spacing="2" />
+  <button id="foo" onclick="bar.setAttribute('enabled', !bar.enabled)">toggle bar</button>
+  <button id="bar">my name is bar</button>
+  <view onclick="Debug.write('click')" width="100" height="100" bgcolor="red" id="myview"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

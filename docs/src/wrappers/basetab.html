@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basetab">
+    <lztier>Base Component</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A non-visual tab component for basetabsbar.
+    </lzshortdesc>
+    <lztag>base/basetab.xml</lztag>
+</lzelement>
+
+<p><classname>basetab</classname> is a non-visual representation of a
+tab that is contained within a <classname>basetabsbar</classname>
+component. This is the default tab class that the
+<classname>basetabs</classname> component uses.</p>
+
+<example title="Custom basetab">
+&lt;canvas width="150" height="75"&gt;
+  &lt;include href="base"/&gt;
+
+  &lt;class name="aquatab" extends="basetab" 
+         width="40" height="20" bgcolor="aqua"&gt;
+    &lt;text&gt;tab&lt;/text&gt;
+  &lt;/class&gt;
+  &lt;class name="greentab" extends="basetab" 
+         width="40" height="20" bgcolor="green"&gt;
+    &lt;text&gt;tab&lt;/text&gt;
+  &lt;/class&gt;
+
+  &lt;basetabs x="10" y="10" tabclass="aquatab"&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;one&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane tabclass="greentab"&gt;
+      &lt;text&gt;two&lt;/text&gt;
+    &lt;/basetabpane&gt;
+    &lt;basetabpane &gt;
+      &lt;text&gt;three&lt;/text&gt;
+    &lt;/basetabpane&gt;
+  &lt;/basetabs&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<tags>basetabsbar basetabs basetabpane</tags>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

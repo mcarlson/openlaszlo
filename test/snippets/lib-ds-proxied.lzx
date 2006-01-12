@@ -1,0 +1,5 @@
+ <library proxied="true">
+   <dataset name="ds" src="http:../resources/xml/textnodes.xml" request="true"/>
+   <simplelayout/>
+   <text resize="true" datapath="ds:/items/item/text()"/>
+ </library>

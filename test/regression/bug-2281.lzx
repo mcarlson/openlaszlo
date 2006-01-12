@@ -1,0 +1,8 @@
+<canvas width="400" height="300">
+	<dataset name="testdata" request="true" type="http" src="$once{'../resources/xml/swatch.xml'}"/>
+	<text datapath="testdata:/resultset/result/@color1" fontsize="12"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

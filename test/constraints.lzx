@@ -1,0 +1,42 @@
+<!-- Resize the window.  The red rectangle should stay half the width, and extend from the bottom of the green rectangle to the bottom of the content area of the rectangle. -->
+<canvas debug="true" width="1024">
+  <debug y="150" width="400" height="150" />
+  <window id="one" x="70" y="70" width="150" resizable="true">
+    <view width="${parent.width/2}" height="${parent.height - parent.other.height - 10}" bgcolor="red"/>
+    <view name="other" width="${parent.width}" height="20" bgcolor="green"/>
+    <text>
+	Resize the window.  The red rectangle should stay half the width, and extend from the bottom of the green rectangle to the bottom of the content area of the rectangle.
+    </text>
+  </window>
+
+  <window id="two" resizable="true">
+    <view bgcolor="blue" width="10" height="10" >
+        <attribute name="x" value="${this.parent.getMouse( 'x' )}" />
+    </view>
+    <text>
+        Move the mouse.  The blue dot should follow (in x).
+    </text>
+  </window>
+
+  <script>
+      var a = {b: 37, toString: function(){return "[object a]"}};
+      var c = {d: 12, toString: function(){return "[object c]"}};
+      var e = 14;
+      var f = function(t, x, y) {return x * y};
+      f.dependencies = function(t, c, x, y){return ["f.dependencies", x, y];};
+      var test;
+      test=function () {
+	  #pragma "constraintFunction"
+	  with (this)
+	      this.setAttribute('width', a.b+f(c.d, e));
+      };
+      Debug.write("Expected '[object a],b,[object c],d,f.dependencies,12,14'");
+      Debug.write("got: ", test.dependencies());
+      Debug.write("Expected 'LzIdle,onidle'");
+      Debug.write("got: ", LzView.prototype.getMouse.dependencies());
+  </script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

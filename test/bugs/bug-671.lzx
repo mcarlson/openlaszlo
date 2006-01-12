@@ -1,0 +1,13 @@
+<canvas> 
+  <!-- Declaring the multiframe image -->
+  <resource name="test1"> 
+    <resource src="logo.gif" /> 
+    <resource src="http://www.laszlosystems.com/images/bogie.gif" /> 
+  </resource>
+  <!-- Displaying the second frame in the multiframe image -->
+  <view resource="test1" onclick="this.setResourceNumber(2)"/> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

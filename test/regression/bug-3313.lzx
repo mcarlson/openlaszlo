@@ -1,0 +1,16 @@
+<canvas bgcolor="silver">
+    <font name="vera">
+          <face style="plain" src="bitstream-vera-1.10/vera.ttf"/>
+          <face style="bold" src="bitstream-vera-1.10/verabd.ttf"/>
+    </font>
+
+    <text font="vera" fontsize="24" fontstyle="bold">This is vera 24 
+Bold</text>
+    <edittext font="vera" fontsize="24" fontstyle="bold">
+        This is vera 24 Bold</edittext>
+    <simplelayout axis="y" spacing="5"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

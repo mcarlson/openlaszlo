@@ -1,0 +1,72 @@
+<canvas>
+    <inittimer/>
+
+    <view layout="spacing:10">
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+    </view>
+    <view x="200" layout="spacing:10">
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+        <list>
+            <textlistitem>one</textlistitem>
+            <textlistitem>two</textlistitem>
+            <textlistitem>three</textlistitem>
+            <textlistitem>four</textlistitem>
+        </list>
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

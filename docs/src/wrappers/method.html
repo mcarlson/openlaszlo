@@ -1,0 +1,58 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Method">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Scripting</lzcategory>
+    <lzshortdesc>Attaches a function or event handler to an object or class.
+    </lzshortdesc>
+    <lztag>tag-method.xml</lztag>
+</lzelement>
+
+<p>Attaches a method to the object that contains this element.  The
+method must have either a <attribute>name</attribute> or
+<attribute>event</attribute> attribute.</p>
+
+<p>If the method has a <attribute>name</attribute> attribute, it
+defines a method that can be invoked from JavaScript with this name.
+For example, if a method is defined via:</p>
+
+<example extract="false">
+&lt;view id="obj"&gt;
+  &lt;method name="f" args="a, b"&gt;
+    return a+b;
+  &lt;/method&gt;
+&lt;/view&gt;
+</example>
+
+<p>
+then script code
+can invoke <code>obj.f(1, 2)</code> to add two
+numbers.</p>
+
+<p>If the method has an <attribute>event</attribute> attribute, the
+script will be executed when the referenced view receives an event
+with this name.  For example, </p>
+
+<example extract="false">
+&lt;view&gt;
+  &lt;method event="onclick"&gt;
+    f(this);
+  &lt;/method&gt;
+&lt;/view&gt;
+</example> 
+
+<p>defines code that applies the function <code>f</code> to the view
+object, when the view is clicked on.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

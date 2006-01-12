@@ -1,0 +1,15 @@
+<canvas> 
+    <view width="${parent.width}" > 
+        <text id="t" width="200" multiline="true">
+            Quote:
+            <p><b>&lt;p&gt;</b>"Through our scientific genius we have made of the world a neighborhood;<b>&lt;/p&gt;</b></p>
+            <p/><b>&lt;p/&gt;</b>Now, through moral and spiritual genius, we must make of it a brotherhood."<b>&lt;br/&gt;</b><br/>
+            Martin Luther King
+        </text> 
+    </view> 
+</canvas> 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

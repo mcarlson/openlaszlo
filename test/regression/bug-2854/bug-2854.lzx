@@ -1,0 +1,20 @@
+<canvas width="780" height="540" debug="false">
+    <debug x="250" height="200" />
+    <!-- could be any resource -->
+    <resource name="slider_cart" src="images/slider_cart_norm.swf"/>
+
+    <view name="vtabpanel" width="${tab.width}" >
+
+        <attribute name="tabresource" type="string" value="slider_cart" />
+
+        <view clickable="true" name="tabButton">
+            <attribute name="resource" value="${parent.tabresource}"/>
+        </view>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

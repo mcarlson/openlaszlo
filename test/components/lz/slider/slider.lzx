@@ -1,0 +1,149 @@
+<library>
+    <resource name="slider_background" src="images/slider_background.swf"/>
+    <resource name="slider_l" src="images/slider_l.swf"/>
+    <resource name="slider_m" src="images/slider_m.swf"/>
+    <resource name="slider_r" src="images/slider_r.swf"/>
+    <resource name="slider_back_lc" src="images/slider_back_lc.swf"/>
+    <resource name="slider_back_m" src="images/slider_back_m.swf"/>
+    <resource name="slider_back_rc" src="images/slider_back_rc.swf"/>
+    <include href="divisionlayout.lzx"/>
+    
+  
+    <class name="tick" width="1" bgcolor="black" height="100%"/>    
+    <class name="ticks" width="100%" height="10">
+        <attribute name="numticks" value="2"/>
+        
+        <divisionlayout name="layout" axis="x"/>
+        <method event="oninit">
+        <![CDATA[
+            this.layout.lock();
+            for(var i = 0; i < this.numticks; i++)
+            {
+                new tick(this);
+            }    
+            this.layout.unlock();            
+        ]]>    
+        </method>
+    </class>
+    <!--
+    <class name="ticks" height="10" clip="true">
+        <attribute name="numticks" value="2"/>
+        <view resource="images/slider_hairline.swf" height="${parent.height}" width="${parent.width * 31 / (parent.numticks - 1) - 1}" stretches="both"/>
+    </class>
+    -->
+    <resource name="slider_arrow">
+        <frame src="images/slider_arrow_n.swf"/>
+        <frame src="images/slider_arrow_r.swf"/>
+        <frame src="images/slider_arrow_r.swf"/>
+    </resource>
+
+    <script>
+        <![CDATA[
+        function limit(min, max, value)
+        {
+            if (value > max) return max;
+            if (value < min) return min;
+            return value;
+
+        }
+        ]]>
+    </script>
+    <class name="xdragstate" extends="state">
+        <attribute name="xdoffset" value="this.getMouse( 'x' )" when="once" />
+        <attribute name="x"
+                value="${limit(minx, maxx,
+                    this.immediateparent.getMouse( 'x' ) - this.xdoffset)}" />
+    </class>
+
+    <class name="sliderknob" y="14" width="1" height="1">
+        <attribute name="minx" value="0"/>
+        <attribute name="maxy" value="100"/>
+        <attribute name="isMouseDown" value="false"/>
+       
+        <xdragstate name="dragger" />
+        <basebutton x="${-(this.width /2)}" resource="slider_arrow">
+            <method event="onmousedown">
+                parent.dragger.apply();                
+                parent.setAttribute("isMouseDown", true);
+            </method>    
+            <method event="onmouseup">
+                parent.dragger.remove();
+                parent.setAttribute("isMouseDown", false);
+            </method>            
+        </basebutton>
+    </class>
+
+    
+    <class name="slider">
+        <attribute name="width" value="100"/>
+        <attribute name="minlimit" value="0"/>
+        <attribute name="maxlimit" value="100"/>
+        <attribute name="valueratio" value="(this.maxlimit  - this.minlimit) / this.width" when="always"/>
+        <attribute name="startlabel" value="this.minlimit" when="once"/>
+        <attribute name="endlabel" value="this.maxlimit" when="once"/>
+        <attribute name="majordivision" value="2"/>
+        <attribute name="minordivision" value="5"/>        
+
+        
+        <view name="track" width="${parent.width + 6}">            
+            <stableborderlayout axis="x"/>
+            <view resource="slider_back_lc"/>
+            <view resource="slider_back_m" stretches="width"/>
+            <view resource="slider_back_rc"/>
+        </view>
+
+        
+        <ticks y="10" numticks="${parent.minordivision * parent.majordivision + 1}" height="3" width="${parent.width}"/>
+        <ticks y="10" numticks="${parent.majordivision + 1}" height="6" width="${parent.width}"/>
+
+                
+        <view name="labels" width="100%"  y="20"  fgcolor="0x666666">            
+            <text name="label1" fgcolor="0x666666" text="${parent.parent.startlabel.toString()}" align="left" resize="true"/>
+            <text name="label2" fgcolor="0x666666" text="${parent.parent.endlabel.toString()}" align="right" resize="true"/>    
+        </view>               
+    </class>
+
+    <class name="simpleslider" extends="slider">
+        <attribute name="value" value="this.minlimit + this.knob.x * this.valueratio" when="always"/>
+
+        <view x="-3" width="${parent.knob.x + 8}">
+            <stableborderlayout axis="x"/>
+            <view resource="slider_l"/>
+            <view resource="slider_m" stretches="width"/>
+            <view resource="slider_r"/>
+        </view>
+        
+        <sliderknob  name="knob" x="$once{parent.track.x + parent.width  / 2}">
+            <attribute name="minx" value="0"/>                 
+            <attribute name="maxx" value="$once{parent.width}"/>
+        </sliderknob>
+        <method name="setvalue" args="v">
+            this.knob.setX((v - this.minlimit)/this.valueratio);
+        </method>
+    </class>
+
+    <class name="rangeslider" extends="slider">
+        <attribute name="minvalue" value="this.minlimit + this.leftknob.x * this.valueratio" when="always"/>
+        <attribute name="maxvalue" value="this.minlimit + this.rightknob.x * this.valueratio"  when="always"/>        
+        <view x="${parent.leftknob.x - 3}" width="${parent.rightknob.x-parent.leftknob.x+8}">
+            <stableborderlayout axis="x"/>
+            <view resource="slider_l"/>
+            <view resource="slider_m" stretches="width"/>
+            <view resource="slider_r"/>
+        </view>
+
+        <sliderknob name="leftknob" x="0">
+            <attribute name="minx" value="0"/>                 
+            <attribute name="maxx" value="${parent.rightknob.x}"/>
+        </sliderknob>
+        
+        <sliderknob name="rightknob" x="$once{parent.width}">
+            <attribute name="minx" value="${parent.leftknob.x}"/>
+            <attribute name="maxx" value="$once{parent.width}"/>            
+        </sliderknob>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

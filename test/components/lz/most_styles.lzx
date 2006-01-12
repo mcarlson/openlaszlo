@@ -1,0 +1,213 @@
+<canvas width="800" height="600" >
+<include href="slider/slider.lzx"/>
+    <silverstyle name="silvercolors"/>
+    <greenstyle name="greencolors"/>
+    <bluestyle name="bluecolors"/>
+    <goldstyle name="goldcolors"/>
+    <whitestyle name="whitecolors"/>
+    <purplestyle name="purplecolors"/>
+    <style name="altbluestyle"
+    	canvascolor="grayblue"
+    	basecolor="iceblue3"
+    	bgcolor="iceblue5"
+		textfieldcolor="palegreen5" textcolor="blue" texthilitecolor="palegreen1"
+		textselectedcolor="yellow"  textdisabledcolor="green"
+        hilitecolor="iceblue4" selectedcolor="iceblue2"
+        bordercolor="green" bordersize="10"/>
+
+<!-- text size and color? -->
+    <!--view valign="bottom">
+	    <inittimer/><frametimer/>
+    </view-->
+    <debug x="450" y="200" height="200"/>
+	<view id="s1" x="20" y="40">
+		<view name="tsliderview">
+		<view name="stylechooser">
+			<simplelayout spacing="4"/>
+			<text>Style:</text>
+			<combobox width="120" editable="false">
+				<textlistitem text="silver" >
+					<method event="onselected">
+						canvas.silvercolors.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+				<textlistitem text="green" >
+					<method event="onselected">
+                        canvas.greencolors.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+				<textlistitem text="blue">
+					<method event="onselected">
+                        canvas.bluecolors.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+				<textlistitem text="gold" >
+					<method event="onselected">
+                        canvas.goldcolors.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+				<textlistitem text="white" selected="true">
+					<method event="onselected">
+                        canvas.whitecolors.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+				<textlistitem text="purple" >
+					<method event="onselected">
+                        canvas.purplecolors.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+				<textlistitem text="alt blue" >
+					<method event="onselected">
+                        canvas.altbluestyle.setAttribute("isdefault", true);
+					</method>
+				</textlistitem>
+			</combobox>
+
+<!--            <view id="testcolor" width="22" height="22"-->
+<!--                bgcolor="${setBGColor(canvas.defaultstyle, canvas.defaultstyle.basecolor)}" >-->
+<!--                <method name="setBGColor">-->
+<!--                     super.setBGColor(canvas.defaultstyle.basecolor);-->
+<!--                </method>-->
+<!--            </view>-->
+		</view>
+			<tabslider width="250" height="200">
+				<tabelement text="possesion" selected="true">
+					<button text="hello"/>
+					<checkbox text="this should not be big"/>
+					<radiobutton text="this should also not be big"/>
+					<text resize="true">hello sarah how are you?</text>
+					<simplelayout axis="y" spacing="10"/>
+				</tabelement >
+				<tabelement text="housewares"/>
+				<tabelement text="isotope"/>
+				<tabelement text="delinquents"/>
+				<tabelement text="whale bones"/>
+			</tabslider>
+
+			<!-- build padding into content area? allowheight specified in parent apply to panes?-->
+			<tabs>
+				<tabpane>Insecticides
+					<simplelayout spacing="10"/>
+					<button height="22">Remove</button>
+					<radiogroup>
+						<radiobutton>Yes, I want to know more</radiobutton>
+						<radiobutton>No, I prefer to remain blissfully unaware</radiobutton>
+						<radiobutton>Please tell my neighbor, who may tell me</radiobutton>
+					</radiogroup>
+				</tabpane>
+				<tabpane selected="true">Parcheesi
+					<text >On my honor I will do my best </text>
+					<button height="22">Testify</button>
+					<simplelayout spacing="10"/>
+				</tabpane>
+				<tabpane text="Subliminal">
+					<button height="22" >Submit</button>
+				</tabpane>
+			</tabs>
+
+		   <menubar name="mbar" width="300" x="10" y="100" >
+		         <menu name="file" id="mfile" >File
+		            <menuitem text="item 1" />
+		            <menuitem text="item 2" />
+		        </menu>
+
+		        <menu name="Document" >Document
+		            <menuitem  text="Menuitem with submenu" />
+					<menuseparator/>
+		            <menuitem  id="MWS" text="item 2" >
+						<menu name="subedit" >subedit
+							<menuitem text="subitem 1" />
+							<menuitem text="subitem 2" />
+						</menu>
+		            </menuitem>
+		            <menuitem text="item 3" >
+						<menu name="subedit" >subedit
+							<menuitem text="subitem 1" />
+							<menuitem text="subitem 2" >
+								<menu name="subsubedit" >subedit
+									<menuitem text="subitem 1" />
+									<menuitem text="subitem 2" />
+									<menuitem text="subitem 3" />
+								</menu>
+							</menuitem>
+							<menuitem text="subitem 3" />
+						</menu>
+		            </menuitem>
+		            <menuitem text="item 4" />
+		            <menuitem text="item 5" />
+		            <menuitem text="item 6" />
+		        </menu>
+		   </menubar>
+
+			<simplelayout axis="y" spacing="30"/>
+		</view>
+        <!-- gripper align w/ title.  stop before close btn. less title room.
+            resize closer to edges. content border? performance?-->
+        <window text="test window" width="250" height="250"
+            y="250"
+            x="450"
+            resizable="true" closeable="true"
+            id="fw" title="Frosty the Snowman"
+            >
+            <include href="../testmedia/frosty.lzx" />
+            <scrollbar/>
+        </window>
+
+		<!-- button height not correct (18 not 22) check view color and opacity in 5pc. -->
+		<view>
+			<button height="22">Submit</button>
+			<button height="22">Cancel</button>
+			<button height="22">OK</button>
+			<button height="22">Revert</button>
+			<button height="22" enabled="false">disabled</button>
+
+			<combobox width="120">
+				<textlistitem text="item one"/>
+				<textlistitem text="item two"/>
+				<textlistitem text="item three"/>
+			</combobox>
+			<!-- offset black dot in radiobtn art (dn state) -->
+			<radiogroup>
+				<radiobutton text="tension"/>
+				<radiobutton text="distance"/>
+				<radiobutton text="delerium"/>
+				<radiobutton text="froth"/>
+				<radiobutton text="persuasion"/>
+				<radiobutton text="disabled" enabled="false"/>
+			</radiogroup>
+	<simplelayout axis="y" spacing="14"/>
+	</view>
+
+		<view height="200" width="40" clip="true">
+			<view height="500" width="40"/>
+			<!-- tab to scroll, then arrow -->
+			<scrollbar id="sb"/>
+		</view>
+
+		<!-- align text vertically against checkbox. increase check box size?	 -->
+		<view name="checkbox_group">
+				<checkbox text="tension"/>
+				<checkbox text="distance"/>
+				<checkbox text="delerium"/>
+				<checkbox text="froth"/>
+				<checkbox text="persuasion"/>
+				<checkbox text="disabled" enabled="false"/>
+				<simplelayout axis="y" spacing="5"/>
+		</view>
+
+		<!-- input text resize not working. text truncated.
+			text from a dataset not resizing box-->
+		<view name="textfields">
+			<edittext text="this is a spiffy input box for text"/>
+			<edittext text="disabled" enabled="false"/>
+			<simplelayout axis="y" spacing="5"/>
+		</view>
+
+		<simplelayout axis="x" spacing="30"/>
+	</view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,191 @@
+<canvas title="lzunit-node-placement" debug="true">
+  <include href="lzunit"/>
+
+  <class name="nc1" extends="node">
+    <node name="n1"/>
+  </class>
+  
+  <class name="nc2" extends="node" defaultplacement="n1">
+    <node name="n1"/>
+  </class>
+  
+  <class name="nc3" extends="node" defaultplacement="n2">
+    <nc2 name="n2"/>
+  </class>
+  
+  <class name="nc4" extends="node" defaultplacement="n1">
+    <nc2 name="n1"/>
+  </class>
+
+  <class name="nc5" extends="nc2" defaultplacement="n2">
+    <node name="n2"/>
+  </class>
+  
+  <class name="nc6" extends="node" defaultplacement="n2">
+    <node name="n1">
+      <node name="n2"/>
+    </node>
+  </class>
+  
+  <TestSuite>
+    <TestCase name="basicPlacement">
+      <nc1 name="nci1">
+        <node name="n2" placement="n1"/> 
+      </nc1>
+      
+      <method name="testPlacement">
+        assertEquals(nci1.n2, nci1.n1.searchImmediateSubnodes("name", "n2"));
+      </method>
+      
+      <nc1 name="nci2">
+        <method name="determinePlacement" args="v, p, a">
+          return super.determinePlacement(v,p,a);
+        </method>
+        <node name="n2" placement="n1"/> 
+      </nc1>
+      
+      <method name="testPlacementWithOverride">
+        assertEquals(nci2.n2, nci2.n1.searchImmediateSubnodes("name", "n2"));
+      </method>
+      
+    </TestCase>
+    
+    <TestCase name="testBasicDefaultPlacement">
+      <nc2 name="nci1">
+        <node name="n2"/>
+      </nc2>
+      
+      <method name="testPlacement">
+        assertEquals(nci1.n2, nci1.n1.searchImmediateSubnodes("name", "n2"));
+      </method>
+
+      <nc2 name="nci2">
+        <method name="determinePlacement" args="v, p, a">
+          return super.determinePlacement(v,p,a);
+        </method>
+        <node name="n2"/>
+      </nc2>
+      
+      <method name="testPlacementWithOverride">
+        assertEquals(nci2.n2, nci2.n1.searchImmediateSubnodes("name", "n2"));
+      </method>
+    </TestCase>
+    
+    <TestCase name="testBasicDefaultPlacementWithOverride">
+      <nc2 name="nci1">
+        <node name="n2">
+          <attribute name="ignoreplacement" value="true"/>
+        </node>
+      </nc2>
+      
+      <method name="testPlacement">
+        assertEquals(nci1.n2, nci1.searchImmediateSubnodes("name", "n2"));
+      </method>
+
+      <nc2 name="nci2">
+        <method name="determinePlacement" args="v, p, a">
+          return super.determinePlacement(v,p,a);
+        </method>
+        <node name="n2">
+          <attribute name="ignoreplacement" value="true"/>
+        </node>
+      </nc2>
+      
+      <method name="testPlacementWithOverride">
+        assertEquals(nci2.n2, nci2.searchImmediateSubnodes("name", "n2"));
+      </method>
+
+    </TestCase>
+    
+    <TestCase name="testIgnorePlacement">
+      <nc1 name="nci1">
+        <node name="n2" ignoreplacement="true"/>
+      </nc1>
+      
+      <method name="testIgnorePlacement">
+          assertEquals(nci1.n2, nci1.searchImmediateSubnodes("name", "n2"));
+          assertEquals(null, nci1.n1.searchImmediateSubnodes("name", "n2"));
+      </method>
+
+      <nc1 name="nci2">
+        <method name="determinePlacement" args="v, p, a">
+          return super.determinePlacement(v,p,a);
+        </method>
+        <node name="n2" ignoreplacement="true"/>
+      </nc1>
+      
+      <method name="testIgnorePlacementWithOverride">
+          assertEquals(nci2.n2, nci2.searchImmediateSubnodes("name", "n2"));
+          assertEquals(null, nci2.n1.searchImmediateSubnodes("name", "n2"));
+      </method>
+
+    </TestCase>
+    
+    <TestCase name="testDoubleDefaultPlacement">
+      <!-- test that placing a node into a node with default placement does the right thing -->
+      <nc3 name="nci1">
+        <node name="n3"/>
+      </nc3>
+      
+      <method name="testPlacement">
+        assertEquals(nci1.n3, nci1.n2.n1.searchImmediateSubnodes("name", "n3"));
+      </method>
+
+      <nc3 name="nci2">
+        <method name="determinePlacement" args="v, p, a">
+          return super.determinePlacement(v,p,a);
+        </method>
+        <node name="n3"/>
+      </nc3>
+      
+      <method name="testPlacementWithOverride">
+        assertEquals(nci2.n3, nci2.n2.n1.searchImmediateSubnodes("name", "n3"));
+      </method>
+    </TestCase>
+    
+    <TestCase name="testOverrideDeterminePlacement">
+      <!-- Ensure that overriding node.determinePlacement works properly. -->
+      <nc2 name="nci1">
+        <node name="n3"/>
+        <attribute name="hadDP" value="false"/>
+        <method name="determinePlacement" args="v, placement, args">
+          hadDP = true;
+          return super.determinePlacement(v, placement, args);
+        </method>
+      </nc2>
+      
+      <method name="testOverride">
+        assertTrue(nci1.hadDP);
+      </method>
+    </TestCase>
+    
+    <TestCase name="TestOverrideDefaultPlacement">
+      <!-- Test what happens when a subclass overrides the defaultplacement attribute -->
+      <nc5 name="nci1">
+        <node name="n3"/>
+      </nc5>
+      
+      <method name="testOverride">
+        assertEquals(null, nci1.n1.searchImmediateSubnodes("name", "n3"));
+        assertEquals(nci1.n3, nci1.n2.searchImmediateSubnodes("name", "n3"));
+      </method>
+    </TestCase>
+    
+    <TestCase name="TestErrantPlacement">
+      <!-- This test is to document an undesirable side-effect of
+           the current design. -->
+      <nc6 name="nci6">
+        <node name="n2" ignoreplacement="true"/>
+        <node name="n4"/>
+      </nc6>
+      
+      <method name="testErrantPlacement">
+        // This ISNT what you would want to happen: the instance nci6 has
+        // "captured" the name "n2", so node n4 is places inside the wrong subnode.
+        // I'm capturing this in a unit test to streamline response to bug reports.
+        assertEquals(nci6.n4, nci6.n2.searchImmediateSubnodes("name", "n4"));
+      </method>
+    </TestCase>
+    
+  </TestSuite>
+</canvas>

@@ -1,0 +1,43 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="a">
+    <lztier>Text Markup</lztier>
+    <lzcategory>HTML Markup</lzcategory>
+    <lzshortdesc>
+        HTML hypertext link.
+    </lzshortdesc>
+    <lztag>tag-a.xml</lztag>
+</lzelement>
+
+<p>HTML hypertext link.  This tag can only occur inside XHTML
+text containers such as <tagname>text</tagname>.</p>
+
+<example>
+&lt;canvas height="30"&gt;
+  &lt;text&gt;A &lt;a href="http://www.laszlosystems.com" target="_blank"&gt;link&lt;/a&gt;&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Unlike HTML, the text in the link is not automatically styled.  To style the text, use the <tagname>u</tagname> and <tagname>font</tagname> tags:</p>
+
+<example>
+&lt;canvas height="30"&gt;
+  &lt;text&gt;
+    A &lt;font color="#0000FF"&gt;&lt;u&gt;&lt;a
+      href="http://www.laszlosystems.com" target="_blank"&gt;link&lt;/a&gt;&lt;/u&gt;&lt;/font&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,65 @@
+<canvas width="1024" height="800" embedfonts="false">
+<!--  <splash/> -->
+  <debug x="200" height="400" width="400"/>
+
+  <font name="_serif" device="true"/>
+  <font name="&#95;&#12468;&#12471;&#12483;&#12463;" device="true"/>
+  <font name="&#95;&#26126;&#26397;" device="true"/>
+
+  <dataset name="recs" src="http:jmonths.xml" request="true"/>
+    
+    <datapointer xpath="recs:/*" ondata="processData();" 
+         onerror="showError();"
+         ontimeout="showTimeout();">
+
+      <!-- When data is received from the datasource, do this -->
+      <method name="processData">
+            debug.write("processData");
+       </method>   
+
+      <method name="showError">
+    debug.write("Server error: " + 
+    this.getDataset().getErrorString());
+      </method>
+
+      <method name="showTimeout">
+    debug.write("Error: Load timed out.");
+      </method>
+    </datapointer>
+
+    <simplelayout/>
+    <text font="_serif" fontsize="24"
+      fgcolor="red" bgcolor="#ffcccc" >&#x5341;&#20108;&#x6708;</text>
+    <text font="&#95;&#12468;&#12471;&#12483;&#12463;" fontsize="24"
+      fgcolor="red" bgcolor="#ffcccc" >&#95;&#12468;&#12471;&#12483;&#12463; &#95;&#26126;&#26397;</text>
+
+    <text font="&#95;&#26126;&#26397;" fontsize="24"
+      fgcolor="red" bgcolor="#ffcccc" >&#95;&#12468;&#12471;&#12483;&#12463; &#95;&#26126;&#26397;</text>
+
+    <text onmouseover="setbgcolor(gray)" onmouseout="setbgcolor(white)" 
+      font="_serif" fontsize="24" datapath="recs:/records/record/@msg"/>
+
+<!--
+Chapter 11: Fonts and Text
+FontName:
+English Name: Gothic
+UTF-8 Byte String (hex): 5F E3 82 B4 E3 82 B7 E3 83 83 E3 82 AF
+Example Appearance
+FontName:
+English Name: Tohaba(Gothic Mono)
+
+UTF-8 Byte String (hex): 5F E7 AD 89 E5 B9 85
+Example Appearance:
+FontName:
+English Name: Mincho
+UTF-8 Byte String (hex): 5F E6 98 8E E6 9C 9D
+
+-->
+
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

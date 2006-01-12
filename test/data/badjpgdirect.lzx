@@ -1,0 +1,13 @@
+<canvas width="1200" height="800" debug='true' proxied="false" medialoadtimeout="2000">
+  <debug x="200"/>
+  <view x="0" y="0" id="v1"      resource="http:images/nrasn.jpg"/>
+  <view x="100" y="100" id="v2"  resource="http:images/nrasn.jpg"/>
+  <view x="200" y="200" id="v3"  resource="http:images/nrasn.jpg"/>
+  <view x="300" y="300" id="v4"  resource="http:images/nrasn.jpg"/>
+  <view x="400" y="400" id="v5"  resource="http:images/nrasn.jpg"/>
+  <view x="500" y="500" id="v6"  resource="http:images/nrasn.jpg"/>
+  <view x="600" y="600" id="v7"  resource="http:images/nrasn.jpg"/>
+  <view x="700" y="700" id="v8"  resource="http:images/nrasn.jpg"/>
+
+
+</canvas>

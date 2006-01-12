@@ -1,0 +1,21 @@
+<canvas>
+<include href="../../lps/components/base/basevaluecomponent.lzx"/>
+<import href="../../lps/components/base/baseformitem.lzx" name="testlib" stage="defer"/>
+
+<!-- This test case demonstrates that loading a library can break the "instanceof"
+mechanism. Initially, slist is an instance of basecomponent, because it's a basevaluecomponent,
+which is defined as a direct subclass of basecomponent. You can see this by mousing over the
+button, which prints out the value of "slist instanceof basecomponent". Click the button -
+this loads the library "baseformitem.lzx" dynamically (which, incidentally, statically includes
+basevaluecomponent.lzx, which we already statically included here). Mouse over the button 
+again - you will see that slist is no longer an instance of basecomponent. -->
+
+<basevaluecomponent id="slist">
+</basevaluecomponent>
+
+<button text="Load library" onclick="testlib.load()" 
+  onmouseover="Debug.write( slist instanceof basecomponent)"
+  x="20" y="20">
+</button>
+
+</canvas>

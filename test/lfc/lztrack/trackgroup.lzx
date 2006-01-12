@@ -1,0 +1,109 @@
+<canvas debug="true">
+     <debug y="240"/>
+    <view name="myglobals">
+        <attribute name="unregister" value="false"/>
+    </view>
+    <class name="trackview" bgcolor="${mycolor}"
+        clickable="true"
+        onclick="this.bringToFront()"
+        width="80" height="40">
+        <attribute name="trackgroup" type="string" value="${parent.trackgroup}"/>
+        <attribute name="mycolor" value="0x000099"/>
+        <method event="oninit">
+             debug.write("LzTrack.register(" + this, this.trackgroup + ")");
+             LzTrack.register(this, this.trackgroup);
+        </method>
+        <method event="onmousedown">
+            if (canvas.myglobals.unregister) {
+                debug.write("LzTrack.unregister(" + this.trackgroup, this + ")");
+                 this.setAttribute('mycolor', 0xaa0000);
+                 LzTrack.unregister(this, this.trackgroup);
+            } else {
+                debug.write("LzTrack.activate(" + this.trackgroup + ")");
+                LzTrack.activate(this.trackgroup);
+            }
+        </method>
+        <method event="onmouseup">
+            debug.write("LzTrack.deactivate(" + this.trackgroup + ")");
+            LzTrack.deactivate(this.trackgroup);
+        </method>
+        <method event="onmousetrackover">
+            setAttribute('bgcolor', 0x00dd00);
+            debug.write("onmousetrackover", this);
+        </method>
+        <method event="onmousetrackout">
+            setAttribute('bgcolor', this.mycolor);
+            debug.write("onmousetrackout", this);
+        </method>
+        <method event="onmousetrackup">
+            setAttribute('bgcolor', this.mycolor);
+            debug.write("onmousetrackup", this);
+        </method>
+        <method event="onmouseover">
+            setAttribute('bgcolor', 0x009900);
+        </method>
+        <method event="onmouseout">
+            setAttribute('bgcolor', this.mycolor);
+        </method>
+    </class>
+
+    <view>
+        <attribute name="trackgroup" value="one" type="string"/>
+        <text text="${'group: ' + parent.trackgroup}"/>
+        <trackview id="t1"/>
+        <trackview id="t2"/>
+        <trackview id="t3"/>
+        <trackview id="t4"/>
+        <trackview id="t5"/>
+
+        <view bgcolor="yellow" width="130" height="40"
+            onclick="canvas.myglobals.setAttribute('unregister', !canvas.myglobals.unregister)">
+            <text name="buttonlabel" x="5" y="10"
+                text="${canvas.myglobals.unregister ? 'activate on mousedown' : 'click to unregister'}"/>
+        </view>
+    <simplelayout spacing="10"/>
+    </view>
+
+    <class name="overlappingviews">
+        <attribute name="trackgroup" value="${parent.trackgroup}"  type="string"/>
+        <trackview name="w1" width="100" height="100"/>
+        <trackview name="w2" width="100" height="100"
+            mycolor="0x0000aa" x="20" y="20"/>
+        <trackview name="w3" width="100" height="100"
+            mycolor="0x0000cc" x="40" y="40"/>
+    </class>
+
+    <view>
+        <attribute name="trackgroup" value="two"  type="string"/>
+        <text text="${'group: ' + parent.trackgroup}"/>
+
+        <overlappingviews/>
+        <trackview
+            name="p" width="100" height="100">
+            <trackview
+                name="c" width="50" height="50" x="25" y="25"
+                mycolor="0x0000cc"/>
+        </trackview>
+        <simplelayout spacing="20"/>
+    </view>
+
+    <view>
+        <attribute name="trackgroup" value="three"  type="string"/>
+        <text text="${'group: ' + parent.trackgroup}"/>
+        <trackview name="p1" y="20" width="200" height="200" mycolor="0x9999ff">
+            <overlappingviews />
+        </trackview>
+        <trackview name="p2" width="200" height="200" mycolor="0x9999ff"
+            x="50" y="70">
+            <overlappingviews />
+        </trackview>
+    </view>
+
+    <simplelayout spacing="5" axis="x"/>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

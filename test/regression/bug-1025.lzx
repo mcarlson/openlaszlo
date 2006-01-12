@@ -1,0 +1,55 @@
+<canvas width="800" height="600" bgcolor="#ACC9AC">
+ <resource name="ag" src="../resources/png/alphagrad.png"/>
+ <resource name="tm" src="../resources/png/test_mask.png"/>
+
+   <class name="xdrag" extends="state">
+       <attribute name="x" value="${wbar.bar.getMouse( 'x' )}"/>
+   </class>
+
+ <class name="colorbar">
+   <attribute name="selector" value="0xffffff"/>
+   <attribute name="initval" value="128"/>
+   <view name="bar"
+     height="${parent.height}"
+     width="${parent.width}"
+     resource="ag"
+     stretches="height" clickable="true" onmousedown="parent.slider.dragger.apply();"
+     onmouseup="parent.slider.dragger.remove();"/>
+     
+   <view name="slider"
+     height="${this.parent.height + 4}"
+     y="-2"
+     x="128"
+     width="1"
+     clickable="true"
+     onmousedown="dragger.apply();"
+     onmouseup="dragger.remove();">
+     
+   	   <attribute name="xval" value="Math.min(Math.max(this.x,0),parent.width-1)" when="always"/>
+
+       <attribute name="x" value="${this.xval}"/>
+       <attribute name="bgcolor" value="${parent.selector}"/>
+     <xdrag name="dragger" />
+   </view>
+   </class>
+
+ <colorbar name="wbar" initval="256" selector="0xff0000" height="32" width="256" bgcolor="white" x="200" y="308"/>
+
+ <class name="swatch">
+        <attribute name="bgcolor" value="
+                    (wbar.slider.xval &lt;&lt; 16)|
+                    (wbar.slider.xval &lt;&lt; 8)|
+                    (wbar.slider.xval)"
+         when="always" />
+ </class>
+ 
+<swatch width="32" height="64" x="0"/>
+<swatch width="32" height="64" x="100"/>
+<swatch width="40" height="40" x="200"/>
+
+</canvas> 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

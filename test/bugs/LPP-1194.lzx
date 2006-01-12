@@ -1,0 +1,57 @@
+<canvas>
+
+    <class name="cityLayout" extends="simplelayout" > 
+
+        <collisionDetection name="colDet"
+                            refView="parent"/> 
+
+        <!-- the following will hang the player also -->
+        <!-- collisionDetection name="colDet"
+                            refView="${ parent }" / --> 
+
+
+
+        <method name="addSubview" args="newsub"> 
+            super.addSubview( newsub ); 
+        </method> 
+
+        <method name="update">
+        <![CDATA[ 
+            if ( this.locked ) return; 
+             
+            var l = this.subviews.length; 
+
+            for(var i=0; i < l; i++) { 
+                var currentSubview = this.subviews[i]; 
+                this.colDet.detectCollision( currentSubview ); 
+            } 
+            ]]>
+        </method> 
+    </class>
+
+    <class name="collisionDetection" extends="node"> 
+
+        <attribute name="refView" 
+                   type="expression" 
+                   value="0"
+                   when="always"
+                   /> 
+
+        <method name="detectCollision" args="targetView"> 
+            <![CDATA[
+            debug.write('here a'); 
+            //if I change 'this.refView' to 'canvas', the player does not hang
+            var tx = targetView.getAttributeRelative( 'x', this.refView );   
+            debug.write('here b'); 
+            ]]>
+        </method> 
+    </class> 
+
+
+    <view> 
+        <view/>
+        <cityLayout /> 
+    </view> 
+
+
+</canvas>

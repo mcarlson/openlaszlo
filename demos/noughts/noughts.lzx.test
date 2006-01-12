@@ -1,0 +1,29 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<ol>
+<li>On startup verify that:
+<ul>
+<li>Tic Tac Toe Board is displayed
+</ul></li>
+<li>Play a game where X wins and verify that:
+<ul>
+<li>the message "Player X has won!" is displayed in a fixed modal window
+<li>A red line connects the three winning squares
+<li>clicking the ok button clears the board and the dialog
+</ul></li>
+<li>Play a game where O wins and verify that:
+<ul>
+<li>the message "Player O has won!" is displayed in a fixed modal window
+<li>A red line connects the three winning squares
+<li>clicking the ok button clears the board and the dialog
+</ul></li>
+<li>Play a game where neither wins and verify that:
+<ul>
+<li>the message "Nobody wins." is displayed in a fixed modal window
+<li>no red lines are visible
+<li>clicking the ok button clears the board and the dialog
+</ul></li>
+</ol>

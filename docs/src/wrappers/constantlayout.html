@@ -1,0 +1,60 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head/>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Constantlayout">
+    <lztier>Utility Component</lztier>
+    <lzcategory>layout</lzcategory>
+    <lzshortdesc>
+        Arranges a set of views to a constant 'x' or 'y' value.
+    </lzshortdesc>
+    <lztag>utils/layouts/constantlayout.xml</lztag>
+</lzelement>
+
+<p><classname>constantlayout</classname> extends
+<classname>LzLayout</classname>, and therefore it is responsible for
+arranging all of the subviews for the view that it is attached to. The
+attributes of a view that <classname>constantlayout</classname>
+effects are the <attribute>x</attribute> and <attribute>y</attribute>
+values, and as its name implies <classname>constantlayout</classname>
+sets all of the subviews to the same value.</p>
+
+<example>
+&lt;canvas height="100"&gt;
+  &lt;view bgcolor="red" &gt;
+    &lt;view width="80" height="80" bgcolor="teal"/&gt;       
+    &lt;view width="60" height="60" bgcolor="silver"/&gt; 
+    &lt;view width="40" height="40" bgcolor="green"/&gt;           
+    &lt;constantlayout <em>axis="x"</em> value="10"/&gt;
+  &lt;/view &gt;
+&lt;/canvas&gt;
+</example>
+
+<p>In this example the teal, silver and green views are aligned on the
+horizontal (x) axis; the layout element's value attribute (10) causes
+the subviews to be shifted ten pixels to the right.</p>
+
+<example>
+&lt;canvas height="100" &gt;
+  &lt;view bgcolor="red" &gt;
+    &lt;view width="80" height="80" bgcolor="teal"/&gt;       
+    &lt;view width="60" height="60" bgcolor="silver"/&gt; 
+    &lt;view width="40" height="40" bgcolor="green"/&gt;           
+    &lt;constantlayout <em>axis="y"</em> value="10"/&gt;
+  &lt;/view &gt;
+&lt;/canvas&gt;
+</example>
+
+<p>In this example the teal, silver and green views are aligned on the
+vertical (x) axis; the layout element's value attribute (10) causes
+the subviews to be shifted ten pixels down. </p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

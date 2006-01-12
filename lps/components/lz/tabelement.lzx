@@ -1,0 +1,163 @@
+<library>
+    <include href="utils/layouts/resizelayout.lzx" />
+    <include href="../base/basebutton.lzx" />
+    <include href="../base/basetabelement.lzx" />
+
+    <!--- Tabelement button resource. -->
+    <resource name="tabrsrc" >
+        <frame src="resources/tabslider/tab_slider_up.swf" />
+        <frame src="resources/tabslider/tab_slider_mo.swf" />
+        <frame src="resources/tabslider/tab_slider_dn.swf" />
+    </resource>
+
+    <!--- Tabelement shadow resource. -->
+    <resource name="tabshadow"  src="resources/tabslider/tab_element_shdw.swf" />
+
+    <!-- Tabelements are children of tabslider. They have a header and a content
+         region. If additional art (like icons) need to be contained in the
+         header region, then simply add placement='header' to any view and
+         adjust the text_x attribute of tabelement to shift the text over. -->
+    <class name="tabelement" extends="basetabelement" styleable="true">
+        <!--- Default placement for views placed in tabelement is 'content'. -->
+        <attribute name="defaultplacement" value="content" type="string"/>
+
+        <!--- The top inset for content appearing within a tabelement. Default
+              is the containing tabslider's inset_top value. -->
+        <attribute name="inset_top" value="${parent.inset_top}"/>
+        <!--- The right inset for content appearing within a tabelement. Default
+              is the containing tabslider's inset_right value. -->
+        <attribute name="inset_right" value="${parent.inset_right}"/>
+        <!--- The bottom inset for content appearing within a tabelement. Default
+              is the containing tabslider's inset_bottom value. -->
+        <attribute name="inset_bottom" value="${parent.inset_bottom}"/>
+        <!--- The left inset for content appearing within a tabelement. Default
+              is the containing tabslider's inset_left value. -->
+        <attribute name="inset_left" value="${parent.inset_left}"/>
+
+        <!--- The x position of the text field in the header area. Default is
+              4. -->
+        <attribute name="text_x" value="4"/>
+
+        <!--- The y position of the text field in the header area. Default is centered. -->
+        <attribute name="text_y"
+            value="${this.top.header.height/2 - this.top.header.txt.height/2}"/>
+
+        <!--- The height of the shadow. Default is 4. -->
+        <attribute name="shadowheight" value="4"/>
+
+        <!--- Boolean to set the shadow of this tabelement. Default is true. -->
+        <attribute name="shadowvisible" value="true"/>
+
+        <!--- This is not being used.
+              @keywords private -->
+        <attribute name="contentopacity" value="0.5"/>
+
+        <!--- The offset to shift header contents when the mouse is down.
+              @keywords private -->
+        <attribute name="_mdoffset" value="2"/>
+
+        <!--- The background color for the tabelement. -->
+        <attribute name="bgcolor" setter="this._setBGColor( bgcolor );" />
+
+        <!--- @keywords private -->
+        <attribute name="_bgcolor"  value="null" />
+        <!--- Insets the header art on the x-axis. Default is 0. -->
+        <attribute name="headerpadding"   value="0" />
+
+        <view name="top" width="100%" height="${parent.headerheight}"
+              oninit="this.bringToFront()" >
+            <basebutton name="bkgnd" resource="tabrsrc" styleable="true"
+                x="${classroot.headerpadding}"
+                width="${parent.width - 2*classroot.headerpadding}" 
+                height="100%" stretches="both" >
+                <method event="onmousedown">
+                    classroot.container.shdw.setVisible(false);
+
+                    parent.header.setY(classroot._mdoffset);
+                </method>
+                <method event="onmouseup">
+                    classroot.container.shdw.setVisible(classroot.shadowvisible);
+                    parent.header.setY(0);
+               </method>
+               <method event="onclick">
+                   classroot.parent.openTab(classroot,true);
+                   LzFocus.setFocus( this.classroot , false );
+               </method>
+            </basebutton>
+            <view name="header" width="100%" height="100%" >
+                <text name="txt"
+                      x="${classroot.text_x}"
+                      y="${classroot.text_y}"
+                      text="${classroot.text}" resize="true"/>
+            </view>
+        </view>
+        <view name="container" options="releasetolayout"
+              width="100%" >           <!-- height="20" -->
+            <!-- swatchview -->
+            <view name="content"
+                  x="${classroot.inset_left}"
+                  y="${classroot.inset_top}" 
+                  width="${ Math.max(parent.width - classroot.inset_left - classroot.inset_right, 0 ) }" 
+                  height="${ Math.max(parent.height - classroot.inset_top - classroot.inset_bottom, 0) }" 
+                  clip="true" visible="${classroot.contentvisible}"/>
+            <view name="shdw"
+                  resource="tabshadow"
+                  stretches="both"
+                  width="100%"
+                  height="$once{classroot.shadowheight}"
+                  visible="$once{classroot.shadowvisible}"
+                  opacity=".3"/>
+        </view>
+        <resizelayout axis="y"/>
+
+        <!--- Overrides baselistitem's setHilite.
+              @param boolean dohilite: true if you want to hilite-->
+        <method name="setHilite" args="dohilite">
+            top.header.txt.setAttribute('fgcolor',
+                dohilite ? style.texthilitecolor : style.textcolor);
+            if (dohilite)
+                 top.bkgnd.onmouseover.sendEvent(top.bkgnd);
+            else
+                 top.bkgnd.onmouseout.sendEvent(top.bkgnd);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                super._applystyle(s);
+                this.top.header.txt.setAttribute("fgcolor", s.textcolor);
+                if (this._bgcolor == null) {
+                    this.container.setAttribute("bgcolor", s.bgcolor);
+                } else {
+                    this.container.setAttribute("bgcolor", this._bgcolor);
+                }
+                this.top.setBGColor(s.bordercolor);
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setBGColor" args="color">
+            this._bgcolor = color;
+            if (_initcomplete) {
+                this.container.setAttribute("bgcolor", color );
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="doSpaceDown">
+            this.top.bkgnd.doSpaceDown();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="doSpaceUp">
+            this.top.bkgnd.doSpaceUp();
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

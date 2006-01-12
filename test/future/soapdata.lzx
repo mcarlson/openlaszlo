@@ -1,0 +1,94 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- soapdata.lzx                                                          -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="800" height="600" debug="true">
+    <include href="redmond"/>
+    <splash/>
+
+    <dataset name="searchdata" type="soap" src="http://api.google.com/search/beta2" namespace="urn:GoogleSearch" method="doGoogleSearch"/>
+
+    <resource name="icon">
+	    <frame src="resources/jpg/logo.jpg" />
+        <frame src="resources/swf/logo.swf" />
+    </resource>
+
+    <class name="link" extends="text" fgcolor="blue" clickable="true" onmouseup="LzBrowser.loadURL(getText(), '_new')"/>
+
+    <class name="searchresult" extends="view"  height="40" bgcolor="#ffffff" oninit="setColor()">
+        <text y="8" height="14" name="snippet" width="640" datapath="snippet/text()"/>
+        <link height="14" name="url" width="640" datapath="URL/text()"/>
+        <method name="setColor">
+            if (datapath.getNodeOffset() % 2 == 1) {
+                setProp("bgcolor", 16777164);
+            }
+        </method>
+        <simplelayout axis="y" spacing="4"/>
+    </class>
+
+    <window id="resultwin" visible="false" closeable="true" resizable="true" y="100" width="500" height="300" options="lazyreplication;">
+        <view x="4" name="content" datapath="searchdata:/return[1]">
+            <searchresult datapath="resultElements[1]/item"/>
+            <simplelayout axis="y" spacing="4"/>
+        </view>
+        <scrollbar axis="y"/>
+    </window>
+    
+    <view name="dataTest">
+        <windowtext id="search" width="400">Laszlo Systems</windowtext>
+        <view>
+            <text>Loading...</text>
+            <view id="mover" clickable="true" onmouseup="parent.parent.data.run();" resource="icon" />
+        </view>
+        <simplelayout axis="x" spacing="4"/>
+
+        <datapointer name="data" xpath="searchdata:/" ondata="processData();" 
+                     onerror="showError();" ontimeout="showError();">
+    
+            <!-- When data is recieved from the datasource, do this -->
+            <method name="processData">
+                Debug.write("Load time: " + getDataset().getLoadTime());
+                Debug.write("Load counter: " + getDataset().getLoadCount());
+                resultwin.setTitle(getXPath("/return[1]/resultElements[1]/item[1]/title[1]/text()") );
+                if (resultwin.visible == false ){
+                    resultwin.setVisible( true );
+                    resultwin.bringToFront();
+                }
+                mover.stop(2);
+            </method>
+
+            <method name="showError">
+                Debug.write("Load time: " + getDataset().getLoadTime());
+                Debug.write("Load counter: " + getDataset().getLoadCount());
+                Debug.write("Error: " + getDataset().getErrorString());
+                Debug.write(serialize());
+                mover.stop(2);
+            </method>
+    
+            <method name="run">
+                var q = search.getText()
+                Debug.write("Running query: " + q);
+                var ds = getDataset();
+                ds.setRequest({key:"jPowhZxXe1nLbx+khbeLJ4R3vWw4N6Rb", q:q, start:1, maxResults:10, filter:false, restrict:"false", safeSearch:false, lr:"", ie:"", oe:""});
+                ds.doCall();
+                if (resultwin.visible == true ){
+                    resultwin.setVisible( false );
+                }
+                mover.play();
+            </method>
+        </datapointer>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

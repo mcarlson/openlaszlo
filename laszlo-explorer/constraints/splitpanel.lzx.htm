@@ -1,0 +1,27 @@
+<b>Notes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for more details&nbsp;</b>
+<a href="../docs/reference/index.html?state.html" target="laszlo-reference">state</a>
+<hr>
+
+The <font class=tag>&lt;state&gt;</font> tag allows you to declaratively describe a specific state of your application that you can selectively apply or remove at runtime using the <font class=script>apply()</font> and <font class=script>remove()</font> methods.<br>
+
+<br>
+
+In this example, when the user moves the divider between the two panels, the <font class=attribute>x</font> coordinate of the divider has to "follow" the position of the mouse: in the dragging state, the <font class=attribute>x</font> coordinate of the divider is constrained to the x coordinate of the mouse. The dragging state is <i>applied</i> in the <font class=attribute>onmousedown</font> event handler of the divider view, and <i>removed</i> in the <font class=attribute>onmouseup</font> event handler.<br>
+
+<br>
+
+Notice the other constraints used in this example:<br>
+
+<table>
+
+<tr valign=top><td><li></td><td>The <font class=attribute>width</font> of the left view is constrained to the <font class=attribute>x attribute of the divider</td></tr>
+
+<tr valign=top><td><li></td><td>The <font class=attribute>x</font> attribute of the right view is constrained to the <font class=attribute>x</font> attribute of the divider plus its <font class=attribute>width</font></td></tr>
+
+<tr valign=top><td><li></td><td>The <font class=attribute>width</font> of the right view is constrained to the <font class=attribute>width</font> of the parent (the canvas), minus the <font class=attribute>x</font> attribute of the right view itself</td></tr>
+
+</table>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

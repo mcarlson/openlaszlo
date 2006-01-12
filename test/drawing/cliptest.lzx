@@ -1,0 +1,81 @@
+<canvas>
+
+<class name="photo" extends="drawview" stretches="both">
+  <attribute name="rwidth" type="number"/> 
+  <attribute name="rheight" type="number"/> 
+  <attribute name="image" type="string"/>
+  <attribute name="isMax" value="false"/>
+  <attribute name="position" type="number" />
+  <attribute name="imageClip" value="false" />
+  <method event="onwidth">
+	redraw();
+  </method>
+   <method event="onheight">
+	redraw();
+  </method>
+ <method event="oninit">
+     //this.setSource(this.image);
+  </method>
+    <method name="redraw">
+        this.clear();
+        this.beginPath();
+        this.clearMask();
+
+      this.moveTo(11,0);
+      // top right
+      this.lineTo(this.width-11,0);
+      this.quadraticCurveTo(this.width,0,this.width,11);
+      
+      // bot right 
+      this.lineTo(this.width,this.height-11);
+      this.quadraticCurveTo(this.width,this.height,this.width-11,this.height);
+      
+      // bot left 
+      this.lineTo(11,this.height);
+      this.quadraticCurveTo(0,this.height,0,this.height-11);
+      
+      // top left
+      this.lineTo(0,11);
+      this.quadraticCurveTo(0,0,11,0);
+      this.closePath();
+
+      if (this.imageClip){
+        this.fillStyle = 0x000000;
+        this.fill();
+        this.clip();
+      } else {
+        this.strokeStyle = 0xFF00FF;
+        this.lineWidth = 1;
+        this.stroke(); 
+      }
+      
+    </method>
+    <animatorgroup process="sequential" repeat="infinity">
+      <animatorgroup name="min" duration="500" process="simultaneous">
+        <animator attribute="width" to="64"/>
+        <animator attribute="height" to="$once{(classroot.rheight)/(classroot.rwidth/64)}"/>
+        <animator attribute="x" to="0"/>
+        <animator attribute="y" to="0"/>
+      </animatorgroup>
+      <animatorgroup name="max" duration="500" process="simultaneous">
+        <animator attribute="width" to="$once{classroot.rwidth}"/>
+        <animator attribute="height" to="$once{classroot.rheight}"/>
+        <animator attribute="x" to="50"/>
+        <animator attribute="y" to="50"/>
+      </animatorgroup>
+    </animatorgroup>
+
+</class>
+
+<photo position="1" name="tester" image="http:../resources/jpg/k8s.jpg" rwidth="397" rheight="220" />
+<view layout="axis:x;" y="${canvas.height - this.height}">
+<!-- <button>Toggle Image</button> 
+<button>Toggle bgcolor</button>
+-->
+<button onclick="canvas.tester.setAttribute('imageClip',!canvas.tester.imageClip);" >Toggle clip</button>
+<!--
+<button>Toggle fill</button>
+<button>Toggle hairline</button>
+ -->
+</view>
+</canvas>

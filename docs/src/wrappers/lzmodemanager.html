@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="../lps/includes/styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzModeManager">
+    <lztier>Service</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        Controls pass-through of mouse events.
+    </lzshortdesc>
+    <lzapi>api-lzmodemanager.xml</lzapi>
+    <seealso>mode example</seealso>
+</lzelement>
+<p>
+The mode manager controls the dispatch of mouse events to the rest 
+of the system. The mode manager keeps a stack of modal views. When a 
+view is made <i>modal</i> (with the 
+call <a href="#meth-makeModal">LzModeManager.makeModal()</a>) only it and 
+its children receive mouse events. </p>
+<p>
+In the example below, the window grabs the mode when it is opened and releases it when it is closed. Note that the button no longer responds to mouse examplesses after the window is made modal, but the children of the window (such as the close button and the drag bar) still do. For a more detailed example of using modes with Laslzo, see 
+<a href="${examples}modeexample.lzx">modeexample.lzx</a> in the examples 
+directory.
+</p>
+
+<example title="Using the mode manager to make a window behave like a modal dialog">
+&lt;canvas height="160"&gt;
+  &lt;button name="b1" onclick="winDia.openWindow()"&gt;Show modal dialog&lt;/button&gt;
+  &lt;window width="200" name="winDia" closeable="true" visible="false"
+          x="150" title="modal dialog"&gt;
+    &lt;method name="openWindow"&gt;
+      this.open();
+      LzModeManager.makeModal(this);
+    &lt;/method&gt;
+    &lt;method name="close"&gt;
+      LzModeManager.release(this);
+      super.close();
+    &lt;/method&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt; 
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

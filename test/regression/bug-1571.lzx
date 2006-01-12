@@ -1,0 +1,21 @@
+<canvas>
+	<include href="redmond"/>
+
+    <checkbox label="move guy" width="10" height="${width}">
+        <method event="onclick">
+            if ( this.amchecked ) moveIt.apply();
+            else moveIt.remove();
+        </method>
+        
+        <state name="moveIt"> 
+            <method event="onidle" reference="LzIdle">
+                this.setX( this.x+1 );
+            </method>
+        </state>
+    </checkbox>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

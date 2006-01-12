@@ -1,0 +1,79 @@
+<canvas>
+  <!-- global card resources: 73x97 gif-->
+  <resource name="two_c" src="../resources/gif/2c.gif"/>
+  <resource name="three_c" src="../resources/gif/3c.gif"/>
+
+  <class width="73" height="97" name="card"  resource="../resources/gif/h.gif" extends="view" onclick="holdme();">
+    <attribute name="index"/>
+    <method name="holdme">
+      if (hand[index] == 0){
+        hand[index]=deck[index];
+        animate("y",100,250);
+      }
+      else {
+        hand[index]=0;
+        animate("y",80,250);
+      }
+    </method>
+    <method name="showme" args="val">
+      this.setResource(cardlookup(deck[val]));
+       this.setClickable();
+    </method>
+  </class>
+
+  <!-- Old style card class, uses remote resources -->
+  <class width="73" height="97" name="ocard" resource="../resources/gif/h.gif" extends="view" onclick="holdme();">
+    <attribute name="index"/>
+    <method name="holdme">
+      if (hand[index] == 0){
+        hand[index]=deck[index];
+        animate("y",100,250);
+      }
+      else {
+        hand[index]=0;
+        animate("y",80,250);
+      }
+    </method>
+    <method name="showme" args="val">
+      this.setSource(ocardlookup(deck[val]));
+       this.setClickable();
+    </method>
+  </class>
+  <!-- Methods: -->
+  <script>
+    var deck = [2,3];
+    var hand = [0,0,0,0];
+
+    function cardlookup(card){
+      switch (card){
+        case 2 : return "two_c";
+        case 3 : return "three_c";
+      }
+    }
+    function ocardlookup(card){
+      switch (card){
+        case 2 : return "../resources/gif/2c.gif";
+        case 3 : return "../resources/gif/3c.gif";
+      }
+    }
+  </script>
+
+  <view	oninit="startHand();">
+
+    <method name="startHand">
+      this.card1.showme(0);
+      this.card2.showme(1);
+      this.ocard1.showme(0);
+      this.ocard2.showme(1);
+    </method>
+
+    <card name="card1" x="0" y="80" index="0"/>
+    <card name="card2" x="75" y="80" index="1"/>
+    <ocard name="ocard1" x="150" y="80" index="2"/>
+    <ocard name="ocard2" x="225" y="80" index="3"/>
+  </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

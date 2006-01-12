@@ -1,0 +1,74 @@
+<vcalendar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year2003>
+       <month6>
+             <day2>
+                <event>
+                   <summary value="Project Review"/>
+                   <comment value="Discuss Agenda for next project."/>
+                   <start year="2003" month="6" day="2" hour="10"/>
+                   <end year="2003" month="6" day="2" hour="12"/>
+                </event>
+                <event>
+                   <summary value="Online Conference"/>
+                   <comment value="Demostrate Laszlo to new customers"/>
+                   <start year="2003" month="6" day="2" hour="3"/>
+                   <end year="2003" month="6" day="2" hour="4"/>
+                </event>
+            </day2>
+            <day12>
+                <event>
+                   <summary value="Company Meeting"/>
+                   <comment value="Discuss Agenda for next project."/>
+                   <start year="2003" month="6" day="12" hour="10"/>
+                   <end year="2003" month="6" day="12" hour="12"/>
+                </event>
+                <event>
+                   <summary value="Product Demo"/>
+                   <comment value="Demostrate Laszlo to new customers"/>
+                   <start year="2003" month="6" day="12" hour="2"/>
+                   <end year="2003" month="6" day="12" hour="5"/>
+                </event>
+            </day12>
+            <day14>
+                <event>
+                   <summary value="Flag Day"/>
+                   <comment value="Flag Day"/>
+                   <start year="2003" month="6" day="14" hour="10"/>
+                   <end year="2003" month="6" day="14" hour="12"/>
+                   <category value="holiday"/>
+                </event>
+            </day14>
+            <day15>
+                <event>
+                   <summary value="Father's Day"/>
+                   <comment value="Father's Day"/>
+                   <start year="2003" month="6" day="15" hour="10"/>
+                   <end year="2003" month="6" day="15" hour="12"/>
+                   <category value="holiday"/>
+                </event>
+            </day15>
+            <day21>
+                <event>
+                   <summary value="Summer Solstice"/>
+                   <comment value="Summer Solstice"/>
+                   <start year="2003" month="6" day="21" hour="10"/>
+                   <end year="2003" month="6" day="21" hour="12"/>
+                   <category value="astro"/>
+                </event>
+            </day21>
+            <day24>
+                <event>
+                   <summary value="St. Jean-Baptiste Day"/>
+                   <comment value="St. Jean-Baptiste Day"/>
+                   <start year="2003" month="6" day="24" hour="10"/>
+                   <end year="2003" month="6" day="24" hour="12"/>
+                   <category value="holiday"/>
+                </event>
+            </day24>
+        </month6>
+    </year2003>
+</vcalendar>

@@ -1,0 +1,140 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="survey-chapter">
+<head>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>A Component-based application</title>
+</head>
+
+<body>
+
+<!-- Put Chapter title in h1 -->
+<h1>A Components-based application</h1>
+
+<p>Laszlo components are high level objects that implement common user-interface functions. 
+They range from relatively simple objects like <tagname link="true">button</tagname> to complex objects
+like <tagname link="true">form</tagname> and <tagname link="true">grid</tagname>.
+</p>
+<p>
+Sources for LZ components are <a href="../../lps/components">here.</a>
+</p>
+
+<p>
+This chapter is a tutorial explains how
+components are used to create a simple survey tool.
+</p>
+
+<!--=========================================================================-->
+<!-- Major sub-heads in h2, etc                                                               -->
+<!--=========================================================================-->
+<h2>Overview</h2>
+<p>
+The following short tutorial shows how the <a href="../demos/vacation-survey">vacation survey </a>application works.  In this tutorial we show how various components
+such as <tagname>radiobuttons</tagname> and <tagname>radiogroup</tagname>s nest inside the <tagname>form</tagname> component, and how these and other components can be bound to data to collect
+and display survey results.
+</p>
+<p>
+Please note that the methodology that we're using to explain how this application is constructed is not necessarily the best way to
+go about builing an application. It's simply a way of explaining how the application works from the inside out.
+</p>
+<h2>Building a Survey Tool</h2>
+
+<h3>Starting with a radiogroup</h3>
+<p>
+We begin constructing the questionaire at the heart of the survey:
+</p>
+<example title="Survey Toolradiogroup">
+&lt;canvas height="200" &gt;
+        &lt;view&gt;
+          
+                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
+                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
+                &lt;/radiogroup&gt;
+                
+    
+        &lt;/view&gt;
+&lt;/canvas&gt;
+
+</example>
+<h3>Putting components inside a &lt;form&gt;</h3>
+<p>
+As discussed above, the <tagname link="true">form</tagname> element provides a structure for grouping various related components. 
+By handling layout and common funtions, <tagname>form</tagname> allows you to concentrate on behavior. In the code below, we've
+added a button and associated it with the form's <method>submit</method>.
+</p>
+<example title="Survey Tool&#8212;Simple Form">
+&lt;canvas height="200" &gt;
+        &lt;view&gt;
+          <em>  &lt;form name="myform" bgcolor="#c0c0c0" spacing="33"&gt;</em>
+                &lt;submit id="surveysubmit" /&gt;
+ 
+                &lt;view height="20"&gt;
+                    &lt;text&gt;What is your favorite vacation spot?&lt;/text&gt;
+                &lt;/view&gt; 
+                &lt;radiogroup x="20" layout="class: simplelayout; axis: y; spacing:6" name="vote"&gt;
+                    &lt;radiobutton value="'hawaii'" selected="true"&gt;Hawaii&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'paris'"&gt;Paris&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'jamaica'"&gt;Jamaica&lt;/radiobutton&gt;
+                    &lt;radiobutton value="'trenton'"&gt;Trenton&lt;/radiobutton&gt;
+                &lt;/radiogroup&gt;
+              <em>  &lt;button isdefault="true"&gt;Vote
+                    &lt;method event="onclick"&gt;
+                        surveysubmit.submit();
+                    &lt;/method&gt;
+                &lt;/button&gt;
+            &lt;/form&gt;</em>
+        &lt;/view&gt;
+&lt;/canvas&gt;
+
+</example>
+<h3>The Data Model</h3>
+<p>
+As we've seen above, the <method>submit</method> on the form causes user responses to be recorded.
+<fixme>
+More explanation. Say what the jsp does.
+</fixme>
+</p>
+<example extract="false" title="data model">
+    &lt;dataset name="surveydataset" type="http" src="http:survey.jsp"/&gt;
+
+    &lt;node id="resultdata"&gt;
+        &lt;attribute name="hawaii" value="$path{'surveydataset:/response/summary/option[1]/text()'}"/&gt;
+        &lt;attribute name="paris" value="$path{'surveydataset:/response/summary/option[2]/text()'}"/&gt;
+        &lt;attribute name="jamaica" value="$path{'surveydataset:/response/summary/option[3]/text()'}"/&gt;
+        &lt;attribute name="total" value="$path{'surveydataset:/response/summary/@total'}"/&gt;
+        &lt;attribute name="vote" value="$path{'surveydataset:/response/vote/text()'}"/&gt;
+    &lt;/node&gt;
+</example>
+<h4>Associating the form with its dataset</h4>
+<p>
+Note the <tagname link="true">submit</tagname> tag in the example (just below the <tagname>form</tagname> tag.)
+</p>
+<pre><code>
+                &lt;submit id="surveysubmit" data="${surveydataset}"/&gt;
+</code>
+</pre>
+<p>
+The function of this tag is to associate the form with the dataset.  Later, when the <method>submit()</method> is invoked,
+the data will be sent to the server.
+</p>
+<h3>Extending the &lt;alert&gt; component</h3>
+<p>
+As explained above, sometimes you can create your own new component by subclassing, or "extending" an existing component.  Here
+the <tagname link="true">alert</tagname> class is extended to create a new component called "myalert".  It is trivially different
+from the default <tagname>alert</tagname>; its only difference is that it centers nicely over the survey box.
+</p>
+<example extract="false" title="extending a component">
+    &lt;class extends="alert" name="myalert" x="${Math.max(survey.width - this.width, 0)/2}" y="${Math.max(survey.height - this.height, 0)/3}"&gt;
+    &lt;/class&gt;
+</example>
+<fixme>
+The remainder of this chapter shows the construction of the survey tool.
+</fixme>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

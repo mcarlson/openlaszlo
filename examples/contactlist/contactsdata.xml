@@ -1,0 +1,24 @@
+<resultset >
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<result id="154" firstname="Chep" displayname="Sinbad" nickname="Yo" email="chep@arwins.com" home_default="0" work_default="0" work_address="565 Laurel Canyon" work_webpage="http://www.laszlosystems.com/" />
+<result id="146" firstname="Yahoo" middlename="Laszlo" lastname="Really" title="Mr." displayname="Really, Yahoo Laszlo" work_address="5443 East 56th Street" nickname="Serious" email="yah@sirius.com" home_default="1" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="149" firstname="Antun" lastname="Karlovac" displayname="Antun Karlovac" email="antun@antunkarlovac.com" work_address="2321 Russell St #3G" home_city="Berkeley" home_state="CA" home_zip="94705" home_country="USA" home_default="0" home_webpage="http://www.antunkarlovac.com" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="16" firstname="Bret" lastname="Simister" displayname="Bret Simister" email="bsimister@foo.com" home_default="1" work_address="1 Boynton Ct." home_phone="415-555-1212" home_mobile="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="140" firstname="Goober" middlename="H" lastname="Bloober" title="Mr" displayname="Bloober, Goober H" work_address="10 Palm Avenue" email="goober@superduper.com" home_default="1" work_city="foo city" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="18" firstname="Caprice" lastname="Briggs" displayname="Caprice Briggs" work_address="451 Zanzibar Court" email="caprice@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="19" firstname="Charles" lastname="Ember" displayname="Charles Emory" work_address="555 5th street #1204" email="charlesemory@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="20" firstname="Cheryl" lastname="Erickson" displayname="Cheryl Erickson" work_address="991 Creed Road" email="chericks@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="21" firstname="Chris" lastname="Kimm" displayname="Kimm Chris" work_address="1233 Sallen Drive" email="ckimm@foo.com;mikc@oof.moc" home_default="1" home_phone="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="22" firstname="Christopher" lastname="Stewart" displayname="Stewart Christopher" work_address="40 Simister Boulevard" email="docstu@foo.edu" home_default="1" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="23" firstname="Colleen" lastname="Forbes" displayname="Colleen Forbes" work_address="13 Rucker Road" email="colfor@foo.com" home_default="0" home_phone="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="24" firstname="John" middlename="Doe" lastname="Smith" title="Mr" displayname="Copy" work_address="819 Andrea Avenue" email="nancy@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="27" firstname="Dan" lastname="Lewis" displayname="Dan Lewis" work_address="744 Fritsch Strasse" email="dlewis@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="28" firstname="Dan" lastname="Rokhsar" displayname="Dan Rokhsar" work_address="2211 Dejoie Alley" email="dsrokhsar@foo.gov" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="29" firstname="Daniel" lastname="Roth" displayname="Daniel Roth" work_address="256 Temkin Lane" email="droth@somewhere.com" home_default="0" work_default="0" work_office="415-555-1212" work_webpage="http://www.laszlosystems.com/" />
+<result id="30" firstname="David" lastname="Dorosin" displayname="David Dorosin" work_address="4113 Grig Street" mail="ddorosin@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="31" firstname="David Pruskin" displayname="David Pruskin" work_address="6565 Nabakov Way" email="thabo_lephutha@foo.com" home_default="0" home_phone="(207) 555-1219" work_city="Durham" work_state="Ma" work_zip="04555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="32" firstname="David" lastname="Temkin" displayname="David Temkin" work_address="33 Formation Way" email="temkin@foo. 201" home_address="San francisco" home_default="1" home_phone="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+</resultset>

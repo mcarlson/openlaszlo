@@ -1,0 +1,138 @@
+<canvas debug="true">
+  <!-- Debugger parameters, if invoked with debug=true -->
+  <debug height="50%" y="50%" width="100%" x="0"/>
+
+  <include href="lzunit" />
+  <include href="compiler.lzl" />
+  <include href="lzunit-test.lzl" />
+  <include href="debugger.lzl" />
+  <include href="all_setters.lzl" />
+  <include href="getters-setters.lzl" />
+  <include href="bitwise.lzl" />
+  <include href="math.lzl" />
+  <include href="canvas-attributes.lzl"/>
+  <include href="constraint.lzl"/>
+  <include href="data.lzl"/>
+  <include href="ecma.lzl"/>
+  <include href="regression.lzl"/>
+  <include href="lztext.lzl"/>
+
+  <TestSuite>
+    <TestCompiler />
+    <!-- LZUnit Tests: verify it is working first -->
+    <Tautologies /> 
+    <JavaScriptSemantics />
+    <ActionScriptSemantics />
+    <IntentionalFailures />
+    <IntentionalErrors />
+    <!-- end of LZUnit Tests -->
+
+    <TestDebugger />
+
+    <!-- math function tests math.lzl -->
+    <TestMath />
+
+    <!-- All bitwise operators checked -->
+    <BitwiseTest />
+
+    <!-- Checking constraints -->
+    <ConstraintTest />
+
+    <!-- Canvas Attributes -->
+    <CanvasAttrsTest/>
+
+    <!-- view setter function tests all_setters.lzl -->
+    <ViewTest />
+
+    <!-- test text APIs -->
+    <LzTextTest />
+
+    <!-- text setter function tests all_setters.lzl -->
+    <ATextTest />
+
+    <GetterTest />
+    <SetterTest />
+    <GSViewTest />
+
+    <ViewTest />
+
+    <!-- a couple of data tests are in here -->
+    <TestData />
+
+    <!-- Funny ecma cases to look at: -->
+    <TestSwitch />
+    
+    <!-- regression tests -->     
+    <bug_178/>
+    <bug_179/>
+    <bug_293/>
+    <bug_320/>
+    <bug_332/>
+    <bug_366/>
+    <bug_368/>
+    <bug_440/>
+    <bug_511/>
+    <bug_535/>
+    <bug_553/>
+    <bug_557/>
+    <bug_577/>
+    <bug_623/>
+    <bug_663/>
+    <bug_733/>
+    <!-- 739 can't run in this suite, look for delay.lzx in this dir -->
+    <!-- <bug_739/> -->
+    <bug_748/>
+    <bug_950/>
+    <bug_967/>
+    <bug_1000/>
+    <bug_1032/>
+    <bug_1046/>
+    <bug_1062/>
+    <bug_1134/>
+    <bug_1254/>
+    <bug_1267/>
+    <bug_1304/>
+    <bug_1314/>
+    <bug_1315/>
+    <bug_1374/>
+    <bug_1383/>
+    <!-- <bug_1415/> -->
+    <bug_1484/>
+    <bug_1485/>
+    <bug_1553/>
+    <bug_1653/>
+    <bug_1660/>
+    <bug_1664/>
+    <bug_1666/>
+    <bug_1672/>
+    <bug_1702/>
+    <bug_1718/>
+    <bug_1723/>
+    <bug_1767/>
+    <bug_1809/>
+    <bug_1843/>
+    <bug_1897/>
+    <bug_1899/>
+    <bug_2029/>
+    <bug_2113/>
+    <bug_2125/>
+    <bug_2131/>
+    <bug_2223/>
+    <bug_2225/>
+    <bug_2239/>
+    <bug_2263/>
+    <bug_3005/>
+    <bug_3036/>
+    <bug_3069/>
+    <bug_3071/>
+    <bug_3285/>
+    <bug_3435/>
+    <bug_3452/>
+    <bug_3474/>
+  </TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,99 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Simplelayout">
+    <lztier>Utility Component</lztier>
+    <lzcategory>layout</lzcategory>
+    <lzshortdesc>
+        A quick layout for arranging siblings vertically or horizontally.
+    </lzshortdesc>
+    <lztag>utils/layouts/simplelayout.xml</lztag>
+</lzelement>
+
+<p><classname>simplelayout</classname> extends
+<classname>LzLayout</classname>, and therefore it is responsible for
+arranging all of the subviews for the view that it is attached to. The
+attributes of a view that <classname>simplelayout</classname> effects
+are the <attribute>x</attribute> and <attribute>y</attribute>
+values. <classname>simplelayout</classname> places the first subview
+at (0, 0) and then places each subsequent subview based on the width
+(or height) of the previous subview, depending on which axis was
+specified.</p>
+
+<p>The following example illustrates the use of
+<classname>simplelayout</classname>.</p>
+
+<example>
+&lt;canvas height="60"&gt;
+  &lt;view &gt;
+    &lt;simplelayout axis="x" spacing="10"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<img src="images/simplelayout/simplelayout1.jpg" width="170" height="29" />
+-->
+
+<p>More than one layout can be applied to a view as long as the
+attributes are controlled by only one layout. This next example
+demonstrates this feature.</p>
+
+<example>
+&lt;canvas height="120"&gt;
+  &lt;view &gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;simplelayout axis="x" spacing="0"/&gt;
+    &lt;simplelayout axis="y" spacing="0"/&gt;
+  &lt;/view &gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<img src="images/simplelayout/simplelayout2.jpg" width="150" height="90" />
+-->
+
+<p>Finally, like all layouts, when an attribute of a subview changes
+its value and that new value effects the overall layout, then the
+layout object will update automatically. This is shown in the next
+example.</p>
+
+<example>
+&lt;canvas height="65"&gt;
+  &lt;view&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" width="50"
+          onclick="this.animate('width', 100, 500, true)"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;simplelayout axis="x" spacing="10"/&gt;
+  &lt;/view&gt;
+  &lt;view &gt;
+    &lt;text&gt;Click on the red rectangle. Layout is conserved as its size changes.&lt;/text&gt;
+  &lt;/view&gt;
+  &lt;simplelayout axis="y" spacing="15"/&gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<p>
+
+BEFORE</p>
+<img src="images/simplelayout/simplelayout1.jpg" width="170" height="29" />
+
+<p>
+AFTER</p>
+<img src="images/simplelayout/simplelayout3.jpg" width="220" height="29" />
+-->
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

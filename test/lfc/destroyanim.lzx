@@ -1,0 +1,14 @@
+<canvas>
+    
+    <view x="200" width="20" height="20" name="guy" bgcolor="teal">
+        <animatorgroup repeat="Infinity" motion="linear" duration="1000">
+            <animator attribute="x" to="100" from="0" />
+            <animator id="pokeme" attribute="y" to="100" from="0" />
+        </animatorgroup>
+    </view>
+    <button y="50" onclick="pokeme.destroy()"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

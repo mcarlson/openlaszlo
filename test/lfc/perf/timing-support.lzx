@@ -1,0 +1,179 @@
+<library>
+    <include href="timing-classes.lzx"/>
+
+    <script>
+    // Support for timing code fragments
+
+    //---
+    // Default number of iterations
+    //---
+    var defaultIterations = 5;
+    var defaultPrecision = 0.01;
+
+    //---
+    // prec
+    //
+    // Round a number to a certain precision
+    //
+    // @param Number number: the number to format
+    // @param Number precision: power of 10 representing lsb
+    //--
+    function prec(number, precision) {
+        if (arguments.length &lt; 2) precision = defaultPrecision;
+        return Math.round(number/precision)*precision;
+    }
+
+    //---
+    // Meter
+    //
+    // A meter is used to to accumulate a count, total, max, min, and
+    // mean^2 of a set of data points.  These accumulated values can be
+    // used to report number, total, average and deviation of the data
+    // set.
+    //
+    // @param String name: the name of the meter
+    //---
+    function Meter (name) {
+        this.name = name;
+        this.count = 0;
+        this.total = 0.0;
+        this.meanSquared = 0.0;
+        this.max = 0;
+        this.min = Infinity;
+    }
+
+    //---
+    // Accumulate a value, which will increment the count of events and
+    // update max, min, and the running mean^2
+    //---
+    Meter.prototype.accumulate = function (amount) {
+        var count = this.count + 1;
+        var total = this.total;
+        var meanSquared = this.meanSquared;
+
+        // We accumulate a running mean^2, which minimizes overflow but
+        // sacrifices numerical stability for small variances, so sez jga.
+        this.count = count;
+        this.total = total + amount;
+        this.meanSquared =
+        meanSquared / count * (count - 1.0)
+        + amount / count * amount;
+        if (amount &gt; this.max) {
+        this.max = amount;
+        }
+        if (amount &lt; this.min) {
+        this.min = amount;
+        }
+    }
+
+    //---
+    // pad or trim a string to a specified length
+    //---
+    Meter.prototype.pad = function ( str , len ) {
+        <![CDATA[
+        //force to be string
+        str = '' + str;
+        if ( str.length > len ) return str.substring( 0 , len );
+        while ( str.length < len ) str = str + " ";
+        return str;
+        ]]>
+    }
+
+    //---
+    // String version of a meter.  The name, mean, sigma, range and
+    // count.
+    //---
+    Meter.prototype.toString = function () {
+        var mean = this.total / this.count;
+        return this.pad( this.name , 30 ) + ' ' + 
+               this.pad( prec(mean), 10 )+ ' ' +
+        // This should be greek small letter sigma (&#x3C3;), meaning
+        // 'standard deviation', but it is not supported in Flash 5 so I
+        // am using plus-minus sign (&#xB1;) instead.
+        '&#xB1;' + this.pad( prec(Math.sqrt(this.meanSquared - (mean * mean))),
+                                                    12)+
+        // This is the range and number of samples
+        ' ' + this.pad ('[ ' + prec(this.min) + '..' + prec(this.max) + ']' +
+                                        '/' + this.count , 25 ) ;
+    }
+
+
+    //---
+    // Test collection
+    //---
+    testCollection = []
+    function addTest( funname , iter ) {
+        <![CDATA[
+        if (arguments.length < 2) {
+            iter = defaultIterations;
+        }
+        testCollection.push([ funname , iter ]);
+        ]]>
+    }
+
+    function runTests( title, times ) {
+        testCollection.$pass = times;
+        testCollection.$title = title;
+        testCollection.$curtest = 0;
+        testCollection.$del = new LzDelegate( testCollection, '$doNext' ,
+                                              LzIdle , "onidle" );
+
+    }
+    testCollection.$doNext = function (){
+        <![CDATA[ 
+        var curtest = this[ this.$curtest ];
+        time( curtest[ 0 ] , curtest[ 1 ] );
+        if ( ++this.$curtest == this.length ){
+            this.$curtest = 0;
+            if ( --this.$pass <1){
+                //we're done
+                this.$del.unregisterAll();
+
+                TimingOutput.write(this.$title);
+                TimingOutput.write( report() );
+            }
+        }
+            
+
+        ]]>
+    }
+
+    //---
+    // Timing accumulators
+    //---
+    timingMeters = {};
+    //---
+    // Time a function
+    //---
+    function time(funname, iter) {
+        var fun = global[ funname ];
+        var start = (new Date).getTime();
+        for ( var n = 0; n &lt; iter; n++ ) {
+            fun();
+        }
+        var stop = (new Date).getTime();
+        elapsed = stop - start;
+        // record totals
+        if (typeof(timingMeters[funname]) == 'undefined') {
+            timingMeters[funname] = new Meter(funname);
+        }
+        timingMeters[funname].accumulate(elapsed / iter);
+        return elapsed / iter;
+    }
+
+    //---
+    // Report times
+    //---
+    function report() {
+        var s ="";
+        for (var k in timingMeters) {
+            s += timingMeters[k].toString() +"\n";
+        }
+        return s;
+    }
+    </script>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

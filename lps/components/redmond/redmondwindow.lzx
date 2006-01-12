@@ -1,0 +1,188 @@
+<!--
+    Class: window
+    implements an area of the screen that can be dragged, resized or closed
+    by the user.  Standard placement is defined for menubar, toolbar and icon.
+-->
+<library>
+    <include href="redmondfonts.lzx" />
+    <include href="base/basebutton.lzx" />
+    <include href="basewindow.lzx" />
+    <resource src="./resources/lzwindowsimplebottom_rsc.swf" name="LzWindowSimpleBottom_rsc" />
+    <resource src="./resources/lzwindowsimplebottoml_rsc.swf" name="LzWindowSimpleBottomL_rsc" />
+    <resource src="./resources/lzwindowsimplebottomr_rsc.swf" name="LzWindowSimpleBottomR_rsc" />
+    <resource src="./resources/lzwinml_rsc.swf" name="LzWinML_rsc" />
+    <resource src="./resources/lzwinmr_rsc.swf" name="LzWinMR_rsc" />
+    <resource src="./resources/lzwintitletl_rsc.swf" name="LzWinTitleTL_rsc" />
+    <resource name="LzWinTitleTM_rsc" src="./resources/lzwintitletm_rsc.swf"/>
+    <resource name="LzWinTitleTM_inactive_rsc" src="./resources/lzwintitletm_inactive.swf"/>
+    <resource src="./resources/lzwintitletr_rsc.swf" name="LzWinTitleTR_rsc" />
+    <resource src="./resources/windowclose.swf" name="windowclose" />
+    <resource src="./resources/windragbottoml_rsc.swf" name="WinDragBottomL_rsc" />
+    <resource src="./resources/windragbottomr_rsc.swf" name="WinDragBottomR_rsc" />
+    <resource src="./resources/windragbottomseparator_rsc.swf" name="WinDragBottomSeparator_rsc" />
+    <resource src="./resources/windragbottomsizeable_rsc.swf" name="WinDragBottomSizeable_rsc" />
+
+
+    <class name="window" extends="basewindow"  font="lztahoe8" fontsize="8" >
+        <attribute name="defaultplacement" value="content" type="string"/>
+
+        <!-- fgcolor: Redmond API compatibility -->
+        <attribute name="internalcolor" value="0xffffff" type="number"/>
+        <attribute name="fgcolor" value="white"
+            setter="this.setAttribute('internalcolor', fgcolor);
+            if (this['onfgcolor']) this.onfgcolor.sendEvent()"/>
+        <attribute name="temppixellock" value="false"/>
+
+        <method name="construct" args="parent, args">  <![CDATA[
+            // this is a workaround for a bug where pixellock sets the
+            // height explicitly, which would break the auto-sizing
+            // of windows without a specified width or height (see init)
+            if (args['pixellock']) {
+                this.temppixellock = true;
+                args.pixellock = false;
+            }
+            super.construct(parent, args);
+            ]]>
+        </method>
+        <method name="init">  <![CDATA[
+            if (!hassetwidth) {
+               // no width given
+                var new_width = Math.max(middle.left.width + middle.right.width +
+                    content.measureWidth(), this.minwidth);
+                this.setWidth(new_width);
+            } else {
+               // check minwidth
+                if (this.width < this.minwidth) {
+                    debug.write("window width smaller than minwidth, ignored");
+                    setWidth(this.minwidth);
+                }
+            }
+            if (!this.hassetheight) {   // no height given
+                // if no height given
+                var new_height = Math.max(top.height + bottom.height +
+                    content.measureHeight() + menubar.measureHeight(), this.minheight);
+                this.setHeight(new_height);
+            } else {
+               // check minheight
+                if (this.height < this.minheight) {
+                    debug.write("window height smaller than minheight, ignored");
+                    setHeight(this.minheight);
+                }
+            }
+            super.init();
+            if (this.temppixellock) setAttribute('pixellock', true);
+            ]]>
+        </method>
+
+
+        <view name="top" >
+
+            <view name="background" width="${classroot.width}"
+                clickable="true"
+                onmousedown="classroot.startDrag()"
+                onmouseup="classroot.stopDrag()" >
+                <view name="left" resource="LzWinTitleTL_rsc"/>
+                <view>
+                    <view width="100%" stretches="width"
+                        visible="${classroot.haswindowfocus}" resource="LzWinTitleTM_rsc"/>
+                    <view width="100%" stretches="width"
+                        visible="${!classroot.haswindowfocus}" resource="LzWinTitleTM_inactive_rsc"/>
+                </view>
+                <view name="right" resource="LzWinTitleTR_rsc"/>
+                <stableborderlayout axis="x" />
+
+            </view>
+            <view name="controls"
+                x="${classroot.width-this.width-8}" y="6">
+                <state name="closeable" >
+                    <attribute name="apply" value="classroot.closeable" when="always"/>
+                    <basebutton x="2" name="close_btn" resource="windowclose"
+                        downResourceNumber="2" onclick="classroot.closeWindow()"
+                        overResourceNumber="0"  />
+                        <!-- over state unused -->
+                </state>
+            </view>
+            <view x="7" y="6">
+                <view name="icon"/>
+                <text name="title" fgcolor="#FFFFFF"
+                        width="${parent.parent.controls.x-x-2}"
+                        fontstyle="bold">
+                    <attribute name="label" value="${classroot.title}" />
+                </text>
+                <simplelayout axis="x" spacing="3"/>
+            </view>
+        </view>
+
+
+        <view name="middle">
+             <attribute name="width" value="classroot.width" when="always"/>
+            <view name="left" height="100%" stretches="height" resource="LzWinML_rsc"/>
+            <view name="middle" height="100%">
+                <view name="menubar" width="100%" clip="true"
+                    oninit="classroot.menubar = this">
+                    <!-- placement for menubar -->
+                </view>
+                <view name="toolbar" width="100%" clip="true"
+                    oninit="classroot.menubar = this">
+                    <!-- placement for menubar -->
+                </view>
+                <view name="content" clip="true" width="100%"
+                    bgcolor="${classroot.internalcolor}"
+                    options="releasetolayout"
+                    oninit="classroot.content = this">
+                    <!-- this is the "defaultplacement" view -->
+                </view>
+                <resizelayout axis="y"/>
+            </view>
+            <view name="right" height="100%" stretches="height" resource="LzWinMR_rsc"/>
+            <stableborderlayout axis="x" />
+
+            <view width="100%" height="100%"
+                    onclick="classroot.setAttribute('haswindowfocus', true)"
+                    oninit="bringToFront()" visible="${!classroot.haswindowfocus}"/>
+        </view>
+
+
+        <view name="bottom" width="${classroot.width}">
+            <state name="nonresizeable">
+                 <attribute name="apply" value="!classroot.resizable" when="always"/>
+                <view name="left"  resource="LzWindowSimpleBottomL_rsc"/>
+                <view name="center" stretches="width"
+                      resource="LzWindowSimpleBottom_rsc"/>
+                <view name="right" resource="LzWindowSimpleBottomR_rsc" />
+                <stableborderlayout axis="x" />
+            </state>
+
+
+            <state name="resizeable" >
+                <attribute name="apply" value="classroot.resizable" when="always"/>
+                <view name="left"
+                      resource="WinDragBottomL_rsc"/>
+                <view name="fixedpanel"
+                      resource="WinDragBottomSizeable_rsc"/>
+                <view name="separator"
+                      resource="WinDragBottomSeparator_rsc"/>
+                <view name="sizeablepanel" stretches="width"
+                      options="releasetolayout;"
+                      resource="WinDragBottomSizeable_rsc"/>
+                <view name="resizeControl"
+                      resource="WinDragBottomR_rsc"
+                      onmousedown="this.classroot.windowResize.apply()"
+                      onmouseup="this.classroot.windowResize.remove()"
+                      clickable="true"
+                      />
+                <resizelayout axis="x" />
+            </state>
+        </view>
+
+
+        <stableborderlayout axis="y"/>
+    </class>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

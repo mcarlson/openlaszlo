@@ -1,0 +1,151 @@
+<library>
+
+    <class name="cdview" width="${parent.width}" height="82">
+
+        <resizelayout axis="x" spacing="8"/>
+        <view name="cover" datapath="ImageUrlSmall/text()" y="7" width="50" height="50" clip="true"
+            onmouseover="dragsmall.display(this, this.datapath.xpathQuery('text()'))"
+            onmouseout="dragsmall.hide()"
+            onmousedown="dragsmall.start()"
+            onmouseup="dragsmall.stop(); this.itemDropped(parent.datapath);"
+            ondblclick="this.parent.getInfo()">
+            <attribute name="source" value="${this.data}"/>
+            <method name="itemDropped" args="dpath">
+                if (dragsmall.droppedInView(cart.parent)) {
+                    cart.addItem(dpath);
+                } else if (dragsmall.droppedInView(wish.parent)) {
+                    wish.addItem(dpath);
+                }
+            </method>
+        </view>
+
+        <view  y="7" options="releasetolayout" name="info">
+            <simplelayout axis="y" spacing="-3"/>
+            <text fontsize="12" fontstyle="bold" datapath="ProductName/text()"
+                  visible="${ width &gt; 40 }"
+                  multiline="true" name="title"
+                  width="${parent.width - 15}" fgcolor="#666699"/>
+            <text datapath="Artists/Artist[1]/text()" 
+                  visible="${ width &lt; parent.width - 5 &amp;&amp;
+                              parent.title.height &lt;40 }"
+                  resize="true"
+                  width="300"
+                  fgcolor="#666699"/>
+            <view fontsize="12" fontstyle="bold" 
+                  visible="${ parent.width &gt; 150 }"
+                  fgcolor="#666699">
+                <simplelayout axis="x" spacing="4"/>
+                <text>Our Price:</text>
+                <text datapath="OurPrice/text()" width="50"/>
+            </view>
+        </view>
+        <view y="${classroot.cover.height + 8}" 
+              x="${classroot.info.width &gt; this.width ? classroot.info.x : 0 }"
+              options="ignorelayout">
+            <simplelayout axis="x" spacing="4"/>
+            <mouseview resource="info_butt" onclick="classroot.getInfo()" 
+                       visible="${parent.wish.visible}"/>
+            <mouseview resource="cart_butt" width="54" height="18"
+                onclick="cart.addItem(classroot.datapath)"/>
+            <mouseview resource="wish_butt" width="54" height="18"
+                       name="wish"
+                       visible="${x + width &lt; classroot.width}"
+                onclick="wish.addItem(classroot.datapath)"/>
+        </view>
+
+    <remotecall name="userAsinSearchDetailed" funcname="AsinSearchRequest" 
+                remotecontext="$once{canvas.amazon}" dataobject="dsCDInfo">
+
+      <method event="ondata" args="mydata">
+        recommend.setVisible( false );
+        cdinfo.setVisible( true );
+        cdinfo.bringtofront();
+        infoLoader.hide();
+      </method>
+      <method event="onerror" args="error">
+        Debug.write('ERROR:', error);
+        infoLoader.hide();
+      </method>
+      <method event="ontimeout">
+        Debug.write( "timeout in dataset: dsCDInfo" );
+        infoLoader.hide();
+      </method>
+    </remotecall>
+
+        <method name="getInfo">
+      <![CDATA[
+      infoLoader.show();
+
+      var obj = new canvas.amazon.proto.AsinRequest();
+      obj.devtag = canvas.developerToken;
+      obj.tag = 'webservices-20';
+      obj.type = 'heavy';
+      obj.mode = 'music';
+      obj.asin = this.datapath.xpathQuery("Asin/text()");
+      Debug.write("asin search for "+obj.asin);
+      this.userAsinSearchDetailed.invoke([ obj ]);
+      ]]>
+    </method>
+    </class>
+
+    <class name="recommendationpanel" font="Arial,Helvetica" fontsize="11" bgcolor="#CAD0EC">
+
+    <remotecall name="userAsinSearchLite" funcname="AsinSearchRequest" 
+                    remotecontext="$once{canvas.amazon}" dataobject="dsRecommend">
+
+      <method event="ondata" args="mydata">
+        infoLoader.hide();
+      </method>
+      <method event="onerror" args="error">
+        Debug.write('ERROR:', error);
+        infoLoader.hide();
+      </method>
+      <method event="ontimeout">
+        Debug.write( "timeout in dataset: dsCDInfo" );
+        infoLoader.hide();
+      </method>
+    </remotecall>
+
+
+
+      <method event="onload" reference="canvas.amazon">
+            <![CDATA[
+        Debug.write("recommendations asin setup ");
+        var obj = new canvas.amazon.proto.AsinRequest();
+        infoLoader.show();
+        obj.devtag = canvas.developerToken;
+        obj.tag = 'webservices-20';
+        obj.type = 'lite';
+        obj.mode = 'music';
+        obj.page = 1;
+        obj.asin = "B00005YW4H,B00006IX86,B000005J56,B00006AAJF,B00004WGVR,B00006IX6E,B000069HKH,B00006JP29,B00005TPKC,B000002L2Z";
+        Debug.write("recommendations asin search for "+obj.asin);
+        this.userAsinSearchLite.invoke([ obj ]);
+        ]]>
+        </method>
+
+        <text y="20" x="10" fontstyle="bold" fontsize="16" 
+              fgcolor="#666699">Your Recommendations:</text>
+        <view x="20" y="46" width="${parent.width - x }">
+            <resizelayout axis="x" spacing="20"/>
+
+            <view options="releasetolayout">
+                <simplelayout axis="y" spacing="1"/>
+                <!-- Repeated view displaying the list of items matching the keyword search -->
+                <cdview datapath="dsRecommend:/Details/Details[1-5]"/>
+            </view>
+            <view options="releasetolayout">
+                <simplelayout axis="y" spacing="1"/>
+                <!-- Repeated view displaying the list of items matching the keyword search -->
+                <cdview datapath="dsRecommend:/Details/Details[6-10]"/>
+            </view>
+        </view>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

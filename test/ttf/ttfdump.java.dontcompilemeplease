@@ -1,0 +1,51 @@
+/******************************************************************************
+ * ttfdump.java
+ * ****************************************************************************/
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+import java.io.File;
+
+// Apache Batik TrueType Font Parser
+import org.apache.batik.svggen.font.*;
+import org.apache.batik.svggen.font.table.*;
+
+class ttfdump {
+    static void main(String[] argv) {
+        try {
+            Font ttf = Font.create(argv[0]);
+
+            // Os2Table  os2  = ttf.getOs2Table();
+            CmapTable cmap = ttf.getCmapTable();
+            // GlyfTable glyf = ttf.getGlyfTable();
+            HeadTable head = ttf.getHeadTable();
+            HheaTable hhea = ttf.getHheaTable();
+            HmtxTable hmtx = ttf.getHmtxTable();
+            LocaTable loca = ttf.getLocaTable();
+            MaxpTable maxp = ttf.getMaxpTable();
+            NameTable name = ttf.getNameTable();
+            PostTable post = ttf.getPostTable();
+
+            System.out.println("Dumping " + argv[0]);
+            System.out.println("   " + ttf.getNumGlyphs() + " glyphs");
+            System.out.println("   " + ttf.getAscent() + " ascent");
+            System.out.println("   " + ttf.getDescent() + " descent");
+
+            // System.out.println(os2.toString());
+            System.out.println(cmap.toString());
+            // System.out.println(glyf.toString());
+            System.out.println(head.toString());
+            System.out.println(hhea.toString());
+            System.out.println(hmtx.toString());
+            System.out.println(loca.toString());
+            System.out.println(maxp.toString());
+            System.out.println(name.toString());
+            System.out.println(post.toString());
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}

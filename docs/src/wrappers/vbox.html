@@ -1,0 +1,31 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="vbox">
+    <lztier>LZ Components</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+        A vertical box for grouping subviews
+    </lzshortdesc>
+    <lztag>base/vbox.xml</lztag>
+</lzelement>
+</body>
+<example title="vbox">
+&lt;canvas&gt;
+    &lt;vbox&gt;
+        &lt;method event="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/method&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/vbox&gt;
+&lt;/canvas&gt;
+</example>
+</html>

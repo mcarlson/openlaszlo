@@ -1,0 +1,56 @@
+<canvas width="800" height="480">
+
+    <!--
+    bug 416 - 
+
+    We're running into some strange effects when integrating .swf assets 
+    into our Laszlo application that are causing us quite a few production 
+    headaches.  I've attached a simple example and am hoping you have some 
+    insight or workaround.
+ 
+    First, if you open the two .swf assets directly in Flash, you'll see 
+    that both have been produced with a light cream-colored background.  When 
+    both of these are brought onto the same canvas in asset_test.lzx, 
+    our application (remember we're still using P3+) renders 
+    print_options_sheen_btn.swf as having a bright yellow background.  
+    Further, if you switch the order in which the two views are defined in 
+    the .lzx, the sheen button looks correct now -
+    but startoverbtn.swf has a dark, discolored background.  
+    
+    I believe both .swf files were produced directly in Flash (not 
+    Illustrator).  In other assets, different strange effects occur -
+    usually involving shading and background colors appearing as solid black, 
+    red, or other colors.
+
+    This testcase has some additional use now that the original
+     bug has been repaired. There are some multiframe resources and 
+     single frame resources in the view. We should use this to include
+     more swf resources as we get odd situations.  
+     12/03/02 -md 
+    -->
+
+    <view name="startOverButton" clickable="true"
+        onmousedown="this.setResourceNumber(2)" 
+        onmouseup="this.setResourceNumber(1)"
+        resource="resources/swf/startoverbtn.swf" />
+
+    <view name="sheenOption" y="100" clickable="true" 
+        onmousedown="this.setResourceNumber(2)"
+        onmouseup="this.setResourceNumber(1)"
+        resource="resources/swf/print_options_sheen_btn.swf"/>
+
+    <view name="main" y="250">
+       <!-- this resource dissappeared...
+        <view resource="resources/swf/subheader_modify_palette.swf" />  
+        <view resource="resources/swf/sbhdr_next_steps.swf" />  
+        <view resource="resources/swf/subheader_touch_color.swf" />       
+-->
+
+        <simplelayout axis="y" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

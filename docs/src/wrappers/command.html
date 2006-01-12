@@ -1,0 +1,37 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Command">
+    <lztier>LFC</lztier>
+    <lzcategory>Menu and Command</lzcategory>
+    <lzshortdesc>
+        An element that sends events in response to keyboard input.
+    </lzshortdesc>
+    <lztag>tag-command.xml</lztag>
+    <lzapi>api-lzcommand.xml</lzapi>
+</lzelement>
+
+<example class="program" id="command-1">
+&lt;canvas height="130" debug="true"&gt;
+  &lt;command onselect="Debug.write('the enter key was pressed');" 
+            key="['Enter']" /&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Sample applications that use the <tagname>command</tagname> tag:</p>
+<ul>
+    <li> <a href="${demos}weather/weather.lzx">Weather</a></li>
+    <li> <a href="${demos}contacts/contacts.lzx">Contacts</a></li>
+</ul>
+Also, see <a href="lzkeys.html">lzkeys</a>.
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

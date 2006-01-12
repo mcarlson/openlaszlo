@@ -1,0 +1,77 @@
+<canvas width="800" height="500" bgcolor="0x1E3A49" debug="true" oninit="debug.setY(100)">
+    <dataset name="dset">
+        <record>Chep</record>
+        <record>Yahoo</record>
+        <record>Antun</record>
+        <record>Bret</record>
+        <record>Goober</record>
+        <record>Caprice</record>
+        <record>Charles</record>
+        <record>Cheryl</record>
+        <record>Chris</record>
+    </dataset>
+
+    <class name="delText" onclick="this.destroy()" bgcolor="silver">
+        <attribute name="label" type="string" />
+        <text>
+            <attribute name="label" value="parent.label" when="always"/>
+        </text>
+    </class>
+    <text width="200" fgcolor="white" multiline="true">
+        Delete elements in each list (by clicking them.) Add elements (by 
+        clicking the bottom button.) Press the "write subviews" button. An
+        array should appear in the debugger which has no gaps (e.g. nothing
+        that looks like this: ,,
+    </text>
+
+        
+    <view>
+        <text fgcolor="silver" fontsize="20">Views</text>
+        <view name="reppar">
+            <delText label="Chep"/>
+            <delText label="Yahoo"/>
+            <delText label="Antun"/>
+            <delText label="Bret"/>
+            <delText label="Goober"/>
+            <delText label="Caprice"/>
+            <delText label="Charles"/>
+            <delText label="Cheryl"/>
+            <delText label="Chris"/>
+            <simplelayout spacing="1"/>
+        </view>
+        <button onclick="Debug.write( parent.reppar.subviews )">Write subviews</button>
+        <button onclick="">
+            Add view
+            <method event="onclick">
+                new delText( parent.reppar , { label : "Added" } );
+            </method>
+        </button>
+        <simplelayout spacing="10"/>
+    </view>
+    <simplelayout axis="x" spacing="40"/>
+
+    <view>
+        <text fgcolor="silver" fontsize="20">Data</text>
+        <view name="reppar">
+            <view  bgcolor="silver"
+                onclick="this.datapath.deleteNode()" >
+                <datapath xpath="dset:/*" pooling="true"/>
+                <text datapath="text()"/>
+            </view>
+            <simplelayout spacing="1"/>
+        </view>
+        <button onclick="Debug.write( parent.reppar.subviews )">Write subviews</button>
+        <button onclick="">
+            Add view
+            <datapointer name="mydp" xpath="dset:/"/>
+            <method event="onclick">
+                mydp.addNode( "record" , "Added" );
+            </method>
+        </button>
+        <simplelayout spacing="10"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

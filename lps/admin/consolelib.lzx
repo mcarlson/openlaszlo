@@ -1,0 +1,16 @@
+<library>
+
+    <font name="mono" src="bitstream-vera-1.10/veramono.ttf" />
+    <font name="monob" src="bitstream-vera-1.10/veramobd.ttf" />
+
+    <include href="serverinfo.lzx" />
+    <include href="cacheinfo.lzx" />
+    <include href="version.lzx" />
+    <include href="logconfig.lzx" />
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

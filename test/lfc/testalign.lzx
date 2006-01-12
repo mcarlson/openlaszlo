@@ -1,0 +1,36 @@
+<canvas debug="true" width="1024">
+  <view oninit="Debug.setAttribute('height', 200);
+	Debug.setAttribute('width', 400);
+	Debug.setAttribute('x', 200);
+	Debug.setAttribute('y', 0);
+	Debug.setLine(0);"/>    
+  <include href="utils/layouts/alllayouts.lzx" />
+  <class name="box" bgcolor="blue" opacity=".70" clickable="true" 
+	 onmousedown="this.animate( this.animprop , 20 , 1000 , true )"
+	 width="20" height="20" >
+    <attribute name="animprop" type="string" value="width" />
+  </class>
+  
+  <view width="200" bgcolor="red" height="200" clickable="true" 
+	onclick="Debug.write('animg='+animG);animG.doStart();animE.doStart();">
+    <animator id="animE" to="50" duration="1000" 
+	      attribute="width" relative="true" 
+	      start="false"/>
+    <animator id="animG" to="50" duration="1000" 
+	      attribute="height" relative="true" 
+	      start="false" /> 
+    <box align="left"/>
+    <box align="center"/>
+    <box align="right"/>
+    <box valign="middle" animprop="height"/>
+    <box align="center" valign="middle" animprop="height"/>
+    <box align="right" valign="middle" animprop="height"/>
+    <box valign="bottom"/>
+    <box align="center" valign="bottom"/>
+    <box align="right" valign="bottom"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

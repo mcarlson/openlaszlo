@@ -1,0 +1,16 @@
+<canvas width="240" height="320" bgcolor="#FFFFFF" title="Loads data from a relative remote URL">
+    <dataset name="weatherdata" request="true" type="http" src="weather.xml"/>
+
+    <view datapath="weatherdata:/weather[1]" height="25">
+        <view datapath="forecast[1]/day">
+            <text name="day" x="42" width="140" datapath="@label">Tonight</text>
+            <text name="desc" x="42" y="14" width="140" datapath="@desc">T-storms possible</text>
+            <text name="temp" x="168" datapath="@temp">Hi 80 F</text>
+        </view>
+        <simplelayout axis="y" spacing="10"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

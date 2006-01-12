@@ -1,0 +1,32 @@
+<canvas width="1280" height="1024" debug="true">
+  <debug y="310" />
+  <dataset name="data" src="resources/xml/test-1ind.xml"/>
+  <window height="300" width="600">
+    <simplelayout axis="y" spacing="1"/>
+    <view name="column" bgcolor="yellow" height="500"
+	  datapath="data:/data/industry[1]" options="lazyreplication">
+      <text name="title" width="199" datapath="@code"/>
+      <simplelayout axis="y" spacing="1"/>
+      <view>
+	<view name="header" bgcolor="blue">
+	  <text width="199">Company Name</text>
+	  <text x="200" width="199">1-Day Price Chg %</text>
+	  <text x="400" width="199">Market Cap</text>
+	</view>
+	<simplelayout axis="y" spacing="1"/>
+	<view>
+	  <simplelayout axis="y" spacing="1"/>
+	  <view name="row" datapath="company" bgcolor="green" options="lazyreplication">
+	    <text name="coname" width="199" datapath="@name"/>
+	    <text x="200" name="oneday" width="199" datapath="@oneday"/>
+	    <text x="400" name="cap" width="199" datapath="@cap"/>
+	  </view>
+	</view>
+      </view>
+    </view>
+  </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

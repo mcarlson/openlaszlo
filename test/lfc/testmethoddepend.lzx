@@ -1,0 +1,39 @@
+<canvas debug="true">
+    
+    <class name="box" width="20" height="20" bgcolor="red" />
+    <view> 
+        <animatorgroup repeat="Infinity" duration="777" motion="linear" >
+            <animator attribute="x" to="0" from="100" />
+            <animator attribute="x" to="100" from="0" />
+        </animatorgroup>
+        <box id="trackbox">
+            <animatorgroup repeat="Infinity"  duration="1000">
+                <animator attribute="x" to="200" from="10" />
+                <animator attribute="x" to="10" from="200" />
+            </animatorgroup>
+        </box>
+    </view>
+    <view width="5" height="5" bgcolor="blue" y="55">
+        <animatorgroup repeat="Infinity"  duration="1300" motion="easeout">
+            <animator attribute="x" to="330" from="5" />
+            <animator attribute="x" to="5" from="330" />
+        </animatorgroup>
+        <box y="10" oninit="this.writeDependencies()"> 
+             <method name="writeDependencies" >
+                var d =  this.setAttributeRelative.dependencies( this , this, 'x',  
+                                                            trackbox);
+                Debug.write( "D: " + d );
+            </method>
+        </box>
+
+        <box y="50" >
+            <method event="onidle" reference="LzIdle" >
+                this.setAttributeRelative( "x" , trackbox );
+            </method>
+        </box>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

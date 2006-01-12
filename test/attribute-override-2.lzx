@@ -1,0 +1,20 @@
+<!-- This overrides attribute width with no explicit type, the compiler
+     should default the attribute type to the proper type to the first attribute
+     of the same name found by climbing up class hierarchy.
+
+     So this example should compile with no error message.
+-->
+
+
+<canvas>
+  <class name="foo" bgcolor="red">
+    <attribute name="width" value="100" /> 
+    <text>Passed.</text>
+  </class>
+
+  <foo x="100" y="100"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

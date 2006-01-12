@@ -1,0 +1,4 @@
+<!-- used by rngparse.py to determine which extensions to document -->
+<library>
+  <include href="extensions/views/richinputtext.lzx" />
+</library>

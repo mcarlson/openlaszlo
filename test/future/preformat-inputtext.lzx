@@ -1,0 +1,77 @@
+<canvas width="1000" height="800">
+
+<!-- ////////////////////////////////////////////////////////////////  
+  	PREFORMAT text 
+--> 
+
+<inputtext id="pfast" y="410" width="400" height="400" resizable="false" bgcolor="#cccccc" >
+<pre>
+BETA TEST AGREEMENT
+
+This Beta Test Agreement (the "Agreement") between you and Laszlo Systems,
+Inc. ("Laszlo") sets forth the terms and conditions governing your access
+to and use of the Software for the sole purpose of beta testing the
+Software. The Laszlo Presentation Server software and related documentation
+and materials, described more extensively in Exhibit A of this Agreement
+which is incorporated herein by reference, and any Updates (defined herein)
+provided pursuant to Section 2 (Updates) are collectively referred to
+herein as the "Software."
+
+   1. License Grant. Subject to all the terms and conditions of this
+Agreement, Laszlo grants you a personal, royalty-free, non-sublicensable,
+nontransferable, nonexclusive license to install and use the Software in
+the manner specified in the related documentation supplied by Laszlo only
+for your internal testing and evaluation purposes only during the Term
+(defined herein). You agree to use the Software only in the ordinary course
+of testing, and not to reproduce, distribute, sell, resell, bundle, deploy,
+publicly display, modify, or make available to any third party the Software
+or any portion thereof or any documentation or materials related thereto.
+Except to the extent that the following restriction is prohibited by
+applicable law, if any, you shall not reverse assemble, reverse compile or
+reverse engineer any software source code or other components of the
+Software or otherwise attempt to discover any underlying Proprietary
+Information (defined herein).
+</pre>
+</inputtext>
+
+
+
+<inputtext x="410" y="410" id="pnormal" width="400" height="400"  bgcolor="#ffcccc" >
+<pre>
+BETA TEST AGREEMENT
+
+This Beta Test Agreement (the "Agreement") between you and Laszlo Systems,
+Inc. ("Laszlo") sets forth the terms and conditions governing your access
+to and use of the Software for the sole purpose of beta testing the
+Software. The Laszlo Presentation Server software and related documentation
+and materials, described more extensively in Exhibit A of this Agreement
+which is incorporated herein by reference, and any Updates (defined herein)
+provided pursuant to Section 2 (Updates) are collectively referred to
+herein as the "Software."
+
+   1. License Grant. Subject to all the terms and conditions of this
+Agreement, Laszlo grants you a personal, royalty-free, non-sublicensable,
+nontransferable, nonexclusive license to install and use the Software in
+the manner specified in the related documentation supplied by Laszlo only
+for your internal testing and evaluation purposes only during the Term
+(defined herein). You agree to use the Software only in the ordinary course
+of testing, and not to reproduce, distribute, sell, resell, bundle, deploy,
+publicly display, modify, or make available to any third party the Software
+or any portion thereof or any documentation or materials related thereto.
+Except to the extent that the following restriction is prohibited by
+applicable law, if any, you shall not reverse assemble, reverse compile or
+reverse engineer any software source code or other components of the
+Software or otherwise attempt to discover any underlying Proprietary
+Information (defined herein).
+</pre>
+
+
+</inputtext>
+
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

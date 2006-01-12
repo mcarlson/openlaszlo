@@ -1,0 +1,16 @@
+<canvas>
+  <window title="Resize and drag this window"
+          resizable="true" layout="layout: y">
+    <view width="25%" height="20" bgcolor="red" />
+    <view width="50%" height="20" bgcolor="green"/>
+    <view width="75%" height="20" bgcolor="blue"/>
+    <view width="100%" height="20" bgcolor="yellow"/>
+    <text>Window coordinates:</text>
+    <view layout="axis: x; spacing: 5">
+      <text><b>x: </b></text>
+      <text text="${parent.parent.x}"/>
+      <text><b>y: </b></text>
+      <text text="${parent.parent.y}"/>
+    </view>
+  </window>
+</canvas>

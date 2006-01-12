@@ -1,0 +1,12 @@
+<canvas bgcolor="#eaeaea">
+	<button text="Go!">
+		<method event="onclick">
+			msg.setText("Flash Player: " + LzBrowser.getVersion());
+		</method>
+	</button>
+	<text name="msg" width="300" y="30" multiline="true" selectable="true" />
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

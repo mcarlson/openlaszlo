@@ -1,0 +1,34 @@
+<b>Notes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for more details&nbsp;</b>
+<a href="../docs/reference/index.html?animator.html" target="laszlo-reference">animator reference</a>
+<hr>
+<table>
+
+<tr valign=top><td><li></td><td>Animations are extremely useful when building easy-to-use, self-explanatory user interfaces because they provide the user with visual clues about the application state transitions.</td></tr>
+
+<tr valign=top><td><li></td><td>LZX's simple and powerful animation API allows you to build sophisticated animations using a familiar and manageable programmatic approach. Using Laszlo, you don't have to work with complicated and/or unfamiliar metaphors such as the timeline and frames.</td></tr>
+
+<tr valign=top><td><li></td><td>All user interface components have an <font class=script>animate()</font> method, that allows you to animate <i>any</i> component property.</td></tr>
+
+<tr valign=top><td><li></td><td>This example, demonstrates an expandable panel. When you click the "Click here to toggle" text, the details view opens smoothly. This is done by animating the <font class=attribute>height</font> attribute of the details view from <font class=value>0</font> to <font class=value>200</font> pixels in <font class=value>500</font> milliseconds. When you click the "Click here to toggle" text again, the details view closes. This is done by animating the <font class=attribute>height</font> attribute back to <font class=value>0</font>.</td></tr>
+
+<tr valign=top><td><li></td><td>The animate method takes four arguments:
+
+    <table cellpadding=0 cellspacing=0>
+
+    <tr valign=top><td>1.&nbsp;</td><td>The name of the property to animate</td></tr>
+
+    <tr valign=top><td>2.&nbsp;</td><td>A value for the property</td></tr>
+
+    <tr valign=top><td>3.&nbsp;</td><td>The time in milliseconds the animation should take</td></tr>
+
+    <tr valign=top><td>4.&nbsp;</td><td>A boolean indicating if the value passed as the second argument is relative to the property’s current value (true), or absolute (false)</td></tr>
+
+    </table>
+
+</td></tr>
+
+</table>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

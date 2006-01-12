@@ -1,0 +1,207 @@
+<!DOCTYPE canvas SYSTEM "http://laszlosystems.com/lps-v1/tools/lzx.dtd">
+
+<library>
+
+    <class name="inputfield" height="18" width="180">
+        <view bgcolor="#666699" width="${parent.width}" height="${parent.height}"/>
+        <inputtext x="1" y="1" width="${parent.width-2}" height="${parent.height-2}" bgcolor="#FFFFFF" datapath="${parent.datapath}"/>
+    </class>
+
+    <class name="sel">
+        <attribute name="selectedItem" type="expression" value="null" />
+        <attribute name="val" type="string" value="0"/>
+    </class>
+
+    <class name="radiobutton" onclick="select()">
+
+        <attribute name="selectionobject" type="expression" />
+        <attribute name="val" type="string"/>
+
+        <view name="img" resource="radio_rsc" y="2"/>
+
+        <method name="select">
+            selectionobject.selectedItem.img.setResourceNumber(1);
+            this.img.setResourceNumber(2);
+            selectionobject.setAttribute("selectedItem", this);
+            selectionobject.setAttribute("val", this.val);
+        </method>
+
+    </class>
+
+
+    <class name="linktext" extends="text"
+        onmouseover="setColor(0x800080)"
+        onmouseout="setColor(0x000000)"
+        onmouseup="setColor(0x000000)"/>
+
+    <class name="mouseview" extends="basebutton"
+        onmouseover="this.setResourceNumber(2)"
+        onmouseout="this.setResourceNumber(1)"
+        onmousedown="this.setResourceNumber(3)"
+        onmouseup="this.setResourceNumber(1)"/>
+
+    <class name="vtabpanel" width="${tab.width}" height="${parent.height}" 
+           bgcolor="white" defaultplacement="content" clickable="true">
+
+        <attribute name="tabresource" type="string" value="slider_cart" />
+        <attribute name="openingsize" type="string" value="200" />
+        <attribute name="opened" value="false"/>
+        <attribute name="xdoffset" value="0" type="number" />
+
+        <simplelayout axis="x"/>
+        <view name="tab" height="${parent.height}">
+
+            <simplelayout axis="y"/>
+            <view clickable="true" name="tabButton"
+                onmouseover="setResourceNumber(classroot.opened=='true'?5:2)"
+                onmouseout="setResourceNumber(classroot.opened=='true'?4:1)"
+                onmousedown="setResourceNumber(classroot.opened=='true'?6:3)"
+                onmouseup="setResourceNumber(classroot.opened=='true'?4:1)">
+                <attribute name="resource" value="${classroot.tabresource}"/>
+                <method event="onclick">
+                    if (classroot.opened=="true") {
+                        classroot.close();
+                        classroot.opened="false";
+                    } else {
+                        classroot.open();
+                        classroot.opened="true";
+                    }
+                </method>
+            </view>
+            <vtabsliderbutton resource="slider_drag">
+                <method event="onmousedown">
+                    classroot.xdoffset = this.getMouse("x")
+                                           -( (canvas.width
+                                               -classroot.getAttributeRelative('x', canvas))
+                                           -classroot.width );
+                    classroot.panelDragger.apply();
+                </method>
+                <method event="onmouseup">
+                    if ( !classroot.opened ) classroot.opened = 'true';
+                    if ( classroot.width == parent.width ) {
+                        // User has just closed the tab by dragging the panel
+                        // manually.
+                        classroot.opened = 'false'
+                    }
+                    parent.tabButton.setResourceNumber(classroot.opened=='true'?4:1);
+                    classroot.panelDragger.remove();
+                </method>
+
+            </vtabsliderbutton>
+        </view>
+
+        <view width="${parent.width-parent.tab.width}" height="${parent.height}">
+            <view name="div" resource="divider_panel" width="${parent.width}" stretches="both"/>
+            <view name="content" width="${parent.width}" height="${parent.height-parent.div.height}" clip="true"/>
+        </view>
+
+        <method name="open">
+            this.animate("width",openingsize,333,false);
+        </method>
+
+        <method name="close">
+            this.animate("width",tab.width,333,false);
+        </method>
+
+        <!-- Nudge the tab left then right to give feedback that something's
+             been added to it -->
+        <method name="nudge">
+            if ( this.opened != 'true' ) {
+                this.nudgeAnim.doStart();
+            }
+        </method>
+
+        <animatorgroup name="nudgeAnim">
+            <animator attribute="x" to="-10" duration="100" relative="true" />
+            <animator attribute="x" to="10" duration="200" relative="true" />
+        </animatorgroup>
+
+        <state name="panelDragger">
+            <attribute name="width" 
+                       value="${
+                                Math.round(
+                                    Math.max(
+                                        Math.min(this.openingsize, 
+                                                 canvas.width-canvas.getMouse('x')+this.xdoffset),
+                                        this.tab.width
+                                    )
+                                )
+
+                                
+                                }" /> 
+        </state>
+
+    </class>
+
+    <class name="tabpanel" clip="true" x="1" width="${parent.width-2}" 
+           bgcolor="#FFFFFF" height="${top.height}" defaultplacement="content">
+
+        <attribute name="label" type="string"/>
+
+        <simplelayout axis="y" spacing="0"/>
+
+        <view name="top" width="${parent.width}" clip="true" clickable="true">
+            <mouseview resource="tabslider" width="${parent.width}" stretches="width" onclick="parent.parent.parent.openTab(parent.parent)"/>
+            <text name="label" oninit="this.setText(parent.parent.label)" fontsize="12"  fontstyle="bold" fgcolor="#2F4D86" x="8" y="2" width="100%" />
+            <text name="annotation" fontsize="12"  fontstyle="bold" 
+                  fgcolor="#2F4D86" x="455" y="2" width="25" />
+        </view>
+
+        <view name="content"/>
+
+        <method name="open">
+            this.animate("height",parent.height-(parent.subviews.length-1)*top.height-1,333,false);
+        </method>
+
+        <method name="close">
+            this.animate("height",top.height,333,false);
+        </method>
+
+        <method name="setAnnotation" args="a">
+            this.top.annotation.setText( a );
+        </method>
+
+    </class>
+
+    <class name="tabslider" oninit="this.selected=null">
+        <attribute name="selectedItem" type="expression" value="null" />
+        <simplelayout axis="y" spacing="0"/>
+        <method name="openTab" args="tab">
+            if (this.selectedItem==null) {
+                tab.open();
+                this.selectedItem = tab;
+            } else if (this.selectedItem != tab) {
+                tab.open();
+                this.selectedItem.close();
+                this.selectedItem = tab;
+            }
+        </method>
+    </class>
+
+    <class name="loading_indicator" 
+           visible="false" 
+           options="ignorelayout">
+        <method name="show">
+            this.bringToFront();
+            this.setVisible( true );
+        </method>
+        <method name="hide">
+            this.setVisible( false );
+        </method>
+    </class>
+
+    <class name="trashcan" resource="trash_can" 
+           onmouseover="this.setResourceNumber( 2 )"
+           onmouseout="this.setResourceNumber( 1 )">
+
+    </class>
+
+    <class name="vtabsliderbutton" extends="basebutton">
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

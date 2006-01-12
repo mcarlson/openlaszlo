@@ -1,0 +1,11 @@
+<!-- Application is blank if datapointer points to a non-existent dataset. -->
+<canvas>
+    <view>
+        <text>hello there</text>
+        <datapointer xpath="no_dataset:/" />
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,131 @@
+; NullSoft Installer Script for LPS 1.0 
+;
+; bloch@laszlosystems.com ; cribbed heavily from Tomcat4.1's script
+;; * E_LZ_COPYRIGHT_BEGIN ******************************************************
+;; * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+;; * Use is subject to license terms.                                          *
+;; * E_LZ_COPYRIGHT_END ********************************************************
+
+Name "Laszlo Presentation Server, Deployer Edition (@VERSIONID@)"
+OutFile lps-@VERSIONID@-lite-windows.exe
+CRCCheck off
+SetCompress force
+SetDatablockOptimize on
+
+;BGGradient 404040 808080 DDDDDD
+;InstallColors 808080 000000
+;InstProgressFlags smooth  colored
+InstProgressFlags smooth
+AllowRootDirInstall true
+
+Icon laszlo.ico
+UninstallIcon uninst.ico 
+;EnabledBitmap tickyes.bmp 
+;DisabledBitmap tickno.bmp
+
+LicenseText "You must read the following license before installing:"
+LicenseData LICENSE
+ComponentText "This will install the Laszlo Presentation Server, Server Edition (@VERSIONID@)"
+AutoCloseWindow true
+ShowInstDetails show
+DirText "Please select a location to install LPS (@VERSIONID@) (or use the default):"
+SetOverwrite on
+SetDateSave on
+
+InstallDir "C:\lps-@VERSIONID@-lite"
+InstallDirRegKey HKLM "Software\Laszlo Systems, Inc.\LPS\lite\@VERSIONID@" ""
+
+Section "LPS"
+
+  SetOutPath $INSTDIR
+  File /r lps-@VERSIONID@-lite\*.*
+  File laszlo.ico
+
+  WriteUninstaller "$INSTDIR\uninst-lps-@VERSIONID@-lite.exe"
+
+  SetOutPath "$SMPROGRAMS\LPS Server Edition @VERSIONID@"
+
+  CreateShortCut \
+    "$SMPROGRAMS\LPS Server Edition\Laszlo Systems, Inc. Home Page.lnk" \
+    "http://www.laszlosystems.com"
+
+  CreateShortCut \
+    "$SMPROGRAMS\LPS Server Edition\Uninstall.lnk" \
+    "$INSTDIR\uninst-lps-@VERSIONID@-lite.exe"
+
+
+  ; back up old value of .lzx
+  ReadRegStr $1 HKCR ".lzx" ""
+  StrCmp $1 "" Label1
+    StrCmp $1 "LZXFile" Label1
+    WriteRegStr HKCR ".lzx" "backup_val" $1
+
+Label1:
+
+  WriteRegStr HKCR ".lzx" "" "LZXFile"
+  WriteRegStr HKCR "LZXFile" "" "Laszlo XML"
+  WriteRegStr HKCR "LZXFile\shell" "" "open"
+  WriteRegStr HKCR "LZXFile\DefaultIcon" "" "$INSTDIR\laszlo.ico"
+  ; Query for text editor program here. XXX
+  WriteRegStr HKCR "LZXFile\shell\open\command" "" 'notepad.exe "%1"'
+
+SectionEnd
+
+Section -post
+
+  WriteRegStr HKLM "Software\Laszlo Systems, Inc.\LPS\lite\@VERSIONID@" "" $INSTDIR
+  WriteRegStr HKLM \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\LPS\lite\@VERSIONID@" \
+      "DisplayName" "Laszlo Presentation Server 1.0 (remove only)"
+  WriteRegStr HKLM \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\LPS\lite\@VERSIONID@" \
+      "UninstallString" '"$INSTDIR\uninst-lps-@VERSIONID@-lite.exe"'
+
+  BringToFront
+
+SectionEnd
+
+
+Function .onInit
+  ClearErrors
+FunctionEnd
+
+
+Function .onInstSuccess
+
+  MessageBox MB_OK \
+      "Installation of LPS Server Edition (@VERSIONID@) succeeded" 
+
+FunctionEnd
+
+
+UninstallText "This will un-install the Laszlo Presentation Server, Server Edition (@VERSIONID@) from your system:"
+
+Section Uninstall
+
+  SetAutoClose true
+  Delete "$INSTDIR\uninst-lps-@VERSIONID@.exe"
+
+  ReadRegStr $1 HKCR ".lzx" ""
+  StrCmp $1 "LZXFile" 0 NoOwn ; only do this if we own it
+    ReadRegStr $1 HKCR ".lzx" "backup_val"
+    StrCmp $1 "" 0 RestoreBackup ; if backup == "" then delete the whole key
+      DeleteRegKey HKCR ".lzx"
+    Goto NoOwn
+    RestoreBackup:
+      WriteRegStr    HKCR ".lzx" "" $1
+      DeleteRegValue HKCR ".lzx" "backup_val"
+  NoOwn:
+
+  ClearErrors
+
+  DeleteRegKey HKCR "LZXFile"
+  DeleteRegKey HKLM  \
+      "Software\Microsoft\Windows\CurrentVersion\Uninstall\LPS\lite\@VERSIONID@" 
+  DeleteRegKey HKLM \
+      "Software\Laszlo Systems, Inc.\LPS\lite\@VERSIONID@"
+  RMDir /r "$SMPROGRAMS\LPS Server Edition 1.0"
+  RMDir /r "$INSTDIR"
+  ; Someday handle case of saving files that might have been added
+
+SectionEnd

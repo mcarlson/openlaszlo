@@ -1,0 +1,58 @@
+<library>
+
+    <include href="lz/listitem.lzx" />
+    
+    <!--- Textlistitem is a baselist item with a text field. -->
+    <class name="textlistitem" extends="listitem">
+
+        <!--- The x position of the displayed text. -->
+        <attribute name="text_x"    value="4"/>
+
+        <!--- the y position of the text label. default: centered -->
+        <attribute name="text_y"
+            value="${this.height/2 - this._title.height/2}" />
+
+
+        <text name="_title"
+                    x="$once{classroot.text_x}"
+                    y="$once{classroot.text_y}"
+                    width="100%"
+              text="${parent.text}" />
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this['style'] != null) {
+                super._applystyle(s);
+                // set text color
+                if (_enabled) {
+                     if (hilited) {
+                         this._title.setAttribute('fgcolor', style.texthilitecolor);
+                     }
+                     else if (selected) {
+                         this._title.setAttribute('fgcolor', style.textselectedcolor);
+                     } else {
+                         this._title.setAttribute('fgcolor', style.textcolor);
+                     }
+                } else {
+                    this._title.setAttribute( "fgcolor", style.textdisabledcolor );
+                }
+            }
+        </method>
+
+         <!--- @keywords private -->
+         <method name="_showEnabled">  <![CDATA[
+            super._showEnabled();
+             if (_initcomplete) {
+                _applystyle();
+            }
+         ]]>
+         </method>
+
+     </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

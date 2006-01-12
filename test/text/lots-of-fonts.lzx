@@ -1,0 +1,93 @@
+<canvas fontsize="15" height="6000" width="900">
+ <simplelayout axis="y" />
+  <font name="ariosob_ttf" src="ariosob.ttf" />        
+  <text font="ariosob_ttf" >ariosob_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="ariosor_ttf"   src="ariosor.ttf" />    
+  <text font="ariosor_ttf">ariosor_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-5-bold-expanded-s_ttf" src="ceriph-5-bold-expanded-s.ttf"  /> 
+  <text font="ceriph-5-bold-expanded-s_ttf" >ceriph-5-bold-expanded-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-5-bold-expanded_ttf" src="ceriph-5-bold-expanded.ttf"/>      
+  <text font="ceriph-5-bold-expanded_ttf" >ceriph-5-bold-expanded_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-5-plain-expanded-s_ttf" src="ceriph-5-plain-expanded-s.ttf" /> 
+  <text font="ceriph-5-plain-expanded-s_ttf" >ceriph-5-plain-expanded-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-5-plain-expanded_ttf" src="ceriph-5-plain-expanded.ttf"  />   
+  <text font="ceriph-5-plain-expanded_ttf" >ceriph-5-plain-expanded_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="ceriph-5-plain-regular-s_ttf" src="ceriph-5-plain-regular-s.ttf"   />  
+  <text font="ceriph-5-plain-regular-s_ttf" >ceriph-5-plain-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-5-plain-regular_ttf" src="ceriph-5-plain-regular.ttf" />     
+  <text font="ceriph-5-plain-regular_ttf" >ceriph-5-plain-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="ceriph-7-bold-regular-s_ttf" src="ceriph-7-bold-regular-s.ttf" />   
+  <text font="ceriph-7-bold-regular-s_ttf" >ceriph-7-bold-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-7-bold-regular_ttf" src="ceriph-7-bold-regular.ttf" />           
+  <text font="ceriph-7-bold-regular_ttf" >ceriph-7-bold-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="ceriph-7-plain-regular-s_ttf" src="ceriph-7-plain-regular-s.ttf"   />       
+  <text font="ceriph-7-plain-regular-s_ttf" >ceriph-7-plain-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="ceriph-7-plain-regular_ttf" src="ceriph-7-plain-regular.ttf" />       
+  <text font="ceriph-7-plain-regular_ttf" >ceriph-7-plain-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="chevaraor_ttf" src="chevaraor.ttf" /> 
+  <text font="chevaraor_ttf" >chevaraor_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="chevarar_ttf" src="chevarar.ttf"    /> 
+  <text font="chevarar_ttf" >chevarar_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="congab_ttf" src="congab.ttf" />  
+  <text font="congab_ttf" >congab_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="congar_ttf" src="congar.ttf"  /> 
+  <text font="congar_ttf" >congar_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="copy-8-bold-regular-s_ttf" src="copy-8-bold-regular-s.ttf"  /> 
+  <text font="copy-8-bold-regular-s_ttf" >copy-8-bold-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="copy-8-bold-regular_ttf"               src="copy-8-bold-regular.ttf" /> 
+  <text font="copy-8-bold-regular_ttf" >copy-8-bold-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="copy-8-plain-regular-s_ttf" src="copy-8-plain-regular-s.ttf" /> 
+  <text font="copy-8-plain-regular-s_ttf" >copy-8-plain-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="copy-8-plain-regular_ttf"             src="copy-8-plain-regular.ttf" />  
+  <text font="copy-8-plain-regular_ttf" >copy-8-plain-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="header-17-bold-condensed-s_ttf" src="header-17-bold-condensed-s.ttf"    /> 
+  <text font="header-17-bold-condensed-s_ttf" >header-17-bold-condensed-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="header-17-bold-condensed_ttf" src="header-17-bold-condensed.ttf"  />  
+  <text font="header-17-bold-condensed_ttf" >header-17-bold-condensed_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="header-8-bold-condensed-s_ttf" src="header-8-bold-condensed-s.ttf"   />  
+  <text font="header-8-bold-condensed-s_ttf" >header-8-bold-condensed-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="header-8-bold-condensed_ttf" src="header-8-bold-condensed.ttf" /> 
+  <text font="header-8-bold-condensed_ttf" >header-8-bold-condensed_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="header-8-bold-regular-s_ttf" src="header-8-bold-regular-s.ttf" />  
+  <text font="header-8-bold-regular-s_ttf" >header-8-bold-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="header-8-bold-regular_ttf" src="header-8-bold-regular.ttf"   />  
+  <text font="header-8-bold-regular_ttf" >header-8-bold-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="helmetb_ttf"                           src="helmetb.ttf"  />        
+  <text font="helmetb_ttf" >helmetb_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="helmetbi_ttf"                          src="helmetbi.ttf" />       
+  <text font="helmetbi_ttf" >helmetbi_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="helmetcb_ttf"                          src="helmetcb.ttf"  /> 
+  <text font="helmetcb_ttf" >helmetcb_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="helmetcbi_ttf"                         src="helmetcbi.ttf" />  
+  <text font="helmetcbi_ttf" >helmetcbi_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="helmetci_ttf"                          src="helmetci.ttf" />  
+  <text font="helmetci_ttf" >helmetci_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="helmetcr_ttf"                          src="helmetcr.ttf"  />  
+  <text font="helmetcr_ttf" >helmetcr_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="helmeti_ttf"                           src="helmeti.ttf" /> 
+  <text font="helmeti_ttf" >helmeti_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="helmetr_ttf"                           src="helmetr.ttf"  /> 
+  <text font="helmetr_ttf" >helmetr_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="hooge-4-bold-regular-s_ttf" src="hooge-4-bold-regular-s.ttf"/>  
+  <text font="hooge-4-bold-regular-s_ttf" >hooge-4-bold-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="hooge-4-bold-regular_ttf"              src="hooge-4-bold-regular.ttf"  />  
+  <text font="hooge-4-bold-regular_ttf" >hooge-4-bold-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="hooge-4-plain-regular-s_ttf" src="hooge-4-plain-regular-s.ttf"  />   
+  <text font="hooge-4-plain-regular-s_ttf" >hooge-4-plain-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="hooge-4-plain-regular_ttf" src="hooge-4-plain-regular.ttf"/>   
+  <text font="hooge-4-plain-regular_ttf" >hooge-4-plain-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="hooge-5-bold-expanded-s_ttf" src="hooge-5-bold-expanded-s.ttf" />  
+  <text font="hooge-5-bold-expanded-s_ttf" >hooge-5-bold-expanded-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="hooge-5-bold-expanded_ttf" src="hooge-5-bold-expanded.ttf" /> 
+  <text font="hooge-5-bold-expanded_ttf" >hooge-5-bold-expanded_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="hooge-5-bold-regular-s_ttf" src="hooge-5-bold-regular-s.ttf"/>  
+  <text font="hooge-5-bold-regular-s_ttf" >hooge-5-bold-regular-s_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text>
+  <font name="hooge-5-bold-regular_ttf"              src="hooge-5-bold-regular.ttf"  />   
+  <text font="hooge-5-bold-regular_ttf" >hooge-5-bold-regular_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+  <font name="hooge-5-plain-condensed_ttf" src="hooge-5-plain-condensed.ttf"  />                           
+  <text font="hooge-5-plain-condensed_ttf" >hooge-5-plain-condensed_ttf abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</text> 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

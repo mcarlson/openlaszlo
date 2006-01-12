@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="TestSuite">
+    <lztier>Development Component</lztier>
+    <lzcategory>Development</lzcategory>
+    <lzshortdesc>
+        A view that comprises a suite of LZUnit tests.
+    </lzshortdesc>
+    <lztag>lzunit/testsuite.xml</lztag>
+    <lzseealso>test.html</lzseealso>
+    <lzseealso>testcase.html</lzseealso>
+    <lzseealso>testresult.html</lzseealso>
+</lzelement>
+
+<p>
+  This is the LZUnit library.  LZUnit is an implementation of the
+  xUnit testing framework for <code>LZX</code> programs (cf., <a
+  href="http://junit.sourceforge.net/doc/cookstour/cookstour.htm">JUnit
+  A Cook's Tour</a>).
+</p>
+
+<p>
+  Each of the xUnit components is implemented as an LZX tag with the
+  corresponding name.  Tests can be written by defining a subclass of
+  <code>TestCase</code> and defining <code>test<i>...</i></code>
+  methods.  A test suite can be created by enclosing any number of
+  <code>TestCases</code> in a <code>TestSuite</code>.
+</p>
+
+<p>
+  The usual helper methods, <code>assertTrue</code>,
+  <code>assertEquals</code>, <code>assertWithin</code>,
+  <code>assertSame</code>, etc. are available for implementing the
+  tests.  (See the documentation of <code>Test</code> for a full
+  list.)
+</p>
+
+<p>
+  An <code>LZX</code> program that consists of a
+  <code>TestSuite</code> will, when loaded, automatically run all of
+  its child <code>TestCases</code> and report the number of test cases
+  run, the number of failures, and the number of errors.  If any error
+  occurs, an obvious error message is presented.
+</p>
+
+<p>
+  Below is a simple example of the use of LZUnit demonstrating a
+  successful test, a failed test, and a test that causes an error.
+</p>
+
+<note>You must run LZUnit with debugging on for it to detect
+errors.</note>
+
+<example>
+&lt;canvas debug="true"&gt;
+  &lt;debug y="275"/&gt;
+  &lt;include href="lzunit"/&gt;
+  
+  &lt;class name="Tautologies" extends="TestCase"&gt;
+    &lt;method name="testSuccess"&gt;
+      assertTrue(true);
+      assertFalse(false);
+      assertEquals(null, undefined);
+      assertWithin(0, .001, .01);
+      assertSame(null, null);
+      assertNotSame(null, undefined);
+      assertNull(null);
+      assertNotNull(undefined);
+      assertUndefined(undefined);
+      assertNotUndefined(null);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="IntentionalBugs" extends="TestCase"&gt;
+    &lt;method name="testFailure"&gt;
+      fail("This is an intentional failure");
+    &lt;/method&gt;
+    
+    &lt;method name="testError"&gt;
+      error("This is an intentional error");
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;TestSuite&gt;
+    &lt;Tautologies/&gt;
+    &lt;IntentionalBugs/&gt;
+  &lt;/TestSuite&gt;
+&lt;/canvas&gt;  
+</example>
+
+<fixme>Add link to guide to thsi and the other TestXXX pages</fixme>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

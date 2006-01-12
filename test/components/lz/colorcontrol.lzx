@@ -1,0 +1,63 @@
+<library >
+    <debug y="160"/>
+    <include href="base/basecomponent.lzx"/>
+    <include href="base/swatchview.lzx"/>
+    <include href="lz"/>
+    <include href="slider/slider.lzx"/>
+
+    <class name="box" height="10" width="10" extends="basecomponent"/>
+    <class name="swatch" height="10" width="10" extends="swatchview"/>
+
+    <class name="offsetslider" height="45">
+        <attribute name="value" value="${Math.round(this.s.value)}" type="number"/>
+        <text x="30" y="15" text="${parent.value}"/>
+        <text x="${50-this.width}" resize="true" text="${parent.name + ':'}"/>
+	    <simpleslider name="s" y="5" x="54" width="200" oninit="setValue(0)"
+            minlimit="-255" maxlimit="255"
+            majordivision="20" minordivision="0"/>
+
+    </class>
+    <class name="colorslider" height="35">
+        <attribute name="value" value="${Math.round(this.s.value)}" type="number"/>
+        <text x="30" y="15" text="${parent.value}"/>
+        <text x="${50-this.width}" resize="true" text="${parent.name + ':'}"/>
+	    <simpleslider name="s" y="5" x="54" width="200"
+            minlimit="0" maxlimit="100" oninit="setValue(100)"
+            majordivision="20" minordivision="0"/>
+    </class>
+
+    <class name="div">
+        <attribute name="text" type="text"/>
+        <text resize="true" name="n" text="${parent.text}"/>
+        <view x="${parent.n.width+10}" y="7" bgcolor="blue" width="200" height="1"/>
+    </class>
+    
+    <class name="colorcontrol">
+        <method name="docolortransform"> <![CDATA[
+            var mycolor = Number(this.blue.value/100*255);
+           mycolor = mycolor + (Number(this.red.value/100*255) << 16);
+           mycolor = mycolor + (Number(this.green.value/100*255) << 8);
+            sb.setTint(s1, mycolor, offset.value);
+            ]]>
+        </method>
+        <method event="oninit">
+            var del = new LzDelegate(this, "docolortransform");
+            del.register(this.red, 'onvalue');
+            del.register(this.green, 'onvalue');
+            del.register(this.blue, 'onvalue');
+            del.register(this.offset, 'onvalue');
+            docolortransform();
+        </method>
+        <simplelayout inset="10"/>
+        <colorslider name="red" />
+        <colorslider name="green" />
+        <colorslider name="blue" />
+        <offsetslider name="offset"/>
+<!--        <offsetslider name="greenoffset" />-->
+<!--        <offsetslider name="blueoffset" />-->
+    </class>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,260 @@
+<canvas debug="true" height="800" width="700">
+    <debug x="375" height="500" y="0" width="330" fontsize="14"/>
+    <resource src="resc-a.swf" name="ra"/>
+    <resource src="resc-b.swf" name="rb"/>
+
+    <dataset name="dsTest">
+    </dataset>
+    <dataset name="dsRepl">
+    </dataset>
+
+    <simplelayout spacing="20"/>
+    <view>
+        <simplelayout/>
+        <text fontstyle="bold"> Opacity </text>
+        <view>
+            <simplelayout axis="x" spacing="20"/>
+            <view name="controls">
+                <simplelayout spacing="5"/>
+                <text>Visible</text>
+                <radiogroup name="rg" defaultselection="null">
+                    <method event="onvalue">
+                        var v;
+                        switch (value){
+                            case "true":
+                                v = true;
+                                break;
+                            case "false":
+                                v = false;
+                                break;
+                            default:
+                                v = null;
+                        }
+
+                        parent.parent.elem.oa.setVisible( v);
+                    </method>
+                    <radiobutton>true</radiobutton>
+                    <radiobutton>false</radiobutton>
+                    <radiobutton>null</radiobutton>
+                </radiogroup>
+                <button> fade in 
+                    <method event="onclick">
+                        parent.parent.elem.oa.animate( "opacity" , 1, 800 );
+                    </method>
+                </button>
+            </view>
+            <view valign="middle" name="elem">
+               <simplelayout/>
+                <text>click to fade </text>
+                <view resource="ra" name="oa" bgcolor="yellow">
+                    <method event="onclick">
+                        if ( this.opacity == 0 ){
+                            this.animate( "opacity" , 1, 800 );
+                        } else {
+                            this.animate( "opacity" , 0, 800 );
+                        }
+                    </method>
+                    <method event="onvisible">
+                        Debug.write( this, "visible: " + visible );
+                    </method>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view>
+        <simplelayout/>
+        <text fontstyle="bold"> Data Controls visibility </text>
+        <view>
+            <simplelayout axis="x" spacing="20"/>
+            <view name="controls">
+                <simplelayout spacing="5"/>
+                <text>Visible</text>
+                <radiogroup name="rg" defaultselection="null">
+                    <method event="onvalue">
+                        var v;
+                        switch (value){
+                            case "true":
+                                v = true;
+                                break;
+                            case "false":
+                                v = false;
+                                break;
+                            default:
+                                v = null;
+                        }
+
+                        parent.parent.elem.da.setVisible( v);
+                        parent.parent.elem.db.setVisible( v);
+                    </method>
+                    <radiobutton>true</radiobutton>
+                    <radiobutton>false</radiobutton>
+                    <radiobutton>null</radiobutton>
+                </radiogroup>
+
+                <checkbox value="true"> have data
+                    <method event="onvalue">
+                        var hasnode = dsTest.getFirstChild();
+                        if ( value ){
+                            if ( ! hasnode ) {
+                                dsTest.appendChild(new LzDataElement( "node" ));
+                            }
+                        } else {
+                            if ( hasnode ) {
+                                dsTest.removeChild( hasnode );
+                            }
+                        }
+                    </method>
+                </checkbox>
+            </view>
+            <view valign="middle" name="elem" id="v1">
+                <attribute name="da" value="$once{subviews[0].da}"/>
+                <attribute name="db" value="$once{subviews[1].db}"/>
+                <simplelayout axis="x"/>
+                <view>
+                    <simplelayout/>
+                    <text> no datacontrolsvisibility </text>
+                    <view resource="rb" name="da" bgcolor="yellow"
+                          align="center" datapath="dsTest:/node">
+                        <method event="onvisible">
+                            Debug.write( this, "visible: " + visible );
+                        </method>
+                    </view>
+                </view>
+                <view>
+                    <simplelayout/>
+                    <text> datacontrolsvisibility=false</text>
+                    <view resource="rb" name="db" bgcolor="green" 
+                          align="center">
+                        <datapath xpath="dsTest:/node">
+                            <attribute name="datacontrolsvisibility" value="false"/>
+                        </datapath>
+                        <method event="onvisible">
+                            Debug.write( this, "visible: " + visible );
+                        </method>
+                    </view>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view>
+        <simplelayout/>
+        <text fontstyle="bold"> Replication </text>
+        <view>
+            <simplelayout axis="x" spacing="20"/>
+            <view name="controls">
+                <simplelayout spacing="5"/>
+                <text>Visible</text>
+                <radiogroup name="rg" defaultselection="null">
+                    <method event="onvalue">
+                        var v;
+                        switch (value){
+                            case "true":
+                                v = true;
+                                break;
+                            case "false":
+                                v = false;
+                                break;
+                            default:
+                                v = null;
+                        }
+
+                        parent.parent.elem.ra.setVisible( v);
+                    </method>
+                    <radiobutton>true</radiobutton>
+                    <radiobutton>false</radiobutton>
+                    <radiobutton>null</radiobutton>
+                </radiogroup>
+
+                <button> Add node
+                    <method event="onclick">
+                        dsRepl.appendChild(new LzDataElement( "node" ));
+                    </method>
+                </button>
+                <button> Remove node
+                    <method event="onclick">
+                        dsRepl.removeChild( dsRepl.getFirstChild() );
+                    </method>
+                </button>
+            </view>
+            <view valign="middle" name="elem">
+                <simplelayout axis="x"/>
+                <view resource="ra" name="ra" bgcolor="yellow">
+                    <datapath xpath="dsRepl:/node" pooling="true"/>
+                    <method event="onvisible">
+                        Debug.write( this, "visible: " + visible );
+                    </method>
+                </view>
+            </view>
+        </view>
+    </view>
+    <view>
+        <simplelayout/>
+        <text fontstyle="bold"> Loading media </text>
+        <view>
+            <simplelayout axis="x" spacing="20"/>
+            <view name="controls">
+                <simplelayout spacing="5"/>
+                <text>Visible</text>
+                <radiogroup name="rg" defaultselection="null">
+                    <method event="onvalue">
+                        var v;
+                        switch (value){
+                            case "true":
+                                v = true;
+                                break;
+                            case "false":
+                                v = false;
+                                break;
+                            default:
+                                v = null;
+                        }
+
+                        parent.parent.elem.la.setVisible( v);
+                    </method>
+                    <radiobutton>true</radiobutton>
+                    <radiobutton>false</radiobutton>
+                    <radiobutton>null</radiobutton>
+                </radiogroup>
+
+            </view>
+            <view name="elem">
+                <view name="la" bgcolor="yellow">
+                    <method event="onload">
+                        Debug.write( this.__LZmovieClipRef == 
+                                     this.__LZmovieClipRef.mc);
+                        Debug.write( this.__LZmovieClipRef ,  
+                                     this.__LZmovieClipRef._visible );
+                        Debug.write( this.__LZmovieClipRef.lmc ,
+                                     this.__LZmovieClipRef.lmc._visible );
+                    </method>
+                    <method event="onvisible">
+                        Debug.write( this, "visible: " + visible );
+                    </method>
+                </view>
+                <view y="80">
+                    <simplelayout/>
+                    <button>load
+                        <method event="onclick">
+                            Debug.write( parent.parent )
+                            parent.parent.la.setResource( "http:resc-a.swf" );
+                        </method>
+                    </button>
+                    <button>set resource
+                        <method event="onclick">
+                            parent.parent.la.setResource( "rb" );
+                        </method>
+                    </button>
+                    <button>error
+                        <method event="onclick">
+                            parent.parent.la.setResource( "http:fungdummy" );
+                        </method>
+                    </button>
+                </view>
+            </view>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

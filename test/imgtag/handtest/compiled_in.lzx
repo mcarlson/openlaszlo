@@ -1,0 +1,6 @@
+<canvas>  
+  <resource name="horse" src="horse-3.jpg"/>
+  <text multiline="true" height="300">
+    <img src="horse-3.jpg"/>
+  </text>
+</canvas>

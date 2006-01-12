@@ -1,0 +1,53 @@
+<library>
+<!--- this state provides standard 'drag' functionality to its immediateparent when applied -->
+<class name="dragstate" extends="state">
+    <!--- 'x', 'y' or 'both' , default: both -->
+    <attribute name="drag_axis" value="both" type="string"/>
+
+    <!--- the minimum value for the x attribute. Default : null, no minimum -->
+    <attribute name="drag_min_x" value="null" type="number"/>
+
+    <!--- the maximum value for the x attribute. Default : null, no maximum -->
+    <attribute name="drag_max_x" value="null" type="number"/>
+
+    <!--- the minimum value for the y attribute. Default : null, no minimum -->
+    <attribute name="drag_min_y" value="null" type="number"/>
+
+    <!--- the maximum value for the y attribute. Default : null, no maximum -->
+    <attribute name="drag_max_y" value="null" type="number"/>
+
+    <!--- @keywords private -->
+    <attribute name="__dragstate_ydoffset" value="this.getMouse( 'y' )" when="once" />
+    <attribute name="y"
+       value="(this.drag_axis == 'both' || this.drag_axis == 'y') ?
+            __dragstate_getnewpos('y',
+                this.immediateparent.getMouse( 'y' ) - this.__dragstate_ydoffset)
+           : this.y"
+        when="always"/>
+
+    <!--- @keywords private -->
+    <attribute name="__dragstate_xdoffset" value="this.getMouse( 'x' )" when="once" />
+    <attribute name="x"
+       value="(this.drag_axis == 'both' || this.drag_axis == 'x') ?
+           __dragstate_getnewpos('x',
+                this.immediateparent.getMouse( 'x' ) - this.__dragstate_xdoffset)
+           : this.x"
+        when="always"/>
+
+    <!--- @keywords private -->
+    <method name="__dragstate_getnewpos" args="axis, newpos"> <![CDATA[
+        var min = this['drag_min_' + axis];
+        var max = this['drag_max_' + axis];
+        if ((min != null) && (newpos < min)) newpos = min;
+        if ((max != null) && (newpos > max)) newpos = max;
+        return newpos;
+    ]]>
+    </method>
+</class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

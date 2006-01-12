@@ -1,0 +1,34 @@
+<canvas> 
+    <include href="utils/layouts/alllayouts.lzx" />
+    <font src="helmetr.ttf" name="Helvetica" />
+    <font src="helmetb.ttf" name="Helvetica" style="bold"/>
+    <font src="helmeti.ttf" name="Helvetica" style="italic" />
+    <font src="helmetbi.ttf" name="Helvetica" style="bold italic" />
+
+    <class name="myview">
+        <simplelayout axis="y" spacing="10" />
+        <text fontstyle="bold">Default bold</text>
+        <text fontstyle="italic">Default italic</text>
+        <text fontstyle="bold italic">Default bold italic</text>
+        <text><b>Default bold</b></text>
+        <text><i>Default italic</i></text>
+        <text fontstyle="bold"><i>Default bold italic</i></text>
+        <text fontstyle="italic"><b>Default bold italic</b></text>
+    </class>
+
+    <view width="400" font="Helvetica"  fontsize="14" >
+        <simplelayout axis="y" spacing="10" />
+        <text fontstyle="bold">Helvetica bold</text>
+        <text fontstyle="italic">Helvetica italic</text>
+        <text fontstyle="bold italic">Helvetica bold italic</text>
+        <text><b>Helvetica bold</b></text>
+        <text><i>Helvetica italic</i></text>
+        <text fontstyle="bold"><i>Helvetica bold italic</i></text>
+        <text fontstyle="italic"><b>Helvetica bold italic</b></text>
+        <myview/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

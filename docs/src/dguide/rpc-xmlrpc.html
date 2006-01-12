@@ -1,0 +1,127 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="rpc-xmlrpc">
+<head>
+    <title>XML-RPC</title>
+</head>
+
+<body>
+<warning>
+This feature works in proxied applications only.  It does not work in serverless applications.
+</warning>
+<h1>XML-RPC</h1>
+
+<p>XML-RPC is simple spec that describes how to invoke a remote operation using
+XML over HTTP. Laszlo XML-RPC is part of <a href="${dguide}rpc.html">Laszlo
+RPC</a> and shares many of the same APIs and concept. Laszlo RPC includes <a
+href="${dguide}rpc-soap.html">SOAP</a> and <a
+href="${dguide}rpc-javarpc.html">JavaRPC</a>. For more information on XML-RPC,
+go to <a href="http://www.xmlrpc.com/">XML-RPC.com</a></p>
+
+<h2>&lt;xmlrpc&gt;</h2>
+
+<p>The &lt;xmlrpc&gt; element creates a client-side representation of an XML-RPC
+service. The service attribute is required and must be an URL.</p>
+
+<example title="SOAP" extract="false">
+&lt;xmlrpc service="..."
+      autoload="[true|false]"
+      secure="[true|false]"
+      secureport="..." &gt;
+</example>
+
+<!-- ============================================================ -->
+<!-- attributes/methods                                           -->
+<!-- ============================================================ -->
+<h3>Attributes</h3>
+
+<p><dfn>service</dfn>: (String) URL of where service is located. This attribute
+is required.</p>
+
+<p><dfn>autoload</dfn>: (Boolean) if true, calls to load client proxy during
+init stage. If false, the proxy must be loaded using the load() method. See the
+proxy section in the RPC chapter for details. <b>Default is true.</b></p>
+
+<p><dfn>secure</dfn>: (Boolean) if true, creates a secure HTTPS connection
+between the client and LPS. Also see secureport below. <b>Default is
+false.</b></p>
+
+<p><dfn>secureport</dfn>: (Number) valid only when secure attribute is set to
+true. The secure port to use. There is no client-side default. Most servers use
+port 443 as the default HTTPS port.</p>
+
+
+<h3>Read-only properties</h3>
+
+<p><dfn>proxy</dfn>: (Object) unlike other RPC services, proxy functions are
+created based on declared remotecall elements. Because there is no XML-RPC
+service description, each function stub in the proxy is created by remotecall
+elements declared by the developer. In other RPC services, declared remotecalls
+refer to proxy function stubs that exist after load.</p>
+
+<h3>Methods</h3>
+
+<h4><a name="load">load()</a></h4>
+
+<p>Load() is responsible for setting up the proxy property. The proxy will have
+function stubs based on remotecalls declared in the body of the &lt;xmlrpc&gt;
+element. This method is automatically invoked if autoload is true. When the call
+returns, an onload event is sent.</p>
+
+<h4>unload()</h4>
+
+<p>This method unloads the proxy from the RPC object and sets it to null. When
+the call returns, an onunload event is sent.</p>
+
+<h2>Using remotecall to creating function stubs</h2>
+
+<p>Most Laszlo RPC objects like JavaRPC and SOAP will set function stubs in the
+proxy property during load based on methods described by a class (for JavaRPC)
+or on a service description (using a WSDL in SOAP). Remotecall declarations
+refer to these function stubs and any remotecalls not pointing to a function
+stub that doesn't exist will generate an error/warning. In &lt;xmlrpc&gt;,
+function stubs are create based on remotecall declarations. Note that XML-RPC
+use dot notation for their operation names. Because that will conflict with the
+view system's notation, it's suggested that remotecalls are explictly named.</p>
+
+<example>
+&lt;canvas debug="true" height="400"&gt;
+
+    &lt;debug x="10" y="40" width="450" height="350" /&gt;
+    
+    &lt;xmlrpc name="meerkat"
+            service="http://www.oreillynet.com/meerkat/xml-rpc/server.php"&gt;
+
+        &lt;method event="onload"&gt;
+            Debug.write('meerkat XML-RPC service loaded');
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        &lt;/method&gt;
+
+        &lt;method event="ondata" args="data"&gt;
+            Debug.write('got data:', data);
+        &lt;/method&gt;
+
+        &lt;method event="onerror" args="error"&gt;
+            Debug.write('onerror:', error);
+        &lt;/method&gt;
+
+        &lt;remotecall name="gc" funcname="meerkat.getCategories" /&gt;
+
+    &lt;/xmlrpc&gt;
+
+    &lt;button text="getCategories" x="10" y="10"&gt;
+        &lt;method event="onclick"&gt;
+            Debug.write('getting categories...');
+            meerkat.gc.invoke()
+        &lt;/method&gt;
+    &lt;/button&gt;
+
+&lt;/canvas&gt;
+</example>
+
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

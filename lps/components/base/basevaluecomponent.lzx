@@ -1,0 +1,24 @@
+<library>
+    <include href="base/basecomponent.lzx" />
+
+    <!--- an abstract class for components that represent a value for data -->
+    <class name="basevaluecomponent" extends="basecomponent">
+        <!--- the value that this item represents. When selected,
+        the parent selection group's value will be set to this value.
+        Most subclasses require you to call getValue() to get the
+        value of the attribute.  -->
+        <attribute name="value" value="null"/>
+
+        <!--- returns the value that is represented by this component
+        -->
+        <method name="getValue">
+            return this.value == null ? this.text : this.value;
+        </method>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

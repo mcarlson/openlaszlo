@@ -1,0 +1,59 @@
+<canvas>
+
+    <include href="redmond" />
+
+    <dataset name="messages" />
+    <datapointer name="mptr" xpath="messages:/" />
+
+    <view>
+        <simplelayout axis="x" spacing="10" />
+
+        <view width="200" height="400" bgcolor="#ffffff" clip="true">
+            <view>
+                <view height="12" datapath="messages:/message" oninit="this.parent.adjustScroll();">
+                    <text width="515" datapath="@text" />
+                </view>
+                <simplelayout axis="y" spacing="2"/>
+                <method name="adjustScroll">
+                <![CDATA[
+                    if (this.parent.height < 0) return;
+                        var cvDif=this.parent.height-this.height;
+                        if ((cvDif) < 0){
+                            this.setY(cvDif);
+                            this.parent.scrollbar.updateThumbPos();
+                        }
+                ]]>
+                </method>
+            </view>
+            <scrollbar name="scrollbar" axis="y"/>
+        </view>
+
+        <view>
+            <windowtext name="msg" width="200" />
+            <button id="send" name="send" width="50" height="24" onclick="this.enter();">Enter
+                <method name="enter">
+                <![CDATA[
+                    var message = this.parent.msg.getText();
+                    if (message!=null && message!="") {
+                        canvas.mptr.addNode("message", null, { text: message } );
+                        this.parent.msg.setText("");
+                    }
+                ]]>
+                </method>
+            </button>
+            <simplelayout axis="x" spacing="5"/>
+        </view>
+
+    </view>
+
+    <method event="onkeyup" reference="LzKeys" args="k">
+        if ( k == 13 ) {
+            send.enter();
+        }
+    </method>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

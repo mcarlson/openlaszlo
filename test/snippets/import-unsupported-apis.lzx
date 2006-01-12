@@ -1,0 +1,16 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!-- Should issue a compiler warning that <font> tag in a imported library will not work -->
+<canvas debug="true" proxied="false">
+
+  <import name="lib" href="unsupported-apis-library.lzx" stage="late" />
+ <text width="400" multiline="true">
+  This should issue a compiler warning that the library tries to run API calls which do not exist in serverless mode.
+  <br/>It should also issue a runtime debugger warning for the same things.
+  </text>
+
+
+</canvas>

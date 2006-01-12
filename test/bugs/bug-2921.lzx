@@ -1,0 +1,14 @@
+<canvas font="foo" >
+    <font style="plain" name="foo" src="lztahoe8.ttf" />
+    <font style="plain" name="default" src="lztahoe8.ttf" />
+    <font style="bold" name="goo" src="lztahoe8b.ttf" />
+    <simplelayout/>
+    <button>default</button>
+    <button id="good" fontstyle="bold">default</button>
+    <button id="bad" ><b>default</b></button>
+    <button font="goo" fontstyle="bold">default</button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

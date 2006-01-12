@@ -1,0 +1,20 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<contacts>
+
+<contact firstname="Sarah" lastname="Allen" email="sallen@laszlosystems.com" phone="(415)241-2711"/>
+<contact firstname="Paco" lastname="Anderson" email="paco@laszlosystems.com" phone="(415)241-2700"/>
+<contact firstname="Peter" lastname="Andrea" email="peter@laszlosystems.com" phone="(415)241-2707 "/>
+<contact firstname="Valarie" lastname="Arismendez" email="val@lultralaszlo.com" phone="(415)241-2706 "/>
+<contact firstname="Eric" lastname="Bloch" email="bloch@laszlosystems.com" phone="(415)241-2721"/>
+<contact firstname="Max" lastname="Carlson" email="max@laszlosystems.com" phone="(415)241-2731"/>
+<contact firstname="Xian" lastname="Cho" email="xian@hotmail.com" phone="(408)244-7022"/>
+<contact firstname="Alice" lastname="Munroe" email="alice@laszlosystems.com" phone="(415)241-2711"/>
+<contact firstname="Frederico" lastname="Pancheco" email="fred@laszlosystems.com" phone="(415)241-2756"/>
+<contact firstname="Jose" lastname="Rivera" email="jrivera@acme.com" phone="(408) 891-1044"/>
+<contact firstname="Gina" lastname="Santiago" email="gina@laszlosystems.com" phone="(415)241-2722"/>
+<contact firstname="Bret" lastname="Simister" email="bret@laszlosystems.com" phone="(415)241-2781"/>
+
+</contacts>

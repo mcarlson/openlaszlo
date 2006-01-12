@@ -1,0 +1,95 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<project default="build">
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+  <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"/>
+  
+  <!-- Local locations for public DTDs, so that the build doesn't
+       require web access -->
+  <xmlcatalog id="commonDTDs">
+    <dtd publicId="-//W3C//DTD XHTML 1.0 Transitional//EN"
+         location="dtds/xhtml1-transitional.dtd"/>
+  </xmlcatalog>
+  
+  <target name="init">
+    <property name="docbook-xsl" value="../../../tools/docbook-xsl-1.65.1"/>
+    <property name="dguide.input.dir" value="dguide"/>
+    <property name="dguide.build.dir" value="build/dguide"/>
+    <property name="dguide.output.dir" value="../fast-dguide"/>
+  </target>
+  
+  <target name="xsl" depends="init">
+    <copy todir="dbk">
+      <fileset dir="${dguide.input.dir}" includes="*.dbk"/>
+    </copy>
+    <style style="xsl/doc2dbk.xsl"
+           basedir="${dguide.input.dir}"
+           destdir="${dguide.build.dir}"
+           extension=".dbk"
+           includes="chap*.html"
+           excludes="index.html">
+      <xmlcatalog refid="commonDTDs"/>
+      <param name="localdir" expression="docs/dguide/"/>
+    </style>
+  </target>
+  
+  <target name="dbk" depends="init">
+    <path id="xslt.processor.classpath">
+      <pathelement path="../../WEB-INF/lib/saxon-6.5.3-lz-p1.jar" />
+      <pathelement path="../../3rd-party/jars/dev/xercesImpl.jar"/>
+      <pathelement path="${docbook-xsl}/extensions/saxon651.jar" />
+    </path>
+    
+    <java classname="com.icl.saxon.StyleSheet"
+          fork="yes" 
+          failonerror="true">
+      <classpath refid="xslt.processor.classpath" />
+      <jvmarg value="-Djavax.xml.parsers.DocumentBuilderFactory=org.apache.xerces.jaxp.DocumentBuilderFactoryImpl"/>
+      <jvmarg value="-Djavax.xml.parsers.SAXParserFactory=org.apache.xerces.jaxp.SAXParserFactoryImpl"/>
+      <jvmarg value="-Dorg.apache.xerces.xni.parser.XMLParserConfiguration=org.apache.xerces.parsers.XIncludeParserConfiguration"/>
+      
+      <arg line="-o ${dguide.output.dir}/index.html"/>
+      <arg line="${dguide.build.dir}/chapter-template.dbk"/>
+      <arg line="xsl/fast-dguide.xsl"/>
+      <arg line="base.dir=${dguide.output.dir}/"/>
+    </java>
+  </target>
+  
+  <target name="copy" depends="init">
+    <property name="local.output.dir" value="${dguide.output.dir}" />
+    <property name="local.build.dir" value="${dguide.build.dir}" />
+    <!-- Extract the lzx (and other) files from the *.in files. -->
+    <mkdir dir="${local.output.dir}/programs"/>
+    <copy toDir="${local.output.dir}/programs">
+      <fileset dir="${local.build.dir}" includes="*.in"/>
+      <filterset begintoken="&amp;" endtoken=";">
+        <filtersfile file="entities.properties"/>
+      </filterset>
+      <mapper type="glob" from="*.in" to="*"/>
+    </copy>
+    
+    <copy todir="${dguide.output.dir}/images">
+      <fileset dir="${docbook-xsl}/images"/>
+    </copy>
+    
+    <mkdir dir="${dguide.output.dir}/programs/resources"/>
+    <copy todir="${dguide.output.dir}/programs/resources">
+        <fileset dir="dguide/resources"/>
+    </copy>
+    <copy todir="${dguide.output.dir}">
+      <fileset dir="${dguide.input.dir}" excludes="*.html"/>
+    </copy>
+  </target>
+  
+  <target name="validate">
+    <jing rngfile="../../../tools/emacs/nxml-mode-20031031/schema/docbook.rnc"
+          compactsyntax="true" checkid="true">
+      <fileset dir="dbk" includes="*.dbk" excludes="**/index*.dbk"/>
+    </jing>
+  </target>
+  
+  <target name="build" depends="init,xsl,dbk,copy">
+  </target>
+</project>

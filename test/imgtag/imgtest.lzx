@@ -1,0 +1,39 @@
+<canvas width="100%" height="80%" debug="true">
+  <debug oninit="this.setWrapLines(true)"/>
+  <include href="lzunit" />
+
+  <resource name="horse3" src="horse-3.jpg"/>
+
+  <method event="oninit">
+        //LzBrowser.setClipboard('foo!');
+        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
+        LzTimer.addTimer(upddel, 500);
+  </method>
+
+  <text multiline="true" height="200" width="300" id="t2"/>
+
+  <class name="TestAAText" extends="TestCase">
+    <method name="testImgTag">
+      <![CDATA[
+      canvas.accessible = true;
+      t2.setText("foo\n\nbar");
+      assertEquals("foo\n\nbar", t2.getText());  
+      t2.setText("foo\n\nbar <img src='foo' alt='a nice pretty picture'> foo baz");
+      assertEquals("foo\n\nbar <img src='foo' alt='a nice pretty picture'>[image a nice pretty picture] foo baz", t2.getText());
+      t2.setText('foo\n\nbar <img src="foo" alt="a nice pretty picture"> foo baz');
+      assertEquals('foo\n\nbar <img src="foo" alt="a nice pretty picture">[image a nice pretty picture] foo baz', t2.getText());
+      t2.setText('foo\n\nbar <img src = "foo" alt ="a nice pretty picture"> foo baz');
+      assertEquals('foo\n\nbar <img src = "foo" alt ="a nice pretty picture">[image a nice pretty picture] foo baz', t2.getText());
+      t2.setText('<img src =  "foo" alt =  "a nice pretty picture"> foo baz');
+      assertEquals('<img src =  "foo" alt =  "a nice pretty picture">[image a nice pretty picture] foo baz', t2.getText());
+      t2.setText('&lt;img src=baz&gt;<img src =  "foo" alt =  "a nice pretty picture"> foo baz');
+      assertEquals('&lt;img src=baz&gt;<img src =  "foo" alt =  "a nice pretty picture">[image a nice pretty picture] foo baz', t2.getText());
+      ]]>
+    </method>
+  </class>
+
+  <TestSuite>
+    <TestAAText />
+  </TestSuite>
+
+</canvas>

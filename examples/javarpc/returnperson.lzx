@@ -1,0 +1,56 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- returnperson.lzx                                                      -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas width="700" height="500" debug="true">
+
+    <debug x="170" y="20" width="500" height="400" />
+
+    <security>
+        <allow>
+            <pattern>^examples.ReturnPersonExample</pattern>
+        </allow>
+    </security>
+
+    <javarpc name="returnperson" scope="none" classname="examples.ReturnPersonExample">
+        <method event="onload">
+            Debug.write('proxy:');
+            Debug.inspect(this.proxy);
+        </method>
+
+        <remotecall funcname="getPerson">
+            <method event="ondata" args="person">
+                Debug.write('-------------------');
+                Debug.write('getPerson response:');
+                Debug.inspect(person);
+            </method>
+        </remotecall>
+
+        <remotecall funcname="getArrayListOfPerson">
+            <method event="ondata" args="list">
+                Debug.write('------------------------------');
+                Debug.write('getArrayListOfPerson response:');
+                Debug.write(list);
+            </method>
+        </remotecall>
+
+    </javarpc>
+
+    <constantlayout axis="x" value="10"/>
+    <simplelayout inset="10" spacing="10"/>
+
+    <button onclick="returnperson.getPerson.invoke()" 
+            text="get person" />
+    <button onclick="returnperson.getArrayListOfPerson.invoke()" 
+            text="get person list" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

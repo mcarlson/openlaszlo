@@ -1,0 +1,115 @@
+<canvas bgcolor="#EAEAEA" width="640" height="700">
+    <dataset name="items">
+        <item value="item1" >item one</item>
+        <item value="item2" >item two</item>
+        <item value="item3" >item three</item>
+        <item value="item4" >item four</item>
+        <item value="item5" >item five</item>
+        <item value="item6" >item six</item>
+    </dataset>
+    <constantlayout axis="x" value="20"/>
+    <simplelayout axis="y" inset="20"/>
+    <view  layout="axis:y;spacing:4">
+        <text>The text that appears in the list may be different from the
+        value represented by that list item</text>
+        <view layout="axis:x; spacing:30">
+            <view layout="spacing:4">
+                <text>single select</text>
+                <list  id="a1" width="130"
+                    oninit="selectItemAt(1)"
+                           shownitems="3">
+                    <textlistitem datapath="items:/item"
+                               text='$path{"text()"}'
+                               value='$path{"@value"}'/>
+                </list>
+                <text text="${'value: ' + a1.value}"/>
+            </view>
+            <view layout="spacing:4">
+                <text>toggle selected</text>
+                <list  id="a2" toggleselected="true"
+                           oninit="selectItemAt(0)"
+                           width="130"
+                           shownitems="3">
+                    <textlistitem datapath="items:/item"
+                               text='$path{"text()"}'
+                               value='$path{"@value"}'/>
+                </list>
+                <text text="${'value: ' + a2.value}"/>
+            </view>
+            <view layout="spacing:4">
+                <text>multi-select</text>
+                <list  id="a3"  multiselect="true"
+                           width="130"
+                           shownitems="3">
+                    <textlistitem datapath="items:/item"
+                               text='$path{"text()"}'
+                               value='$path{"@value"}'/>
+
+                </list>
+                <button height="20">Clear Selection
+                    <method event="onclick">
+                        var val = a3.clearSelection();
+                    </method>
+                </button>
+                <button height="20">Get Value
+                    <method event="onclick">
+                        var val = a3.getValue();
+                        a1val.setText(val);
+                    </method>
+                </button>
+                <text multiline="true" id="a1val" width="200" height="60"/>
+            </view>
+        </view>
+    </view>
+
+    <class name="mylistitem" extends="listitem" height="20">
+        <attribute name="color" value="0x000000" when="once"/>
+        <view x="4" y="5" width="10" height="10" bgcolor="${parent.color}"/>
+        <text x="18" text="${parent.text}"/>
+    </class>
+
+    <bluestyle name="customlistcolors" textfieldcolor="white"/>
+    <purplestyle name="purplecolors"/>
+    <view layout="axis:x; spacing:60">
+        <view layout="axis:y;spacing:5">
+            <text>purple style</text>
+            <list style="purplecolors" width="150">
+                <textlistitem>cloudy</textlistitem>
+                <textlistitem>sunny</textlistitem>
+                <textlistitem>thunder showers</textlistitem>
+                <textlistitem selected="true">hailstorm</textlistitem>
+                <textlistitem>snow</textlistitem>
+            </list>
+       </view>
+        <view layout="axis:y;spacing:5">
+            <text>custom listitem class</text>
+            <list width="140">
+                <mylistitem color="teal">teal</mylistitem>
+                <mylistitem color="ltpurple2">light purple</mylistitem>
+                <mylistitem color="palegreen2">pale green</mylistitem>
+                <mylistitem color="iceblue2">ice blue</mylistitem>
+                <mylistitem color="sand2">sand</mylistitem>
+            </list>
+        </view>
+        <view layout="axis:y;spacing:5">
+            <text>custom colors, spacing=2</text>
+            <list style="customlistcolors" spacing="2" shownitems="6"
+                bgcolor="${iceblue4}">
+                <textlistitem>Peter</textlistitem>
+                <textlistitem>Bret</textlistitem>
+                <textlistitem>Sarah</textlistitem>
+                <textlistitem>Christian</textlistitem>
+                <textlistitem>Pablo</textlistitem>
+                <textlistitem>Lyndon</textlistitem>
+                <textlistitem>Adam</textlistitem>
+                <textlistitem>Eric</textlistitem>
+                <textlistitem>David</textlistitem>
+            </list>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

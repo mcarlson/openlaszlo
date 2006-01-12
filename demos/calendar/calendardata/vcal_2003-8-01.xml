@@ -1,0 +1,47 @@
+<vcalendar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year2003>
+        <month8>
+            <day1>
+                <event>
+                   <summary value="Friday Party!"/>
+                   <comment value="Drinks at the Pub!"/>
+                   <start year="2003" month="8" day="1" hour="6" />
+                   <end year="2003" month="8" day="1" hour="9" />
+                   <category value="holiday"/>
+                </event>
+           </day1>
+
+            <day4>
+                <event>
+                   <summary value="Civic Holiday"/>
+                   <comment value="Civic Holiday, Canada"/>
+                   <start year="2003" month="8" day="4" hour="9" />
+                   <end year="2003" month="8" day="4" hour="10" />
+                   <category value="holiday"/>
+                </event>
+           </day4>
+           <day14>
+                <event>
+                   <summary value="Company Meeting"/>
+                   <comment value="Project Reviews"/>
+                   <start year="2003" month="8" day="14" hour="9" />
+                   <end year="2003" month="8" day="14" hour="10" />
+                   <category value="holiday"/>
+                </event>
+           </day14>
+            <day19>
+                <event>
+                   <summary value="Peter's Birthday!"/>
+                   <comment value="Surprise Party in the Kitchen"/>
+                   <start year="2003" month="8" day="19" hour="1" />
+                   <end year="2003" month="8" day="19" hour="3" />
+                   <category value="holiday"/>
+                </event>
+           </day19>
+        </month8>
+    </year2003>
+</vcalendar>

@@ -1,0 +1,8 @@
+<data>
+    <message><![CDATA[
+      THIS TEST REQUIRES SWF7: there should be an image here <img src='../resources/jpg/k8s.jpg'> <br/>and text following it
+     ]]></message>
+    <message><![CDATA[
+      There is no image here...
+    ]]></message>
+  </data>

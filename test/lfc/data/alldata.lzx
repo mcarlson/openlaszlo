@@ -1,0 +1,35 @@
+<canvas width="900" height="90%" debug="true">
+    <debug x="300" width="300" height="400"/>
+
+    <include href="datanode.lzx"/>
+    <include href="datapointer.lzx"/>
+    <include href="datapointerServerless.lzx"/>
+
+    <include href="datapointerdependencies.lzx"/>
+    <include href="datapath.lzx"/>
+    <include href="specialop.lzx"/>
+    <include href="xpspace.lzx"/>
+    <include href="datadollarpath.lzx"/>
+    <include href="namespace.lzx"/>
+    <include href="namespace-solo.lzx"/>
+    <include href="whitespace.lzx"/>
+
+    <TestSuite>
+
+        <TestDatanode/>
+        <TestDatapointer/>
+        <TestDatapointerServerless/>
+        <TestDPDepend/>
+        <TestDatapath/>
+        <TestDatapathSpecialOp/>
+        <TestXPParse/>
+        <TestPathBinding/>
+        <TestNamespace/>
+        <TestNamespaceSOLO/>
+        <TestTrimWhitespace/>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

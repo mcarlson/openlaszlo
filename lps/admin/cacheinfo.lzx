@@ -1,0 +1,310 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- cacheinfo.lzx                                                         -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <dataset type="http" name="cids" src="console.lzx" />
+    <dataset type="http" name="ccds" src="console.lzx" />
+
+    <!-- =================================================================== -->
+    <!-- itemlist                                                            -->
+    <!-- =================================================================== -->
+    <class name="itemlist">
+        <attribute name="width"  value="300"/>
+        <attribute name="height" value="125"/>
+        <view name="border" bgcolor="black" width="${parent.width}" 
+              height="${parent.height}">
+            <view name="content" bgcolor="#eaeaea" x="1" y="1" clip="true"
+                  width="${parent.width - 2}" height="${parent.height -2}">
+                <view>
+                    <simplelayout axis="y" spacing="5" />
+                    <view clickable="true">
+                        <datapath xpath="item" replication="lazy" />
+                        <method event="onclick">
+                        <![CDATA[
+                            if (typeof(classroot.parent.parent.mt) == "undefined") {
+                                debug.write('itemlist: no parent.parent.mt')
+                                return;
+                            }
+
+                            var dp = this.datapath;
+                            var key = dp.xpathQuery('@key');
+                            var dirty = dp.xpathQuery('@dirty');
+                            var size = dp.xpathQuery('@size');
+                            var path_name = dp.xpathQuery('@path-name');
+                            var info_name = dp.xpathQuery('@info-name');
+                            var last_modified = dp.xpathQuery('@last-modified-gmt');
+
+                            var cache;
+                            if (dp.xpathQuery('@active') == 'true') {
+                                cache = 'active';
+                            } else if (dp.xpathQuery('@in-memory') == 'true') {
+                                cache = 'memory';
+                            } else {
+                                cache = 'disk';
+                            }
+
+                            var str = 
+                                'cache: ' + cache + 
+                                (dirty == 'true' ? '(dirty)' : '') + '\n' +
+                                'size: ' + size + '\n' +
+                                'key: \n' + key + '\n\n' +
+                                'path-name: \n' + path_name + '\n\n' +
+                                'info-name: \n' + info_name + '\n\n'+ 
+                                'last-modified: \n' + last_modified + '\n'
+                                ;
+
+                            classroot.parent.parent.mt.setText(str);
+                        ]]>
+                        </method>
+                        <method event="onmouseup">
+                            this.setAttribute("bgcolor",0xcacaca);
+                        </method>
+                        <method event="onmousedown">
+                            this.setAttribute("bgcolor",0xbababa);
+                        </method>  
+                        <method event="onmouseover">
+                            this.setAttribute("bgcolor",0xcacaca);
+                        </method>                      
+                        <method event="onmouseout">
+                            this.setAttribute("bgcolor",0xeaeaea);
+                        </method>                       
+                        <text width="${canvas.maxtextwidth}" datapath="@key" />
+                    </view>
+                </view>
+                <scrollbar name="sby" />
+                <scrollbar name="sbx" axis="x"/>
+            </view>
+        </view>
+    </class>
+
+    <!-- =================================================================== -->
+    <!-- cacheinfolayout                                                     -->
+    <!-- =================================================================== -->
+    <class name="cacheinfolayout">
+        <simplelayout axis="x" spacing="10" />
+        <view>
+            <simplelayout axis="y" spacing="4" />
+            <text>active</text>
+            <itemlist name="a" datapath="active[1]" clickable="true" />
+            <view>
+                <simplelayout axis="x" spacing="1" />
+                <text>mem-total=</text>
+                <text datapath="@mem-total" resize="true"/>
+                <text>, </text>
+                <text>mem-in-use=</text>
+                <text datapath="@mem-in-use" resize="true"/>
+            </view>
+            <itemlist name="m" datapath="in-memory[1]" />
+            <view>
+                <simplelayout axis="x" spacing="1" />
+                <text>disk-total=</text>
+                <text datapath="@disk-total" resize="true"/>
+                <text>, </text>
+                <text>disk-in-use=</text>
+                <text datapath="@disk-in-use" resize="true"/>
+            </view>
+            <itemlist name="d" datapath="disk[1]" clickable="true" />
+        </view>
+        <text name="mt" y="20" selectable="true" multiline="true"
+              width="275" height="${classroot.height - 30}" />
+    </class>
+
+
+    <!-- =================================================================== -->
+    <!-- cacheinfo                                                           -->
+    <!-- =================================================================== -->
+    <class name="cacheinfo">
+
+
+        <datapointer xpath="cids:/*[1]">
+            <method event="ondata">
+                var nn = this.getNodeName();
+                if (nn == "lps-cacheinfo") {
+                    parent.mt.setVisible(false);
+                    parent.info.setVisible(true);
+                    this.handleData();
+                } else if (nn == "lps-error") {
+                    parent.mt.setVisible(true);
+                    parent.info.setVisible(false);
+                    this.handleError();
+                } else {
+                    parent.mt.setVisible(true);
+                    parent.info.setVisible(false);
+                    parent.mt.setText('error: cache info request node is ' + nn);
+                }
+            </method>
+            <method name="handleData">
+            <![CDATA[
+                var str;
+                var dptr = this.xpathQuery('media-cache[1]');
+                var attrs = dptr.attributes;
+
+                var max; // longest string
+                for (var k in attrs) {
+                    if (max < k.length)
+                        max = k.length;
+                }
+
+                str += "Media Cache\n";
+                for (var k in attrs) {
+                    var len = max - k.length;
+                    indent = ' ';
+                    for (var i=0; i < len; i++)
+                        indent += ' ';
+                    str += k + ':' + indent + attrs[k] + '\n';
+                }
+
+                var dptr = this.xpathQuery('data-cache[1]');
+                var attrs = dptr.attributes;
+                str += "\nData Cache\n";
+                for (var k in attrs) {
+                    var len = max - k.length;
+                    indent = ' ';
+                    for (var i=0; i < len; i++)
+                        indent += ' ';
+                    str += k + ':' + indent + attrs[k] + '\n';
+                }
+
+                var dptr = this.xpathQuery('compiler-cache[1]');
+                var attrs = dptr.attributes;
+                str += "\nCompiler Cache\n";
+                for (var k in attrs) {
+                    var len = max - k.length;
+                    indent = ' ';
+                    for (var i=0; i < len; i++)
+                        indent += ' ';
+                    str += k + ':' + indent + attrs[k] + '\n';
+                }
+
+                var dptr = this.xpathQuery('compiler-media-cache[1]');
+                var attrs = dptr.attributes;
+                str += "\nCompiler Media Cache\n";
+                for (var k in attrs) {
+                    var len = max - k.length;
+                    indent = ' ';
+                    for (var i=0; i < len; i++)
+                        indent += ' ';
+                    str += k + ':' + indent + attrs[k] + '\n';
+                }
+
+                parent.info.mt.setText(str.slice(0, str.length-1));
+            ]]>
+            </method>
+            <method name="handleError">
+                var err = this.xpathQuery('text()');
+                if (err.indexOf('status="403"') != -1) {
+                    parent.mt.setText("Forbidden: cache info request (bad password).");
+                } else {
+                    parent.mt.setText(err);
+                }
+            </method>
+            <method event="onerror" args="ds">
+                parent.mt.setText(ds.getErrorString());
+            </method>
+            <method event="ontimeout" >
+                parent.mt.setText("Cache info request timed out.");
+            </method>
+        </datapointer>
+        <datapointer xpath="ccds:/*[1]">
+            <method event="ondata">
+                var nn = this.getNodeName();
+                if (nn == "lps") {
+                    parent.mt.setVisible(false);
+                    parent.info.setVisible(true);
+                    this.handleData();
+                } else if (nn == "lps-error") {
+                    parent.mt.setVisible(true);
+                    parent.info.setVisible(false);
+                    this.handleError();
+                } else {
+                    parent.mt.setVisible(true);
+                    parent.info.setVisible(false);
+                    parent.mt.setText('error: clear cache request node is ' + nn);
+                }
+            </method>
+            <method name="handleData" >
+                var cleared = this.xpathQuery('clearcache[1]/@cleared');
+                if (cleared == 'true') {
+                    parent.request();
+                    return;
+                } 
+                var msg = "Problems clearing cache:\n";
+                var mc = this.xpathQuery("clearcache[1]/media-cache[1]/@cleared");
+                var dc = this.xpathQuery("clearcache[1]/data-cache[1]/@cleared");
+                var cc = this.xpathQuery("clearcache[1]/compilation-cache[1]/@cleared");
+                if (mc == 'false') msg += "Couldn't clear media cache.\n";
+                if (dc == 'false') msg += "Couldn't clear data cache.\n";
+                if (cc == 'false') msg += "Couldn't clear compilation cache.\n";
+                parent.mt.setText(msg);
+            </method>
+            <method name="handleError">
+                var err = this.xpathQuery('text()');
+                if (err.indexOf('status="403"') != -1) {
+                    parent.info.mt.setText("Forbidden: clear cache request (bad password).");
+                } else {
+                    parent.info.mt.setText(err);
+                }
+            </method>
+            <method event="onerror" args="ds" >
+                parent.mt.setText(ds.getErrorString());
+            </method>
+            <method event="ontimeout" >
+                parent.mt.setText("Clear cache request timed out.");
+            </method>
+        </datapointer>
+
+        <method name="request">
+            this.mt.setVisible(true);
+            this.info.setVisible(false);
+            this.mt.setText('Requesting...');            
+            cids.setQueryParams( { lzt: "cacheinfo", /* details: 1, */
+                                   pwd: pwd.getText() } );
+            cids.doRequest();
+        </method>
+
+        <simplelayout axis="y" spacing="2"/>
+        <view name="panel">
+            <simplelayout axis="x" spacing="5" />
+            <button onclick="parent.parent.request()">Refresh</button>
+            <button>View Details
+                <method event="onclick" >
+                    LzBrowser.loadURL("javascript: var wptr = window.open('console.lzx?lzt=cacheinfo&amp;details=1&amp;pwd=" + escape(escape(pwd.getText())) + "', 'test', 'resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address'); wptr.focus(); void(0);")
+                </method>
+            </button>
+            <button>Clear Cache
+                <method event="onclick" >
+                    classroot.mt.setVisible(true);
+                    classroot.info.setVisible(false);
+                    this.mt.setText('Clearing...');            
+                    ccds.setQueryParams( { lzt: "clearcache", pwd: pwd.getText() } );
+                    ccds.doRequest();
+                </method>
+            </button>
+        </view>
+
+        <text name="mt" font="monob" fontsize="10" 
+              height="${parent.parent.height - 100}"
+              width="${parent.parent.width}" selectable="true" 
+              multiline="true" />
+
+        <view name="info" width="200" height="600">
+            <text name="mt" font="monob" fontsize="10" 
+                  height="${parent.height - 100}"
+                  width="${parent.width}" selectable="true" 
+                  multiline="true" />
+        </view>
+
+    </class> <!-- class cacheinfo -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

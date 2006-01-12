@@ -1,0 +1,267 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- testhttpdata.lzx                                                      -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="100%" height="100%" debug="true">
+    <debug y="${tests.height}" height="${canvas.height - tests.height}" />
+    <dataset name="data1" type="http" 
+            querystring="'foo=bar&amp;plop=slop'"
+            src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp">
+    </dataset>
+
+    <dataset name="data2" type="http" queuerequests="true"
+             src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp"/>
+
+    <dataset name="data3" acceptencodings="true" getresponseheaders="false"
+             src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp"/>
+
+    <dataset name="data4" cacheable="true" getresponseheaders="false"
+             src="http:../../resources/xml/swatch.xml"/>
+
+    <dataset name="data5" cacheable="true" acceptencodings="true"
+             src="http:../../resources/xml/swatch.xml"/>
+
+    <dataset name="data6" acceptencodings="true"
+             src="http://localhost:8080/lps/test/lfc/data/httpecho.jsp"/>
+
+    <dataset name="data7" acceptencodings="true" cacheable="true"
+             src="file:../../resources/xml/swatch.xml"/>
+
+    <dataset name="data8" 
+             src="http://localhost:8080/lps/test/lfc/data/httptimeout.jsp"/>
+
+    <dataset name="data9" src="http:httpredir.jsp"/>
+
+    <dataset name="data10" src="http:httptimeout.jsp"/>
+
+    <dataset name="data11" src="http:httptimeout.jsp"
+        getresponseheaders="false" cacheable="true" />
+
+    <dataset name="data12" src="http:httpdate.jsp"
+        getresponseheaders="false" cacheable="true" />
+
+    <class name="testdatapointer" extends="datapointer">
+      <method event="ondata">
+        Debug.format("%s: .ondata(%w)\n", parent.text, arguments[0]);
+      </method>
+      <method event="onerror">
+        Debug.format("%s: .onerror(%w)\n", parent.text, arguments[0]);
+      </method>
+      <method event="ontimeout">
+        Debug.format("%s: .ontimeout(%w)\n", parent.text, arguments[0]);
+      </method>
+    </class>
+
+    <view id="tests">
+      <simplelayout/>
+      <view name="buttons" layout="class:wrappinglayout;axis:x;spacing:2" width="${canvas.width}">
+        <button>
+          Unqueued
+          <attribute name="rnum" value="0"/>
+          <method event="onclick">
+            canvas.datasets.data1.setQueryString( { rnum : this.rnum++, set: 1} );
+            Debug.format("%s request: %d\n", this.text, this.rnum );
+            canvas.datasets.data1.doRequest();
+          </method>
+          <testdatapointer xpath="data1:/*" />
+        </button>
+        <button>
+          Queued
+          <attribute name="rnum" value="0"/>
+          <method event="onclick">
+            canvas.datasets.data2.setQueryString( { rnum : this.rnum++, set: 2} );
+            Debug.format("%s request: %d\n", this.text, this.rnum );
+            canvas.datasets.data2.doRequest();
+          </method>
+          <testdatapointer xpath="data2:/*" />
+        </button>
+        <button>
+          No Response Headers
+          <attribute name="rnum" value="0"/>
+          <method event="onclick">
+            canvas.datasets.data3.setQueryString( { rnum : this.rnum++, set: 3} );
+            Debug.format("%s request: %d\n", this.text, this.rnum );
+            canvas.datasets.data3.doRequest();
+          </method>
+          <testdatapointer xpath="data3:/*" />
+        </button>
+        <button>
+          XML
+          <method event="onclick">
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data4.doRequest();
+          </method>
+          <testdatapointer xpath="data4:/*" />
+        </button>
+        <button>
+          XML with encodings
+          <method event="onclick">
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data5.doRequest();
+          </method>
+          <testdatapointer xpath="data5:/*" />
+        </button>
+        <button>
+          Echo with encondings
+          <method event="onclick">
+            var d6 = canvas.datasets.data6;
+            d6.setHeader( "XFoo" , "i//%xBar" );
+            d6.setHeader( "XPlop" , "x slop" );
+            d6.setQueryString( "hi=there");
+            Debug.format("%s request\n", this.text);
+            d6.doRequest();
+          </method>
+          <testdatapointer xpath="data6:/*">
+            <method event="ondata">
+              Debug.format("%s: .ondata(%w)\n", parent.text, arguments[0]);
+              Debug.write( "got headers: " );
+              Debug.write( this.getDataset().getAllResponseHeaders().serialize( ":" , "\n" ));
+            </method>
+          </testdatapointer>
+        </button>
+        <button>
+          XML, cacheable, encodings
+          <method event="onclick">
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data7.doRequest();
+          </method>
+          <testdatapointer xpath="data7:/*" />
+        </button>
+        <button>
+          Don't Timeout
+          <method event="onclick">
+            var sl = "sleep=10000";
+            canvas.datasets.data8.setQueryString( sl );
+            Debug.format("%s request: %s\n", this.text, sl);
+            canvas.datasets.data8.doRequest();
+          </method>
+          <testdatapointer xpath="data8:/*" />
+        </button>
+        <button>
+          Redirect
+          <method event="onclick">
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data9.doRequest();
+          </method>
+          <testdatapointer xpath="data9:/*" />
+        </button>
+        <button>
+          Do Timeout
+          <method event="onclick">
+            canvas.datasets.data10.setQueryString("sleep=60000");
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data10.doRequest();
+          </method>
+          <testdatapointer xpath="data10:/*" />
+        </button>
+        <button>
+          Do Timeout, cacheable
+          <method event="onclick">
+            canvas.datasets.data11.setQueryString("sleep=60000");
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data11.doRequest();
+          </method>
+          <testdatapointer xpath="data11:/*" />
+        </button>
+        <button>
+          Date
+          <method event="onclick">
+            Debug.format("%s request\n", this.text);
+            canvas.datasets.data12.doRequest();
+          </method>
+          <testdatapointer xpath="data12:/*" />
+        </button>
+        <button>
+          Switch Image
+          <attribute name="nextImage" />
+          <method event="onclick">
+            switch (this.nextImage) {
+            case 1:
+            parent.img.loadImg( "Beavis" , 
+            "http://www.10th-avenue.com/~bloch/beavis.jpg");
+            this.nextImage = 2;
+            break;
+            case 2:
+            parent.img.loadImg("Hipsters",
+            "http://www.10th-avenue.com/~bloch/hipsters.gif");
+            this.nextImage = 3;
+            break;
+            case 3:
+            parent.img.loadImg("Kermit",
+            "http://www.10th-avenue.com/Kermit/Update99/dog4.jpg");
+            this.nextImage = 4;
+            break;
+            case 4:
+            parent.img.loadImg("Logo",
+            "file:../../resources/jpg/logo.jpg");
+            this.nextImage = 5;
+            break;
+            case 5:
+            parent.img.loadImg("Matrix",
+            "file:../../../sample-apps/dashboard/media/video/matrix.swf" );
+            this.nextImage = 6;
+            break;
+            case 6:
+            parent.img.loadImg("Windows XP Sunset",
+            // Test absolute URL on Windows
+            "file:///C:/Documents and Settings/All Users/Documents/My Pictures/Sample Pictures/Sunset.jpg");
+            this.nextImage = 7;
+            break;
+            default:
+            parent.img.loadImg("Oddtodd",
+            "http://www.oddtodd.com/wordup.swf");
+            this.nextImage = 1;
+            break;
+            } 
+          </method>
+        </button>
+        <button>
+          Abort Load
+          <method event="onclick">
+
+            parent.img.loadImg( "matrix",
+            "http:../../../sample-apps/dashboard/media/video/matrix.swf");
+            var d = new LzDelegate( parent.img , "unload" );
+            LzTimer.addTimer( d , 1000 );
+          </method>
+        </button>
+        <checkbox name="ccheck">cache in client</checkbox>
+        <checkbox name="scheck">cache in server</checkbox>
+        <view name="img" >
+          <method name="loadImg" args="n , url, docache">
+            this.imgname = n;
+            Debug.format("Loading %s (cache: %s)", this.imgname,
+                         parent.ccheck.amChecked?
+                           (parent.scheck.amChecked?"both":"client"):
+                           (parent.scheck.amChecked?"server":"none"));
+            this.setSource(url, foo);
+          </method>
+          <method event="onload">
+            Debug.format("%s: .ondata(%w)\n", this.imgname, arguments[0]);
+          </method>
+          <method event="ondata">
+            Debug.format("%s: .ondata(%w)\n", this.imgname, arguments[0]);
+          </method>
+          <method event="onerror">
+            Debug.format("%s: .onerror(%w)\n", this.imgname, arguments[0]);
+          </method>
+          <method event="ontimeout">
+            Debug.format("%s: .ontimeout(%w)\n", this.imgname, arguments[0]);
+          </method>
+        </view>
+      </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

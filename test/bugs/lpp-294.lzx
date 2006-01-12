@@ -1,0 +1,39 @@
+<canvas>
+    <class name="testTS" width="50%" height="100%">
+        <tabslider height="100%" width="100%" >
+            <tabelement text="element 1" >
+                <text height="100%" bgcolor="blue">I have an invisible element so I'm short.</text>
+            </tabelement>
+            <tabelement text="element 2" visible="false">
+                <text height="100%" bgcolor="blue">I have an invisible element so I'm short.</text>
+            </tabelement>
+            <tabelement text="element 3" >
+                <text height="100%" bgcolor="blue">I have an invisible element so I'm short.</text>
+            </tabelement>
+            <tabelement text="element 4" >
+                <text height="100%" bgcolor="blue">I have an invisible element so I'm short.</text>
+            </tabelement>
+        </tabslider>
+    </class>
+    <class name="testTS2" width="50%" height="100%">
+        <tabslider height="100%" width="100%" >
+            <tabelement text="element 1" >
+                <text height="100%" bgcolor="green">LOVE</text>
+            </tabelement>
+            <tabelement text="element 2" >
+                <text height="100%" bgcolor="green">LOVE</text>
+            </tabelement>
+            <tabelement text="element 3" >
+                <text height="100%" bgcolor="green">LOVE</text>
+            </tabelement>
+            <tabelement text="element 4" >
+                <text height="100%" bgcolor="green">LOVE</text>
+            </tabelement>
+        </tabslider>
+    </class>
+    
+    <testTS />
+    <testTS2 />
+
+    <simplelayout axis="x" />
+</canvas>

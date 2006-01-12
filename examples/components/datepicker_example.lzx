@@ -1,0 +1,26 @@
+<canvas height="550" bgcolor="0xeaeaea">
+    <font name="smallfont" src="verity/verity9.ttf"/>
+
+    <view x="40" y="40">
+
+        <view>
+            <simplelayout axis="y" spacing="2"/>
+             <datepicker/>
+             <text> datepicker that starts with an icon </text>
+        </view>
+
+        <view>
+            <simplelayout axis="y" spacing="2"/>
+             <datepicker startAsIcon="false"/>
+             <text> datepicker that starts without an icon </text>
+        </view> 
+
+        <simplelayout axis="y" spacing="20"/>
+     </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,73 @@
+<library>
+    <include href="basebutton.lzx"/>
+    <class name="multistatebutton" extends="basebutton" clickable="true">
+        <!--- the current state, default: 0 -->
+        <attribute name="statenum" type="number" value="0" setter="this.setStateNum(statenum)"/>
+        <!--- the number of frames in a state, default: 3 -->
+        <attribute name="statelength" type="number" value="3" setter="this.setStateLength(statelength)"/>
+        <!--- the largest number allowed for the value of statenum, default: 0 -->
+        <attribute name="maxstate" type="number" value="0"/>
+       
+        <!--- @keywords private -->
+        <attribute name="lastres" type="number" value="1"/>
+        <!--- @keywords private -->
+        <attribute name="frame" value="${this.lastres + (this.statenum * this.statelength)}"/>
+        <!--- @keywords private -->
+        <attribute name="onstatenum" value="null"/>
+        <!--- @keywords private -->
+        <attribute name="onstatelength" value="null"/>
+        <!--- @keywords private -->
+        <method name="showDown" args="sd">
+            this.setAttribute('lastres', this.downResourceNumber);
+        </method>
+        <!--- @keywords private -->
+        <method name="showUp" args="sd">  <![CDATA[
+            if (!_enabled &&  this.disabledResourceNumber) {
+                this.setAttribute('lastres', this.disabledResourceNumber);
+            } else {
+                this.setAttribute('lastres', this.normalResourceNumber);
+            }
+        ]]>
+        </method>
+        <!--- @keywords private -->
+        <method name="showOver" args="sd">
+            this.setAttribute('lastres', this.overResourceNumber);
+        </method>
+
+        <!--- setter for the statenum attribute -->
+        <method name="setStateNum" args="s">
+            if (s &gt; this.maxstate) {
+                return;
+            }
+            this.statenum = s;
+            if (this.onstatenum) this.onstatenum.sendEvent(s);
+        </method>
+
+        <!--- setter for the statelength attribute -->
+        <method name="setStateLength" args="s">
+            this.statelength = s;
+            if (this.statelength == 2) {
+                this.overResourceNumber = this.normalResourceNumber;
+                if (this.downResourceNumber == 3) {
+                    this.downResourceNumber = 2;
+                }
+            } else if (this.statelength == 1) {
+                this.overResourceNumber = 1;
+                this.downResourceNumber = 1;
+            }
+            if (this.onstatelength) this.onstatelength.sendEvent(s);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_showEnabled"> <![CDATA[
+            reference.setAttribute('clickable', _enabled);
+            this.showUp();
+        ]]> </method>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

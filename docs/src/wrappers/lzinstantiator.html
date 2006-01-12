@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="../lps/includes/styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzInstantiator">
+    <lztier>Service</lztier>
+    <lzcategory>Scripting</lzcategory>
+    <lzshortdesc>
+        Handles application instantiation.
+    </lzshortdesc>
+    <lzapi>api-lzinstantiator.xml</lzapi>
+</lzelement>
+<p>
+The instantiator is responsible for timing the creation and initialization of Laszlo applications. Because of Laszlo's declarative style, applications must be instantiated in two passes -- one where all of the objects are created and another where all of the references are resolved. This ensures that order rarely matters in an lzx file, and allows objects to refer to one another without making the programmer worry about initialization order or messy callbacks.</p>
+
+<p>Unfortunately, some large Laszlo apps are slow to instantiate. To improve user experience, LzNodes supply the <a href="view.html#attr-initstage">initstage</a> attribute. The instantiator also has a few exposed methods and attributes that can be used to control the instantiation behavior of a Laszlo app.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

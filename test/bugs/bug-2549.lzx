@@ -1,0 +1,28 @@
+<canvas debug="true">
+	<include href="lzunit"/>
+	<dataset name="bug2549">
+		<item name="first">first item</item>
+		<item name="second">second item</item>
+		<item name="third">third item</item>
+	</dataset>
+	
+	<class name="bug-2549" extends="TestCase">
+		<text name="foo" fontsize="10" datapath="bug2549:/item[1]/text()"/>
+			
+		<datapointer name="dp" xpath="bug2549:/"/>
+			
+		<method name="testDPSeparators">
+			AssertEquals('first item', foo.datapath.serialize())
+			dp.setXPath('bug2549:/item[2]/@name')
+			AssertEquals('second', dp.serialize())
+		</method>
+	</class>
+     
+	<TestSuite>
+		<bug-2549/>
+	</TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

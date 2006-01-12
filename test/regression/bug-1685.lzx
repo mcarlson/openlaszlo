@@ -1,0 +1,31 @@
+<canvas debug="true" bgcolor="gray">
+    <debug x="300" width="300" height="300"/>
+    <simplelayout spacing="5"/>
+    <view name="noclick" bgcolor="red" height="80" width="150" 
+          stretches="both" onclick="Debug.write('This should work...'); ">
+        <view name="blue" bgcolor="blue" width="400" height="10" opacity=".5"/>
+    </view>
+
+    <view name="canclick" resource="../resources/swf/box.swf" stretches="both"
+          height="80" width="150" bgcolor="black"
+          onclick="Debug.write('This does work...');">
+        <view name="blue" bgcolor="blue" width="400" height="10" opacity=".5"/>
+    </view>
+
+    <view name="simple" 
+          onclick="Debug.write('This should be simple');"
+          height="80" width="150" stretches="both" >
+        <view name="blue" bgcolor="blue" width="400" height="10">
+        </view>
+        <view height="5" width="5" bgcolor="green">
+            <animator attribute="x" from="0" to="800" duration="1000"
+                        repeat="Infinity"/>
+        </view>
+    </view>
+</canvas>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

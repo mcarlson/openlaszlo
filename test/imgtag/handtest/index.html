@@ -1,0 +1,64 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <title>img tag hand tests </title>
+  </head>
+
+  <body>
+    <h1>img tag hand tests </h1>
+<ul><li><a href="basic.lzx">Basic case</a></li>
+      <li><a href="runtime_local.lzx">Image requested at runtime, from same directory as application</a></li>
+<li><a href="compiled_in.lzx">Image compiled into application</a></li>
+<li><a href="scaled_down.lzx">Scaled down image embedded in text</a></li>
+<li><a href="float_left.lzx">Floats to left</a></li>
+<li><a href="float_right.lzx">Floats to right</a></li>
+<li><a href="horiz_space.lzx">Horizontal spacing</a></li>
+<li><a href="verti_space.lzx">Vertical spacing</a></li>
+</ul>
+<ul>
+The following examples produce compilation warnings: 
+<ul>
+<li><a href="">No multiline attribute:</a></li>
+
+  <resource name="horse" src="horse-1-sm.jpg"/>
+  <text>
+    <img src="horse.jpg"/>
+  </text>
+
+<li><a href="">Multiline=false:</a></li>
+
+  <resource name="horse" src="horse-1-sm.jpg"/>
+  <text multiline="false">
+    <img src="horse.jpg"/>
+  </text>
+
+<li><a href="">Unsupported schema:</a></li>
+
+  <text multiline="true">
+    <img src="file:horse-1-sm.jpg"/>
+  </text>
+
+<li><a href="">Inputtext does not accept &lt;img&gt; tag:</a></li>
+
+  <inputtext multiline="true">
+    <img src="file://horse-1-sm.jpg"/>
+  </inputtext>
+</ul>
+<ul>
+This does not produce a compilation warning:
+<li><a href=""> Multiline attribute cannot be determined at compile time:</a></li>
+
+  <resource name="horse" src="horse-1-sm.jpg"/>
+  <text multiline="${parent.multiline}">
+    <img src="horse.jpg"/>
+  </text>
+
+</ul>
+    <hr>
+    <address><a href="mailto:mdavis@lyta.corp.laszlosystems.com">Mark Davis</a></address>
+<!-- Created: Wed Dec 21 17:30:40 PST 2005 -->
+<!-- hhmts start -->
+Last modified: Thu Dec 22 16:44:42 PST 2005
+<!-- hhmts end -->
+  </body>
+</html>

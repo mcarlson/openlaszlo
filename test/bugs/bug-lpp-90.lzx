@@ -1,0 +1,12 @@
+<canvas oninit="testAnimate()" debug="true">
+  <view id="redbox" bgcolor="green" width="50" height="50" y="250">
+    <animatorgroup name="moveright" process="simultaneous" attribute="x" to="10" duration="500"
+                   start="false" relative="true" repeat="6">
+      <method event="onrepeat">Debug.write(parent.x)</method>
+      <animator/><animator/><animator/><animator/><animator/>
+    </animatorgroup>
+  </view>
+  <method name="testAnimate">
+    redbox.moveright.doStart()
+  </method>
+</canvas>

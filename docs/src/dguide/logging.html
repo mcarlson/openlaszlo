@@ -1,0 +1,327 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="logging">
+<head>
+    <title>Logging</title>
+</head>
+
+<body>
+
+<h1>Logging</h1>
+ 
+<p>This chapter describes how to monitor and configure LPS logging as well
+as how to log events from your LZX application.  Some of the same
+details are covered in <xref linkend="deployers-guide"/>.</p>
+
+<p>Conventions used in this chapter:</p>
+<ul>
+    <li>When file or directory path names are provided, unless otherwise
+    noted, we use the Unix convention for the separator character &#x2014; the
+    forward slash ("<code>/</code>").  To translate the documentation for use on Windows
+    systems, simply replace every instance of "<code>/</code>" with "<code>\</code>".
+    </li>
+    <li>Environment variables are referred to via their Unix convention, e.g., <code>$<var>VARNAME</var></code>.
+    To translate the documentation for use on Windows systems, the variable
+    is <code>%<var>VARNAME</var>%</code>.
+    </li>
+</ul>
+
+<h2>Overview</h2>
+<p>The LPS provides a highly configurable and efficient logging mechanism that you can
+use to debug and monitor server activities.  The LPS relies on the well-known
+<a target="_blank" href="http://logging.apache.org/log4j/docs/">Log4j </a> package and
+this chapter touches on only a handful of the Log4j details you may need or want to know.
+Before we go on to discuss the LPS log in some detail, we will first briefly
+go over the logging details provided by the servlet container. 
+<xref linkend="architecture">The architecture chapter</xref> explains what a container is and how LPS fits 
+inside it.
+</p>
+
+<h2><a name="container-log">Servlet container logging</a></h2>
+<p>The servlet container itself maintains logs of its activities that may be of interest
+for debugging or monitoring Laszlo applications.  These
+include:</p>
+<ul>
+	<li>web application lifecycle events (and errors), </li>
+	<li>request/response details, </li>
+	<li>individual web-application logs, and,</li>
+	<li>other container-specific details.  </li>
+</ul>
+
+ 
+
+<p>
+The Jakarta Tomcat 5.0 container, by default, keeps its logs 
+in <code>$TOMCAT_HOME/logs</code>.   Depending on how tomcat was started, it may also display some of its
+logs in a console or terminal window as well.
+The <a target="_blank" href="http://jakarta.apache.org/tomcat/tomcat-5.0-doc/config/index.html">Tomcat 5.0 configuration guide</a> 
+has details on its <a target="_blank" href="http://jakarta.apache.org/tomcat/tomcat-5.0-doc/config/logger.html">Logger</a> configuration.  
+In general, see the documentation on your container for details on how to locate and configure these logs.
+</p>
+
+<fixme>Update the above to the Tomcat 5.0 location.</fixme>
+
+<p>
+Servlet containers do provide a mechanism for the LPS to write
+directly into the container logs.  In general though, the LPS does <i>not</i> use this mechanism
+except at initialization time.  When the LPS starts up, it logs a short list of initialization details
+to the container's log.  In particular, it logs a message that describes where to find the 
+detailed LPS log, that contains the remainder of the LPS log messages.  
+</p>
+<p> When the LPS is started successfully, you will see information such as the following in 
+the container's log.  
+</p>
+
+<pre>
+2004-04-20 15:58:23 LPS: LPS_HOME is c:\Program Files\Laszlo Presentation Server 2.2\Server\lps-2.2
+2004-04-20 15:58:23 LPS: LPS config directory is: c:\Program Files\Laszlo Presentation Server 2.2\Server\lps-2.2\WEB-INF\lps\config
+2004-04-20 15:58:24 LPS: Detailed LPS log is at C:/Program Files/Laszlo Presentation Server 2.2/Server/lps-2.2/WEB-INF/lps/work/logs/lps.log
+2004-04-20 15:58:24 LPS: LPS log configured with c:\Program Files\Laszlo Presentation Server 2.2\lps-2.2\WEB-INF\lps\config\lps.xml
+</pre>
+
+<h2>Java IO streams</h2>
+<p>
+Since ultimately a Java servlet container is just a Java process, it 
+has standard IO streams, <code>stdout</code> and <code>stderr</code>, associated
+with it.  Some containers may provide configuration for the location
+of the files that these streams are written to.  In general, the LPS does not use these streams 
+for logging.  Your container may or may not use these streams.   Other server code in your 
+web application may use these streams.   We mention them briefly here
+as they can be helpful in debugging configuration or installation problems.
+</p>
+
+<fixme>Not sure the following section belongs here. It could be useful in the install docs.</fixme>
+
+<p>
+If you have set certain Java debugging options, you may find
+debug information in the <code>stderr</code> stream.  For example, if you are debugging
+Java <code>$CLASSPATH</code> and class loading issues, you may use <code>JAVA_OPTS="-verbose:class"</code>
+and you will want to locate the Java <code>stderr</code> stream for the verbose output.
+Jakarta Tomcat will often store these files its <code>$TOMCAT_HOME/logs</code> directory.
+(If you are on Windows and running Tomcat as an NT service, the location of these files
+will depend on how the NT service was created; these files 
+are in <code>C:\WINDOWS\system32\stderr.log</code> and <code>C:\WINDOWS\system32\stdout.log</code>).
+</p>
+
+
+<h2>LPS logging</h2>
+<p>
+The LPS log (referred to <a href="#container-log">above</a> as the detailed
+LPS log) contains both request/response details as well as 
+debugging information.</p>
+
+<p>
+The default location for the LPS log file is inside the web applications WEB-INF directory at
+<code>$LPS_HOME/WEB-INF/lps/work/logs/lps.log</code>.
+</p>
+
+<p>
+For some deployments,  you may want to configure the log location
+to be something other than the default.  The LPS Log4j configuration
+is read from <code>$LPS_HOME/WEB-INF/lps/config/lps.xml</code>.
+If <code>$LPS_HOME/WEB-INF/lps/config/log4j.xml</code> settings are
+read from this file instead.
+</p>
+
+<p>The LPS ships with its logger configured at the <code>INFO</code> level.  You may
+wish to change this to <code>WARN</code> or <code>ERROR</code> to see fewer details, or to <code>DEBUG</code>
+to see more details.  You can do this by changing the <code>priority</code>
+attribute of the <code>org.openlaszlo</code> logger defined in the
+default lps.xml file.  Below is an example of chaning the logger to <code>DEBUG</code>.
+The <code>DEBUG</code> level is extremely verbose. 
+</p>
+
+<example title="Changing LPS log to DEBUG" extract="false">
+&lt;logger name="org.openlaszlo" additivity="false"&gt;
+  &lt;priority value="debug"/&gt;
+  &lt;appender-ref ref="lps"/&gt;
+&lt;/logger&gt;
+</example>
+
+
+<h2>Log4j tidbits</h2>
+<fixme>Is this worth it or can we just expect them to read the log4j docs? 
+most details can be 
+found at <a target="_blank" href="http://logging.apache.org/log4j/docs/manual.html">Log4j docs</a>
+
+<ul>
+    <li>Overview</li>
+    <li>Loggers</li>
+    <li>Appenders
+    <ul>
+        <li>Connecting to NT Event Logger</li>
+    </ul>
+    </li>
+    <li>Layouts
+    <ul>
+        <li>ConversionPattern details </li>
+    </ul>
+    </li>
+</ul>
+</fixme>
+<p>
+If your container also uses Log4j to configure its own logging, there
+can be some interaction between the LPS logs and the container logs.
+<fixme>Remove this parag. or fill in how this works; the value of the appender's <code>additivity</code>
+attribute may cause log statements to show up in multiple logs.  The precise way this works
+is a bit confusing.  Also need to describe log4j stuff before going into this so maybe move down lower?.</fixme>
+</p>
+
+<h3>Interactions between container and LPS logging</h3>
+<p>
+If your container happens to also use Log4j as its logging mechanism (Tomcat 5.0 does), then 
+you may see interactions between the container and LPS logging depending on how the Log4j appenders
+are configured for the LPS.
+</p>
+<h2>Using the LPS administrative console</h2>
+<p>
+The Administrative console will display the current Log4j configuration
+in XML.  You can edit the configuration live in the console and press 'Update'
+to change the logging configuration w/out restarting the server.  If you'd like
+these configuration changes to persist accross server restarts, you can select the
+<i>save</i> checkbox and the settings will be saved to <code>$LPS_HOME/WEB-INF/lps/log4j.xml</code>.
+</p>
+
+<h2>Logging from within LZX</h2>
+
+<p>
+You can log events from your application to the server quite simply.   There are
+three steps.</p>
+
+<ul>
+    <li>Modify the log4j configuration</li>
+    <li>Create a logger jsp</li>
+    <li>Send messages to the logger from your LZX code</li>
+</ul>
+
+<p>You may want to log directly into the LPS log file.  Or you may want to
+log into a separate file.  You can set up the Log4j configuration to best suit
+your needs.  And the configuration can be changed after the application has been developed.
+</p>
+<p>
+Log4j appenders can be used to control where log statements are emitted.  The example below creates a 
+new logger called <code>mylogger</code> that will append log statements to the <code>C:\mylog.txt</code> file.  
+(If you wanted your applications log statements to go directly into the LPS log file, you would configure
+your logger to use the <code>lps</code> appender that is already declared.)
+</p>
+<example executable="false" title="Log4j configuration: creating your own logger">
+&lt;log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j"&gt;
+
+  &lt;appender name="myappender" class="org.apache.log4j.RollingFileAppender"&gt;
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+      &lt;param name="ConversionPattern" 
+             value="%d{dd MMM yyyy HH:mm:ss} %-5p - %m%n"/&gt;
+    &lt;/layout&gt;	    
+    &lt;param name="File" value="c:\mylog.txt"/&gt;
+  &lt;/appender&gt;
+
+  &lt;appender name="lps" class="org.apache.log4j.RollingFileAppender"&gt;
+    &lt;!-- ==================================================== --&gt;
+    &lt;!-- By default, the LPS sets the log file in the servlet --&gt;
+    &lt;!-- container's temporary directory. See servlet context --&gt;
+    &lt;!-- log for the exact location.                          --&gt;
+    &lt;!-- If you wish to place that file somewhere else, like  --&gt;
+    &lt;!-- /var/adm/logs, then uncomment the line below.        --&gt;
+    &lt;!-- ==================================================== --&gt;
+    &lt;!--
+    &lt;param name="File" value="/var/adm/logs/lps.log"/&gt;
+    --&gt;
+
+    &lt;!--
+    &lt;param name="MaxFileSize" value="10MB"/&gt;
+    --&gt;
+    &lt;param name="MaxBackupIndex" value="10"/&gt;
+
+    &lt;layout class="org.apache.log4j.PatternLayout"&gt;
+        &lt;param name="ConversionPattern" 
+               value="%d{dd MMM yyyy HH:mm:ss} (%x) %-5p %-20c{2} - %m%n"/&gt;
+    &lt;/layout&gt;	    
+  &lt;/appender&gt;
+
+  &lt;logger name="mylogger" additivity="false"&gt;
+    &lt;priority value="debug"/&gt;
+    &lt;appender-ref ref="myappender"/&gt;
+  &lt;/logger&gt;
+
+  &lt;logger name="org.openlaszlo" additivity="false"&gt;
+    &lt;priority value="info"/&gt;
+    &lt;appender-ref ref="lps"/&gt;
+  &lt;/logger&gt;
+&lt;/log4j:configuration&gt;
+</example>
+
+<p>
+The following is a simple JSP that can be used to talk to a Log4j logger of a given 
+name and emit error, warn, info, or debug messages.
+</p>
+
+<example executable="false" title="Simple JSP logger">
+&lt;%@ page import="java.util.*" %&gt;
+&lt;%@ page import="java.io.*" %&gt;
+&lt;%@ page import="org.apache.log4j.*" %&gt;
+&lt;%
+  response.setContentType("text/xml");
+  response.setHeader("Expires", "Fri, 05 Oct 2001 00:00:00 GMT");
+
+  String loggerName = request.getParameter("logger");
+  Logger logger = Logger.getLogger(loggerName);
+  String msg = request.getParameter("msg");
+  String t = request.getParameter("type");
+
+  if (t.equalsIgnoreCase("debug")) {
+    logger.debug(msg);
+  } else if (t.equalsIgnoreCase("info")) {
+    logger.info(msg);
+  } else if (t.equalsIgnoreCase("error")) {
+    logger.error(msg);
+  } else if (t.equalsIgnoreCase("warn")) {
+    logger.warn(msg);
+  } else {
+    throw new Exception("unknown log type");
+  }
+%&gt;
+&lt;status&gt;ok&lt;/status&gt;
+</example>
+<warning>
+If you deploy something like the JSP above, you will likely want the JSP to require some authentication.
+<fixme>This is left as an exercise for the reader :-).  There should be a link to the authentication
+section in the data chapter. (jrs: what section is that??)</fixme>
+</warning>
+
+<p>
+The following is a simple Laszlo application that can be used with the above JSP and log configuration
+to emit messages to the <code>C:\mylog.txt</code> file.
+</p>
+
+<example extract="false" title="Log from LZX to the server" >
+&lt;canvas&gt;
+  &lt;dataset name="ds" src="http:logger.jsp"/&gt;
+  &lt;form layout="axis: y" id="f"&gt;
+    &lt;edittext id="logger" width="200"&gt;mylogger&lt;/edittext&gt;
+    &lt;edittext id="msg"    width="300"&gt;Your message here &lt;/edittext&gt;
+    
+    &lt;radiogroup id="t"&gt;
+      &lt;radiobutton&gt;debug&lt;/radiobutton&gt; 
+      &lt;radiobutton&gt;warn&lt;/radiobutton&gt; 
+      &lt;radiobutton&gt;error&lt;/radiobutton&gt; 
+      &lt;radiobutton&gt;info&lt;/radiobutton&gt; 
+    &lt;/radiogroup&gt; 
+    &lt;button isdefault="true"&gt;Log message to server
+      &lt;method event="onclick"&gt;
+        ds.setQueryParams({logger:logger.text, msg: msg.text, type:t.value}); 
+          ds.doRequest();
+      &lt;/method&gt;
+    &lt;/button&gt;
+  &lt;/form&gt;
+&lt;/canvas&gt;
+</example>
+
+<h2>Caveats</h2>
+<ul>
+    <li>The precise format of the LPS log may change from release to release.</li>
+</ul>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

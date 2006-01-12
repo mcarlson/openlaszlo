@@ -1,0 +1,156 @@
+<canvas width="1000" height="500" title="menu test" >
+    <include href="redmond"/>
+    <command id="cmd_new"
+             onselect="canvas.newWindow()"
+             key="['Control','Shift','N']"/>
+
+    <command id="cmd_open"
+             onselect="canvas.newWindow()"
+             key="['Control','O']"/>
+
+    <method name="newWindow">
+       new window(canvas,{width:200, height:200, x:300, y:300});
+    </method>
+
+    <window title="test" width="300" height="200" resizable="true" fgcolor="blue">
+        <menubar spacing="0" >
+        <!--
+            <menu name="file" label="File" hasbutton="true" width="300" >
+                <menuitem label="open..." id="mn" >
+                    <menu name="other" label="other" placement="cascade" >
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem >
+                            <menu name="othertwo" label="othertwo" placement="cascade" >
+                                <menuitem label="sghjgghjhjjhgjg"/>
+                                <menuitem disabled="true"  />
+                                <menuitem />
+                                <menuitem command="${cmd_new}"/>
+                                <menuitem />
+                            </menu>
+                        </menuitem>
+                        <menuitem command="${cmd_new}"/>
+                        <menuitem />
+                    </menu>
+                </menuitem>
+                <menuitem label="new" command="cmd_new"/>
+            </menu >
+            <menu name="edit" label="Edit" hasbutton="true" >
+                <menuitem label="sghjgghjhjjhgjg"/>
+                <menuitem disabled="true"  />
+                <menuitem label="ttt"/>
+                <menuitem disabled="true"  />
+                <menuitem label="yyy"/>
+                <menuitem disabled="true"  />
+                <menuitem label="sghjgghjhjjhgjg"/>
+                <menuitem disabled="true"  />
+                <menuitem label="new" command="cmd_new"/>
+            </menu >
+-->
+            <menu label="Test" hasbutton="true" >
+                <menuitem label="old" command="cmd_open"/>
+                <menuitem label="new khkjhkjhkjh" command="cmd_new">
+                    <menu name="edit" label="Edit" placement="cascade" >
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="ttt"/>
+                        <menuitem>
+                            <menu name="edit" label="Edit" placement="cascade"   width="200">
+								<menuitem label="sghjgghjhjjhgjg"/>
+								<menuitem disabled="true"  />
+								<menuitem label="ttt"/>
+								<menuitem disabled="true"  />
+								<menuitem label="yyy"/>
+								<menuitem disabled="true"  />
+								<menuitem label="sghjgghjhjjhgjg"/>
+								<menuitem disabled="true"  />
+								<menuitem label="new" command="cmd_new"/>
+                     		</menu >
+                        </menuitem>
+                        <menuitem label="yyy"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="new" command="cmd_new"/>
+                    </menu >
+                </menuitem>
+            </menu >
+            <menu label="Test" hasbutton="true" width="200">
+                <menuitem label="old" command="cmd_open"/>
+                <menuitem label="new khkjhkjhkjh" command="cmd_new">
+                    <menu name="edit" label="Edit" placement="cascade"   width="200">
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="ttt"/>
+                        <menuitem>
+                            <menu name="edit" label="Edit" placement="cascade"  width="200">
+                            <menuitem label="sghjgghjhjjhgjg"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="ttt"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="yyy"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="sghjgghjhjjhgjg"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="new" command="cmd_new"/>
+                            </menu >
+                        </menuitem>
+                        <menuitem label="yyy"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="new" command="cmd_new"/>
+                    </menu >
+                </menuitem>
+            </menu >
+            <menu label="Test" hasbutton="true" width="200">
+                <menuitem label="old" command="cmd_open"/>
+                <menuitem label="new khkjhkjhkjh" command="cmd_new">
+                    <menu name="edit" label="Edit" placement="cascade"  width="200">
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="ttt"/>
+                        <menuitem>
+                            <menu name="edit" label="Edit" placement="cascade"   width="200">
+                            <menuitem label="sghjgghjhjjhgjg"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="ttt"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="yyy"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="sghjgghjhjjhgjg"/>
+                            <menuitem disabled="true"  />
+                            <menuitem label="new" command="cmd_new"/>
+                            </menu >
+                        </menuitem>
+                        <menuitem label="yyy"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="sghjgghjhjjhgjg"/>
+                        <menuitem disabled="true"  />
+                        <menuitem label="new" command="cmd_new"/>
+                    </menu >
+                </menuitem>
+            </menu >
+        </menubar>
+        <view bgcolor="red" width="100%" height="100"/>
+        <simplelayout axis="y"/>
+    </window>
+
+    <!-- This little bit of code puts a white box in the top left corner
+         that gives time to app init in milliseconds.-->
+    <view name="inittime" visible="true" > <!--bgcolor="white"  -->
+        <method event="oninit" reference="canvas">
+            var d = new LzDelegate( mytext , "tellTime" );
+            LzIdle.callOnIdle( d );
+            this.bringToFront();
+        </method>
+        <text name="mytext" width="100">
+            <method name="tellTime" args="t">
+                this.setText( "Time taken: " + t );
+            </method>
+        </text>
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

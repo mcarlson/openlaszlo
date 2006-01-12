@@ -1,0 +1,41 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+
+
+<canvas debug="false" 
+        width="800" 
+        height="400"
+        oninit="canvas.searchAnim.setAttribute('visible',false)"> 
+
+    <splash persistent="true">
+		<view ratio="1"
+		resource="intro1frame.swf"/>
+    </splash> 
+
+    <view name="searchAnim" resource="intro.swf" 
+          oninit="canvas.initdelay=400" pixellock="true" initstage="early">
+    <attribute name="currentFrame" value="1" type="number"/>
+	<attribute name="splashRemoved" type="expression" value="false"/>
+
+        <method event="onpercentcreated" reference="canvas" args="p"> 
+	    if(  !this.splashRemoved ) {
+                canvas.splash.setAttribute('visible', false );
+                canvas.splash.deleteNode();
+            }
+            if( this.currentFrame == 6 ) {
+                this.currentFrame = 1;
+            }
+            this.stop(  this.currentFrame );
+            this.currentFrame++;
+        </method> 
+    </view>   
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

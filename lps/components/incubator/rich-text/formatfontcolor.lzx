@@ -1,0 +1,103 @@
+ <library>
+     <!--- 
+         formatfontcolor 
+         A class which wraps up the font face combobox and associated data
+     -->
+     
+     <!-- dependencies  -->
+     <include href="../emerald-contrib/lzcombobox.lzx"/>
+     <include href="../emerald-contrib/tooltip.lzx"/>
+     <include href="colorsquare.lzx"/>
+     
+     <!-- Data: Font Color
+         inside of a state because datasets get instantiated upon application init
+         the state delays instantiation until the RTE is used. -->
+     <state name="fontColorData">
+     <dataset name="fontcolors">
+         <clr value="0x000000"/>
+         <clr value="0x555555"/>
+         <clr value="0x333399"/>
+         <clr value="0x339999"/>
+         <clr value="0x339966"/>
+         <clr value="0xcccc33"/>
+         <clr value="0xcc9933"/>
+         <clr value="0xcc3300"/>
+     </dataset>
+     </state>
+     <!--- 
+         colorswatch 
+         A class which is used as a combobox item
+     -->    
+     <class name="colorswatch" extends="lzcombobox_item">
+         <colorsquare swatchcolor="$path{'@value'}" drawsquare="true" x="10" y="3"/>
+     </class>
+     
+     <class name="formatfontcolor" extends="lzcombobox" width="48" shownitems="8" style="sidebarbutton_style"
+         itemclassname="colorswatch" itemdatapath="fontcolors:/clr"
+         focusable="false">
+         
+         <attribute name="editor" value="$once{this.parent.editor}" />
+         <attribute name="toolbar" value="$once{this.parent}" />
+         
+         <tooltip>Choose font color</tooltip>      
+         
+         <!---  @keywords private
+             Set my initial value to be the editor's default font color.
+             Register tool with toolbar -->
+         <method name="init">
+             super.init();
+             toolbar.registerTool(this,"color");
+             this.setValue(this.editor.defaultfontcolor, true);
+             this.csq.setColor(this.editor.defaultfontcolor);
+         </method>
+         <!---  @keywords private
+             apply state for late instantiation of local data -->
+         <method name="construct" args="parent, args">
+             super.construct(parent, args);
+             fontColorData.apply();
+         </method>    
+         <!--- When the user selects an item from the combo box, 
+             create an object representing just the change in format.
+             Give that object to the editor. -->
+         <method event="onselect"><![CDATA[
+                var color  = this.value; 
+                
+                this.csq.setColor(color);
+
+                //------------------------------------------------------------
+                // make sure that we call into editor if this combobox has
+                // changed, i.e., it contains an initial value. -pk
+                //------------------------------------------------------------
+                if (this.changed && this.toolbar._passthruchanges) {                
+                    this.editor.setFormatAttribute("color", this.getValue()); 
+                    this.editor.delegateRestoreSelection(); 
+                }
+                ]]>
+         </method>
+         
+         <!--- method broadcast out by the toolbar for clearing tool's state -->
+         <method name="reset">
+             rollback(false);
+         </method>
+         
+         <!--- method broadcast out by the toolbar for setting tool's state -->
+         <method name="setState" args="state">
+             this.setValue(state); 
+         </method>
+         
+         <!-- Save the selection region before another widget gets focus. -->
+         <method event="onmouseover">          
+             this.editor.saveSelectionRegion();
+         </method>
+         <colorsquare x="11" y="3" name="csq" drawsquare="true">
+             <method name="setColor" args="color">
+                 this.setVisible( color != null );
+                 if (this.visible) {
+                 this.setAttribute('swatchcolor', color);
+                 }
+             </method>
+         </colorsquare>
+     </class>
+     
+ </library>
+ 

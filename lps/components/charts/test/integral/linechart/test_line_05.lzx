@@ -1,0 +1,96 @@
+ <canvas width="1000" height="900">
+    <include href="charts/styles/chartstyle.lzx"/>
+    <include href="charts/addon/zoomarea.lzx"/>
+    <include href="chartstyle.lzx"/>
+    <include href="charts/addon/slider/slider.lzx"/>
+    
+    <dataset name="baseball" src="../../data/redsox-data.xml"/> 
+    <font name="myverity" src="verity/verityplus11.ttf"/>    
+    
+    <simplelayout axis="y" spacing="10"/>
+    <view name="title" x="250"  >
+        <text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF">
+          Line Chart with Time Period Slider.
+        </text>
+    </view>
+    <rangeslider x="100" id="slider"  minlimit="1900" maxlimit="2010">
+        <method event="onminvalue">
+            if(chart1.initdone)
+            {
+                chart1.changeBound(this.minvalue, chart1.miny, chart1.maxx, chart1.maxy); 
+            }                       
+        </method>
+        <method event="onmaxvalue">
+            if(chart1.initdone)
+            {
+                chart1.changeBound(chart1.minx, chart1.miny, this.maxvalue, chart1.maxy);             
+            }
+        </method>
+    </rangeslider>
+        
+    <linechart id="chart1" y="60" width="600" height="500" style="chartstyle05" 
+        dataPointsEnabled="true"  verticalGridLines="true" horizontalGridLines="true">
+
+        <dataseries datapath="baseball:/records">
+            <datacolumn name="x" columndatapath="record/@year" datatype="number"/>
+
+            <dataseries label="wins">
+            <datacolumn  name="y"   columndatapath="record/@wins" datatype="number"/>
+            <datacolumn name="datatip" columndatapath="record">
+                <method name="processData" args="d">
+                    return "( " + d.attributes.year + ", " + d.attributes.wins + ")";
+                </method>
+            </datacolumn>
+            </dataseries>
+
+            <dataseries label="losses">
+            <datacolumn name="y" columndatapath="record/@losses" datatype="number"/>
+            <datacolumn name="datatip" columndatapath="record">
+                <method name="processData" args="d">
+                    return "( " + d.attributes.year + ", " + d.attributes.losses + ")";
+                </method>
+            </datacolumn>
+            </dataseries>
+        </dataseries>
+        
+        <horizontalaxis name="haxis"  title="Years" interval="10" type="linear" columnName="x" titleLocation="high"  majorTickEnabled="true" minorTickEnabled="true" tickMarksLabelsEnabled="true" />
+        <verticalaxis name="vaxis" title="Wins/Losses" type="linear" columnName="y"  titleLocation="low"  />
+        
+        <valuepoints label="(1925,95)" tip="Year: 1925 - Games: 95" datax="1920" datay="95" />
+        <valuepoints label="(1950,78)" tip="Year:1950 - Games: 78" datax="1950" datay="78" />
+        <valuepoints label="(1975,63)" tip="Year:1975 - Games: 63" datax="1975" datay="63" />
+        <valuepoints label="(2000,50)" tip="Year:2000 - Games: 50" datax="2000" datay="50" />
+        
+        <valueregion data1="1950" data2="1980" 
+                axis="x" 
+                label="Date Period: 1950 - 1980"/>
+        
+    </linechart>
+    <!-- LEGEND ASSOCIATED WITH THE CHART -->
+        <legend name="legendbox" 
+                chart="${chart1}"
+                legendFont="serif"
+                bgcolor="0xB6500F"
+                legendFontsize="14" 
+                legendborder="false"
+                x="${chart1.x + chart1.width + 10}"
+                y="${(chart1.y + chart1.height)/2}">
+          <method event="onitemmouseclick" args="item">
+              var topseries = this.getChartInstance().getDataSeries();
+
+              topseries.getDataSeries(item.identifier).enabled = item.linevisible;
+              this.getChartInstance().renderPlotArea();
+              item.linevisible = !item.linevisible;
+          </method> 
+        </legend>
+ </canvas>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->

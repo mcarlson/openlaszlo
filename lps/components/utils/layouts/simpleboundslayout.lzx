@@ -1,0 +1,60 @@
+<library>
+    <class name="simpleboundslayout" extends="layout">
+        <!--- The axis in which this layout operates, 'x' or 'y'. Default value is 'y' -->
+        <attribute name="axis" value="y" setter="this.setAxis( axis )" 
+                type="string" />
+                
+        <!--- A pixel amount to use between each view in the layout. Default value is 0 -->
+        <attribute name="spacing" value="0" 
+                setter="this.spacing = spacing; 
+                        if( this.subviews.length ) this.update()"/>
+
+        <!--- setter for the axis attribute. The default value is 'y' 
+          @param string a: 'x' oy 'y' -->
+        <method name="setAxis" args="a" >
+            this.axis = a;
+            this.sizeAxis = a == "x" ? "width" : "height"
+        </method>
+
+        <!--- @keywords private -->
+        <method name="addSubview" args="newsub">
+            this.updateDelegate.register( newsub,  "onx");
+            this.updateDelegate.register( newsub,  "ony");
+            this.updateDelegate.register( newsub,  "onrotation");
+            this.updateDelegate.register( newsub,  "onwidth");
+            this.updateDelegate.register( newsub,  "onheight");
+            super.addSubview( newsub );
+            this.update();
+
+        </method>
+
+        <!--- This method is usually called automatically when any of the views
+              controlled by the layout change their size in the layout axis, or
+              their visibility. However it can be called directly to force the
+              layout to update -->
+        <method name="update">
+            <![CDATA[
+            if ( this.locked ) return;
+            this.locked=true;
+            var l = this.subviews.length;
+            var c = 0;
+                
+            for(var i=0; i < l; i++) {
+                var s = this.subviews[i]; 
+                var sb = s.getBounds();
+                if ( s[ this.axis ] != c - sb[ this.axis + "offset"] ){
+                    s.setAttribute( this.axis , c - sb[ this.axis + "offset"] );
+                }
+                c += this.spacing + sb[ this.sizeAxis ] ;
+            }
+            this.locked=false;
+            
+            ]]>
+        </method>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

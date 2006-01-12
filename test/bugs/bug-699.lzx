@@ -1,0 +1,74 @@
+<canvas debug="true" width="1024" height="768">
+  <debug height="400" width="600" x="0" y="200" />
+  <include href="lzunit" />
+
+  <script>
+    <![CDATA[
+             // The correct definitions of min an max
+             FixedMath = {}
+
+             FixedMath.min = function () {
+               var result = +Infinity;
+               for (var i in arguments) {
+                 // Unary plus coerces to number
+                 var a = +(arguments[i]);
+                 Debug.write(a);
+                 // Sense important for NaN detection
+                 if (!(result < a)) {
+                   if (IsNaN(a)) return a;
+                   result = a;
+                 }
+               }
+               return result;
+             }
+                 
+             FixedMath.max = function () {
+               var result = -Infinity;
+               for (var i in arguments) {
+                 // Unary plus coerces to number
+                 var a = +(arguments[i]);
+                 Debug.write(a);
+                 // Sense important for NaN detection
+                 if (!(result > a)) {
+                   if (IsNaN(a)) return a;
+                   result = a;
+                 }
+               }
+               return result;
+             }
+    ]]>
+  </script>
+
+  <class name="TestMathFunctions" extends="TestCase">
+    <method name="testMathMin">
+        assertEquals((+ Infinity), Math.min(), "No arguments");
+        assertEquals(42, Math.min(42), "One argument");
+        assertEquals(3, Math.min(3, 42), "Two arguments");
+        assertEquals(-1, Math.min(3, 42, -1), "Three arguments");
+        assertEquals((- Infinity), Math.min(-1, -Infinity), "Infinite argument");
+        assertTrue(IsNaN(Math.min(-1, NaN)), "NaN argument");
+        assertEquals(3, Math.min("42", "3"), "String arguments");
+    </method>
+    <method name="testMathMax">
+        assertEquals((- Infinity), Math.max(), "No arguments");
+        assertEquals(42, Math.max(42), "One argument");
+        assertEquals(42, Math.max(3, 42), "Two arguments");
+        assertEquals(42, Math.max(-1, 3, 42), "Three arguments");
+        assertEquals((+ Infinity), Math.max(42, +Infinity), "Infinite argument");
+        assertTrue(IsNaN(Math.max(42, NaN)), "NaN argument");
+        assertEquals(42, Math.max("42", "3"), "String arguments");
+    </method>
+    <method name="testMathElements">
+        assertEquals(-1, Math['min'](3, 42, -1), "Math['min']");
+        assertEquals(42, Math['max'](-1, 3, 42), "Math['max']");
+    </method>
+  </class>
+
+  <TestSuite>
+    <TestMathFunctions />
+  </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

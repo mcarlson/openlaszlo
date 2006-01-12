@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Stableborderlayout">
+    <lztier>Utility Component</lztier>
+    <lzcategory>layout</lzcategory>
+    <lzshortdesc>
+        Keeps the width of two outer sibling views constant, while stretching the innermost one.
+    </lzshortdesc>
+    <lztag>utils/layouts/stableborderlayout.xml</lztag>
+</lzelement>
+
+<p><classname>stableborderlayout</classname> extends
+<classname>LzLayout</classname>, and is therefore responsible for
+arranging a set of views. Unlike like most layouts,
+<classname>stableborderlayout</classname> only manipulates the first
+three subviews. All of the other subviews are
+ignored. <classname>stableborderlayout</classname> is very similar to
+<classname>simplelayout</classname> in that it arranges views
+vertically or horizontally depending on the axis specified. The
+difference is that <classname>stableborderlayout</classname> stretches
+the second view so that the total combined width (or height) of these
+three subviews matches the width (or height) of their parent.</p>
+
+<p>The following example demonstrates the differences between
+<classname>simplelayout</classname> and
+<classname>stableborderlayout</classname>.</p>
+
+<example title="simplelayout vs. stableborderlayout">
+&lt;canvas height="100"&gt;
+  &lt;view bgcolor="yellow" width="200"&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" width="50"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    <em>&lt;simplelayout axis="x" spacing="10"/&gt;</em>
+  &lt;/view&gt;
+  
+  &lt;view y="40" bgcolor="yellow" width="200"&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    <em>&lt;stableborderlayout axis="x"/&gt;</em>
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<!--
+<img src="images/stableborderlayout/stableborderlayout_image1.jpg" width="200" height="69" />
+-->
+
+<p>Note that there is no spacing parameter allowed in
+<classname>stableborderlayout</classname>. Also, notice that each
+parent view has a width of 200. In the top view this information is
+ignored, which is why yellow can be seen extending past the last
+subview. In the bottom view no yellow can be seen because it is
+covered up by the blue and red views. Finally, take note that the
+second red view has no width assigned to it, because
+<classname>stableborderlayout</classname> controls that value
+directly.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

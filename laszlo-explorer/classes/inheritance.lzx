@@ -1,0 +1,16 @@
+<canvas width="200">
+  <simplelayout spacing="5"/>
+  
+  <class name="box" height="100" width="100" bgcolor="red"/>
+  
+  <class name="borderedbox" extends="box">
+    <view bgcolor="yellow"
+          x="3" y="3"
+          width="${parent.width-6}"
+          height="${parent.height-6}"/>
+  </class>
+  
+  <borderedbox/>
+  <borderedbox/>
+  <borderedbox/>
+</canvas>

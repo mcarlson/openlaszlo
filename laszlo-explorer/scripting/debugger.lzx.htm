@@ -1,0 +1,23 @@
+<b>Notes&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;for more details&nbsp;</b>
+<a href="../docs/reference/index.html?debug.html" target="laszlo-reference">debug</a>
+
+<hr>
+
+Laszlo provides a powerful debugger to identify and solve problems in your application. This example illustrates three different ways you can use the debugger:<br>
+
+<table>
+
+<tr valign=top><td>1.</td><td>Slightly move the debugger window, and click the "Click Me!" button. A debugging message is written in the debugger. This is done using <font class=script>Debug.write()</font> in the onclick event handler of the button.</td></tr>
+
+<tr valign=top><td>2.</td><td>You can also use the debugger to obtain runtime values of component attributes. For example type <font class=script>myButton.width</font> in the input field at the bottom of the debugger window, and then press enter: the width of the button is displayed in the debugger's main window.</td></tr>
+
+<tr valign=top><td>3.</td><td>Finally, you can use the debugger to interact with the application at runtime using JavaScript. For example type<br><font class=script>logo.setAttribute("visible",true)</font> in the debugger's input field and press enter: the logo now appears in the running application.</td></tr>
+
+</table>
+
+Notice how the <font class=attribute>debug</font> attribute of the <font class=tag>&lt;canvas&gt;</font> tag is used to turn on the debugger.<br>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

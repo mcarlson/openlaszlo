@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.2//EN"
+                 "http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd"-->
+<book xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>Laszlo Internals</title>
+  <bookinfo>
+    <corpauthor>Laszlo Systems, Inc.</corpauthor>
+    <productname>Laszlo Presentation Server</productname>
+    <mediaobject><imageobject><imagedata fileref="logo.png"/>
+    </imageobject></mediaobject>
+    <copyright>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <holder>Laszlo Systems, Inc.</holder>
+    </copyright>
+    <pubdate>September, 2004</pubdate>
+    <legalnotice>
+      <para>
+        All Rights Reserved. Unauthorized use, duplication or distribution
+        is strictly prohibited. This is the proprietary information of
+        Laszlo Systems, Inc. Use is subject to license
+        terms.</para>
+
+        <para>Flash&#153; and Macromedia Flash&#153; are trademarks of
+        Macromedia, Inc.</para>
+        
+        <para>Laszlo&#174; is a registered tradmark, and Laszlo
+        Presentation Server&#153;, LPS&#153;, LZX&#153; and Laszlo
+        Explorer&#153; are trademarks of Laszlo Systems, Inc.
+        </para>
+    </legalnotice>
+  </bookinfo>
+  
+  <!--xi:include href="preface.dbk"/-->
+  
+  <!--part id="overview">
+      <title>Overview</title>
+  </part-->
+  
+  <xi:include href="architecture.dbk"/>
+  <xi:include href="server.dbk"/>
+  <xi:include href="compiler.dbk"/>
+  <xi:include href="script-compiler.dbk"/>
+  <xi:include href="client.dbk"/>
+  <xi:include href="client-server.dbk"/>
+  <xi:include href="krank.dbk"/>
+  <xi:include href="build-system.dbk"/>
+  
+  <!-- browser integration -->
+  <!-- client integration -->
+  <!-- component design -->
+
+</book>
+

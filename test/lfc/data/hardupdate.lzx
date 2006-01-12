@@ -1,0 +1,45 @@
+<canvas debug="true" width="800" height="600">
+    <debug x="200" width="500" height="500"/>
+    <include href="lzunit/lzunit.lzx" />
+    <dataset name="testdat">
+        <a>
+            <b>foo</b>
+            <b>foo</b>
+            <b>foo</b>
+        </a>
+        <c>
+            <d/>
+            <d/>
+            <d/>
+        </c>
+    </dataset>
+    <view id="par" datapath="testdat:/a[1]" y="100">
+        <text id="chil" datapath="*/../../a/name()" />
+        <simplelayout/>
+    </view>
+    <TestSuite>
+        <TestCase>
+            <method name="test1">
+                assertEquals( 3, par.subviews.length );
+                var anode = testdat.getFirstChild();
+                anode.appendChild( new LzDataElement( 'r' ) );
+                assertEquals( 4, par.subviews.length );
+                Debug.write ( (new LzDatapointer()).xpathQuery( 
+                               "testdat:/a[1]/*/../../a/name()" ).length );
+                testdat.appendChild( new LzDataElement( 'r' ) );
+                Debug.write ( (new LzDatapointer()).xpathQuery( 
+                               "testdat:/a[1]/*/../../a/name()" ).length );
+                assertEquals( 4, par.subviews.length );
+                var nde = new LzDataElement( 'a' );
+                testdat.appendChild( nde );
+                Debug.write ( (new LzDatapointer()).xpathQuery( 
+                               "testdat:/a[1]/*/../../a/name()" ).length );
+                assertEquals( 8, par.subviews.length );
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,4 @@
+ <canvas proxied="false">
+   <!-- load dataset unproxied -->
+   <include href="lib-ds-unproxied.lzx"/>
+ </canvas>

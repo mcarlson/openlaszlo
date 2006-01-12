@@ -1,0 +1,79 @@
+<canvas>
+    <debug x="200"/>
+    <class name="dragger" width="10" height="${width}"
+           onmousedown="ds.apply()" onmouseup="ds.remove()">
+        <dragstate name="ds"/>
+    </class>
+
+    <view>
+        <checkbox name="setIt">use set size</checkbox>
+        <view bgcolor="yellow" clickable="true">
+            <dragger x="15" bgcolor="teal"/>
+            <dragger y="15" bgcolor="red"/>
+            <state apply="${parent.parent.setIt.value}">
+                <attribute name="width" value="100"/>
+                <attribute name="height" value="100"/>
+            </state>
+            <state apply="${!parent.parent.setIt.value}">
+                <attribute name="width" value="$immediately{null}"/>
+                <attribute name="height" value="$immediately{null}"/>
+            </state>
+        </view>
+        <simplelayout/>
+    </view>
+    <view>
+        <checkbox name="setIt">use set size (masked)</checkbox>
+        <view bgcolor="yellow" clickable="true" clip="true" id="poke">
+            <dragger x="15" bgcolor="teal"/>
+            <dragger y="15" bgcolor="red"/>
+            <state apply="${parent.parent.setIt.value}">
+                <attribute name="width" value="100"/>
+                <attribute name="height" value="100"/>
+            </state>
+            <state apply="${!parent.parent.setIt.value}">
+                <attribute name="width" value="$immediately{null}"/>
+                <attribute name="height" value="$immediately{null}"/>
+            </state>
+        </view>
+        <simplelayout/>
+    </view>
+    <view>
+        <checkbox name="setIt">use set size (stretched)</checkbox>
+        <view bgcolor="yellow" clickable="true" stretches="both">
+            <dragger x="15" bgcolor="teal"/>
+            <dragger y="15" bgcolor="red"/>
+            <state apply="${parent.parent.setIt.value}">
+                <attribute name="width" value="100"/>
+                <attribute name="height" value="100"/>
+            </state>
+            <state apply="${!parent.parent.setIt.value}">
+                <attribute name="width" value="$immediately{null}"/>
+                <attribute name="height" value="$immediately{null}"/>
+            </state>
+        </view>
+        <simplelayout/>
+    </view>
+
+    <view y="250" options="ignorelayout">
+        <simplelayout/>
+        <checkbox name="setIt">use set size (no contents)</checkbox>
+        <view bgcolor="yellow" clickable="true" stretches="both">
+            <state apply="${parent.parent.setIt.value}">
+                <attribute name="width" value="100"/>
+                <attribute name="height" value="100"/>
+            </state>
+            <state apply="${!parent.parent.setIt.value}">
+                <attribute name="width" value="$immediately{null}"/>
+                <attribute name="height" value="$immediately{null}"/>
+            </state>
+        </view>
+    </view>
+
+    <simplelayout axis="x" spacing="10"/>
+
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

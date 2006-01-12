@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      LZX Reference Internal Documentation
+    </title>
+  </head>
+  <body>
+    <h1>LZX Reference Internal Documentation</h1>
+    
+    <h2>Table of Contents Generation</h2>
+    <p>The table of contents is created by make-toc.toc.xsl.  This
+    file contains a list of hardpages, plus commands to include
+    generate a chapter for each category (below).</p>
+    
+    <h2>Categories</h2>
+    <p>Categories are used in the "Contents" tab of the TOC.  The *.py
+    tools create a file named index-categories.html.  The
+    make-toc.xsl stylesheet turns this into toc.xml, which is placed
+    in <code>docs/reference</code>.</p>
+    
+    <p>The list of categories is in categories.txt.  Categories are
+    documented in <code>hardpages/info-categories.html</code>.</p>
+    
+    <p>The category of a page is specified as the content of the
+    &lt;lzcategory&gt; tag in its &lt;lzelement&gt; header.  These
+    transformations are applied to it:</p>
+    <ol>
+      <li>If the &lt;lztier&gt; is "Base Component", the category is
+      replaced by "Base Class" instead.  (HTMLWrapper.py implements
+      this.  TODO: Edit the wrapper pages instead.)</li> <li>If the
+      &lt;lztier&gt; is "Lz Component", the category is replaced by
+      "Components".</li>
+      <li>The "Views" category is replaced by "View Basics"
+      (makeHTML.py).</li>
+      <li>Singular category names are made plural.  (makeHTML.py
+      implements this.)</li>
+      <li>Redmond classes are removed (make-toc.xsl).</li>
+    </ol>
+    <h2>nav.lzo</h2>
+    <p>
+      The nav.lzx app needs to be optimized.  It should be precompiled
+      standalone, i.e., by loading nax.lzx and optimizing it.  Be sure
+      <i>not</i> to optimize it in the lxz-reference frame as this
+      will cause it to cache the target parameter and it will not work
+      properly with the web docs.
+    </p>
+  </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,24 @@
+<!-- bitwise.lzx 
+     checks all of the bitwise operators on low order bits..
+     I hope this works... -md 2/12/03
+-->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<library>
+    <class name="BitwiseTest" extends="TestCase">
+	<method name="testBitwiseOperators">
+        <![CDATA[
+	    assertEquals( 12 & 4 , 4);  // AND
+	    assertEquals( 9 | 10 , 11); // OR
+	    assertEquals( 9 ^ 10 , 3);  // XOR
+	    assertEquals( ~0x0f  , -16); // NOT
+	    assertEquals( 7 << 1 , 14); // Shift Left
+	    assertEquals( 7 >> 1 , 3); // Shift Right with sign
+	    assertEquals( -1 >>> 4 , 0x0fffffff); // Shift Right with Zero Fill
+        ]]>
+	</method>
+    </class>
+</library>

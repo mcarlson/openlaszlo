@@ -1,0 +1,13 @@
+<canvas width="200">
+  <button onclick="vw.setWidth(200)" 
+          text="Expand Width" />
+  
+  <view id="vw" bgcolor="blue" 
+        y="30" width="100" height="100" >
+    
+    <!-- onwidth is sent anytime width is changed --> 
+    <method event="onwidth" > 
+      this.setBGColor(0xFF0000) 
+    </method>
+   </view>
+</canvas>

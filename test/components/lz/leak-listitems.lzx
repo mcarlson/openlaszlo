@@ -1,0 +1,123 @@
+<canvas>
+    <class name="leaktest">
+        <attribute name="start" value="0"/>
+        <attribute name="numtimes" value="0"/>
+        <attribute name="itemlist" value="null"/>
+        <attribute name="numitems" value="0"/>
+        <attribute name="limit" value="100"/>
+        <attribute name="itemclassname" value="" type="string"/>
+        <method event="oninit">
+            this.itemlist = [];
+        </method>
+        <method name="dotest" args="whichclass">
+            this.start = 1;
+            this.numtimes = 0;
+            this.itemclassname = whichclass;
+        </method>
+        <method event="onidle" reference="LzIdle">  <![CDATA[
+            if (start && (this.numtimes < this.limit || this.numitems>0)) {
+                if (this.numitems == 0) {
+                    for (var i=0; i < 10; i ++) {
+                        display.parentlist.addItem('itemtext', i);
+                        this.numitems ++;
+                    }
+                    this.setAttribute('numtimes', numtimes+1);
+                } else {
+                    for (var i=0; i < this.numitems; i++) {
+                        display.parentlist.removeItem(i);
+                    }
+                   this.numitems = 0;
+                }
+            } else {
+                for (var i=0; i < this.numitems; i++) {
+                    display.parentlist.removeItem(i);
+                }
+               this.numitems = 0;
+            }
+        ]]> </method>
+    </class>
+
+    <method event="oninit">
+      this.wasteofspace = new Array();
+      for (var i=0; i &lt; 10000; i++) this.wasteofspace[i] = 'waste of space #' + i;
+    </method>
+
+    <class name="bigbaselistitem" extends="baselistitem">
+      <method event="oninit">
+        this.wos = canvas.wasteofspace.concat()
+      </method>
+    </class>
+
+    <class name="bigtextlistitem" extends="textlistitem">
+      <method event="oninit">
+        this.wos = canvas.wasteofspace.concat()
+      </method>
+    </class>
+
+    <leaktest id="test"/>
+    <view id="display" layout="axis: x; spacing: 10">
+      <view layout="spacing: 10">
+        <view layout="axis: x; spacing: 10">
+          <view layout="spacing:10">
+            <combobox id="sel">
+              <textlistitem>baselistitem</textlistitem>
+              <textlistitem>textlistitem</textlistitem>
+              <textlistitem>bigbaselistitem</textlistitem>
+              <textlistitem selected="true">bigtextlistitem</textlistitem>
+            </combobox>
+            <combobox id="listtype">
+              <textlistitem>combobox
+              <method event="onselected" args="isselected">
+                if (isselected) {
+                combostate.apply();
+                } else {
+                combostate.remove();
+                }
+              </method>
+              </textlistitem>
+              <textlistitem selected="true">list
+              <method event="onselected" args="isselected">
+                if (isselected) {
+                liststate.apply();
+                } else {
+                liststate.remove();
+                }
+              </method>
+              </textlistitem>
+            </combobox>
+          </view>
+          <view layout="spacing: 5">
+            <button onclick="display.parentlist.itemclassname = sel.getText();
+                             test.dotest(sel.getText())">Start</button>
+            <button onclick="display.parentlist.itemclassname = sel.getText();
+                             display.parentlist.addItem('itemtext', 1)">Add 1 item</button>
+            <button onclick="display.parentlist.itemclassname = sel.getText();
+                             display.parentlist.removeItem(1)">Remove 1 item</button>
+          </view>
+          <text width="150" text="${test.numtimes +'/'+test.limit}"/>
+        </view>
+        <text width="300" multiline="true">
+          to use this test you need to use an external tool (like the
+          Windows Task Manager) to look at how much memory this
+          process is using.  When you click the "start" button.  The
+          test will repeatedly add and remove items of the class named
+          in the first combobox. The value of second combobox
+          determines which container will be used.  Expect memory to
+          increase at first, but then level off at some point. (run in
+          non-debug to get quicker results)
+        </text>
+      </view>
+      <state id="liststate" onapply="debug.write('liststate applied')"
+             onremove="debug.write('liststate removed')">
+        <list name="parentlist"/>
+      </state>
+      <state id="combostate" onapply="debug.write('combostate applied')"
+             onremove="debug.write('combostate removed')">
+        <combobox name="parentlist"/>
+      </state>
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

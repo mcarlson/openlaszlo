@@ -1,0 +1,53 @@
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+default namespace = "http://www.w3.org/1999/xhtml"
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+
+Inline.class |=
+  element api | classname | param | tagname {
+      attribute library {string}? &
+      attribute link {xsd:boolean}? &
+      string
+    }
+  | element attribute | method | field | event {
+      attribute api | classname | tagname {string}? &
+      attribute library {string}? &
+      attribute link {xsd:boolean}? &
+      string
+    }
+  | element varname {string}
+
+example = element example { example.attlist, example.model }
+
+example.attlist =
+  attribute class {"code" | "program" | "fragment"}? &
+
+  ## If true, display the application
+  [a:defaultValue="true"]
+  attribute executable {xsd:boolean}? &
+
+  ## If true, extract the content as a file, and display the application
+  ## (unless executable='false')
+  [a:defaultValue="true"]
+  attribute extract {xsd:boolean}? &
+  attribute filename {string}? &
+  attribute query-parameters {string}? &
+  attribute id {xsd:ID}? &
+  attribute title {string}?
+
+example.model = Inline.model & element co {Block.model}*
+
+
+Block.class |= example
+
+# docbook tags
+Block.class |= element note | warning | todo {Block.model}
+Inline.class |= element todo {Inline.model}
+
+# For John to play with:
+Block.class |= element fixme {Block.model}
+Inline.class |= element fixme {Inline.model}
+Block.class |= element glossary {Block.model}
+Block.class |= element infochunk {Block.model}

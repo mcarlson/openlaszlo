@@ -1,0 +1,94 @@
+<canvas title="LPP-544" debug="true"> 
+    <include href="lzunit"/>
+    
+    <dataset name="indata0" request="true" type="http" src="indata0.xml"/> 
+    <dataset name="indata1" request="true" type="http" src="indata1.xml"/> 
+    <dataset name="indata2" request="true" type="http" src="indata2.xml"/> 
+    <dataset name="indata3" request="true" type="http" src="indata3.xml"/> 
+    
+    <dataset name="ddata1">
+        <docu> 
+            <box name="x123"/> 
+        </docu> 
+    </dataset>
+    
+    <class name="objectView"> 
+        <simplelayout axis="x" spacing="3"/>
+        <!-- this one doesn't work when there's just one matching node -->
+        <text name="$path{'@name'}" text="${this.name}"/>
+        <!-- this works in all cases -->
+        <text text="$path{'@name'}"/>
+        <!-- so does this - strange, because it is identical to the first
+             case except we are using @ident instead of @name here -->
+        <text>
+            <attribute name="ident" value="$path{'@name'}"/>
+            <attribute name="text" value="${this.ident}"/>
+        </text>
+    </class>
+    
+    <simplelayout spacing="5"/>
+    <view id="ov0" bgcolor="#ee0000"> 
+        <simplelayout/> 
+        <!-- matches no nodes, so objectView is invisible -->
+        <objectView datapath="indata0:/docu/box/"/> 
+    </view> 
+    <view id="ov1" bgcolor="#00ee00"> 
+        <simplelayout/> 
+        <!-- matches one node, so not replication occurs -->
+        <objectView datapath="indata1:/docu/box/"/> 
+    </view> 
+    <view id="ov2" bgcolor="#0000ee"> 
+        <simplelayout/> 
+        <objectView datapath="indata2:/docu/box/"/> 
+    </view> 
+    <view id="ov3" bgcolor="#ee00ee"> 
+        <simplelayout/> 
+        <objectView datapath="indata3:/docu/box/"/> 
+    </view> 
+    <view id="ov4" bgcolor="#00eeee"> 
+        <simplelayout/> 
+        <!-- bizarrely, accessing a single node from an embedded dataset works -->
+        <objectView datapath="ddata1:/docu/box/"/> 
+    </view>
+    
+    <TestSuite>
+        <TestCase>
+        
+            <method name="confirmOV" args="ov, ident">
+                assertTrue(ov.visible);
+                assertEquals(3, ov.subviews.length);
+                assertEquals(ident, ov.subviews[0].text);
+                assertEquals(ident, ov.subviews[1].text);
+                assertEquals(ident, ov.subviews[2].text);
+            </method>
+            
+            <method name="testov0">
+                assertEquals(1, ov0.subviews.length);
+                assertFalse(ov0.subviews[0].visible);
+            </method>
+            
+            <method name="testov1">
+                assertEquals(1, ov1.subviews.length);
+                confirmOV(ov1.subviews[0], "x123");
+            </method>
+            
+            <method name="testov2">
+                assertEquals(2, ov2.subviews.length);
+                confirmOV(ov2.subviews[0], "x123");
+                confirmOV(ov2.subviews[1], "x234");
+            </method>
+            
+            <method name="testov3">
+                assertEquals(3, ov3.subviews.length);
+                confirmOV(ov3.subviews[0], "x123");
+                confirmOV(ov3.subviews[1], "x234");
+                confirmOV(ov3.subviews[2], "x345");
+            </method>
+            
+            <method name="testov4">
+                assertEquals(1, ov4.subviews.length);
+                confirmOV(ov4.subviews[0], "x123");
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas> 

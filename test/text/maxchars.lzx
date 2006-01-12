@@ -1,0 +1,12 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+  <simplelayout spacing="4"/>
+  <view layout="axis: x">
+    <text>maxlength = 7: </text><inputtext id="it1" bgcolor="#cccccc" width="200" maxlength="7" />
+  </view>
+
+  <view layout="axis: x">
+    <text>restrict to a-f0-9, max 4 chars: </text>
+    <edittext id="et1"  bgcolor="#ffcddc" width="100" maxlength="4" pattern="[a-f0-9]*"/>
+  </view>
+</canvas>

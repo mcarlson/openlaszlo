@@ -1,0 +1,28 @@
+<canvas bgcolor="teal" debug="true" > 
+	<text x="230" y="20"> this inputtext reports mouseevents</text>
+    <inputtext width="200" bgcolor="white" x="20" y="20" selectable="true">  
+        <method event="onclick">
+            Debug.write("click, Selection at ", this.getSelectionPosition());
+        </method>
+
+
+        <method event="onmouseup"> 
+            Debug.write("Mouseup, Selection at ", this.getSelectionPosition());
+        </method>
+
+	<method event="onmousedown">
+            Debug.write("Mousedown, Selection at ", this.getSelectionPosition()); 
+        </method> 
+        <method event="onsetselection"> 
+            Debug.write("setselection, Selection at ", this.getSelectionPosition()); 
+        </method> 
+ 
+    </inputtext> 
+	<inputtext width="200" bgcolor="white" x="20" y="40" selectable="true" >blah</inputtext>  
+ 
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

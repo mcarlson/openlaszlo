@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzKeys">
+    <lztier>Service</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        Keyboard input service.
+    </lzshortdesc>
+    <lzapi>api-lzkeys.xml</lzapi>
+</lzelement>
+
+<p>This service handles keyboard input events.</p>
+
+<p>Here is a simple example:</p>
+
+<example title="LzKeys">
+&lt;canvas height="140" debug="true"&gt;
+  &lt;method event="onkeydown" reference="LzKeys" args="k"&gt;
+    Debug.write("key " + k + " down");
+  &lt;/method&gt;
+  &lt;method event="onkeyup" reference="LzKeys" args="k"&gt;
+    Debug.write("key " + k + " up");
+  &lt;/method&gt;
+  &lt;method name="pressA"&gt;
+    Debug.write("A pressed");
+  &lt;/method&gt;
+  &lt;method event="oninit"&gt;
+    del = new LzDelegate(this, "pressA");
+    LzKeys.callOnKeyCombo(del, ["A"]);
+  &lt;/method&gt; 
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

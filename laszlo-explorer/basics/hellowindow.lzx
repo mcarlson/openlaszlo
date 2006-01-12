@@ -1,0 +1,6 @@
+<canvas width="200">
+  <window x="10" y="10" 
+          width="150" height="150" >
+    <button>Hello World!</button>
+  </window>
+</canvas>

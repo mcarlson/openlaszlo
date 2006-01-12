@@ -1,0 +1,29 @@
+<canvas width="1000" height="800">
+     <include href="redmond" />
+
+     <window width="200" height="200" title="My Window Tag" x="540">
+         <button height="24" width="100" id="b1">
+             ButtonInWindow
+         </button>
+     </window>
+
+     <class name="MyWindow" extends="window"
+         width="200" height="200" x="250"
+         title="My Window Class">
+         <button width="100" height="24" id="b2" name="b2">
+            ButtonInClass
+         </button>
+     </class>
+
+     <MyWindow id="mywin" x="540" y="250" />
+
+     <view width="200" height="200" y="500" x="540" bgcolor="blue" >
+         <button width="100" height="24" id="b3">
+             ButtonInView
+         </button>
+     </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

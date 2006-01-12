@@ -1,0 +1,239 @@
+<rdf_RDF>
+  <rdfs_Class rdf_ID="AbnormalAnatomicalStructure">
+    <rdfs_subClassOf rdf_resource="#AnatomicalStructure"/>
+    <rdfs_comment>
+      Any AnatomicalStructure which
+      is not normally found in the Organism of which it is a part, i.e. it is
+      the result of a PathologicProcess.  This class covers tumors, birth marks,
+      goiters, etc.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Abstract">
+    <rdfs_subClassOf rdf_resource="#Entity"/>
+    <rdfs_comment>
+      Properties or qualities as distinguished from any
+      particular embodiment of the properties/qualities in a physical medium.
+      Instances of Abstract can be said to exist in the same sense as mathematical
+      objects such as sets and relations, but they cannot exist at a particular
+      place and time without some physical encoding or embodiment.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Adjective">
+    <rdfs_subClassOf rdf_resource="#Word"/>
+    <rdfs_comment>
+      One of the parts of speech.  The Class of
+      Words that conventionally denote Attributes of Objects.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Adverb">
+    <rdfs_subClassOf rdf_resource="#Word"/>
+    <rdfs_comment>
+      One of the parts of speech.  The Class of Words
+      that conventionally denote Attributes of Processes.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AgeGroup">
+    <rdfs_subClassOf rdf_resource="#GroupOfPeople"/>
+    <rdfs_comment>
+      A GroupOfPeople whose members all have the
+      same age.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Agent">
+    <rdfs_subClassOf rdf_resource="#Object"/>
+    <rdfs_comment>
+      Something or someone that can act on its own and
+      produce changes in the world.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Air">
+    <rdfs_subClassOf rdf_resource="#GasMixture"/>
+    <rdfs_comment>
+      Air is the gaseous stuff that makes up the
+      atmosphere surrounding Earth.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AlethicAttribute">
+    <rdfs_subClassOf rdf_resource="#ObjectiveNorm"/>
+    <rdfs_comment>
+      A Class containing all of the Attributes
+      relating to the notions of possibility and necessity.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Alga">
+    <rdfs_subClassOf rdf_resource="#NonFloweringPlant"/>
+    <rdfs_comment>
+      A chiefly aquatic plant that contains chlorophyll,
+      but does not form embryos during development and lacks vascular tissue.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Ambulating">
+    <rdfs_subClassOf rdf_resource="#BodyMotion"/>
+    <rdfs_subClassOf rdf_resource="#Translocation"/>
+    <rdfs_comment>
+      Any BodyMotion which is accomplished by
+      means of the legs of an Animal for the purpose of moving from one
+      point to another.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Amphibian">
+    <rdfs_subClassOf rdf_resource="#ColdBloodedVertebrate"/>
+    <rdfs_comment>
+      A cold-blooded, smooth-skinned Vertebrate
+      which characteristically hatches as an aquatic larva, breathing by
+      gills.  When mature, the Amphibian breathes with Lungs.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AnatomicalStructure">
+    <rdfs_subClassOf rdf_resource="#OrganicObject"/>
+    <rdfs_comment>
+      A normal or pathological part
+      of the anatomy or structural organization of an Organism.  This
+      class covers BodyParts, as well as structures that are given off
+      by Organisms, e.g. ReproductiveBodies.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AngleMeasure">
+    <rdfs_subClassOf rdf_resource="#ConstantQuantity"/>
+    <rdfs_comment>
+      The value of an angle in a plane or in a
+      solid.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AngularDegree">
+    <rdfs_subClassOf rdf_resource="#PlaneAngleMeasure"/>
+    <rdf_type rdf_resource="#UnitOfMeasure"/>
+    <rdfs_comment>A plane angle measure.</rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AnimacyAttribute">
+    <rdfs_subClassOf rdf_resource="#BiologicalAttribute"/>
+    <rdfs_comment>
+      Attributes that indicate whether an
+      Organism is alive or not.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Animal">
+    <rdfs_subClassOf rdf_resource="#Organism"/>
+    <rdfs_comment>
+      An Organism with eukaryotic Cells, and lacking
+      stiff cell walls, plastids, and photosynthetic pigments.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AnimalAnatomicalStructure">
+    <rdfs_subClassOf rdf_resource="#AnatomicalStructure"/>
+    <rdfs_comment>
+      AnatomicalStructures that
+      are possessed exclusively by Animals.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AnimalLanguage">
+    <rdfs_subClassOf rdf_resource="#Language"/>
+    <rdfs_comment>
+      The subclass of Languages used by
+      Animals other than Humans.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AnimalSubstance">
+    <rdfs_subClassOf rdf_resource="#BodySubstance"/>
+    <rdfs_comment>
+      BodySubstances that are produced
+      exclusively by Animals.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AntisymmetricRelation">
+    <rdfs_subClassOf rdf_resource="#BinaryRelation"/>
+    <rdfs_comment>
+      BinaryRelation ?REL is an
+      AntisymmetricRelation if for distinct ?INST1 and ?INST2, (?REL ?INST1
+      ?INST2) implies not (?REL ?INST2 ?INST1).  In other words, for all ?INST1
+      and ?INST2, (?REL ?INST1 ?INST2) and (?REL ?INST2 ?INST1) imply that ?INST1
+      and ?INST2 are identical.  Note that it is possible for an
+      AntisymmetricRelation to be a ReflexiveRelation.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Ape">
+    <rdfs_subClassOf rdf_resource="#Primate"/>
+    <rdfs_comment>
+      Various Primates with no tails or only short
+      tails.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="April">
+    <rdfs_subClassOf rdf_resource="#Month"/>
+    <rdfs_comment>The Class of all Months which are April.</rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AquaticMammal">
+    <rdfs_subClassOf rdf_resource="#Mammal"/>
+    <rdfs_comment>
+      The Class of Mammals that dwell chiefly
+      in the water.  Includes whales, dolphins, manatees, seals, and walruses.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Arachnid">
+    <rdfs_subClassOf rdf_resource="#Arthropod"/>
+    <rdfs_comment>
+      A Class of Arthropods that includes
+      ticks and spiders.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AreaMeasure">
+    <rdfs_subClassOf rdf_resource="#ConstantQuantity"/>
+    <rdfs_comment>
+      Measures of the amount of space in two
+      dimensions.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Argument">
+    <rdfs_subClassOf rdf_resource="#Proposition"/>
+    <rdfs_comment>
+      Any proposition which has the form of a deductive
+      or inductive argument, i.e. a set of premises which, it is claimed, imply
+      a conclusion.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="ArtWork">
+    <rdfs_subClassOf rdf_resource="#Artifact"/>
+    <rdfs_comment>
+      Artifacts that are created primarily for
+      aesthetic appreciation.  Note that this Class does not include
+      most examples of architecture, which belong under StationaryArtifact.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Arthropod">
+    <rdfs_subClassOf rdf_resource="#Invertebrate"/>
+    <rdfs_comment>
+      A Class of Invertebrate that includes
+      Arachnids and Insects.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Article">
+    <rdfs_subClassOf rdf_resource="#Text"/>
+    <disjoint rdf_resource="#Book"/>
+    <rdfs_comment>
+      A relatively short Text that either is unbound or is
+      bound with other Articles in a Book.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="Artifact">
+    <rdfs_subClassOf rdf_resource="#CorpuscularObject"/>
+    <rdfs_comment>
+      A CorpuscularObject that is the product of a
+      Making.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="ArtificialLanguage">
+    <rdfs_subClassOf rdf_resource="#Language"/>
+    <rdfs_comment>
+      The subclass of Languages that are
+      designed by Humans.
+    </rdfs_comment>
+  </rdfs_Class>
+  <rdfs_Class rdf_ID="AsexualReproduction">
+    <rdfs_subClassOf rdf_resource="#Replication"/>
+    <rdfs_comment>
+      Asexual Processes of biological
+      reproduction.
+    </rdfs_comment>
+  </rdfs_Class>
+
+</rdf_RDF>

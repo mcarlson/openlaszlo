@@ -1,0 +1,52 @@
+<canvas debug="true">
+  <include href="lzunit" />
+
+  <TestSuite>
+    <TestCase name="testBasicReplication">
+    
+      <dataset name="ds">
+        <items>
+          <a name="a1"/>
+          <a name="a2"/>
+          <a name="a3"/>
+        </items>
+      </dataset>
+      
+      <node name="np">
+        <node datapath="local:parent.parent.ds:/items/a">
+        </node>
+      </node>
+      
+      <method name="testVerifyReplication"><![CDATA[
+        var acount = ds.getPointer().xpathQuery("items/a/last()");
+        assertTrue(np.subnodes.length > acount);
+        for (i=0; i<3; i++) {
+          var de = ds.getPointer().xpathQuery("items/a[" + (i+1) + "]/");
+          var n = np.subnodes.length;
+          var found = false;
+          for (j=0; j<n; j++) {
+            var sn = np.subnodes[j];
+            if (sn.data == de) {
+              found = true;
+            }
+          }
+          assertTrue(found);
+        }
+      ]]></method>
+      
+      <!-- disabled until searchSubnodes is fixed to traverse subnodes 
+           instead of subviews 
+        -->
+      <method name="xtestSearchSubnodes"><![CDATA[
+        for (i=0; i<3; i++) {
+          var de = ds.getPointer().xpathQuery("items/a[" + (i+1) + "]/");
+          var sn = np.searchSubnodes("data", de);
+          assertTrue(sn != null);
+        }        
+      ]]></method>
+      
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>

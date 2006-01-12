@@ -1,0 +1,101 @@
+<!--  Author: Eric Bloch                                                     -->
+<!--  Author: Adam Wolff                                                     -->
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<project name="docs" default="doc" basedir=".">
+
+  <description>
+      This is the build file for the LFC docs.
+  </description>
+
+  <!-- Define contrib tasks -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <property environment="env"/>
+
+  <property name="LPS_HOME" value="${env.LPS_HOME}"/>
+  <property name="python.exec" value="python" />
+  <property file="${LPS_HOME}/build.properties"/>
+
+  <!--================  Target [init] ==============-->
+  <target name="init" >
+      <if> 
+          <not> <isset property="env.LPS_HOME"/> </not>
+          <then> <fail message="LPS_HOME not set" /> </then>
+      </if>
+  </target>
+
+  <!--================  Target [doc] ==============-->
+  <target name="doc" description="Generate the doc using jsdoc" depends="init">
+    <if>
+        <not>
+            <uptodate targetfile="build/classes.html" >
+                <srcfiles dir= ".." excludes="docs"/>
+            </uptodate>
+        </not>
+        <then>
+            <exec executable="${python.exec}" dir="." failonerror="true" >
+              <arg line="jsdoc.py -undocumented"/>
+              <!-- use -deprecated for deprecated functions and methods -->
+              <!-- use -allfields for all fields in a class definition-->
+            </exec>
+        </then>
+    </if>
+    <copy file="index.html" todir="build" />
+    <copy file="styles.css" todir="build"/>
+    <copy file="splash.html" todir="build"/>
+    <copy file="images/splash.gif" todir="build/images/"/>
+    <!-- run Antun's hack script to combine pre-made schema and lfc docs -->
+    <exec executable="${python.exec}" dir="." failonerror="true" >
+      <arg line="jscombine.py"/>
+    </exec>
+  </target>
+
+  <!--================  Target [doc_website] ==============-->
+  <target name="doc_website" 
+          description="Generate the doc (for website) using jsdoc" 
+          depends="init">
+    <if>
+        <not>
+            <uptodate targetfile="build_website/views/index.php" >
+                <srcfiles dir= ".." excludes="docs"/>
+            </uptodate>
+        </not>
+        <then>
+            <exec executable="${python.exec}" dir="." failonerror="true" >
+              <arg line="jsdoc.py -undocumented -web"/>
+              <!-- use -deprecated for deprecated functions and methods -->
+              <!-- use -allfields for all fields in a class definition-->
+            </exec>
+            <copy file="styles.css" todir="build_website"/>
+            <copy file="images/splash.gif" todir="build_website/images/"/>
+        </then>
+    </if>
+  </target>
+
+  <!--================  Target [test] ==============-->
+  <target name="test" depends="init" />
+
+  <!--================  Target [clean] ==============-->
+  <target name="clean" 
+      description="Remove generated docs" depends="init" >
+      <delete quiet="true" includeEmptyDirs="true">
+          <fileset dir="build" />
+          <fileset dir="build_website" />
+          <fileset dir="${LPS_HOME}/docs/noship/lzx-reference"/>
+          <fileset dir="${LPS_HOME}/docs/noship/lzx-reference-website"/>
+          <fileset dir="." includes="*.pyc" />
+          <fileset dir="." defaultexcludes="no" includes="**/*~"/>
+      </delete>
+  </target>
+
+  <target name="cleandoc"  depends="clean" />
+
+  <!--================  Target [build] ==============-->
+  <target name="build"  />
+
+</project>

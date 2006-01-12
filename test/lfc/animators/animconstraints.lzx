@@ -1,0 +1,57 @@
+<canvas>
+    <debug x="400"/>
+    <view x="200" width="20" height="20" name="guy" bgcolor="teal">
+        <animator id="pokeme">
+            <attribute name="start" value="${cstart.attrval}"/>
+            <attribute name="to" value="${cto.attrval}"/>
+            <attribute name="from" value="${cfrom.attrval}"/>
+            <attribute name="duration" value="${cduration.attrval}"/>
+            <attribute name="motion" value="${cmotion.attrval}"/>
+            <attribute name="relative" value="${crelative.attrval}"/>
+            <attribute name="attribute" value="${cattribute.attrval}"/>
+                  
+        </animator>
+    </view>
+    <class name="setThing">
+        <attribute name="setAttr" type="string"/>
+        <attribute name="attrval" value="$once{this.text}"/>
+        <attribute name="text" type="html"/>
+        <inputtext name="t" text="$once{parent.attrval}"/>
+        <button text="${parent.setAttr}" >
+            <method event="onclick">
+                var v = parent.t.getText();
+                parent.setAttribute( 'attrval'  , v );
+            </method>
+        </button>
+        <simplelayout axis="x"/>
+    </class>
+    <view y="200">
+        <simplelayout />
+        <button onclick="pokeme.doStart()">just go</button>
+        <setThing setAttr="attribute" id="cattribute">
+            x
+        </setThing>
+        <setThing setAttr="start" id="cstart" >
+            0
+        </setThing>
+        <setThing setAttr="to" id="cto" >
+            200
+        </setThing>
+        <setThing setAttr="from" id="cfrom">
+         	100
+        </setThing>
+        <setThing setAttr="duration" id="cduration" >
+            1000
+        </setThing>
+        <setThing setAttr="motion" id="cmotion">
+        	easein
+        </setThing>
+        <setThing setAttr="relative" id="crelative">
+        	1
+        </setThing>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

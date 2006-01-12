@@ -1,0 +1,19 @@
+<!-- test preformat text region; whitespace and linebreaks are preserved inside PRE element -->
+<canvas> 
+<splash/>
+<view>
+<simplelayout axis="y"/>
+<text multiline="false" height="100"> This is some text.<pre>This is a preformat.
+region   so   it should    have line breaks  .
+     At every period that you see.
+yay!
+</pre>
+ </text>
+
+</view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

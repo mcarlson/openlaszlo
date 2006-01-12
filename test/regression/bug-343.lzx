@@ -1,0 +1,22 @@
+<canvas debug="true" width="1024" bgcolor="0x0000ff">
+  <view oninit='Debug.setAttribute("x", 175); 
+	Debug.setAttribute("y", 230);
+	Debug.write("Debug window should be aligned with the three of clubs,");	
+	Debug.write("and with the bottom of the red square, covering the bot of 3");' />
+  <simplelayout axis="x" spacing="0" />
+  <view x="100" y="50" width="175" height="180" bgcolor="#ff0000">
+    <simplelayout axis="y" spacing="4" />
+    <view resource="../resources/gif/2c.gif" />
+    <view resource="../resources/gif/3c.gif" />
+  </view>   
+  <view x="100" y="50" width="175" height="180" bgcolor="#ff0000">
+    <simplelayout axis="y" spacing="4" />
+    <view resource="../resources/gif/2c.gif" />
+    <view resource="../resources/gif/3c.gif" />
+  </view>
+  
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

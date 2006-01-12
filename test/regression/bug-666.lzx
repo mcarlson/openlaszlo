@@ -1,0 +1,14 @@
+<!--
+  Should generate an error (trying to assign to a literal), but not a backtrace.
+-->
+<canvas>
+    <view width="10" height="10" bgcolor="blue" onclick="'x'='x'+3;" >
+        <method name="myMethod" args="a, b">
+                return a+b;
+        </method>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

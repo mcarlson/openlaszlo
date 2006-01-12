@@ -1,0 +1,202 @@
+<library>
+<!--
+    Class: windowtext
+    This control implements an input text box with beveled border.
+    Like <b><i>Button</b></i>, if given no height parameter,
+    this control will use a streamlined set of resources, but it will not
+    be resizable in the y axis.
+ -->
+    <include href="/redmond/redmondresources.lzx" />
+    <include href="redmondfonts.lzx" />
+
+    <!-- class for use in windowtext takes its parent's arguments
+         when it constructs -->
+    <class name="windowtextinputtext" extends="inputtext" >
+        <method name="construct" args="parent, args">
+            // args from parent
+            if ( parent['textwidth'] != null ) args.textwidth = parent.textwidth;
+            if ( parent['initialtext'] != null ) args.text = parent.initialtext;
+            if ( parent['fgcolor'] != null ) args.fgcolor = parent.fgcolor;
+            if ( parent['password'] != null ) args.password = parent.password;
+            if ( parent['multiline'] != null ) args.multiline = parent.multiline;
+        if ( parent['resizable'] != null ) args.resizable= parent.resizable;
+            super.construct(  parent, args );
+        </method>
+    </class>
+
+
+    <class name="windowtext" font="lztahoe8" fontsize="8">
+        <!-- you can set text or label,
+             but need to get the value w/ getText() -->
+        <attribute name="text" type="html" setter="setText(text)"/>
+        <attribute name="label" type="string" setter="setText(label)"/>
+        <attribute name="multiline"/>
+        <attribute name="password" value="false"/>
+        <attribute name="resizable"/>
+        <attribute name="fgcolor"/>
+
+        <!-- private -->
+        <attribute name="initcomplete" value="0"/>
+        <attribute name="initialtext" value="" type="string"/>
+        <!-- can't change the background color on the fixed height button
+             cuz the resource isn't transparent -->
+        <attribute name="bgcolor" value="white"/>
+
+        <method event="oninit">
+            <![CDATA[
+            var standard = false;
+            // if a height has not been set, use the height of the text
+            // plus the border
+            if (!this.hassetheight) {
+                setAttribute('height', this.field.height + this.HEIGHT_BORDER * 2);
+                if (height <= this.FIXED_HEIGHT) {
+                    // fixed height, use "standard" 3-part button
+                    // otherwise we'll use a 9-part button, which can be resized
+                    // both horizontally and vertically
+                    standard = true;
+                }
+            } else {
+                this.field.setHeight(this.height - this.HEIGHT_BORDER * 2);
+            }
+
+            if (!this.hassetwidth) {
+                setAttribute('width', this.field.width
+                    + this.WIDTH_BORDER * 2 + this.DEFAULT_PADDING);
+            } else {
+                this.field.setWidth(this.width - this.WIDTH_BORDER * 2
+                        - this.DEFAULT_PADDING );
+            }
+
+            if (standard){
+                this.standardstate.apply();
+            } else {
+                resizeheightstate.apply();
+            }
+
+
+            // note: there is a bug that if pixellock is set in the class
+            // it sets the height, even if the height wasn't already set
+            // so we want to set the pixellock attribute after checking hassetheight
+            setAttribute('pixellock', true);
+            this.initcomplete = true;
+            ]]>
+        </method>
+
+        <method name="setText" args="t">
+            if (this.initcomplete) {
+                this.field.setText(t);
+                if (this['ontext']) this.ontext.sendEvent();
+                if (this['onlabel']) this.onlabel.sendEvent();
+            } else {
+                this.initialtext = t;
+            }
+        </method>
+        <method name="clearText" >
+            this.setText("");
+        </method>
+
+        <method name="toString">
+            var idstring = "";
+            var namestring = "";
+            if (this.id != null) idstring = "  id="+this.id;
+            if (this.name != null) namestring = "  name="+this.name;
+            return "windowtext " + namestring + idstring;
+        </method>
+
+        <windowtextinputtext name="field"
+            password="$once{parent.password}"
+            x="$once{parent.WIDTH_BORDER}"
+            y="$once{parent.HEIGHT_BORDER}"
+            onblur="if (parent['onblur']) parent.onblur.sendEvent()"
+            onfocus="if (parent['onfocus']) parent.onfocus.sendEvent()"
+            ondata="if (parent['ondata']) parent.ondata.sendEvent()"
+            />
+
+        <state name="standardstate">
+            <view name="bgviews" width="100%" height="100%"
+                oninit="this.sendToBack()">
+                <view name="left" resource="LzWinStdTextL_rsc"/>
+                <view name="middle" stretches="width" resource="LzWinStdTextM_rsc"/>
+                <view name="right" resource="LzWinStdTextR_rsc"/>
+                <stableborderlayout axis="x"/>
+            </view>
+        </state>
+
+        <state name="resizeheightstate">
+            <view name="bgviews"  width="100%" height="100%"
+                oninit="this.sendToBack()">
+                <view name="top" width="100%">
+                    <view name="left" resource="LzWinInvFrameTL_rsc"/>
+                    <view name="middle" stretches="width" resource="LzWinInvFrameTM_rsc"/>
+                    <view name="right" resource="LzWinInvFrameTR_rsc"/>
+                    <stableborderlayout axis="x"/>
+                </view>
+                <view name="middle" width="100%">
+                    <view name="left" resource="LzWinInvFrameML_rsc"
+                        height="100%" stretches="height" align="left"/>
+                    <view name="right" resource="LzWinInvFrameMR_rsc"
+                        height="100%" stretches="height" align="right"/>
+                </view>
+                <view name="bottom" width="100%">
+                    <view name="left" resource="LzWinInvFrameBL_rsc"/>
+                    <view name="middle" stretches="width" resource="LzWinInvFrameBM_rsc"/>
+                    <view name="right" resource="LzWinInvFrameBR_rsc"/>
+                    <stableborderlayout axis="x"/>
+                </view>
+                <stableborderlayout axis="y"/>
+            </view>
+        </state>
+        <method name="getText">
+            if (this.initcomplete) {
+                 return this.field.getText();
+            } else {
+                return this.initialtext;
+            }
+        </method>
+        <method name="applyData" args="d">
+            if (this.initcomplete) {
+                return this.field.applyData( d );
+            } else {
+                this.initialtext = d;
+            }
+        </method>
+        <method name="updateData">
+            return this.field.updateData();
+        </method>
+    </class>
+
+
+    <script>
+    <![CDATA[
+
+windowtext.prototype.setters.fgcolor = -1;
+
+//@field DEFAULT_WIDTH: The width for the control if there is no width given
+//and no initial text string
+windowtext.prototype.DEFAULT_WIDTH = 100;
+//@field HEIGHT_BORDER: The y offset of the contained text view from the
+//beveled border
+windowtext.prototype.HEIGHT_BORDER = 3;
+//@field WIDTH_BORDER: The x offset of the contained text view from the
+//beveled border
+windowtext.prototype.WIDTH_BORDER = 2;
+//@field FIXED_HEIGHT: The height to use for the control if none is given. This
+//must match the height of the streamlined resources for this control in the
+// library
+windowtext.prototype.FIXED_HEIGHT = 22;
+//@field DEFAULT_PADDING: The amount to add to the width of the text contained
+//by the control if no width was given and the control is being sized to its
+//text
+windowtext.prototype.DEFAULT_PADDING = 5;
+
+
+
+
+    ]]>
+    </script>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

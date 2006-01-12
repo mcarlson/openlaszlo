@@ -1,0 +1,64 @@
+<library>
+
+    <include href="base/basecombobox.lzx" />
+
+    <!-- resources -->
+    <resource name="lzcombobox_lft_rsc">
+        <frame src="resources/combobox/combobox_lft_up.swf" />
+        <frame src="resources/combobox/popup_lft_up.swf" />
+        <frame src="resources/combobox/combobox_lft_dsbl.swf" />
+        <frame src="resources/combobox/popup_lft_dsbl.swf" />
+    </resource>
+
+    <resource name="lzcombobox_mid_rsc">
+        <frame src="resources/combobox/combobox_mid_up.swf" />
+        <frame src="resources/combobox/popup_mid_up.swf" />
+        <frame src="resources/combobox/combobox_mid_dsbl.swf" />
+        <frame src="resources/combobox/popup_mid_dsbl.swf" />
+    </resource>
+
+    <resource name="lzcombobox_rgt_rsc">
+        <frame src="resources/combobox/popbtn_rt_up.swf" />
+        <frame src="resources/combobox/popbtn_rt_mo.swf" />
+        <frame src="resources/combobox/popbtn_rt_dn.swf" />
+        <frame src="resources/combobox/popbtn_rt_dsbl.swf" />
+    </resource>
+
+
+    <!--- A dropdown list of selectable items. Can either be editable or
+          not. -->
+    <class name="combobox" extends="basecombobox">
+            <view name="lft" resource="lzcombobox_lft_rsc" placement="bkgnd"/>
+        <view name="mid" resource="lzcombobox_mid_rsc" stretches="width" placement="bkgnd"/>
+        <basebutton name="rgt" resource="lzcombobox_rgt_rsc" styleable="true"
+                placement="bkgnd" onclick="classroot.toggle(false)" />
+        <stableborderlayout axis="x" placement="bkgnd"/>
+               <!--- @keywords private -->
+        <method name="_showEnabled">
+           super._showEnabled();
+           if (_enabled) {
+                if (!editable) {
+                    this.bkgnd.lft.setResourceNumber( 2 );
+                    this.bkgnd.mid.setResourceNumber( 2 );
+                } else {
+                    this.bkgnd.lft.setResourceNumber( 1 );
+                    this.bkgnd.mid.setResourceNumber( 1 );
+                }
+            } else {
+                if (!editable) {
+                    this.bkgnd.lft.setResourceNumber( 4 );
+                    this.bkgnd.mid.setResourceNumber( 4 );
+                } else {
+                    this.bkgnd.lft.setResourceNumber( 3 );
+                    this.bkgnd.mid.setResourceNumber( 3 );
+                }
+            }
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

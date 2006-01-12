@@ -1,0 +1,184 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- logconfig.lzx                                                         -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <dataset type="http" name="config" src="console.lzx" />
+
+    <class name="logconfig">
+
+        <attribute name="height" value="400" />
+
+        <method name="request">
+        <![CDATA[
+            var dset = this.cdptr.getDataset();
+            dset.setQueryString( "lzt=logconfig&pwd=" + escape(pwd.getText()) );
+            dset.doRequest();
+        ]]>
+        </method>
+
+        <datapointer name="cdptr" xpath="config:/*[1]" >
+            <attribute name="xml"   value="" type="string" />
+            <attribute name="lines" value="0" />
+            <method event="ondata">
+                var nn = this.getNodeName();
+                if (nn == "configuration") {
+                    this.handleData();
+                } else if (nn == "lps-error") {
+                    this.handleError();
+                } else {
+                    parent.mt.setText('error: log config request node is ' + nn);
+                }
+            </method>
+            <method name="handleData">
+            <![CDATA[
+                // LPS strips out namespace prefix from <log4j:configuration>.
+                if (this.getNodeName() == 'configuration') {
+                    this.setNodeName('log4j:configuration');
+                    this.setNodeAttribute('xmlns:log4j', 
+                                          'http://jakarta.apache.org/log4j');
+                }
+
+                this.xml = '';
+                this.lines = 0;
+
+                // Parse xpath and then reset
+                this.parseXML();
+                this.setXPath('config:/*');
+
+                classroot.a.input.setText(this.xml);
+
+                classroot.level0.level1.update.updateable(true);
+            ]]>
+            </method>
+            <method name="handleError">
+                var err = this.xpathQuery('text()');
+                if (err.indexOf('status="403"') != -1) {
+                    classroot.a.input.setText("Forbidden: log config request (bad password).");
+                } else {
+                    classroot.a.input.setText(err);
+                }
+                classroot.level0.level1.update.updateable(false);
+            </method>
+            <method event="onerror" args="ds">
+                classroot.a.input.setText(ds.getErrorString());
+                classroot.level0.level1.update.updateable(false);
+            </method>
+            <method event="ontimeout">
+                classroot.a.input.setText("Log config request timed out.");
+                classroot.level0.level1.update.updateable(false);
+            </method>
+
+            <method name="parseXML" args="indent">
+            <![CDATA[
+                var nn = this.getNodeName();
+
+                // Get any text
+                if (nn == null) {
+                    this.selectParent();
+                    var text = this.getNodeText();
+                    if (text != null)
+                        this.xml += indent + text + '\n\n';
+                    return;
+                }
+
+                var starttag = indent + '<' + nn;
+
+                var attrs = getNodeAttributes();
+                for (var k in attrs) {
+                    starttag += ' ' + k + '="' + this.getNodeAttribute(k) + '"';
+                }
+
+                if (! this.selectChild()) {
+                    this.xml += starttag + '/>\n\n'
+                    return;
+                }
+                this.xml += starttag + '>\n\n';
+
+                this.parseXML(indent + '    ');
+
+                while (this.selectNext()) {
+                    this.parseXML(indent + '    ');
+                }
+
+                this.selectParent();
+
+                this.xml += indent + '</' + nn + '>\n\n';
+            ]]>
+            </method>
+        </datapointer>
+
+        <resizelayout axis="y" spacing="2" />
+        <view name="level0" height="30">
+            <simplelayout axis="x" spacing="20" />
+            <view name="level1">
+                <simplelayout axis="x" spacing="5" />
+                <button>Refresh
+                    <method event="onclick">
+                    <![CDATA[
+                        classroot.a.input.setText('Requesting...');
+                        classroot.request();
+                    ]]>
+                    </method>
+                </button>
+                <button name="update">Update
+                    <method event="onclick">
+                    <![CDATA[
+                        var xml = classroot.a.input.getText();
+                        var query = "lzt=logconfig&xml=" + escape(xml) +
+                                    "&pwd=" + escape(pwd.getText());
+                        if (parent.save.value) {
+                            query += "&save=1";
+                            classroot.a.input.setText('Updating and saving...');
+                        } else {
+                            classroot.a.input.setText('Updating...');
+                        }
+                        var dset = classroot.cdptr.getDataset();
+                        dset.setQueryString(query);
+                        dset.doRequest();
+                    ]]>
+                    </method>
+                    <method name="updateable" args="isOk">
+                        if (isOk) {
+                            this.setAttribute('clickable', true);
+                            this.setAttribute('opacity', 1);
+                            parent.save.setAttribute('clickable', true);
+                            parent.save.setAttribute('opacity', 1);
+                        } else {
+                            this.setAttribute('clickable', false);
+                            this.setAttribute('opacity', 0.5);
+                            parent.save.setAttribute('clickable', false);
+                            parent.save.setAttribute('opacity', 0.5);
+                        }
+                    </method>
+                </button>
+                <checkbox name="save" text="Save" y="4" />
+            </view>
+
+            <button>View Log
+                <method event="onclick" >
+                    LzBrowser.loadURL('javascript: var wptr = window.open("console.lzx?lzt=log&amp;pwd=' + escape(escape(pwd.getText())) + '", "test", "resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);')
+                </method>
+            </button>
+
+        </view>
+        <view name="a" width="${parent.width}" options="releasetolayout" >
+
+                <inputtext name="input"  font="mono"  fontsize="12" bgcolor="#fafafa" 
+                           resizable="true" multiline="true" selectable="true"
+                           width="${parent.width}" height="${parent.height}" />
+
+        </view>
+    </class> <!-- class logconfig -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

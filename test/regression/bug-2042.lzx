@@ -1,0 +1,31 @@
+<canvas debug="true">
+	<dataset name="sleeper" 
+             src="http://localhost:8080/lps/qa/test/lfc/data/httptimeout.jsp?sleep=20000" 
+             queuerequests="true" request="false"/>
+             
+    <datapointer name="ptr" xpath="sleeper:/*"
+		ondata="Debug.write ( 'Query returned: ' + this.serialize() )"
+		onerror="Debug.write ( 'Request error: ' + 
+			this.getDataset().getErrorString() )"
+		ontimeout="Debug.write ( 'Request timed out' );"/>
+	<simplelayout axis="y" spacing="10"/>
+	<statictext>Number of requests to make</statictext>
+	<edittext name="req" width="40" height="20"/>
+	<button text="Start request">
+		<method event="onclick">
+			var num = parseInt(req.getText())
+			debug.write('sending ' + num + ' requests...')
+			for (var i = 0; i &lt; num; ++ i)
+			{	
+				del = new LzDelegate(sleeper, "doRequest")
+				LzTimer.addTimer(del, 1000)
+			}
+		</method>
+	</button>
+	
+	<debug y="100"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

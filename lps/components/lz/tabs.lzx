@@ -1,0 +1,292 @@
+<library>
+
+    <include href="base/basetabs.lzx" />
+    <include href="base/basecomponent.lzx" />
+    <include href="base/swatchview.lzx" />
+    <include href="utils/layouts/stableborderlayout.lzx"/>
+    <include href="utils/layouts/simplelayout.lzx"/>
+
+
+    <!--- Left resource for tab. Frame 1 (disabled), frame 2 (deselected),
+          frame 3 (mouse over), frame 4 (selected).  -->
+    <resource name="tab_L_rsc">
+        <frame src="resources/tab/tab_disable_lft.swf" />
+        <frame src="resources/tab/tab_dslct_lft.swf"/>
+        <frame src="resources/tab/tab_mo_lft.swf" />
+        <frame src="resources/tab/tab_slct_lft.swf" />
+    </resource>
+    <!--- Middle resource for tab. Frame 1 (disabled), frame 2 (deselected),
+          frame 3 (mouse over), frame 4 (selected).  -->
+    <resource name="tab_M_rsc">
+        <frame src="resources/tab/tab_disable_mid.swf" />
+        <frame src="resources/tab/tab_dslct_mid.swf" />
+        <frame src="resources/tab/tab_mo_mid.swf" />
+        <frame src="resources/tab/tab_slct_mid.swf" />
+    </resource>
+    <!--- Right resource for tab. Frame 1 (disabled), frame 2 (deselected),
+          frame 3 (mouse over), frame 4 (selected).  -->
+    <resource name="tab_R_rsc">
+        <frame src="resources/tab/tab_disable_rt.swf" />
+        <frame src="resources/tab/tab_dslct_rt.swf" />
+        <frame src="resources/tab/tab_mo_rt.swf" />
+        <frame src="resources/tab/tab_slct_rt.swf" />
+    </resource>
+
+    <!-- ====== -->
+    <!--  TABS  -->
+    <!-- ====== -->
+
+    <!--- The default tab used by tabsbar. This class isn't meant to be used
+          standalone. You can pass the name of this class in the 'tabclass'
+          attribute of basetabpane, tabpane, basetabs, and tabs classes. Tabs
+          uses this class as its default 'tabclass'. -->
+    <class name="tab" extends="basetab">
+        <!--- Text padding. Default is 20. -->
+        <attribute name="padding" value="20" />
+
+        <!--- @keywords private -->
+        <attribute name="tabstate" value="2" type="number"/>
+        <!--- @keywords private -->
+        <attribute name="MIN_TEXT_BORDER" value="2" type="number"/>
+        <!--- @keywords private -->
+        <attribute name="titleshift" value="${this.tabstate == 4 ? 4 : 0}" type="number"/>
+        <!--- @keywords private -->
+        <attribute name="width" value="${tabview.labeltext.getTextWidth() + 2*padding}" />
+
+        <view name="tabview" width="100%" >
+            <stableborderlayout axis="x"/>
+            <view name="left" resource="tab_L_rsc">
+                <attribute name="frame" value="${classroot.tabstate}"/>
+            </view>
+            <view name="middle" resource="tab_M_rsc" stretches="width">
+                <attribute name="frame" value="${classroot.tabstate}"/>
+            </view>
+            <view name="right" resource="tab_R_rsc">
+                <attribute name="frame" value="${classroot.tabstate}"/>
+            </view>
+
+            <statictext name="labeltext"
+                    x="${parent.parent.width/2 - this.width/2}"
+                    y="${parent.parent.height/2-(this.height/2) - parent.parent.titleshift +4}"
+                    text="${parent.parent.text}"
+                    resize="true" >
+            </statictext>
+        </view>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            tabview.labeltext.setAttribute('fgcolor',s.textcolor);
+            setTint(tabview.left, s.basecolor);
+            setTint(tabview.middle, s.basecolor);
+            setTint(tabview.right, s.basecolor);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_showEnabled">
+            setAttribute('tabstate', this._enabled ? 2 : 1);
+        </method>
+        <!--- @keywords private -->
+        <method event="onmouseover">
+            setAttribute('tabstate', 3);
+        </method>
+        <!--- @keywords private -->
+        <method event="onmouseout">
+            if (!this["selected"]) {
+                setAttribute('tabstate',2);
+            }
+        </method>
+        <!--- @keywords private -->
+        <method name="setSelected" args="s">
+            <![CDATA[
+                if (s) {
+                   setAttribute('tabstate', 4);
+                   setAttribute("y", 1);
+                } else {
+                    setAttribute('tabstate', 2);
+                    setAttribute("y",0);
+                }
+
+                super.setSelected(s);
+            ]]>
+        </method>
+        <!--- @keywords private -->
+        <method name="setHilite" args="dohilite">
+            tabview.labeltext.setAttribute('fgcolor',
+                dohilite ? style.texthilitecolor : style.textcolor);
+        </method>
+    </class> <!-- class tab -->
+
+    <!-- ============== -->
+    <!--  TABSBAR CLASS -->
+    <!-- ============== -->
+
+    <!--- The default tab bar created by tabpane. This class is dependent on
+          tabs (or any subclass of basetabs) and shouldn't be used by
+          itself. The default layout for its subviews is "class: simplelayout;
+          axis: x; spacing: -15". You can pass the name of this class in the
+          'barclass' attribute of tabpane, basetabpane, basetabs, and tabs. Tabs
+          uses this class as its default 'barclass'. -->
+    <class name="tabsbar" extends="basetabsbar" itemclassname="tab"
+        x="-5" clip="true"
+        layout="class: simplelayout; axis: x; spacing: -15">
+        <!-- x="-5" to account for corner shadow of the asset -->
+
+        <!--- Spacing between tab items. Default is 0. -->
+        <attribute name="spacing" value="0" type="number" 
+                   setter="_setTabSpacing(spacing)" />
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            bringToFront();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setTabSpacing" args="s">
+        <![CDATA[
+            if (! _initcomplete) return;
+            for (var i=0; i < subnodes.length; i++) {
+                var sn = subnodes[i];
+                if (sn instanceof  simplelayout) {
+                    sn.setAttribute('spacing', s);
+                }
+            }
+        ]]>
+        </method>
+
+    </class> <!-- class tabsbar -->
+
+
+    <!-- ========= -->
+    <!--  TABPANE  -->
+    <!-- ========= -->
+
+    <!--- Tabpanes are children of the tabs component. Each tabpane has a
+          corresponding tab. If width and height are not set, all tabpanes will
+          resize themselves to largest tabpane or the width of the tabsbar,
+          whichever is larger. The content of the tabpane is initstage late. You
+          can override this value by setting initstage late on tabpane. -->
+    <class name="tabpane" extends="basetabpane" bgcolor="0xd9d9d9">
+
+        <!--- Width of the tab associated with this tabpane. If not set, the tab
+              will resize itself to fit. -->
+        <attribute name="tabwidth" value="-1" type="number" />
+
+        <!--- Keep our background swatchview from getting swallowed into
+              content. This number is used in the createChildren method and it
+              determines how many are spliced from the beginning of the array.
+              @keywords private -->
+        <attribute name="_keepchildren" value="1" type="number" />
+
+        <!-- Basetabpane places first view of extending subclass in the class
+             and not in the basetabpanecomponent. This may not make it possible
+             to extend from tabpane. -->
+        <swatchview name="background" width="100%" height="100%" 
+                    bgcolor="${parent.bgcolor}" />
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+            // Set width attribute of associated tab if tabwidth is defined
+            if (this.tabwidth > -1) {
+                this.tab.setAttribute('width', this.tabwidth);
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                setTint(background, s.basecolor);
+            }
+        </method>
+
+    </class> <!-- class tabpane -->
+
+
+    <!-- ============= -->
+    <!--  TABSCONTENT  -->
+    <!-- ============= -->
+
+    <!--- This is the class used by tabs to place tabpanes. Visually, it
+          contains a border. The size of the border is constrained by its
+          parent's (tabs) bordersize attribute value. You can pass the name of
+          this class in the 'contentclass' attribute of basetabs and tabs. Tabs
+          uses this class as its default 'contentclass'. -->
+    <class name="tabscontent" extends="basetabscontent" bgcolor="0x4c4c4c">
+        <!--- @keywords private -->
+        <attribute name="defaultplacement" value="borderedcontent" type="string" />
+        <view name="borderedcontent"
+            x="${parent.parent.bordersize}"
+            y="${parent.parent.bordersize}"
+            width="${parent.width-(2*parent.parent.bordersize)}"
+            height="${parent.height-(2*parent.parent.bordersize)}"
+            clip="true" />
+    </class> <!-- class tabscontent -->
+
+    <!-- ====== -->
+    <!--  TABS  -->
+    <!-- ====== -->
+    <!--- Tabs is a component which takes one or more tabpanes and provides a
+          tab for each one to switch between them. -->
+    <class name="tabs" extends="basetabs" clip="true">
+
+        <!--- Align the set of tabs within the dimensions of the "tabs"
+             container ("left", "center", "right").  Defaults to "left". -->
+        <attribute name="tabalign" value="left" type="string" 
+                   setter="_setTabAlign(tabalign)"/>
+        <!--- Spacing between the tabs. Defaults to -15 so tabs overlap. -->
+        <attribute name="tabspacing" value="-15" type="number" 
+                   setter="_setTabSpacing(tabspacing)"/>
+        <!--- Content's border size (see tabscontent). Default is 1. -->
+        <attribute name="bordersize" value="1" type="number" />
+        <!--- Class to use for tab items in tabsbar. Default is tab. 
+              @keywords final -->
+        <attribute name="tabclass" value="tab" type="string" />
+        <!--- Class to use for tabs bar. Default is tabsbar.
+              @keywords final -->
+        <attribute name="barclass" value="tabsbar" type="string" />
+        <!--- Class to use for tabs content area. Default is tabscontent. 
+              @keywords final -->
+        <attribute name="contentclass" value="tabscontent" type="string" />
+        <!--- Layout to use between tabsbar and tabscontent. Default is
+              "class: simplelayout; axis: y; spacing: -2". -->
+        <attribute name="layout"
+            value="class: simplelayout; axis: y; spacing: -2" />
+
+        <!--- @keywords private -->
+        <method name="init">
+            super.init();
+
+            // This also calls _setTabAlign()
+            this._setTabSpacing(this.tabspacing);
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="_setTabAlign" args="align">
+            this.tabalign = align;
+            if (! _initcomplete) return;
+            if (align == "center") {
+                this.bar.setAttribute('x', Math.floor(this.width/2 - this.bar.width/2));
+            } else if (align == "right") {
+                this.bar.setAttribute('x', this.width - this.bar.width + 7);
+            } else { // left
+                this.bar.setAttribute('x', -5);
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setTabSpacing" args="s">
+            this.tabspacing = s;
+            if (! _initcomplete) return;
+            this.bar.setAttribute('spacing', s);
+            this._setTabAlign(tabalign);
+        </method>
+
+    </class> <!-- class tabs -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

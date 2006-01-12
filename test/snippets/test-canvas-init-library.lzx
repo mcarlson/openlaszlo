@@ -1,0 +1,15 @@
+<library>
+  <script>
+    _root.blah = 0xff0000;
+    function foo() {
+       _root.Debug.write('foo!', 'canvas=', canvas,'_root.canvas=', _root.canvas);
+    }
+
+    new _root.LzView(_root.canvas, {width: 50, height: 50, bgcolor: _root.blah});
+    new _root.LzView(_root.canvas, {width: 50, height: 50, bgcolor: _root.canvas.greencolor});
+  </script>
+  <view bgcolor="yellow" width="50" height="50" id="libview"
+        oninit="_root.Debug.write('oninit called on library yellow square')">
+    <text>snippet</text>
+  </view>
+</library>

@@ -1,0 +1,142 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+
+  <script>
+  <![CDATA[
+    letters = [];
+    for ( var i = 0; i < 26; i++ ){
+        letters[ i ] = String.fromCharCode( 'a'.charCodeAt(0)  + i );
+    }
+
+    few_Keys = {};
+    manyKeys = {};
+    mnmnKeys = {};
+    longKeys = {};
+
+
+    for ( var i = 0 ; i < letters.length; i++ ){
+        var l = letters[ i ];
+        few_Keys[ l ] = i;
+        manyKeys[ l ] = i;
+        mnmnKeys[ l ] = i;
+        longKeys[ 'allthekeysforthisobjecthavelongidentifiers' + l ] = i;
+        for ( var j = 0 ; j < letters.length; j++ ){
+            var m = letters[ m ];
+            manyKeys[ l + m ] = j;
+            mnmnKeys[ l + m ] = j;
+            longKeys[ 'allthekeysforthisobjecthavelongidentifiers' + l+m] = j;
+            for ( var h = 0 ; h < letters.length; h++ ){
+                mnmnKeys[ l + m + letters[ h ] ] = h;
+            }
+        }
+    }
+
+    function lookUpSome( obj ){
+        return obj.a + obj.b + obj.c + obj.d + obj.e + obj.f + obj.g + obj.h;
+    }
+  
+    function testFewKeys(){
+        return lookUpSome( few_Keys );
+    }
+    function testManyKeys(){
+        return lookUpSome( manyKeys);
+    }
+    function testManyManyKeys(){
+        return lookUpSome( mnmnKeys);
+    }
+
+    var fewAsProto = { a: 22 , c:12 , __proto__ : few_Keys };
+    function testFewKeysAsProto(){
+        return lookUpSome( fewAsProto );
+    }
+
+    var pchain1 = { a: 22 , __proto__ : few_Keys };
+    var pchain2 = { c: 33 , __proto__ : pchain1 };
+    var pchain3 = { e: 99 , __proto__ : pchain2 };
+    var pchain4 = { f: 11 , __proto__ : pchain3 };
+    function testDeepProto(){
+        return lookUpSome( pchain4 );
+    }
+
+    function lookupShortIdentifiers(){
+        return manyKeys.a + manyKeys.aa + 
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb +
+               manyKeys.bb;
+    }
+
+    function lookupLongIdentifiers(){
+        return manyKeys.allthekeysforthisobjecthavelongidentifiersa + 
+               manyKeys.allthekeysforthisobjecthavelongidentifiersaa + 
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb +
+               manyKeys.allthekeysforthisobjecthavelongidentifiersbb;
+    }
+
+    function lookupLocal (){
+        var svar =2;
+        return svar + svar + svar + svar + svar + svar + svar + svar + svar;
+    }
+
+    global.gvar =2;
+    function lookupGlobal (){
+        var svar =2;
+        return gvar + gvar + gvar + gvar + gvar + gvar + gvar + gvar + gvar;
+    }
+
+    function lookupGlobalWith (){
+        with ( few_Keys ){
+            with ( manyKeys ){
+                with ( mnmnKeys ){
+                    var svar =2;
+                    return gvar + gvar + gvar + gvar + gvar + gvar + gvar + gvar + gvar;
+                }
+            }
+        }
+    }
+
+    addTest("testFewKeys" , 1000);
+    addTest("testManyKeys" , 1000);
+    addTest("testManyManyKeys" , 1000);
+    addTest("testFewKeysAsProto" , 1000);
+    addTest("testDeepProto" , 1000);
+    addTest("lookupShortIdentifiers" , 1000);
+    addTest("lookupLongIdentifiers" , 1000);
+    addTest("lookupLocal" , 1000);
+    addTest("lookupGlobal" , 1000);
+    addTest("lookupGlobalWith" , 1000);
+    
+    runTests( 'Identifiers' , 25 );
+
+  ]]>
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

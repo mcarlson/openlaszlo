@@ -1,0 +1,61 @@
+
+<canvas  width="1024" height="700" >
+    <class name="drawView">
+        <method event="onconstruct">
+            this.makeContainerResource();
+            Debug.write( 'mcref' , this.__LZmovieClipRef );
+            this.__LZmovieClipRef.createEmptyMovieClip( "$draw" , 4 );
+            this.__LZdraw = this.__LZmovieClipRef['$draw'];
+            Debug.write( 'draw' , this.__LZdraw );
+        </method>
+        <method name="moveTo" args="x,y">
+            this.__LZdraw.moveTo( x ,y );
+        </method>
+        <method name="lineTo" args="x,y">
+            this.__LZdraw.lineTo( x ,y );
+        </method>
+        <method name="lineStyle" args="weight, color , unknown">
+            this.__LZdraw.lineStyle( weight, color, unknown );
+        </method>
+    </class>
+    <text>I need to run as flash6, make sure you have lzr=swf6 in the URL</text>
+    <drawView name="foo" width="200" height="200"/>
+    <simplelayout/>
+    <include href="utils/states/dragstate.lzx" />
+
+    <class name="linestate" extends="dragstate" >
+      
+    </class>
+
+    <class name="dot" bgcolor="blue" width="10" height="10"
+	  onmousedown="drag.apply()"
+
+	  >
+      <attribute name="lastx" value="$once{this.x}"/>
+      <attribute name="lasty" value="$once{this.y}"/>
+
+      <linestate name="drag"/>
+      <method event="onmousedown">
+	foo.moveTo(lastx, lasty);
+	foo.lineTo(this.x, this.y);
+	this.lastx=this.x;
+	this.lasty=this.y;
+      </method>
+
+
+
+    </class>
+
+    <dot x="100" y="100"/>
+
+    <script>
+        foo.lineStyle( 3, red , 100 );
+        foo.moveTo( 100 , 100);
+    </script>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

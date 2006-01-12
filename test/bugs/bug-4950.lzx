@@ -1,0 +1,19 @@
+<canvas debug="true">
+  <class name="testState" extends="state">
+    <attribute name="countApplies"  value="0"
+               setter="this.countApplies = countApplies"/>
+    <method name="apply">
+      this.setAttribute('countApplies', ++this.countApplies);
+      Debug.write("inApply:" + this.countApplies);
+      super.apply();
+    </method>
+  </class>
+    <testState name="ts"/>
+  <button >Try it
+    <method event="onclick">
+      ts.apply();
+      Debug.write("applies:" + ts.countApplies);
+      ts.remove();
+    </method>
+  </button>
+</canvas>

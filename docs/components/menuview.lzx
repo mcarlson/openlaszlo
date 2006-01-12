@@ -1,0 +1,46 @@
+<library>
+
+    <include href="common.lzx" />
+
+    <class name="menuitemview" layout="axis: y">
+        <border width="100%" height="20" cbgcolor="${canvas.lcdcolor}">
+            <textlink file="lz-menuitem.html">menuitem</textlink>
+        </border>
+        <border width="100%" height="20" cbgcolor="${canvas.lcdcolor}">
+            <textlink file="lz-textlistitem.html">textlistitem</textlink>
+        </border>
+        <border width="100%" height="20" cbgcolor="${canvas.lcicolor}">
+            <textlink file="lz-listitem.html">listitem</textlink>
+        </border>
+        <border width="100%" height="20" cbgcolor="${canvas.basecolor}">
+            <textlink>baselistitem</textlink>
+        </border>
+        <border width="100%" height="20" cbgcolor="${canvas.basecolor}">
+            <textlink>basevaluecomponent</textlink>
+        </border>
+    </class>
+
+    <class name="menuview1" layout="axis: x">
+        <border width="50%" height="100" cbgcolor="${canvas.lcdcolor}">
+            <view width="100%" y="10">
+                <simplelayout axis="y" />
+                <textlink file="lz-menu.html">menu</textlink>
+                <textlink file="lz-menubar.html">menubar</textlink>
+                <textlink file="lz-menuseparator.html">menuseparator</textlink>
+            </view>
+        </border>
+        <menuitemview width="50%" />
+    </class>
+
+    <class name="menuview" layout="axis: y">
+        <menuview1 width="100%" />
+        <border width="100%" height="20" cbgcolor="${canvas.basecolor}">
+            <textlink>basecomponent</textlink>
+        </border>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

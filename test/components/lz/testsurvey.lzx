@@ -1,0 +1,41 @@
+<canvas bgcolor="silver">
+    <debug x="250"/>
+
+    <dataset name="surveydataset" type="http"
+        src="http:testsurvey.jsp"/>
+
+    <form id="f">
+        <submit name="survey" data="${surveydataset}"/>
+        <statictext id="q">What is your favorite vacation spot?</statictext>
+        <radiogroup name="place" id="rg">
+            <radiobutton id="r1" value="0">Hawaii</radiobutton>
+            <radiobutton id="r2" value="1">Paris</radiobutton>
+            <radiobutton id="r3" value="2">Jamaica</radiobutton>
+        </radiogroup>
+        <checkbox name="show">show results</checkbox>
+        <button isdefault="true" id="btn"
+            onclick="parent.survey.submit()">submit</button>
+    </form>
+
+    <view name="results" datapath="surveydataset:/xml">
+        <view>
+             <text>you voted for #</text>
+             <text datapath="vote/text()"/>
+                <simplelayout axis="x"/>
+         </view>
+          <view>
+         <text>summary</text>
+         <text datapath="summary/option@name"/>
+         <text datapath="summary/option/text()"/>
+              <simplelayout axis="y"/>
+
+          </view>
+        <simplelayout axis="y"/>
+
+    </view>
+    <simplelayout/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

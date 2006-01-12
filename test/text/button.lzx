@@ -1,0 +1,21 @@
+<canvas width="1000" height="1000">
+    <include href="redmond" />
+
+    <font src="helmetr.ttf"               name="Helvetica" />
+    <font src="helmetb.ttf"               name="Helvetica" style="bold"/>
+    <font src="helmeti.ttf"               name="Helvetica" style="italic" />
+    <font src="helmetbi.ttf"              name="Helvetica" style="bold italic" />
+
+ <view name="test">
+   <simplelayout axis="y"/> 
+   <button>Hello there</button>
+   <button>
+     Hello there
+   </button>
+ </view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

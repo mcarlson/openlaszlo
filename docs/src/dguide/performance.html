@@ -1,0 +1,907 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="performance-tuning">
+<head>
+  <title>Performance Monitoring and Tuning</title>
+</head>
+<fixme>
+Rewriting without constraints is a major optimization technique.  Constraints are useful for quickly writing code and for writing compact maintainable programs, but with a significant performance cost.
+
+The significant contributions to the cost of constraints aren't so much in the evaluation of the constraint expression itself.  Rather, they come about from two causes:
+- It's expensive to register a constraint.  Partly this is because each constraint requires two functions (which contributes to application size), and one function call (which contributes to startup time).  There have been some proposals to reduce this overhead, by combining multiple constraint initializers ("dependency functions") into one function call, but no one has had time to explore these.
+- It's expensive to trigger a constraint, both because because there's one function call (it's the other function, this time), and because of the constraint machinery.
+</fixme>
+<body>
+<h1>Performance Monitoring and Tuning</h1>
+<p>
+In this chapter we'll look at various ways to detect and address sources of poor performance. You may also want to investigate the <a href="http://www.openlaszlo.org/wiki/CallProfiler">OpenLaszlo Wiki</a>, where developers discuss advanced techniques, including unofficial and unsupported tools such as the call profiler.
+</p>
+<todo>
+size profiler stuff
+</todo>
+<p>
+This chapter discusses ways to measure the performance of your Laszlo
+client code and gives some tips for more efficient coding.
+</p>
+<p>
+Be sure also to see <xref linkend="debugging"/>,  which includes explanations of many useful techniques, such as tracing, backtracing, memory leak detection and object inspection, for finding performance problems.
+</p>
+<h2>Time Measurement</h2>
+<p>
+Simple timing measurements can be made using <code>(new
+Date).getTime()</code>, which will return a millisecond time.  You
+can use <code>Debug.write</code> or <code>Debug.log</code> to output
+timing data.  Here is a simple framework illustrating how you can use
+this to measure the cost of certain operations.  A more complete
+framework is available by including <code>utils/performance</code>.
+</p>
+<example class="code" title="Measurement Framework">
+  &lt;canvas height="150" debug="true"&gt;
+    &lt;script&gt;
+      var trials = 30;
+
+      function measure (target, iterations, description, trials, empty) {
+        // Default arguments
+        switch (arguments.length) {
+          case 0:
+            Debug.write("No measurement target");
+            return;
+          case 1:
+            iterations = 500;
+          case 2:
+            description = null;
+          case 3:
+            trials = 10;
+          case 4:
+            empty = function () {
+              for (var i = 0; i &amp;lt; iterations; ) i++;
+            }
+        }
+        // Compute overhead
+        var overhead = 0;
+        var total = 0;
+        for (var j = 0; j &amp;lt; trials; j++) {
+          var start = (new Date).getTime();
+          empty();
+          var end = (new Date).getTime();
+          overhead += end - start;
+          // Measure target
+          var start = (new Date).getTime();
+          target();
+          var end = (new Date).getTime();
+          total += end - start;
+        }
+        var usPerOp = Math.round((total-overhead)*1000/(trials*iterations));
+        // Report results
+        if (description != null) {
+          Debug.write(description + ": " + usPerOp + "us");
+        }
+        return usPerOp;
+      }
+
+      // What we want to measure
+      var iterations = 100;
+      function stringConcatenation () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          "foo" + "bar";
+        }
+      }
+
+      // Measure it
+      measure(stringConcatenation, iterations, "String concatenation");
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+<p>
+Because <code>Date.getTime</code> is based on the real time clock,
+measurements using it can be deceiving: the runtime may choose to
+execute maintenance tasks during your measurement period (for
+instance, garbage collection) and the operating system may share the
+processor with other applications during your measurement period.  The
+<code>utils/performance</code> library uses a slightly more
+sophisticated meter that accumulates both a mean time, standard
+deviation, and min and max times.  In the examples below, the meters
+are presented as: <tt><i>mean</i> &#xB1;<i>std. dev.</i>
+[<i>minimum</i>..<i>maximum</i>]/<i>trials</i></tt>.  For the purposes
+of measuring the relative performance of two different techniques,
+comparing the minimum times of a large number of trials is probably
+the most accurate.
+</p>
+<p>
+You will see that in both the example framework and the performance
+library that we accumulate statistics in two loops: a short-term loop
+to ameliorate the overhead of getting the time, and a long-term loop
+to minimize the perturbation due to background or other processes.
+</p>
+
+<note>
+Be sure to do your testing on your most difficult target.  Clients
+with the Flash 6 player installed will be slower than those with the
+Flash 7 player installed.  Macintosh clients will, in general, be
+slower than Windows clients.  Most of the advice in this chapter holds
+across all players and platforms, but by viewing the examples on the
+particular client of interest, you can see exactly how important the
+advice is.
+</note>
+
+<h2>JavaScript Performance</h2> 
+<p>
+Like most programming languages, Javascript often can express the same
+algorithm in a number of different ways.  Below are some tips on
+choosing the more efficient of those ways.
+</p>
+<h3>Variables</h3>
+<h4>Use local variables rather than global</h4>
+<p>
+Local variables are faster to access than global variables, so global
+variables should only be used when necessary.  In particular, watch
+out for erroneously writing <code>for (i in ...)</code> when you
+really mean <code>for (var i in ...)</code>; similarly, <code>for (i =
+0; i &lt; ...; i++)</code> will be less efficient than <code>for (var
+i = 0; i &lt; ...; i++)</code>.  [In addition you are liable to
+clobber an important global variable if you forget to use the
+<code>var</code> declaration in a <code>for</code> loop.]
+</p>
+<p>
+The example below uses the performance <code>Measurement</code> utility to
+illustrate the difference between incrementing a global variable and a
+local variable.
+</p>
+<example class="code" title="Globals vs. Locals">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {}
+      }
+      
+      var j = 0;
+      function globalReference () {
+        for (var i = 0; i &amp;lt; iterations; i++) {j++}
+      }
+
+      function localReference() {
+        var k = 0;
+        for (var i = 0; i &amp;lt; iterations; i++) {k++}
+      } 
+
+      (new Measurement({'Global reference': globalReference,
+                      'Local reference': localReference,
+                      'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+<h4>Cache constant global references</h4>
+<p>
+If you need to access a global reference many times that you know will
+not change, create a local reference and use that instead.
+</p>
+<example class="code" title="Cacheing globals">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var j;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+         j = i;
+        }
+      }
+      
+      function globalReference () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          j = Math.PI;
+        }
+      }
+
+      function cachedGlobalReference() {
+        var PI = Math.PI;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          j = PI;
+        }
+      } 
+
+      (new Measurement({'Global reference': globalReference,
+                      'Cached global reference': cachedGlobalReference,
+                      'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+<h3>Arrays</h3>
+<p>
+For an array <code>A</code>, <code>A.push(b)</code> is more expensive
+than <code>A[A.length] = b</code>, which in turn is more expensive
+than <code>A[i] = b</code> (i.e., if you already had the current
+length of the array in a variable).
+</p>
+<p>
+Allocating an array in advance, when you know how many elements it
+will eventually hold, makes no difference on existing runtime
+platforms, because arrays are just objects that maintain a length
+field.
+</p>
+<p>
+Note that if you do not need to know how many elements are in the array, using an object can be slightly more efficient, because it does not have to maintain the lenght field.
+</p>
+<p>
+The example below illustrates the various ways of adding elements to an array.
+</p>
+<example class="code" title="Adding elements to an Array">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var textIndexes={};
+      for (var i = 0; i &amp;lt; iterations; i++) {
+        textIndexes[i] = i.toString();
+      }
+
+      function empty () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          ;
+        }
+      }
+
+      function measurePush () {
+        var testArray = [];
+        for (var j in textIndexes ) {
+          testArray.push(j);
+        }
+      }
+
+      function measureSetAtLength () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[testArray.length] = j;
+        }
+      }
+
+      function measureSetAtIndex () {
+        var testArray = [];
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureSetAtIndexPreallocated () {
+        var testArray = new Array(iterations);
+        for (var j in textIndexes) {
+          testArray[j] = j;
+        }
+      }
+
+      function measureObjectSetAtIndex () {
+        var testObject = {};
+        for (var j in textIndexes) {
+          testObject[j] = j;
+        }
+      }
+
+      (new Measurement({'Array.push': measurePush,
+                        'Array[Array.length] =': measureSetAtLength,
+                        'Array[index] =':  measureSetAtIndex,
+                        'Array[index] = (preallocated)':
+                        measureSetAtIndexPreallocated,
+                        'Object[key] =': measureObjectSetAtIndex,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+<h3>Loops</h3>
+<p>
+In older players, <code>while</code> loops are slightly more efficient than <code>for ... in</code> loops which are slightly more efficent than <code>for</code> loops.  The difference is not enough that you should contort your code, but if any will work equally well, you should choose accordingly.
+</p>
+<example class="code" title="Iterating with for, for in, or while">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var testIndexes={};
+      for (var i = 0; i &amp;lt; iterations; i++) {
+        testIndexes[i] = i.toString();
+      }
+
+      function empty () {
+      }
+
+      function measureFor () {
+        for (var j = 0; j &amp;lt; iterations; j++ ) {
+          testIndexes[j];
+        }
+      }
+
+      function measureForIn () {
+        for (var j in testIndexes ) {
+          testIndexes[j];
+        }
+      }
+
+      function measureWhile () {
+        var j = 0;
+        while (j &amp;lt; iterations) {
+          testIndexes[j++];
+        }
+      }
+
+      (new Measurement({'for': measureFor,
+                        'for in': measureForIn,
+                        'while':  measureWhile,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+<h3>Conditionals</h3>
+<p>
+Using a cascade of <code>if</code> statements is slightly more efficient that using
+the equivalent logical operators.  This is a bug that will be fixed in
+a future release, so you should not contort your code unless
+absolutely necessary.
+</p>
+
+<fixme>Is this really a bug?  What about <code>switch</code> &#x2014; is this faster?</fixme>
+
+<example class="code" title="Conditionals vs. logical operators">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var a = false;
+      var b = true;
+      var c = true;
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a == false) {};
+        }
+      }
+
+      function measureLogicalAnd () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a &amp;amp;&amp;amp; b &amp;amp;&amp;amp; c) {}
+        }
+      }
+
+      function measureIfProduct () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (a) {
+            if (b) {
+              if (c) {}
+            }
+          }
+        }
+      }
+
+      var d = true;
+      var e = false;
+      var f = false;
+      function measureLogicalOr () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (d || e || f) {}
+        }
+      }
+
+      function measureIfSum () {
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          if (c) {}
+          else if(d) {}
+          else if (e) {}
+        }
+      }
+
+      (new Measurement({'Logical And': measureLogicalAnd,
+                        'If Product': measureIfProduct,
+                        'Logical OR':  measureLogicalOr,
+                        'If Sum': measureIfSum,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+<h3>with</h3>
+<p>
+The use of <code>with</code> does not appear to affect performance, so it is a stylistic choice.
+</p>
+
+<fixme>Tucker, is this true?</fixme>
+
+<example class="code" title="with (this) vs. this.">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var testObj = {a: 1, b: 2, c: 3, d: 4, e: 5, f: 6};
+
+      function e () {
+        return 0;
+      }
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          testObj.e();
+      }
+
+      function withThis () {
+        with (this) {return a + b + c + d + e + f};
+      } 
+      function measureWithThis () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          testObj.withThis();
+      }
+
+      function thisDot () {
+        return this.a + this.b + this.c + this.d + this.e + this.f;
+      }
+      function measureThisDot () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          testObj.thisDot();
+      }
+
+      (new Measurement({'with (this)': measureWithThis,
+                        'this.': measureThisDot,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+
+<h3>Function calls</h3>
+
+<p>The cost of a function call is about equivalent to three assignment
+statements, so modularizing your code using function calls is not
+going to create a big performance penalty.  Each argument passed to a
+function call is about equvalent to an aditional assignment.</p>
+
+<example class="code" title="The cost of a function call.">
+  &lt;canvas height="200"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var x;
+
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ;
+      }
+
+      function measureAssignment () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          x = 0;
+      }
+
+      function eff () {
+        return 0;
+      }
+      function measureFunctionCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          eff();
+      }
+
+      function gee (a) {
+        return 0;
+      }
+      function measureFunctionCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          gee(1);
+      }
+
+      function ache (a, b) {
+        return 0;
+      }
+      function measureFunctionCallWithTwoParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ache(1, 2);
+      }
+
+      function eye (a, b, c) {
+        return 0;
+      }
+      function measureFunctionCallWithThreeParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          eye(1,2,3);
+      }
+
+      function jay (a, b, c, d) {
+        return 0;
+      }
+      function measureFunctionCallWithFourParameters () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          jay(1,2,3,4);
+      }
+
+      function MyObj () {}
+      MyObj.prototype.eff = eff;
+      MyObj.prototype.gee = gee;
+
+      var myObj = new MyObj();
+      function measurePrototypeMethodCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.eff();
+      }
+      function measurePrototypeMethodCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.gee(1, 2, 3, 4, 5, 6);
+      }
+
+      var obj = {};
+      obj.f = eff;
+      obj.g = gee;
+      function measureMethodCall () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.eff();
+      }
+      function measureMethodCallWithOneParameter () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          myObj.gee(1);
+      }
+
+      (new Measurement({'assignment': measureAssignment,
+                        'function call': measureFunctionCall,
+                        'function call with 1 parameter': measureFunctionCallWithOneParameter,
+                        'function call with 2 parameters': measureFunctionCallWithTwoParameters,
+                        'function call with 3 parameters': measureFunctionCallWithThreeParameters,
+                        'function call with 4 parameters': measureFunctionCallWithFourParameters,
+                        'method call': measureMethodCall,
+                        'method call with 1 parameter': measureMethodCallWithOneParameter,
+                        'prototype method call': measurePrototypeMethodCall,
+                        'prototype method call with 1 parameter': measurePrototypeMethodCallWithOneParameter,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+
+<h3>Code hoisting</h3>
+
+<p>
+It's always a good idea to carefully examine <dfn>inner loops</dfn> (loops that
+are central to an algorithm and executed many times) for expressions
+that don't vary with the loop index and move them out of the loop.
+This is just good standard programming practice, but it may not be
+quite so obvious in an object-oriented language such as Javascript.
+</p>
+<p>
+The example below shows how accessing a deeply nested element of a
+object heirarchy is really a constant expression that can be moved out
+of a loop.
+</p>
+<example class="code" title="Moving constant expressions out of a loop.">
+  &lt;canvas height="150"&gt;
+    &lt;include href="utils/performance" /&gt;
+    &lt;script&gt;
+      var iterations = Measurement.defaultIterations;
+      var x;
+
+      function empty () {
+        for (var i = 0; i &amp;lt; iterations; i++) 
+          ;
+      }
+
+      var myObj = { a: 'eh?', b: 'be',
+                    c: { d: 'dee',
+                         e: { f: 'eff',
+                              g: { h: 'ache'}}}}
+
+      function measureHardWay () {
+        var ans;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          ans = a.c.e.g.h;
+        }
+      }
+
+      function measureEasyWay () {
+        var ans;
+        var aceg = a.c.e.g;
+        for (var i = 0; i &amp;lt; iterations; i++) {
+          ans = aceg.h;
+        }
+      }
+
+      (new Measurement({'in the loop': measureHardWay,
+                        'out of the loop': measureEasyWay,
+                        'empty': empty})).run();
+    &lt;/script&gt;
+  &lt;/canvas&gt;
+</example>
+
+<h2>Optimizing startup time</h2>
+
+
+<h3>Using Lazy Replication</h3>
+<p>If you will have more items in your list that appear to the user,
+you should use <code>dataoption="lazy"</code>.  In this case the
+listitem will use lazy replication <!--link--> and the list will
+use a <classname>LzDataSelectionManager</classname>, instead of a
+<classname>LzSelectionManager</classname>.  Some of the APIs for adding
+and removing items will not be available, but startup time will be
+significantly faster.  In general, you can modify data through the
+data APIs <!--link-->, instead of using list methods.  If you
+have created your own <classname>listitem</classname> class you should
+read more about the <classname>LzDatapath</classname> <a
+href="datapath.html#attr-replication"><attribute>replication</attribute></a>
+attribute.</p>
+
+<p>In the example below, only four <classname>textlistitem</classname>
+views are created, even though there are ten items in the dataset.</p>
+
+
+<note>If you declare a <tagname>textlistitem</tagname> with a child
+<tagname>datapath</tagname>, you must set
+<code>datareplication="lazy"</code> on the <tagname>datapath</tagname>
+element if you set <code>dataoption="lazy"</code> in the list.  If you
+are using a <attribute>datapath</attribute> attribute, that happens
+automatically.)</note>
+
+<example>
+&lt;canvas width="200" height="120"&gt;
+  &lt;dataset name="mydata"&gt;
+    &lt;numbers&gt;
+      &lt;option name="first"/&gt;
+      &lt;option name="second"/&gt;
+      &lt;option name="third"/&gt;
+      &lt;option name="fourth"/&gt;
+      &lt;option name="fifth"/&gt;
+      &lt;option name="sixth"/&gt;
+      &lt;option name="seventh"/&gt;
+      &lt;option name="eigth"/&gt;
+      &lt;option name="ninth"/&gt;
+      &lt;option name="tenth"/&gt;
+    &lt;/numbers&gt;
+  &lt;/dataset&gt;
+  &lt;list id="mylist" shownitems="4" dataoption="lazy"&gt;
+    &lt;textlistitem datapath="mydata:/numbers/option/@name"/&gt;
+  &lt;/list&gt;
+  &lt;text text="${mylist.value}"/&gt;
+  &lt;simplelayout spacing="4" inset="10"/&gt;
+  &lt;constantlayout value="10" axis="x"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<h2>Optimizing runtime performance with pooling</h2>
+
+<fixme>Should this move to the Guide (with a link from here)?</fixme>
+
+<p>If you are creating a list from data and then change the data that
+is represented by the list, you should consider
+<code>dataoption="pooling"</code>.  Normally when the data changes,
+views are re-created, but with pooling only the data is reset.  With
+the textlistitem class this will work effectively.  If you have
+created your own listitem class you should read more about the
+datapath <a href="datapath.html#attr-pooling">pooling</a> attribute.</p>
+
+<note>If you use lazy replication as described above, pooling will
+also be true.</note>
+
+<example>
+&lt;canvas height="200"&gt;
+  &lt;dataset name="letters"&gt;
+    &lt;item value="a" &gt;A&lt;/item&gt;
+    &lt;item value="b" &gt;B&lt;/item&gt;
+    &lt;item value="c" &gt;C&lt;/item&gt;
+    &lt;item value="d" &gt;D&lt;/item&gt;
+    &lt;item value="e" &gt;E&lt;/item&gt;
+    &lt;item value="f" &gt;F&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;dataset name="numbers"&gt;
+    &lt;item value="1" &gt;I&lt;/item&gt;
+    &lt;item value="2" &gt;II&lt;/item&gt;
+    &lt;item value="3" &gt;III&lt;/item&gt;
+    &lt;item value="4" &gt;IV&lt;/item&gt;
+    &lt;item value="5" &gt;V&lt;/item&gt;
+    &lt;item value="6" &gt;VI&lt;/item&gt;
+  &lt;/dataset&gt;
+
+  &lt;simplelayout axis="x" spacing="60" inset="20"/&gt;
+  &lt;method name="toggle" args="list"&gt;
+    var xpath = list.datapath.xpath;
+    if (xpath == "letters:/") {
+      list.setDatapath("numbers:/");
+    } else {
+      list.setDatapath("letters:/");
+    }
+  &lt;/method&gt;
+
+  &lt;view y="10" layout="class: simplelayout; axis: y; spacing: 5"&gt;
+    &lt;text&gt;(list1)&lt;/text&gt;
+
+    &lt;button name="toggle" text="toggle list1"&gt;
+      &lt;method event="onclick"&gt;
+        canvas.toggle(list1);
+      &lt;/method&gt;
+    &lt;/button&gt;
+
+    &lt;list id="list1" width="130" shownitems="6"
+          datapath="letters:/"&gt;
+      &lt;textlistitem datapath="/item" text="$path{'text()'}"
+                    value="$path{'@value'}"/&gt;
+    &lt;/list&gt;
+  &lt;/view&gt;
+
+  &lt;view y="10" layout="class: simplelayout; axis: y; spacing: 5"&gt;
+    &lt;text&gt;(list2) dataoption="pooling"&lt;/text&gt;
+
+    &lt;button name="toggle" text="toggle list2"&gt;
+      &lt;method event="onclick"&gt;
+        canvas.toggle(list2);
+      &lt;/method&gt;
+    &lt;/button&gt;
+
+    &lt;list id="list2" width="130" shownitems="6"
+          datapath="letters:/" dataoption="pooling" &gt;
+      &lt;textlistitem datapath="/item"
+                    text="$path{'text()'}"
+                    value="$path{'@value'}"/&gt;
+    &lt;/list&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<h4>Data optimization checklist</h4>
+<p>
+Data pooling gives you the key tool in optimizing performance issues related to XML data. The philosophy
+can be stated simply: </p>
+<ol>
+	<li>Pool replicated views.</li>
+	<li>Reduce the number of subviews in a replicated row.</li>
+	<li>Defer <tagname>init</tagname> of parts of your application that aren't necessary immediately.</li>
+</ol>
+
+<fixme>
+- removing/redefining the default font (can link to fonts chapter).
+</fixme>
+<fixme>
+This should go in the performance chapter (how large a {} is, how large a dataset node is, and the 
+recommendation to use attributes instead of child elements to decrease memory overhead).
+ 
+
+ var ll = []; for (var i = 0; i &lt;20000; i++) ll[i] = {foo: i}
+
+ 
+
+
+When you consider that every object is a hashtable, and that most objects have a number of attributes, 
+it's probably not that unreasonable.  If you figure that a hash table needs at least two words for each entry (key, value) 
+and that if you use open hashing, you never want to be more than 2/3 full, then 562 bytes works out to at most 45 attributes.  
+If the hash table stores hash codes, make that 3 words per entry, and 30 attributes. 
+ That doesn't count for any table or class overhead either.
+
+  that still seems a little profligate, but   RAM is essentially free these days. 
+ Or perhaps they don't have a good solution for growing an object and updating all references to it, so they want 
+to allocate objects big enough that they seldom have to move.
+
+Include a graph that shows baseline memory levels.
+
+</fixme>
+<fixme>
+Measurement is expensive.  Avoid things like getTextWidth() and for forth. Instead, use built-ins (such as ???).
+
+For details, see Adam.
+</fixme>
+
+
+<h2>Application Size</h2>
+
+<h3>Measuring Application Size</h3>
+
+<p>The developer console displays the uncompressed and gzipped size of the application.  The gzipped size is the size that will be transferred to most browser clients; it is proportional to the file transfer time.  The uncompressed size is the size that will appear in the browser cache, or if you use a tool such as <code>curl</code> or <code>wget</code> to retrieve the file.</p>
+
+<img src="images/size.png" class="illustration"/>
+
+<p>The developer console also contains a link to the <dfn>size profile</dfn> for the application.  This page displays size statistics particular to the application.  These statistics are relative to the uncompressed size of the application, not the compressed size, but they are still a useful tool in finding the "size hot spots" of your application.</p>
+
+<h3>Optimizing Application Size</h3>
+
+<p>Changing embedded datasets and resources to requested datasets and resources will reduce the initial download size of the application.  If these assets are only used in some execution paths, th this will also reduce the total download size of the application, for use cases that avoid these execution paths.</p>
+
+
+<h2 id="inlined-classes">Inlined Classes</h2>
+
+<p>An <dfn>inlined class</dfn> is a class that is applied to an instance when an application is compiled, rather than when the application is instantiated.  An inlined class has the same semantics as a regular class, except that the class cannot be instantiated or otherwise referred to by name in script code.  An inlined class is similar to an inline function, or a macro, in other languages.</p>
+
+<p>If a class is only instantiated once, inlining it can reduce the size of the generated application.  This is because instead of containing two definitions, one for the class and one for its instance, the application will contain only one definition.  The compiler may be able to combine tables that are used in the class with tables that are used in the instance, to save space.</p>
+
+<p>The <code>&lt;?lzc?&gt;</code> XML processor directive directs the compiler to inline a class:</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;?lzc class=&quot;c1&quot; inline=&quot;true&quot;?&gt;
+  &lt;class name=&quot;c1&quot;&gt;
+    &lt;view name=&quot;v2&quot;/&gt;
+    &lt;view name=&quot;v3&quot;/&gt;
+  &lt;/class&gt;
+  &lt;view name=&quot;v1&quot;&gt;
+    &lt;c1/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The program above compiles to the same executable as the following source code:</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;?lzc class=&quot;c1&quot; inline=&quot;true&quot;?&gt;
+  &lt;class name=&quot;c1&quot;&gt;
+  &lt;/class&gt;
+  &lt;view name=&quot;v1&quot;&gt;
+    &lt;view&gt;
+      &lt;view name=&quot;v2&quot;/&gt;
+      &lt;view name=&quot;v3&quot;/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The only difference between these programs the organization of the source code, which allows the developer to defer the decision about whether to combine the class and the instance definition, and to maintain the class definition separately, for readability and in order to easily revisit the decision if a second instance is added, for example.</p>
+
+<p>The compiler directive has two forms.  The <attribute>class</attribute> attribute is a single class.  The <attribute>classes</attribute> attribute is a list of class names, so that this</p>
+<pre>
+&lt;?lzc class=&quot;c1&quot; inline-only=&quot;true&quot;?&gt;
+&lt;?lzc class=&quot;c1&quot; inline-only=&quot;true&quot;?&gt;</pre>
+<p>can be abbreviated as this:</p>
+<pre>
+  &lt;?lzc classes=&quot;c1 c2&quot; inline-only=&quot;true&quot;?&gt;
+</pre>
+
+<p><code>inline-only</code> has two effects: the class definition is applied at compile time, and the runtime representation of the class is omitted from the executable file.</p>
+
+<p>The compiler expands non-inlined class definitions that extend inlined classes, and inlined classes that extend inlined classes.</p>
+
+<p>The following cases can't be inlined.  They will result in a compilation error.</p>
+<ul>
+<li>A inlined class with an instance that defines a method with the same name as a method in the class definition.</li>
+<li>A inlined class with an instance that defines an <code>on<var>event</var></code>code> with the same name as an event that the class defines.</li>
+<li>A inlined class that a non-inlined subclass extends.  If you inline a class, you have to inline its subclasses too.</li>
+<li>A inlined class that contains the <attribute>defaultplacement</attribute> attribute.</li>
+<li>An inlined class with an instance that contains a child with a <attribute>placement</attribute> attribute.</li>
+<li>An inlined class that defines an an attribute value with a subclass or instance that defines an attribute for that attribute.</li>
+</ul>
+
+<p>Inlined classes make it easier to factor a program across multiple files without a performance penalty.  In the following program, a view and a resource have been moved to a separate file.</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;?lzc class=&quot;c1&quot; inline=&quot;true&quot;?&gt;
+  &lt;include href=&quot;lib1.lzx&quot;/&gt;
+  &lt;view name=&quot;v1&quot;&gt;
+    &lt;c1/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<example title="lib1.lzx" extract="false">
+&lt;library&gt;
+  &lt;resource name=&quot;r1&quot; src=&quot;pic1.jpg&quot;/&gt;
+  &lt;class name=&quot;c1&quot;&gt;
+    &lt;view name=&quot;v2&quot;/&gt;
+    &lt;view name=&quot;v3&quot;/&gt;
+  &lt;/class&gt;
+&lt;/library&gt;
+</example>
+<h2>Managing Memory</h2>
+<p>
+In optimizing the performance of your application, it can be useful to look at the "memory footprint" of your application, and in particular, to see if that footprint grows over time.  (The way to determine memory usage by your application depends on the operating system on which it runs and is beyond the scope of this chapter.)
+<p>
+If memory usage for a given application tends to go up over time, you may have a "memory leak."  See <xref linkend="debugging"/> for an explanation of how to use the debugger to detect leakage.
+</p>
+</p>
+<h3>Creating and Destroying Views</h3>
+<p>
+In general, you do not have to worry about the resources consumed by creating views.  However,if you have an application that 
+creates a large number of views, you may want to use the <method>destroy</method> to free 
+memory.  
+</p>
+<p>
+You would not need to use destroy if a view could only be referenced by one variable.  
+Because views can be referenced in many ways (e.g., name, id, events, delegates, handlers) destroy can be used 
+to 'detach' a view from all these links so that it can be garbage-collected.  destroy should not be needed in simple 
+programs or programs that are built from Laszlo components.</p>
+<p>
+When tracking down memory usage, replicated views are a good place to look. When you make more than one copy of a view, you will use proportionally more memory.
+So when performance tuning, remember that <code>$path</code> is implicated in replication.
+</p>
+<p>
+Note that
+constraints do not consume large amounts of memory.  
+<code>$once</code> and <code>$always</code> are equivalent in memory usage, but clearly <code>$always</code> will require more cpu.
+
+</p>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

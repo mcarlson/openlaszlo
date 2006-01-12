@@ -1,0 +1,340 @@
+<library>
+
+    <!--
+    // CLASS: Combobox
+    -->
+   <!-- EXAMPLE API of its use
+        <combobox x="150" y="40" width="152" shownitems="4"
+                  itemfield="nameList:/contents/text()"
+                  datapath="@displayname"
+                  name="mycombo">
+   -->
+
+    <!-- FONTS -->
+    <include href="redmondfonts.lzx" />
+
+    <!-- INCLUDES -->
+    <include href="lineartracker.lzx"/> <!-- rename to simpletracker -->
+
+    <!-- RESOURCES -->
+    <!-- inputbox resources -->
+    <resource name="textbox_rsc_lft" src="resources/lzwinstdtextl_rsc.swf" />
+    <resource name="textbox_rsc_mid" src="resources/lzwinstdtextm_rsc.swf" />
+    <resource name="textbox_rsc_rgt" src="resources/lzwinstdtextr_rsc.swf" />
+    <resource name="arrow_btn_rsc"   src="resources/lzcombobutton_rsc.swf" />
+
+    <!-- CLASS: borderedrect -->
+    <class name="borderedrect" font="lztahoe8"  fontsize="8" >
+        <attribute name="defaultplacement" value="content" type="string"/>
+
+        <!-- attributes -->
+        <attribute name="bordercolor" value="0xFF0000"/>
+        <attribute name="bgcolor" value="${this.bordercolor}"/>
+        <attribute name="bordersize" value="1"/>
+
+        <!-- views -->
+        <view name="content" x="${parent.bordersize}" y="${parent.bordersize}"
+              width="${parent.width - 2*parent.bordersize}"
+              height="${parent.height - 2*parent.bordersize}"
+              bgcolor="white" clip="true"/>
+    </class>
+
+    <!-- CLASS: hiliterect -->
+    <class name="hiliterect" >
+
+        <!-- attributes -->
+        <attribute name="hilitecolor" value="0xFF7766"/>
+        <attribute name="normalcolor" value="$once{this.bgcolor}"/>
+
+        <!-- no subviews -->
+
+        <!-- methods -->
+        <method name="setHilited" args="torf" >
+            if (torf) this.setBGColor(this.hilitecolor)
+            else this.setBGColor(this.normalcolor)
+        </method>
+
+        <method name="setSelected" args="torf" >
+            this.setHilited(torf);
+        </method>
+
+    </class>
+
+    <!-- CLASS: call trackking list - list is to general  -->
+    <class name="redmondlist" extends="borderedrect">
+
+        <!-- attributes -->
+        <attribute name="itemfield"     type="string"/>
+        <!--- The maximum number items to show in the list that drops
+        down. If the number of items in the list is greater than
+        shownitems, the list scrolls. -->
+        <attribute name="shownitems"    value="15" />
+        <attribute name="spacing"       value="0"/>
+        <attribute name="itemheight"    value="16"/>
+        <attribute name="maxheight"
+            value="${this.shownitems ?
+                this.shownitems * this.itemheight + 2*this.bordersize :
+                this['naturalheight']}" />
+        <attribute name="naturalheight"
+            value="${this.content.ltracker.height + 2}" />
+        <attribute name="height"
+            value="${this.shownitems ?
+                        Math.min(this['maxheight'], this['naturalheight'])
+                        : this['naturalheight']}" />
+
+        <lineartracker name="ltracker" axis="y" mumaxcount="0" width="100%">
+            <hiliterect bgcolor="white" hilitecolor="0x0A246A" width="100%"
+                datapath="${classroot.itemfield}">
+                <datapath pooling="true">
+                    <attribute name="asyncnew" value="false"/>
+                </datapath>
+                <attribute name="height" value="${classroot.itemheight}" />
+                <text name="txt" datapath="text()" x="2"/>
+                <method name="setHilited" args="torf" >
+                    super.setHilited(torf);
+                    if (torf) this.txt.setAttribute('fgcolor',0xFFFFFF)
+                    else this.txt.setAttribute('fgcolor',0x000000)
+                </method>
+                <method name="execute"  > <!-- called by lineartracker -->
+                    if (classroot['onselect'])
+                        classroot.onselect.sendEvent(this.txt);
+                </method>
+           </hiliterect>
+           <simplelayout axis="y" spacing="${classroot.spacing}" />
+        </lineartracker>
+
+        <state apply="${parent.naturalheight > parent.maxheight}" >
+            <scrollbar/>
+        </state>
+
+        <!-- needs to be a constraint  see above-->
+        <method name="getMaxHeight">
+            return this.maxheight;
+        </method>
+    </class>
+
+    <class name="combolist" extends="redmondlist"
+           bordercolor="0x000000"
+           onmousedown="parent.onmousedown.sendEvent()"
+           onmouseup="parent.onmouseup.sendEvent()" >
+
+    </class>
+
+    <!-- CLASS: combobox -->
+    <!-- has two main elements -->
+    <!-- the editable field -->
+    <class name="combobox" bgcolor="gray" width="100"> <!-- -->
+
+        <!-- ATTRIBUTES -->
+        <attribute name="shownitems" value="0" />
+        <attribute name="amopen" value="false"/>
+        <attribute name="itemfield" type="string"/>
+
+        <!-- private -->
+        <attribute name="waitduration" value="100"/>
+        <attribute name="continueblur" value="true"/>
+        <attribute name="initcomplete" value="0" />
+        <attribute name="mytext" value="" type="string"/>
+
+        <method name="applyData" args="d">
+            if (!this.initcomplete) {
+               this.mytext = d;
+            } else {
+                this.top.field.setText(d == null ? "" : d);
+    }
+
+         </method>
+         <method name="updateData">
+            return this.top.field.updateData();
+         </method>
+
+        <method event="oninit">
+            if (typeof(this['mytext']) != "undefined") {
+                if (this.mytext != "") {
+                    this.top.field.setText(this.mytext);
+                }
+            }
+            this.initcomplete = true;
+        </method>
+
+        <!-- VIEWS -->
+        <view name="top"
+              width="${parent.width}" height="21" >
+
+            <view resource="textbox_rsc_lft" />
+            <view resource="textbox_rsc_mid" stretches="width"/>
+            <view resource="textbox_rsc_rgt" />
+            <stableborderlayout axis="x"/>
+
+
+            <inputtext name="field" x="2" y="2"
+                  bgcolor="white" width="${classroot.width - 20}"
+                  height="${classroot.top.height - 4}">
+                <method event="onblur">
+                    // this event gets called when a user clicks on outside elements
+                    // this also gets called when...
+                    LzTimer.addTimer(classroot.finishBlurDL,classroot.waitduration);
+                </method>
+                <method event="onkeydown" args="key">  <![CDATA[
+                    if ((key>36) && (key<41)) classroot.setOpen(true);
+                ]]> </method>
+            </inputtext>
+
+            <view resource="arrow_btn_rsc" bgcolor="black"
+                  x="${parent.width - width - 2}" y="2"
+                  onmousedown="classroot.onmousedown.sendEvent();
+                               this.setResourceNumber(2);
+                               classroot.toggle()"
+                  onmouseup="classroot.onmouseup.sendEvent();
+                             this.setResourceNumber(1); " />
+        </view>
+
+        <!-- EVENT METHODS -->
+
+        <!-- remove -->
+        <method event="onconstruct">
+            this.itemsetpointer = new LzDatapointer( this ,
+                                                   { xpath : this.itemfield } );
+        </method>
+
+        <method event="oninit" >
+            this.clickedOtherDL = new LzDelegate(this,"clickedOther");
+            this.finishBlurDL   = new LzDelegate(this,"finishBlur");
+            this.openstopDL     = new LzDelegate(this,"openstop");
+            this.closestopDL    = new LzDelegate(this,"closestop");
+            this.createlist();
+            //fixes a bug when valigned
+            this.setAttribute('pixellock',true);
+       </method>
+
+        <!-- NAMED METHODS -->
+
+        <method name="createlist">
+              // create the list view as a child of the canvas
+              var cb = new combolist(canvas,{visible:false,
+                                             itemfield:this.itemfield, options:{'ignorelayout':true}});
+              // remove and place above - assign attributes to this global view
+              cb.setAttribute('itemfield',this.itemfield);
+              cb.setWidth(this.width);
+              cb.setAttribute('shownitems',this.shownitems);
+              // and keep a local reference
+              this.cblistview = cb;
+
+              // create a delegate to be called when the list is selected.
+              this.selecteditemDL = new LzDelegate(this,'selectedItem',this.cblistview,"onselect");
+        </method>
+
+        <method name="selectedItem" args="txt" >
+            this.top.field.setText(txt.getText());
+            this.setOpen(false);
+        </method>
+
+        <method name="finishBlur" >
+            // this gets called
+            if ( this.continueblur ) this.setOpen(false)
+            this.continueblur = true;
+        </method>
+
+        <method event="onmousedown" >
+            // a component can have many views within
+            // that receive the mousedown. A component
+            // may need to do a behavior that happens no
+            // matter what subview has been clicked.
+            // ------------------------------
+            // for combox, when a user mouses down on another
+            // subview, its inputtext object automatically
+            // is sent an onblur. This needs to be ignored
+            // which is accomplished with delaying the action
+            // so that a flag can be set.
+            this.continueblur=false;
+        </method>
+
+        <method event="onmouseup" >
+            // a component can have many views within
+            // that receive the mousedown. A component
+            // may need to do a behavior that happens no
+            // matter what subview has been clicked.
+            // ------------------------------
+            // for combox the inputtext needs to be refocused
+            // on mouseup.
+            LzFocus.setFocus(this.top.field);
+        </method>
+
+        <method name="passModeEvent" args="event,view" > <![CDATA[
+            // This method is called ONLY when a user clicks on a view outside
+            // the contents of this view, or clicks on a inputtext view anywhere
+            // on the screen even for a subview within combobox( as designed passmodeeevtnt
+            // should never pass an event from a subview, this only a problem with inputtext
+
+            if ( event == "onmousedown" ){
+                // first, we only care about the mousedown event.
+                // if the user has pressed the mouse down on a textfield
+                // within the component, then we will not know this unless
+                // we test it to see if it is a subview of this component.
+
+                // if the view that was clicked was a clickable view then
+                // pass the event along, this occurs because of returning
+                // true from this method call.
+                if ( view != null ) {
+                   if ( !view.childOf(this.cblistview) ){
+                        this.setOpen(false);
+                   }
+                   return true;  //passes event to view
+                }
+
+                // otherwise, close the combobox
+                this.setOpen(false);
+                return true;  //passes event to view
+            } else {
+                // even though the view is not a child of combox if it is
+                // a child of the list view that sists on the canvas as is
+                // a part of combobox
+                if ( view != null && view.childOf(this.cblistview)){
+                    return true; //passes event to view
+                }
+            }
+            return false; // don't pass event
+
+        ]]> </method>
+
+        <method name="toggle">
+            this.setOpen(!this.amopen)
+        </method>
+
+        <!-- convert animation to a tag -->
+        <method name="setOpen" args="amOn" >
+            if (amOn) { // open combox
+                if (this.amopen) return;
+                LzModeManager.makeModal( this );
+                this.cblistview.setX(this.getAttributeRelative('x',canvas)); //
+                this.cblistview.setY(this.getAttributeRelative('y',canvas) + this.top.height );
+                this.cblistview.bringToFront();
+                this.cblistview.setAttribute('shownitems', this.shownitems);
+                this.cblistview.setVisible(true);
+                this.amopen = true;
+            } else { // close combox
+                if (!this.amopen) return;
+                LzModeManager.release( this );
+                this.cblistview.setVisible(false);
+                this.amopen = false;
+            }
+       </method>
+
+       <method name="openstop">
+            this.openstopDL.unregisterAll();
+       </method>
+
+        <method name="closestop">
+            this.closestopDL.unregisterAll();
+            this.cblistview.setVisible(false);
+       </method>
+
+
+    </class> <!-- END COMBO BOX -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

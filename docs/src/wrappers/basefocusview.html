@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basefocusview">
+    <lztier>Base Component</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        an abstract class for the focus indicator
+    </lzshortdesc>
+    <lztag>base/basefocusview.xml</lztag>
+</lzelement>
+
+<p>An abstract base class that responds to focus by animating to the
+focused view and sizing itself to that view.  A subclass of this view
+may be used to override the default look and feel of the focus
+indicator.</p>
+
+<p>By default, a class called <classname>focusoverlay</classname> is
+used which highlights the corners of the focused view and adds a
+bounce animation when it arrives at the focusable view. To override
+this behavior and use your own class, set
+<code>canvas.focusclass</code> to the name of a class that extends
+<classname>basefocusview</classname>.  To make it so there is no
+visual focus indicator set the canvas'
+<attribute>focusclass</attribute> attribute to <code>null</code>.</p>
+
+<p>
+In some browsers you need to click on the application before keyboard navigation
+will work.  You can experiment with the example below.  Tab and shift-tab will
+move the focus between components.  Space will activate the checkbox.  Return or
+space will activate the button.
+</p>
+<example title="Custom Focus Indicator">
+&lt;canvas width="200" height="120" &gt;
+  &lt;class name="myfocusclass" extends="basefocusview"&gt;
+    &lt;view bgcolor="blue" y="${parent.height+1}" height="2" width="${parent.width}"/&gt;
+  &lt;/class&gt;
+
+  &lt;attribute name="focusclass" value="myfocusclass" type="string"/&gt;
+  &lt;view x="20" y="20"&gt;
+    &lt;simplelayout spacing="10"/&gt;
+    &lt;checkbox&gt;I would like fries with that&lt;/checkbox&gt;
+    &lt;checkbox&gt;Rush delivery&lt;/checkbox&gt;
+    &lt;button&gt;Order&lt;/button&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,49 @@
+<canvas height="500" width="700" bgcolor="#D4D0C8">
+    <dataset name="dset">
+        <phonebook>
+            <contact category="friends"
+                firstName="John"
+                lastName="Smith"
+                phone="617-536-7855"
+                email="jsmith@mail.com"
+            />
+            <contact category="Neighbors"
+                firstName="John"
+                lastName="Smith"
+                phone="617-536-7855"
+                email="jsmith@mail.com"
+            />
+        </phonebook>
+    </dataset>
+<window>
+    <grid id="screen1" x="0" y="0" width="770" height="640"
+          contentdatapath="dset:/*/*" multiselect="false" 
+          showhlines="true" showvlines="true" selectable="true"
+          showhscroll="false" bgcolor="0xcccccc">
+        <gridcolumn width="70">
+            Relation
+            <text datapath="@category"/>
+        </gridcolumn>
+        <gridcolumn width="70">
+            Fname
+            <text datapath="@firstName"/>
+        </gridcolumn>
+        <gridcolumn width="70">
+            Lname
+            <text datapath="@lastName"/>
+        </gridcolumn>
+        <gridcolumn sortable="false" resizable="false" width="70"> 
+            eMail
+            <text datapath="@email"/>
+        </gridcolumn>
+        <gridcolumn datatype="number" width="70">
+            Phone
+            <text datapath="@phone"/>
+        </gridcolumn>
+    </grid>
+</window>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,79 @@
+<library>
+    <!-- resources used by explore-nav.lzx -->
+      <!-- Fonts -->
+  <font name="itemfont">
+      <face src="helmetb.ttf" />
+  </font>
+
+    <!--    <face src="nav/frank-demi.ttf" />-->
+
+  <font name="smallfont">
+    <face src="verity/verity9.ttf" />
+  </font>
+<!--  <font name="itemfont">-->
+<!--    <face src="verity/verity11.ttf" />-->
+<!--    <face src="verity/verity11bold.ttf"  style="bold" />-->
+<!--  </font>-->
+
+  <!-- Art Assets -->
+  <resource name="sitelink">
+    <frame src="assets/sitelink.png" />
+    <frame src="assets/sitelink_slct.png" />
+  </resource>
+  
+  <resource name="icon">
+    <frame src="images/arrow_close.png" />
+    <frame src="images/arrow_open.png" />
+    <frame src="assets/icon_inline.swf" />
+    <frame src="assets/icon_popup.swf" />
+  </resource>
+  
+  <resource name="sect_arrow">
+    <frame src="assets/icon_section_arrow_close.swf" />
+    <frame src="assets/icon_section_arrow_open.swf" />
+  </resource>
+  
+  <resource name="topic_arrow">
+    <frame src="assets/icon_topic_arrow_close.swf" />
+    <frame src="assets/icon_topic_arrow_open.swf" />
+   </resource>
+   
+  <resource name="section_btn">
+    <frame src="images/nav1_btn_up.png" />
+    <frame src="images/nav1_btn_mo.png" />
+    <frame src="images/nav1_btn_dn.png" />
+    <frame src="images/nav1_btn_slct.png" />
+  </resource>
+  
+  <resource name="topic_btn">
+    <frame src="images/nav2_btn_up.png" />
+    <frame src="images/nav2_btn_mo.png" />
+    <frame src="images/nav2_btn_dn.png" />
+    <frame src="images/nav2_btn_slct.png" />
+  </resource>
+  
+  <resource name="item_btn">
+    <frame src="images/nav3_btn_up.png" />
+    <frame src="images/nav3_btn_mo.png" />
+    <frame src="images/nav3_btn_dn.png" />
+    <frame src="images/nav3_btn_slct.png" />
+  </resource>
+  
+  <resource name="subitem_btn">
+    <frame src="images/nav4_btn_up.png" />
+    <frame src="images/nav4_btn_mo.png" />
+    <frame src="images/nav4_btn_dn.png" />
+    <frame src="images/nav4_btn_slct.png" />
+  </resource>
+  
+  <resource name="navbg" src="images/nav_bg.png"/>
+  
+  <resource name="logobtn" >
+     <frame src="images/openlaszlo_explorer_logo.png" />
+     <frame src="images/openlaszlo_explorer_logo_mo.png" />
+  </resource>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

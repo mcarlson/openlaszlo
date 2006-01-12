@@ -1,0 +1,65 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      Web Docs
+    </title>
+  </head>
+  <body>
+    <h>Building the Web Docs</h1>
+    <p><i>This part of the build is in limbo.  Web docs are currently
+    the same as product docs.</i></p>
+
+    <h2>Workflow</h2>
+    <p>Use <tt>ant -f build-web.xml web web-zip</tt> to create a zip
+    file.  Mail it to Antun.  He will install it on the staging
+    server, where it can be tested.</p>
+    
+    <h2>Build</h2>
+    <p>These tasks require the installation of these jars in the
+    ant/lib directory.  These jars aren't yet checked into perforce
+    because we haven't yet verified that their presence doesn't
+    disrupt the main build.</p>
+    <ul>
+      <li><a href="http://www.langdale.com.au/styler/">Styler</a></li>
+      <li><a href="http://sourceforge.net/projects/jtidy">JTidy</a></li>
+      <li><a
+      href="http://www-124.ibm.com/developerworks/projects/bsf">Bean
+      Scripting Framework</a></li>
+      <li><a href="http://www.mozilla.org/rhino/">Rhino</a></li>
+    </ul>
+    
+    <dl>
+      <dt><tt>ant -f build-web.xml web</tt></dt>
+      <dd>Builds the web docs into build/web.  This will produce a
+      <i>lot</i> of warnings.</dd>
+      <dt><tt>ant -f build-web.xml web-zip</tt></dt>
+      <dd>Places the text files from the web build in web-docs.zip.
+      This is what can be mailed to Antun for installation on the
+      staging server.  (He can't build on his machine, and the zip
+      that includes the art assets is too large to mail.)</dd>
+      <dt><tt>ant -f build-web.xml web-clean</tt></dt>
+      <dd>Clean the web build files.</dd>
+    </dl>
+    
+    <h2>Specification</h2>
+    <ul>
+      <li>Rename *.html files to *.php</li>
+      <li>Replace HTML header and footer by php.</li>
+      <li>Fix internal links:
+      <ul>
+        <li>*.html to *.php</li>
+        <li>Tutorials directory is a sibling of lzx-reference, not of
+        its parent.  (This is now true in the product as well.)</li>
+        <li>laszlo-in-ten-minutes is relative to /lps/.</li>
+        <li>Include files (embed, images) are in a different
+        location.</li>
+      </ul>
+      </li>
+    </ul>
+  </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

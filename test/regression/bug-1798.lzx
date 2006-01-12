@@ -1,0 +1,47 @@
+<canvas>
+    <view id="myThing" resource="../resources/png/face.png" stretches="both">
+
+        <attribute name="oldX" value="0" type="number" />
+        <attribute name="oldY" value="0" type="number" />
+        <attribute name="oldWidth" value="0" type="number" />
+        <attribute name="oldHeight" value="0" type="number" />
+
+        <animatorgroup name="animateToSpecificPlace" process="simultaneous" 
+                       start="false">
+            <animator attribute="x" to="200" duration="1000" />
+            <animator attribute="y" to="50" duration="1000" />
+            <animator attribute="width" to="215" duration="1000" />
+            <animator attribute="height" to="200" duration="1000" />
+            <method event="onstart">
+                myThing.setAttribute( "oldX", myThing.x );
+                myThing.setAttribute( "oldY", myThing.y );
+                myThing.setAttribute( "oldWidth", myThing.width );
+                myThing.setAttribute( "oldHeight", myThing.height );
+            </method>
+        </animatorgroup>
+
+        <animatorgroup name="returnToStartingState" process="simultaneous" 
+                       start="false" >
+            <animator attribute="x" to="${myThing.oldX}" duration="1000" />
+            <animator attribute="y" to="${myThing.oldY}" duration="1000" />
+            <animator attribute="width" to="${myThing.oldWidth}"     
+                      duration="1000" />
+            <animator attribute="height" to="${myThing.oldHeight}"     
+                      duration="1000" />
+        </animatorgroup>
+    </view>
+
+    <view name="controls">
+        <simplelayout axis="x" spacing="2" />
+        <button onclick="myThing.animateToSpecificPlace.dostart()">
+            Go to first place
+        </button>
+        <button onclick="myThing.returnToStartingState.dostart()">
+            Go back to where you started
+        </button>
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

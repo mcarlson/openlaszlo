@@ -1,0 +1,85 @@
+<library>
+  <!-- test the whitespace trimming in proxied and SOLO mode -->
+  <include href="lzunit/lzunit.lzx" />
+
+  
+  <dataset trimwhitespace="true"
+           proxied="false" name="solows" src="http:whitespace.xml" request="true" type="http" />
+  <dataset trimwhitespace="true"
+           proxied="true" name="proxyws" src="http:whitespace.xml" request="true" type="http" />
+
+  <!-- these default to trimwhitespace = false -->
+  <dataset proxied="false" name="solows_notrim" src="http:whitespace.xml" request="true" type="http" />
+  <dataset proxied="true" name="proxyws_notrim" src="http:whitespace.xml" request="true" type="http" />
+
+
+    <class name="TestTrimWhitespace" extends="TestCase">
+        <attribute name="dp2ready" value="false"/>
+        <attribute name="dp3ready" value="false"/>
+        <attribute name="dp4ready" value="false"/>
+        <attribute name="dp5ready" value="false"/>
+        <attribute name="t2del" value="false"/>
+        <attribute name="waitcnt" value="0"/>
+
+        <datapointer xpath="proxyws:/persons" name="dp2" ondata="parent.dp2ready = true"/>
+        <datapointer xpath="solows:/persons" name="dp3" ondata="parent.dp3ready = true"/>
+
+        <datapointer xpath="solows_notrim:/persons" name="dp4" ondata="parent.dp4ready = true"/>
+        <datapointer xpath="proxyws_notrim:/persons" name="dp5" ondata="parent.dp5ready = true"/>
+
+        <method name="test2">
+          <![CDATA[
+            if ( ! (this.dp2ready && this.dp3ready && this.dp4ready && this.dp5ready) ){
+                if ( ! this.t2del ){
+                    Debug.write( "test isn't done until async test runs" );
+                    this.t2del = new LzDelegate( this , 'test2' );
+                }
+
+                if ( this.waitcnt++ > 100 ){
+                    fail( "Didn't get async data" );
+                } else {
+                    LzIdle.callOnIdle( this.t2del );
+                }
+                return;
+            }
+
+            Debug.write( 'running async test for loaded data' );
+            this.doIt( dp2, dp3, dp4, dp5 );
+            ]]>
+        </method>
+
+        <method name="doIt" args="dpp, dps, dpnp, dpns">
+            <![CDATA[
+            // dpp = proxied dataset
+            // dps = solo dataset
+            assertTrue( true );
+
+            Debug.write("dpp", dpp);
+            Debug.write("dps", dps);
+            assertEquals(  'Barry' , dpp.xpathQuery( 'person[1]/firstName/text()' ));
+            assertEquals(  'Bonds' , dpp.xpathQuery( 'person[1]/lastName/text()' ));
+
+            // Check verbatim (trimwhitespace=false) for solo and proxy
+            assertEquals(  "   Barry  " , dpnp.xpathQuery( 'person[1]/firstName/text()' )); 
+            assertEquals(  "   Barry  " , dpns.xpathQuery( 'person[1]/firstName/text()' ));           
+
+            assertEquals(  'Barry' , dps.xpathQuery( 'person[1]/firstName/text()' ));
+            assertEquals(  'Bonds' , dps.xpathQuery( 'person[1]/lastName/text()' ));
+
+            assertEquals(  'Jeff "The Jeffster"    Rodger Morton Tanith' , dpp.xpathQuery( 'person[2]/firstName/text()' ));
+            assertEquals(  'Beck' , dpp.xpathQuery( 'person[2]/lastName/text()' ));
+
+            assertEquals(  'Jeff "The Jeffster"    Rodger Morton Tanith' , dps.xpathQuery( 'person[2]/firstName/text()' ));
+            assertEquals(  'Beck' , dps.xpathQuery( 'person[2]/lastName/text()' ));
+
+
+            ]]>
+            
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

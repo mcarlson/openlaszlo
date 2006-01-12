@@ -1,0 +1,86 @@
+<!--
+  OOBE bootstrap page.
+  Make sure to compile this with lzr=swf6, to make a swf6 SOLO output file.
+-->
+<canvas width="800" height="600" bgcolor="#677080" proxied="false">
+  <debug  fontsize="12"/>
+
+  <script>
+    var appstart = getTimer();
+  </script>
+
+  <view resource="startup_launching.swf"/>
+  <dataset name="svars" type="http" src="startup.var" request="true"/>
+  <dataset name="ping" type="http"/>
+
+ 
+  <method reference="svars" event="ondata">
+      global.ping_interval = Number(svars.getPointer().xpathQuery("/params/@ping_interval"));
+      global.ping_timeout =  Number(svars.getPointer().xpathQuery("/params/@timeout"));
+      global.ping_url = svars.getPointer().xpathQuery("/params/@ping_url");
+      global.succ_url = svars.getPointer().xpathQuery("/params/@succ_url");
+      global.fail_url = svars.getPointer().xpathQuery("/params/@fail_url");
+
+    // set up a task to try to retrieve the ping_url
+    ping.timeout = Number(ping_interval);
+    Debug.write('ping_interval = ', ping.timeout);
+
+    Debug.write('ping_url = ', ping_url);
+
+    global.pdel = new LzDelegate(ping, 'doRequest');
+    ping.setSrc(ping_url);
+    ping.doRequest();
+
+  </method>
+
+
+  <method reference="ping" event="ondata">
+      Debug.write('SUCCESS: LzBrowser.loadURL(',succ_url,');');
+      LzBrowser.loadURL(succ_url);
+  </method>
+
+  <method reference="ping" event="ontimeout">
+      Debug.write('ping.ontimeout');
+      canvas.checkloaded();
+  </method>
+
+  <method reference="ping" event="onerror">
+    <![CDATA[
+      Debug.write('ping.onerror, elapsed ', (getTimer() - appstart));
+      if ( (getTimer() - appstart)  > ping_timeout) {
+          Debug.write('FAIL: LzBrowser.loadURL(',fail_url,');');
+          LzBrowser.loadURL(fail_url);
+      } else {
+          LzTimer.addTimer(global.pdel, ping_interval);
+      }
+    ]]>
+  </method>
+
+
+  <method name="checkloaded">
+    <![CDATA[
+      Debug.write('checkloaded, elapsed ', (getTimer() - appstart));
+      if ( (getTimer() - appstart)  > ping_timeout) {
+          Debug.write('FAIL: LzBrowser.loadURL(',sparams.fail_url,');');
+          LzBrowser.loadURL(sparams.fail_url);
+      } else {
+          ping.doRequest();
+      }
+    ]]>
+  </method>
+
+
+  <!--
+    This is what we get from startup.var:
+
+    <params ping_url="http://localhost:8080/lps-@V ERSIONID@/lps/utils/test.lzx?lzt=xml"
+            succ_url="http://localhost:8080/lps-@V ERSIONID@/laszlo-explorer/index.jsp"
+            fail_url="startup_error.html" timeout="360000" ping_interval="5000" pad="pad"
+    />
+
+    
+  -->
+
+
+
+</canvas>

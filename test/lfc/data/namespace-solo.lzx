@@ -1,0 +1,71 @@
+<library>
+  <!-- test the 'nsprefix' option, to preserve namespace information in data compiler -->
+    <include href="lzunit/lzunit.lzx" />
+
+    <dataset proxied="false" name="solons" src="http:namespace.xml" nsprefix="true" request="true" type="http" />
+
+    <!--
+    <text datapath="lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/>
+    -->
+
+    <class name="TestNamespaceSOLO" extends="TestCase">
+        <attribute name="dp2ready" value="false"/>
+        <attribute name="t2del" value="false"/>
+        <attribute name="waitcnt" value="0"/>
+
+        <datapointer xpath="solons:/persons" name="dp2" ondata="parent.dp2ready = true"/>
+
+        <method name="test2">
+            if ( ! this.dp2ready ){
+                if ( ! this.t2del ){
+                    Debug.write( "test isn't done until async test runs" );
+                    this.t2del = new LzDelegate( this , 'test2' );
+                }
+
+                if ( this.waitcnt++ > 100 ){
+                    fail( "Didn't get async data" );
+                } else {
+                    LzIdle.callOnIdle( this.t2del );
+                }
+                return;
+            }
+
+            Debug.write( 'running async test for loaded data' );
+            this.doIt( 'http', dp2 );
+        </method>
+
+        <method name="doIt" args="dtype, dpns">
+            <![CDATA[
+            assertTrue( true );
+
+            Debug.write("type of dataset", dtype);
+            Debug.write("dpns", dpns);
+
+            assertEquals(  'jonny' , dpns.xpathQuery( 'foo:person[1]/@name' ) );
+            assertEquals(  'Jeff' , dpns.xpathQuery( 'person[2]/firstName/text()' ));
+
+
+            // with namespace prefixes, attribute named "name" and "secret:name" are different
+            // xpath parsing of attribute names with prefixes is broken
+            // assertEquals(  'freddy' , dpns.xpathQuery( 'foo:person[1]/@secret:name' ) );
+
+            assertEquals(  'bret' , dpns.xpathQuery( 'foo:person[2]/@name' ) );
+            // assertEquals(  'bart' , dpns.xpathQuery( 'foo:person[2]/@secret:name' ) );
+
+            // with namespace prefixes stripped, you will get three matches
+            // with prefixes enabled, you'll get only two matches
+            assertEquals( 2 , dpns.xpathQuery( "person/firstName/text()" ).length ) ;
+            // with prefixes will also match one foo:person
+            assertEquals( 2 , dpns.xpathQuery( "foo:person/firstName/text()" ).length ) ;
+
+
+            ]]>
+            
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

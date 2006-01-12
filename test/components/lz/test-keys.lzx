@@ -1,0 +1,73 @@
+<canvas width="650">
+    <debug x="280" height="300"/>
+    <class name="myfclass" extends="focusoverlay">
+        <method name="bounce">
+            agroup.doStart();
+            super.bounce();
+        </method>
+        <animatorgroup name="agroup" attribute="rotation" duration="100">
+            <animator to="10" />
+            <animator to="0" />
+        </animatorgroup>
+    </class>
+    <attribute name="focusclass" value="myfclass" type="string"/>
+    <simplelayout axis="x" spacing="50" inset="20"/>
+
+    <view>
+        <simplelayout spacing="10"/>
+        <edittext width="200"> This is some regular text </edittext>
+        <edittext multiline="true" height="200" width="200">
+            Now is the time for all good people to come to the aid of 
+            their country.
+        </edittext>
+        <combobox defaulttext="value nn">
+            <textlistitem>value 1</textlistitem>
+            <textlistitem>value 2</textlistitem>
+            <textlistitem>value 3</textlistitem>
+            <textlistitem>value 4</textlistitem>
+        </combobox>
+        <inputtext>Some text</inputtext>
+        <button onclick="mymd.open()"> Alert </button>
+        <button> Noop </button>
+        <button isdefault="true"> Default </button>
+    </view>
+    <view>
+        <simplelayout spacing="10"/>
+        <edittext width="200"> This is some regular text </edittext>
+        <edittext multiline="true" height="200" width="200">
+            Now is the time for all good people to come to the aid of 
+            their country.
+        </edittext>
+        <combobox defaulttext="value nn">
+            <textlistitem>value 1</textlistitem>
+            <textlistitem>value 2</textlistitem>
+            <textlistitem>value 3</textlistitem>
+            <textlistitem>value 4</textlistitem>
+        </combobox>
+        <inputtext>Some text</inputtext>
+        <button onclick="mymd.open()"> Alert </button>
+        <button> Noop </button>
+        <button isdefault="true"> Default 2 </button>
+    </view>
+    <modaldialog name="mymd" layout="spacing: 5" title="just checking"
+                 width="200">
+        <text>Bring up an alert?</text>
+        <view align="right">
+            <simplelayout axis="x" spacing="5"/>
+            <button onclick="parent.parent.close()" isdefault="true">
+                No
+            </button>
+            <button onclick="myalert.open()">
+                Yes
+            </button>
+        </view>
+    </modaldialog>
+    <alert name="myalert" align="center" valign="middle" button2="Cancel"
+           title="here it is">
+        This is an alert.
+    </alert>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,64 @@
+<canvas height="1000" width="600" >
+    <include href="classes/buttons.lzx" />
+    
+    <font src="fonts/FuturNo2DBol_small.ttf" name="futura" />
+    
+    <class name="testiconbutton" extends="iconbutton">
+        <attribute name="fpath" value="classes/resources/icons/"/>
+        <attribute name="iconstretches" value="both"/>
+    </class>
+
+
+    <view x="10" y="10" >
+        <simplelayout spacing="10" />
+        
+        <text>SIZE 14</text>
+        <textbutton  width="100" height="14" text="Sign Out" />
+        <textbutton  width="100" height="14" text="Empty Trash"/>
+        <textbutton  width="100" height="14" text="Get More Space"/>
+        <textbutton  width="100" height="14" text="+ Add Contact"/>
+        <textbutton  width="100" height="14" text="Preferences"/>
+        <textbutton  width="100" height="14" text="Help"/>
+
+        
+        <text>SIZE 23</text>
+        <testiconbutton iconname="search.swf" texty="4"
+                    text="Search" width="70" />
+                  
+        <testiconbutton width="100" texty="4" text="Advanced Search"/>
+        
+        <testiconbutton id="reply"
+                    iconname="reply.swf"
+                    text="Reply" 
+                    width="60" />
+                    
+        <testiconbutton iconname="forward.swf"
+                    text="Forward" 
+                    width="80" />
+                    
+        <testiconbutton iconname="spam.swf"
+                    text="This Is Spam" 
+                    width="95" />
+                    
+        <testiconbutton iconname="print.swf"
+                    text="Print" 
+                    width="60" />
+
+        <testiconbutton iconname="delete.swf"
+                    text="Delete" 
+                    width="65 " />
+                    
+
+        <testiconbutton iconname="writemessage.swf"
+                    texty="6"
+                    text="Write Message" 
+                    width="110" />
+                    
+        <testiconbutton iconname="checkmail.swf"
+                    texty="6"
+                    text="Check Mail" 
+                    width="110" />
+
+    </view> 
+    
+</canvas>

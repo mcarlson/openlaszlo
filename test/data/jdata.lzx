@@ -1,0 +1,51 @@
+<canvas debug="true" width="1200" height="600">
+
+  <debug y="150" height="400" width="800" fontsize="14" />
+
+  
+
+  <dataset name="foo" src="http:echoUTF8.jsp" 
+           request="false" 
+           ontimeout="Debug.write(this.name + ': timed out')"
+           onerror="Debug.write(this.name + ': error')"
+           ondata="Debug.write('Response: ' + this.getPointer().serialize())" >
+  </dataset>
+
+  <simplelayout/>
+  <button text="clickme">
+    <method event="onclick">
+      foo.setSrc(s1.value);
+      foo.setQueryParam('j', "&#20844;"); 
+      foo.setQueryType(r1.value);
+      Debug.write("setQueryType", r1.value);
+      Debug.write("calling foo.doRequest()", foo);
+      foo.doRequest();
+    </method>
+  </button>
+  <view layout="axis:x">
+  <radiogroup id="s1" width="200">
+    <radiobutton value="'http:echoUTF8.jsp'"  selected="true">echoUTF8</radiobutton>
+    <radiobutton value="'http:echoUTF8-1.jsp'">echoUTF8-1</radiobutton >
+    <radiobutton value="'http:echoUTF8-2.jsp'">echoUTF8-2</radiobutton >
+  </radiogroup>
+
+  <radiogroup id="r1">
+    <radiobutton value="'GET'">GET</radiobutton>
+    <radiobutton value="'POST'" selected="true">POST</radiobutton >
+  </radiogroup>
+  </view>
+
+  <view fontsize="18" layout="axis:x"           
+        datapath="foo:/response/formcomponent">
+    <text bgcolor="#cccccc" width="200" visible="true"
+          datapath="@name"/>
+    <text bgcolor="#cccccc" width="300" visible="true" multiline="true"
+          datapath="text()"/>
+    <text bgcolor="#cccccc" width="300" visible="true"  multiline="true"
+          datapath="@hex"/>
+  </view>
+
+
+
+
+</canvas>

@@ -1,0 +1,115 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<project name="tests" default="test" basedir=".">
+
+  <description>
+  This is the build file for the LPS tests subproject.
+  </description>
+
+  <!-- Define contrib tasks -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <!-- Ignore the system classpath -->
+  <property name="build.sysclasspath" value="ignore" />
+
+  <!-- Read in properties and get env variables -->
+  <property environment="env"/>
+
+  <property name="LPS_HOME"    value="${env.LPS_HOME}"/>
+
+  <property file="${LPS_HOME}/build.properties"/>
+
+  <property name="python.exec" value="python" />
+
+  <!-- Configure the custom Ant tasks for the Manager application -->
+  <taskdef name="tom.install"   
+           classname="org.apache.catalina.ant.InstallTask"/>
+  <taskdef name="tom.undeploy"      
+           classname="org.apache.catalina.ant.UndeployTask"/>
+
+  <!--================  Target [test] ==============-->
+  <target name="test" description="Run LPS Automated tests" >
+      <!-- This will create results.html -->
+      <!--
+      <exec executable="${python.exec}" taskname="regress" >
+          <arg line="regress.py -config test-suites.xml" />
+      </exec>
+      <exec executable="${python.exec}" taskname="quickcheck" >
+          <arg line="quickcheck.py -config test-suites.xml -home ${LPS_HOME} -port 8080 -path lps" />
+      </exec>
+      -->
+      <echo message="Compiling ${file}" />
+      <apply executable="bash" parallel="true">
+          <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc -dir build" />
+          <fileset dir="." >
+              <include name="*.lzx"/>
+              <include name="noughts/noughts.lzx"/>
+              <include name="music/music.lzx"/>
+          </fileset>
+      </apply>
+  </target>
+
+  <!--================  Target [smoke] ==============-->
+  <target name="smoke" description="Run LPS Smoke tests" >
+      <exec executable="${python.exec}" taskname="quickcheck" >
+          <arg line="quickcheck.py -config smoke-test.xml -home ${LPS_HOME} -port 8080 -path lps" />
+      </exec>
+  </target>
+
+  <!--================  Target [golden] ==============-->
+  <target name="golden" description="Create LPS Automated test golden files" >
+      <!-- This will create results.html -->
+      <exec executable="${python.exec}" taskname="regress" >
+          <arg line="regress.py -c -config test-suites.xml" />
+      </exec>
+  </target>
+
+  <!--================  Target [test-data] ==============-->
+  <target name="test-data" description="Create LPS Automated test data distros" >
+      <property name="test-tar" value="lps-test-data.tar" />
+      <property name="test-gz" value="lps-test-data.tgz" />
+      <tar tarfile="${test-tar}" >
+          <tarfileset prefix="lps-test/data" dir="perf-data" >
+              <include name="*/**" />
+          </tarfileset>
+          <tarfileset prefix="lps-test/media" dir="media-test-data" >
+              <include name="*/**" />
+          </tarfileset>
+      </tar>
+      <gzip src="${test-tar}" zipfile="${test-gz}" />
+      <delete file="${test-tar}" />
+  </target>
+
+  <target name="test-axis-install">
+       <tom.install url="${tom.url}" username="${tom.username}" 
+             password="${tom.password}" path="/axis" 
+             war="file://${LPS_HOME}/test/rpc/soap/https/version/webapps/axis" />
+  </target>
+
+  <target name="test-axis-uninstall">
+      <trycatch>
+          <!-- Allow this to fail, for example, if the webapp isn't deployed -->
+          <try>
+              <tom.undeploy url="${tom.url}" username="${tom.username}"
+                      password="${tom.password}" path="/axis" />
+          </try>
+          <catch> </catch>
+      </trycatch>
+  </target>
+
+  <!--================  Target [clean] ==============-->
+  <target name="clean" >
+      <delete file="results.html" />
+  </target>
+
+  <!-- These targets are noops -->
+  <target name="build" />
+  <target name="doc" />
+  <target name="cleandoc" />
+
+  <target name="all" depends="clean,test"/>
+
+</project>

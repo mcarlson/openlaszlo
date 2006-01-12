@@ -1,0 +1,38 @@
+<library>
+    <!-- Class: windowframe
+    This component implements a resizable beveled frame.
+    -->
+    <include href="redmondresources.lzx" />
+
+    <class name="windowframe" bgcolor="white">
+        <attribute name="defaultplacement" value="content" type="string"/>
+
+            <view name="top" width="100%">
+                <view resource="LzWinInvFrameTL_rsc"/>
+                <view resource="LzWinInvFrameTM_rsc" stretches="width"/>
+                <view resource="LzWinInvFrameTR_rsc"/>
+                <stableborderlayout axis="x"/>
+            </view>
+            <view name="middle" width="100%">
+                <view name="left"    height="100%"
+                    resource="LzWinInvFrameML_rsc" stretches="height"/>
+                <view name="content" height="100%"/>
+                <view name="right"   height="100%"
+                    resource="LzWinInvFrameMR_rsc" stretches="height"/>
+                <stableborderlayout axis="x"/>
+            </view>
+            <view name="bottom" width="100%">
+                <view resource="LzWinInvFrameBL_rsc"/>
+                <view resource="LzWinInvFrameBM_rsc"  stretches="width"/>
+                <view resource="LzWinInvFrameBR_rsc"/>
+                <stableborderlayout axis="x"/>
+            </view>
+            <stableborderlayout axis="y"/>
+        </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

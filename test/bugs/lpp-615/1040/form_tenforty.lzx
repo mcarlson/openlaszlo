@@ -1,0 +1,18 @@
+<library>
+
+    <class name="form_tenforty">
+        <view name="background" 
+              resource="http:1040/form_1040_screenshot.gif"
+              options="ignorelayout" />
+        <simplelayout axis="y" spacing="10" />
+         
+        <edittext />
+        <edittext />
+        <edittext />
+        <edittext />
+        <edittext />
+        <edittext />
+        <edittext />
+    </class>
+    
+</library>

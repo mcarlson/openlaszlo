@@ -1,0 +1,97 @@
+<!---
+linkdialog
+A dialog to let the user set a hyperlink on the currently selected text.
+[ben 7.26.05]
+-->
+<library>
+
+    <!-- dependencies  -->
+    <include href="../emerald-contrib/borderinput.lzx" /> 
+        
+    <class name="linkdialog" width="${parent.width}" height="${parent.toolbar.height}" bgcolor="0xD4D7E6" visible="false">
+        
+        <!--- Reference to the associated richtexteditor. (default: grte) --> 
+        <attribute name="editor" value="${grte}"/>
+        
+        <!--- Used to show dialog. -->
+        <animator 
+            name="_animShow" attribute="y" to="0" 
+            from="${-parent.height}" 
+            duration="500" start="false" onstart="parent.setVisible(true)" 
+          />
+    
+        <!--- Used to hide dialog.
+                  @keywords private -->
+        <animator name="_animHide" attribute="y" from="0" 
+            to="${-parent.height}" 
+            duration="200" start="false" onstop="parent.setVisible(false)" 
+         />
+    
+        <!--- show
+            slides in the dialog. -->
+        <method name="show">
+            this.urlfield.setText("http://");
+            var ntextlength = this.urlfield.getText().length;
+            this.urlfield.setSelection(ntextlength,ntextlength);
+            this._animShow.doStart();
+        </method>
+    
+        <!--- hide
+            slides out the dialog --> 
+        <method name="hide">
+            this._animHide.doStart();
+        </method>
+     
+        
+        <!--- makelink
+            Assigns link and standard link formatting to text selected in the editor. --> 
+        <method name="makelink">
+            var url = urlfield.getText();
+            var fmtBeforeLink = this.editor.currentformat; 
+            var colbefore = fmtBeforeLink.color;
+            
+            var fmt = this.editor.currentformat; 
+            fmt.url = url;
+            fmt.color = blue; 
+            fmt.target = "_new"; 
+            fmt.underline = true; 
+            this.editor.setCurrentFormat(fmt); 
+            fmt.url="";
+            fmt.color = colbefore;
+            fmt.underline = false; 
+            this.editor.inp.setDefaultFormat(fmt);
+            var ncaratinsertpoint = this.editor.getAttribute("_esel");
+            this.editor.setSelection(ncaratinsertpoint,ncaratinsertpoint); 
+            this.editor.setCurrentFormat(fmtBeforeLink);
+            this.hide();
+        </method>
+    
+        <text name="linktolabel" 
+            y="4"
+            x="5"
+            fgcolor="0x40408B" font="Verdana, Arial, sans" fontsize="11"
+            resize="true" >Link to URL:</text>    
+        <borderinput name="urlfield" width="${parent.width-150}" y="3"/>
+    
+        <view y="4" x="${parent.width-145}">
+            <custombutton 
+                onclick="classroot.makelink()" 
+                width="70" 
+                text="Link"             
+            >
+                <tooltip>Make a link to this location</tooltip>
+            </custombutton>
+            
+            <custombutton 
+                onclick="classroot.hide()" 
+                x="80" width="60" 
+                text="Cancel" 
+            >
+                <tooltip>Don't make a link</tooltip>
+            </custombutton>
+        </view>
+    
+    
+    </class>
+    
+</library> 

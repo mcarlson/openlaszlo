@@ -1,0 +1,29 @@
+<canvas>
+    <dataset name="ds">
+        <node c="255"/>
+    </dataset>
+
+    <button onclick="dp.addNode( 'node' , null , { c : 255} )">add one</button>
+    <button>break
+        <method event="onclick">
+            dp.selectChild();
+            //while( dp.selectNext() ){}
+            dp.setNodeAttribute( 'c' , 0 );
+            dp.selectParent();
+            Debug.write( dp.serialize() );
+        </method>
+    </button>
+    <view  width="100" height="10">
+        <datapath xpath="ds:/*" pooling="true" />
+        <attribute name="bgcolor" 
+                   value="${Number( this.datapath.getXPath( '@c' ))}"/>
+    </view>
+    <datapointer name="dp" xpath="ds:/"/>
+    <simplelayout spacing="10"/>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,161 @@
+<canvas debug="true" width="700">
+    <debug y="300"/>
+
+    <include href="lz/grid.lzx"/>
+    <dataset name="contactsLoad" queuerequests="true"
+           src="http://localhost:8080/lps/sample-apps/contacts/contactsdata.xml"
+             ondata="contactsData.appendChild( this.getFirstChild() );"
+             type="http" request="true"/>
+
+    <dataset name="contactsData" />
+    <class name="valignedText" extends="text">
+        <attribute name="y" value="$once{ immediateparent.height /2 - 
+                                          this.height/2}"/>
+    </class>
+
+    <window title="dgTester" width="400" height="200" name="dgwin"
+            resizable="true">
+        <grid width="${immediateparent.width}"  id="tgrid"
+              contentdatapath="contactsData:/*/*"
+              height="${immediateparent.height}">
+
+            <gridcolumn showheader="false" width="50">
+                <view bgcolor="#CCCCCC" width="${parent.width}"
+                      placement="header"
+                      id="testme"
+                      height="${parent.immediateparent.height-1}"/>
+                <valignedText datapath="position()"/>
+            </gridcolumn>
+
+            <gridcolumn>
+                First
+                <valignedText datapath="@firstname"/>
+            </gridcolumn>
+
+            <gridtext editable="false" datapath="@lastname">Last
+            </gridtext>
+
+            <gridtext datapath="@displayname">
+                Fullname
+            </gridtext>
+
+            <gridcolumn resizable="false" sortable="false" width="130"> 
+                Default contact
+                <radiogroup xoffset="-10" text="$path{ '@title'}" 
+                            defaultSelection="0"
+                            layout="axis:'x'">
+                    <attribute name="y" 
+                              value="$once{ immediateparent.height /2 
+                                            - this.height/2}"/>
+                    <attribute name="workdef" value="$path{ '@work_default' }"/>
+                    <attribute name="homedef" value="$path{ '@home_default' }"/>
+                    <attribute name="datasel" 
+                               value="${ workdef == '1' ? 2 : 1 }"/>
+
+                    <method event="ondatasel" name="checkDataSel">
+                        if ( !this._initcomplete ) return;
+                        this.selectItem(  datasel );
+                    </method>
+
+                    <method event="oninit">
+                        this.checkDataSel();
+                    </method>
+
+                    <method event="onselect">
+                        if ( this.value == 1 ){
+                            this.workdef = 0;
+                            this.homedef = 1;
+                        } else if ( this.value == 2 ){
+                            this.workdef = 1;
+                            this.homedef = 0;
+                        }
+                        this.datapath.updateData();
+                    </method>
+
+                    <radiobutton value="1">home</radiobutton>
+                    <radiobutton value="2">work</radiobutton>
+                </radiogroup>
+            </gridcolumn>
+
+        </grid>
+    </window>
+
+    <window title="poke" layout="axis:'y'" x="${dgwin.width+10}">
+        <button text="loadMoreData">
+            <method event="onclick">
+                contactsLoad.doRequest();
+            </method>
+        </button>
+        <button text="getSelection">
+            <method event="onclick">
+                Debug.write( tgrid[ text ]() );
+            </method>
+        </button>
+
+        <button text="selectNext">
+            <method event="onclick">
+                tgrid[ text ]();
+            </method>
+        </button>
+        
+        <button text="selectPrev">
+            <method event="onclick">
+                tgrid[ text ]();
+            </method>
+        </button>
+
+        <button text="getNumItems">
+            <method event="onclick">
+                Debug.write( tgrid[ text ]() );
+            </method>
+        </button>
+
+        <button text="getItemAt"  >
+            <method event="onclick">
+                Debug.write( tgrid[ text ]( 22 ) );
+            </method>
+        </button>
+
+        <button text="getItem" >
+            <method event="onclick">
+                Debug.write( tgrid[ text ]( contactsData.getFirstChild().childnodes[ 44 ] ) );
+            </method>
+        </button>
+
+        <button text="removeItemAt"  >
+            <method event="onclick">
+                tgrid[ text ]( 0 );
+            </method>
+        </button>
+
+        <button text="selectItem"  >
+            <method event="onclick">
+                tgrid[ text ]( contactsData.getFirstChild().getFirstChild() );
+            </method>
+        </button>
+
+        <button text="selectItemAt"  >
+            <method event="onclick">
+                tgrid[ text ]( 13);
+            </method>
+        </button>
+
+        <button text="clearSelection" >
+            <method event="onclick">
+                tgrid[ text ]( );
+            </method>
+        </button>
+
+        <button text="clearSort" >
+            <method event="onclick">
+                tgrid[ text ]( );
+            </method>
+        </button>
+
+    </window>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

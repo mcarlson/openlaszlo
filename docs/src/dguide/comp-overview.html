@@ -1,0 +1,129 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="comp-overview">
+<head>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>A Closer Look at Components</title>
+</head>
+
+<body>
+
+<!-- Put Chapter title in h1 -->
+<h1>Getting More from Components</h1>
+
+<p>OpenLaszlo components are high-level objects that implement common user-interface functions. 
+</p>
+
+<p>
+Sources for LZ components are <a href="../../lps/components">here.</a>
+</p>
+
+<p>
+Earlier chapters have shown simple usage of components.
+This chapter describes various more advanced
+ways to use components, and contains summary descriptions of how to extend components and create new ones.
+(These topics are covered in greater depth in later chapters.) 
+</p>
+
+<h2>Customizing components</h2>
+<p>
+All components have several attributes, such as background color and text color, to which you can assign different values to
+change the component's appearance. You can set individual values for a single component, and you can also set a "style" for
+a group.
+</p>
+<h3>Using the &lt;style&gt; tag</h3>
+<p>
+There are several styles defined as classes (whitestyle, silverstyle, bluestyle, greenstyle, goldstyle, and purplestyle).
+ You may create an instance of one of these, create a new style, or create an instance with one or more modified attributes.
+</p>
+<p>
+Different styles may be used in different parts of an application, to highlight a single component or to distinguish a group of components. 
+The style of a component applies to itself and any component within it.
+</p>
+<p>
+Styles may be defined to establish a consistent "look" for a group of components. 
+There are a number of pre-defined styles. If you don't declare a default style, the OpenLaszlo components use whitestyle. 
+To specify a different default style, define a style with isdefault="true".
+</p>
+<p>
+In the example below, section one and two of the tabslider and the checkboxes inside them appear gold. Section Three and the components inside it appear green.
+</p>
+<example title="The &lt;style&gt; tag">
+&lt;canvas height="250"&gt;
+  &lt;goldstyle name="defaultstyle" isdefault="true"/&gt;
+  &lt;greenstyle name="specialstyle"/&gt;
+  &lt;tabslider id="ts1" x="50" y="20"
+             width="300" height="180"&gt;
+
+    &lt;tabelement text="Section One" selected="true"&gt;
+      &lt;checkbox&gt;option one&lt;/checkbox&gt;
+    &lt;/tabelement&gt;
+
+    &lt;tabelement text="Section Two"&gt;
+      &lt;checkbox&gt;option two&lt;/checkbox&gt;
+    &lt;/tabelement&gt;
+
+    &lt;tabelement text="Section Three" style="$once{specialstyle}"&gt;
+      &lt;radiogroup&gt;
+        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
+        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
+        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
+      &lt;/radiogroup&gt;
+      &lt;button align="right"&gt;Submit&lt;/button&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;/tabelement&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+</p>
+<h2>Building your own components</h2>
+<p>
+As you design more powerful applications you may find that the existing components do not meet your needs. In that situation you
+can build your own custom components. Designing your own components is a subject beyond the scope of this chapter, but here is
+a brief description of what's involved.
+</p>
+<p>Implementing
+new components has two general aspects:
+</p>
+<ul>
+	<li>devising the component's behavior</li>
+	<li>devising its visual appearance.</li>
+</ul>
+<p>
+</p>
+<h3>Implementing behavior</h3>
+
+<p>
+To learn how
+to do this, first make sure that you understand classes and how to extend them, as explained in
+<xref linkend="introductory-classes"/> and <xref linkend="class-inheritance"/>.
+Then read the <a href="../component-design">Component Design Guide</a>
+on extending components.  
+</p>
+<h3>Implementing appearance</h3>
+<p>
+Designing the visual appearance of a new component require's a designer's eye and meticulous attention to detail&#8212;at the level
+of placement of individual pixels. 
+</p>
+<p>
+The role of the graphic designer on Laszlo projects is explained in the <a href="${design}">Designer's Guide</a>.  In addition, we recommend
+that you study the construction of the LZ components, as explained in <xref linkend="custom-components"/>.
+
+</p>
+
+<h3>Example: Extending the &lt;alert&gt; component</h3>
+<p>
+As explained above, sometimes you can create your own new component by subclassing, or <glossterm>extending</glossterm> an existing component.  Here
+the <tagname link="true">alert</tagname> class is extended to create a new component called "myalert".  It is trivially different
+from the default <tagname>alert</tagname>; its only difference is that it centers nicely over the survey box.
+</p>
+<example extract="false" title="extending a component">
+    &lt;class extends="alert" name="myalert" x="${Math.max(survey.width - this.width, 0)/2}" y="${Math.max(survey.height - this.height, 0)/3}"&gt;
+    &lt;/class&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

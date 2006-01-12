@@ -1,0 +1,134 @@
+<!--=======================================================================-->
+<!-- noauthlib.lzx                                                         -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <include href="redmond" />
+
+    <method event="onkeyup" reference="LzKeys" args="k">
+        if ( k == 13 ) {
+            bSend.send();
+        }
+    </method>
+
+    <dataset name="chatDset" />
+
+    <connectiondatasource name="myconnection">
+
+        <method name="print" args="str">
+            canvas.chatwindow.chatPtr.addNode("message", null, { text: str } );
+        </method>
+
+        <method event="onconnect">
+            this.print("...connected...");
+            canvas.myconnection.sendMessage("*", "", "userconnect");
+            canvas.front.setVisible(false);
+            canvas.chatwindow.setVisible(true);
+        </method>
+
+        <method event="onerror">
+            this.print("...connection error...");
+        </method>
+
+        <method event="ontimeout">
+            this.print("...connection timed out...");
+        </method>
+
+        <method event="ondisconnect">
+            this.print("...disconnected...");
+        </method>
+
+        <dataset name="message" />
+    </connectiondatasource>
+
+
+    <view name="front" x="20" y="20">
+        <button>go chat
+            <method event="onclick">
+                canvas.myconnection.connect();
+            </method>
+        </button>
+    </view>
+
+
+    <view name="chatwindow" width="450" height="400" bgcolor="#EAEAEA" visible="false"> 
+
+        <datapointer name="chatPtr" xpath="chatDset:/" />
+
+        <datapointer xpath="myconnection:message:/">
+            <method event="ondata">
+                var mesg = this.getXPath('text()');
+                this.parent.chatPtr.addNode("message", null,
+                    { text: mesg}
+                );
+            </method>
+        </datapointer>
+
+        <datapointer xpath="myconnection:sendMessageDset:/">
+            <method event="onerror">
+                var message = this.parent.sendView.msg.getText();
+                this.parent.chatPtr.addNode("message", null, 
+                    { text:  "error: " + this.dataset.getErrorString() }
+                );
+            </method>
+        </datapointer>
+
+        <view width="387" height="287" x="29" y="39" bgcolor="#000000" />
+        <view name="chatView" width="385" height="285" x="30" y="40" bgcolor="#ffffff" clip="true">
+            <view name="svpar">
+                <method name="adjustScroll">
+                <![CDATA[
+                    if (this.parent.height < 0) return;
+                        var cvDif=this.parent.height-this.height;
+                        if ((cvDif) < 0){
+                            this.setY(cvDif);
+                            parent.scroller.updateThumbPos(); 
+                        }
+                    ]]>
+                </method>
+
+                <view name="sview" height="12" datapath="chatDset:/message" oninit="this.parent.adjustScroll();">
+                    <text width="515" datapath="@text" />
+                </view>
+                <simplelayout axis="y" spacing="2"/>
+            </view>
+            <scrollbar name="scroller" axis="y"/>
+        </view>
+
+        <view name="sendView" x="0" y="335">
+            <text>msg:</text>
+            <windowtext name="msg" width="200" />
+            <button id="bSend" name="send" width="50" height="24" onclick="this.send();">
+                Send
+                <method name="send">
+                <![CDATA[
+                    var message = this.parent.msg.getText();
+                    if (message!=null && message!="") {
+                        canvas.myconnection.sendMessage("*", message, "message");
+                        this.parent.msg.setText("");
+                    }
+                ]]>
+                </method>
+            </button>
+            <button width="50" height="24">Logout
+                <method event="onclick">
+                    canvas.front.setVisible(true);
+                    canvas.chatwindow.setVisible(false);
+                    canvas.myconnection.disconnect();
+                </method>
+            </button>
+
+            <simplelayout axis="x" spacing="5"/>
+        </view>
+
+    </view> <!-- chatwindow -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

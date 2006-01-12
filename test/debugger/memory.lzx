@@ -1,0 +1,20 @@
+<canvas debug="true">
+  <simplelayout/>
+  <view>
+    <state name="clickState" apply="false">
+      <window x="40" y="40" title="foo"/>
+    </state>
+    <button text="apply">
+      <method event="onclick">
+        parent.clickState.isapplied ? parent.clickState.remove() : parent.clickState.apply();
+      </method>
+    </button>
+  </view>
+  <text>To run this test, type  </text>
+  <text>    __LzDebug.markObjects() </text>
+  <text>    bonk the button a couple times, make sure there are no windows visible </text>
+  <text>    __LzDebug.findNewObjects() </text>
+  <text>    __LzDebug.whyAlive() </text>
+  <text>    See if there are lingering objects </text>
+
+</canvas>

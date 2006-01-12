@@ -1,0 +1,92 @@
+#!/bin/sh
+#===============================================================================
+# SWF diffing utility. Ignores the Laszlo build number.
+# Author: pkang@laszlosystems.com
+# Modifications for nightly regression by: Mark Davis
+#===============================================================================
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+DIFF="diff"
+SWFDUMP="swfdump"
+ECHO="echo"
+SED="sed"
+AWK="awk"
+WC="wc"
+PRG="swfdiff"
+RM="rm"
+
+#-------------------------------------------------------------------------------
+# Display usage, force remove temporary files, and exit
+#-------------------------------------------------------------------------------
+help()
+{
+	${ECHO} "Usage: ${PRG} [-hv] <swffile1> <swffile2>"
+        ${ECHO} "  -h        help"
+#        ${ECHO} "  -v        verbose mode (display swfdump diff)"
+	${RM} -f ${tmpfile1} ${tmpfile2}
+	exit 1
+}
+
+case $1 in
+#    -v) 
+#        shift
+#        verbose=1
+#        ;;
+    -h)
+        help
+        ;;
+esac
+
+        verbose=1
+
+file1=$1
+file2=$2
+tmpfile1=.tmp-${PRG}-$$-1
+tmpfile2=.tmp-${PRG}-$$-2
+
+#-------------------------------------------------------------------------------
+# Variables
+#  file: name of SWF file
+#  tmpfile: name of SWFDump file associated with SWF file
+#-------------------------------------------------------------------------------
+createSWFDumpFile()
+{
+    (
+        ${SWFDUMP} -a ${file} |
+        #${SED} 's/\(Push String:"canvas" String:"width".*String:"build" String:"\).*\(" String:"version" .*\)$/\1XXX\2/g'
+        ${SED} 's/\(String:"build" String:"\).*\(" String:"version" .*\)$/\1XXX\2/g'
+
+    ) > ${tmpfile} 2>&1
+
+    # One line indicates an error message
+    if [ `${WC} -l ${tmpfile} | ${AWK} '{print $1}'` -eq 1 ]
+    then
+        ${ECHO} "${PRG}: ${file} is not a SWF file"
+        ${RM} -f ${tmpfile1} ${tmpfile2}
+        exit
+    fi
+}
+
+
+if [ $# != 2 ]; then help; fi
+if [ ! -f ${file1} ]; then ${ECHO} "${file1}: No such file"; help; fi
+if [ ! -f ${file2} ]; then ${ECHO} "${file2}: No such file"; help; fi
+if [ -z "`${DIFF} -q $1 $2`" ]; then exit; fi
+
+file=${file1}; tmpfile=${tmpfile1}; createSWFDumpFile
+file=${file2}; tmpfile=${tmpfile2}; createSWFDumpFile
+
+if [ ! -z $verbose ]
+    then
+    ${DIFF} ${tmpfile1} ${tmpfile2}
+else
+    if [ ! -z "`${DIFF} -q ${tmpfile1} ${tmpfile2}`" ]
+    then
+        ${ECHO} "${file1} and ${file2} differ"
+    fi
+fi
+
+${RM} -f ${tmpfile1} ${tmpfile2}

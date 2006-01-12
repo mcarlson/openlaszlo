@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="font">
+    <lztier>Text Markup</lztier>
+    <lzcategory>HTML Markup</lzcategory>
+    <lzshortdesc>
+        Inline font markup.
+    </lzshortdesc>
+    <lztag>tag-html-font.xml</lztag>
+</lzelement>
+
+<p>A <tagname>font</tagname> tag controls the font face, size,
+and color for its textual content.</p>
+
+<p>This tag can only occur inside XHTML text containers such as
+<tagname>text</tagname> and <tagname>button</tagname>.</p>
+
+<note>The XHMTL <tagname>font</tagname> tag, which controls the
+appearance of its content, is different from the top-level
+<tagname>font</tagname> which defines a font and imports it into the
+application.</note>
+
+<example>
+&lt;canvas height="30"&gt;
+  &lt;font name="Arioso" src="ariosor.ttf"&gt;
+    &lt;face src="ariosob.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+
+  &lt;text height="24"&gt;
+    Some &lt;font color="#ff0000"&gt;red&lt;/font&gt; text, and text
+    in &lt;font face="Arioso" size="24"&gt;Arioso&lt;/font&gt;
+    and &lt;font face="Arioso" size="24"&gt;&lt;b&gt;Arioso bold&lt;/b&gt;&lt;/font&gt;.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

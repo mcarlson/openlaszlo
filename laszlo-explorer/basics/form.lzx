@@ -1,0 +1,53 @@
+<canvas  width="240">
+  <!-- An url that reads submitted form data -->
+  <!-- and echoes it back in a response -->
+  <dataset name="echoer" src="http:echo.jsp"/>
+  
+  <window x="10" y="10" >
+    <form id="ex1" bgcolor="0xAAB5C8" >
+      <submit name="submitter" data="${echoer}"/>
+      
+      <statictext fontstyle="bold" >
+        What's your current name?
+      </statictext>
+      <edittext width="175" />
+      
+      <statictext fontstyle="bold" >
+        What's in a name?
+      </statictext>
+      <radiogroup x="25" name="definition">
+        <radiobutton value="1">
+          Sticks and Stones
+        </radiobutton>
+        <radiobutton value="2">
+          Parent's Agendas
+        </radiobutton>
+        <radiobutton value="3">
+          A Rose by any Other...
+        </radiobutton>
+      </radiogroup>
+      
+      <statictext fontstyle="bold" >
+        My new name is ...
+      </statictext>
+      <combobox width="175" editable="false" 
+                defaulttext="Choose a name" >
+        <textlistitem text="Joe Laszlo" />
+        <textlistitem text="Laszlo Moholy-Nagy"/>
+        <textlistitem text="Victor Laszlo" />
+      </combobox>
+      
+      <button text="Submit" isdefault="true"
+              onclick="parent.submitter.submit()" />
+    </form>
+    
+    <view name="congrats" datapath="echoer:/response"
+          bgcolor="0xAAB5C8" 
+          width="100%" height="100%" >
+      <text text="Congrats!" fontstyle="bold"
+            y="80" align="center"  />
+      <text text="your name has been changed." 
+            y="103" align="center" />
+    </view>
+  </window>
+</canvas>

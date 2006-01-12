@@ -1,0 +1,17 @@
+<canvas>
+    <include href="lz/grid.lzx"/>
+
+    <dataset name="contacts" request="true"
+             src="http://www.laszlosystems.com/lps/sample-apps/contacts/contactsdata.xml"/>
+    
+    <grid width="300" height="200" 
+          id="gr"
+          rowheight="45" spacing="5"
+          bgcolor0="#DDFFDD" bgcolor1="#DDDDFF"
+          datapath="contacts:/*">
+    </grid>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

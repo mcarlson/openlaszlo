@@ -1,0 +1,21 @@
+<!-- This tests that children of an inlined subclass of state have the right classroot -->
+
+<canvas debug="true">
+  <?lzc classes="c1 stateSubclass" inline-only="true"?>
+  
+  <class name="stateSubclass" extends="state"/>
+  
+  <class name="c1">
+    <method name="f">Debug.write('click')</method>
+    
+    <stateSubclass apply="true">
+      <button onclick="classroot.f()">Click</button>
+    </stateSubclass>
+  </class>
+  
+  <c1/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

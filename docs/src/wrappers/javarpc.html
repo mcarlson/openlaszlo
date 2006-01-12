@@ -1,0 +1,238 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="JavaRPC">
+    <lztier>RPC Components</lztier>
+    <lzcategory>RPC</lzcategory>
+    <lzshortdesc>
+        Call remote server java methods.
+    </lzshortdesc>
+    <lztag>rpc/javarpc.xml</lztag>
+</lzelement>
+
+<p>JavaRPC is a feature that allows server-side Java objects and methods to be
+accessed from a client application. JavaRPC is part of the Laszlo RPC family and
+shares similar APIs with SOAP and XML-RPC. See the <a
+href="${dguide}rpc.html">RPC chapter</a> and <a
+href="${dguide}rpc-javarpc.html">JavaRPC</a> for in the <a
+href="${dguide}">Developer's Guide</a> for details.</p>
+
+<p>This tag causes the creation of a JavaRPC object. The classname
+attribute specifies what class javarpc represents. To use a class, place it in
+WEB-INF/classes or, if it exists in a jar, in WEB-INF lib. This will ensure that
+the class is accessible to the OpenLaszlo Server.</p>
+
+<p>Java classes used in an application must be declared in a security
+element. Classes not defined in a security element are not allowed to be
+accessed or instantiated. The format of the security element looks like:</p>
+
+<example extract="false">
+&lt;security&gt;
+    &lt;allow&gt;
+        &lt;pattern&gt;CLASS1&lt;/pattern&gt;
+        &lt;pattern&gt;CLASS2&lt;/pattern&gt;
+        ...
+        &lt;pattern&gt;CLASSN&lt;/pattern&gt;
+    &lt;/allow&gt;
+&lt;/security&gt;
+</example>
+
+<p>Each &lt;pattern&gt; is a regular expression.</p>
+
+<example extract="false">
+&lt;security&gt;
+    &lt;allow&gt;
+        &lt;pattern&gt;^org\.openlaszlo&lt;/pattern&gt;
+    &lt;/allow&gt;
+&lt;/security&gt;
+</example>
+
+<p>This example demonstrates how to call methods in a java object that exists
+remotely in the server:</p>
+
+<example title="Passing different parameter types">
+&lt;canvas debug="true" height="300" width="800"&gt;
+ 
+    &lt;debug x="250" y="10" width="500" height="275" /&gt;
+
+    &lt;security&gt;
+        &lt;allow&gt;
+            &lt;pattern&gt;^examples\.TypesExample&lt;/pattern&gt;
+        &lt;/allow&gt;
+    &lt;/security&gt;
+
+    &lt;!-- See WEB-INF/classes/TypesExample.java for java source. --&gt;
+    <em>&lt;javarpc name="types_example_rpc" scope="none" 
+             classname="examples.TypesExample"&gt;</em>
+
+        &lt;method event="onload"&gt;
+            // Set buttons visible only after JavaRPC object loads
+            canvas.buttons.setAttribute('visible', true);
+        &lt;/method&gt;
+
+        &lt;method event="ondata" args="res"&gt;
+            Debug.write('(types ondata) response is:', res);
+        &lt;/method&gt;
+
+        &lt;method event="onerror" args="errmsg"&gt;
+            Debug.write('(types onerror) error:', errmsg);
+        &lt;/method&gt;
+
+        &lt;!-- Declaratively pass an integer. --&gt;
+        &lt;remotecall funcname="passInteger"&gt;
+            &lt;param value="42" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;!-- Declaratively pass a double. Note that we name this function pd1
+             because we have multiple remotecall declarations that call
+             passDouble but with different parameters. --&gt;
+        &lt;remotecall name="pd1" funcname="passDouble"&gt;
+            &lt;param value="42.1" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;!-- Declaratively pass a double with 0 decimal. The 0 decimal will
+             truncate and the number will become an integer type when it reaches
+             the server. This call will fail. --&gt;
+        &lt;remotecall name="pd2" funcname="passDouble"&gt;
+            &lt;param value="42.0" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;!-- Declaratively pass a double with 0 decimal. Wrapping the double in
+             DoubleWrapper will ensure the value will remain a double when
+             reaching the server. --&gt;
+        &lt;remotecall name="pd3" funcname="passDouble"&gt;
+            &lt;param&gt; 
+                &lt;method name="getValue"&gt;
+                    return new LzRPC.DoubleWrapper(42.0);
+                &lt;/method&gt;
+            &lt;/param&gt;
+        &lt;/remotecall&gt;
+
+    &lt;/javarpc&gt;
+
+    
+    &lt;view name="buttons" visible="false" layout="spacing: 10" &gt;
+
+        &lt;button text="pass integer"
+                onclick="types_example_rpc.passInteger.invoke()" /&gt;
+
+        &lt;button text="pass double"
+                onclick="types_example_rpc.pd1.invoke()" /&gt;
+
+        &lt;button text="pass double (will fail)"
+                onclick="types_example_rpc.pd2.invoke()" /&gt;
+
+        &lt;button text="pass double w/LzRPC.DoubleWrapper" 
+                onclick="types_example_rpc.pd3.invoke()" /&gt;
+
+        &lt;button text="pass boolean" onclick="this.passBoolean.invoke()"&gt;
+            &lt;!-- This is a way to declare a remotecall closer to where it's being
+                 used. The remotecontext must be set. --&gt;
+            &lt;remotecall funcname="passBoolean" 
+                        remotecontext="$once{ types_example_rpc }"&gt;
+                &lt;param value="true" /&gt;
+            &lt;/remotecall&gt;
+        &lt;/button&gt;
+
+        &lt;button text="pass array" onclick="this.passArray.invoke()"&gt;
+            &lt;remotecall name="passArray" funcname="passClientArray" 
+                        remotecontext="$once{ types_example_rpc }"&gt;
+                &lt;param value="[1, 'a string', 4.5, false]" /&gt;
+            &lt;/remotecall&gt;
+        &lt;/button&gt;
+
+        &lt;button text="pass hash" onclick="this.passObject.invoke()"&gt;
+            &lt;remotecall name="passObject" funcname="passClientObject" 
+                        remotecontext="$once{ types_example_rpc }"&gt;
+                &lt;param value="{ a: 1, b: 3.14159, c: 'a string value', d: true}"&gt;
+                &lt;/param&gt;
+            &lt;/remotecall&gt;
+        &lt;/button&gt;
+
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</example>
+
+<p>The java source code, which can be found in
+<tt>$LPS_HOME/WEB-INF/classes/examples</tt>, looks like:</p>
+
+<example extract="false">
+package examples;
+
+import java.util.Vector;
+import java.util.Hashtable;
+
+public class TypesExample {
+
+    public static String passInteger(int i) {
+        return "got integer parameter: " + i;
+    }
+
+    public static String passDouble(double d) {
+        return "got double parameter: " + d;
+    }
+
+    public static String passBoolean(boolean b) {
+        return "got boolean parameter: " + b;
+    }
+
+    public static String passClientArray(Vector v) {
+        return "got vector parameter: " + v;
+    }
+
+    public static String passClientObject(Hashtable t) {
+        return "got hashtable parameter: " + t;
+    }
+
+}
+</example>
+
+<p>JavaScript client-side paramaters are mapped to Java types as follows:</p>
+
+<p>
+<table border="1">
+<tr><th>JavaScript data type</th><th>Parameter types expected by java method</th></tr>
+<tr><td>Number (int)</td><td>int</td></tr>
+<tr><td>Number (double)*</td><td>double</td></tr>
+<tr><td>LzRPC.DoubleWrapper</td><td>double</td></tr>
+<tr><td>Boolean</td><td>boolean</td></tr>
+<tr><td>Array</td><td>Vector</td></tr>
+<tr><td>Object</td><td>Hashtable</td></tr>
+</table>
+</p>
+
+<p>* Any floating point number with a zero decimal value is considered to be an
+integer, i.e., 1.0 is really 1. Use LzRPC.DoubleWrapper to ensure a number is
+considered a double. For example:</p>
+
+<example extract="false">
+    // assume myrpc is a javarpc object and myrpc.proxy.myMethod is a function
+    // that expects a single double as a parameter
+    var mydouble = new LzRPC.DoubleWrapper(1.0);
+    myrpc.proxy.myMethod([ mydouble ], new LzDelegate(...));
+</example>
+
+<seealso>
+<classes><a href="${reference}rpc.html">rpc</a></classes>
+<classes><a href="${reference}sessionrpc.html">sessionrpc</a></classes>
+<classes><a href="${reference}webapprpc.html">webapprpc</a></classes>
+<classes><a href="${reference}soap.html">soap</a></classes>
+<classes><a href="${reference}xmlrpc.html">xmlrpc</a></classes>
+<classes><a href="${reference}remotecall.html">remotecall</a></classes>
+<tags><a href="${reference}security.html">security</a></tags>
+<a href="${dguide}rpc.html">Developer's Guide: RPC chapter</a>
+<a href="${dguide}rpc-javarpc.html">Developer's Guide: JavaRPC chapter</a>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

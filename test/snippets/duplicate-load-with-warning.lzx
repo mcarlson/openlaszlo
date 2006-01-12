@@ -1,0 +1,27 @@
+<canvas width="1024" debug="true">
+  <!-- Tests to make sure a warning is issued when duplicate libraries
+       are included in different loadable modules.
+
+       A warning should be issued regarding duplicate-library.lzx and duplicate-library-2.lzx
+       both being imported libraries which include common-library.lzx.
+  -->
+
+  <import name="lib" href="duplicate-library.lzx" 
+          stage="late"
+      onload="canvas.doLoaded()"/>
+
+  <import name="lib2" href="duplicate-library-2.lzx" 
+          stage="late"
+      onload="canvas.doLoaded()"/>
+
+  <method name="doLoaded">
+    Debug.write('mynumber = ', mynumber);
+  </method>
+
+  <simplelayout spacing="2" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

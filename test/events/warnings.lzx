@@ -1,0 +1,11 @@
+<canvas width="100%" height="80%" debug="true">
+  <!-- Should generate a compilation warning for handler/method -->
+  <debug  fontsize="12"/>
+
+    <!-- generate a compilation warning -->
+    <class name="test1" >
+      <handler name="onblah" method="mymethod">
+        Debug.write("you shouldn't have a method and an event name");
+      </handler>
+    </class>
+</canvas>

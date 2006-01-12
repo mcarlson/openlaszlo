@@ -1,0 +1,31 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+  <!-- test whether debug errors during startup are delivered to the remote debug port 
+  
+       This test should be run with the remote debug command line client running on port 5559,
+       run this with query arg remotedebug=5559
+       
+       the errors in the script below should be received in the remote client
+
+ remotestartup.lzx:13: reference to undefined variable 'foo'
+ remotestartup.lzx:13: undefined object does not have a property 'bar'
+ remotestartup.lzx:14: call to undefined function 'oops'
+
+
+ cd lps/server/src/org/openlaszlo/test
+ javac debugserver.java
+ java -cp . debugserver
+
+ http://localhost:8080/lps-dev/test/debugger/remotestartup.lzx?remotedebug=5559
+
+  -->
+
+  <script>
+    foo.bar = 259;
+    var blah = oops(100);
+
+  </script>
+
+
+</canvas>

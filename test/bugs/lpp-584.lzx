@@ -1,0 +1,45 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+
+
+<canvas debug="true">
+	<include href="lzunit"/>
+	<debug y="200"/>
+	
+	<dataset request="false" type="http" name="dset"
+		src="http://localhost:8080/lps/test/foo.lzx" querystring="key1=val1"/> 
+		
+	<class name="QSTest" extends="TestCase">
+		<method name="testParamOverride">
+			dset.setQueryParam('key2', 'val2')
+			var qp = dset.getParams()
+			AssertEquals('val2', qp.getValue('key2'))
+			AssertEquals(qp.toString(), dset.getQueryString())
+		</method>
+		
+		<method name="testSetParams">
+			AssertEquals(10, dset.getParams().getValue('key1'))
+		</method>
+		
+		<method name="testSetQuery">
+			dset.setQueryString('lzt=serverinfo')
+			AssertEquals(dset.getParams().toString(), dset.querystring)
+		</method>
+		
+		<method name="setUp">
+			dset.setQueryParams({'key1' : 10, 'key2' : 20})
+		</method>
+	</class>
+
+	<TestSuite>
+		<QSTest/>
+	</TestSuite>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

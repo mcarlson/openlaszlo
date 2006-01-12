@@ -1,0 +1,35 @@
+<canvas>
+<script>
+var animDuration = 1000;
+function animDur(){
+return 1000;
+}
+</script>
+  <resource name="h" src="../resources/gif/h.gif"/>
+  <resource name="2" src="../resources/gif/2c.gif"/>
+  <resource name="3" src="../resources/gif/3c.gif"/>
+
+  <class name="card" width="73" height="97" extends="view" 
+	 oninit="this.setResource('2');discard.doStart();">
+    <method name="swapnew">
+        hand[index] = deck[index+5];
+        this.setResource('3');
+        this.animate("x",5+index*75,animDuration);
+        this.animate("y",100,animDuration);
+        this.animate("rotation","0",animDuration);
+     </method>
+    <animatorgroup name="discard" process="simultaneous"
+		    onstop="this.parent.swapnew();">
+          <attribute name="duration" value="animDuration" when="once"/>
+          <animator attribute="y" to="200"/>
+          <animator attribute="x" to="155"/>
+          <animator attribute="rotation" to="180"/>
+    </animatorgroup>
+</class>
+
+<card name="card1" x="200" y="100"  rotation="180"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

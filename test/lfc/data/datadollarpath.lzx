@@ -1,0 +1,80 @@
+<library >
+    <dataset name="dolpatbind">
+        <r foo="bar">slop</r>
+        <r foo="aaa">bbb</r>
+        <r>
+            <p foo="ddd">eee</p>
+        </r>
+    </dataset>
+
+    <include href="lzunit/lzunit.lzx" />
+
+    <class name="TestPathBinding" extends="TestCase">
+
+        <view datapath="dolpatbind:/r[1]" name="a">
+            <view name="b">
+                <view name="m">
+                    <attribute name="dattr" value="$path{ '@foo' }"/>
+                </view>
+                <view name="n">
+                    <attribute name="dattr" value="$path{ 'text()' }"/>
+                </view>
+            </view>
+        </view>
+
+        <method name="test1">
+            assertEquals( 'bar' , a.b.m.dattr );
+            assertEquals( 'slop' , a.b.n.dattr );
+
+            dolpatbind.getFirstChild().setAttr( 'foo' , 11 );
+            dolpatbind.getFirstChild().getFirstChild().setData( 'newdata' );
+
+            assertEquals( 11 , a.b.m.dattr );
+            assertEquals( 'newdata' , a.b.n.dattr );
+
+            a.b.m.setAttribute( 'dattr' , 'back' );
+            a.b.n.setAttribute( 'dattr' , 'back2' );
+
+            assertEquals( 11 , dolpatbind.getFirstChild().getAttr( 'foo' ));
+            assertEquals( 'newdata' , 
+                          dolpatbind.getFirstChild().getFirstChild().data );
+
+            a.datapath.updateData();
+
+            assertEquals( 'back' , dolpatbind.getFirstChild().getAttr( 'foo' ));
+            assertEquals( 'back2' , 
+                          dolpatbind.getFirstChild().getFirstChild().data );
+
+            a.datapath.selectNext();
+            assertEquals( 'aaa' , a.b.m.dattr );
+            assertEquals( 'bbb' , a.b.n.dattr );
+
+            a.datapath.selectNext();
+            assertEquals(  null, a.b.m.dattr );
+            assertEquals( '' ,  a.b.n.dattr );
+
+            a.b.setDatapath( 'p' );
+            assertEquals( 'ddd' , a.b.m.dattr );
+            assertEquals( 'eee' , a.b.n.dattr );
+
+            a.b.m.setAttribute( 'dattr' , 'back' );
+            a.b.n.setAttribute( 'dattr' , 'back2' );
+
+            assertEquals( 'ddd' , a.b.datapath.p.getAttr( 'foo' ));
+            assertEquals( 'eee' , 
+                          a.b.datapath.p.getFirstChild().data );
+
+            a.datapath.updateData();
+
+            assertEquals( 'back' , a.b.datapath.p.getAttr( 'foo' ));
+            assertEquals( 'back2' , 
+                          a.b.datapath.p.getFirstChild().data );
+
+
+        </method>
+    </class>
+</library >
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

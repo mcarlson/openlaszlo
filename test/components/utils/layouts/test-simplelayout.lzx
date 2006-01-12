@@ -1,0 +1,57 @@
+<canvas width="800" height="400"
+    bgcolor="0xeaeaea" layout="axis:y">
+    <debug y="200"/>
+    <class name="box" width="100" height="20" bgcolor="0xccccea">
+        <attribute name="text" type="text"/>
+        <view bgcolor="0xaaaadd" x="2" y="2" width="96" height="16">
+            <text text="${classroot.text}"
+                resize="true" align="center" valign="middle"/>
+        </view>
+    </class>
+    <view x="40" >
+        <view layout="spacing:10;inset:20" >
+            <view layout="axis:x; spacing:10">
+               <button onclick="a.mylayout.open.doStart()">open</button>
+               <button onclick="a.mylayout.close.doStart()">close</button>
+            </view>
+            <text text="${'spacing: ' + a.mylayout.spacing}"/>
+        </view>
+        <view x="200" layout="spacing:10;inset:20" >
+            <view layout="axis:x; spacing:10">
+               <button onclick="b.mylayout.down.doStart()">down</button>
+               <button onclick="b.mylayout.up.doStart()">up</button>
+            </view>
+            <text text="${'inset: ' + b.mylayout.inset}"/>
+        </view>
+    </view>
+    <view bgcolor="blue" width="400" x="40" height="1"/>
+    <view x="40">
+        <view id="a" >
+            <simplelayout name="mylayout" spacing="-20">
+                <animator name="open" attribute="spacing" to="1" duration="700" start="false"/>
+                <animator name="close" attribute="spacing" to="-20" duration="700" start="false"/>
+            </simplelayout>
+            <box>one</box>
+            <box>two</box>
+            <box>three</box>
+            <box>four</box>
+            <box>five</box>
+        </view>
+        <view id="b" x="200">
+            <simplelayout name="mylayout" inset="0">
+                <animator name="down" attribute="inset" to="20" duration="700" start="false"/>
+                <animator name="up" attribute="inset" to="0" duration="700" start="false"/>
+            </simplelayout>
+            <box>one</box>
+            <box>two</box>
+            <box>three</box>
+            <box>four</box>
+            <box>five</box>
+        </view>
+
+    </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

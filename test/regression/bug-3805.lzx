@@ -1,0 +1,7 @@
+<canvas debug="true">
+<view oninit="setSource('http://localhost:8080/lps/404.gif')"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

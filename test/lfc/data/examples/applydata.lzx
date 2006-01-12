@@ -1,0 +1,25 @@
+<canvas width="1024" height="1280">
+    <dataset name="recs">
+        <record color="332136432" />
+        <record color="56521236432" />
+        <record color="1565336432" />
+        <record color="565336432" />
+        <record color="56533643992" />
+        <record color="250" />
+        <record color="565335649932"/>
+        <record color="56533643432" />
+    </dataset>
+    
+    <view datapath="recs:/record">
+        <view datapath="@color" width="200" height="20">
+            <method name="applyData" args="d">
+                this.setBGColor( Number( d ) );
+            </method>
+        </view>
+    </view>
+    <simplelayout axis="y"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

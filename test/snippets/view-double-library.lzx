@@ -1,0 +1,5 @@
+<library>
+  <import name="lib2" href="view-double-library2.lzx" stage="defer" />
+  <text>Loaded Lib1</text>
+  <button onclick="lib2.load()">load lib2</button>
+</library>

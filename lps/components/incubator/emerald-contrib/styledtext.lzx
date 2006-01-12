@@ -1,0 +1,75 @@
+<library>
+    <!--- A text subclass which allows use of text styles
+        @START_CODE
+            <styledtext text="hello" style="mytextstyle" />
+        @END_CODE
+    -->
+    <class name="styledtext" extends="text">
+        <!--- should be an object of type "textstyle" -->
+        <attribute name="style" value="null" when="once" />
+        
+        <!---  @keywords private -->
+       <method name="init">
+            <![CDATA[
+                super.init();
+                if (this.style != null)
+                    this._applystyle(this.style);
+            ]]>
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (s != null) {
+                this.setAttribute("fgcolor", s.textcolor);
+                this.setAttribute("font", s.font);
+                this.setAttribute("fontsize", s.fontsize);
+                if ( s['fontstyle'] ) this.setAttribute( "fontstyle", s.fontstyle );
+            }
+        </method>
+    </class>
+
+    <!--- various styled text subclasses which use predefined styles, for UI text labels
+        @START_CODE
+            <textlabel text="hello" />
+        @END_CODE
+    -->
+    <class name="textlabel" extends="styledtext" 
+        style="textlabel_style" />
+        
+    <class name="textheading" extends="styledtext" 
+        style="textheading_style" />
+        
+    <class name="statustext" extends="styledtext" 
+        style="statustext_style" />
+        
+    <class name="appheadertext" extends="styledtext" 
+        style="appheadertext_style" />
+
+    <class name="prefheadertext" extends="styledtext"
+        style="prefs_heading_style"/>
+
+    <class name="preflabeltext" extends="styledtext"
+        style="prefs_label_style"/>
+
+    <class name="regbasetext" extends="styledtext"
+        style="registration_base_style" />
+    <class name="regheadertext" extends="styledtext"
+        style="registration_header_style"/>
+
+    <class name="regoverviewtext" extends="styledtext"
+        style="registration_overview_style"/>
+        
+    <class name="regfieldlabelselectedtext" extends="styledtext"
+        style="registration_field_label_selected_style"/>
+
+    <class name="regfieldlabelplaintext" extends="styledtext"
+        style="registration_field_label_plain_style"/>
+
+    <class name="reginlineerrortext" extends="styledtext"
+        style="registration_inline_error_text_style"/>
+
+    <class name="reginlineinstructionstext" extends="styledtext"
+        style="registration_inline_instructions_text_style"/>
+        
+        
+</library>

@@ -1,0 +1,31 @@
+<canvas>
+    <include href="lzunit/lzunit.lzx" />
+    <debug y="300"/>
+
+    <dataset name="dset3278">
+        <datanode dataone="1" datatwo="2"/>
+    </dataset>
+
+    <class name="bug-3278" extends="TestCase">
+        <attribute name="someval" value="9"/>
+        <node name="dmap" datapath="dset3278:/datanode/@dataone">
+        </node>
+        <method name="test1">
+            AssertTrue( true );
+            AssertTrue( dmap.datapath != null );
+            AssertEquals( 1, dmap.data );
+            dmap.datapath.destroy();
+            AssertNull( dmap.datapath );
+            dset3278.getFirstChild().setAttr( 'dataone' , 2 );
+            AssertTrue( dmap.data != 2 );
+        </method>
+    </class>
+
+    <TestSuite>
+        <bug-3278/>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

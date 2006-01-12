@@ -1,0 +1,9 @@
+<canvas>
+    <inputtext resizable="true" bgcolor="red" id="red" width="200" ></inputtext>
+    <inputtext resizable="false" bgcolor="yellow" id="yellow" width="200" ></inputtext>
+    <simplelayout axis="x" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

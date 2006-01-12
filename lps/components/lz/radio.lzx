@@ -1,0 +1,123 @@
+<library>
+    <include href="base/baselist.lzx" />
+    <include href="base/baselistitem.lzx" />
+    <include href="base/multistatebutton.lzx" />
+    <include href="utils/layouts/simplelayout.lzx" />
+
+    <resource name="lzradio_rsrc">
+        <frame src="resources/radio/radiobtn_up.swf" />
+        <frame src="resources/radio/radiobtn_mo.swf" />
+        <frame src="resources/radio/radiobtn_dn.swf" />
+        <frame src="resources/radio/radiobtn_dsbl_up.swf" />
+        <frame src="resources/radio/radiobtn_dn.swf" />
+        <frame src="resources/radio/radiobtn_dn.swf" />
+        <frame src="resources/radio/radiobtn_dn.swf" />
+        <frame src="resources/radio/radiobtn_dsbl_dn.swf" />
+    </resource>
+
+    <!--- Enables a one-of-many selection of its children. -->
+    <class name="radiogroup" extends="baselist"
+        itemclassname="radiobutton" defaultselection="0">
+
+        <!--- The layout to use for the radiogroup. The default is simplelayout
+              with spacing 5. Note: if you use another layout, be sure to
+              include the layout library file. -->
+        <attribute name="layout"
+            value="class: simplelayout; axis: y; spacing:5"/>
+
+        <!--- @keywords private -->
+        <attribute name="value" setter="_setvalue(value)" value="null"/>
+        <!--- @keywords private -->
+        <attribute name="onvalue" value="null"/>
+
+        <!--- @keywords private -->
+        <method name="applyData" args="d">
+            //try to find the relevant radio button, or clear selection if none
+            this._setvalue( d );
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setvalue" args="val">
+            if ( val == this.value ) return;
+            if ( this._initcomplete ){
+                var item = null;
+                if ( val != null ){
+                    item = this.getItem( val );
+                }
+                this.value = val;
+                if ( item ) this.select( item );
+                else this.clearSelection();
+            } else {
+                this.value = val;
+            }
+            if( this.onvalue ) this.onvalue.sendEvent( val );
+        </method>
+            
+    </class>
+
+    <!--- Implements a "radio" button, allows a one-of-many selection when
+          several of these are in a radiogroup. Radiobutton expects its parent
+          to be radiogroup. -->
+    <class name="radiobutton" extends="baselistitem" focusable="false"
+        clickable="true">
+
+        <!--- the y position of the text label. default: centered -->
+        <attribute name="text_y"
+            value="${this.rb.height/2 - this._title.height/2}" type="number"/>
+
+
+        <!--- @keywords private -->
+        <attribute name="initcomplete" value="0"/>
+
+        <multistatebutton name="rb" resource="lzradio_rsrc" text=""
+            statenum="${parent.selected ? 1 : 0}"
+            statelength="4" maxstate="1"
+            reference="parent">
+        </multistatebutton>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                if (_enabled) {
+                    _title.setAttribute('fgcolor', this.style.textcolor);
+                } else {
+                    _title.setAttribute('fgcolor', this.style.textdisabledcolor);
+                }
+                setTint(this.rb, s.basecolor);
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_showEnabled">
+            if (this.style != null) {
+                if (_enabled) {
+                   _title.setAttribute("fgcolor", style.textcolor);
+                } else {
+                   _title.setAttribute("fgcolor", style.textdisabledcolor);
+                }
+            }
+        </method>
+        
+        <!--- @keywords private -->
+        <method event="onclick">
+            if (!this.selected) {
+                parent.select(this);
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method name="setHilite" args="dohilite">
+            _title.setAttribute('fgcolor',
+                dohilite ? style.texthilitecolor : style.textcolor);
+        </method>
+
+        <text name="_title" resize="true"
+            x="17" y="$once{classroot.text_y}" text="${parent.text}"/>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,255 @@
+<canvas width="1000" height="800">
+
+<!-- **** Test input text scrolling *** -->
+
+<window id="v2"  y="10" x="420" width="460" height="600" resizable="false">
+  <resizelayout axis="x" />
+  <inputtext name="intext"  id="intext"
+        options="releasetolayout" resizable="false"
+        height="600" width="444" 
+        bgcolor="#acdcef" selectable="true"
+        multiline="true"><pre>
+BETA TEST AGREEMENT
+
+This Beta Test Agreement (the "Agreement") between you and Laszlo Systems,
+Inc. ("Laszlo") sets forth the terms and conditions governing your access
+to and use of the Software for the sole purpose of beta testing the
+Software. The Laszlo Presentation Server software and related documentation
+and materials, described more extensively in Exhibit A of this Agreement
+which is incorporated herein by reference, and any Updates (defined herein)
+provided pursuant to Section 2 (Updates) are collectively referred to
+herein as the "Software."
+
+   1. License Grant. Subject to all the terms and conditions of this
+Agreement, Laszlo grants you a personal, royalty-free, non-sublicensable,
+nontransferable, nonexclusive license to install and use the Software in
+the manner specified in the related documentation supplied by Laszlo only
+for your internal testing and evaluation purposes only during the Term
+(defined herein). You agree to use the Software only in the ordinary course
+of testing, and not to reproduce, distribute, sell, resell, bundle, deploy,
+publicly display, modify, or make available to any third party the Software
+or any portion thereof or any documentation or materials related thereto.
+Except to the extent that the following restriction is prohibited by
+applicable law, if any, you shall not reverse assemble, reverse compile or
+reverse engineer any software source code or other components of the
+Software or otherwise attempt to discover any underlying Proprietary
+Information (defined herein).
+   2. Updates. In its sole discretion, Laszlo may provide you with access
+to updated versions of the Software ("Updates"). If Laszlo provides you
+with access to Updates via an authorized password, you acknowledge and
+agree that you are solely responsible for strictly maintaining the
+confidentiality and integrity of any passwords provided to you by Laszlo
+for such Updates.
+   3. Ownership. Except as expressly licensed in Section 1 (License Grant)
+above, you acknowledge and agree that Laszlo owns all right, title and
+interest in and to the Software, Proprietary Information and any
+intellectual property rights inherent therein or related thereto. The
+Software is and contains trade secrets, proprietary rights and other
+intellectual property of Laszlo. You do not acquire title to the Software
+or any intellectual property or other rights related thereto except for the
+limited evaluation license granted hereunder.
+   4. Confidentiality. You shall maintain the confidentiality of the
+Software and shall not disclose any aspect of the Software or any aspect of
+the testing or evaluation performed by you under this Agreement. You
+acknowledge that, in the course of using the Software and performing the
+duties under this Agreement, you may obtain, become exposed to, or develop
+information including, but not limited to, technology, software code,
+know-how, ideas, testing procedures, structure, interfaces, documentation,
+problem reports, development schedule, analysis and performance
+information, and other technical, business, software, marketing and
+financial information, plans and data relating to the Software or Laszlo
+("Proprietary Information"). During and after the Term, you shall hold in
+confidence and protect, and shall not use (except as expressly authorized
+by this Agreement) or disclose, Proprietary Information unless such
+Proprietary Information becomes part of the public domain without breach of
+this Agreement by you, your officers, directors, employees or agents. You
+shall limit access to the Software to your employees and consultants having
+a need for such access and who enter into written confidentially
+obligations at least as protective of Laszlo as those set forth in this
+Agreement.
+   5. Equitable Relief. You acknowledge and agree that due to the unique
+nature of Laszlo's Proprietary Information, there can be no adequate remedy
+at law for any breach of your obligations hereunder, that any such breach
+may allow you or third parties to unfairly compete with Laszlo resulting in
+irreparable harm to Laszlo, and therefore, that upon any such breach or
+threat thereof, Laszlo shall be entitled to injunctions and other
+appropriate equitable relief in addition to whatever remedies it may have
+at law.
+   6. Dangerous Applications. The Software is not intended for use in any
+nuclear, aviation, mass transit, medical or life support application or in
+any other inherently dangerous application. You are responsible for taking
+all appropriate measures to ensure the safe use of the Software if used for
+such purposes, and Laszlo shall not be liable for any claims or damages
+arising from such use.
+   7. Evaluation. You agree to submit, during the Term, periodic written
+reports ("Reports") to Laszlo. Such Reports shall specify (a) all errors,
+bugs, crashes, failures, unexpected results and other problems encountered
+with the Software and any resolutions or workarounds therefore, (b) any
+other information or feedback concerning your use, testing and evaluation
+of the Software, and (c) any and all modifications, design changes,
+features or improvements to the Software suggested by you, your officers,
+directors, employees or agents (collectively (a) - (c), the "Results"). The
+Results, including without limitation the Reports, shall be deemed
+Proprietary Information of Laszlo and you agree that Laszlo shall have, and
+you hereby assign to Laszlo, any and all right, title and interest in and
+to any such Results and Reports, without the payment of any additional
+consideration therefore, and Laszlo shall have the right to use, in any
+manner and for any purpose whatsoever, the Results, Reports and any other
+information provided by you hereunder whether during or after the Term. You
+agree to perform all acts reasonably requested by Laszlo to enable Laszlo
+to perfect and enforce such rights.
+   8. No Training or Support. You acknowledge and agree that Laszlo shall
+have no obligation under this Agreement to provide any training or to
+correct any bugs, defects or errors or to otherwise support, develop or
+maintain the Software.
+   9. No Commercial Assurances. While Laszlo intends to commercially
+release a version of the Software, Laszlo reserves the right at any time
+not to release a version of the Software or, even if released, to alter
+features, specifications, capabilities, functions or other characteristics
+of the Software. Nothing herein shall (a) obligate either party to proceed
+with any other transaction between them, including without limitation
+licensing of any such commercial version of the Software, or (b) be
+construed as permitting you to rely in any way on the continued use of the
+software or any further development or commercial release thereof.
+  10. Taxes. Laszlo will not charge you for the Software. However, you will
+be responsible for payment of all taxes or any other duties, charges or
+fees payable or due upon import of the Software in the country or countries
+to which such Software is delivered.
+  11. Warranty Disclaimer. YOU ACKNOWLEDGE AND AGREE THAT THE SOFTWARE IS
+EXPERIMENTAL AND MAY NOT FUNCTION CORRECTLY OR AT ALL ON YOUR COMPUTER OR
+IN ANY ENVIRONMENT AND IS THEREFORE PROVIDED "AS-IS" AND AT YOUR SOLE RISK.
+TO THE FULL EXTENT PERMISSIBLE UNDER APPLICABLE LAW, LASZLO AND ITS THIRD
+PARTY LICENSORS DISCLAIM ALL WARRANTIES, EXPRESS OR IMPLIED, INCLUDING, BUT
+NOT LIMITED TO, ANY WARRANTIES AGAINST INFRINGEMENT OF THIRD PARTY RIGHTS,
+MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE. LASZLO AND ITS THIRD
+PARTY LICENSORS MAKE NO WARRANTY TO ANY PERSON RELATING TO THE SOFTWARE,
+ITS USE OR ANY INABILITY TO USE THE SOFTWARE, THE RESULTS OF ITS USE, THAT
+THE SOFTWARE WILL BE ERROR-FREE, THAT ERRORS IN THE SOFTWARE WILL BE
+CORRECTED, OR THAT THE SOFTWARE WILL EVER BE COMPLETED OR COMMERCIALLY
+AVAILABLE.
+  12. Restrictions of Use; Limitation of Remedies and Damages. YOU
+ACKNOWLEDGE AND AGREE THAT THIS SOFTWARE IS FOR TESTING PURPOSES ONLY. YOU
+SHALL HAVE THE SOLE RESPONSIBILITY FOR PROTECTING ANY DATA USED IN
+CONNECTION WITH THE SOFTWARE. TO THE FULL EXTENT PERMISSIBLE UNDER
+APPLICABLE LAW, LASZLO AND ITS THIRD PARTY LICENSORS SHALL NOT BE
+RESPONSIBLE OR LIABLE WITH RESPECT TO ANY SUBJECT MATTER OF THIS AGREEMENT
+OR TERMS AND CONDITIONS RELATED THERETO UNDER ANY CONTRACT, NEGLIGENCE,
+STRICT LIABILITY OR OTHER THEORY FOR ANY (A) LOSS OR INACCURACY OF DATA,
+(B) DAMAGE TO SOFTWARE OR EQUIPMENT, (C) COST OF PROCUREMENT OF SUBSTITUTE
+GOODS, SERVICES OR TECHNOLOGY, (D) INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY
+OR CONSEQUENTIAL DAMAGES INCLUDING, BUT NOT LIMITED TO, LOSS OF USE,
+REVENUES, DATA OR PROFITS, BUSINESS INTERRUPTION OR (E) FOR ANY MATTER
+BEYOND ITS REASONABLE CONTROL, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
+DAMAGES. IN NO EVENT WILL LASZLO'S LIABILITY TO YOU UNDER THIS AGREEMENT
+EXCEED $100 IN THE AGGREGATE.
+  13. Term and Termination. The term of this Agreement ("Term") shall
+expire on December 31, 2002, unless earlier terminated by Laszlo in
+accordance with the terms set forth herein. This Agreement may be
+terminated by Laszlo (a) for any reason or no reason upon five (5) days
+prior written notice to you, or (b) immediately upon notice of any breach
+by you of the provisions of this Agreement. Notice can be delivered by any
+means, including e-mail. Upon termination or expiration, the terms of this
+Agreement will remain in full force and effect, except the license granted
+in Section 1 and the Updates in Section 2 shall terminate and you will
+immediately cease all use of the Software and destroy all copies or
+portions of the Software and any Proprietary Information in your possession
+or control.
+  14. No Assignment. Neither the rights nor the obligations arising under
+this Agreement are assignable or transferable by you, and any such
+attempted assignment or transfer shall be void and without effect.
+  15. Controlling Law; Severability. This Agreement shall be governed by
+and construed in accordance with the laws of the State of California
+without regard to conflicts of laws provisions thereof and you submit to
+the exclusive jurisdiction and venue of the federal and state courts
+located in the State of California and County of San Francisco for any
+disputes arising out of or related to this Agreement. In the event that any
+of the provisions of this Agreement shall be held by a court or other
+tribunal of competent jurisdiction to be unenforceable, such provisions
+shall be limited or eliminated to the minimum extent necessary so that this
+Agreement shall otherwise remain in full force and effect and enforceable.
+  16. Entire Agreement; Amendment; Waiver. This Agreement constitutes the
+entire agreement between the parties pertaining to the subject matter
+hereof, and supercedes any and all prior or contemporaneous written or oral
+agreements between the parties. No waiver or modification of this Agreement
+will be binding upon either party unless made in a writing signed by both
+parties and no failure or delay in enforcing any right will be deemed a
+waiver.
+  17. Export Compliance. You will not export the Software, any portion
+thereof, or any matters related thereto. You will indemnify and defend
+Laszlo from and against any claims, penalties, loss or damage arising out
+of a breach of your obligations hereunder.
+
+If you have any questions concerning this Agreement or the Software or
+related documentation, you may contact Laszlo at:
+
+Laszlo Systems, Inc.
+1040 Mariposa
+San Francisco, CA 94107
+Telephone: 415-865-2905.
+
+EXHIBIT A
+SOFTWARE
+
+For the purposes of this Agreement, the Software shall include the software
+and documentation available for review and download at
+www.laszlosystems.com, including the following:
+
+    * Laszlo Presentation Server Java archive
+    * Laszlo Foundation Classes
+    * Laszlo Interface Components
+    * Sample LZX (Laszlo XML) source code and tutorials
+    * LZX language schemas (DTD, XSD)
+    * Text editor configurations/extensions for LZX editing
+    * Sample art assets, audio clips, and fonts
+    * Documentation for Laszlo Application Platform
+
+</pre>
+</inputtext>
+
+  <scrollbar id="vscroll2" name="vscroll"
+                   axis="y"
+                   scrollattr="yscroll"
+                   scrollmax="14 * 230"
+                   oninit="scrolltarget = parent.intext" />
+
+</window>
+
+
+<window x="0" title="Normal Laszlo Input Text" width="450" height="600" resizable="true"> 
+<inputtext multiline="true" id="foo" width="parent.width" height="parent.height"   bgcolor="#ffcccc" >
+<pre>
+This is the standard general resizable Laszlo wrapping view.
+
+BETA TEST AGREEMENT
+
+This Beta Test Agreement (the "Agreement") between you and Laszlo Systems,
+Inc. ("Laszlo") sets forth the terms and conditions governing your access
+to and use of the Software for the sole purpose of beta testing the
+Software. The Laszlo Presentation Server software and related documentation
+and materials, described more extensively in Exhibit A of this Agreement
+which is incorporated herein by reference, and any Updates (defined herein)
+provided pursuant to Section 2 (Updates) are collectively referred to
+herein as the "Software."
+
+   1. License Grant. Subject to all the terms and conditions of this
+Agreement, Laszlo grants you a personal, royalty-free, non-sublicensable,
+nontransferable, nonexclusive license to install and use the Software in
+the manner specified in the related documentation supplied by Laszlo only
+for your internal testing and evaluation purposes only during the Term
+(defined herein). You agree to use the Software only in the ordinary course
+of testing, and not to reproduce, distribute, sell, resell, bundle, deploy,
+publicly display, modify, or make available to any third party the Software
+or any portion thereof or any documentation or materials related thereto.
+Except to the extent that the following restriction is prohibited by
+applicable law, if any, you shall not reverse assemble, reverse compile or
+reverse engineer any software source code or other components of the
+Software or otherwise attempt to discover any underlying Proprietary
+Information (defined herein).
+</pre>
+</inputtext>
+</window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

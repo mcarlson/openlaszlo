@@ -1,0 +1,54 @@
+<canvas debug="true" >
+
+  <class name="RSSfeedMgr">
+    <attribute name="sourceFile" type="string" />
+    <attribute name="dsource" type="expression" />
+    <attribute name="ds" type="expression" />
+    <attribute name="dp" type="expression" />
+    <method event="processData">
+      <![CDATA[
+        debug.write("Entered .processData()");
+      ]]>
+    </method>
+    <method event="showError">
+      debug.write("Dataset error processing " + this.sourceFile + ".  Error = " +
+                  this.ds.getErrorString());
+    </method>
+    <method name="build">
+      <![CDATA[
+        this.dsource = new Datasource(this);
+        this.ds = new LzHTTPDataset( this, { name: this.sourceFile, 
+                                             type: "http",
+                                             autorequest: false } );
+
+        this.ds.initialize(this.dsource);
+        var xp = this.sourceFile + ":/"
+        this.dp = new LzDatapointer( this, { ondata: this.processData, 
+                                           onerror: this.showError,
+                                           xpath: xp } );
+        ds.setSrc(this.sourceFile);
+        debug.write("executing doRequest()");
+        ds.doRequest();
+      ]]>
+    </method>
+  </class>  
+
+  <RSSfeedMgr name="feedMgr" sourceFile="../resources/xml/syndi8.xml"></RSSfeedMgr>
+  <script>
+    feedMgr.build();
+  </script>
+
+
+</canvas>
+
+
+<!--
+Local Variables:
+sgml-default-doctype-name: canvas
+sgml-default-dtd-file: "/usr/local/lps-dr/jakarta-tomcat-4.1.12/webapps/lps-dr/tools/lzx.ced"
+End:
+-->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

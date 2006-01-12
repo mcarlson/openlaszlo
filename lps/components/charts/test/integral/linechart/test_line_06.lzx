@@ -1,0 +1,33 @@
+ <canvas width="1000" height="900">
+    <include href="charts/styles/chartstyle.lzx"/>
+    <include href="chartstyle.lzx"/>
+        
+    <dataset name="stock" src="../../data/ebay.xml"/> 
+    
+    <linechart id="chart1" width="500" height="500" style="chartstyle05" dataPointsEnabled="true">        
+            <dataseries datapath="stock:/stock">
+            <datacolumn name="x" columndatapath="item/@index" datatype="number"/>
+            
+            <dataseries label="high">                
+                <datacolumn  name="y" columndatapath="item/@high" datatype="number"/>
+            </dataseries>
+            
+            <dataseries label="low">                
+                <datacolumn name="y"  columndatapath="item/@low" datatype="number"/>
+            </dataseries>            
+        </dataseries>      
+        
+        <horizontalaxis name="haxis" title="X Axis" type="linear" columnName="x" titleLocation="low"/>
+        <verticalaxis name="vaxis" title="Y Axis" type="linear" columnName="y" titleLocation="low"/>
+ 
+    </linechart>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->

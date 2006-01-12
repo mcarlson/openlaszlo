@@ -1,0 +1,8 @@
+<canvas width="200" >
+  <checkbox id="cbox"  text="Show Window" 
+            x="10" y="10" />
+  
+  <window visible="${cbox.value}"
+          x="5" y="30" 
+          width="150" height="150" />
+</canvas>

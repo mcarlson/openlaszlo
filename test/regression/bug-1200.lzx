@@ -1,0 +1,41 @@
+<canvas debug="true" width="600">
+	<include href="redmond"/>
+
+	<debug y="200"/>
+ 	<dataset request="true" type="http" name="forecast" 
+src="http://www.laszlosystems.com/cgi-pub/weather.cgi" querystring="zip=94107" /> 
+
+ 	<simplelayout spacing="10"/>
+
+ 	<windowtext name="myQS">Enter new zip code here</windowtext>
+ 	<button>Submit Query
+ 		<method event="onclick">
+			var d = canvas.datasets.forecast;
+			var myQS = parent.myQS.getText() 
+			header.setText(myQS)
+			d.setQueryString('zip=' + myQS );
+			d.doRequest();
+		</method>
+ 	</button>
+ 	
+ 	<text fontstyle="bold" name="header" resize="true" label="94107"/>
+	<view>
+		<simplelayout axis="x" spacing="5"/>
+		<view bgcolor="0xeec0d0" datapath="forecast:/weather/forecast/day">
+			<text datapath="@label"/>
+			<text datapath="@temp"/>
+			<view datapath="@imageurl" align="center">
+				<method name="applyData" args="d">
+					setSource(d)
+				</method>
+			</view>
+			<text datapath="@desc"/>
+			<simplelayout spacing="5"/>
+		</view>
+	</view>
+	
+ </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

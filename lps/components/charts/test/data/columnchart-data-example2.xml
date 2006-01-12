@@ -1,0 +1,21 @@
+<records>
+    <record value="1" month="Jan" hits="198" />
+    <record value="2" month="Jan" hits="100" />
+    <record value="3" month="Dec" hits="75" />
+    <record value="4" month="Nov" hits="120" />
+    <record value="5" month="Apr" hits="80" />
+    <record value="6" month="Mar" hits="100" />
+    <record value="7" month="Jul" hits="110" />
+    <record value="8" month="Jul" hits="40" />
+    <record value="9" month="Aug" hits="50" />
+    <record value="10" month="Aug" hits="10" />
+    <record value="11" month="Aug" hits="90" />
+    <record value="12" month="Dec" hits="5" />
+    <record value="13" month="Dec" hits="140" />
+    <record value="14" month="Jan" hits="190" />
+    <record value="15" month="Feb" hits="130" />
+    <record value="16" month="Feb" hits="120" />
+    <record value="17" month="Mar" hits="80" />
+    <record value="18" month="Mar" hits="90" />
+</records>
+

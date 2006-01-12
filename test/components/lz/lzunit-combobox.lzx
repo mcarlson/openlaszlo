@@ -1,0 +1,108 @@
+<library>
+
+    <dataset name="citems">
+        <item value="item1">text 1</item>
+        <item value="item2">text 2</item>
+        <item value="item3">text 3</item>
+        <item value="item4">text 4</item>
+        <item value="item5">text 5</item>
+        <item value="item6">text 6</item>
+        <item value="item7">text 7</item>
+        <item value="item8">text 8</item>
+        <item value="item9">text 9</item>
+    </dataset>
+
+    <class name="test_combobox" extends="TestCase">
+        <combobox name="cbox">
+            <textlistitem name="items" 
+                          text='$path{"text()"}'
+                          value='$path{"@value"}'
+                          datapath="citems:/item"/>
+        </combobox>
+
+        <method name="_testSelect" args="item">
+            this.selectDL.unregisterAll();
+            assertEquals(this.cbox.items.clones[2], item);
+            assertEquals(item.value, this.cbox.getValue());
+        </method>
+
+        <method name="testCombobox">
+        <![CDATA[
+            //----------------------------------------
+            // check text and values
+            var clones = this.cbox.items.clones;
+            for (var i=1; i <= clones.length; i++) {
+                assertEquals('text ' + i, clones[i-1].text);
+                assertEquals('item' + i,  clones[i-1].value);
+            }
+
+            //----------------------------------------
+            // select()
+            if (typeof(this.selectDL) == "undefined") {
+                this.selectDL = new LzDelegate(this, "_testSelect");
+            }
+            this.selectDL.register(this, "onselect");
+            var item = this.cbox.items.clones[2];
+            this.cbox.select(item);
+
+            //----------------------------------------
+            // toggle()
+            assertEquals(false, this.cbox.isopen);
+            this.cbox.toggle();
+            assertEquals(true, this.cbox.isopen);
+            this.cbox.toggle();
+            assertEquals(false, this.cbox.isopen);
+
+            //----------------------------------------
+            // removeItem() && getItem()
+            var item1 = this.cbox.getItem('item1');
+            var item5 = this.cbox.getItem('item5');
+            var item9 = this.cbox.getItem('item9');
+            this.cbox.removeItem('item1');
+            this.cbox.removeItem('item5');
+            this.cbox.removeItem('item9');
+
+            assertNull(this.cbox.getItem(item1.value));
+            assertNull(this.cbox.getItem(item5.value));
+            assertNull(this.cbox.getItem(item9.value));
+
+            //----------------------------------------
+            // removeItemAt() && getItemAt()
+            var itemIndex0 = this.cbox.getItemAt(0);
+            this.cbox.removeItemAt(0); // this removes item2
+
+            var itemIndex1 = this.cbox.getItemAt(1);
+            this.cbox.removeItemAt(1); // this removes item4
+            
+            assertNull(this.cbox.getItem(itemIndex0.value));
+            assertNull(this.cbox.getItem(itemIndex1.value));
+
+            //----------------------------------------
+            // addItem() && getItem()
+            this.cbox.addItem('text add1', 'add1');
+            this.cbox.addItem('text add2', 'add2');
+            var add1 = this.cbox.getItem('add1');
+            var add2 = this.cbox.getItem('add2');
+            assertEquals('add1', add1.value);
+            assertEquals('add2', add2.value);
+
+            //----------------------------------------
+            // addItem() w/index
+// TODO: [2003-11-26 pkang] uncomment once addItem w/index is implemented
+//            this.cbox.addItem('index add1', 'inadd1', 3);
+//            var inadd1 = this.cbox.getItemAt(3);
+//            assertEquals('inadd1', inadd1.value);
+//
+//            this.cbox.addItem('index add2', 'inadd2', 0);
+//            var inadd2 = this.cbox.getItemAt(0);
+//            assertEquals('inadd2', inadd2.value);
+        ]]>
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,194 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="initialization-and-instantiation"
+      xmlns:d="docbook">
+<head>
+  <title>Understanding Instantiation</title>
+</head>
+
+<body>
+<?html2db class="appendix"?>
+
+<h1>Understanding Instantiation</h1>
+<h2>Overview</h2>
+<p>
+The instantiation of <classname>LzNode</classname> objects such as
+<classname>LzView</classname> and <classname>LzLayout</classname> is a
+multi-phase procedure, but in general, you do not need to know the
+details of the instantiation of view objects; they "just work".  In
+rare cases, you will need to understand the details of the process.
+Parts of the process can be deferred to speed startup of an
+application.</p>
+
+<p>
+This chapter assumes you are familar with classes and objects.  In the
+descriptions below, we distinguish between <dfn>creation</dfn>, by
+which we mean storage for the object is allocated and constant
+properties assigned &#x2014; a process that cannot be customized &#x2014; and
+<dfn>initialization</dfn>, by which we mean the instantiation of
+children and the application of computed attributes, which can be
+customized (by overriding the <method>init</method> method).  These
+two processes together are referred to as <dfn>instantiation</dfn>.
+</p>
+
+<h2>When instances are instantiated</h2>
+<p>
+At a high level, the initialization of a <classname>LzNode</classname>,
+the calling of its <method>init</method> method, and sending of the
+<method>oninit</method> event is under the control of its
+<code>initstage</code> attribute, as follows:</p>
+  <dl>
+    <dt>
+      <code>immediate</code>
+    </dt>
+    <dd>
+      Initialization happens immediately as the last stage of
+      <code>instantiation</code>.
+    </dd>
+    <dt>
+      <code>early</code>
+    </dt>
+    <dd>
+      Initialization happens right after the view and its children
+      have been <code>created</code>.
+    </dd>
+    <dt>
+      <code>normal</code>
+    </dt>
+    <dd>
+      Initialization happens when the parent is
+      <code>initialized</code>.
+    </dd>
+    <dt>
+      <code>late</code>
+    </dt>
+    <dd>
+      Initialization happens during idle time. To check whether the
+      view has been initialized, check the <code>isinited</code>
+      property. Force initialization using the
+      <method>completeInstantiation</method> method.
+    </dd>
+    <dt>
+      <code>defer</code>
+    </dt>
+    <dd>
+      Initialization will not happen unless explicitly requested by
+      calling the <method>completeInstantation</method> method.
+    </dd>
+  </dl>
+
+<h2>How instances are instantiated</h2>
+<p>
+When a <glossterm>node</glossterm> is instantiated, its
+attributes are the attributes explicitly given in the object, plus any
+attributes that the class specifies.  Similarly, its children will be
+the childen explicitly given in the object, plus any children that are
+specified in the class.  The class <method>construct</method> method
+is called, with these attributes and the parent view.
+</p>
+<p>The steps happen in the following sequence:</p>
+<ol>
+  <li>A single dictionary is created which combines the attributes of
+  the instance with the attributes of the class</li>
+  <li>A single array is created which combines the children of the
+  instance with the children of the class</li>
+  <li><code>construct(<var>args</var>, <var>parent</var>)</code> is called.
+  <code><var>args</var></code> is a dictionary of your attributes (does not
+  include expressions, such <code>width="${parent.width}"</code>),
+  <code><var>parent</var></code> is the lexical parent. This method can only be
+  declared in a class, not in an instance. You can modify the
+  arguments or the parent before calling
+  <code>super.construct</code>.</li>
+  <li>Any <code>&lt;method event="<var>...</var>"&gt;</code> for the class or
+  event handlers (e.g. onclick in the tag) for the class are created
+  for the instance</li>
+  <li>Attributes with <code>when="immediately"</code> values are applied
+  <ol type="a">
+    <li>Attributes with no setters are set</li>
+    <li>Special LFC attributes are set
+    <ul>
+      <li>The <attribute>name</attribute> attribute</li>
+      <li>The <attribute>id</attribute> attribute</li>
+      <li>Event handlers</li>
+      <li>Event methods</li>
+      <li>The <attribute>classroot</attribute> attribute</li>
+      <li>Datapath children are created (datapath set using
+      <code>&lt;datapath xpath="<var>...</var>"&gt;</code>)</li>
+    </ul>
+    </li>
+    <li>Attributes with setters (<code>&lt;attribute name="foo"
+    value="0" setter="setfoo(foo)"
+    /&gt;</code>). <code>setfoo(0)</code> will be called before
+    initialization and before children are instantiated, but after you
+    have a parent and the attributes mentioned above applied)</li>
+  </ol>
+  </li>
+  <li><method>createChildren</method> is called with an
+  array of children with the superclass' children first (deepest
+  first). There are two options for how children are created:
+  synchronously and asynchronously. When whichever method is chosen
+  completes, <code>__LZinstantiationDone</code> will be called on this
+  instance.
+  <dl>
+    <dt><glossterm>Synchronous creation</glossterm></dt>
+    <dd>No other code can run
+      until all the children for this instance are created
+      <dl>
+        <dt><code>intstage="immediate"</code></dt>
+        <dd><code>new <var>classname</var>(<var>parent</var>, <var>args</var>, <var>children</var>, false)</code> or any
+        trailing args are omitted, e.g. <code>new classname(<var>parent</var>,
+        <var>args</var>)</code></dd>
+      </dl>
+    </dd>
+    <dt><glossterm>Asynchronous creation</glossterm></dt>
+    <dd>Children for this
+    instance will be put on the <classname>LzInstantiator</classname> queue and
+    created later.
+    <dl>
+      <dt><code>initstage="early"</code></dt>
+      <dt><code>initstage="normal"</code></dt>
+      <dd>Children will be created at high
+      priority</dd>
+      <dt><code>initstage="late"</code></dt>
+      <dd>Children will be created at low
+      priority</dd>
+      <dt><code>intstage="defer"</code></dt>
+      <dd>Children are not created until
+      <method>completeInstantiation</method> is called</dd>
+    </dl>
+    </dd>
+  </dl>
+  </li>
+  <li>After the children have been created, initialization will
+  happen if:
+  <ul>
+    <li><code>initstage="early"</code></li>
+    <li>The instance's <attribute>immediateparent</attribute> has already been initialized</li>
+    <li>The instance is the canvas</li>
+    <li>The <method>completeInstantiation</method> was called</li>
+  </ul>
+  otherwise initialization will be triggered by this instance's
+  <attribute>immediateparent</attribute> being initialized.
+  </li>
+  <li><glossterm>Initialization</glossterm>
+  <ol type="a">
+    <li>Resolve references:
+    <ol type="i">
+      <li><code>$once{...}</code></li>
+      <li><code>$always{...}</code></li>
+      <li><code>&lt;method event="<i>...</i>" reference="<i>...</i>"&gt;</code></li>
+    </ol>
+    </li>
+    <li>Initialize subviews that are not <code>initstage="late"</code> or
+    <code>initstage="defer"</code></li>
+    <li>Call the <method>init</method> method</li>
+    <li>Send the <event>oninit</event> event</li>
+  </ol>
+  </li>
+</ol>
+
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

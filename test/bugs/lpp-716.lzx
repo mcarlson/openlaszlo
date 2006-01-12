@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<canvas debug="true">
+    <constantlayout axis="x" value="20" />
+    <simplelayout inset="20" spacing="5" />
+    <text resize="true">Also enter Korean, Japanese, and Chinese text</text>
+    <inputtext id="foo" text="áéíóúñçäëïöü" width="400" bgcolor="gray"/>
+    <button id="bar" text="doit">
+        <method name="doClick" event="onclick">
+            var v = new Array;
+            v[0]=foo.getText();
+            echo.echo.parametro.value=v[0]; 
+            echo.echo.invoke ();
+            /*
+            echo.echo2.parametro.value=v; 
+            echo.echo2.invoke ();
+            */
+        </method>
+    </button>
+
+    <!-- Conexió JavaRPC y seguridad -->
+    <javarpc classname="org.openlaszlo.test.xmlrpc.Echo" name="echo" scope="session" 
+             loadoption="create" >
+        <method event="onerror" args="err">
+            Debug.write("----------");
+            Debug.write("onerror:", err);
+            canvas.error_alert.setAttribute('text',err);
+            canvas.error_alert.open ();
+        </method>
+        <!-- Inicio de llamada a datos -->
+        <method event="onload">
+            bar.doClick();
+        </method>
+        <remotecall funcname="echo">
+            <param name="parametro"/>
+            <method event="ondata" args="value">
+                Debug.write('echo:', value);
+            </method>
+            <method event="onerror" args="err">
+                Debug.write("........");
+                Debug.write("error1:", err);
+            </method>
+        </remotecall>
+        <remotecall funcname="echo2">
+            <param value="${'traerFicheros'}" />
+            <param name="parametro"/>
+            <method event="ondata" args="value">
+                Debug.write('echo2:', value);
+            </method>
+            <method event="onerror" args="err">
+                Debug.write("........");
+                Debug.write("error23:", err);
+            </method>
+        </remotecall>
+        <!-- Fin llamada a datos -->
+    </javarpc>
+    <security>
+        <allow>
+            <pattern>^org\.openlaszlo\.test\.xmlrpc\.Echo</pattern>
+        </allow>
+    </security>
+
+
+ <!-- conexin Java RPC para el ejb RolesEJB-->
+</canvas>
+

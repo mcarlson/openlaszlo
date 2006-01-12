@@ -1,0 +1,58 @@
+<library>
+
+
+  <class name="m0">
+    <view>
+      <view  >
+        <method event="doesnotmatter" />
+        <method event="doesntmatter"/>
+      </view>
+    </view>
+  </class>
+  
+  <class name="c0">
+    <method event="doesntmatter"/>
+  </class>
+
+<class name="c1">
+    <method event="doesnotmatter"/>
+    <method event="doesnotmatter"/>
+    <method event="doesnotmatter"/>
+</class>
+
+
+<class name="c2">
+    <method event="doesnotmatter" />
+    <method event="doesnotmatter" />
+    <method event="doesnotmatter" />
+    <method event="doesnotmatter"/>
+    <method event="doesnotmatter" />
+    <method event="doesnotmatter"/>
+</class>
+
+<class name="c3" >
+  <method event="doesnotmatter"/>
+    <method event="doesnotmatter" />
+    <method event="doesnotmatter" />
+    <method event="doesnotmatter" />
+</class>
+
+
+
+<class name="c4">
+    <myclass name="contents">
+      <view>
+        <method event="doesnotmatter" />
+      </view>
+      <method event="doesntmatter"/>
+    </myclass>
+  </class>
+
+
+<script>
+  Debug.write('snippet is all done loading');
+</script>
+
+
+
+</library>

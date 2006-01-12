@@ -1,0 +1,12 @@
+<canvas fontsize="22">
+    <inputtext onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"
+               width="400" >click me </inputtext>
+    <inputtext onfocus="this.setText( 'this.fixedsize = ' + this.fixedsize )"
+               width="400" height="35" >click me </inputtext>
+    <simplelayout/>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

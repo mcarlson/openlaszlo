@@ -1,0 +1,113 @@
+<canvas>
+<debug y="220"/>
+<dataset name="listdata1">
+    <item>one</item>
+    <item>two</item>
+    <item>three</item>
+    <item>four</item>
+    <item>five</item>
+</dataset>
+
+<dataset name="listdata2">
+    <item>one</item>
+    <item>two</item>
+    <item>three</item>
+    <item>four</item>
+    <item>five</item>
+    <item>six</item>
+    <item>seven</item>
+    <item>eight</item>
+    <item>nine</item>
+    <item>ten</item>
+</dataset>
+
+<dataset name="listdata3">
+    <item>one</item>
+    <item>two</item>
+    <item>three</item>
+    <item>four</item>
+    <item>five</item>
+    <item>six</item>
+    <item>seven</item>
+    <item>eight</item>
+    <item>nine</item>
+    <item>ten</item>
+</dataset>
+
+<class name="myitem" extends="baselistitem"
+    width="100" height="20"
+    bgcolor="${selected ? green : mycolor}"
+    onmouseout="this._mousein = false; setHilite(false)">
+    <attribute name="mycolor" value="0xffff99"/>
+
+    <method event="onmouseover" name="setHilite" args="ishilited">
+        if (ishilited == undefined) {
+            this._mousein = true;
+            ishilited = this._mousein;
+        }
+        this.setBGColor(this.selected ? green : (ishilited ? yellow : this.mycolor));
+    </method>
+</class>
+<text y="10" resize="true" width="${canvas.width}" multiline="true">
+    baselist test: each list has baselistitems which have light yellow bgcolor (0xffff99)
+    onmouseover or arrow, they change to light yellow.  If selected, the item appears green
+</text>
+<view y="50">
+    <simplelayout axis="x" inset="20" spacing="20"/>
+
+    <view layout="spacing:4">
+        <text>no dataoption</text>
+        <text>5 items</text>
+        <baselist id="mylist1">
+            <simplelayout/>
+            <myitem datapath="listdata1:/item">
+                <text datapath="text()"/>
+            </myitem>
+        </baselist>
+    </view>
+
+    <view layout="spacing:4">
+        <text>dataoption="lazy"</text>
+        <text>10 items, 4 visible</text>
+        <baselist id="mylist2" height="80" clip="true" dataoption="lazy">
+            <view id="v">
+                <simplelayout/>
+                <myitem datapath="listdata2:/item">
+                    <text datapath="text()"/>
+                </myitem>
+            </view>
+        </baselist>
+        <view layout="axis:y; spacing:10">
+            <button onclick="v.setY(Math.Max(-v.height+mylist.height, v.y-20))">scroll up</button>
+            <button onclick="v.setY(Math.Min(0, v.y+20))">scroll down</button>
+        </view>
+    </view>
+
+    <view layout="spacing:4">
+        <text>dataoption="resize"</text>
+        <text>10 items, 4 visible</text>
+        <baselist id="mylist3" height="80" clip="true" dataoption="resize">
+            <view id="v2">
+                <simplelayout/>
+                <myitem datapath="listdata3:/item">
+                    <text datapath="text()"/>
+                    <method event="onselected">
+                        if (this.selected) this.setHeight(40);
+                        else this.setHeight(20);
+                    </method>
+
+                </myitem>
+            </view>
+        </baselist>
+        <view layout="axis:y; spacing:10">
+            <button onclick="v2.setY(Math.Max(-v2.height+mylist2.height, v2.y-20))">scroll up</button>
+            <button onclick="v2.setY(Math.Min(0, v2.y+20))">scroll down</button>
+        </view>
+    </view>
+</view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

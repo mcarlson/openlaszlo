@@ -1,0 +1,14 @@
+<canvas debug="true">
+    <dataset name="ds1" type="http" src="twoheaders.jsp" />
+    <datapointer xpath="ds1:/*">
+        <method event="ondata">
+            Debug.write( "Date: " + ds1.getResponseHeader( 'date' ));
+            Debug.write( "xfoo: " + ds1.getResponseHeader( 'xfoo' ));
+        </method>
+    </datapointer>
+    <button onclick="ds1.doRequest()"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

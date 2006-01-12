@@ -1,0 +1,39 @@
+<canvas>
+    <drawview>
+        <method event="oninit">
+            this.beginPath();
+            this.arc(100, 55, 50, 0, 90);
+            this.arc(100, 5, 50, 90, 180);
+            this.arc(50, 5, 50, 180, 270);
+            this.arc(50, 55, 50, 270, 360);
+            this.oval(20, 120, 10);
+            this.oval(75, 120, 10, 40);
+            this.rect(10, 150, 50, 40, 10);
+            this.moveTo(100, 150);
+            this.quadraticCurveTo(150, 250, 200, 150);
+            this.strokeStyle = 0xff0000;
+            this.stroke();
+            this.closePath();
+        </method>
+    </drawview>
+    <drawview>
+        <method event="oninit">
+            this.beginPath();
+            this.rect(50, 5, 50, 50);
+            this.rect(10, 110, 20, 20);
+            this.rect(65, 80, 20, 80);
+            this.rect(10, 150, 50, 40);
+            this.moveTo(100, 100);
+            this.lineTo(100, 200);
+            this.moveTo(200, 150);
+            this.lineTo(100, 150);
+            this.stroke();
+            this.closePath();
+        </method>
+    </drawview>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

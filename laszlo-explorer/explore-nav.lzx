@@ -1,0 +1,241 @@
+<canvas width="200" height="605" bgcolor="0xeaeaea" debug="false">
+
+  <!-- Datasets -->
+  <dataset name="sinfo" src="http:explorer-nav.lzx?lzt=serverinfo" autorequest="true" />
+  <dataset name="navdata" src="nav.xml"/>
+
+  <!-- Included Libraries -->
+  <include href="base/basetree.lzx" />
+<!--  <include href="inspector/inspector.lzx" />-->
+
+  <include href="resources.lzx" />
+
+  <!-- Global Setup Script -->
+  <script>
+    var opened = new Array(4);
+  </script>
+
+  <!-- CLASSES -->
+
+  <!-- NavButton Class parent of all item buttons -->
+  <class name="menubutton" extends="basetree" xindent="0" yindent="${this.item.height}"
+    closechildren="true" closesiblings="true" layout="class:null">
+    <attribute name="level" type="number"/>
+    <attribute name="defaultplacement" value="itemlist" type="string"/>
+<!--    <attribute name="pos" value="$path{'position()'}"/>-->
+
+    <method event="oninit">
+        this.children.sendToBack();
+    </method>
+    <method name="openChildren" args="o">
+        //debug.write('openChildren', this, o, this.children.itemlist.subviews);
+        if (this.children.itemlist.subviews) {
+            var item_hgt = this.item.height;
+
+            this.itemlist.childlayout.setAttribute('hgt', item_hgt);
+            //debug.write("this.open = ",o,this.open,this);
+            if (o) {
+                this.itemlist.childlayout.setAttribute('spacing', -item_hgt);
+                this.itemlist.childlayout.setAttribute('inset', -item_hgt);
+                this.children.setVisible(true);
+                this.itemlist.childlayout.open.doStart();
+            } else {
+                this.itemlist.childlayout.close.doStart();
+            }
+        }
+    </method>
+
+    <view name="itemlist" width="${classroot.width}" placement="children" >
+        <simplelayout name="childlayout" spacing="-20">
+            <attribute name="hgt" value="0" />
+
+            <animatorgroup name="open" process="sequential" start="false">
+                <animator target="${classroot}" attribute="width" to="${160 + 7*(classroot.level+1)}"
+                    duration="100" relative="false"/>
+                <animatorgroup name="open" process="simultaneous" duration="250" start="false"
+                    onstop="classroot.onopendone.sendEvent()">
+                    <!-- note the spacing & inset to -6, since the shadow is 6 pixels high -->
+                    <animator attribute="inset" to="-6"
+                        start="false" relative="false"/>
+                    <animator attribute="spacing" to="-6"
+                        start="false"  relative="false"/>
+                </animatorgroup>
+            </animatorgroup>
+
+            <animatorgroup name="close"  process="sequential" start="false">
+                <animatorgroup name="items" process="simultaneous" duration="200"  start="false"
+                    onstop="classroot.children.setVisible(false);">
+                    <!-- note the spacing & inset from -6, since the shadow is 6 pixels high -->
+                    <animator attribute="spacing" to="${-parent.parent.parent.hgt}" from="-6"
+                        start="false"
+                        relative="false"/>
+                    <animator attribute="inset" to="${-parent.parent.parent.hgt}" from="-6"
+                        start="false"/>
+                </animatorgroup>
+                <animator target="${classroot}" attribute="width" to="${160 + 7*classroot.level}"
+                    duration="100" relative="false"/>
+            </animatorgroup>
+        </simplelayout>
+    </view>
+    <itembutton name="header" level="$once{classroot.level}" placement="item"
+       text="$once{classroot.name}" width="${classroot.width}"/>
+  </class>
+
+  <!-- ItemButton class the visible portion of navButtons -->
+  <class name="itembutton" placement="item" datapath="."
+    onmouseover="background.setResourceNumber(2)"
+    onmouseout="showUp()"
+    onmousedown="background.setResourceNumber(3)"
+    onmouseup="showUp()" clickable="true">
+    <attribute name="tagtype" value="$path{'name()'}"/>
+    <attribute name="params" value="$path{'@params'}"/>
+    <attribute name="popup" value="$path{'@popup'}"/>
+    <attribute name="tagline" value="$path{'@text'}"/>
+    <attribute name="title" value="$path{'@title'}"/>
+    <attribute name="src" value="$path{'@src'}"/>
+    <attribute name="action" value="$path{'@action'}"/>
+    <attribute name="target" value="$path{'@target'}"/>
+    <attribute name="autoselect" value="$path{'@autoselect'}"/>
+
+    <attribute name="infoOpen" value="false"/>
+    <attribute name="level" type="number"/>
+    <attribute name="resourceOffset" value="0" />
+    <attribute name="text" type="string"/>
+
+    <method event="ondata">
+        this.background.setResource(this.tagtype + "_btn");
+        if (this.tagtype == 'subitem') {
+             this.smalltext.apply();
+        } else {
+            this.largetext.apply();
+        }
+
+        if (this.action == 'popup' || this.action == 'source') {
+            icon.setResourceNumber(4);
+        }
+    </method>
+
+    <method event="onopendone" reference="classroot" name="doaction">  <![CDATA[
+        if (this.autoselect == "true") {
+            classroot.itemlist.subviews[0].header.open();
+        } else {
+              if (this.action=='popup'){
+                LzBrowser.loadURL('loading.jsp?src=' + this.popup + '&action=' + this.action + '&' + this.params,
+                      this.target=="" ? "_blank" : this.target);
+                if (this.src != null){
+                  LzBrowser.loadURL('content.jsp?src=' + this.src + '&tag=' + this.tagline +
+                                    '&title=' + this.title + '&' + this.params, 'content');
+                }
+              } else if (this.action=='source'){
+                  LzBrowser.loadURL('content.jsp?src=' + this.src + '&tag=' + this.tagline +
+                                '&title=' + this.title + '&action=source' + '&' + this.params, 'source');
+              } else {
+                if (this.title ==null){
+                   this.title = classroot.name;
+                }
+                LzBrowser.loadURL('content.jsp?src=' + this.src + '&tag=' + this.tagline +
+                                   '&title=' + this.title + '&action=' + this.action+ '&' + this.params, 'content');
+           }
+        }
+        ]]>
+    </method>
+    <method name="open" event="onclick">
+      <![CDATA[
+      global.opened[classroot.level]=classroot.name;
+      global.opened.length=classroot.level +1;
+      //debug.Write(global.opened.join("|"));
+      classroot.changeFocus();
+
+      // only open subitems if there are
+      if (this.tagtype != 'subitem' || this.datapath.getNodeCount() > 0) {
+        // only open menu if not already opened ( i.e don't toggle like before )
+        // if ( !classroot.open ) -- this did not completely work, so just always open
+        classroot.setAttribute("open", true);
+      } else {
+        this.doaction();
+      }
+      ]]>
+    </method>
+    <method event="onopen" reference="classroot" name="showUp">
+        background.setResourceNumber(classroot.open ? 4 : 1);
+        // Only toggle arrow if there are subnodes
+        if (this.datapath.getNodeCount()) {
+            icon.setResourceNumber(classroot.open ? 2 : 1);
+        }
+    </method>
+
+      <view  name="background"  width="${classroot.width}" x="${classroot.width-200}" />
+
+    <state name="largetext" apply="false">
+        <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
+          x="${classroot.width - this.width - 6 }" />
+        <text x="${6 + classroot.level*7}" y="3" font="itemfont" fgcolor="#ffffff"
+            fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
+    </state>
+    <state name="smalltext" apply="false">
+        <view name="icon" resource="icon" y="5" stretches="both" width="11" height="11"
+          x="${classroot.width - this.width - 6 }" />
+        <text x="${6 + classroot.level*7}" y="2" font="itemfont" fgcolor="#d4dcec"
+            fontsize="11" width="${parent.width-x}" text="${classroot.text}"/>
+    </state>
+  </class>
+
+    <class name="navbutton" extends="menubutton" width="${immediateparent.width}">
+        <attribute name="name" value="$path{'@name'}"/>
+    </class>
+
+  <!-- APPLICATION -->
+  <!-- navigation bar and classes -->
+  <view width="200" height="$once{canvas.height}" > 
+    <view x="-15" resource="navbg"/>
+    <basebutton resource="logobtn" x="2" y="6"
+        onclick="this.gotoWWW()">
+            <method name="gotoWWW">
+                LzBrowser.loadURL('javascript:window.open("http://www.openlaszlo.org","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); void(0);' );
+            </method>
+    </basebutton>
+    <view x="10" y="570" layout="axis:y">
+      <text resize="true" fgcolor="white" font="smallfont" fontsize="8" text="${'Version: ' + canvas.version}" />
+      <view>
+        <text fgcolor="white" font="smallfont" fontsize="8" text="Build: "/>
+        <text resize="true" fgcolor="white" font="smallfont" fontsize="8" datapath="sinfo:/*/@build"/>
+        <simplelayout axis="x"/>
+      </view>
+    </view>
+  </view>
+
+  <view width="200" y="42" height="${menu.height +4}">
+    <basetree name="menu" datapath="navdata:/menu"
+        showroot="false" x="2" y="2"
+        layout="spacing:-6">
+        <!-- note spacing is -6, since the shadonw is 6 pixels high -->
+      <method event="oninit" reference="canvas">
+        // this is how we restore the state of the app from an incoming URL, 
+        // this is always provided by the JSP wrappers 
+        var restore = new Array(); 
+        if (typeof(global.bookmark) != 'undefined'){
+          restore = global.bookmark.split('|');
+          this[restore[0]].header.open();
+          this[restore[0]][restore[1]].header.open();
+          this[restore[0]][restore[1]][restore[2]].header.open();
+          this[restore[0]][restore[1]][restore[2]][restore[3]].header.open();
+        }
+      </method>
+      <navbutton width="160" datapath="*" level="0">
+        <navbutton datapath="*" level="1">
+          <navbutton datapath="*" level="2">
+            <navbutton datapath="*" level="3">
+            </navbutton>
+          </navbutton>
+        </navbutton>
+      </navbutton>
+    </basetree>
+  </view>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

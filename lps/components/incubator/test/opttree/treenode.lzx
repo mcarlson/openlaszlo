@@ -1,0 +1,48 @@
+<!-- sample tree node implementation; inherits baseopttreenode-->
+<library>
+    <include href="resources.lzx"/>
+    <include href="incubator/opttree/baseopttreenode.lzx"/>
+    
+    <class name="treenode" extends="baseopttreenode">
+        <view resource="folder" frame="${ classroot.open ? 2 : 1 }"/>
+
+        <attribute name="mousein" value="false"/>
+
+        <attribute name="bgcolor" value="${ mousein ? 0xCCCCEE  :
+                                            ( highlight ? 0xEECCCC : null ) }"/>
+
+        <text name="label" x="22" datapath="@name"/>
+
+        <method event="onmouseover">
+            this.setAttribute( "mousein", true );
+        </method>
+
+        <method event="onmouseout">
+            this.setAttribute( "mousein", false );
+        </method>
+
+        <method name="setSelected" args="s">
+            label.setAttribute( "fgcolor", s ? red : black );
+        </method>
+
+        <method event="onclick">
+            <![CDATA[ 
+            parent.setOpen( datapath.p, !open );
+            ]]>
+        </method>
+
+        <method event="onopen">
+            <![CDATA[ 
+            if ( !open ) return;
+            var p = datapath.p;
+            if ( !p ) return;
+            var cn = p.childNodes;
+            parent.select( this );
+            if ( !cn || !cn.length ){
+                gDataMan.loadAdditionalTreeData( p );
+            }
+            ]]>
+        </method>
+
+    </class>
+</library>

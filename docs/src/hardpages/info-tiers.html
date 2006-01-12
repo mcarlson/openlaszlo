@@ -1,0 +1,203 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html>
+<head>
+<title>Tiers</title>
+
+<link rel="STYLESHEET" type="text/css" href="./styles.css"/>
+
+</head>
+
+<body>
+
+<!-- lz_content_start -->
+
+
+
+<div align="center"><img src="./logo.gif" width="100" height="125" border="0" alt="Laszlo Systems" /></div>
+
+<h1>Tiers</h1>
+
+<p>LZX is divided into tiers ranging from the very core features to the component sets. In general, elements in higher tiers are built using elements from the lower tiers.</p>
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+
+<a name="Language_Tags"></a>
+<h3>Language Tags</h3>
+<p>These tags define the structure of a Laszlo application.  The
+<tagname link="true">canvas</tagname>, <tagname
+link="true">library</tagname>, and <tagname
+link="true">include</tagname> tags define the structure of a Laszlo
+application.  The <tagname link="true">font</tagname> and <tagname
+link="true">resource</tagname> tags defines resources that are
+included in the application and are available as view attributes (the
+<attribute classname="view">font</attribute> and <attribute
+classname="view">resource</attribute> attributes, respectively).  The
+<tagname link="true">class</tagname>, <tagname
+link="true">attribute</tagname>, and <tagname
+link="true">method</tagname> tags are used to define and customize
+tags, and the <tagname link="true">attribute</tagname> and <tagname
+link="true">method</tagname> tags are also used to customize the
+appearance and behavior of instances that are created from both
+builtin and custom tags.</p>
+
+<p>Tags in this tier don't have a corresponding JavaScript class.</p>
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+
+<a name="Laszlo_Foundation_Classes"></a>
+<h3>Laszlo Foundation Classes</h3>
+
+<p>These are the names of classes that are built into the client
+framework.  Names that begin with <code>Lz</code> are only available
+from script code.  Other classes are available both as tag names,
+without the <code>Lz</code> prefix, and as JavaScript class names,
+with the <code>Lz</code> prefix.  (These names are shown without the
+prefix.)</p>
+
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Text_Markup"></a>
+<h3>Text Markup</h3>
+
+<p>Tags that mark up HTML text.  These tags may be used within a
+<tagname link="true">text</tagname> element, tags that extend this
+tag, and tags whose definition includes a definition for
+<code>&lt;attribute name="text" type="html"/&gt;</code>.  (See the
+documentation on <a href="class.html#text-classes">Text Classes</a>
+for more information about this last category.)</p>
+
+<p>The text markup classes are:</p>
+<dl>
+<dt><tagname link="true">a</tagname></dt><dd>Encloses hypertext link.</dd>
+<dt><tagname link="true">b</tagname></dt><dd><b>Bold</b> character markup.</dd>
+<dt><tagname link="true">br</tagname></dt><dd>A line break.</dd>
+<dt><tagname link="true">font</tagname></dt><dd>Sets the font, fontface, and color of its contents</dd>
+<dt><tagname link="true">i</tagname></dt><dd><i>Italic</i> character markup.</dd>
+<dt><tagname link="true">p</tagname></dt><dd>Encloses a paragraph.</dd>
+<dt><tagname link="true">pre</tagname></dt><dd>Encloses preformatted text.</dd>
+<dt><tagname link="true">u</tagname></dt><dd><u>Underlined</u> character markup.</dd>
+</dl>
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Laszlo_Components"></a>
+<h3>Laszlo Components</h3>
+
+<p>Components in the Laszlo components library.  These tags can be used
+to build to web applications.</p>
+
+<p>An application can include the entire set of Laszlo components by
+including the line <span class="code">&lt;include
+href="base"/&gt;</span>.  An application can include individual Laszlo
+components by including just the files that define those components.
+The Laszlo components are included automatically if an application
+refers to them but does not define or include them; see <a
+href="include.html#autoinclude">here</a> for a discussion of implicit
+inclusion.</p>
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Base_Components"></a>
+<h3>Base Components</h3>
+
+<p>Components in the Base components library.  These tags can be used
+to build custom components using the <tagname
+include="true">class</tagname> tag.</p>
+
+<p>An application can include the entire set of Base components by
+including the line <span class="code">&lt;include
+href="base"/&gt;</span>.  An application can include individual Base
+components by including just the files that define those components.
+The Base components are included automatically if an application
+refers to them but does not define or include them; see <a
+href="include.html#autoinclude">here</a> for a discussion of implicit
+inclusion.</p>
+
+<p>The <a href="#Laszlo_Components">Laszlo component set</a> extends
+the Base components with a specific look and feel.</p>
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Utility_Components"></a>
+<h3>Utility Components</h3>
+<p>Components in the Utility component set.  These include custom layouts, and tags that add resizing and dragging behavior to components.</p>
+
+<p>An application can include the entire set of Utility components by
+including the line <span class="code">&lt;include
+href="utils"/&gt;</span>.  An application can include individual
+Utility components by including just the files that define those
+components.  The Utility components are included automatically if an
+application refers to them but does not define or include them; see <a
+href="include.html#autoinclude">here</a> for a discussion of implicit
+inclusion.</p>
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Redmond_Components"></a>
+<h3>Redmond Components</h3>
+<p>Note: The Redmond library is deprecated.  These components will be
+removed from a future release.</p>
+
+<p>Components in the Redmond library.  These are the window tag, and standard controls such as button and checkbox, with a familiar appearance.  These can be included by including the line <span class="code">&lt;include href="redmond"/&gt;</span> in an application.</p>
+
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Development_Components"></a>
+<h3>Development Components</h3>
+<p>Components intended for use during application development.  These include tags for writing unit tests, which can be included by including <span class="code">&lt;include href="lzunit"/&gt;</span> in an application.  Another development component, the debugger, is not listed here but can be included by including a debug attribute on the canvas tag.</p>
+
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+<a name="Services"></a>
+<h3>Services</h3>
+<p>Runtime services available to JavaScript code. Services are always available by their api name, and do not get instantiated, e.g.</p>
+
+<pre class="code" extract="false">
+    LzBrowser.loadURL( 'http://www.laszlosystems.com' );
+</pre>
+
+
+
+
+
+<hr size="1" bgcolor="#e5e5e5" />
+<br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br />
+<br /> <br /> <br /> <br /> <br /> <br />
+
+
+
+
+
+<!-- lz_content_end -->
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

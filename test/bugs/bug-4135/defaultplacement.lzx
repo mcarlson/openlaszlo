@@ -1,0 +1,17 @@
+<!-- This should result in a compiler error. -->
+
+<canvas>
+  <?lzc class="c1" inline-only="true"?>
+  
+  <class name="c1" defaultplacement="content">
+    <view name="content"/>
+  </class>
+  
+  <c1>
+    <view/>
+  </c1>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,685 @@
+<html id="window-tutorial" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Window Tutorial</title>
+</head>
+
+<body>
+
+<h1>Window Tutorial</h1>
+<h2>Introduction</h2>
+  <fixme>
+Put in links to Peter's components guide
+</fixme>
+<p>This tutorial shows you how to make a window similar to the windows used in our Dashboard demo.</p>
+
+<img class="screenshot" src="img/d_t_window_1.jpg" alt="The window" width="300" height="242"/>
+
+
+<h2><a name="viz"></a>Designing the window visually</h2>
+
+<p>Before we begin to code, let's consider what a window is. Essentially it's a collection of views, some of which are flexible in size, and others fixed. To break it down even more, think of it as three rows:</p>
+
+<img class="illustration" src="img/d_t_window_2.jpg" alt="Breakdown of a window into three rows" width="300" height="242"/>
+
+<p>In the <em>top row</em>, the left and right corners remain a fixed size, while the center bar stretches to fill the width of the window.</p>
+
+<p>In the <em>body</em> area, this pattern is repeated, only the left and right edges are much thinner than the left and right corners of the top row.</p>
+
+<p>Again, this pattern is repeated for the <em>bottom row</em>.</p>
+
+<p>The following diagram should make this clear.</p>
+
+<img class="illustration" src="img/d_t_window_3.jpg" alt="What parts of the window stretch" width="300" height="242"/>
+
+<p>Now let's look at the positioning of the elements. As we shall see, this step is <i>not necessary</i>, because Laszlo provides a shortcut, but it will help to understand views.</p>
+
+<p><i>In the top row</i>, the fist element (the "Media" part) is located at x=0 (the left hand edge). So when does the second element start (the part that stretches)? It's x-coordinate is going to be the width of the first element. And the x-coordinate of the third element is the width of itself from the <i>right hand</i> edge of the window.</p>
+
+<example extract="false">
+&lt;canvas width="800" height="600"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+
+    &lt;simplelayout axis="y"/&gt;
+
+    &lt;view name="topRow"&gt;
+      &lt;view name="topLeft"/&gt;
+      &lt;view name="topCenter"/&gt;
+      &lt;view name="topRight"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="body"&gt;
+      &lt;view name="leftSide"/&gt;
+      &lt;view name="content"/&gt;
+      &lt;view name="rightSide"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"&gt;
+      &lt;view name="bottomLeft"/&gt;
+      &lt;view name="bottomCenter"/&gt;
+      &lt;view name="bottomRight"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Not surprisingly, there is nothing to see in the output. We haven't added any art assets yet. You can use the ones we supply, or feel free to design your own.</p>
+
+<p>Notice how we made the whole window clickable? That's because if we made only some parts of the window clickable, clicks would go <i>through</i> the window, and could register with something visually below it. The <tagname>simplelayout</tagname> tag ensures that the rows will stack vertically.</p>
+
+<img class="screenshot" src="img/d_t_window_4.jpg" alt="Nothing" width="300" height="240"/>
+
+<example title="Using &lt;simplelayout&gt; to position art">
+&lt;canvas width="800" height="400"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+    
+    &lt;simplelayout axis="y"/&gt;
+    
+    &lt;view name="topRow"&gt;
+      &lt;view name="topLeft" <em>resource="../img/media_win_top_left.swf"</em>/&gt;
+      &lt;view name="topCenter" <em>resource="../img/media_win_top.swf"</em>/&gt;
+      &lt;view name="topRight" <em>resource="../img/media_win_top_right.swf"</em>/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="body"&gt;
+      &lt;view name="leftSide" <em>resource="../img/media_win_side.swf"</em>/&gt;
+      &lt;view name="content"&gt;
+        &lt;text&gt;Hello, World!&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view name="rightSide" <em>resource="../img/media_win_side.swf"</em>/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"&gt;
+      &lt;view name="bottomLeft" <em>resource="../img/media_win_bottom_left.swf"</em>/&gt;
+      &lt;view name="bottomCenter" <em>resource="../img/media_win_bottom.swf"</em>/&gt;
+      &lt;view name="bottomRight" 
+        <em>resource="../img/media_win_bottom_right.swf"</em>/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+
+
+</example>
+
+<p>OK that doesn't look great, but the art assets ar e all in there, the views are named, so we're ready to go!</p>
+
+<p>Recall that we said that the x-coordinate of the <i>topCenter</i> view was the width of the <i>topLeft</i> view? We're going to use that principle right in the x-attributes of the views.</p>
+
+<example title="Setting x attributes">
+&lt;canvas width="800" height="100"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+
+    &lt;simplelayout axis="y"/&gt;
+
+    &lt;view name="topRow"
+             <em>width="${parent.width}"</em>&gt;
+      &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+            x="0" y="0"/&gt;
+      &lt;view name="topCenter" resource="../img/media_win_top.swf"
+            <em>x="${parent.topLeft.width}"</em>
+            <em>width="${parent.width - parent.topLeft.width
+                                                   - parent.topRight.width}"
+            stretches="width"</em>/&gt;
+      &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+            <em>x="${parent.width - this.width}"</em>/&gt;
+    &lt;/view&gt;
+
+    &lt;!-- Body &amp; Bottom Row commented out for clarity
+    &lt;view name="body"&gt;
+      &lt;view name="leftSide" resource="../img/media_win_side.swf"/&gt;
+      &lt;view name="content"&gt;
+        &lt;text&gt;Hello, World!&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view name="rightSide" resource="../img/media_win_side.swf"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"&gt;
+      &lt;view name="bottomLeft" resource="../img/media_win_bottom_left.swf"/&gt;
+      &lt;view name="bottomCenter" resource="../img/media_win_bottom.swf"/&gt;
+      &lt;view name="bottomRight" 
+              resource="../img/media_win_bottom_right.swf"/&gt;
+    &lt;/view&gt;
+     --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>One thing we forgot about was the change the y value for the <varname>topCenter</varname> and <varname>topRight</varname> views: They are both shorter than the first one (by 10px), so we can just give them both a y-value of 10. We could be really clever and give them a dynamic y-value, but that's not really necessary here.</p>
+
+<p>Since the center view is variable width, we needed to allow it to stretch its resource, by adding the <code>stretches="width"</code> attribute to the view. We won't see any results from this right now, but when we move on to resizing the window, the effect will become apparent.</p>
+
+<p>We also had to set its width to be dependant on the widths of its neigboring two views, and that of its parent. There is no need to specify the widths of <varname>topLeft</varname> or <varname>topRight</varname>, as they shall take on the widths of their resources.</p>
+
+<example title="Stretchable widths">
+&lt;canvas width="800" height="100"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+
+    &lt;simplelayout axis="y"/&gt;
+
+    &lt;view name="topRow"
+          width="${parent.width}"&gt;
+      &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+            x="0" y="0"/&gt;
+      &lt;view name="topCenter" resource="../img/media_win_top.swf"
+            x="${parent.topLeft.width}" <em>y="10"</em>
+            width="${parent.width - parent.topLeft.width
+                   - parent.topRight.width}"
+            stretches="width"/&gt;
+      &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+            x="${parent.width - this.width}" <em>y="10"</em>/&gt;
+    &lt;/view&gt;
+
+    &lt;!-- Body &amp; Bottom Row commented out for clarity
+    &lt;view name="body"&gt;
+        ...
+    &lt;/view&gt;
+     --&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>That's fixed now. </p>
+
+<p>The system we used to constrain the elements of the top of the view together is not actually necessary in this case. The idea of three neighboring views, where the outer two are fixed width, and the center one stretches is very common, so Laszlo allows for a shorthand way of doing that. For the body and bottom row, we shall be using this shorthand system, but you are encouraged to use it whenever possible, because it is faster.</p>
+
+<example title="Constraining widths">
+&lt;canvas width="800" height="400"&gt;
+  &lt;view name="mediaWindow"
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+
+    &lt;simplelayout axis="y"/&gt;
+
+    &lt;view name="topRow"
+          width="${parent.width}"&gt;
+      &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+            x="0" y="0"/&gt;
+      &lt;view name="topCenter" resource="../img/media_win_top.swf"
+            x="${parent.topLeft.width}" y="10"
+            width="${parent.width - parent.topLeft.width
+                   - parent.topRight.width}"
+            stretches="width"/&gt;
+      &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+            x="${parent.width - this.width}" y="10"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="body"
+          <em>width="${parent.width}"</em>&gt;
+      &lt;view name="leftSide" resource="../img/media_win_side.swf"/&gt;
+      &lt;view name="content"&gt;
+          &lt;text&gt;Hello, World!&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view name="rightSide" resource="../img/media_win_side.swf"/&gt;
+      <em>&lt;stableborderlayout axis="x"/&gt;</em>
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"
+          <em>width="${parent.width}"</em>&gt;
+      &lt;view name="bottomLeft" resource="../img/media_win_bottom_left.swf"/&gt;
+      &lt;view name="bottomCenter" resource="../img/media_win_bottom.swf"
+            stretches="width"/&gt;
+      &lt;view name="bottomRight" 
+            resource="../img/media_win_bottom_right.swf"/&gt;
+      <em>&lt;stableborderlayout axis="x"/&gt;</em>
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The shorthand method in question is the tag <code>stableborderlayout</code>. It takes one attribute, <attribute>axis</attribute> which determines which way to space the elements. It has an optional spacing attribute too, but we're not using that right now.</p>
+
+<p>Note that it is recommended to put layouts (<classname>simpleborderlayout</classname> and <classname>stableborderlayout</classname>) at the end of the view tags they affect.</p>
+
+<p>Our window appears too big, even though we've set its size in the <tagname>view</tagname> tag. This is because we haven't yet told it to stretch (or in this particular case, compress) the art assets.</p>
+
+<example title="completing the layout">
+&lt;canvas width="800" height="250"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+
+    &lt;view name="topRow"
+          width="${parent.width}"&gt;
+      &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+            x="0" y="0"/&gt;
+      &lt;view name="topCenter" resource="../img/media_win_top.swf"
+            x="${parent.topLeft.width}" y="10"
+            width="${parent.width - parent.topLeft.width
+                   - parent.topRight.width}"
+            stretches="width"/&gt;
+      &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+            x="${parent.width - this.width}" y="10"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="body"
+          width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+
+      &lt;view name="leftSide" resource="../img/media_win_side.swf"
+            <em>height="${parent.height}"
+            stretches="height"</em>/&gt;
+      &lt;view name="content"
+            <em>height="${parent.height}"
+            bgcolor="#BB95C0"</em>&gt;
+          &lt;text&gt;Hello, World!&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view name="rightSide" resource="../img/media_win_side.swf"
+            <em>height="${parent.height}"
+            stretches="height"</em>/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"
+          width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+      &lt;view name="bottomLeft" resource="../img/media_win_bottom_left.swf"/&gt;
+      &lt;view name="bottomCenter" resource="../img/media_win_bottom.swf"
+            stretches="width"/&gt;
+      &lt;view name="bottomRight" 
+            resource="../img/media_win_bottom_right.swf"/&gt;
+    &lt;/view&gt;
+    <em>&lt;stableborderlayout axis="y"/&gt;</em>
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>We had to set the views to stretch, and set their heights to their parent view, in this case, <varname>body</varname>. The body height is now governed by the <tagname>stableborderlayout</tagname> tag, which replaces the old <tagname>simplelayout</tagname> tag. Note that its axis is now set to y.</p>
+
+
+<h2><a name="draggable" id="draggable"></a>Making the window draggable.</h2>
+
+<p>For the purposes of this exercise, we are going to make this window draggable by its menubar; just like the <tagname>window</tagname> component.</p>
+
+<p>It's important to understand mouse events for this. When something is dragged, two mouse events happen: <em>First</em> the mouse is pressed down (not <em>clicked</em> &#x2014; clicked is down, then up), <em>second</em> the mouse is lifted up. So in short what we shall be doing is listening for the mouse to go down (on the menu), at which point we will move the window relative to the current mouse position. Then when we hear that the mouse has gone back up, we will stop repositioning the window.</p>
+
+<example title="Making window Draggable">
+&lt;canvas width="800" height="200"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+    <em>&lt;dragstate name="dragger"/&gt;</em>
+
+    &lt;view name="topRow"
+          width="${parent.width}"&gt;
+      &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+            x="0" y="0"
+            <em>onmousedown="parent.parent.dragger.apply();"
+            onmouseup="parent.parent.dragger.remove();"</em>/&gt;
+      &lt;view name="topCenter" resource="../img/media_win_top.swf"
+            x="${parent.topLeft.width}" y="10"
+            width="${parent.width - parent.topLeft.width
+                   - parent.topRight.width}"
+            stretches="width"
+            <em>onmousedown="parent.parent.dragger.apply();"
+            onmouseup="parent.parent.dragger.remove();"</em>/&gt;
+      &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+            x="${parent.width - this.width}" y="10"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="body"
+          width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+
+      &lt;view name="leftSide" resource="../img/media_win_side.swf"
+            height="${parent.height}"
+            stretches="height"/&gt;
+      &lt;view name="content"
+            height="${parent.height}"
+            bgcolor="#BB95C0"&gt;
+          &lt;text&gt;Hello, World!&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view name="rightSide" resource="../img/media_win_side.swf"
+            height="${parent.height}"
+            stretches="height"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"
+          width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+      &lt;view name="bottomLeft" resource="../img/media_win_bottom_left.swf"/&gt;
+      &lt;view name="bottomCenter" resource="../img/media_win_bottom.swf"
+            stretches="width"/&gt;
+      &lt;view name="bottomRight" 
+            resource="../img/media_win_bottom_right.swf"/&gt;
+    &lt;/view&gt;
+    &lt;stableborderlayout axis="y"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+
+</example>
+
+<p>We're using the <tagname>dragstate</tagname> component here. This is an extension of a LZX concept we have not covered yet, namely a <glossterm>state</glossterm>. A state is a predefined set of instructions as to how a view behaves when it is applied. The <tagname>dragstate</tagname> tag ensures that the view follows the mouse. Notice how the <varname>mediaWindow</varname> view has the dragstate (because the whole thing is being dragged), and not the menu bar.</p>
+
+
+
+<h2><a name="resizable" id="resizable"></a>Making the window resizable.</h2>
+
+<p>We're going to make this window resizable by its bottom-right hand corner. (For this example, we're not doing the full job of making the window resize by grabbing any edge. When the mouse is pressed, that's when we're going to start taking readings at regular intervals, and adjusting the size of the window accordingly. When the mouse is lifted back up, that's when we're going to stop adjusting the size of the window.</p>
+
+<p>We shall need three methods:</p>
+<dl>
+  <dt><method>startResize</method></dt>
+  <dd>called when the mouse is pressed down (<event>onmousedown</event> event).</dd>
+  <dt><method>adjustSize</method></dt>
+  <dd>called repeatedly when the mouse is depressed. To achieve this <i>idle</i> repetition, we will create a <i>delegate</i> that is called every <event>onidle</event> &#x2026; every frame.</dd>
+  <dt><method>stopResize</method></dt>
+  <dd>called when the mouse is lifted up (<event>onmouseup</event> event).</dd>
+</dl>
+
+<p>The delegate will be set in <method>startResize</method>. The new
+dimensions of the window are dependant on the distance of the mouse
+from the top-right corner of the window. However we need to include an
+offset too:</p>
+
+<img class="illustration" src="img/d_t_window_12.jpg" alt="How the window will be resized" width="300" height="242"/>
+
+<p>In the diagram, at position 1, the user presses down on the mouse. So at position 2, the width of the window will be set to the distance from the origin of the window view, or <varname>newX</varname>. Remember that <varname>newX</varname> is relative to the origin of the window view, <em>not</em> the canvas. However when the mouse is depressed, it's not <em>exactly</em> at the edge of the window - it's a few pixels in from the right hand edge (offsetX). So if we fail to add those few pixels to the new width, the corner of the window will be getting dragged by the very edge (as shown in the diagram). This would feel odd. The same goes for the y-axis.</p>
+
+<p>Therefore we need to record the offsets (x and y) when the  mouse is depressed. We can't just create variables, because the method that will handle the resizing (<method>adjustSize</method>, see above) will not be the same as the method that is called when the mouse is depressed. So the solution is to assign the offsets as properties of the window every time the window is set.</p>
+
+<example title="Using &lt;dragstate&gt;">
+&lt;canvas width="800" height="300"&gt;
+  &lt;view name="mediaWindow"
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+    &lt;dragstate name="dragger"/&gt;
+
+    &lt;view name="topRow"
+          width="${parent.width}"&gt;
+      &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+            x="0" y="0"
+            onmousedown="parent.parent.dragger.apply();"
+            onmouseup="parent.parent.dragger.remove();"/&gt;
+      &lt;view name="topCenter" resource="../img/media_win_top.swf"
+            x="${parent.topLeft.width}" y="10"
+            width="${parent.width - parent.topLeft.width
+                   - parent.topRight.width}"
+            stretches="width"
+            onmousedown="parent.parent.dragger.apply();"
+            onmouseup="parent.parent.dragger.remove();"/&gt;
+      &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+            x="${parent.width - this.width}" y="10"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="body"
+          width="${parent.width}"&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+
+      &lt;view name="leftSide" resource="../img/media_win_side.swf"
+            height="${parent.height}"
+            stretches="height"/&gt;
+      &lt;view name="content"
+            height="${parent.height}"
+            bgcolor="#BB95C0"&gt;
+          &lt;text&gt;Hello, World!&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view name="rightSide" resource="../img/media_win_side.swf"
+            height="${parent.height}"
+            stretches="height"/&gt;
+    &lt;/view&gt;
+
+    &lt;view name="bottomRow"
+          width="${parent.width}"&gt;
+      &lt;view name="bottomLeft" resource="../img/media_win_bottom_left.swf"/&gt;
+      &lt;view name="bottomCenter" resource="../img/media_win_bottom.swf"
+            stretches="width"/&gt;
+      &lt;view name="bottomRight" resource="../img/media_win_bottom_right.swf"
+            <em>onmousedown="parent.parent.startResize();"
+            onmouseup="parent.parent.stopResize();"</em>/&gt;
+      &lt;stableborderlayout axis="x"/&gt;
+    &lt;/view&gt;
+    &lt;stableborderlayout axis="y"/&gt;
+
+    <em>&lt;method name="startResize"&gt;
+      // set distances from right and bottom edges
+      this.resizeOffsetX = this.getAttribute('width') 
+                           - this.getMouse('x');
+      this.resizeOffsetY = this.getAttribute('height') 
+                           - this.getMouse('y');
+
+      if (!this.getAttribute('sizerDel')) {
+        this.sizerDel = new LzDelegate(this, 'adjustSize', 
+                                       LzIdle, 'onidle');
+      }
+    &lt;/method&gt;
+
+    &lt;method name="adjustSize"&gt;
+      var newWidth = this.getMouse('x') + this.resizeOffsetX;
+      var newHeight = this.getMouse('y') + this.resizeOffsetY;
+
+      this.setAttribute('width', newWidth);
+      this.setAttribute('height', newHeight);
+    &lt;/method&gt;
+
+    &lt;method name="stopResize"&gt;
+      this.sizerDel.unregisterAll();
+      this.sizerDel = null;
+    &lt;/method&gt;</em>
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<p>First we assign the offset properties to the window. Next, we create the delegate (testing first to make sure it does not already exist). The delegate becomes a attribute of the window (<code>this.sizerDel = new...</code>). When we create a delegate, we have to pass it the context (<code>this</code>), the method to call (<method>adjustSize</method>), the event sender (<classname>LzIdle</classname>) and the event name (<event>onidle</event>).</p>
+<p>This translates to something like: "Every time the <classname>LzIdle</classname> service publishes an
+ <event>onidle</event> event, call the <method>adjustSize</method> method as if it were called from <code>this</code>".</p>
+
+
+
+<p>Later, we clear this delegate by calling the <method>unregisterAll</method> method, and setting the delegate to null, so that it will evaluate to false next time we do the <code>if (!this.getAttribute('sizerDel'))</code> test.</p>
+
+<p>The window resizes smoothly, but as you can see, strange things can happen when the window is resized quickly. This is because the sizes of some of the elements get set to a negative value, causing our window to break. Also, it's possible to completely invert the window.</p>
+
+<p>The simple solution is to have a minimum height and width for the window. The way to do this is to set attributes of the window tag, and then test to see if the window should still be resized.</p>
+
+
+<example extract="false">
+&lt;canvas width="800" height="600" debug="true"&gt;
+  &lt;view name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+    <em>&lt;attribute name="minWindowWidth" value="150"/&gt;
+    &lt;attribute name="minWindowHeight" value="60"/&gt;</em>
+
+    ... Top two rows removed for clarity ...
+
+    &lt;method name="adjustSize"&gt;
+    <em>&lt;![CDATA[</em>
+      var newWidth = this.getMouse('x') + this.resizeOffsetX;
+      var newHeight = this.getMouse('y') + this.resizeOffsetY;
+      <em>if (newWidth &gt; this.minWindowWidth) {
+        this.setAttribute('width', newWidth);
+      }
+      if (newHeight &gt; this.minWindowHeight) {
+        this.setAttribute('height', newHeight);
+      }</em>
+    <em>]]&gt;</em>
+    &lt;/method&gt;
+
+    &lt;method name="stopResize"&gt;
+      this.sizerDel.unregisterAll();
+      this.sizerDel = null;
+    &lt;/method&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The key differences here are that we've added the attribute tags, and the change to the <method>adjustSize</method> method that checks to see that the window is not smaller than it should be. Note the use of<code>CDATA</code>, which allow the use of <code>&amp;gt;</code> and <code>&amp;lt;</code> in the method.</p>
+
+<note>Just like the <tagname>dragstate</tagname> tag, LZX has a <tagname>resizestate</tagname> component that makes resizing views a breeze. The reason we didn't use it here was to show how you can have manual control over views using delegates, and also because in order to achieve minimum/maximum constraints we would have to overwrite the <tagname>resizestate</tagname> class, which introduces too many concepts in one go.</note>
+
+<h2><a name="class" id="class"/>Reusing the window (turning it into a class)</h2>
+
+<p>Should we need more windows like this one, we could of course write all new view tags for them, but that would take forever, and is completely unnecessary. We can reuse the common features of this window instead, by changing it from a view to a class.</p>
+
+<p>So what needs to be changed?</p>
+
+<code>view name="mediaWindow" ...</code>
+<p>will change to</p>
+<code>class name="mediaWindow" ...</code>
+
+<p>And in future, the name <varname>mediaWindow</varname> will be used to instantiate the class.</p>
+
+
+<h3>'parent' addressing</h3>
+
+<p>So far we've been using <code>parent</code> to mean the view that's superior to the current one but with classes, this changes.</p>
+
+<example extract="false">
+&lt;class name="mediaWindow"&gt;
+  &lt;view name="myView"/&gt;
+&lt;/class&gt;
+
+&lt;mediaWindow name="myInstance"&gt;
+  &lt;view name="myPlacedView" placement="myView"/&gt;
+&lt;/mediaWindow&gt;
+</example>
+
+<p>In the snippet of code above, we have defined the <classname link="false">mediaWindow</classname> class, then instantiated it. This means that <varname>myInstance</varname> contains a view named myView. When we instantiate <classname>mediaWindow</classname>, we can pass it a view, and tell that view where to go. That's exactly what we're doing with <varname>myPlacedView</varname>. <varname>myPlacedView</varname>'s <code>parent</code> is the <classname>mediaWindow</classname>'s <varname>myView</varname>, whereas its <code>immediateparent</code> is <varname>myInstance</varname>.</p>
+
+<example title="Completed window">
+&lt;canvas width="800" height="400"&gt;
+  &lt;<em>class</em> name="mediaWindow" 
+        x="10" y="10"
+        width="200" height="150" 
+        clickable="true"&gt;
+      &lt;dragstate name="dragger"/&gt;
+      &lt;attribute name="minWindowWidth" value="150"/&gt;
+      &lt;attribute name="minWindowHeight" value="60"/&gt;
+
+      &lt;view name="topRow"
+            width="${parent.width}"&gt;
+        &lt;view name="topLeft" resource="../img/media_win_top_left.swf"
+              x="0" y="0"
+              onmousedown="parent.parent.dragger.apply();"
+              onmouseup="parent.parent.dragger.remove();"/&gt;
+        &lt;view name="topCenter" resource="../img/media_win_top.swf"
+              x="${parent.topLeft.width}" y="10"
+              width="${parent.width - parent.topLeft.width
+                     - parent.topRight.width}"
+              stretches="width"
+              onmousedown="parent.parent.dragger.apply();"
+              onmouseup="parent.parent.dragger.remove();"/&gt;
+        &lt;view name="topRight" resource="../img/media_win_top_right.swf"
+              x="${parent.width - this.width}" y="10"/&gt;
+      &lt;/view&gt;
+
+      &lt;view name="body"
+            width="${parent.width}"&gt;
+
+        &lt;view name="leftSide" resource="../img/media_win_side.swf"
+              height="${parent.height}"
+              stretches="height"/&gt;
+        &lt;view name="content"
+              height="${parent.height}"
+              bgcolor="#BB95C0"&gt;
+            &lt;!-- This is where content will go --&gt;
+        &lt;/view&gt;
+        &lt;view name="rightSide" resource="../img/media_win_side.swf"
+                                      height="${parent.height}"
+              stretches="height"/&gt;
+        &lt;stableborderlayout axis="x"/&gt;
+      &lt;/view&gt;
+
+      &lt;view name="bottomRow"
+            width="${parent.width}"&gt;
+        &lt;view name="bottomLeft" resource="../img/media_win_bottom_left.swf"/&gt;
+        &lt;view name="bottomCenter" resource="../img/media_win_bottom.swf"
+              stretches="width"/&gt;
+        &lt;view name="bottomRight" resource="../img/media_win_bottom_right.swf"
+              clickable="true"
+              onmousedown="parent.parent.startResize();"
+              onmouseup="parent.parent.stopResize();"/&gt;
+        &lt;stableborderlayout axis="x"/&gt;
+      &lt;/view&gt;
+      &lt;stableborderlayout axis="y"/&gt;
+
+      &lt;method name="startResize"&gt;
+        // set distances from right and bottom edges
+        this.resizeOffsetX = this.getAttribute('width') 
+                             - this.getMouse('x');
+        this.resizeOffsetY = this.getAttribute('height') 
+                             - this.getMouse('y');
+
+        if (!this.getAttribute('sizerDel')) {
+          this.sizerDel = new LzDelegate(this, 'adjustSize', 
+                                         LzIdle, 'onidle');
+        }
+      &lt;/method&gt;
+
+      &lt;method name="adjustSize"&gt;
+      &lt;![CDATA[
+        var newWidth = this.getMouse('x') + this.resizeOffsetX;
+        var newHeight = this.getMouse('y') + this.resizeOffsetY;
+        if (newWidth &gt; this.minWindowWidth) {
+          this.setAttribute('width', newWidth);
+        }
+        if (newHeight &gt; this.minWindowHeight) {
+          this.setAttribute('height', newHeight);
+        }
+      ]]&gt;
+      &lt;/method&gt;
+
+      &lt;method name="stopResize"&gt;
+        this.sizerDel.unregisterAll();
+        this.sizerDel = null;
+    &lt;/method&gt;
+  &lt;/<em>class</em>&gt;
+
+  <em>&lt;mediaWindow name="firstWindow" width="250" height="175"/&gt;
+
+  &lt;mediaWindow name="secondWindow" 
+               x="100" y="100"
+               width="200" height="200"
+               minWindowWidth="200"
+               minWindowHeight="200"&gt;
+    &lt;text placement="content" 
+          name="myText"
+          x="10" y="13" 
+          width="${immediateparent.width - 20}"
+          height="${immediateparent.height - 7}"
+          multiline="true"&gt;
+      Hello, this is some other content that was included by default. 
+      Because we have set the text to multiline, and given it a width of 
+      its immediateparent minus a margin, it should wrap nicely.
+    &lt;/text&gt;
+  &lt;/mediaWindow&gt;</em>
+&lt;/canvas&gt;
+</example>
+
+<p>As <varname>firstWindow</varname> clearly shows, it is possible to override the attributes (such as <attribute>width</attribute> and <attribute>height</attribute>, that were specified in the class definition).</p>
+
+<p>What <varname>secondWindow</varname> shows is that we can override our own attributes (such as <attribute>minWindowWidth</attribute> and <attribute>minWindowHeight</attribute>) too. Also, you can see that we have created some text (which is really a view) and given it a <attribute>placement</attribute> attribute to tell it that it should go in the <varname>content</varname> view as defined in the class definition. This is where it is important to remember the difference between <attribute>parent</attribute> and <attribute>immediateparent</attribute>.</p>
+
+<!-- <p>We might also have given the class definition a <span class="code">defaultplacement</span> attribute, which would instruct the class to place all views in a particular subview, removing the need to declare the placement of views we pass to class instances. The <span class="code">defaultplacement</span> attribute <b>must</b> go after the views in the class definition.</p>
+
+<example>
+    &lt;class name="mediaWindow" 
+          x="10" y="10"
+          width="200" height="150" 
+          clickable="true"&gt;
+        ... views ...
+        <em>&lt;attribute name="defaultplacement" value="'content'"/&gt;</span>
+        ... methods ...
+    &lt;/class&gt;
+</example> -->
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

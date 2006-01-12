@@ -1,0 +1,13 @@
+<canvas debug="true">
+    <debug y="50"/>
+    <dataset name="serverinfo" 
+        src="/lps/foo.lzx?lzt=serverinfo" type="http" request="false"/>
+
+    <datapointer xpath="serverinfo:/*" ondata="debug.write(this.data)"/>
+    
+    <button text="Get data" onclick="serverinfo.doRequest()"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

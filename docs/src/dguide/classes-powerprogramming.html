@@ -1,0 +1,1091 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="class-inheritance"
+      xmlns:d="docbook">
+<head>
+    <title>Extending Classes</title>
+</head>
+
+<body>
+
+<h1>Extending Classes</h1>
+ 
+<p>This section assumes you're familiar with basic LZX concepts such
+as <glossterm baseform="view">views</glossterm>, <glossterm baseform="method">methods</glossterm>, and <glossterm baseform="attribute">attributes</glossterm>. Familiarity
+with <glossterm>objected-oriented programming</glossterm> (OOP) concepts is helpful, but not
+required. For a primer on classes in LZX see <xref
+linkend="introductory-classes"/>.
+</p>
+<h2>Overview</h2>
+
+<p>Inheritance allows you to create custom classes from other
+predefined classes. The advantage is that much of the logic doesn't have to be
+rewritten every time you want to create a class that does something similar, but
+in a slightly different way.</p>
+
+<p>A <dfn>subclass</dfn> is a class derived from another class. The class
+from which it is derived is referred to as its <dfn>superclass</dfn>. A
+subclass is said to <dfn>inherit</dfn> methods and attributes from its
+superclass. Visual elements of a superclass, such as
+<tagname>view</tagname>, are also inherited by each subclass. In LZX,
+you use the <attribute>extends</attribute> attribute to the <tagname
+link="true">class</tagname> tag to create subclasses.</p>
+
+<pre>
+&lt;class name="myclass" extends="mysuperclass"&gt;
+   ...
+&lt;/class&gt;
+</pre>
+
+<p>Any class that is that you create without using the
+<attribute>extends</attribute> attribute is assumed to be a subclass
+of <tagname>view</tagname>. All methods and properties from
+<tagname>view</tagname> are inherited by the subclass. These two
+declarations are equivalent:</p>
+
+<pre>
+&lt;class name="myclass"/&gt;
+&lt;class name="myclass" extends="view"/&gt;
+</pre>
+<fixme> explicitly explain multiple inheritance -- or rather, define single inheritance --superclass and subclass, etc
+</fixme>
+<p>You can only extend one class per class declaration, though the inheritance
+chain can be arbitrarily deep. Multiple inheritance is not supported; that is to say you cannot create a new class
+that extends more than one existing classes. Methods,
+variables, and views inside a class are inherited down through each level.</p>
+
+<example title="Inheritance chain">
+&lt;canvas debug="true" height="125"&gt;
+  &lt;debug x="80" y="5" width="170" height="112"/&gt;
+
+  &lt;class name="top"&gt;
+    &lt;attribute name="myfoo" value="bar" type="string"/&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="middle" extends="top"&gt;
+    &lt;method name="doit"&gt;
+      Debug.write("myfoo is " + this.myfoo);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="bottom" extends="middle"&gt;
+    &lt;button text="clickme" onclick="parent.doit()"/&gt;
+  &lt;/class&gt;
+  
+  &lt;bottom/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Class definitions can include default values for attributes. For example, a class that a class that <i>extends</i> view can have default
+<attribute>width</attribute> and <attribute>height</attribute>
+attributes:</p>
+
+<example executable="false">
+&lt;class name="myClass" width="50" height="50"/&gt; <co><p>Defines a class and tag named <code>myClass</code></p></co>
+&lt;myClass/&gt; <co><p>Creates an instance of <code>myClass</code> with height and width of 50</p></co>
+&lt;myClass width="100"/&gt; <co><p>Creates an instance of <code>myClass</code> with height 50 and width 100</p></co>
+</example>
+
+<!--=================================== --> 
+<!-- Overriding methods and attributes  -->
+<!--=================================== --> 
+<h2>Overriding methods and attributes</h2>
+<p>A subclass can <dfn>override</dfn>, that is, provide a different implementation from, a
+superclass method. The overriding method can specify a different set of
+arguments from the superclass's method. For example, if your superclass's method
+has two arguments such as <code>method(arg1, arg2)</code>, you can choose to have a
+third argument for your subclass such as <code>method(arg1, arg2, arg3)</code>. 
+</p>
+<p>
+LZX does not support
+ <glossterm>overloading</glossterm> methods. That means that you cannot have different methods, within one class, that have the same name. 
+The runtime only "cares about"
+the name of the calling method. You will receive a compilation warning if you
+define two or more methods with the same name in a class definition.</p>
+<fixme>
+explain behavior -- what happens if you overload
+</fixme>
+
+<p>You can modify inherited attributes by defining a new value using
+the <tagname link="true">attribute</tagname> tag or by declaring it as
+an attribute in the <tagname>class</tagname> declaration itself.</p>
+
+<example title="Inheriting Properties">
+&lt;canvas height="100"&gt;
+  &lt;!-- create a simplelayout so embedded views are laid out  --&gt;
+  &lt;!-- on top of each other.                                 --&gt;
+  &lt;class name="class1" layout="class: simplelayout; spacing: 2"&gt;
+    &lt;attribute name="label" value="class1 label" type="string"/&gt;
+    &lt;text&gt;from class1&lt;/text&gt;
+    &lt;button text="${classroot.label}"/&gt;
+  &lt;/class&gt;
+
+  &lt;!-- overrides class1's label; inherits text and button --&gt;
+  &lt;class name="class2" extends="class1" label="class2 label"&gt;
+    &lt;text&gt;from class2&lt;/text&gt;
+  &lt;/class&gt;
+
+  &lt;!-- inherit class1's text and button; inherit class2's text --&gt;
+  &lt;class name="class3" extends="class2"&gt;
+    &lt;text&gt;from class3&lt;/text&gt;
+  &lt;/class&gt;
+  &lt;class3/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>You can use the <code>super</code> keyword to invoke a superclass's
+method. The <code>super</code> keyword is useful in instances where you want to
+extend the superclass's method without rewriting the same logic. A
+method can only use <code>super</code> to call the method that it
+overrides.  That is, a subclass's <method>myfunc</method> can only call <code>super.myfunc()</code>, <code>super.myotherfunc()</code>.</p>
+
+<example title="The super keyword">
+&lt;canvas debug="true" height="140"&gt;
+  &lt;debug x="60"/&gt;
+
+  &lt;class name="foo"&gt;
+    &lt;method name="talk"&gt;
+      Debug.write("hello");
+    &lt;/method&gt;
+    &lt;button text="click" onclick="parent.talk()"/&gt;
+  &lt;/class&gt;
+
+  &lt;class name="bar" extends="foo"&gt;
+    &lt;method name="talk"&gt;
+      super.talk();
+      Debug.write("goodbye");
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;bar/&gt;
+&lt;/canvas&gt;
+</example>
+<h3>Anonymous methods cannot be overridden</h3>
+<p>
+In order to override an event handler, you must name the event. You do that by using the <code>name="" event=" "</code> attributes inside a <tagname link="true">method</tagname> tag. For example, let's say that you wanted to write a handler for the <code>onclick</code> event that you could override in an instance. In your class definition, you would use this syntax:</p>
+<pre>
+    &lt;method name="handleClick" event="onclick"&gt;
+</pre>
+<p>
+As described in <xref linkend="methods-events-attributes"/>, you can create event handlers without giving them names. However, when you do this events just stack up like delegates (which they are). When the event occurs, all event handlers associated with that event are executed&#8212; none of them are overridden.
+</p>
+<p>
+They key is that if you <i>don't</i> name the method that you connect to an event, it will get a unique name (assigned by the runtime) and you will not be able to override it in a subclass or instance (because you don't know its name).
+</p>
+<p>
+In the example below, we can see that unnamed event handlers that are defined using the <code>event=""</code> syntax do not behave the desired way when we try to override them.</p>
+<example title="named events">
+&lt;canvas debug="true" height="400"&gt;
+  &lt;debug y="200"/&gt;
+  &lt;class name="named_way" bgcolor="red" width="40" height="40"&gt;
+    &lt;method name="handleClick" event="onclick"&gt;
+        Debug.write('original click');
+     &lt;/method&gt;
+   &lt;/class&gt;
+
+  &lt;class name="annonymous_way" bgcolor="blue" width="40" height="40"&gt;
+    &lt;method event="onclick"&gt;
+        Debug.write('original click');
+     &lt;/method&gt;
+   &lt;/class&gt;
+
+   &lt;simplelayout/&gt;
+   &lt;named_way&gt;
+     &lt;method name="handleClick"&gt;
+         Debug.write('overridden method');
+     &lt;/method&gt;
+   &lt;/named_way&gt;
+   &lt;annonymous_way&gt;
+     &lt;method event="onclick"&gt;
+         Debug.write('annonymous event handler');
+     &lt;/method&gt;
+   &lt;/annonymous_way&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>
+Remember, you can call the original click code in the new method by using the super method:
+</p>
+
+<example extract="false">
+     &lt;method name="handleClick"&gt;
+         super.handleClick();
+         Debug.write('new click');
+     &lt;/method&gt;
+</example>
+
+<!--=========== --> 
+<!-- Classroot  -->
+<!--=========== --> 
+<h2>Classroot</h2>
+
+<p>The <code>classroot</code> property is a convenient short-hand that
+refers to the root node of a class instance. It's often used by an
+deeply nested view or method that needs access to something near the
+root of the class. Though you can equivalently use to
+<code>parent</code>, <code>parent.parent</code>,
+<code>parent.parent.parent</code>, etc. (depending on how deep the
+view that contains the reference is nested), using classroot is
+usually more readable. Members of state subclasses do not define
+classroot.</p>
+
+<todo>What does the last sentence above mean?</todo>
+
+<example title="Classroot example">
+&lt;canvas debug="true" height="160"&gt;
+  &lt;debug x="155" y="10"/&gt;
+    
+  &lt;!-- class deep --&gt;
+  &lt;class name="deep"&gt;
+    &lt;attribute name="mytext" value="hello, world" type="string"/&gt;
+    
+    &lt;view bgcolor="red" width="150" height="150"&gt;
+      &lt;view bgcolor="green" width="75%" height="75%"&gt;
+        &lt;button text="clickme" width="75%" height="75%"&gt;
+          &lt;!-- classroot is a convenient way to access mytext --&gt;
+          &lt;method event="onclick"&gt;
+            Debug.write("classroot.mytext: " + classroot.mytext);
+            Debug.write("parent.parent.parent.mytext: " + 
+                        parent.parent.parent.mytext);
+          &lt;/method&gt;
+        &lt;/button&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- instance of class deep --&gt;
+  &lt;deep/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Be careful when using <code>classroot</code> from the root of the
+class. If there is no surrounding class, <code>classroot</code> will
+be undefined. Use the <code>this</code> keyword in code attached to
+the root of the class. On the other hand, if an instance of a class
+appears inside another class, the <code>classroot</code> for the
+instance will be the root of the surrounding class. Use this feature
+as a short-cut to refer to the root of outer classes.</p>
+
+<example title="Referring to outer class's root using classroot">
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug height="175"/&gt;
+  
+  &lt;class name="foo"&gt;
+    &lt;method name="doit"&gt;
+      Debug.write("foo: this is [" + this + "]");
+      Debug.write("foo: classroot is [" + classroot + "]");
+      Debug.write("foo: classroot.classroot is [" + classroot.classroot + "]");
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- boo contains a foo --&gt;
+  &lt;class name="boo"&gt;
+    &lt;foo name="myfoo"/&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- goo contains a boo --&gt;
+  &lt;class name="goo"&gt;
+    &lt;boo name="myboo"/&gt;
+    &lt;method event="oninit"&gt;
+      myboo.myfoo.doit();
+      Debug.write("-----");
+      Debug.write("goo: this is [" + this + "]");
+      // warning will be displayed -- there is no classroot
+      Debug.write("goo: classroot is [" + classroot + "]");
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- Make an instance of goo --&gt;
+  &lt;goo name="mygoo"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<!--======= -->
+<!-- Text   -->
+<!--======= -->
+<h2>Declared text</h2>
+
+<p>The <tagname link="true">text</tagname> and <tagname
+link="true">inputtext</tagname> tags are unique among the built in
+classes in that they can hold textual content:</p>
+
+<example extract="false">
+&lt;canvas height="50" layout="y"&gt;
+  &lt;inputtext&gt;plain text&lt;/inputtext&gt;
+  &lt;text&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The text may contain character text, as well as certain XHTML markup
+tags. The inputtext tag may contain character text.</p>
+
+<p>Classes that extend the text and inputtext classes may contain XHTML and
+plain text, respectively. The text content is available as the text attribute of
+such a class.</p>
+
+<example title="Extending text classes">
+&lt;canvas height="50" layout="axis: y"&gt;
+  &lt;class name="mytext" extends="text"/&gt;
+  &lt;class name="myinputtext" extends="inputtext"/&gt;
+  &lt;myinputtext&gt;plain text&lt;/myinputtext&gt;
+  &lt;mytext&gt;&lt;i&gt;styled&lt;/i&gt; text&lt;/mytext&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>A user-defined class can also handle text content by defining an
+attribute named <attribute>text</attribute> with a value of
+<code>text</code> (for plain text) or <code>html</code> (for XHTML
+text), like <code>&lt;attribute name="text"
+type="text"&gt;</code>. There is another text type available called
+<code>string</code> which allows you set a text string as an
+attribute, but does not allow text content.</p>
+
+<p>Consider these two classes, where the first is defined using
+<code>type="string"</code> and the second with <code>type="text"</code>:</p>
+
+<example extract="false">
+&lt;class name="stringText"&gt;
+  &lt;attribute name="text" type="string"/&gt;
+&lt;/class&gt;
+
+&lt;class name="textText"&gt;
+  &lt;attribute name="text" type="text"/&gt;
+&lt;/class&gt;
+</example>
+
+<p>Both classes can be used with a text attribute:</p>
+
+<pre class="code">
+&lt;stringText text="some text"/&gt;
+&lt;textText text="some text"/&gt;
+</pre>
+
+<p>Only <varname>textText</varname> can be used with text content. The
+use of stringText below is invalid, and will produce a compilation
+warning.</p>
+
+<pre class="code">
+&lt;stringText&gt;some text&lt;/stringText&gt; &lt;!-- This is invalid --&gt;
+&lt;textText&gt;some text&lt;/textText&gt;     &lt;!-- This is valid --&gt;
+</pre>
+
+<p>Using the <code>html</code> type declares that the class can accept
+html text content, or set through the <attribute>text</attribute>
+attribute. The text may contain XHTML tags such as <tagname>b</tagname> and
+<tagname>a</tagname>, as in the following program:</p>
+
+<example title="Text type: html">
+&lt;canvas height="50"&gt;
+  &lt;class name="htmlText"&gt;
+    &lt;attribute name="text" type="html"/&gt;
+    &lt;text resize="true" text="${parent.text}"/&gt;
+  &lt;/class&gt;
+  
+  &lt;simplelayout/&gt;
+  &lt;htmlText&gt;
+    &lt;b&gt;bold&lt;/b&gt; text declared here with 
+    &lt;a href="http://www.laszlosystems.com"&gt;&lt;i&gt;anchor&lt;/i&gt;&lt;/a&gt;
+  &lt;/htmlText&gt;
+  &lt;htmlText text="&amp;lt;b&amp;gt;bold&amp;lt;/b&amp;gt; text set here"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Note that XHTML markup within a class that is declared with
+<code>type="text"</code>, instead of <code>type="html"</code>, is
+invalid:</p>
+
+<example extract="false">
+&lt;textText&gt;some text&lt;/textText&gt; &lt;!-- valid --&gt;
+&lt;textText&gt;some &lt;i&gt;fancy&lt;/i&gt; text&lt;/textText&gt; &lt;!-- invalid --&gt;
+&lt;htmlText&gt;some text&lt;/htmlText&gt; &lt;!-- valid --&gt;
+&lt;htmlText&gt;some &lt;i&gt;fancy&lt;/i&gt; text&lt;/htmlText&gt; &lt;!-- valid --&gt;
+</example>
+
+<p>Any text content with a class that is declared without a text
+attribute whose type is <code>text</code> or <code>html</code> is
+invalid:</p>
+
+<example extract="false">
+&lt;class name="noText"/&gt;
+&lt;noText&gt;some text&lt;/noText&gt; &lt;!-- invalid --&gt;
+&lt;noText&gt;some &lt;i&gt;fancy&lt;/i&gt; text&lt;/noText&gt; &lt;!-- invalid --&gt;
+</example>
+
+<p>The attribute name must be <code>text</code>.  It is an error to
+use <code>text</code> and <code>html</code> as the type of any other
+attribute:</p>
+
+<example extract="false">
+&lt;class name="invalidClass"&gt;
+ &lt;attribute name="label" type="text"/&gt; &lt;!-- invalid --&gt;
+&lt;/class&gt;
+</example>
+
+<!--======= --> 
+<!-- Fonts  -->
+<!--======= --> 
+<h2>Font inheritance</h2>
+
+<p>Classes and views enclosed in classes inherit their font and font
+properties (such as <attribute>fontstyle</attribute> and
+<attribute>fontsize</attribute>) from their superclass. Also, any
+class instance will inherit its font from its enclosing view. A font
+can be overridden at any point in a view hierarchy and any subview
+from there on will inherit that font.</p>
+
+<example title="Inheriting fonts">
+&lt;canvas height="50"&gt;
+  &lt;font src="helmetr.ttf" name="Helvetica"/&gt;
+  &lt;font src="helmetb.ttf" name="Helvetica" style="bold"/&gt;
+  
+  &lt;class name="foo"&gt;
+    &lt;!-- view overrides inherited fontstyle to plain --&gt;
+    &lt;view fontstyle="plain" bgcolor="yellow"&gt;
+      &lt;!-- text overrides inherited fontsize to 12 --&gt;
+      &lt;text fontsize="12"&gt;hello&lt;/text&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="bar" extends="foo" layout="axis: y"&gt;
+    &lt;text&gt;goodbye&lt;/text&gt;
+  &lt;/class&gt;
+  
+  &lt;bar font="Helvetica" fontstyle="bold" fontsize="12"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<!--================ --> 
+<!-- Instantiating   -->
+<!--================ --> 
+<h2>Instantiating classes through script</h2>
+
+<p>In general, <glossterm>instantiation</glossterm> of objects happen using tags. For
+instance, assuming <code>&lt;class name="myclass"&gt;</code> is
+declared, you can create an instance of that class by writing
+<code>&lt;myclass/&gt;</code>. However, there may be times when you
+will need to instantiate an object using script. The script
+instantiation syntax for classes looks like:</p>
+
+<pre>
+var myobject = new myclass(<i>parent</i>, <i>attributes</i>, <i>children</i>, <i>instcall</i>)
+</pre>
+
+<p>where:</p>
+
+<ul>
+    <li><varname>parent</varname> is where your object will be
+    placed in the node hierarchy.  If it doesn't matter, then you
+    can pass <code>null</code>. If you are creating a subclass of
+    <code>view</code> and the parent is <code>null</code>, the
+    <code>canvas</code> will be the parent of this object.</li>
+    
+    <li><varname>attributes</varname> is a hash of attribute values
+    that get passed into the object. For example, if you wanted to
+    instantiate a new <code>view</code> with a different bgcolor,
+    width, and height, you could pass in <code>{bgcolor: 0xff0000, width:
+    50, height: 50}</code>.
+    </li>
+    
+    <li><varname>children</varname> is the array of child views this object
+    encapsulates. The OpenLaszlo Runtime instantiator is responsible for passing in the
+    children of this <code>object</code> based on the LZX hierarchy. You will
+    generally set this to null.
+    </li>
+
+    <li><varname>instcall</varname> is a boolean value that determines
+    when this object will be instantiated. If false, the instantiation
+    of this object will be immediate, otherwise, its instantiation
+    will be synchronized with the rest of the view system. See <xref
+    linkend="initialization-and-instantiation"/>.
+    </li>
+</ul>
+
+<p>All these parameters are optional. Not setting any of these arguments (e.g.,
+<code>new myclass()</code>) is equivalent to <code>new myclass(null,
+null, null, 0)</code>.</p>
+
+<p>The following example shows you how to instantiate a new object through script and
+add it to another view.</p>
+
+<example title="Script instantiation">
+&lt;canvas height="120"&gt;
+  &lt;class name="mybox"&gt;
+    &lt;view bgcolor="${parent.bgcolor}" width="50" height="50"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="redbox" bgcolor="red" width="100" height="100"/&gt;
+  
+  &lt;!-- Create new mybox with cyan bgcolor and place it in canvas.redbox. --&gt;
+  &lt;button x="110" text="add cyan"
+            onclick="if (canvas.redbox['cyan'] == null) 
+                       new mybox(canvas.redbox, { name: 'cyan', bgcolor: 0x00ffff })"/&gt;
+
+  &lt;!-- Remove cyan view from redbox. --&gt;
+  &lt;button x="110" y="30" text="remove cyan"
+            onclick="if (canvas.redbox['cyan'] != null) canvas.redbox.cyan.destroy()"/&gt;
+
+&lt;/canvas&gt;
+</example>
+
+<p>All classes are defined in the global namespace. If you wanted to instantiate
+a class dynamically, you can write <code>new
+global[classString](...)</code>. Using the previous example, mybox can be
+instantiated like <code>new global['mybox'](canvas.redbox, { bgcolor: 0x00ffff
+})</code>.</p>
+
+<p>Be aware that names for tag classes are not always the same as their
+JavaScript counterpart. For example, <code>&lt;view&gt;</code> is actually
+<code>LzView</code> in script, and <code>&lt;node&gt;</code> is actually
+<code>LzNode</code>. Thus, to instantiate a view through script, you would write
+<code>new LzView(...)</code> (<b>not</b> <code>new view(...)</code>). Refer to
+the <b>LZX Reference</b> for details on how LZX tags map to JavaScript.</p>
+
+
+<!--======= --> 
+<!-- Using  -->
+<!--======= --> 
+<h2>Using LZX classes</h2>
+
+<!--========================================-->
+<!-- Basic approach to implementing classes -->
+<!--========================================-->
+<h3>Basic approach to implementing classes</h3>
+
+<p>An approach you can take to writing classes is just to declare the class tags
+and have an instance of that class on the canvas. This will give you the
+framework to see what it looks like while you're building up your class, for
+example:</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;class name="myclass"&gt;
+    ...
+  &lt;/class&gt;
+  
+  &lt;myclass/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Optionally, you can sketch out a class by writing a view first and then
+transforming it into a class. The drawbacks of this approach are that you can't use the
+<code>classroot</code> keyword and attributes can't be declared.</p>
+
+<!--================== --> 
+<!-- Inheriting views  -->
+<!--================== --> 
+<h3>Inherited views</h3>
+<p>Top-level views inherited from a superclass are placed in the top-level of a
+subclass. The inherited views from the superclass will be placed first in
+order. This can be verified by examining the subviews array.</p>
+
+<example title="Inheriting views">
+&lt;canvas debug="true"&gt;
+  &lt;debug y="215" width="435"/&gt;
+  
+  &lt;class name="one"&gt;
+    &lt;view name="r" bgcolor="red" width="200" height="200"/&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="two" extends="one"&gt;
+    &lt;view name="g" bgcolor="green" width="100" height="100"/&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="three" extends="two"&gt;
+    &lt;view name="t" bgcolor="teal" width="50" height="50"/&gt;
+    &lt;view name="y" bgcolor="yellow" width="25" height="25"/&gt;
+  &lt;/class&gt;
+  
+  &lt;three id="mysubclass" oninit="Debug.write('subviews: ' + this.subviews)"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Views declared in an instance of a class will be placed in the
+top-level of the class unless otherwise declared with the
+<attribute>defaultplacement</attribute> attribute. Those views will be
+placed with a later order in the subviews array. The
+<attribute>defaultplacement</attribute> attribute tells a class where
+declared views should be placed in the hierarchy of the class and is
+explained in more detail in the next section.</p>
+
+<example title="Inherited view order">
+&lt;canvas debug="true" height="250"&gt;
+  &lt;debug y="115" width="330"/&gt;
+  &lt;class name="foo"&gt;
+    &lt;view name="r" bgcolor="red" width="100" height="100"/&gt;
+  &lt;/class&gt;
+  
+  &lt;foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)"&gt;
+    &lt;view name="y" bgcolor="yellow" width="50" height="50"/&gt;
+  &lt;/foo&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Notice how view <varname>y</varname> follows view
+<varname>r</varname> in its subviews array. If a
+<tagname>simplelayout</tagname> is placed in view
+<varname>myfoo</varname>, they will be displayed in order of
+<varname>r</varname> followed by <varname>y</varname>.</p>
+
+<example title="Inherited view order with simplelayout">
+&lt;canvas debug="true" height="250"&gt;
+  &lt;debug x="75" y="115" width="330"/&gt;
+  
+  &lt;class name="foo"&gt;
+    &lt;view name="r" bgcolor="red" width="100" height="100"/&gt;
+  &lt;/class&gt;
+  
+  &lt;foo name="myfoo" oninit="Debug.write('subviews: ' + this.subviews)"&gt;
+    &lt;simplelayout/&gt;
+    &lt;view name="y" bgcolor="yellow" width="50" height="50"/&gt;
+  &lt;/foo&gt;
+&lt;/canvas&gt;
+</example>
+
+<!--===========-->
+<!-- Placement -->
+<!--===========-->
+<h3>Placement</h3>
+
+<p>The internal structure of a class is generally not visible to its
+hierarchical children. By default, instances which appear inside a class are
+made children of the top level instance of the class. This is generally not
+desirable for container classes. For example:</p>
+
+<example title="Undesired placement">
+&lt;canvas height="50"&gt;
+  &lt;class name="myframe" extends="view"&gt;
+    &lt;attribute name="bgcolor" value="red"/&gt;
+    &lt;view x="5" y="5" width="${parent.width-10}"
+               height="${parent.height-10}"
+               bgcolor="#FFFFCC"/&gt;
+  &lt;/class&gt;
+  
+  &lt;!-- make an instance of myframe with text inside it--&gt;
+  &lt;myframe width="220" height="20"&gt;
+    &lt;text&gt;This is some text&lt;/text&gt;
+  &lt;/myframe&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>This behavior can be changed using the
+<attribute>defaultplacement</attribute> attribute or the
+<method>determinePlacement</method> method. Using
+<attribute>defaultplacement</attribute> is simple &#x2014; this is a
+class attribute that identifies by name the subview where a child
+should be attached. The child will be attached to the first subview
+with a matching name. If none is found, the child is placed as a
+subview in the top-level node of the class, as would have happened if
+no <attribute>defaultplacement</attribute> was specified.</p>
+
+<p>Be aware that the <attribute>defaultplacement</attribute> attribute
+should always be declared in an attribute with
+<code>type=&quot;string&quot;</code>.</p>
+
+<example title="Placing a child in desired subview">
+&lt;canvas height="50"&gt;
+  &lt;class name="myframe" extends="view"&gt;
+    &lt;attribute name="bgcolor" value="red"/&gt;
+    
+    &lt;!-- child views of class instances will be placed in the first view
+            called insideview --&gt;
+    &lt;attribute name="defaultplacement" value="insideview" type="string"/&gt;
+    
+    &lt;view x="5" y="5" width="${parent.width-10}" name="insideview"
+                height="${parent.height-10}" 
+                bgcolor="#FFFFCC"/&gt;
+  &lt;/class&gt;
+  &lt;!-- make an instance of myframe with text inside it--&gt;
+  &lt;myframe width="220" height="50"&gt;
+    &lt;text&gt;This is some text&lt;/text&gt;
+  &lt;/myframe&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Elements declared in a class are not consider for placement, but children in
+subclasses or class instances will be.</p>
+
+<example title="Defaultplacement">
+&lt;canvas height="150"&gt;
+  &lt;class name="myframe" extends="view"&gt;
+      &lt;attribute name="bgcolor" value="red"/&gt;
+
+      &lt;attribute name="defaultplacement" value="'insideview'"/&gt;
+
+      &lt;view x="5" y="5" width="${parent.width-10}" name="insideview"
+              height="${parent.height-10}" 
+              bgcolor="#FFFFCC"/&gt;
+
+      &lt;!-- this view is not affected by defaultplacement --&gt;
+      &lt;!-- because it's declared in the class.           --&gt; 
+      &lt;view x="5" y="${parent.height}" name="anotherview" 
+            width="${parent.width-10}" height="10"
+            bgcolor="blue"/&gt;
+  &lt;/class&gt;
+
+  &lt;class name="subframe" extends="myframe"&gt;
+    &lt;!-- the layout and text will be placed in insideview of myframe --&gt;
+    &lt;simplelayout axis="y"/&gt;
+    &lt;text bgcolor="teal"&gt;subframe text&lt;/text&gt;
+  &lt;/class&gt;
+
+
+  &lt;myframe width="220" height="50"&gt;
+    &lt;!-- this will be placed in insideview --&gt;
+    &lt;text&gt;This is some text&lt;/text&gt;
+  &lt;/myframe&gt;
+
+  &lt;subframe width="220" height="50" y="70"&gt;
+    &lt;text bgcolor="green"&gt;More subframe text&lt;/text&gt;
+  &lt;/subframe&gt;
+&lt;/canvas&gt;
+</example>
+
+<h4>Placing layouts</h4>
+
+<p>A layout declared as an attribute will be considered for
+placement. This is often the desired behavior because it makes it easy
+for subclasses and class instances to modify the layout for views
+inside the default placement. To override this behavior, a
+<attribute>layout</attribute> attribute can be set with a non-existing
+<code>placement</code> (e.g., <code>placement: null</code>). The
+<attribute>placement</attribute> attribute tells an element's
+container where it should go within the container's internal
+hierarchy. If the container has a
+<attribute>defaultplacement</attribute>, the <code>placement</code>
+value has precedence. Alternatively, you can make sure that a layout
+isn't handled by defaultplacement by declaring it as a tag element in
+the class.</p>
+
+<example title="Layout placement">
+&lt;canvas&gt;
+  &lt;!-- the layout attribute will be placed in the red view --&gt;
+  &lt;class name="myplacement" defaultplacement="'red'" layout="axis: x; spacing: 5"&gt;
+    &lt;!-- this layout element applies to views inside of class --&gt;
+    &lt;simplelayout spacing="10"/&gt;
+    &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
+    &lt;view name="yellow" bgcolor="yellow" width="150" height="150"/&gt;
+  &lt;/class&gt;
+
+  &lt;myplacement&gt;
+    &lt;!-- placement overrides defaultplacement --&gt;
+    &lt;view name="blue" bgcolor="blue" width="50" height="50" placement="yellow"/&gt;
+
+    &lt;!-- green and teal will be placed in red --&gt;
+    &lt;view name="green" width="50" height="50" bgcolor="green"/&gt;
+    &lt;view name="teal" width="50" height="50" bgcolor="teal"/&gt;
+  &lt;/myplacement&gt;
+
+&lt;/canvas&gt;
+</example>
+
+<!-- ================ -->
+<!-- Immediate parent -->
+<!-- ================ -->
+<h4>ImmediateParent</h4>
+
+<p>A child placed using <attribute>defaultplacement</attribute> or
+<attribute>placement</attribute> will often have two parent types. The
+<field>parent</field> is the reference to the node that was passed as
+the child's ancestor in the constructor, e.g., <code>new
+childClass(parent, args)</code>. If the child was created by declaring
+it in a tag, the parent will be its lexical parent. Its lexical parent
+is the tag that encloses it.</p>
+
+<p>The <field>immediateparent</field> refers to the node where the
+child was placed in. Its value will be the same as
+<field>parent</field> if no placement was assigned.</p>
+
+<example title="Parent vs. immediateparent">
+&lt;canvas debug="true" height="200"&gt;    
+  &lt;debug x="155"/&gt;
+
+  &lt;class name="container" defaultplacement="'red'"&gt;
+    &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
+  &lt;/class&gt;
+
+  &lt;!-- yellow's parent is top and its immediateparent   --&gt;
+  &lt;!-- is red, since that's where it's actually placed. --&gt;
+  &lt;container name="top"&gt;
+    &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
+      &lt;method event="oninit"&gt;
+        Debug.write('parent: ', this.parent);
+        Debug.write('immediateparent: ', this.immediateparent);
+      &lt;/method&gt;
+    &lt;/view&gt;
+  &lt;/container&gt;
+&lt;/canvas&gt;
+</example>
+
+<h4>Obtaining a reference to the defaultPlacement node</h4>
+
+<p>There may be instances a class will need a reference to the default placement
+node. A good trick is to search the subnodes of the class until it's found.</p>
+
+<example title="Obtaining a reference to the defaultPlacement node">
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug x="155"/&gt;
+
+  &lt;class name="container" defaultplacement="'red'"&gt;
+    &lt;attribute name="contentview" value="null" type="expression"/&gt;
+
+    &lt;method name="init"&gt;
+      super.init();
+
+      // get a reference to the content node
+      if ( this.contentview == null ) {
+        if ( this.defaultplacement != null ){
+          this.contentview = this.searchSubnodes( "name" , this.defaultplacement );
+        } else {
+          this.contentview = this;
+        }
+      }
+      
+      Debug.write("content view", this.contentview);
+    &lt;/method&gt;
+
+    &lt;view name="green" bgcolor="green" width="100" height="100"&gt;
+      &lt;view name="yellow" bgcolor="yellow" width="50%" height="50%"&gt;
+        &lt;view name="red" bgcolor="red" width="50%" height="50%"/&gt;
+      &lt;/view&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;container name="top"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<!-- ================== -->
+<!-- determinePlacement -->
+<!-- ================== -->
+<h4>Overriding placement behavior using <method>determinePlacement</method></h4>
+
+<p>A node calls its <method>determinePlacement</method> method to
+determine the <field>immediateparent</field> of a child. This method
+will only be called for subnodes which have a placement attribute, or
+for all subnodes if this node has a non-null
+<attribute>defaultplacement</attribute>. The
+<attribute>placement</attribute> attribute of a subnode overrides a
+parent's <attribute>defaultplacement</attribute>. This method looks
+for a subnode with the name given in the <varname>placement</varname>
+parameter, and returns that node. If no such named node exists, it
+returns <varname>this</varname>. The code essentially looks like:</p>
+
+<example extract="false">
+&lt;!-- subnode: the child node to place         --&gt;
+&lt;!-- placement: the node to place the subnode --&gt;
+&lt;!-- args: init args of the child subnode     --&gt;
+&lt;method name="determinePlacement" args="subnode, placement, args"&gt;
+  // ignore placement if set
+  if ( args.ignoreplacement ){
+      return this;
+  }
+
+  if ( placement == null ){
+    var p = null;
+  } else {
+    var p = this.searchSubnodes( "name" , placement );
+  }
+
+  return p == null ? this : p;
+&lt;/method&gt;
+</example>
+
+<p>A subclass might implement this method to cause the
+<varname>placement</varname> parameter to have a different behavior or
+additional affects. For instance, a subnode could have
+<field>parent</field> and <field>immediateparent</field> be the
+same.</p>
+
+<example title="Overriding determinePlacement">
+&lt;canvas debug="true" height="200"&gt;
+  &lt;debug x="155"/&gt;
+
+  &lt;class name="container" defaultplacement="'red'"&gt;
+    &lt;!-- setting subnode's parent to be the same as immediateparent --&gt;
+    &lt;method name="determinePlacement" args="subnode, place, args"&gt;
+      var p = super.determinePlacement(subnode, place, args);
+      subnode.parent = p;
+      return p;
+    &lt;/method&gt;
+
+    &lt;view name="blue" bgcolor="blue" width="100" height="100"&gt;
+      &lt;view name="red" bgcolor="red" width="150" height="150"/&gt;
+    &lt;/view&gt;
+  &lt;/class&gt;
+
+  &lt;container name="top"&gt;
+    &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
+      &lt;method event="oninit"&gt;
+        Debug.write('parent: ', this.parent);
+        Debug.write('immediateparent: ', this.immediateparent);
+      &lt;/method&gt;
+    &lt;/view&gt;
+  &lt;/container&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<!--=======-->
+<!-- Steps -->
+<!--=======-->
+<h3>Construction and initialization</h3>
+
+<p>When writing complex classes, a deep understanding of how classes
+are constructed and initialized is essential. Several steps are
+involved before a class instance is fully initialized. Describing this
+process is out of the scope of this chapter, but important methods and
+events that are involved and the sequence in which they are invoked in
+will be discussed. See <xref
+linkend="initialization-and-instantiation"/>.</p>
+
+<p>The <method>construct</method> method node is called as early as
+possible in the view system. It is invoked before any arguments have
+been applied. This is the method to override in lieu of writing a
+class constructor for your LZX class. If this method is overridden,
+the superclass method must be called or results will be extremely
+unpredictable. For instance, this is the method where the class being
+constructed places itself in its container by calling its parent's
+<method>determinePlacement</method> method. If the superclass
+construct method isn't called, the class instance may not be placed
+correctly.</p>
+
+<p>Alternatively, you can use the <event>onconstruct</event> event,
+which is sent out by the instantiator after <method>construct</method>
+is called. The <event>onconstruct</event> happens right at the end of
+the instantiation process, but before any subnodes have been created
+or references resolved.</p>
+
+<p>Keep in mind that construction happens top-down (parent to subviews),
+whereas initialization happens bottom-up (subviews to ancestor).</p>
+
+<example title="Construction and initialization">
+&lt;canvas debug="true" height="180"&gt;
+  &lt;debug height="160"/&gt;
+
+  &lt;class name="container"&gt;
+    &lt;!-- Don't forget to call super.construct(parent,args)!! --&gt;
+    &lt;method name="construct" args="parent,args"&gt;
+      Debug.write("container construct", parent, args);
+      super.construct(parent, args);
+    &lt;/method&gt;
+
+    &lt;!-- The onconstruct event --&gt;
+    &lt;method event="onconstruct" args="v"&gt;
+      Debug.write("container onconstruct", v);
+    &lt;/method&gt;
+
+    &lt;method name="init"&gt;
+      Debug.write("container init");
+    &lt;/method&gt;
+
+    &lt;method event="oninit"&gt;
+      Debug.write("container oninit");
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;container&gt;
+    &lt;view name="outside" oninit="Debug.write('outside oninit')"&gt;
+      &lt;view name="inside" oninit="Debug.write('inside oninit')"/&gt;
+    &lt;/view&gt;        
+  &lt;/container&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Following instantiation (i.e., after the <event>onconstruct</event>
+is sent) and if there are child nodes, the
+<method>createChildren</method> method is called. This method takes an
+array of child objects as a parameter. Each child object has three
+properties:</p>
+
+<dl>
+  <dt><field>name</field></dt>
+  <dd>The class name of the child to instantiate</dd>
+  <dt><field>attrs</field></dt>
+  <dd>The attributes to initialize the child with,
+  e.g. <attribute>name</attribute>, <attribute>height</attribute></dd>
+  <dt><field>children</field></dt>
+  <dd>An array of child objects. This can be undefined if none
+  exist.</dd>
+</dl>
+
+<example title="createChildren()">
+&lt;canvas debug="true" height="180"&gt;
+  &lt;debug height="160"/&gt;
+
+  &lt;class name="container"&gt;
+    &lt;method event="onconstruct" args="v"&gt;
+      Debug.write("container onconstruct", v);
+    &lt;/method&gt;
+
+    &lt;method name="createChildren" args="c"&gt;
+      Debug.write("container createChildren", c);
+      Debug.write("    c[0].name:", c[0].name);
+      Debug.write("    c[0].attrs:", c[0].attrs);
+      Debug.write("    c[0].children:", c[0].children);
+      super.createChildren(c);
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;container&gt;
+   &lt;view name="outside"&gt;
+     &lt;view name="inside"/&gt;
+   &lt;/view&gt;
+  &lt;/container&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>In summary, you can expect the basic timing order of method and event calls to look
+like:</p>
+
+<ol>
+  <li>The <method>construct</method> method is called.</li>
+  <li>The <method>determinePlacement</method> method is called.  (The parent's method is called
+  so parent knows where to place this object.)</li>
+  <li>The <event>onconstruct</event> event is sent.</li>
+  <li>The <method>createChildren</method> is called.  (Each child is instantiated
+  and initialized)</li>
+  <li>The <method>init</method> is called.</li>
+  <li>The <event>oninit</event> is called.</li>
+</ol>
+
+<fixme>Is this the same information as in <xref linkend="initialization-and-instantiation"/>?  Should it be consolidated?</fixme>
+
+<h2>Glossary</h2>
+
+<dl>
+  <dt><code>classroot</code></dt>
+  <dd>a short-hand that refers to the root node of the instance of a
+  class.</dd>
+  
+  <dt><attribute>extends</attribute></dt>
+  <dd>the keyword used in a class declaration to create a subclass.</dd>
+  
+  <dt>inheritance</dt>
+  <dd>the concept of classes automatically containing the variables
+  and methods defined in their superclass.</dd>
+  
+  <dt>instantiation</dt>
+  <dd>the action that creates an instance of a class or object.</dd>
+  
+  <dt>overloading</dt>
+  <dd>using one identifier to refer to multiple functions.</dd>
+  
+  <dt>overriding</dt>
+  <dd>to provide a different method implementation in the
+  subclass from its superclass.</dd>
+  
+  <dt>subclass</dt>
+  <dd>the class that derives from another class.</dd>
+  
+  <dt><code>super</code></dt>
+  <dd>keyword operator that allows a subclass to
+  invoke it's superclass's method.</dd>
+  
+  <dt>superclass</dt>
+  <dd>the class that a subclass derives its attributes and
+  methods from.</dd>
+</dl>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,81 @@
+<canvas bgcolor="0xCACACA" height="800" >
+    <debug y="200" height="300"/>
+    <dataset name="items">
+        <item name="item 1" status="1"/>
+        <item name="item 2" status="1"/>
+        <item name="item 3" status="2"/>
+        <item name="item 4" status="1"/>
+        <item name="item 5" status="3"/>
+        <item name="item 6" status="1"/>
+        <item name="item 7" status="1"/>
+        <item name="item 8" status="1"/>
+        <item name="item 9" status="3"/>
+        <item name="item 10" status="1"/>
+        <item name="item 11" status="1"/>
+        <item name="item 12" status="1"/>
+    </dataset>
+    <resource name="resource1">
+        <frame src="icons/icon_rurf_read.png" />
+        <frame src="icons/icon_rurf_unread.png" />
+        <frame src="icons/icon_rurf_reply.png" />
+     </resource>
+     
+    <resource name="resource2">
+        <frame src="icons/opened_email.swf" />
+        <frame src="icons/opened.swf" />
+        <frame src="icons/arrow_left_replied.swf" />
+     </resource>
+     
+    <!-- 
+     <resource name="resource2">
+        <frame src="../resources/icons/status_read.swf" />
+        <frame src="../resources/icons/status_unread.swf" />        
+        <frame src="../resources/icons/status_replied.swf" />
+     </resource>
+     -->
+
+    <!--
+     <simplelayout axis="x" spacing="30"/>
+     <view height="100" clip="true">
+        <view>
+            <simplelayout axis="y"/>
+            <view >
+                <datapath xpath="items:/item" replication="lazy"/>
+                <simplelayout axis="x"/>
+                <view resource="resource1" datapath="@status" >
+                    <method event="ondata" args="d">
+                        debug.write(d);
+                        this.setAttribute("frame", new Number(d));
+                    </method>
+                </view>
+                <text datapath="@name"/>
+            </view>
+
+        </view>
+        <scrollbar/>
+    </view>
+    -->
+
+    <view height="100" clip="true">
+        <view>
+            <simplelayout axis="y"/>
+            <view >
+                <datapath xpath="items:/item" replication="lazy"/>
+                <simplelayout axis="x"/>
+                <view name="bug" resource="resource2" datapath="@status" >
+                    <method event="ondata" args="d">
+                        if (d == null) return;
+                        this.setAttribute("frame", Number(d));
+                        debug.write(parent.datapath.p.attributes.name + "-> " + d, this.frame);
+
+                    </method>
+                </view>
+                <text name="label" datapath="@name"/>
+            </view>
+
+        </view>
+        <scrollbar/>
+    </view>
+</canvas>
+
+

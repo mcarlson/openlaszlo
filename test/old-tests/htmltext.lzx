@@ -1,0 +1,91 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- htmltext.lzx                                                          -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas>   
+    <include href="redmond" />
+    <font name="Helvetica" src="helmetr.ttf" />
+    <font name="Helvetica" src="helmetb.ttf"  style="bold"/>
+    <font name="Helvetica" src="helmeti.ttf"  style="italic"/>
+    <font name="Helvetica" src="helmetbi.ttf" style="bold italic"/>
+    
+    <debug/>
+    
+    <view x="50" y="50" id="holdstext">
+        
+        <view bgcolor="#002255" width="4" height="100" x="300" 
+              clickable="true"  onmousedown="this.startDrag()" 
+              onmouseup="this.stopDrag()" id="dragger" >
+            
+            <method name="startDrag" >
+                this.moco = new LzMouseConstraint( this , {prop:"x" } );
+            </method>
+            
+            <method name="stopDrag" >
+                this.moco.release();
+            </method>
+
+        </view>
+
+        <view bgcolor="#552200" width="10" height="4" y="300" clickable="true"
+              onmousedown="this.startDrag()" onmouseup="this.stopDrag()" 
+              id="draggerh" >
+            
+            <method name="startDrag" >
+                this.moco = new LzMouseConstraint( this , {prop:"y" } );
+            </method>
+            
+            <method name="stopDrag" >
+                this.moco.release();
+            </method>
+        </view>
+        
+        <text id="ttext"  multiline="true" font="Helvetica" name="debugme" fontsize="22" width="400">
+this is <b>bold</b> and <i>italic</i> and <b><i>bold italic</i></b><br/>
+<font size="20">big</font> textual long lines another long line <br/>
+and <font color="#00FF00">green</font> text
+
+            <propconstraint prop="width" refprop="x"  reference="dragger"/>
+            <propconstraint prop="height" refprop="y"  reference="draggerh"/>
+        </text> 
+            
+   
+    </view>
+
+
+    <windowtext name="addme" id="te" font="lztahoe8" fontsize="8">
+        this is some text to add
+    </windowtext>
+
+    <view>
+        
+        <propconstraint prop="x" refprop="width" 
+                        reference="view.parent.addme"/>
+        <simplelayout axis="x" spacing="5"/>
+        
+        <button label="add" onclick="this.addText()" name="addbutt">
+            <method name="addText" >
+                ttext.addText( this.parent.parent.addme.getText() );
+                var t = ttext.font.measureText(ttext.getText());
+            </method> 
+        </button>
+
+        <button label="testwidth" x="300"
+                onclick="Debug.write( 'width: ' + holdstext.getProp( 'width' ) )"/>
+        <button label="setcolor" x="300" onclick="ttext.setColor(0xFF0000)"/>
+    </view>
+    
+</canvas>    
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

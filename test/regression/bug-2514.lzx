@@ -1,0 +1,13 @@
+<canvas width="640" height="480" debug="true">
+    <debug x="250"/>
+
+    <form id="f" width="300" height="300">
+        <text>No debug warnings for hitting return</text>
+        <button onclick="Debug.write('Okie-dokey')">The Button</button>
+    </form>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

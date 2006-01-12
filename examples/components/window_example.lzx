@@ -1,0 +1,82 @@
+<canvas bgcolor="0xEAEAEA" height="600" width="800"
+    oninit="closeme.setAttribute('haswindowfocus', true)">
+    <silverstyle isdefault="true" canvascolor="null"/>
+    <bluestyle name="bluecolors" canvascolor="null"/>
+    <goldstyle name="goldcolors" canvascolor="null"/>
+
+    <window style="bluecolors" width="220" height="200" bgcolor="0xffffdd"
+            title="close me"
+            id="closeme"
+            resizable="true" closeable="true"
+            x="40" y="40">
+          <text x="10" y="10"
+              width="${immediateparent.width-40}" multiline="true"
+              fgcolor="${iceblue1}">
+              The style of this window has blue colors.  The
+              instance overrides bgcolor to be light yellow.
+              The window is closeable and resizable.
+              If you close it, you may click the "appear"
+              button to open it again.</text>
+            <scrollbar/>
+    </window>
+
+    <window width="200" height="200" x="300" y="40"
+        resizable="true" closeable="true"
+        id="fw" title="Frosty">
+        <include href="testmedia/frosty.lzx" />
+        <scrollbar/>
+        <scrollbar axis="x"/>
+    </window>
+
+    <window id="w1" x="40" y="250" width="200" height="100"
+                    title="w1: 200x100" layout="axis:x; spacing:20; inset:20">
+        <checkbox y="10">checkbox</checkbox>
+        <button y="10">button</button>
+    </window>
+
+    <window style="goldcolors" id="cherry" title="Cherry"
+            x="300" y="240">
+          <view resource="testmedia/cherry.png"/>
+    </window>
+
+    <modaldialog id="md" title="Modal Dialog" width="240">
+        <simplelayout spacing="10"/>
+        <text width="${immediateparent.width}" multiline="true">
+            Are you really sure you want to do something?</text>
+        <checkbox align="right">Thursday Afternoon</checkbox>
+        <view align="right" layout="axis:x; spacing:10">
+            <button onclick="parent.parent.close()">Cancel</button>
+            <button onclick="parent.parent.close()" isdefault="true">OK</button>
+        </view>
+    </modaldialog>
+
+    <alert id="a1">Attention: this is an alert!</alert>
+
+    <alert id="a2" title="Lunch Alert" button2="Whatever" button1="Pizza">
+        Here is an alert that specifies the title and
+        what text should go on the buttons.
+        What would you like to eat?</alert>
+
+    <alert id="a3" text_x="70" text_y="5">This alert has a child view to show the warning icon.
+        <view resource="testmedia/warning.swf" stretches="both" width="60" height="60"/>
+    </alert>
+
+    <view y="40" x="550">
+        <button text="appear" onclick="closeme.open()" />
+        <button text="new simple window"
+            onclick="new window(canvas,{title:'new', name:'anon',
+                    width:100, height:100, resizable:true, closeable:true})" />
+        <button text="open modal dialog" onclick="md.open()" />
+        <button text="simple alert" onclick="a1.open()" />
+        <button text="alert with buttons" onclick="a2.open()" />
+        <button text="alert with image" onclick="a3.open()" />
+        <simplelayout spacing="20"/>
+    </view>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

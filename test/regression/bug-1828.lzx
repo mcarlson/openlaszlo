@@ -1,0 +1,47 @@
+<canvas  width="1024" height="768">
+    <view width="20" height="20" bgcolor="red">
+        <animatorgroup duration="2000" repeat="Infinity">
+            <animator attribute="x" to="400"/>
+            <animator attribute="x" to="0"/>
+        </animatorgroup>
+    </view>
+    
+    <button onclick="s1.apply()">Apply synced</button>
+    <button onclick="s2.apply()">Apply unsynced</button>
+    <state name="s1">
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+    </state>
+    <state name="s2">
+        <attribute name="asyncnew" value="true"/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+        <window/>
+    </state>
+    <simplelayout/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

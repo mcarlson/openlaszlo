@@ -1,0 +1,69 @@
+<canvas height="600" width="600" debug="true" oninit="debug.sety(260);
+    debug.setX(220);
+    debug.setHeight(200)">
+    <include href="redmond"/>
+
+<resource name="cherry" src="../testmedia/cherry.png"/>
+
+<class name="scrollview" clip="true">
+    <attribute name="defaultplacement" value="content" type="string"/>
+    <attribute name="scrollto" value="0" type="number"/>
+    <view x="${-parent.scrollto}" name="content"/>
+    <scrollbar name="sbx" axis="x"/>
+    <scrollbar name="sby"/>
+</class>
+
+<class name="testoldstyle" clip="true" height="250" width="200" >
+    <view options="releasetolayout">
+        <include href="../testmedia/frosty.lzx" />
+    </view>
+    <scrollbar height="${parent.height}" axis="y"/>
+    <resizelayout axis="x"/>
+</class>
+
+<view height="20" width="500"/>
+<view>
+    <view>
+        <scrollview id="sv1" height="100" width="200" scrollto="50">
+            <include href="../testmedia/frosty_wide.lzx" />
+        </scrollview>
+        <view>
+            <inputtext id="scrolltopos" width="50" bgcolor="silver">0</inputtext>
+            <button onclick="debug.write(number(scrolltopos.getText()));
+                    sv1.setAttribute('scrollto',number(scrolltopos.getText()))">set scroll</button>
+            <simplelayout axis="x" spacing="10"/>
+        </view>
+        <simplelayout axis="y" spacing="10"/>
+    </view>
+    <scrollview id="sv2" height="80" width="80" >
+        <view name="pic" resource="cherry" clip="true"/>
+    </scrollview>
+
+    <view>
+    <inputtext id="w" width="50" bgcolor="silver">20</inputtext>
+    <button onclick="sv2.pic.setAttribute('width', number(w.getText()))">set width</button>
+    <button onclick="debug.write('width='+sv2.pic.width);
+                    sv2.pic.animate('width', number(w.getText()), 1000);
+                    debug.write('width='+sv2.pic.getExpectedAttribute('width'));">anim width</button>
+    <simplelayout axis="y" spacing="20"/>
+    </view>
+
+    <simplelayout axis="x" spacing="10"/>
+
+</view>
+
+<view>
+    <scrollview id="sv3" height="200" width="200" >
+        <include href="../testmedia/frosty2.lzx" />
+    </scrollview>
+
+    <simplelayout axis="x" spacing="20"/>
+</view>
+
+    <simplelayout axis="y" spacing="20"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

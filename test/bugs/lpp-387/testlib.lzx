@@ -1,0 +1,5 @@
+<library>
+  <script>
+    Debug.write('snippet loaded');  
+  </script>
+</library>

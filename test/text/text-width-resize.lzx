@@ -1,0 +1,30 @@
+<!--  When the text is changed via setText(), a text field with resize=true will resize it's width to the new text -->
+
+
+<canvas>
+
+<simplelayout axis="y" />
+<text> The first two buttons below call setText() to change the text in the gray text field.
+<p/>
+The text field width will not resize matically, unless you set setResize(true). 
+
+</text>
+
+ <view name="top" height="100"  width="200" bgcolor="#ccccff">
+   <text id="tt"  bgcolor="#cccccc" multiline="false">This is some text.</text>
+ </view>
+
+  <button  onclick='tt.setText("resize me!")'>(1) tt.setText("resize me!")</button>
+  <button  onclick='tt.setText("A longer string to show you what happens")'>(2) tt.setText("A longer string to show you what happens")</button>
+  <button  onclick='tt.setResize(true)'>(3) tt.setResize(true)</button>
+  <button  onclick='tt.setResize(false)'>(4) tt.setResize(false)</button>
+
+
+</canvas>
+
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

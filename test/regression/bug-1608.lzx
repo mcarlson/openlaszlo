@@ -1,0 +1,25 @@
+<canvas>
+<include href="lz/tabslider.lzx"/>
+
+<class name="mytab" extends="tabelement" width="100%"
+        bgcolor="green">
+      <view height="19" bgcolor="silver" width="100%"  />
+        <!--onclick="parent.parent.openTab(this, true)"/-->
+      <view height="1" bgcolor="black"  width="100%"/>
+</class>
+
+<tabslider height="200" bgcolor="blue" width="200"
+    oninit="this.openTab(this.one, false)"
+    mintabheight="20"
+    slideduration="300">
+    <mytab name="one"/>
+    <mytab/>
+    <mytab/>
+
+</tabslider>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

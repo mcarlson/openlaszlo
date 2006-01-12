@@ -1,0 +1,28 @@
+<canvas width="800" height="600">
+    <debug y="15%" height="80%" />
+    <dataset type="http" name="ds1" src="http://www.antisleep.com/cgi-bin/yawn?q=ds1"/>
+    <dataset type="http" name="ds2" src="http://www.antisleep.com/cgi-bin/yawn?q=ds2"/>
+    <dataset type="http" name="ds3" src="http://www.antisleep.com/cgi-bin/yawn?q=ds3"/>
+
+    <datapointer xpath="ds1:/*" ondata="Debug.write('got ds1');"/>
+    <datapointer xpath="ds2:/*" ondata="Debug.write('got ds2');"/>
+    <datapointer xpath="ds3:/*" ondata="Debug.write('got ds3');"/>
+
+    <view>
+        <simplelayout axis="y"/>
+
+        <button onclick="ds1.doRequest(); ds2.doRequest(); ds3.doRequest();">
+            3 in parallel
+        </button>
+
+
+        <button onclick="ds1.doRequest(); ds2.doRequest();">
+            1, 2
+        </button>
+
+
+        <button onclick="ds1.doRequest(); ds1.doRequest(); ds1.doRequest();">
+            ds1 three times in a row
+        </button>
+    </view>
+</canvas>

@@ -1,0 +1,34 @@
+<!-- all the lines of text numbered 1-65 should be displayed in the text region 
+
+ the bug is that it gets clipped at the first 32 lines -->
+
+<canvas width="1000" height="1000" >
+
+<view name="test">
+    <simplelayout axis="y" />
+
+    <button text="Insert 65 Lines Of Text" onclick="parent.forcetext()"/>
+    <text id="foo" multiline="false" width="200" height="600" bgcolor="#cccccc" />
+
+    <method name="forcetext">
+     <![CDATA[
+	var j;	
+	var msg = "";
+	for (j = 0; j < 100; j++) {
+	    msg = msg + j + "<br>";
+	}
+
+	foo.settext(msg);
+	
+     ]]>
+   </method>   
+	
+</view>
+
+</canvas>
+ 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

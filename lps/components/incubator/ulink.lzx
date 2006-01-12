@@ -1,0 +1,63 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+
+<!-- A class for URL links.
+
+This differs from the use of the XHTML <a> attribute, e.g in '<text><a href="http://openlaszlo.org">OpenLaszlo.org</a></text>', in these ways:
+- There is a hover effect.  (This defaults to underline.)
+- There is a hover color.  (This defaults to blue.)
+- The link content and target can be databound. 
+
+Example:
+  <ulink href="http://openlaszlo.org">OpenLaszlo.org</ulink>
+
+See ulink-test.lzx for additional examples. -->
+<library>
+  <class name="ulink">
+    <!-- The color when the link is <em>not</em> being hovered. -->
+    <attribute name="color" type="color" value="blue"/>
+    <!-- The color when the link is hovered. -->
+    <attribute name="hoverColor" type="color" value="blue"/>
+    <!-- A list of tags that are applied to the link when
+    it is hovered.  This is either a list of tag names, e.g. "u"
+    or "u b", or the HTML itself, e.g. "&lt;u&gt;". -->
+    <attribute name="hoverTags" type="string" value="u"/>
+    <!-- The text of the link. -->
+    <attribute name="text" type="html"/>
+    <!-- The URL target. -->
+    <attribute name="href" type="string"/>
+    <!-- Where the target opens.  See LzBrowser.loadURL for
+    a list of values. -->
+    <attribute name="target" type="string" value="_new"/>
+    
+    <method event="onmouseover">
+      label.setAttribute('fgcolor', this.hoverColor);
+      label.setText(makeTags(this.hoverTags)+this.text);
+    </method>
+    
+    <method event ="onmouseout">
+      label.setAttribute('fgcolor', this.color);
+      label.setText(this.text);
+    </method>
+    
+    <method event="onclick">
+      LzBrowser.loadURL(this.href, this.target)
+    </method>
+
+    <method name="makeTags" args="tags"><![CDATA[
+      if (tags.split('<').length > 1) return tags;
+      var s = '';
+      tags = tags.split(' ');
+      for (var i = 0; i < tags.length; i++) {
+        s += '<' + tags[i] + '>';
+      }
+      return s;
+    ]]></method>
+
+    <text name="label" resize="true" fgcolor="${parent.color}"
+          text="${parent.text}"/>
+  </class>
+</library>

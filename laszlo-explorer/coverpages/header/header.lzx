@@ -1,0 +1,14 @@
+<canvas width="705" height="80"  bgcolor="0x394660">
+
+    <include href="pageheader.lzx"/>
+    <script>
+      var innerTitle = typeof(global.title) != 'undefined' ? global.title : '';
+      var innerTag = typeof(global.tag) != 'undefined' ? global.tag : '';
+    </script>
+    <pageheader id="h" title="${global.innerTitle}" tag="${global.innerTag}"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,86 @@
+<canvas debug="true">
+    <include href="lzunit"/>
+    <include href="/extensions/views/richinputtext.lzx" />
+    <include href="/extensions/views/LzTextFormat.lzx" />
+    <include href="/incubator/textutils.lzx" />
+
+    <!--- Constant for testing. --> 
+    <attribute name="PLAIN_A" type="string" value="aaa." />
+    <attribute name="PLAIN_B" type="string" value="bBb!" /> 
+    <attribute name="PLAIN_C" type="string" value="c cat c!" />
+    <attribute name="RICH_A" type="string" value="&lt;bold&gt;rich&lt;/bold&gt;" />
+    <attribute name="RICH_B" type="string" value="&lt;bold&gt;i have spaces&lt;/bold&gt;" />    
+    <attribute name="RICH_C" type="string" value="&lt;bold&gt; space before and after &lt;/bold&gt;" />    
+    <attribute name="PLAIN_RICH_A" type="string" value="rich" />
+    <attribute name="PLAIN_RICH_B" type="string" value="i have spaces" />    
+    <attribute name="PLAIN_RICH_C" type="string" value=" space before and after " />    
+    
+    <class name="Creation" extends="TestCase">
+        <method name="testCreation">
+            var f = new LzTextFormat();
+            assertNotNull(f); 
+            assertNull(f.font); 
+        </method>
+
+        <method name="testCreationWithArg">
+            var f = new LzTextFormat(this, {bold:true});
+            assertTrue(f.bold);
+        </method>
+
+        <method name="testCreationWithArgs">
+            var f = new LzTextFormat(this, {bold:true, font:"Verdana"});
+            assertTrue(f.bold);
+            assertSame("Verdana", f.font);
+            assertNull(f.url); 
+        </method>
+       
+        <method name="testCreationWithColor">
+            var f = new LzTextFormat(this, {color:0x0000FF});
+            assertSame(0x0000FF, f.color);
+        </method>
+    </class>        
+
+    <class name="FormatToHTML" extends="TestCase">
+        <!--- Doesn't do a proper test. -->
+        <method name="testSimple">
+            var fmt = new LzTextFormat(this); 
+            var html = fmt.toHTML();
+            assertNotNull(html); 
+        </method>
+
+        <!--- Set the font, then turn it into html. Very fuzzy test. --> 
+        <method name="testFont">
+            var fmt = new LzTextFormat(this, {font: "Verdana"}); 
+            var html = fmt.toHTML();
+            Debug.write("FormatToHTML.testFont got " + html); 
+            assertTrue(html.length &gt;= 9); 
+        </method>
+        
+    </class>
+
+    <TestSuite>
+        <Creation />
+        <FormatToHTML />
+        <!-- TODO: 
+            Defaults
+            Changes
+            Removing text
+            Replacing text
+            more...
+        -->
+    </TestSuite>
+
+    <window y="280">
+    <richinputtext id="rich" 
+        width="${parent.width-20}" height="100" 
+        multiline="true"
+        text="" >        
+    </richinputtext>
+    </window>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

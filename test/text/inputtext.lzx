@@ -1,0 +1,38 @@
+<canvas  height="700">   
+    <include href="redmond" />
+    <font src="helmetr.ttf" name="Helvetica"/>
+
+    <simplelayout axis="x" />
+    <view name="b">
+        <text name="t" height="60" width="80" multiline="false">
+            this is some text to test<br/>
+            this is some text to test<br/>
+            this is some text to test
+            <attribute name="lineheight" 
+                       value="${this.font.height * this.fontsize/this.DEFAULT_SIZE}" 
+                       when="once" />
+        </text>
+        <view width="10" height="1" bgcolor="red" y="${parent.t.lineheight}" />
+        <view width="10" height="1" bgcolor="red" y="${2*parent.t.lineheight}" />
+        <view width="10" height="1" bgcolor="red" y="${3*parent.t.lineheight}" />
+    </view>
+    
+    <view name="d" >
+        <inputtext name="t" height="360" width="300">
+            this is some text to test
+            this is some text to test
+            this is some text to test
+            <attribute name="alineheight" 
+                       value="${this.font.height * this.fontsize/this.DEFAULT_SIZE}"
+                       when="once" />
+        </inputtext>
+        <view width="10" height="1" bgcolor="red" y="${parent.t.alineheight}" />
+        <view width="10" height="1" bgcolor="red" y="${2*parent.t.alineheight}" />
+        <view width="10" height="1" bgcolor="red" y="${3*parent.t.alineheight}" />
+    </view>
+        
+</canvas>   
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

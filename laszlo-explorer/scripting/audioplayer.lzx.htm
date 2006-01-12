@@ -1,0 +1,27 @@
+Like most modern programming languages, LZX is event-driven. User Interface components have events
+
+(For example: <font class=attribute>oninit</font>, <font class=attribute>onclick</font>, <font class=attribute>onmousedown</font>, <font class=attribute>onmouseup</font>, ...).  You can write standard <b>JavaScript</b> code to define the component's
+
+behavior when a specific event is triggered. LZX is really the combination of two standards: XML (to declaratively define the
+
+User Interface) and embedded JavaScript (to define components' behaviors).<br>
+
+<img src="images/spacer.gif" height=6><br>
+
+Notice that we used a different syntax to define the event handler for the Pause button and for the Resume button.
+
+<img src="images/spacer.gif" height=6><br>
+
+<table>
+
+<tr valign=top><td><li></td><td>For the Pause button, we used the <font class=attribute>onclick</font> attribute of the <font class=tag>&lt;button&gt;</font> tag.</td></tr>
+
+<tr valign=top><td><li></td><td>For the Resume button, we defined a <font class=tag>&lt;method&gt;</font> inside the <font class=tag>&lt;button&gt;</font> to handle the event. This approach is usually more readable when the event handler
+
+involves multiple lines of code.</td></tr>
+
+</table>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,8 @@
+<canvas>  
+  <resource name="horse" src="horse-3.jpg"/>
+  <text multiline="true" height="300">
+    Some text and
+    <img src="horse-3.jpg" width="20" height="20" align="left"/>
+    some more text
+  </text>
+</canvas>

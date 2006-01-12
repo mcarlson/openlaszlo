@@ -1,0 +1,18 @@
+# Common Attributes Module
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+id.attrib = attribute id { ID.datatype }?
+class.attrib = attribute class { NMTOKENS.datatype }?
+title.attrib = attribute title { Text.datatype }?
+Core.attrib = id.attrib, class.attrib, title.attrib
+lang.attrib = attribute xml:lang { LanguageCode.datatype }?
+I18n.attrib = lang.attrib
+Common.attrib = Core.attrib, I18n.attrib
+CommonIdRequired.attrib =
+  attribute id { ID.datatype },
+  class.attrib,
+  title.attrib,
+  I18n.attrib

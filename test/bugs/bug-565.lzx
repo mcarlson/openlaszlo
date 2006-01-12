@@ -1,0 +1,14 @@
+<!-- Test case for bug 565.  Poor effor message for misused keyword 'function' -->
+
+<canvas>
+    <view name="foo">
+        <method name="bar" args="zot">
+	    return zot == function;
+        </method>
+    </view>
+</canvas>
+	
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

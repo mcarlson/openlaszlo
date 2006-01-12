@@ -1,0 +1,164 @@
+<library>
+
+    <!-- Fonts used in the application -->
+
+    <resource name="radio_rsc">
+        <frame src="images/radio_off.gif"/>
+        <frame src="images/radio_on.gif"/>
+    </resource>
+
+    <resource name="header" src="images/header.jpg"/>
+
+    <resource name="divider_panel" src="images/divider_panel.swf"/>
+
+    <resource name="laszlo_powered">
+        <frame src="images/laszlo_power_norm.swf"/>
+        <frame src="images/laszlo_power_roll.swf"/>
+    </resource>
+
+    <resource name="background" src="images/background.swf"/>
+
+    <resource name="creditcard" src="images/cclogo.gif"/>
+
+    <resource name="usps" src="images/usps.gif"/>
+    <resource name="ups" src="images/ups.jpg"/>
+    <resource name="fedex" src="images/fedex.gif"/>
+
+    <resource name="stars_rsc">
+        <frame src="images/stars10.gif"/>
+        <frame src="images/stars20.gif"/>
+        <frame src="images/stars30.gif"/>
+        <frame src="images/stars40.gif"/>
+        <frame src="images/stars50.gif"/>
+    </resource>
+
+    <resource name="dragframe" src="images/drag_frame.swf"/>
+
+    <resource name="add_address">
+        <frame src="images/add_address_norm.swf"/>
+        <frame src="images/add_address_roll.swf"/>
+    </resource>
+
+    <resource name="add_card">
+        <frame src="images/add_card_norm.swf"/>
+        <frame src="images/add_card_roll.swf"/>
+    </resource>
+
+    <resource name="ok_butt">
+        <frame src="images/ok_butt_norm.swf"/>
+        <frame src="images/ok_butt_roll.swf"/>
+        <frame src="images/ok_butt_down.swf"/>
+    </resource>
+
+    <resource name="cancel_butt">
+        <frame src="images/cancel_butt_norm.swf"/>
+        <frame src="images/cancel_butt_roll.swf"/>
+        <frame src="images/cancel_butt_down.swf"/>
+    </resource>
+
+    <resource name="info_butt">
+        <frame src="images/info_butt_norm.swf"/>
+        <frame src="images/info_butt_roll.swf"/>
+        <frame src="images/info_butt_down.swf"/>
+    </resource>
+
+    <resource name="cart_butt">
+        <frame src="images/cart_butt_norm.swf"/>
+        <frame src="images/cart_butt_roll.swf"/>
+        <frame src="images/cart_butt_down.swf"/>
+    </resource>
+
+    <resource name="wish_butt">
+        <frame src="images/wish_butt_norm.swf"/>
+        <frame src="images/wish_butt_roll.swf"/>
+        <frame src="images/wish_butt_down.swf"/>
+    </resource>
+
+    <resource name="back_butt">
+        <frame src="images/back_norm.swf"/>
+        <frame src="images/back_roll.swf"/>
+    </resource>
+
+    <resource name="submit_butt">
+        <frame src="images/submit_butt_norm.swf"/>
+        <frame src="images/submit_butt_roll.swf"/>
+        <frame src="images/submit_butt_down.swf"/>
+    </resource>
+
+    <resource name="search_butt">
+        <frame src="images/search_butt_norm.swf"/>
+        <frame src="images/search_butt_roll.swf"/>
+        <frame src="images/search_butt_down.swf"/>
+    </resource>
+
+    <resource name="slider_cart">
+        <frame src="images/slider_cart_norm.swf"/>
+        <frame src="images/slider_cart_roll.swf"/>
+        <frame src="images/slider_cart_down.swf"/>
+        <frame src="images/slider_cart_2_norm.swf"/>
+        <frame src="images/slider_cart_2_roll.swf"/>
+        <frame src="images/slider_cart_2_down.swf"/>
+    </resource>
+
+    <resource name="slider_wish">
+        <frame src="images/slider_wish_norm.swf"/>
+        <frame src="images/slider_wish_roll.swf"/>
+        <frame src="images/slider_wish_down.swf"/>
+        <frame src="images/slider_wish_2_norm.swf"/>
+        <frame src="images/slider_wish_2_roll.swf"/>
+        <frame src="images/slider_wish_2_down.swf"/>
+    </resource>
+
+    <resource name="slider_checkout">
+        <frame src="images/slider_checkout_norm.swf"/>
+        <frame src="images/slider_checkout_roll.swf"/>
+        <frame src="images/slider_checkout_down.swf"/>
+        <frame src="images/slider_checkout_2_norm.swf"/>
+        <frame src="images/slider_checkout_2_roll.swf"/>
+        <frame src="images/slider_checkout_2_down.swf"/>
+    </resource>
+
+    <resource name="slider_drag">
+        <frame src="images/slider_drag_norm.swf"/>
+        <frame src="images/slider_drag_roll.swf"/>
+        <frame src="images/slider_drag_down.swf"/>
+    </resource>
+
+    <resource name="tabslider">
+        <frame src="images/tabslider_norm.swf"/>
+        <frame src="images/tabslider_roll.swf"/>
+        <frame src="images/tabslider_down.swf"/>
+    </resource>
+
+    <resource name="wait_search">
+        <frame src="images/wait_search.swf" />
+    </resource>
+
+    <resource name="wait_info">
+        <frame src="images/wait_info.swf" />
+    </resource>
+
+    <resource name="search_panel">
+        <frame src="images/search_close_norm.swf"/>
+        <frame src="images/search_close_roll.swf"/>
+        <frame src="images/search_close_roll.swf"/>
+        <frame src="images/search_open_norm.swf"/>
+        <frame src="images/search_open_roll.swf"/>
+        <frame src="images/search_open_roll.swf"/>
+    </resource>
+
+    <resource name="trash_can">
+        <frame src="images/trashcan_norm.swf" />
+        <frame src="images/trashcan_roll.swf" />
+    </resource>
+
+    <resource name="loading_background" src="images/loading_bg.swf" />
+
+    <resource name="loading_anim" src="images/loading_anim.swf" />
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,18 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<ol>
+<li> Click into edittext box which displays "edit text here"</li>
+
+<li>Keyboard navigate to any checkbox.(shift+tab)
+<li>Toggle select checkbox with the spacebar and verify:
+<ul><li>no space characters being entered in edittext (bug 4828)</li>
+</ul></li>
+<li>On startup verify that:
+<ul>
+<li>styles
+</ul></li>
+</ol>
+TODO: MD Finish this app test plan...

@@ -1,0 +1,8 @@
+<library>
+    <include href="utils/layouts/simplelayout.lzx"/>
+    <class name="hbox">
+        <attribute name="spacing" value="0"/>
+        <attribute name="inset" value="0"/>
+        <simplelayout spacing="${parent.spacing}" inset="${parent.inset}" axis="x"/>
+    </class>
+</library>

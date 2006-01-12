@@ -1,0 +1,140 @@
+<library>
+<class name="resizelayout" extends="layout" >
+
+    <!--- The axis in which this layout operates either 'x' or 'y'.  -->
+    <attribute name="axis" setter="this.setAxis( axis )" 
+               value="y"
+               type="string" />
+
+    <!--- A pixel amount to use between each view in the layout -->
+    <attribute name="spacing" value="0" />
+
+    <!--- @keywords private -->
+    <method name="construct" args="view , args" >
+
+        super.construct( view , args );
+        this.resetDelegate = new LzDelegate( this , "reset");
+        this.heldSubs = new Object;
+
+        if ( args[ 'releaseview' ] != null ){
+            this.heldSubs[ view[args.releaseview].getUID() ] = false;
+        }
+
+        if ( args[ 'release' ] != null ){
+            this.heldSubs[ args.release.getUID() ] = false;
+        }
+
+        this.delegates.push( this.updateDelegate );
+    </method>
+
+    <!--- setter for the axis attribute. The default value is 'y' 
+          @param string a: 'x' oy 'y' -->
+    <method name="setAxis" args="a" >
+        this.axis = a;
+        this.sizeAxis = a == "x" ? "width" : "height"
+        this.updateDelegate.register( this.immediateparent , "on" + this.sizeAxis);
+    </method>
+
+    <!--- @keywords private -->
+    <method name="addSubview" args="sd" >
+        <![CDATA[
+        super.addSubview( sd );
+        var subview_id = sd.getUID();  // creates a UID if needed
+        if (sd.getOption('releasetolayout')) {
+            sd.setAttribute(this.sizeAxis,0);
+        } else {
+            this.hold( sd ); //subviews are held by default
+        }
+
+        this.resetDelegate.register( sd , "on" + this.sizeAxis );
+        this.reset();
+        ]]>
+    </method>
+
+    <!--- holding a subview keeps it from being resized when the parent view resizes
+          @param LzView subview: the subview to be held ( not resized ) -->
+    <method name="hold" args="subview" >
+        //right now if a held subview is resized, the layout will
+        //not do the right thing automatically
+        //should register a delegate
+        this.heldSubs[ subview.getUID() ] = true;
+        this.reset();
+    </method>
+
+    <!--- releasing a subview allows the layout to resize it when the parent view stretches
+          @param LzView subview: the subview to be resized -->
+    <method name="release" args="subview">
+        this.heldSubs[ subview.getUID() ] = false;
+        this.reset();
+    </method>
+
+    <!--- @keywords private -->
+    <method name="reset" args="e">
+        <![CDATA[
+        if ( this.locked ) { return; }
+        this.totalHeld = 0;
+        this.heldAmount = 0;
+        this.lastUnheld  = -1;
+
+        var svl = this.subviews.length;
+        for (var i = 0; i < svl; i++ ) {
+            var s = this.subviews[i];
+            var hs = i < svl-1 ? this.spacing : 0;
+            if ( this.heldSubs[ s.getUID() ] ) {
+                hs += s[(this.sizeAxis)];
+                this.heldAmount += hs;
+                this.totalHeld++;
+            } else {
+                this.lastUnheld = i;
+                this.heldAmount += hs;
+            }
+        }
+
+        this.unheldCount = this.subviews.length - this.totalHeld ;
+
+        this.update( );
+
+        ]]>
+    </method>
+
+
+    <!--- This method is usually called automatically when any of the views
+          controlled by the layout change their size in the layout axis, or
+          their visibility. However it can be called directly to force the
+          layout to update 
+          @param deprecated e: there are no arguments to this update method-->
+    <method name="update" args="e">
+        <![CDATA[
+        if ( this.locked ) { return; }
+        this.lock();
+        var layoutSize = this.immediateparent[(this.sizeAxis)];
+
+        var sizeDifference  = layoutSize - (this.heldAmount );
+        var newElementSize = sizeDifference /this.unheldCount;
+        var c = 0;
+        for ( var i=0; i < this.subviews.length ; i++) {
+            var s = this.subviews[i];
+
+            // Set the position
+            s.setAttribute( this.axis , c );
+
+            // IF THE VIEW ALLOWS ITS size TO BE ALTERED THEN SET IT.
+            if ( ! this.heldSubs[ s.getUID() ] ) {
+                s.setAttribute( this.sizeAxis, newElementSize );
+            }
+
+            c += this.spacing + s[( this.sizeAxis )] ;
+
+        }
+        this.locked = false;
+
+        ]]>
+    </method>
+
+</class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

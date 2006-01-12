@@ -1,0 +1,163 @@
+<canvas width="800">
+    <debug x="300" height="300"/>
+    <greenstyle name="greencolors"/>
+    <dataset name="mydata">
+        <date>
+            <day>1</day>
+            <day>2</day>
+            <day>3</day>
+            <day>4</day>
+            <day>5</day>
+            <day>6</day>
+            <day>7</day>
+            <day>8</day>
+            <day>9</day>
+            <day>10</day>
+            <day>11</day>
+            <day>12</day>
+            <day>13</day>
+            <day>14</day>
+            <day>15</day>
+            <day>16</day>
+            <day>17</day>
+            <day>18</day>
+            <day>19</day>
+            <day>20</day>
+            <day>21</day>
+            <day>22</day>
+            <day>23</day>
+            <day>24</day>
+            <day>25</day>
+            <day>26</day>
+            <day>27</day>
+            <day>28</day>
+            <day>29</day>
+            <day>30</day>
+            <day>31</day>
+        </date>
+    </dataset>
+    <dataset name="mydata2">
+        <date>
+            <day>1</day>
+            <day>2</day>
+            <day>3</day>
+            <day>4</day>
+            <day>5</day>
+            <day>6</day>
+            <day>7</day>
+            <day>8</day>
+            <day>9</day>
+            <day>10</day>
+            <day>11</day>
+            <day>12</day>
+            <day>13</day>
+            <day>14</day>
+            <day>15</day>
+            <day>16</day>
+            <day>17</day>
+            <day>18</day>
+            <day>19</day>
+            <day>20</day>
+            <day>21</day>
+            <day>22</day>
+            <day>23</day>
+            <day>24</day>
+            <day>25</day>
+            <day>26</day>
+            <day>27</day>
+            <day>28</day>
+            <day>29</day>
+            <day>30</day>
+            <day>31</day>
+        </date>
+    </dataset>
+    <dataset name="mydata3">
+        <date>
+            <day>1</day>
+            <day>2</day>
+            <day>3</day>
+            <day>4</day>
+            <day>5</day>
+            <day>6</day>
+            <day>7</day>
+            <day>8</day>
+            <day>9</day>
+            <day>10</day>
+            <day>11</day>
+            <day>12</day>
+            <day>13</day>
+            <day>14</day>
+            <day>15</day>
+            <day>16</day>
+            <day>17</day>
+            <day>18</day>
+            <day>19</day>
+            <day>20</day>
+            <day>21</day>
+            <day>22</day>
+            <day>23</day>
+            <day>24</day>
+            <day>25</day>
+            <day>26</day>
+            <day>27</day>
+            <day>28</day>
+            <day>29</day>
+            <day>30</day>
+            <day>31</day>
+        </date>
+    </dataset>
+    <inittimer/>
+    <class name="resizelistitem" extends="textlistitem">
+        <method event="onselected">
+            if (this.selected) this.setHeight(40);
+            else this.setHeight(20);
+        </method>
+    </class>
+    <view x="20" y="30" layout="axis:x;spacing:20">
+        <view layout="axis:y; spacing:2">
+            <text>single select</text>
+            <list id="d1" shownitems="4" y="50"
+                dataoption="resize">
+                <resizelistitem datapath="mydata:/date/day/text()"/>
+            </list>
+            <text y="35" text="${d1.value}"/>
+
+            <view height="10" width="100"/>
+            <text>multi select</text>
+            <list id="d2" shownitems="4" multiselect="true"
+                dataoption="resize">
+                <resizelistitem datapath="mydata2:/date/day/text()"/>
+            </list>
+            <view layout="axis:y">
+                <view layout="axis:x">
+                    <button>Get Value
+                        <method event="onclick">
+                            var val = d2.getValue();
+                            d2val.setText(typeof(val) + '\n' + val);
+                        </method>
+                    </button>
+                    <button>Clear
+                        <method event="onclick">
+                            var val = d2.clearSelection();
+                        </method>
+                    </button>
+                </view>
+                <text multiline="true" id="d2val" width="200" height="60"/>
+            </view>
+
+        </view>
+        <list id="d3" shownitems="4"
+             style="greencolors" bgcolor="${greencolors.basecolor}"
+            spacing="2" dataoption="resize">
+            <resizelistitem datapath="mydata3:/date/day/text()"/>
+        </list>
+
+    </view>
+
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,612 @@
+<canvas width="800" height="1500">
+    <dataset name="contacts">
+        <resultset/>
+    </dataset>
+    <dataset name="simpleset">
+        <resultset/>
+    </dataset>
+
+    <dataset name="acontact">
+        <result id="154" firstname="Chep" displayname="Yo" 
+                nickname="Yo" email="chep@arwins.com" home_phone="33-3333" 
+                work_phone="444-4444" 
+                work_webpage="http://www.laszlosystems.com/" />
+    </dataset>
+
+    <class name="memtester">
+        <attribute name="load" value="10"/>
+        <attribute name="newclass" type="string"/>
+        <attribute name="newattrs"/>
+        <attribute name="running" value="false"/> 
+        <attribute name="defaultPlacement" value="content" type="string"/> 
+
+        <text text="${parent.newclass}"/>
+        <button visible="${!parent.running}" 
+                onclick="parent.setAttribute( 'running' , true )">start</button>
+        <button visible="${parent.running}" 
+                onclick="parent.setAttribute( 'running' , false )">stop</button>
+        <view name="content">
+        </view>
+
+        <method event="oninit">
+            this.n = [];
+            this.idel = new LzDelegate( this , "dispatch" );
+            this.make = true;
+        </method>
+
+        <method event="onrunning">
+            if ( this.running ){
+                this.idel.register( LzIdle, 'onidle' );
+            } else {
+                this.idel.unregisterAll();
+            }
+        </method>
+
+        <method name="dispatch">
+            if ( this.make ){
+                this.makeIt();
+            } else {
+                this.deleteIt();
+            }
+            this.make = !this.make;
+        </method>
+
+        <method name="makeIt"><![CDATA[
+            for ( var i = 0; i < this.load; i++ ){
+                //give everything a name
+                newattrs.name = "t" + i;
+                this.n.push(  
+                    new global[ this.newclass ]( this.content, this.newattrs ));
+            }]]>
+        </method>
+        <method name="deleteIt"><![CDATA[
+            while ( this.n.length){
+                this.n.pop().destroy();
+            }]]>
+        </method>
+        <simplelayout/>
+    </class>
+    <class name="dview">
+        <datapath xpath="@foo"/>
+    </class>
+    <dataset name="staticdata">
+        <top>
+            <record a="0">some text</record>
+            <record a="1">some text</record>
+            <record a="2">some text</record>
+            <record a="3">some text</record>
+            <record a="4">some text</record>
+            <record a="5">some text</record>
+            <record a="6">some text</record>
+            <record a="7">some text</record>
+            <record a="8">some text</record>
+            <record a="9">some text</record>
+        </top>
+    </dataset>
+
+
+    <class name="tinycal"
+           height="22"
+           bgcolor="${normalColor}"
+           width="10"
+           clickable="true">
+
+        <attribute name="selected"/>
+
+        <attribute name="hiColor" type="color" value="0xDDDDDD"/>
+        <attribute name="bkgndColor" type="color" value="0x5D84CB"/>
+
+        <method name="getEventColor" args="cat">
+            if (cat==undefined || cat=="") return (0xC6CEDC); //default
+            else var catColor = category_colors[cat];
+
+            setAttribute('hiColor',gColorTable[catColor].bright);
+            setAttribute('bkgndColor',gColorTable[catColor].bkgnd);
+
+            return (gColorTable[catColor].dim);
+        </method>
+
+        <attribute name="pixelPerMin" type="number" value="22/60"/>
+
+        <attribute name="startTime" type="number"/>
+        <attribute name="startHour" type="number"/>
+        <attribute name="startMin"  type="number"/>
+        <attribute name="endTime"   type="number"/>
+        <attribute name="endHour"   type="number"/>
+        <attribute name="endMin"    type="number"/>
+
+        <attribute name="mouseIsDown" value="false"/>
+
+        <!-- VIEWS -->
+        <view name="tl" bgcolor="#FFFFFF"
+              width="${classroot.width}" height="1" />
+        <view name="bl" bgcolor="#555555"
+              width="${classroot.width}" height="1"
+              y="${parent.height-1}" />
+
+        <text name="timeArea" fgcolor="#4B5D6C"
+              width="35" height="20" x="2" y="3"
+              visible="$once{!this.classroot.classroot.opened}">
+
+            <!--This is a little strange, but we have consolidated the
+                code that handles start times here -->
+        </text>
+
+        <text name="smalltitletext" fgcolor="#4B5D6C"
+              width="$once{classroot.width}"
+              height="20" x="23" y="3"/>
+
+        <method name="openToggle" args="o">
+            if ( o ){
+                this.timeArea.setVisible( false );
+                this.smalltitletext.setX( 10 );
+                this.timekgnd.setBgColor(this.bkgndColor);
+            } else {
+                this.timeArea.setVisible( true );
+                this.smalltitletext.setX( 25 );
+                this.setX( 0 );
+                this.setHeight(22);
+                this.parent.closedlayout.update(true);
+            }
+        </method>
+
+        <state name="timeLayout" apply="${this.parent.classroot.opened}"
+               onapply="parent.openToggle(true)"
+               onremove="parent.openToggle(false)">
+
+            <attribute name="x"
+                       value="24"/>
+            <attribute name="y"
+                       value="${this.startTime * this.pixelPerMin}"/>
+            <!--<attribute name="width"
+                       value="${parent.width-this.x-14}" /> -->
+            <attribute name="height"
+                       value="${correctHeight((this.endTime - this.startTime)
+                               * this.pixelPerMin)}" />
+            <method name="correctHeight" args="h">
+                if (h &lt; 22) return 22;
+                else return h;
+            </method>
+
+            <!-- EVENT BOX VIEW -->
+            <view name="timekgnd" bgcolor="#5D84CB" opacity=".3"
+                x="-29" width="29" height="${parent.height}">
+
+                <!--This is a little strange, but we have consolidated the
+                code that handles end times here -->
+            </view>
+        </state>
+
+        <!-- METHODS -->
+        <method event="onmouseover">
+            this.setBGColor( this.hiColor );
+        </method>
+
+        <method event="onmouseout">
+            this.setBGColor( this.normalColor );
+        </method>
+
+        <method event="onmousedown">
+            this.mouseIsDown = true;
+            calgrid.daySelectionMgr.select(this.classroot);
+            eventselector.selectData( this );
+        </method>
+
+        <method event="onmouseup">
+            this.mouseIsDown = false;
+            eventselector.domouseup();
+        </method>
+
+    </class>
+        
+    <class name="calendar_event"
+           height="22"
+           bgcolor="${normalColor}"
+           width="$once{canvas.width}"
+           clickable="true">
+
+        <attribute name="selected"/>
+
+        <attribute name="normalColor" type="color"
+            value="getEventColor(this.datapath.getXPath('category[1]/@value'))"
+            when="always"/>
+
+        <attribute name="hiColor" type="color" value="0xDDDDDD"/>
+        <attribute name="bkgndColor" type="color" value="0x5D84CB"/>
+
+        <method name="getEventColor" args="cat">
+            if (cat==undefined || cat=="") return (0xC6CEDC); //default
+            else var catColor = category_colors[cat];
+
+            setAttribute('hiColor',gColorTable[catColor].bright);
+            setAttribute('bkgndColor',gColorTable[catColor].bkgnd);
+
+            return (gColorTable[catColor].dim);
+        </method>
+
+        <attribute name="pixelPerMin" type="number" value="22/60"/>
+
+        <attribute name="startTime" type="number"/>
+        <attribute name="startHour" type="number"/>
+        <attribute name="startMin"  type="number"/>
+        <attribute name="endTime"   type="number"/>
+        <attribute name="endHour"   type="number"/>
+        <attribute name="endMin"    type="number"/>
+
+        <attribute name="mouseIsDown" value="false"/>
+
+        <method event="ondata">
+            // When a event is current it's selected node attribute is 'true'
+            // This is the only way that an event becomes the current event,
+            // which in turn selects the event selector bar
+            this.selected = this.datapath.getNodeAttribute('selected') == true;
+            if (this.selected)
+                eventselector.setSelectedEvent( this ,this.mouseIsDown );
+        </method>
+
+        <!-- VIEWS -->
+        <view name="tl" bgcolor="#FFFFFF"
+              width="${classroot.width}" height="1" />
+        <view name="bl" bgcolor="#555555"
+              width="${classroot.width}" height="1"
+              y="${parent.height-1}" />
+
+        <text name="timeArea" fgcolor="#4B5D6C"
+              width="35" height="20" x="2" y="3"
+              visible="$once{!this.classroot.classroot.opened}">
+              <datapath xpath="start[1]">
+                <!-- Usually data bound views are 'automagically' displayed
+                     which changes the visibility so that views without
+                     data are hidden. 'datacontrolsvisibility' set to false
+                     allows us to control when events are shown without
+                     interference from the data binding -->
+                    <attribute name="datacontrolsvisibility" value="false"/>
+              </datapath>
+
+            <!--This is a little strange, but we have consolidated the
+                code that handles start times here -->
+            <method event="ondata"><![CDATA[
+                var o = this.datapath.getNodeAttributes();
+
+                if ( classroot['startHour'] == o['hour'] &&
+                     classroot['startMin'] == o['minute']) return;
+
+                var sh = classroot.startHour =  number(o['hour']);
+                classroot.startMin = number(o['minute']);
+
+                classroot.setAttribute ( "startTime" ,
+                                 classroot.startHour * 60 + classroot.startMin);
+
+                var ap = sh < 12 ? 'a' : 'p';
+                if ( sh > 12) sh-=12;
+                else if ( sh==0 ) sh='12';
+
+                this.setText( sh+ap );
+
+                //if (classroot.classroot.opened)
+                //   classroot.parent.closedlayout.setAttribute('enabled',true);
+               // classroot.parent.closedlayout.update(true);
+            ]]></method>
+        </text>
+
+        <text name="smalltitletext" fgcolor="#4B5D6C"
+              width="$once{classroot.width}"
+              height="20" x="23" y="3"
+              datapath="summary[1]/@value" />
+
+        <method name="openToggle" args="o">
+            if ( o ){
+                this.timeArea.setVisible( false );
+                this.smalltitletext.setX( 10 );
+                this.timekgnd.setBgColor(this.bkgndColor);
+            } else {
+                this.timeArea.setVisible( true );
+                this.smalltitletext.setX( 25 );
+                this.setX( 0 );
+                this.setHeight(22);
+                this.parent.closedlayout.update(true);
+            }
+        </method>
+
+        <state name="timeLayout" apply="${this.parent.classroot.opened}"
+               onapply="parent.openToggle(true)"
+               onremove="parent.openToggle(false)">
+
+            <attribute name="x"
+                       value="24"/>
+            <attribute name="y"
+                       value="${this.startTime * this.pixelPerMin}"/>
+            <!--<attribute name="width"
+                       value="${parent.width-this.x-14}" /> -->
+            <attribute name="height"
+                       value="${correctHeight((this.endTime - this.startTime)
+                               * this.pixelPerMin)}" />
+            <method name="correctHeight" args="h">
+                if (h &lt; 22) return 22;
+                else return h;
+            </method>
+
+            <!-- EVENT BOX VIEW -->
+            <view name="timekgnd" bgcolor="#5D84CB" opacity=".3"
+                x="-29" width="29" height="${parent.height}">
+                <datapath xpath="end[1]"/>
+
+                <!--This is a little strange, but we have consolidated the
+                code that handles end times here -->
+                <method event="ondata"><![CDATA[
+                    var o = this.datapath.getNodeAttributes();
+
+                    if ( classroot['endHour'] == o['hour'] &&
+                         classroot['endMin'] == o['minute']) return;
+
+                    var eh = classroot.endHour =  number(o['hour']);
+                    classroot.endMin = number(o['minute']);
+
+                    classroot.setAttribute ( "endTime" ,
+                                     classroot.endHour * 60 + classroot.endMin);
+
+                   if (classroot.classroot.opened){
+                        var h = ((classroot.endTime - classroot.startTime ) *
+                             classroot.pixelPerMin);
+                        if (h<22) h=22;
+                        classroot.setHeight(h);
+                    }else{
+                        classroot.setHeight(22);
+                    }
+
+                ]]></method>
+
+            </view>
+        </state>
+
+        <!-- METHODS -->
+        <method event="onmouseover">
+            this.setBGColor( this.hiColor );
+        </method>
+
+        <method event="onmouseout">
+            this.setBGColor( this.normalColor );
+        </method>
+
+        <method event="onmousedown">
+            this.mouseIsDown = true;
+            calgrid.daySelectionMgr.select(this.classroot);
+            eventselector.selectData( this );
+        </method>
+
+        <method event="onmouseup">
+            this.mouseIsDown = false;
+            eventselector.domouseup();
+        </method>
+
+    </class>
+    <view height="100">
+        <simplelayout axis="x"/>
+        <memtester newclass="LzNode" 
+                newattrs="{}"> </memtester>
+        <memtester newclass="LzView" 
+                newattrs="{bgcolor : 255 , width:100 , height:10 }"> 
+            <simplelayout spacing="1"/>
+        </memtester>
+        <memtester newclass="LzText"
+                newattrs="{text : 'foo' }">
+            <simplelayout spacing="1"/>
+        </memtester>
+
+        <memtester newclass="dview"> <simplelayout/></memtester> 
+
+        <memtester newclass="tinycal" load="5">
+            <simplelayout spacing="1"/>
+        </memtester>
+        <memtester newclass="calendar_event" load="5">
+            <simplelayout spacing="1"/>
+        </memtester>
+    </view>
+    <class name="ColumnSeparator" width="2" height="${immediateparent.height}"
+           bgcolor="#000000"
+           clickable="true" cursor="splitcursor"
+           onmousedown="startDrag();"
+           onmouseup="stopDrag();">
+
+        <!-- METHODS of swatchview -->
+        <method name="startDrag">
+            var offset = Math.floor( this.getMouse( 'x' ) ) - 0.5;
+            this.dragc = new LzMouseConstraint( this ,
+                             { prop : 'x', offset:-offset } );
+            LzCursor.lock();
+        </method>
+
+        <method name="stopDrag">
+            this.dragc.release();
+            LzCursor.unlock();
+        </method>
+    </class>
+    <view height="100">
+        <simplelayout axis="x"/>
+        <memtester newclass="LzDatapointer" 
+                   newattrs="{ xpath : 'staticdata:/top/record[1]'}">
+        </memtester>
+        <!-- not really a memtester, overrides makeIt, deleteIt -->
+        <memtester newclass="simpledat" >
+            <datapointer name="ptrToContact" xpath="acontact:/result"/>
+            <datapointer name="ptrToDset" xpath="simpleset:/resultset"/>
+            <method name="makeIt"><![CDATA[
+                for ( var i = 0; i < this.load; i++ ){
+                    ptrToDset.addNodeFromPointer( ptrToContact ).destroy();
+                }
+                ]]>
+            </method>
+            <method name="deleteIt"><![CDATA[
+                ptrToDset.selectChild();
+                while ( ptrToDset.getNodeName() != 'resultset' ){
+                    ptrToDset.deleteNode();
+                }
+                ]]>
+            </method>
+            <view width="200">
+                <simplelayout/>
+                <view bgcolor="#FFFFFF">
+                    <datapath xpath="simpleset:/resultset/*" name="codp"/>
+
+                    <!--VIEWS-->
+
+                    <text x="2" y="2" width="50" datapath="@displayname">
+                    </text>
+
+                    <text width="50" datapath="@email">
+                    </text>
+
+                    <text width="50" datapath="@home_phone" >
+                    </text>
+
+                    <text width="50" datapath="@work_phone" >
+                    </text>
+                    <!-- METHODS of duplicated view -->
+                    <simplelayout axis="x"/>
+                </view>
+            </view>
+        </memtester>
+
+        <memtester newclass="datatest">
+            <datapointer name="ptrToContact" xpath="acontact:/result"/>
+            <datapointer name="ptrToDset" xpath="contacts:/resultset"/>
+            <method name="makeIt"><![CDATA[
+                for ( var i = 0; i < this.load; i++ ){
+                    ptrToDset.addNodeFromPointer( ptrToContact ).destroy();
+                }
+                ]]>
+            </method>
+            <method name="deleteIt"><![CDATA[
+                ptrToDset.selectChild();
+                while ( ptrToDset.getNodeName() != 'resultset' ){
+                    ptrToDset.deleteNode();
+                }
+                ]]>
+            </method>
+            <view>
+                <!-- from contacts -->
+                <simplelayout/>
+                <!-- VIEWS of mainWindow -->
+                <view name="topbuttons" height="20"
+                    width="300" clip="true">
+                    <!-- **TODO: Use a custom layout for this row, rather than this
+                        complicated (and slow) constraint system. -->
+
+                    <!-- VIEWS of topbuttons -->
+                    <ColumnSeparator name="column1" x="50" />
+
+                    <ColumnSeparator name="column2" x="100" />
+
+                    <ColumnSeparator name="column3" x="150" />
+
+                    <ColumnSeparator name="column4" x="200" />
+
+                    <button height="20" id="columnbutton1"
+                            width="${parent.column1.x}"
+                            onclick="mainwindow.sort('@displayname', this);"
+                            align="left">
+                    Name
+                        <!--View of Name button -->
+                    </button>
+
+                    <button height="20" id="columnbutton2"
+                            x="${parent.column1.x + 2}"
+                            width="${parent.column2.x - this.x}"
+                            onclick="mainwindow.sort('@email', this);"
+                            align="left">
+                        Email
+                        <!--View of Email button -->
+                    </button>
+
+                    <button height="20" id="columnbutton3"
+                            x="${parent.column2.x + 2}"
+                            width="${parent.column3.x - this.x}"
+                            onclick="mainwindow.sort('@home_phone', this);"
+                            align="left">
+                        Home Phone
+                        <!--View of Home Phone button -->
+                    </button>
+
+                    <button height="20" id="columnbutton4"
+                            x="${parent.column3.x + 2}"
+                            width="${parent.column4.x - this.x}"
+                            onclick="mainwindow.sort('@work_phone', this);"
+                            align="left">
+                        Work Phone
+                        <!--View of Work Phone button -->
+                    </button>
+
+                    <button text="" height="20"
+                            x="${parent.column4.x + 2}"
+                            width="${parent.width - this.x}"
+                            align="left">
+                    </button>
+                </view>
+                <!-- END of toolbar -->
+
+                <view width="${immediateparent.width}" height="20"
+                    clickable="true" bgcolor="#FFFFFF"
+                    name="result"
+                    onmousedown="datarows.selector.select( this ) ;"
+                    ondblclick="mainWindow.openSelection();">
+
+                    <datapath xpath="contacts:/resultset/*" name="codp"
+                            replication="normal" />
+
+                    <!--VIEWS-->
+
+                    <text x="2" y="2" datapath="@displayname" name="col1"
+                        width="${columnbutton1.width - 2}">
+                    </text>
+
+                    <text x="${columnbutton2.x + 2}" y="2"
+                        width="${columnbutton2.width - 2}"
+                        name="col2" datapath="@email">
+                        <method name="applyData" args="el">
+                            if (typeof(el) != "undefined") {
+                                var ellist = el.split( ';' );
+                                this.setText( ellist[0] );
+                            } else {
+                                this.setText( "" );
+                            }
+                        </method>
+                    </text>
+
+                    <text x="${columnbutton3.x + 2}" y="2"
+                        width="${columnbutton3.width - 2}"
+                        datapath="@home_phone" name="col3">
+                    </text>
+
+                    <text x="${columnbutton4.x + 2}" y="2"
+                        width="${columnbutton4.width - 2}"
+                        datapath="@work_phone" name="col4">
+                    </text>
+                    <!-- METHODS of duplicated view -->
+                    <method name="setSelected" args="amselected">
+                        if ( amselected ) {
+                        var txtColor = 0xFFFFFF;
+                            var bgcolor = 0x0A246A;
+                        } else {
+                            var txtColor = 0x000000;
+                        var bgcolor = 0xFFFFFF;
+                        }
+                        this.setBGColor( bgcolor );
+                        this.col1.setColor( txtColor );
+                        this.col2.setColor( txtColor );
+                        this.col3.setColor( txtColor );
+                        this.col4.setColor( txtColor );
+                        this.selected = amselected;
+
+                    </method>
+                </view>
+            </view>
+        </memtester>
+    </view>
+    <simplelayout/>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

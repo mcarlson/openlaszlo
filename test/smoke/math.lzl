@@ -1,0 +1,78 @@
+<library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+  <script>
+    <![CDATA[
+    function randTest(it){
+      // 'it' is iterations to check
+      // returns pass if 'it' iterations do not match
+    
+      var stack=[it]; // for holding numbers
+      // fill stack
+    
+      for(var j=0;j<it;j++){
+        stack[j]=Math.random();
+      }
+      // compare each to every other
+      for(var k=0;k<it;k++){
+        for(j=0;j<it;j++){
+          if (k==j){
+            continue;
+          }
+          if (stack[j]==stack[k]){
+            Debug.write('randTest: it ='+it+' FAIL '+j+': '+stack[j]+' '+k+': '+stack[k]);
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+    ]]>
+  </script>
+
+  <class name="TestMath" extends="TestCase">
+    <method name="testConstants">
+      <!-- 
+        Values are from ECMAScript spec.
+        1e-10 is the minimum precision we accept
+      -->
+      assertWithin(2.7182818284590452354, Math.E, 1e-10, "E");
+      assertWithin(2.302585092994046, Math.LN10, 1e-10, "LN10");
+      assertWithin(0.6931471805599453, Math.LN2, 1e-10, "LN2");
+      assertWithin(1.4426950408889634, Math.LOG2E, 1e-10, "LOG2E");
+      assertWithin(1/Math.LN2, Math.LOG2E, 1e-10, "LOG2E == 1/LN2");
+      assertWithin(0.4342944819032518, Math.LOG10E, 1e-10, "LOG10E");
+      assertWithin(1/Math.LN10, Math.LOG10E, 1e-10, "LOG10E == 1/LN10");
+      assertWithin(3.1415926535897932, Math.PI, 1e-10, "PI");
+      assertWithin(1.4142135623730951, Math.SQRT2, 1e-10, "SQRT2");
+      assertWithin(0.7071067811865476, Math.SQRT1_2, 1e-10, "SQRT1_2");
+      assertWithin(1/Math.SQRT2, Math.SQRT1_2, 1e-10, "SQRT1_2 == 1/SQRT2");
+    </method>
+
+    <method name="testFunctions">
+      <!-- copied from old math.lzx tests -->
+      assertEquals(10, Math.abs(-10), "abs");
+      assertWithin(1.0471975511966, Math.acos(.5), 1e-10, "acos");
+      assertWithin(0.523598775598299, Math.asin(.5), 1e-10, "asin");
+      assertWithin(1.47112767430373, Math.atan(10), 1e-10, "atan");
+      assertWithin(0.785398163397448, Math.atan2(10,10), 1e-10, "atan2");
+      assertEquals(6, Math.ceil(5.5), "ciel");
+      assertWithin(-0.839071529076452, Math.cos(10), 1e-10, "cos");
+      assertWithin(7.38905609893065, Math.exp(2), 1e-10, "exp");
+      assertEquals(5, Math.floor(5.5), "floor");
+      assertWithin(2.30258509299405, Math.log(10), 1e-10, "log");
+      <!-- FIXME: [2003-02-05 ptw] uncomment when bug 699 fixed -->
+<!--        assertEquals(6, Math.max(2,4,6,5,3,1), "max"); -->
+<!--        assertEquals(1, Math.min(2,4,6,5,3,1), "min"); -->
+      assertEquals(65536, Math.pow(2,16), "pow");
+      assertEquals(6, Math.round(5.5), "round");
+      assertWithin(-0.54402111088937, Math.sin(10), 1e-10, "sin");
+      assertEquals(5, Math.sqrt(25), "sqrt");
+      assertWithin(0.648360827459087, Math.tan(10), 1e-10, "tan");
+      assertTrue(randTest(100), "random numbers");
+    </method>
+  </class>
+</library>

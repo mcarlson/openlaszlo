@@ -1,0 +1,16 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<ol>
+<li>On startup verify that:
+<ul>
+<li>Poof button 
+<li>Beep button
+<li>Troll button
+<li>Clicking Poof button makes a "shwoop!" noise 
+<li>Clicking Beep button makes a "piew!" noise 
+<li>Clicking Troll button makes a "pullwoodup" noise 
+</ul></li>
+</ol>

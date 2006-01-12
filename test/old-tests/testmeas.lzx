@@ -1,0 +1,76 @@
+<canvas debug="true" height="700">   
+    <include href="redmond/redmond.lzx" />
+    <font src="helmetr.ttf" name="Helvetica"/>
+
+    <simplelayout spacing="5" />
+    <view name="a">
+        <text name="t">
+            this is some text to test
+        </text>
+        <!--red line is width from server -->
+        <view width="1" height="10" x="this.parent.t.width" bgcolor="red"/>   
+        <!--green line is width calculated by client 
+            using advance table + 1px border-->
+        <view width="1" height="20" y="2" bgcolor="green">
+            <method name="init">
+                this.parent.t.updateMeasure();
+                this.setAttribute( "x" , this.parent.t.getTextWidth() );
+                super.init();
+            </method>
+        </view>
+    </view>
+    <view name="b">
+        <text name="t" height="60" width="200">
+            this is some text to test<br/>
+            this is some text to test<br/>
+            this is some text to test
+            <attribute name="lineheight" 
+                       value="this.font.height * this.fontsize/ 
+                                                this.DEFAULT_SIZE"
+                       when="once" />
+        </text>
+        <view width="10" height="1" bgcolor="red" y="parent.t.lineheight" />
+        <view width="10" height="1" bgcolor="red" y="2*parent.t.lineheight" />
+        <view width="10" height="1" bgcolor="red" y="3*parent.t.lineheight" />
+    </view>
+    
+    <view name="c" font="Helvetica" fontsize="20">
+        <text name="t">
+            this is some text to test
+        </text>
+        <!--red line is width from server -->
+        <view width="1" height="10" x="this.parent.t.width" bgcolor="red"/>   
+        <!--green line is width calculated by client 
+            using advance table + 1px border-->
+        <view width="1" height="20" y="2" bgcolor="green">
+            <method name="init">
+                this.parent.t.updateMeasure();
+                this.setAttribute( "x" , this.parent.t.getTextWidth() );
+                super.init();
+            </method>
+        </view>
+    </view>
+    <view name="d" font="Helvetica" fontsize="20">
+        <text name="t" height="360" width="300">
+            this is some text to test<br/>
+            this is some text to test<br/>
+            this is some text to test
+            <attribute name="lineheight" 
+                       value="this.font.height * this.fontsize/ 
+                                                this.DEFAULT_SIZE"
+                       when="once" />
+        </text>
+        <view width="10" height="1" bgcolor="red" y="parent.t.lineheight" />
+        <view width="10" height="1" bgcolor="red" y="2*parent.t.lineheight" />
+        <view width="10" height="1" bgcolor="red" y="3*parent.t.lineheight" />
+    </view>
+        
+        
+        
+    
+    
+</canvas>   
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Tabslider">
+    <lztier>LZ Component</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+        A Container that animates and coordinates the sliding of Tabelements.
+    </lzshortdesc>
+    <lztag>lz/tabslider.xml</lztag>
+</lzelement>
+
+<p>A <classname>tabslider</classname> coordinates the opening and
+closing of its <classname>tabelement</classname> contained within its
+scope. Only one <classname>tabelement</classname> can be opened at one
+time. The height of the opened <classname>tabelement</classname> is
+determined by the height of the <classname>tabslider</classname> minus
+the total height of all the tabelements when they are closed. </p>
+
+<example>
+&lt;canvas width="200" height="250"&gt;
+  &lt;tabslider width="150" x="10" y="10"
+             height="200"
+             spacing="2" slideduration="300"&gt;
+    &lt;tabelement text="Tabelement One"/&gt;
+    &lt;tabelement text="Tabelement Two"/&gt;
+    &lt;tabelement text="Tabelement Three"/&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<p>The height of a tabelement (when it is closed) is defined in the
+tabelement's <attribute>minheight</attribute> attribute with a default
+value of 22. This can also be specified on the tabslider itself using
+the attribute <attribute>mintabheight</attribute>, which will be
+applied to all of its tabelements.</p>
+
+<example>
+&lt;canvas width="200" height="250"&gt;
+  &lt;tabslider width="150" x="10" y="10"
+             height="200" mintabheight="40"
+             spacing="2" slideduration="300"&gt;
+    &lt;tabelement text="Tabelement One" minheight="20"/&gt;
+    &lt;tabelement text="Tabelement Two"/&gt;
+    &lt;tabelement text="Tabelement Three"/&gt;
+  &lt;/tabslider&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes>tabelement</classes>
+<component-design id="tabslider" title="Tab Slider"/>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,16 @@
+<canvas>
+
+  <import name="lib" href="dataset-library.lzx" stage="late"
+          onload="myview.setDatapath('mylibdset:/items/')"/>
+
+  <simplelayout/>
+  <view name="myview">
+    <simplelayout/>
+    <text resize="true" datapath="item/text()"/>
+  </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,72 @@
+<library>
+    
+    <include href="rpc/rpc.lzx" />
+    <include href="rpc/library/xmlrpc.js" />
+
+    <!--- A class to call XML-RPC services. -->
+    <class name="xmlrpc" extends="rpc">
+
+        <!--- (Required) XML-RPC service URL. The URL must be http. -->
+        <attribute name="service" value="$once{null}" type="string" />
+        <!--- @keywords private -->
+        <attribute name="_verifywithproxy" value="false" type="boolean" />
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- Load the object. If successful, this.proxy is set to an object
+              with remote APIs. -->
+        <method name="load">
+            // Since there aren't any prototypes to load for XML-RPC,
+            // we just create proxy using declared calls. 
+            for (var cn in this.subnodes) {
+
+                // create proxy object if it doesn't exist
+                if (this.proxy == null) this.proxy = {};
+
+                var call = this.subnodes[cn];
+                if ( ! (call instanceof remotecall) ) continue;
+                var method = call.funcname;
+
+                // create proxy for a particular funcname only once.
+                if ( this.proxy[method] == null ) {
+                    this.proxy[method] = function (paramArr, delegate) {
+                        var args = arguments.callee.args;
+                        LzXMLRPCService.invoke(delegate, paramArr, 
+                            { service: args.service, methodname: args.method},
+                              args.secure, args.secureport);
+                    }
+                    this.proxy[method].args = {
+                        service: this.service,
+                        method: method,
+                        secure: this.secure,
+                        secureport: this.secureport
+                    }
+                }
+            }
+
+            this._loadDel.execute( 
+                { status: 'ok', message: 'ok', 
+                  stub: this.proxy, stubinfo: null }
+            );
+
+        </method>
+
+        <!--- @keywords private -->
+        <method name="init">
+            if (this.service == null) {
+                Debug.write("xmlrpc ERROR: service not defined");
+                return;
+            }
+            super.init();
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

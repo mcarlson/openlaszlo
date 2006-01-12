@@ -1,0 +1,78 @@
+<canvas>
+
+    <dataset name="fakeresults">
+        <contact firstname="a"/>
+        <contact firstname="b"/>
+        <contact firstname="c"/>
+        <contact firstname="d"/>
+        <contact firstname="e"/>
+        <contact firstname="f"/>
+    </dataset>
+    <button> Populate List
+        <datapointer name="csr"
+                        xpath="."/>
+        <method event="onclick">
+         <![CDATA[
+                    this.csr.setXPath( 'recip_results:/results' );
+                    this.dp = csr.dupePointer();
+                    this.csr.selectParent();
+                    this.dp.deleteNode();
+                    csr.addNode('results');
+                    csr.selectChild();
+
+                    // Make sure that we copy the appended node, otherwise
+                    //  we steal it from its parent. kidnapper!
+                    for( var i = 0 ; i < canvas.fakeresults.childnodes.length ;
+i++ ) {
+                        var n = canvas.fakeresults.childnodes[i].cloneNode();
+                        Debug.write("slist: Adding", n);
+                        csr.p.appendChild( n );
+                    }
+
+
+                    // open the list and select the first entry
+                    slist.open(this);
+                    LzFocus.setfocus(slist);
+                    slist.onkeydown.sendEvent(40);
+
+        ]]>
+        </method>
+    </button>
+
+    <!-- need to have multiple contacts to create a rep manager -->
+    <dataset name="recip_results">
+        <results>
+            <contact firstname="bob"/>
+            <contact firstname="bob"/>
+        </results>
+    </dataset>
+    <!-- neither 'lazy' nor 'pooling' work correctly -->
+    <class name="mylist"
+            bgcolor="white"
+            width="460"
+            y="25"
+            options="ignorelayout">
+        <attribute name="defaultplacement" value="content" type="string"/>
+        <view name="content">
+            <simplelayout/>
+            <dataselectionmanager name="selector"/>
+        </view>
+    </class>
+
+    <mylist id="slist">
+        <text name="item">
+
+            <datapath xpath="recip_results:/results/contact/@firstname"
+                        pooling="true"
+                        rerunxpath="true"/>
+
+
+
+        </text>
+
+    </mylist>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

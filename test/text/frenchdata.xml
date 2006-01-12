@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<combodata name="combodata">
+<embolo_type name="embolo_type">
+<item lang="Japanese">私はガラスを食べられます。それは私を傷つけません。</item> 
+<item lang="Japanese">私はガラスを食べられます。それは私を傷つけません。</item> 
+<item lang="Japanese">私はガラスを食べられます。それは私を傷つけません。</item> 
+<item value="1">abcd</item>
+<item value="2">abcd</item>
+<item value="3">áááá</item>
+<item value="4">áááá</item>
+<item value="5">ááááá</item>
+<item value="6">KZT1</item>
+<item value="7">KZT2</item>
+<item value="8">KZT3</item>
+<item value="9">KLEM</item>
+<item value="10">åøæ</item>
+<item value="11">áíóúýð</item>
+<item value="12">áááá</item>
+<item value="13">åøæ</item>
+</embolo_type>
+</combodata>

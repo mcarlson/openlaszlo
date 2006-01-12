@@ -1,0 +1,11 @@
+
+<canvas layout="spacing:10">
+   <class name="textfield"/>
+
+   <edittext>
+       <method event="onkeyup">
+           Debug.write('keyup');
+       </method>
+   </edittext>
+
+</canvas>

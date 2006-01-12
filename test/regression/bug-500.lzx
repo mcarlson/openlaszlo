@@ -1,0 +1,15 @@
+<!-- Even though there's a black background, the compiler errors should be reported
+	in a white background table. -->
+
+<canvas width="1000" bgcolor="#000000" height="600">
+
+<view name="test" my_bogus_attribute="12">
+  <text another_bogus_attribute="blah">This is some text</text>
+</view>
+
+</canvas>
+ 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

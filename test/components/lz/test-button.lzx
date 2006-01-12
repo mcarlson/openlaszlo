@@ -1,0 +1,101 @@
+<canvas height="550" bgcolor="silver">
+    <debug x="200"/>
+    <resource src="../testmedia/lzwinsort_rsc.swf"
+                    name="LzWinSort_rsc"/>
+
+    <class name="box" height="10" width="10" extends="basecomponent" focusable="false"/>
+    <simplelayout axis="x"/>
+    <view y="40">
+        <view>
+<!--            <text>color test</text>-->
+            <button id="left1" style="{basecolor:0xbbffbb}" text="green" />
+            <box bgcolor="0xbbffbb"/>
+            <button id="left2"  style="{basecolor:0xbbbbff}" text="blue" />
+            <box bgcolor="0xbbbbff"/>
+            <button id="left3" style="{basecolor:0x5555ff, textcolor:white}" text="dark blue\nwhite text" />
+            <box bgcolor="0x5555ff"/>
+
+            <simplelayout axis="y" spacing="4"/>
+            </view>
+        <view>
+            <button />
+            <text x="120">&lt;button /&gt;</text>
+        </view>
+
+        <view>
+            <button >Submit</button>
+
+            <text x="120">text inside</text>
+        </view>
+
+        <view>
+            <button height="20" id="c1"
+                    width="76"
+                    onclick="debug.write(this, 'clicked')"
+                    text_x="6">
+               Name
+                <view name="sortarrow" resource="LzWinSort_rsc"
+                      y="6" x="60" visible="true" />
+            </button>
+            <text x="120">explictly positioned text</text>
+        </view>
+
+        <view>
+            <button id="b" text="some text"/>
+            <text x="100">(b) text attribute</text>
+        </view>
+
+        <button id="long" text="some long text goes on this button"/>
+        <button enabled="false" text="this button with long text is disabled"/>
+
+        <button isdefault="true">Default Button</button>
+        <simplelayout axis="y" spacing="10"/>
+        <constantlayout axis="x" value="20"/>
+
+    </view>
+
+    <view y="40">
+        <view>
+            <button id="h1" text="some text" height="50"/>
+            <text x="100">height=50</text>
+        </view>
+
+        <view>
+            <button id="h2" text="some text" height="20"/>
+            <text x="100">height=20</text>
+        </view>
+
+        <view width="100" height="2" bgcolor="blue"/>
+
+        <view>
+            <button id="h3" text="some text" width="100"/>
+            <text x="100">width=100</text>
+        </view>
+        <view>
+            <button id="h4" text="some text" width="75" height="25"/>
+            <text x="100">width=75 height=25</text>
+        </view>
+
+        <view>
+            <button id="h5" text="some text" width="100" height="20"/>
+            <text x="100">width=100 height=20</text>
+        </view>
+
+
+        <simplelayout axis="y" spacing="10"/>
+        <constantlayout axis="x" value="20"/>
+    </view>
+
+<!--    <include href="utils/diagnostic/library.lzx"/>-->
+    <view valign="bottom" options="ignorelayout">
+        <simplelayout axis="x" spacing="4"/>
+        <inputtext bgcolor="white">type some text here</inputtext>
+        <inittimer/>
+        <frametimer/>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

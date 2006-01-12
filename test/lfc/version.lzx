@@ -1,0 +1,22 @@
+<canvas debug="true" width="800" version="1.0">
+    <include href="lzunit/lzunit.lzx" />
+    <debug x="300" width="500" height="400"/>
+    <TestSuite>
+        <TestCase>
+            <method name="test1">
+                assertEquals( "1.0" , canvas.version );
+                assertEquals( 0 , canvas.compareVersion( "1.1" , "1.1.0" ) );
+                assertEquals( 1 , canvas.compareVersion( "1.2" , "1.1.0" ) );
+                assertEquals( -1 , canvas.compareVersion( "1.1" , "1.1.1" ) );
+                assertEquals( 1 , canvas.compareVersion( "2.1" , "1.5.1" ) );
+                assertEquals( -1 , canvas.compareVersion( "0.0.5" ) );
+                //this will break if/when lps major version exceeds 100
+                assertEquals( 1 , canvas.compareVersion( "100.0.5" ) );
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

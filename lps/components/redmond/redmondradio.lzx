@@ -1,0 +1,132 @@
+<!--
+  Class: radio
+  implements a "radio" button, allows a one-of-many selection when several
+  of these are in a group.  The group is defined as all siblings or those
+  that shared a common "group" attribute.
+ -->
+<library>
+    <include href="redmondfonts.lzx" />
+    <resource src="./resources/lzwinradio_rsc.swf" name="LzRadio_rsc" />
+
+    <class name="radio" extends="view" font="lztahoe8"
+        onmousedown="this.wasSelected(true)"
+        clickable="true">
+        <attribute name="text" type="text" setter="setText(text)"/>
+        <attribute name="label" type="string" setter="setText(label)"/>
+
+        <attribute name="group" value="default" type="string"/>
+        <attribute name="selected" value="false" setter="this.wasSelected(selected)"/>
+        <attribute name="selectedInGroup" value="0"/>
+
+        <!-- not sure why redmond radio had both selected and amselected
+             but keeping both in case they are both in use by developers -->
+        <attribute name="amselected" value="false"/>
+
+        <!-- private -->
+        <attribute name="otherSelectDelegate" value="0"/>
+        <attribute name="initcomplete" value="0"/>
+
+        <view name="radioart" resource="LzRadio_rsc">
+            <method event="oninit">
+                // Allow for the selected="true" attribute
+                if ( parent.amselected ) {
+                    setResourceNumber( 2 );
+                } else {
+                    setResourceNumber( 1 );
+                }
+            </method>
+        </view>
+        <text name="labeltext" x="16" y="1" text="${parent.label}"/>
+
+
+        <method event="oninit">
+        <![CDATA[
+            // Implements the radio button control. By default, all radio
+            // buttons that are siblings are in a group called "default."
+
+            //@param args.group: The name of the group that this radio button belongs
+            //to. Radio buttons of the same group share a mutually exclusive selection
+
+            this.otherSelectDelegate = new LzDelegate( this , "selectOther" );
+
+            var arr = this.immediateparent.subviews;
+            for (var i = arr.length-1 ; i>=0 ; i-- ){
+                if ( (arr[ i ] instanceof radio) && arr[ i ] != this &&
+                     arr[ i ].group == this.group ){
+
+                    arr[ i ].addToGroup( this );
+                    this.otherSelectDelegate.register( arr[i] , "onselect" );
+                    this.selectedInGroup = arr[i].selectedInGroup;
+                }
+            }
+
+            this.initcomplete = true;
+            //@field amselected: A bool. If true, then the radio button is selected.
+            if (this.amselected) this.wasSelected(true);
+        ]]>
+        </method>
+
+        <!-- label & text are synonyms for backwards compatibility -->
+        <method name="setText" args="t">
+            this.text=t;
+            this.label=t;
+            if (this['ontext']) this.ontext.sendEvent();
+            if (this['onlabel']) this.onlabel.sendEvent();
+        </method>
+
+        <method name="addToGroup" args="r">
+            if (!this.initcomplete) return;
+            // Called to when a new radio button is added to the group
+            this.otherSelectDelegate.register( r , "onselect" );
+        </method>
+
+        <method name="wasSelected" args="s">
+            this.selected = s;
+            if (s) {
+                if (!this.initcomplete) {
+                    this.amselected = true;
+                    return;
+                }
+                // Called when the radio button gets a mouse down.
+                // or setAttribute('selected', true);
+                this.amselected = true;
+                setAttribute('selectedInGroup', this);
+                this.radioart.setResourceNumber( 2 );
+                // @field onselect: The event that is sent when the radio button is selected
+                // keeping onselect for backwards compatibility, should be
+                // onselected to match typically attribute setting events
+                if (this['onselect']) this.onselect.sendEvent( this );
+                if (this['onselected'])  this.onselected.sendEvent( this );
+            }
+        </method>
+
+        <method name="wasUnselected" args="e">
+            this.amselected = false;
+            this.selected = false;
+            this.radioart.setResourceNumber( 1 );
+            if (this['onselected']) this.onselect.sendEvent( this );
+            if (this['onunselect']) this.onunselect.sendEvent( this );
+        </method>
+
+        <method name="selectOther" args="sd">
+            // Called by another radio button in the group when it gets selected
+            // @param sd: The subview that was selected
+            if ( this.amselected ){
+                this.wasUnselected();
+            }
+            setAttribute('selectedInGroup', sd);
+        </method>
+
+        <method name="getSelectedInGroup" args="sd">
+            // Can be called on any radio button in the group and returns a pointer to the
+            // selected button
+            // @return: The radio button that is selected
+            return this.selectedInGroup;
+        </method>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

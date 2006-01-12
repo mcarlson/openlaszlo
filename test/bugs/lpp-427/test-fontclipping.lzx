@@ -1,0 +1,51 @@
+<canvas height="600" >
+   <!-- fonts both included and client fonts -->
+    <font src="fonts/FuturNo2DBol_small.ttf" name="futura" />
+	
+	<simplelayout spacing="20" />
+	<view layout="spacing:5" >
+		<text> For the examples below, there is no height adjustment for the font sizes 12,14,16 </text>
+	
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="12" />
+			  
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="14" />
+			  
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="16" />
+	</view>
+
+	<view layout="spacing:5">
+		<text> For the examples below ( fontsize 12,14,16 ), the height is adjusted with a constraint </text>
+		<text> constraint: height="${1.4*this.getTextHeight()}" </text>
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="12" 
+			  height="${1.4*this.getTextHeight()}" />
+	
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="14" 
+			  height="${1.4*this.getTextHeight()}" />
+	 
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="16" 
+			  height="${1.4*this.getTextHeight()}" />
+	</view>
+
+	<view layout="spacing:5">
+		<text> For the examples below ( fontsize 12,14,16 ), the height is adjusted with a constraint </text>
+		<text> constraint: height="${this.getTextHeight() + 4}" </text>
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="12" 
+			  height="${this.getTextHeight() + 4}" />
+	
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="14" 
+			  height="${this.getTextHeight() + 4}" />
+	 
+		<text text="Welcome you! gpq" bgcolor="0x00FF00" 
+			  resize="true" fgcolor="0x52529B" font="futura" fontsize="16" 
+			  height="${this.getTextHeight() + 4}" />
+	</view>
+
+</canvas>

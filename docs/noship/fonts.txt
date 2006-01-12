@@ -1,0 +1,131 @@
+Here's the chapter outline I proposed as well as the snippets of
+text I said I'd write:
+
+6. Fonts.
+
+    A. What is an LZX Font?
+
+        Every piece of text that is drawn in a Laszlo application is 
+        drawn using an LZX font.  An LZX font is a set of size-independent 
+        glyphs (i.e., outlines or shapes) that should be drawn to represent 
+        text characters.  An LZX font is defined by a name, style and a source 
+        file where the glyphs are stored.  The name is an identifier such as 
+        Courier or Garamond.  The style is one of normal, italic, bold, or 
+        bold italic.  The font source file must be in industry stardard 
+        TrueType format.  (See the spec at 
+        http://developer.apple.com/fonts/TTQualSpec/QS01/FQS1.html, the reference 
+        at http://developer.apple.com/fonts/TTRefMan/index.html and details about 
+        the file format at 
+        http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html)
+        
+        This chapter shows some simple examples of using fonts in LZX.   
+        It then goes on to discuss the default font, font definition elements, 
+        font-related view attributes and font-related HTML
+        elements.  It concludes with some tips and trouble-shooting advice.
+        
+        Each name and style pairing must be unique in an application.
+
+
+    B. Using LZX Fonts
+        Your simple examples...
+
+            <view fontsize="" />
+
+            <text><b>hello</b></text>
+
+    C. The Default Font
+        LZX applications come with a default font that is used by all text.
+
+    D. Defining LZX Fonts
+        All LZX fonts that an application uses must be defined.
+
+        a. Fonts are defined/imported like other resources (see resource chapter?)
+            except that they must be defined/imported at compile time.
+            There is a application-global namespace for fonts.
+            Each font name-stylle pairing must be unique.
+
+        b. The <font> element must be a child of the <canvas> or <library>
+
+            1. <font name="" style="" src="" />
+
+            2. <font>
+                  <font style="" src="" />
+                  <font style="" src="" />
+                  <font style="" src="" />
+              </font>
+
+        c. The system font directory $WEBAPP/WEB-INF/lps/fonts ; but don't use it.
+     
+
+    E Using LZX Fonts Again (or "The Details")
+        a. LZX View Font-Related Attributes
+            font
+            fontsize
+            fontstyle
+            The default values for the canvas are lztahoe8, normal, 8.
+        b. Cascading
+
+        c. HTML Elements
+            Note upper case isn't allowed (XML is case sensitive).    
+            <font>
+                Attributes 
+                    face (The *name* of the LZX font)
+                    size - point size of the font (not +1, -1)
+                    color -(# syntax yes, 0x I dunno).
+                    style - (bold, italic, normal, bolditalic)
+            <b>
+            <i>
+            <u>
+
+        d. How a View chooses its Font
+
+            There are four ways (not including the runtime API, which is currently 
+            undocumented) that you can specify a view's font:
+            
+                1. HTML text elements inside the view that enclose the text
+                2. Font attributes on the view instance itself
+                3. Font attributes on the view's class
+                4. Cascaded fonts attributes
+            
+            A view will choose the font specified with the closest binding.
+            The lower the number above, the "tighter" the binding.
+
+            Enclosing HTML elements > Instance font > Class font > Cascaded font
+
+    F. Tips and Trouble-shooting
+        Use cascading to simplify LZX files
+            This results in less code.
+        Bandwidth considerations
+            Fonts are big.  On average, a single font will add about
+            20 Bytes to the uncompressed bandwidth required to download
+            an application.
+        My Text Doesn't Show Up
+            If you create text at runtime using a font or style that
+            is not defined in your application, text will not show up.
+        Style
+             bold italic and bolditalic issues
+        The Italic and Bold Italic versions of lztahoe are not included by default
+             (nor do we ship them).
+        Don't use the system font directory.  Keep your fonts with your app.
+
+        Pixel-Accuracy
+
+            LZX fonts are outline fonts.  This means the same shapes (glyph definitions)
+            are used regardless of point size and this often results in blurry text
+            at small sizes.  To create pixel-accurate text, it is possible to 
+            carefully construct fonts that will not blur when drawn at certain 
+            point sizes.  
+
+            The LPS comes with a number of such "pseudo"-pixel fonts for your use.  See
+            the system font directory ($WEBAPP/WEB-INF/lps/fonts).  Fonts with 
+            three and four digit numbers are constructed as such.
+            
+            Please contact Laszlo Customer Support (support@laszlosystems.com) for 
+            details on how to build or obtain such fonts.
+
+            See also the <view> pixellock attribute.
+
+* T_LZ_COPYRIGHT_BEGIN ******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Use is subject to license terms.                                          *
+* T_LZ_COPYRIGHT_END ********************************************************

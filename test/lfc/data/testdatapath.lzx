@@ -1,0 +1,76 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- testdatapath.lzx                                                      -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="800" height="600" debug="true">
+    <!-- setup local datasource -->
+    <script>
+        function assert( cond , msg ){
+            if ( ! cond ){
+                Debug.write( msg );
+            }
+        }
+    </script>
+    <class name="datatester">
+        <attribute name="bgcolor" value="this.data" when="always"/>
+        <simplelayout/>
+        <text datapath="name()" width="100"/>
+        <text datapath="@prop" width="100"/>
+        <text datapath="text()" width="100"/>
+    </class>
+        
+    <dataset name="ds">
+        <node prop="top" color="332136432"> Top one
+            <nodea prop="first nodea" color="56521236432" />
+            <nodeb prop="first nodeb" color="1565336432" />
+            <nodea prop="second nodea" color="56521236432" />
+            <nodeb prop="second nodeb" color="565336432" />
+            <nodea prop="third nodea" color="2565336432" >
+                <nodea prop="deeper nodea" color="13421772">text a </nodea>
+                <nodeb prop="deeper nodeb" color="12303291">text b </nodeb>
+            </nodea>
+            <nodeb prop="third nodeb" color="565336432" />
+        </node>
+    </dataset>
+
+    <view datapath="ds:/" ondata="Debug.write( 'dataset update' )">
+        <datatester datapath="node/@color" name="encl">
+            <view name="holder" x="50" y="50">
+                <simplelayout/>
+                <view id="setme" >
+                    <simplelayout/>
+                    <datatester datapath="nodea[1]/@color" />
+                    <datatester datapath="nodea[2]/@color" />
+                </view>
+                <datatester datapath="nodeb[1]/@color" id="changeme"/>
+                <datatester datapath="nodeb[2]/@color" />
+            </view>
+            <button onclick="setme.setDatapath( 'nodea[3]')">
+                Add datapath
+            </button>
+        <button >
+            Set datapath
+            <method event="onclick">
+                changeme.datapath.setNodeText( 'Changed Text' );
+                changeme.datapath.setNodeName( 'changedname' );
+            </method>
+        </button>
+        </datatester>
+    </view>
+        
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

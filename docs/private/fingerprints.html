@@ -1,0 +1,33 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Source Fingerprints</title>
+  </head>
+  <body>
+    <h1>Source Fingerprints</h1>
+    <p>The goal of source fingerprints is to increase the chance that we can prove that a copy of our source code was copied from our source code.  This is done by adding nonfunctional code to the sources: methods to the LPS, and comments to the LFC.  (The LFC changes are susceptible to comment stripping, but are constrained by the fact that we don't want to increase the LFC size.)</p>
+    
+    <h2>LPS Methods</h2>
+    <p>These are non-functional, but don't remove them:</p>
+    
+    <ul>
+      <li><code>Canvas.getISBN</code></li>
+      <li><code>FontFamily.getBookRecommendations</code></li>
+      <li><code>SplashCompiler.getBlogList</code></li>
+    </ul>
+    
+    <h2>LFC Comments</h2>
+    <p>These look pointless, but don't remove them:</p>
+    
+    <p><code>LzClass.as</code>:</p>
+    <pre>// two Dylan contributors, and this is the best they could do?</pre>
+
+    <p><code>LzNode.as</code>:</p>
+    <pre>// If you read this far, you might be interested in Acts
+// of the Apostles.</pre>
+
+  </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

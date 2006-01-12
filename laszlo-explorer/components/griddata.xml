@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resultset>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<result firstname="Chep" lastname="Arwins" email="chep@arwins.com"/>
+<result firstname="Laszlo" lastname="Serious" email="yah@sirius.com"/>
+<result firstname="Antun" lastname="Karlovac" email="antun@antunkarlovac.com"/>
+<result firstname="Bret" lastname="Simister" email="bsimister@foo.com"/>
+<result firstname="Emily" lastname="Dickinson" email="emily@dickinson.com;edickinson@erathlink.net"/>
+<result firstname="Caprice" lastname="Briggs" email="caprice@foo.com;capricious@capricorn.net"/>
+<result firstname="Charles" lastname="Ember" email="charlesemory@foo.com"/>
+<result firstname="Cheryl" lastname="Erickson" email="chericks@foo.com"/>
+<result firstname="Chris" lastname="Kimm" email="ckimm@foo.com;mikc@oof.moc"/>
+<result firstname="Christopher" lastname="Stewart" email="docstu@foo.edu"/>
+<result firstname="Colleen" lastname="Forbes" email="colfor@foo.com"/>
+<result firstname="John" lastname="Smith" email="nancy@foo.com;this is a particularly long email address that I would like to add"/>
+<result firstname="Dan" lastname="Man" email="dan@foo.com;freem"/>
+<result firstname="Dan" lastname="Lewis" email="dlewis@foo.com"/>
+<result firstname="Dan" lastname="Rokhsar" email="dsrokhsar@foo.gov"/>
+<result firstname="Daniel" lastname="Roth" email="droth@somewhere.com"/>
+<result firstname="David" lastname="Dorosin" email="ddorosin@foo.com"/>
+<result firstname="David" lastname="Pruskin" email="thabo_lephutha@foo.com"/>
+<result firstname="David" lastname="Temkin" email="temkin@foo. 201"/>
+<result firstname="Don" lastname="Hayler" email=""/>
+<result firstname="Eric" lastname="Carle" email="eric@yahoo.com"/>
+<result firstname="Oliver" lastname="Twist" email=""/>
+<result firstname="Eric" lastname="Bloch" email="bloch@foo.com"/>
+<result firstname="Eva" lastname="Manolis" email="eva@foo.com"/>
+<result firstname="Felicity" lastname="Buxton" email="msbuxton12345@foo.com"/>
+<result firstname="Earnest" lastname="Gadfly" email=""/>
+<result firstname="Gary" lastname="Helfand" email="gaz@foo.net"/>
+<result firstname="Boo" lastname="Ginsbreg" email="bom@flkjsd.vom;bb@b.bom"/>
+<result firstname="Helen" lastname="Langhammer" email="helen.langhammer@foo.com"/>
+<result firstname="Alan" lastname="Ginsberg" email="alan@hotmail.com"/>
+<result firstname="Hu" lastname="Liang" email="hu.liang@foo.com"/>
+<result firstname="Susan" lastname="O'Connor" email="susan@foo.com"/>
+<result firstname="Ingrid" lastname="Overgard" email="ingrid@foo.com"/>
+<result firstname="Isabell H." lastname="Beddow" email="isabell.beddow@foo.edu"/>
+<result firstname="Jackie" lastname="Shea" email="jshea@foo.edu"/>
+<result firstname="Jai" lastname="Das" email="Jai@foo.com"/>
+<result firstname="James" lastname="Mackey" email="james@foo.com"/>
+<result firstname="Jeff and Michelle" lastname="Kowalski" email="jeff.kowalski@foo.com"/>
+<result firstname="Jeff" lastname="Beall" email="jeb@foo.com"/>
+<result firstname="Jeff" lastname="Pisoni" email=""/>
+<result firstname="Jeffrey and Pam" lastname="Bloom" email="jeffrey_bloom@foo.com"/>
+<result firstname="Jeff" lastname="Bloom" email="jbloom@foo.com"/>
+<result firstname="Jen" lastname="Gonzalez" email="gonzo@foo.com"/>
+<result firstname="Jennifer" lastname="Lopez" email="jennifer@foo.com"/>
+<result firstname="Jennifer" lastname="Bloch" email="jbloch@foo.com"/>
+<result firstname="Jerry" lastname="Tang" email="jtang@foo.com"/>
+<result firstname="Jerry" lastname="Van De Beek" email="jerry@foo.com"/>
+<result firstname="Lalit" lastname="Balchandani" email="lalit@yahoo.com"/>
+<result firstname="John" lastname="Jakubowski" email="john@foo.com"/>
+<result firstname="Jon" lastname="Tyson" email="jon@foo.com"/>
+<result firstname="Jonathan" lastname="Luskin" email="jonathan@foo.com"/>
+<result firstname="Jonathan" lastname="Luskin At Work" email="jpl@foo.net"/>
+<result firstname="Jonathan" lastname="Schaffir" email="schaffir@foo.com"/>
+<result firstname="Joshua" lastname="Storck" email="bardakshalem@foo.com"/>
+<result firstname="Joyce" lastname="Tang" email="joycetang@foo.com;antoheremail@email.com"/>
+<result firstname="Julie" lastname="Holland" email="jholland@foo.com"/>
+<result firstname="Kenny" lastname="Dinkin" email="kenny.dinkin@foo.com"/>
+<result firstname="Henry" lastname="Minsky" email="henry@foo.com"/>
+<result firstname="Linda" lastname="Getman" email="llgetman@foo.net"/>
+<result firstname="Kevin" lastname="McCoy" email="kevin@foo.com"/>
+<result firstname="Marc" lastname="Goodman" email="marc.goodman@foo.com"/>
+<result firstname="Matthew" lastname="Arrott" email="matthew.arrott@foo.com"/>
+<result firstname="Max" lastname="Carlson" email="max@laszlosystems.com"/>
+<result firstname="" lastname="Metrowest" email="email@email"/>
+<result firstname="Michael and Sonja" lastname="Bates" email=""/>
+<result firstname="Michael" lastname="Chow" email="mgchow@foo.com"/>
+<result firstname="Michael" lastname="Getman" email="michael_getman@foo.com"/>
+<result firstname="Michael" lastname="Malone" email="m_malone@foo.net"/>
+<result firstname="Michael" lastname="Simon" email="msimon55@foo.com"/>
+<result firstname="Mike" lastname="Peters" email="mike.peters@foo.com"/>
+<result firstname="Mike" lastname="Rocha" email="mrocha@foo.com"/>
+<result firstname="" lastname="Mom" email="capecodcaryl@foo.com"/>
+<result firstname="Morty" lastname="Okin" email="morty@foo.com"/>
+<result firstname="Nama" lastname="Gidron" email=""/>
+<result firstname="Nancr" lastname="Weiss" email=""/>
+<result firstname="Nancy" lastname="Lau" email="nancy@foo.com"/>
+<result firstname="Smelly" lastname="Delly" email="foo@fl.com"/>
+<result firstname="Pablo" lastname="Kang" email="pkang@foo.com"/>
+<result firstname="Palmer" lastname="Yale" email="palmeryale@foo.com"/>
+<result firstname="Paul" lastname="O'Hare" email="pohare@foo.com"/>
+<result firstname="Peter and Kelly" lastname="Alcorn" email=""/>
+<result firstname="Peter" lastname="Andrea" email="peter@foo.com"/>
+<result firstname="Grace" lastname="Hopper" email=""/>
+<result firstname="Bette" lastname="Davis" email=""/>
+<result firstname="Randi C." lastname="Cohen" email="foo;rcohen@foo.com"/>
+<result firstname="Rebecca" lastname="Tredway" email="rebeccatred@foo.com"/>
+<result firstname="Richard" lastname="Gingras" email="richard@foo.com"/>
+<result firstname="Rick" lastname="Sayre" email="whorfin@foo.com"/>
+<result firstname="Rick" lastname="Weiss" email=""/>
+<result firstname="Ronnie" lastname="Enriquez" email="renriquez@foo.com"/>
+<result firstname="Ronnie" lastname="Enriquez" email="renriguez@foo.com"/>
+<result firstname="Sarah" lastname="Bradley" email="skbradley@foo.com"/>
+<result firstname="Sarah" lastname="Castelblanco" email="scastelblanco@foo.com"/>
+<result firstname="Sarah Kim" lastname="Bradley" email="sarah@foo.com"/>
+<result firstname="Scott" lastname="Alpert" email="scooter_alpert@foo. 82nd Street"/>
+<result firstname="Sheldon" lastname="Bloch" email="sbloch@foo.com"/>
+<result firstname="Simone" lastname="Solondz" email="simone@foo.com"/>
+<result firstname="Barbara" lastname="Ehrenreich" email=""/>
+<result firstname="Steve" lastname="Ginsberg" email="steve@foo.com"/>
+<result firstname="Steve" lastname="Peters" email="scp@foo.com"/>
+<result firstname="Sarah" lastname="Allen" email=""/>
+<result firstname="Susan" lastname="Bernstein" email="aubeausoleil@foo.com"/>
+<result firstname="Ted and Cheryl" lastname="Hall" email="tachall@foo.com"/>
+<result firstname="Test" lastname="Request" email=""/>
+<result firstname="Tim" lastname="Stern" email="tim.stern@foo.com"/>
+<result firstname="Tommibeth" lastname="Josephs" email="tommibeth@foo.com"/>
+<result firstname="Vince and Jen" lastname="Bohner" email="jenvince@foo.net"/>
+<result firstname="Art" lastname="Medlar" email=""/>
+<result firstname="Wiltse" lastname="Carpenter" email="wiltse@foo.com"/>
+<result firstname="Yossie" lastname="Silverman" email="yossie@foo.com"/>
+<result firstname="James" lastname="Finn" email="james@foo.com"/>
+<result firstname="Paulina" lastname="Priss" email="pp@ppnet.net"/>
+<result firstname="Dilip" lastname="Krishnagiri" email="dilip@foo.com"/>
+<result firstname="Victor" lastname="Milter" email="victor@foo.com"/>
+<result firstname="Michelle" lastname="Selak" email="michelle@foo.com"/>
+<result firstname="John" lastname="Unson" email="jf@foo.com"/>
+<result firstname="Antony" lastname="Joseph" email="antony@foo.com"/>
+<result firstname="Pete" lastname="Alcorn" email="pete@foo.com"/>
+<result firstname="arthur" lastname="blaba" email="asdasd@asdawedqwe"/>
+<result firstname="Anne" lastname="Gardner" email="anne@foo.com"/>
+<result firstname="John" lastname="Peyton" email=""/>
+<result firstname="Adam" lastname="Wolff" email="adam@foo.com"/>
+<result firstname="Alex" lastname="B" email="alexb@foo.com"/>
+<result firstname="Ann" lastname="Sussman" email="ramdomann1@foo.com"/>
+<result firstname="Anne" lastname="Harrison" email="aharrison@foo.com"/>
+<result firstname="Antony" lastname="Campitelli" email="acampitelli@foo.com"/>
+<result firstname="Christian" lastname="Walker" email=""/>
+<result firstname="Betsy" lastname="de Fries" email="betsy@foo.com"/>
+<result firstname="Bill" lastname="Mitchel" email="bill@foo.com"/>
+<result firstname="Ani" lastname="DiFranco" email=""/>
+<result firstname="Burt" lastname="Magen" email="bmagen@foo.com"/>
+<result firstname="Amelia" lastname="Earhart" email=""/>
+<result firstname="Jim" lastname="Choumas" email=""/>
+<result firstname="Oliver" lastname="Steele" email="osteele@foo.com"/>
+<result firstname="Al" lastname="Franken" email="al@foo.com"/>
+</resultset>

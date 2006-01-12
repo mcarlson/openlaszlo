@@ -1,0 +1,207 @@
+<canvas width="500">
+    <dataset name="ds">
+        <root>
+            <item day="Monday"  month="January" num="1"/>
+            <item day="Tuesday" month="January" num="2"/>/>
+            <item day="Wednesday"       month="January" num="3"/>
+            <item day="Thursday"        month="January" num="4"/>
+            <item day="Friday"  month="January" num="5"/>
+            <item day="Saturday"        month="January" num="6"/>
+            <item day="Sunday"  month="January" num="7"/>
+            <item day="Monday"  month="January" num="8"/>
+            <item day="Tuesday" month="January" num="9"/>
+            <item day="Wednesday"       month="January" num="10"/>
+            <item day="Thursday"        month="January" num="11"/>
+            <item day="Friday"  month="January" num="12"/>
+            <item day="Saturday"        month="January" num="13"/>
+            <item day="Sunday"  month="January" num="14"/>
+            <item day="Monday"  month="January" num="15"/>
+            <item day="Tuesday" month="January" num="16"/>
+            <item day="Wednesday"       month="January" num="17"/>
+            <item day="Thursday"        month="January" num="18"/>
+            <item day="Friday"  month="January" num="19"/>
+            <item day="Saturday"        month="January" num="20"/>
+            <item day="Sunday"  month="January" num="21"/>
+            <item day="Monday"  month="January" num="22"/>
+            <item day="Tuesday" month="January" num="23"/>
+            <item day="Wednesday"       month="January" num="24"/>
+            <item day="Thursday"        month="January" num="25"/>
+            <item day="Friday"  month="January" num="26"/>
+            <item day="Saturday"        month="January" num="27"/>
+            <item day="Sunday"  month="January" num="28"/>
+            <item day="Monday"  month="January" num="29"/>
+            <item day="Tuesday" month="January" num="1"/>
+            <item day="Wednesday"       month="February"        num="2"/>
+            <item day="Thursday"        month="February"        num="3"/>
+            <item day="Friday"  month="February"        num="4"/>
+            <item day="Saturday"        month="February"        num="5"/>
+            <item day="Sunday"  month="February"        num="6"/>
+            <item day="Monday"  month="February"        num="7"/>
+            <item day="Tuesday" month="February"        num="8"/>
+            <item day="Wednesday"       month="February"        num="9"/>
+            <item day="Thursday"        month="February"        num="10"/>
+            <item day="Friday"  month="February"        num="11"/>
+            <item day="Saturday"        month="February"        num="12"/>
+            <item day="Sunday"  month="February"        num="13"/>
+            <item day="Monday"  month="February"        num="14"/>
+            <item day="Tuesday" month="February"        num="15"/>
+            <item day="Wednesday"       month="February"        num="16"/>
+            <item day="Thursday"        month="February"        num="17"/>
+            <item day="Friday"  month="February"        num="18"/>
+            <item day="Saturday"        month="February"        num="19"/>
+            <item day="Sunday"  month="February"        num="20"/>
+            <item day="Monday"  month="February"        num="21"/>
+            <item day="Tuesday" month="February"        num="22"/>
+            <item day="Wednesday"       month="February"        num="23"/>
+            <item day="Thursday"        month="February"        num="24"/>
+            <item day="Friday"  month="February"        num="25"/>
+            <item day="Saturday"        month="February"        num="26"/>
+            <item day="Sunday"  month="February"        num="27"/>
+            <item day="Monday"  month="February"        num="28"/>
+            <item day="Tuesday" month="March"   num="1"/>
+            <item day="Wednesday"       month="March"   num="2"/>
+            <item day="Thursday"        month="March"   num="3"/>
+            <item day="Friday"  month="March"   num="4"/>
+            <item day="Saturday"        month="March"   num="5"/>
+            <item day="Sunday"  month="March"   num="6"/>
+            <item day="Monday"  month="March"   num="7"/>
+            <item day="Tuesday" month="March"   num="8"/>
+            <item day="Wednesday"       month="March"   num="9"/>
+            <item day="Thursday"        month="March"   num="10"/>
+            <item day="Friday"  month="March"   num="11"/>
+            <item day="Saturday"        month="March"   num="12"/>
+            <item day="Sunday"  month="March"   num="13"/>
+            <item day="Monday"  month="March"   num="14"/>
+            <item day="Tuesday" month="March"   num="15"/>
+            <item day="Wednesday"       month="March"   num="16"/>
+            <item day="Thursday"        month="March"   num="17"/>
+            <item day="Friday"  month="March"   num="18"/>
+            <item day="Saturday"        month="March"   num="19"/>
+            <item day="Sunday"  month="March"   num="20"/>
+            <item day="Monday"  month="March"   num="21"/>
+            <item day="Tuesday" month="March"   num="22"/>
+            <item day="Wednesday"       month="March"   num="23"/>
+            <item day="Thursday"        month="March"   num="24"/>
+            <item day="Friday"  month="March"   num="25"/>
+            <item day="Saturday"        month="March"   num="26"/>
+            <item day="Sunday"  month="March"   num="27"/>
+            <item day="Monday"  month="March"   num="28"/>
+            <item day="Tuesday" month="March"   num="29"/>
+            <item day="Wednesday"       month="March"   num="30"/>
+            <item day="Thursday"        month="March"   num="31"/>
+        </root>
+    </dataset>
+
+    <!--
+    <class name="resizeme" onclick="parent.dsel.select( this )"
+           bgcolor="0x9999FF" height="15">
+        <simplelayout axis='x'/>
+        <text datapath="@num"/>
+        <text datapath="@day"/>
+        <method name="setSelected" args="issel">
+            if ( issel ){
+                this.animate ( 'height', 40 , 500 );
+            } else {
+                this.animate ( 'height', 15 , 500 );
+            }
+        </method>
+
+    </class>
+    -->
+    <class name="resizeme" bgcolor="0x9999FF" height="15"
+           clickable="true">
+        <simplelayout axis='x'/>
+        <text valign="middle" datapath="${'@month'}" width="50"/>
+        <text valign="middle" datapath="${'@num'}" width="50"/>
+        <text valign="middle" datapath="@day"/>
+        <view bgcolor="red" options="ignorelayout"
+              align="right" width="30" height="10">
+            <method event="onclick">
+                if ( parent.height != 40 ){
+                    parent.animate ( 'height', 40 , 500 );
+                } else {
+                    parent.animate ( 'height', 15 , 500 );
+                }
+            </method>
+        </view>
+        <method event="ondblclick">
+            parent.selman.select( this );
+        </method>
+
+        <method name="setSelected" args="s">
+            if ( s ){
+                this.setBGColor( green );
+                this.setHeight( 50 );
+            } else {
+                this.setBGColor( 0x9999FF );
+                this.setHeight( 15 );
+            }
+        </method>
+
+    </class>
+
+    <view clip="true" width="200" height="200">
+        <view>
+            <dataselectionmanager name="selman"/>
+            <resizeme id="repman">
+                <datapath replication="resize" 
+                          spacing="10" xpath="ds:/root/*"/>
+            </resizeme>
+        </view>
+        <scrollbar/>
+    </view>
+    <view y="210">
+        <inputtext name="mo" width="100">March</inputtext>
+        <inputtext name="day">20</inputtext>
+        <button>Show it
+            <datapointer name="mydp" xpath="ds:/root"/>
+            <method event="onclick">
+                <![CDATA[ 
+                var mo = parent.mo.getText();
+                var day = parent.day.getText();
+
+                var nodes = mydp.xpathQuery( '*' );
+                for ( var i = 0; i < nodes.length; i++ ){
+                    var n = nodes[ i ];
+                    if ( n.getAttr( 'month' ) == mo &&
+                         n.getAttr( 'num' ) == day ){
+                        var ty = repman.getPositionByNode( n );
+                        repman.parent.setY( -ty );
+                        break;
+                    }
+                }
+                ]]>
+            </method>
+        </button>
+        <simplelayout axis="x"/>
+    </view>
+    <view y="250">
+        <simplelayout/>
+        <button>scroll-and-select last
+             <method event="onclick">
+                 var rm = repman;
+                 var lastnode = rm.nodes[rm.nodes.length-1];
+                 var ny = rm.getPositionByNode(lastnode);
+                 repman.parent.setY(repman.parent.parent.height - ny - 20);
+                 var cl = rm.getCloneForNode(lastnode);
+                 repman.parent.selman.select(cl);
+             </method>
+         </button>
+         <button>scroll-and-select first
+             <method event="onclick">
+                 var rm = repman;
+                 debug.write('rm', rm);
+                 var first = rm.nodes[0];
+                 repman.parent.setY(0);
+                 var cl = rm.getCloneForNode(first);
+                 repman.parent.selman.select(cl);
+             </method>
+         </button>
+    </view>
+    <debug y="0" x="200" width="250" height="400"/>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,10 @@
+<canvas>
+	<resource>
+		<attribute name="name" value="foo"/>
+		<attribute name="src" value="../resources/gif/2c.gif"/>
+	</resource>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

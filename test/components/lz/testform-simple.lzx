@@ -1,0 +1,35 @@
+<canvas bgcolor="silver" height="1200" >
+    <debug x="250" y="100"/>
+
+    <dataset name="surveydataset" type="http" src="http:testform.jsp"/>
+
+    <class name="label" fontstyle="bold" extends="statictext"/>
+
+    <form id="f" width="300" height="300" bgcolor="red" >
+        <submit name="survey" data="${surveydataset}"/>
+        <label>place</label>
+        <radiogroup name="place" id="rg">
+            <radiobutton id="r1" value="0">Hawaii</radiobutton>
+            <radiobutton id="r2" value="1">Paris</radiobutton>
+            <radiobutton id="r3" value="2">Jamaica</radiobutton>
+        </radiogroup>
+        <button isdefault="true"
+            onclick="parent.survey.submit()">submit</button>
+    </form>
+
+    <view y="10" x="${f.width + 10}"
+          name="results" datapath="surveydataset:/response">
+        <view datapath="formcomponent">
+             <text datapath="@name"/>
+             <text datapath="text()"/>
+                <simplelayout axis="x"/>
+         </view>
+
+        <simplelayout axis="y"/>
+
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

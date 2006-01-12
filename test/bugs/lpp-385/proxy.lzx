@@ -1,0 +1,3 @@
+<canvas proxied="true">
+     <dataset name="foo" src="searchBooks.xml" type="http" ondata="this.doRequest()" request="true"/>
+</canvas>

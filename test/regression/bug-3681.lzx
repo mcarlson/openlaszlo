@@ -1,0 +1,47 @@
+<canvas>
+    <include href="lz/grid.lzx"/>
+
+    <dataset name="contacts" request="true"
+             src="http://www.laszlosystems.com/lps/sample-apps/contacts/contactsdata.xml"/>
+    
+    <grid width="300" height="200" 
+          id="gr"
+          showHLines="true"
+          showVLines="true"
+          datapath="contacts:/*">
+        <gridtext datapath="@id" text="id" datatype="number"/>
+        <gridtext datapath="@displayname" text="name" width="150" />
+        <gridtext datapath="@id" text="funky" datatype="number">
+            <method name="ascendComparator"  args="a,b">
+                <![CDATA[ 
+                var x = Number( a.substring( a.length-1) );
+                var y = Number( b.substring( b.length-1) );
+                if ( x < y ){
+                    return 1;
+                } else if ( x == y ){
+                    return 0;
+                } else {
+                    return -1;
+                }
+                ]]>
+            </method>
+            <method name="descendComparator"  args="a,b">
+                <![CDATA[ 
+                var x = Number( a.substring( a.length-1) );
+                var y = Number( b.substring( b.length-1) );
+                if ( x > y ){
+                    return 1;
+                } else if ( x == y ){
+                    return 0;
+                } else {
+                    return -1;
+                }
+                ]]>
+            </method>
+        </gridtext>
+    </grid>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

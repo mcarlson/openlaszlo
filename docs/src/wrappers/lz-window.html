@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Window">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A window.
+    </lzshortdesc>
+    <lztag>lz/window.xml</lztag>
+</lzelement>
+
+<p>The <tagname>window</tagname> tag creates a floating view that may
+be moved and optionally resized by the user.  Set the
+<attribute>closeable</attribute> attribute to <code>true</code> in
+order to show a window close button.</p>
+
+<example>
+&lt;canvas height="250"&gt;
+  &lt;window x="10" y="10" width="300" height="200"
+          title="my window"
+          resizable="true" closeable="true"&gt;
+    &lt;text&gt;Hello&lt;/text&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Views placed within a <tagname>window</tagname> tag will be placed
+inside the smaller content area within the window.  Because of this,
+you will often want to constrain to the dimensions of the content
+area, rather than to the window dimensions.  To do this, tags placed
+within a window can use the <field>immediateparent</field> property
+rather than the <field>parent</field> property.</p>
+
+<example title="Sizing to the content area">
+&lt;canvas height="150"&gt;
+  &lt;window x="10" y="10" width="200" height="100"
+          resizable="true"&gt;
+    &lt;button width="${immediateparent.width}"
+            height="${immediateparent.height}"&gt;
+      This is a really big button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<tags>modaldialog alert</tags>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

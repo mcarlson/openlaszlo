@@ -1,0 +1,100 @@
+<library>
+
+    <dataset name="litems">
+        <item value="item1">text 1</item>
+        <item value="item2">text 2</item>
+        <item value="item3">text 3</item>
+        <item value="item4">text 4</item>
+        <item value="item5">text 5</item>
+        <item value="item6">text 6</item>
+        <item value="item7">text 7</item>
+        <item value="item8">text 8</item>
+        <item value="item9">text 9</item>
+    </dataset>
+
+    <class name="test_list" extends="TestCase">
+        <list name="lbox">
+            <textlistitem name="items" 
+                          text="$path{ 'text()' }"
+                          value="$path{ '@value' }"
+                          datapath="litems:/item"/>
+        </list>
+
+        <method name="_testSelect" args="item">
+            this.selectDL.unregisterAll();
+            assertEquals(this.lbox.items.clones[2], item);
+            assertEquals(item.value, this.lbox.getValue());
+        </method>
+
+        <method name="testList">
+        <![CDATA[
+            //----------------------------------------
+            // check text and values
+            var clones = this.lbox.items.clones;
+            for (var i=1; i <= clones.length; i++) {
+                assertEquals('text ' + i, clones[i-1].text);
+                assertEquals('item' + i,  clones[i-1].value);
+            }
+
+            //----------------------------------------
+            // select()
+            if (typeof(this.selectDL) == "undefined") {
+                this.selectDL = new LzDelegate(this, "_testSelect");
+            }
+            this.selectDL.register(this, "onselect");
+            var item = this.lbox.items.clones[2];
+            this.lbox.select(item);
+
+            //----------------------------------------
+            // removeItem() && getItem()
+            var item1 = this.lbox.getItem('item1');
+            var item5 = this.lbox.getItem('item5');
+            var item9 = this.lbox.getItem('item9');
+            this.lbox.removeItem('item1');
+            this.lbox.removeItem('item5');
+            this.lbox.removeItem('item9');
+
+            assertNull(this.lbox.getItem(item1.value));
+            assertNull(this.lbox.getItem(item5.value));
+            assertNull(this.lbox.getItem(item9.value));
+
+            //----------------------------------------
+            // removeItemAt() && getItemAt()
+            var itemIndex0 = this.lbox.getItemAt(0);
+            this.lbox.removeItemAt(0); // this removes item2
+
+            var itemIndex1 = this.lbox.getItemAt(1);
+            this.lbox.removeItemAt(1); // this removes item4
+            
+            assertNull(this.lbox.getItem(itemIndex0.value));
+            assertNull(this.lbox.getItem(itemIndex1.value));
+
+            //----------------------------------------
+            // addItem() && getItem()
+            this.lbox.addItem('text add1', 'add1');
+            this.lbox.addItem('text add2', 'add2');
+            var add1 = this.lbox.getItem('add1');
+            var add2 = this.lbox.getItem('add2');
+            assertEquals('add1', add1.value);
+            assertEquals('add2', add2.value);
+
+            //----------------------------------------
+            // addItem() w/index
+// TODO: [2003-11-26 pkang] uncomment once addItem w/index is implemented
+//            this.lbox.addItem('index add1', 'inadd1', 3);
+//            var inadd1 = this.lbox.getItemAt(3);
+//            assertEquals('inadd1', inadd1.value);
+//
+//            this.lbox.addItem('index add2', 'inadd2', 0);
+//            var inadd2 = this.lbox.getItemAt(0);
+//            assertEquals('inadd2', inadd2.value);
+        ]]>
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

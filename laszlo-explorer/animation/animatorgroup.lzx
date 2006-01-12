@@ -1,0 +1,17 @@
+<canvas>
+  <view bgcolor="#666699" 
+        x="120" y="120" 
+        width="170" height="200" >
+    <text fgcolor="#FFFFFF" align="center">Shopping Cart</text>
+  </view>
+  
+  <view name="item" y="10" resource="cd_cover.jpg">
+    <animatorgroup name="move" process="sequential" 
+                   duration="500" start="false">
+      <animator attribute="x" to="130" />
+      <animator attribute="y" to="250" />
+    </animatorgroup>
+  </view>
+  
+  <button x="100" y="350" onclick="item.move.doStart()">Add to cart</button>
+</canvas>

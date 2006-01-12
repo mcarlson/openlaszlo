@@ -1,0 +1,89 @@
+<canvas width="1024" height="768" debug="true">
+  <debug y="400" />
+  <include href="lzunit" />
+
+  <script>
+    Debug.write("Test: " + [1, 2].concat([3, 4]));
+  </script>
+
+  <class name="TestDate" extends="TestCase">
+    <method name="testDateConstructor">
+      assertEquals(new Date(1969,7,20), new Date("7/20/1969"), "new Date(String)");
+    </method>
+  </class>
+
+  <class name="TestObject" extends="TestCase">
+    <method name="testObjectConstructor">
+      assertEquals(true, new Object(true), "new Object(Boolean)");
+      assertEquals(1, new Object(1), "new Object(Number)");
+      assertEquals("foo", new Object("foo"), "new Object(String)");
+    </method>
+
+    <method name="testObjectFunction">
+      assertEquals(true, Object(true), "Object(Boolean)");
+      assertEquals(1, Object(1), "Object(Number)");
+      assertEquals("foo", Object("foo"), "Object(String)");
+      <!-- 1.5 Semantics -->
+      assertNotSame(Object(true), Object(true), "Object(Boolean) identity");
+      assertNotSame(Object(1), Object(1), "Object(Number) identity");
+      var foo = "foo";
+      assertNotSame(Object(foo), Object(foo), "Object(String) identity");
+    </method>
+
+  </class>
+
+  <class name="TestBoolean" extends="TestCase">
+    <method name="testBooleanConstructor">
+      assertEquals(true, new Boolean(true), "new Boolean(Boolean)");
+      assertEquals(true, new Boolean(1), "new Boolean(Number)");
+      assertEquals(true, new Boolean("foo"), "new Boolean(String)");
+    </method>
+
+    <method name="testBooleanFunction">
+      assertEquals(true, Boolean(true), "Boolean(Boolean)");
+      assertEquals(true, Boolean(1), "Boolean(Number)");
+      assertEquals(true, Boolean("foo"), "Boolean(String)");
+      <!-- 1.5 Semantics -->
+      assertNotSame(Boolean(true), Boolean(true), "Boolean(Boolean) identity");
+      assertNotSame(Boolean(1), Boolean(1), "Boolean(Number) identity");
+      var foo = "foo";
+      assertNotSame(Boolean(foo), Boolean(foo), "Boolean(String) identity");
+    </method>
+
+  </class>
+
+  <class name="TestString" extends="TestCase">
+    <method name="testStringConstructor">
+      assertEquals("true", new String(true), "new String(Boolean)");
+      assertEquals("1", new String(1), "new String(Number)");
+      assertEquals("foo", new String("foo"), "new String(String)");
+    </method>
+
+    <method name="testStringFunction">
+      assertEquals("true", String(true), "String(Boolean)");
+      assertEquals("1", String(1), "String(Number)");
+      assertEquals("foo", String("foo"), "String(String)");
+      <!-- 1.5 Semantics -->
+      assertNotSame(String(true), String(true), "String(Boolean) identity");
+      assertNotSame(String(1), String(1), "String(Number) identity");
+      var foo = "foo";
+      assertNotSame(String(foo), String(foo), "String(String) identity");
+    </method>
+
+  </class>
+
+  <TestSuite>
+    <TestDate />
+<?lzx 
+    <TestObject />
+    <!-- comment -->
+    <TestBoolean />
+?>
+    <TestString />
+  </TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

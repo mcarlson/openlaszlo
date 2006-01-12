@@ -1,0 +1,17 @@
+<canvas width="800" height="600">
+
+    <resource name="starButton" src="../resources/swf/star_button.swf" />
+
+    <view name="button1" x="10" y="10" resource="starButton"
+          onmouseover="this.setResourceNumber( 3 )"
+          onmouseout="this.setResourceNumber( 1 )"
+          onmousedown="this.setResourceNumber( 2 )"
+          onmouseup="this.setResourceNumber( 1 )"
+          onclick="canvas.button2.setSource( '../resources/swf/star_button.swf' )" />
+
+    <view name="button2" x="50" y="10"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

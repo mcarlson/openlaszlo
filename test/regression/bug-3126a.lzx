@@ -1,0 +1,21 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+
+
+<canvas>
+    <font name="default">
+        <font face="plain" src="helmetr.ttf"/> 
+        <font face="bold" src="helmetb.ttf"/> 
+        <font face="italic" src="helmeti.ttf"/> 
+    </font>
+    
+    <button>lztahoe8 <b>bold</b> <i>italic</i></button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

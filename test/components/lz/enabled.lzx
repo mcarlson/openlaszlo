@@ -1,0 +1,128 @@
+<canvas height="600" width="800">
+    <debug y="350" height="200"/>
+
+    <checkbox id="c" options="ignorelayout">Enable</checkbox>
+    <view y="20">
+        <text>these components set enabled attribute</text>
+        <view layout="axis:x;spacing:10">
+            <button id="b" onclick="debug.write('clicked', this)" enabled="${c.value}">Browse...</button>
+            <button isdefault="true" onclick="debug.write('clicked', this)" enabled="${c.value}">Default</button>
+        </view>
+        <checkbox enabled="${c.value}">Save Changes</checkbox>
+        <view layout="axis:x;spacing:40">
+            <radiogroup enabled="${c.value}" id="rg">
+                <radiobutton>one</radiobutton>
+                <radiobutton>two</radiobutton>
+                <radiobutton>three</radiobutton>
+            </radiogroup>
+            <view height="60" width="40" clip="true">
+                <view height="500" width="40"/>
+                <scrollbar id="sb" enabled="${c.value}"/>
+            </view>
+        </view>
+        <edittext enabled="${c.value}" >editable text</edittext>
+<!--        <text>tabs don't fully implement enabled=false</text>-->
+<!--        <tabs enabled="${c.value}">-->
+<!--            <tabpane>stuff-->
+<!--                <simplelayout/>-->
+<!--                <radiogroup>-->
+<!--                    <radiobutton>lamp</radiobutton>-->
+<!--                    <radiobutton>mug</radiobutton>-->
+<!--                    <radiobutton>pencil case</radiobutton>-->
+<!--                </radiogroup>-->
+<!--                <button>buy me</button>-->
+<!--            </tabpane>-->
+<!--            <tabpane selected="true">furniture-->
+<!--                <button>more</button>-->
+<!--            </tabpane>-->
+<!--            <tabpane>extra stuff-->
+<!--                <button>more</button>-->
+<!--            </tabpane>-->
+<!--        </tabs>-->
+        <view layout="axis:x; spacing:10">
+            <combobox  enabled="${c.value}">
+                <textlistitem>item one</textlistitem>
+                <textlistitem>item two</textlistitem>
+                <textlistitem>item three</textlistitem>
+            </combobox>
+            <combobox  editable="false" enabled="${c.value}">
+                <textlistitem>item one</textlistitem>
+                <textlistitem>item two</textlistitem>
+                <textlistitem>item three</textlistitem>
+            </combobox>
+        </view>
+        <list enabled="${c.value}" shownitems="3">
+            <textlistitem>item one</textlistitem>
+            <textlistitem>item two</textlistitem>
+            <textlistitem>item three</textlistitem>
+            <textlistitem>item four</textlistitem>
+        </list>
+
+        <simplelayout spacing="10"/>
+    </view>
+    <basecomponent enabled="${c.value}" y="20">
+        <text>these components get enabled from parent component </text>
+        <view layout="axis:x;spacing:10">
+            <button onclick="debug.write('clicked', this)">Browse...</button>
+            <button isdefault="true" onclick="debug.write('clicked', this)">Default</button>
+        </view>
+        <checkbox>Save Changes</checkbox>
+        <view layout="axis:x;spacing:40">
+            <radiogroup>
+                <radiobutton>one</radiobutton>
+                <radiobutton>two</radiobutton>
+                <radiobutton>three</radiobutton>
+            </radiogroup>
+            <view height="60" width="40" clip="true">
+                <view height="500" width="40"/>
+                <scrollbar/>
+            </view>
+        </view>
+        <edittext>editable text</edittext>
+<!--        <text>tabs don't fully implement enabled=false</text>-->
+<!--        <tabs>-->
+<!--            <tabpane>stuff-->
+<!--                <simplelayout/>-->
+<!--                <radiogroup>-->
+<!--                    <radiobutton>lamp</radiobutton>-->
+<!--                    <radiobutton>mug</radiobutton>-->
+<!--                    <radiobutton>pencil case</radiobutton>-->
+<!--                </radiogroup>-->
+<!--                <button>buy me</button>-->
+<!--            </tabpane>-->
+<!--            <tabpane selected="true">furniture-->
+<!--                <button>more</button>-->
+<!--            </tabpane>-->
+<!--            <tabpane>extra stuff-->
+<!--                <button>more</button>-->
+<!--            </tabpane>-->
+<!--        </tabs>-->
+        <view layout="axis:x; spacing:10">
+            <combobox>
+                <textlistitem>item one</textlistitem>
+                <textlistitem>item two</textlistitem>
+                <textlistitem>item three</textlistitem>
+            </combobox>
+            <combobox  editable="false">
+                <textlistitem>item one</textlistitem>
+                <textlistitem>item two</textlistitem>
+                <textlistitem>item three</textlistitem>
+            </combobox>
+        </view>
+        <list id="t" shownitems="3">
+            <textlistitem>item one</textlistitem>
+            <textlistitem>item two</textlistitem>
+            <textlistitem>item three</textlistitem>
+            <textlistitem>item four</textlistitem>
+        </list>
+
+        <simplelayout spacing="10"/>
+    </basecomponent>
+
+
+    <simplelayout axis="x" spacing="20" inset="20"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

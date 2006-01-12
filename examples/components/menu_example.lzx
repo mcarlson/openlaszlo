@@ -1,0 +1,157 @@
+<canvas bgcolor="#EAEAEA" width="600" height="480" >
+   <include href="/lz/library.lzx"/>
+
+    <dataset name="items">
+        <item value="item1" >item one</item>
+        <item value="item2" >item two</item>
+        <item value="item3" >item three</item>
+        <item value="item4" >item four</item>
+    </dataset>
+
+    <command id="cmd_new"
+             onselect="Debug.write('EXECUTED command new')"
+             key="['Control','Shift','N']"/>
+             
+    <command id="cmd_open"
+             onselect="Debug.write('EXECUTED command open')"
+             key="['Control','Shift','O']"/>
+
+
+   <text x="20">Click on the menubar to move it.</text>
+   <menubar name="mbar" placement="menubar">
+         <menu name="file" width="200"  >File
+            <menuitem text="New..." command="cmd_new" />
+            <menuseparator/>
+            <menuitem text="Open..." command="cmd_open" />
+        </menu>
+
+        <menu name="Document" initstage="late" >Document
+            <menuitem  text="item 1 for doc" onselect="Debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
+            <menuseparator/>
+            <menuitem text="item 2" >
+                <menu name="subedit" >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" />
+                </menu>
+            </menuitem>            
+            <menuitem text="item 3" >
+                <menu name="submenu-depth-1 " >subedit
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" >
+                        <menu name="submenu-depth-2" width="200" >subedit            
+                            <menuitem text="subitem 1" command="cmd_new" />
+                            <menuitem text="subitem 2" />
+                            <menuitem text="subitem 3" />
+                        </menu>
+                    </menuitem>
+                    <menuitem text="subitem 3" />
+                    <menuitem text="subitem 4" />
+                    <menuitem text="subitem 5" />
+                    <menuitem text="subitem 6" />
+                    <menuitem text="subitem 7" />
+                    <menuitem text="subitem 8" />
+                </menu>
+            </menuitem>            
+            <menuitem text="item 4" />
+            <menuitem text="item 5" />
+            <menuitem text="item 6" />
+        </menu>
+   </menubar> 
+   
+
+   <menubar name="mbarbottom" width="300" x="10" y="420">
+         <menu name="file" id="mfile" width="200"  >File
+            <menuitem text="New..." command="cmd_new" />
+            <menuseparator/>
+            <menuitem text="Open..." command="cmd_open" />
+        </menu>
+
+        <menu name="Document" initstage="late" >Document
+            <menuitem  text="item 1 for doc" onselect="Debug.write('EXECUTED onselect for menuitem - item 1 for doc' )" />
+            <menuseparator/>
+            <menuitem text="item 2" >
+                <menu name="subedit" >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" />
+                </menu>
+            </menuitem>            
+            <menuitem text="item 3" >
+                <menu name="submenu-depth-1 " >subedit            
+                    <menuitem text="subitem 1" />
+                    <menuitem text="subitem 2" >
+                        <menu name="submenu-depth-2" width="200" >subedit            
+                            <menuitem text="subitem 1" command="cmd_new" />
+                            <menuitem text="subitem 2" />
+                            <menuitem text="subitem 3" />
+                        </menu>
+                    </menuitem>
+                    <menuitem text="subitem 3" />
+                    <menuitem text="subitem 4" />
+                    <menuitem text="subitem 5" />
+                    <menuitem text="subitem 6" />
+                    <menuitem text="subitem 7" />
+                    <menuitem text="subitem 8" />
+                </menu>
+            </menuitem>            
+            <menuitem text="item 4" />
+            <menuitem text="item 5" />
+            <menuitem text="item 6" />
+        </menu>
+   </menubar>
+
+    <view x="20" y="150" width="400" >
+    
+        <button text="openMenu top" width="110" >
+            <menu name="foo" attach="top" width="110" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" />
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+
+        <button text="openMenu right" width="110" >
+            <menu name="foo" attach="right" width="110" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" />
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+            
+        <button text="openMenu below" width="110">
+            <menu name="foo" attach="bottom" width="110" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" >
+                    <menu name="foo" attach="right" width="110" >Document
+                        <menuitem text="subitem 1" />
+                        <menuitem text="subitem 2" />
+                    </menu>
+                </menuitem>
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+        
+        <button text="openMenu left" width="110">
+            <menu name="foo" attach="left" width="110" >Document
+                <menuitem text="item 1" />
+                <menuitem text="item 2" />
+            </menu>
+            <method event="onmousedown">
+                this.foo.setOpen(true);
+            </method>
+        </button>
+        
+        <wrappinglayout spacing="120" axis="x" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

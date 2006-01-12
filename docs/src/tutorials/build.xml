@@ -1,0 +1,16 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<project name="tutorials" default="build">
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <target name="clean">
+    <ant dir=".." target="clean-tutorials"/>
+  </target>
+
+  <target name="build">
+    <ant dir=".." target="tutorials"/>
+  </target>
+
+</project>

@@ -1,0 +1,65 @@
+<library>
+<class name="simplelayout" extends="layout" >
+    <!--- The axis in which this layout operates. One of 'x' or 'y'. -->
+    <attribute name="axis" value="y" setter="this.setAxis( axis )" 
+               type="string" />
+
+    <!--- A pixel amount to inset the first view controlled by the layout-->
+    <attribute name="inset" value="0"
+        setter="this.inset = inset;
+               if( this.subviews.length ) this.update();
+               if (this['oninset']) this.oninset.sendEvent(this.inset)"/>
+
+    <!--- A pixel amount to use between each view in the layout -->
+    <attribute name="spacing" value="0"
+               setter="this.spacing = spacing;
+                      if( this.subviews.length ) this.update();
+                      if (this['onspacing']) this.onspacing.sendEvent(this.spacing)"/>
+
+    <!--- @keywords private -->
+    <method name="setAxis" args="a" >
+        this.axis = a;
+        this.sizeAxis = a == "x" ? "width" : "height"
+    </method>
+
+    <!--- @keywords private -->
+    <method name="addSubview" args="newsub">
+        this.updateDelegate.register( newsub,  "on" + this.sizeAxis);
+        this.updateDelegate.register( newsub,  "onvisible" );
+        //this is an optimization to avoid calling update in the simple case
+        //where a single subview was just added
+        if ( ! this.locked &amp;&amp; this.subviews.length ){
+            var s= this.subviews[ this.subviews.length-1 ];
+            var p =  s[ this.axis ] + s[ this.sizeAxis ] + this.spacing;
+            newsub.setAttribute( this.axis , p  ) ;
+        }
+        super.addSubview( newsub );
+    </method>
+
+    <!--- This method is usually called automatically when any of the views
+          controlled by the layout change their size in the layout axis, or
+          their visibility. However it can be called directly to force the
+          layout to update -->
+    <method name="update">
+        <![CDATA[
+        if ( this.locked ) return;
+        var l = this.subviews.length;
+        var c = this.inset;
+
+        for(var i=0; i < l; i++) {
+            var s = this.subviews[i]; 
+            if ( !s.visible ) continue;
+            if ( s[ this.axis ] != c ){
+                s.setAttribute( this.axis , c );
+            }
+            c += this.spacing + s[ this.sizeAxis ];
+        }
+        ]]>
+    </method>
+</class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,17 @@
+<!-- A methd is defined with the same name as an attribute. Compiler warning should be issued -->
+
+<canvas width="300" height="200" bgcolor="red"> 
+  <view>
+    <method name="foo">
+       debug.write("this is the first foo method");
+    </method>
+
+    <method name="foo" args="n">
+       debug.write("this is the second foo method, with arg "+n);
+    </method>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

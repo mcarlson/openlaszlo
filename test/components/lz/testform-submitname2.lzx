@@ -1,0 +1,30 @@
+<canvas>
+    <debug y="260"/>
+
+    <dataset name="surveydataset" type="http" src="http:testform.jsp"/>
+
+    <class name="label" fontstyle="bold" extends="statictext"/>
+
+    <form id="f" width="300" height="260">
+        <submit name="survey" data="${surveydataset}"/>
+        <label>Duplication Names</label>
+        <text>Duplicate names should be allowed in forms -- order not lexical order</text>
+        <checkbox submitname="stuff">Send Stuff To Me</checkbox>
+        <checkbox submitname="stuff">Send More Stuff To Me</checkbox>
+        <checkbox submitname="stuff">I Really Like Stuff</checkbox>
+        <button isdefault="true"
+            onclick="parent.survey.submit()">submit</button>
+    </form>
+
+    <view y="10" x="${f.width + 10}"
+          name="results" datapath="surveydataset:/response">
+        <view datapath="formcomponent">
+             <text datapath="@name"/>
+             <text datapath="text()"/>
+                <simplelayout axis="x"/>
+         </view>
+
+        <simplelayout axis="y"/>
+
+    </view>
+</canvas>

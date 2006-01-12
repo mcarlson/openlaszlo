@@ -1,0 +1,35 @@
+<canvas>
+    <class name="tolong" bgcolor="red" width="20" height="20">
+        <attribute name="timeout" value="2000"/>
+        <method event="oninit">
+            <![CDATA[
+            var ct = getTimer();
+            while ( getTimer() - ct < this.timeout){ 
+                //noop
+            };
+            ]]>
+        </method>
+    </class>
+    <simplelayout spacing="1"/>
+
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+    <tolong/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

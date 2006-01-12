@@ -1,0 +1,272 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Font">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Media</lzcategory>
+    <lzshortdesc>
+    Tag for including fonts.
+    </lzshortdesc>
+    <lztag>tag-font.xml</lztag>
+    <lzapi>api-lzfont.xml</lzapi>
+</lzelement>
+
+<p>The <tagname>font</tagname> tag is used to import fonts into an LZX
+application.  Each font in an LZX application has a source file (in
+TrueType format), a name, and a style (plain, bold, italic, or bold
+italic).</p>
+
+<note>An <classname>LzFont</classname> object represents a named font
+in a given style.  The <classname>LzFontManager</classname> eservice
+stores these object.  The constructor of this class is for internal
+use only.</note>
+
+<fixme>Say something about accessing fonts through script</fixme>
+
+<p>A font element within a <tagname>canvas</tagname> or
+<tagname>library</tagname> defines a font, which can be referenced by
+the <attribute>font</attribute> attribute of a view, or by the
+<attribute>face</attribute> attribute of the <tagname
+link="true">font</tagname> tag within HTML markup.  A font element can
+define a single font face or style, by using the
+<attribute>src</attribute> attribute to refer to a TrueType&#x2122; font
+that is included in the application.</p>
+
+<p>For example</p>
+
+<example executable="false">
+&lt;font name="MyFont"
+      src="myfont.ttf"/&gt;
+</example>
+
+<p>defines a font whose data is read from the TrueType file named
+<code>myfont.ttf</code>, and that can be referred to as
+<code>MyFont</code> in the application source:</p>
+
+<pre>&lt;text font="MyFont"&gt;some text in MyFont&lt;/text&gt;</pre>
+
+<p>A font element can also define a font family <!--index-->, which
+contains a set of nested font elements which each define a font face
+or style.  For example:</p>
+
+<example executable="false">
+&lt;font name="MyFont"&gt;
+  &lt;face src="myfont.ttf"/&gt; 
+  &lt;face style="bold" src="myfontB.ttf"/&gt;
+  &lt;face style="italic" src="myfontI.ttf"/&gt;
+&lt;/font&gt;
+</example>
+
+<p>defines a font with three faces, plain, bold, and italic, which can
+be used as in:</p>
+
+<pre>&lt;text font="MyFont" fontstyle="bold"&gt;bold&lt;/text&gt;</pre>
+
+<example executable="false">
+&lt;text font="MyFont"&gt;
+  plain 
+  &lt;b&gt;bold&lt;/b&gt; 
+  and &lt;i&gt;italic&lt;/i&gt;
+&lt;/text&gt;
+</example>
+
+<p>Here is a simple example of importing a font and using it.</p>
+
+<example>
+&lt;canvas height="50" fontsize="14"&gt;
+  &lt;font src="helmetr.ttf" name="Helvetica"/&gt;
+  &lt;text font="Helvetica"&gt;Here is some text in Helvetica&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>You can import multiple styles of the same font using the
+<tagname>face</tagname> element:</p>
+
+<example class="program" id="font-2">
+&lt;canvas height="60" fontsize="14"&gt;
+  &lt;font name="Helvetica"&gt;
+    &lt;face src="helmetr.ttf" style="plain"/&gt;
+    &lt;face src="helmetb.ttf" style="bold"/&gt;
+    &lt;face src="helmeti.ttf" style="italic"/&gt;
+  &lt;/font&gt;
+  
+  &lt;simplelayout/&gt;
+  &lt;text font="Helvetica"&gt;Here is some text in Helvetica&lt;/text&gt;
+  &lt;text font="Helvetica"&gt;&lt;b&gt;Here is some bold text in Helvetica&lt;/b&gt;&lt;/text&gt;
+  &lt;text font="Helvetica"&gt;&lt;i&gt;Here is some italic text in Helvetica&lt;/i&gt;&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Below is an example that displays several fonts:</p>
+
+<example>
+&lt;canvas height="400" width="600"&gt; 
+  &lt;splash/&gt;
+
+  &lt;!-- Import some fonts.  --&gt;
+  &lt;font name="Arioso" src="ariosor.ttf"&gt;
+    &lt;face src="ariosob.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+
+  &lt;font name="Chevara" src="chevarar.ttf"&gt;
+    &lt;face src="chevaraor.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+
+  &lt;font name="Conga" src="congar.ttf"&gt;
+    &lt;face src="congab.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+
+  &lt;font name="Helvetica-Condensed"&gt;
+    &lt;face src="helmetcb.ttf"  style="bold"/&gt;
+    &lt;face src="helmetcbi.ttf" style="bold italic"/&gt;
+    &lt;face src="helmetci.ttf"  style="italic"/&gt;
+    &lt;face src="helmetcr.ttf"/&gt;
+  &lt;/font&gt;
+
+  &lt;font name="Helvetica"&gt;
+    &lt;face src="helmetr.ttf"/&gt;
+    &lt;face src="helmetb.ttf"  style="bold"/&gt;
+    &lt;face src="helmeti.ttf"  style="italic"/&gt;
+    &lt;face src="helmetbi.ttf" style="bold italic"/&gt;
+  &lt;/font&gt;
+
+  &lt;font name="Times Roman"&gt;
+    &lt;face src="timmonsr.ttf"/&gt;
+    &lt;face src="timmonsb.ttf"  style="bold"/&gt;
+    &lt;face src="timmonsi.ttf"  style="italic"/&gt;
+    &lt;face src="timmonsbi.ttf" style="bold italic"/&gt;
+  &lt;/font&gt;
+
+  &lt;!-- Laszlo Pixel Font (8) --&gt;
+  &lt;font src="lzsans8.ttf" name="Sans Serif 8"&gt;
+    &lt;face src="lzsans8b.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+
+  &lt;window title="Fonts are fun!" width="400" height="400" resizable="true"&gt;
+  &lt;view width="500"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+
+    &lt;view width="400" font="Sans Serif 8"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Sans Serif 8&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ,./ ?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Sans Serif 8&lt;/b&gt;&lt;/text&gt;
+      <!-- &lt;text&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/text&gt; -->
+      <!-- &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/b&gt;&lt;/text&gt; -->
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Sans Serif 8&lt;/inputtext&gt;
+      <!-- &lt;text&gt;&lt;b&gt;&lt;i&gt;BoldItalic &lt;/i&gt;Bold &lt;/b&gt;&lt;i&gt;Italic &lt;/i&gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt; -->
+      &lt;text&gt;&lt;b&gt;Bold &lt;/b&gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt; 
+    &lt;/view&gt;
+
+    &lt;view width="400" font="Helvetica" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Helvetica&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Helvetica&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Helvetica&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Helvetica&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Helvetica&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    
+    &lt;view width="400" font="Helvetica-Condensed" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Helvetica-Condensed&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Helvetica-Condensed&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Helvetica-Condensed&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Helvetica-Condensed&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Helvetica-Condensed&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Helvetica-Condensed&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;view width="400" font="Times Roman" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Times Roman&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Times Roman&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Times Roman&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Times Roman&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Times Roman&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Times Roman&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold&lt;/b&gt;
+        &lt;i&gt;Italic&lt;/i &gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;!-- These fonts do not have italic and bold italic --&gt;
+    &lt;view width="400" font="Arioso" fontsize="20"&gt; 
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arioso&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Bold&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arioso&lt;/inputtext&gt;
+      &lt;text&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;view width="400" font="Conga" fontsize="14"&gt; 
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Conga&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Bold&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Conga&lt;/inputtext&gt;
+      &lt;text&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;view width="400" font="Chevara" fontsize="14"&gt; 
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Chevara&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Bold&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Chevara&lt;/inputtext&gt;
+      &lt;text&gt;&lt;u&gt;Underline&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+
+    &lt;/view&gt;
+    &lt;scrollbar axis="y"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes>LzFontManager</classes>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

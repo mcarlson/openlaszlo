@@ -1,0 +1,19 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas height="80%" debug="true">
+
+    <simplelayout axis="x" spacing="5" />
+    <button onclick="Debug.write('blam')" onblur="Debug.write('button blur')" onfocus="Debug.write('button focus')">
+    blam me
+    </button>
+    
+
+    <inputtext width="100" onblur="Debug.write('text blur')" onfocus="Debug.write('text focus')">foo</inputtext>
+    <inputtext width="100" onblur="Debug.write('text2 blur')" onfocus="Debug.write('text2 focus')">foo</inputtext>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

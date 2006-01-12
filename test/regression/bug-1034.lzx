@@ -1,0 +1,24 @@
+
+<canvas width="1280" height="1024" debug="true">
+   <debug width="400" height="400" y="300" />
+   <dataset name="keys">
+            <row>[0] I would like these texts to resize themselves</row>
+            <row>[1] this is some text</row>
+            <row>[2] this is some very very very long text</row>
+            <row>[3] this is some very very very extremely long text</row>
+            <row>[4] this is some very very very extremely  hugely long 
+text</row>
+   </dataset>
+
+
+   <view datapath="keys:/">
+      <simplelayout axis="y" spacing="10"/>
+       <text resize="true" bgcolor="yellow"  datapath="row/text()" />
+   </view>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

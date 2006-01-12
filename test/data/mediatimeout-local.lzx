@@ -1,0 +1,18 @@
+<canvas width="1200" height="800" debug='true' >
+  <debug x="200"/>
+  <simplelayout/>
+   <view id="v1" resource="http:images/kbox.jpg"/> 
+
+
+  <view x="600" y="600" id="v2"  resource="http:images/nrasn2.jpg"/>
+
+
+  <view x="100" y="100" id="v3"  resource="http:images/sct.jpg"/>
+  <view x="200" y="200" id="v4"  resource="http:images/nbkn.jpg"/>
+  <view x="300"  y="300" id="v5"  resource="http:images/bkn.jpg"/>
+  <view x="400" y="400"  id="v6" resource="http:images/nsct.jpg"/>
+  <view x="500" y="500" id="v7" resource="http:images/nsn.jpg"/>
+
+
+
+</canvas>

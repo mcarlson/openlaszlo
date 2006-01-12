@@ -1,0 +1,53 @@
+  <canvas debug="true">
+    <script>var kidcount=0</script>
+    <class name="aview" extends="view" clickable="true" width="22" height="22"
+bgcolor="0x0099aa">
+      <animatorgroup name="expand" start="false">
+	<animator attribute="x" to="0" duration="0"/>
+      </animatorgroup>
+    </class>
+    
+    <class name="bview" extends="view" clickable="true" width="22" height="22"
+bgcolor="0x0099aa"/>
+    
+    
+    <class name="expandgrid" extends="layout"
+oninit="this.updateDelegate.register( this , 'onopen' )">
+      <method name="addSubview" args="newsub">
+	super.addSubview( newsub );
+	this.updateDelegate.register( newsub,  "on");
+	var s= this.subviews.length-1;
+	newsub.setAttribute('y',(( s % 6 ) * 22) + (s % 6));
+	newsub.setAttribute('x',(( s % 7 ) * 22) + (s % 7));
+	kidcount++;
+	debug.write(s);
+      </method>    
+    </class>
+    <view width="160" height="168" bgcolor="blue">
+      <expandgrid/>
+      <aview/>
+      <aview/>
+      <aview/>
+      <aview/>
+      <aview/>
+      <aview/>
+      <aview/>
+      <aview/>
+    </view>
+    <view y="170" width="160" height="168" bgcolor="red">
+      <expandgrid/>
+      <bview/>
+      <bview/>
+      <bview/>
+      <bview/>
+      <bview/>
+      <bview/>
+      <bview/>
+      <bview/>
+    </view>
+    <node oninit="debug.write(kidcount)"/>
+  </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

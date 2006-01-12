@@ -1,0 +1,57 @@
+<canvas debug="true" height="600" >
+    <font src="helmetr.ttf" name="helvet" />
+    <debug y="130" height="400" width="400" fontsize="14" font="helvet" />
+    <simplelayout/>
+
+    <view>
+        <simplelayout axis="x" spacing="2"/>
+        <text>Type url:</text>
+        <edittext width="500" id="url" >http:logo.jpg</edittext>
+    </view>
+
+    <command id="cmd_zip" onselect="butt.doit();"  key="['Enter']" active="true"/>
+
+    <checkbox text="cache in client" id="ccache" />
+    <checkbox text="cache in server" id="scache" />
+    <view id="me" >
+        <method event="onerror" args="e">
+            Debug.write('error: ' + e);
+        </method>
+        <method event="ontimeout" args="e">
+            Debug.write('timeout: ' + e);
+        </method>
+    </view>
+
+    <button id="butt" >Make request
+
+        <method event="onclick">
+            this.doit();
+        </method>
+
+        <method name="doit"><![CDATA[
+            Debug.write("Requesting: " + url.getText()); 
+
+            // Determine caching from checkboxes
+            var caching = 'none'
+            if (ccache.getValue() && scache.getValue()) {
+                caching = 'both';
+            } else if (ccache.getValue()) {
+                caching = 'clientonly';
+            } else if (scache.getValue()) {
+                caching = 'serveronly';
+            }
+
+            me.setSource(url.getText(), caching) ;
+        ]]></method>
+    </button>
+    <button onclick="me.stop()"> Stop </button>
+    <button onclick="me.play()"> Play </button>
+    <text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}" />
+    <edittext id="fr"/>
+    <button onclick="me.play(fr.text)" 
+            text="${'Jump to ' + fr.text}"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

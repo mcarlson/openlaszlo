@@ -1,0 +1,42 @@
+<canvas debug="true">
+  <simplelayout />
+  <view clickable="true" name="gclick" width="20" height="20" bgcolor="green">
+    <attribute name="dblDel"/>
+    <attribute name="clicks" type="number" value="0"/>
+    <method name="setupdbl" event="oninit">
+      this.dblDel = new LzDelegate(this, "clearClicks");
+    </method>
+    <method event="onclick">
+      if (this.clicks){
+        doDoubleClick();
+      } else {
+        doClick();      
+      }
+      this.clicks++;
+      LzTimer.addTimer(this.dblDel, 300);
+    </method>
+    <method name="clearClicks">
+      this.clicks=0;
+    </method>
+    <method name="doClick">
+      debug.write('green click');
+    </method>
+    <method name="doDoubleClick">
+      debug.write('green double click');
+      this.clicks=0;
+    </method>
+  </view> 
+
+  <view clickable="true" name="bclick" width="20" height="20" bgcolor="blue">
+    <method event="onclick">
+      debug.write('blue click');
+    </method>
+    <method event="ondblclick">
+      debug.write('blue double click');
+    </method>
+  </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

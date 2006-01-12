@@ -1,0 +1,38 @@
+<library>
+    <include href="lzunit/lzunit.lzx" />
+    <debug x="300" width="500" height="400"/>
+
+    <dataset name="nps" >
+        <record>first<a foo="car"/>
+            <b />
+        </record>
+        <record>second<a />
+            <b goo="dar"/>
+        </record>
+        <record>third<a />
+            <b />
+        </record>
+        <record>fourth<a foo="var"/>
+            <b goo="dar"/>
+        </record>
+    </dataset>
+    <class name="TestXPParse" extends="TestCase">
+        <method name="test1">
+            var dp = nps.getPointer();
+            assertTrue( dp.setXPath( "  nps  :/ record[ 1 ]  /   text()  " ) );
+            assertEquals( "first" , dp.getNodeText() );
+            assertEquals( 2 ,dp.xpathQuery( "  * [ 1 -  ]" ).length );
+            assertFalse( dp.setXPath( "  nps  :/ record[ 1 - ]  /   text()  " ) );
+            assertTrue( dp.setXPath( "  nps  :/ *  / a [ @foo  =  'var' ] / .. / text ( )  " ) );
+            assertEquals( "fourth" , dp.data );
+            assertEquals(  2, dp.xpathQuery( "nps:/*/*[  @goo  ]" ).length );
+            assertEquals(  "fourth", 
+               dp.xpathQuery( "nps:/*/*[  @goo  ]/../* [ @foo   ]/ .. / text () " ) );
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

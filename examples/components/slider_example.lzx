@@ -1,0 +1,48 @@
+<canvas bgcolor="#EAEAEA" height="500">
+    <include href="base/baseslider.lzx"/>
+    <include href="lz/slider.lzx"/>
+
+    <slider x="10" y="20" name="theslider"
+        showvalue="${showValueCheckbox.value}"
+        showfill="${showFillCheckbox.value}"
+        showrange="${showRangeCheckbox.value}"
+        value="50"
+    />
+
+    <view x="5" y="60">
+        <view>
+            <simplelayout/>
+            <text>minValue</text>
+            <edittext name="minValueField" text="${theslider.minvalue}">
+                <method event="onblur">
+                    canvas.theslider.setMinValue(getText());
+                </method>
+            </edittext>
+            
+            <text>maxValue</text>
+            <edittext name="maxValueField" text="${theslider.maxvalue}">
+                <method event="onblur">
+                    canvas.theslider.setMaxValue(getText());
+                </method>
+            </edittext>
+            
+            <text>Value</text>
+            <edittext name="valueField" text="${theslider.value}">
+                <method event="onblur">
+                    canvas.theslider.setValue(getText());
+                </method>
+            </edittext>
+        </view>
+        <view x="150" y="20">
+            <simplelayout spacing="5"/>
+            <checkbox id="showValueCheckbox" value="true">show value</checkbox>
+            <checkbox id="showFillCheckbox" value="true">show fill</checkbox>
+            <checkbox id="showRangeCheckbox" value="true">show range</checkbox>
+                 </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

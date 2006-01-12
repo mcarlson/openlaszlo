@@ -1,0 +1,404 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- noughts.lzx                                                           -->
+<!-- by Antun Karlovac 9/5/2002                                            -->
+<!--                                                                       -->
+<!-- This is the Noughts & Crosses (Tic-tac-toe) example.                  -->
+<!-- ... now with real Noughts and real Crosses!                           -->
+<!-- ... and bonus victory line!                                           -->
+<!-- With a woody effect in the background and noughts and crosses that    -->
+<!-- spin when they get clicked.                                           -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas bgcolor="#EAEAEA" width="640" height="540" >
+    <resource name="noughtImg" src="nought.swf" />
+    <resource name="crossImg" src="cross.swf" />
+    <resource name="hashImg" src="woody.swf" />
+    <resource name="vicLineVertImg" src="vert_line.swf" />
+    <resource name="vicLineHorizImg" src="horiz_line.swf" />
+    <resource name="vicLineForSlashImg" src="for_slash_line.swf" />
+    <resource name="vicLineBakSlashImg" src="bak_slash_line.swf" />
+    <resource name="dialogBox" src="dialog.swf" />
+
+<!-- ===================================================================== -->
+<!-- = Class Definitions                                                 = -->
+<!-- ===================================================================== -->
+    <!-- Definition for a single button -->
+    <class name="singleButton"
+           width="100" height="100" x="0" y="0" 
+           onmouseup="allRowsCols.selectButton(this);">
+        
+        <!-- A flag to keep track of whether a cell has been clicked,
+             thus preventing it from being clicked twice -->
+        <attribute name="isClicked" value="false" />
+        <!-- Will hold "X" or "O". The "''" notation passes a null string -->
+        <attribute name="buttonLabel" value="''" />
+        <!-- Nough or cross resource -->
+        <attribute name="noughtOrCross" value="null" />
+        
+        <!-- Write the "O" or "X" in the cell -->
+        <method name="setLabel" args="currentPlayer">
+            currentGo++;
+            if (currentPlayer == "O") {
+                this.noughtOrCross = this.nought;
+                this.noughtOrCross.play( 6 );
+            } else if (currentPlayer == "X") {
+                this.noughtOrCross = this.cross;
+                this.noughtOrCross.play( 6 );
+            }
+            this.isClicked = true;
+            this.buttonLabel = currentPlayer;
+        </method>
+        
+        <view name="nought" resource="noughtImg" />
+        <view name="cross" resource="crossImg" />
+    </class>
+
+    <!-- Definition for row of buttons -->
+    <class name="buttonrow" height="100">
+        <!-- Clear and reset everything so that we can play again -->
+        <method name="reset">
+            <![CDATA[
+            for (var i=0; i<this.subviews.length; i++) {
+                // reset button text
+                var col = "col" + i;
+                this[col].buttonLabel = "''";
+                this[col].isClicked = false;
+                if (this[col].noughtOrCross) {
+                    this[col].noughtOrCross.stop( 1 );
+                }
+            }
+            ]]>
+        </method>
+        
+        <simplelayout axis="x" spacing="4" />
+        
+        <singleButton name="col0">
+            <attribute name="col" value="0" />
+        </singleButton>
+        <singleButton name="col1">
+            <attribute name="col" value="1" />
+        </singleButton>
+        <singleButton name="col2">
+            <attribute name="col" value="2" />
+        </singleButton>
+    </class>
+
+    <!-- The colored line that gets drawn to indicate a win -->
+    <class name="victoryLine">
+        <attribute name="horizLineSpacing" value="104" />
+        <attribute name="vertLineSpacing" value="106" />
+        <attribute name="initHorizLineY" value="51" />
+        <attribute name="initVertLineX" value="51" />
+        
+        <!-- these will get set later, and are used to determine where the
+             line gets drawn -->
+        <attribute name="firstRow" value="-1" />
+        <attribute name="secondRow" value="-1" />
+        <attribute name="firstCol" value="-1" />
+        <attribute name="secondCol" value="-1" />
+        
+        <!-- Make all red lines disappear -->
+        <method name="reset">
+            this.horizLine.setVisible( false );
+            this.vertLine.setVisible( false );
+            this.forSlashLine.setVisible( false );
+            this.bakSlashLine.setVisible( false );
+            this.horizLine.setAttribute( "y", this.initHorizLineY );
+            this.vertLine.setAttribute( "x", this.initVertLineX );
+        </method>
+
+        <!-- figure out which line and where to draw it -->
+        <method name="drawLine">
+            <![CDATA[
+            this.reset();
+
+            // horiz line
+            if ( this.firstRow == this.secondRow ) {
+                var rowNumber = this.firstRow;
+                var newY = this.horizLine.y + (rowNumber 
+                           * this.horizLineSpacing);
+                this.horizLine.setAttribute( "y", newY );
+                this.horizLine.setVisible( true );
+                return;
+            }
+
+            // vert line
+            if ( this.firstCol == this.secondCol ) {
+                var colNumber = this.firstCol;
+                var newX = this.vertLine.x + (colNumber
+                           * this.vertLineSpacing);
+                this.vertLine.setAttribute( "x", newX );
+                this.vertLine.setVisible( true );
+                return;
+            }
+
+            // forward slash
+            if (( this.firstCol < this.secondCol ) == 
+                ( this.firstRow > this.secondRow )) {
+                this.forSlashLine.setVisible( true );
+            }
+
+            // back slash
+            if (( this.firstCol < this.secondCol ) == 
+                ( this.firstRow < this.secondRow )) {
+                this.bakSlashLine.setVisible( true );
+            }
+            ]]>
+        </method>
+        
+        <view name="horizLine" resource="vicLineHorizImg" x="12" y="-1"
+              visible="false" />
+        <view name="vertLine" resource="vicLineVertImg" x="-1" y="10"
+              visible="false" />
+        <view name="forSlashLine" resource="vicLineForSlashImg" x="12" 
+              y="12" visible="false" />
+        <view name="bakSlashLine" resource="vicLineBakSlashImg" x="12" 
+              y="12" visible="false" />
+    </class>
+
+<!-- ===================================================================== -->
+<!-- = Global Scripts                                                    = -->
+<!-- ===================================================================== -->
+    <script>
+        <![CDATA[
+        // globals
+        //
+        var currentPlayer = "O";
+        var currentGo = 0;
+
+        // set switches between the two players
+        //
+        function setCurrentPlayer() {
+            if (currentPlayer == "O") {
+                currentPlayer = "X";
+            } else {
+                currentPlayer = "O";
+            }
+        }
+
+
+        // Find 3 in a row
+        // loop through the surrounding 8 squares, checking each
+        // of them for a match with the current one. when a match
+        // is found, continue along the same line in both directions
+        // to check for 3 in a row.
+        //
+        function isWin(cell) {
+            for ( var c=-1; c<2; c++ ) {
+                for ( var r=-1; r<2; r++ ) {
+                    // Debug.write( "row " + r + "    col " + c );
+                    if ( (r == 0) && (c == 0) ) {
+                        continue;
+                    }
+
+                    // get the new coordinates
+                    var testC = cell.col + c;
+                    var testR = cell.immediateparent.row + r;
+
+                    victory_line.firstRow = cell.immediateparent.row;
+                    victory_line.firstCol = cell.col;
+                    victory_line.secondRow = testR;
+                    victory_line.secondCol = testC;
+
+
+                    // get the cell's identifier
+                    if ( isCellLegal(testC, testR) ) {
+                        var testCell = getCell(testC, testR, cell);
+                    } else {
+                        continue;
+                    }
+                    
+                    // check if that neighboring cell matches the current
+                    if ( testCell.buttonLabel == currentPlayer ) {
+                        // immediately go one further in the same direction
+                        // to see if that matches as well
+                        //                        
+                        var testC = cell.col + (2 * c);
+                        var testR = cell.immediateparent.row + (2 * r);
+                        if ( isCellLegal(testC, testR) ) {
+                            var testCell = getCell(testC, testR, cell);
+                            if ( testCell.buttonLabel == currentPlayer ) {
+                                // 3 in a row!
+                                return true;
+                            }
+                        } else {
+                            // check the opposite button
+                            var testC = cell.col + (-1 * c);
+                            var testR = cell.immediateparent.row + (-1 * r);
+                            if ( isCellLegal(testC, testR) ) {
+                                var testCell = getCell(testC, testR, cell);
+                                if ( testCell.buttonLabel == currentPlayer ) {
+                                    // 3 in a row!
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        // returns the object identifier of a button
+        // based on its coordinates
+        //
+        function getCell(c, r, cell) {
+            // var buttonObj = cell.parent.parent["row" + r].subviews[c];
+            var buttonObj = cell.parent.parent["row" + r]["col" + c];
+            return buttonObj;
+        }
+
+        // checks the coordinates to see if the cell
+        // falls within the 3*3 range
+        //
+        function isCellLegal(c, r) {
+            if ( (c >= 0) && (c < 3) ) {
+                if ( (r >= 0) && (r < 3) ) {
+                    return true;
+                } else return false;
+            } else return false;
+        }
+
+        ]]>
+    </script>
+
+
+<!-- ===================================================================== -->
+<!-- = The Game Area                                                     = -->
+<!-- ===================================================================== -->
+    <view x="200" y="30">
+        <simplelayout axis="y" spacing="0" />
+        <view>
+            <view name="title" resource="title.swf" />
+        </view>
+        <view width="324" height="324">
+            
+            <!-- the horizontal and vertical lines that make up the hash -->
+            <view name="crosshash" resource="hashImg" x="0" y="0"
+                  stretches="both">
+                <!-- Align and scale the matrix of buttons to the window -->
+            </view>
+
+            <!-- id and name are unrelated at the moment, but this is likely
+                 to change -->
+            <view name="allRowsCols" id="allRowsCols" x="4" y="8">
+                
+                <method name="selectButton" args="cell">
+                    // prints a "O" or "X" in the button, then deactivates
+                    // it so that it cannot be clicked again.
+                    //
+                    if (!cell.isClicked) {
+                        var row = cell.immediateparent.row;
+                        var col = cell.col;                
+
+                        cell.setLabel( currentPlayer );
+                        if ( isWin(cell) ) {
+                            victory_line.drawLine();
+                            var message = "Player " + currentPlayer
+                            message += " has won!";
+                            gameOver.showGameOver( message );
+                            return;
+                        }                
+                        
+                        setCurrentPlayer();
+
+
+                        // Stalemate
+                        if (currentGo >= 9) {
+                            var message = "Nobody wins.";
+                            gameOver.showGameOver( message );
+                            return;
+                        }
+                    }
+                </method>
+
+
+                <view name="rows">
+                    <simplelayout axis="y" spacing="4" />
+
+                    <buttonrow name="row0" >
+                        <attribute name="row" value="0" />
+                    </buttonrow>
+
+                    <buttonrow name="row1">
+                        <attribute name="row" value="1" />
+                    </buttonrow>
+
+                    <buttonrow name="row2">
+                        <attribute name="row" value="2" />
+                    </buttonrow>
+
+
+                </view>
+
+            </view><!-- /allRowscols -->
+
+            <victoryLine name="victory_line" id="victory_line" x="4" y="4" 
+                         stretches="both" />
+        </view>
+    </view>
+
+
+<!-- ===================================================================== -->
+
+    <!-- semi-transparent background -->
+    <view id="gameOverScreen" x="0" y="0" 
+          width="800" height="800"
+          oninit="this.setVisible(false);"
+          bgcolor="#ffffff" opacity=".40">
+    </view>
+
+    <!-- game over dialog box -->
+    <view id="gameOver" x="300" y="200" 
+          width="200" height="125"
+          oninit="this.setVisible( false );"
+          resource="dialogBox">
+
+        <method name="showGameOver" args="message">
+            this.setVisible( true );
+            gameOverScreen.setVisible( true );
+
+            // Prevent the user from clicking anything else
+            LzModeManager.makeModal( this );
+            this.message.setText( message );
+        </method>
+        <method name="playAgain">
+            // Close the dialog box and, reset the game
+            //
+
+            // Allow the user to click other things (i.e. aside from the 
+            // dialog box
+            LzModeManager.release(this); 
+
+            this.setVisible( false );
+            gameOverScreen.setVisible( false );
+
+            // reset globals
+            currentPlayer = "O";
+            currentGo = 0;
+
+            allRowsCols.rows.row0.reset();
+            allRowsCols.rows.row1.reset();
+            allRowsCols.rows.row2.reset();
+            
+            victory_line.reset();
+        </method>
+
+        <!-- The message in the "dialog" box -->
+        <text align="center" multiline="false" resize="true" 
+              name="message" x="10" y="40" width="${parent.width}" />
+
+        <button text="OK" y="80" onclick="this.parent.playAgain()"
+                align="center" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

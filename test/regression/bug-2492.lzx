@@ -1,0 +1,24 @@
+<canvas> 
+    <splash/>
+
+    <font name="Times Roman">
+	<face src="timmonsr.ttf" />
+	<face src="timmonsb.ttf"  style="bold" />
+	<face src="timmonsi.ttf"  style="italic" />
+	<face src="timmonsbi.ttf" style="bold italic" />
+    </font>
+
+    <view width="400" font="Times Roman" fontsize="14" > <simplelayout 
+axis="y" spacing="10"/>
+        <inputtext bgcolor="#cccccc">plain inputtext here</inputtext>
+        <inputtext bgcolor="#ffffcc" fontstyle="bold">bold inputtext 
+here</inputtext>
+        <inputtext bgcolor="#ffcccc" fontstyle="bold italic">bold italic 
+inputtext here</inputtext>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,58 @@
+<library>
+    <include href="base/baseslider.lzx"/>
+
+    <!--- a slider component allowing for easy selection of a value within a range -->
+    <class name="slider" extends="baseslider">
+
+        <slidertrack/>
+
+        <state apply="${classroot.showrange}">
+            <text y="${classroot.track.y + classroot.track.height + 2}"
+                text="${classroot.minvalue}"
+            />
+            <text y="${classroot.track.y + classroot.track.height + 2}" resize="true"
+                x="${classroot.track.x+classroot.track.width-width}"
+                text="${classroot.maxvalue}"
+            />
+        </state>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            track.setBGColor(s.bordercolor);
+            track.background.setBGColor(s.basecolor);
+            track.filled.setBGColor(s.selectedcolor);
+        </method>
+    </class>
+
+    <!--- the inner track on which the sliderthumb rides -->
+    <class name="slidertrack" extends="baseslidertrack">
+        <!--- @keywords private -->
+        <attribute name="showfill" value="${parent.showfill}" type="number"/>
+
+        <view name="background" bgcolor="red"
+            height="${parent.height-(2*parent.classroot.bordersize)}"
+            width="${parent.width-(2*parent.classroot.bordersize)}"
+            x="${ parent.classroot.bordersize }"
+            y="${ (parent.height-height)/2 }"
+        />
+        <!-- the filled area -->
+        <view name="filled" bgcolor="0xff9933" opacity=".8" visible="${classroot.showfill}"
+            height="${parent.height-(2*parent.classroot.bordersize)}"
+            width="${Math.max(0,Math.min(classroot.thumb.x+classroot.thumb.width,parent.width)-(2*parent.classroot.bordersize))}"
+            y="${ (parent.height-height)/2 }"
+            x="${ parent.classroot.bordersize }"
+        />
+
+        <sliderthumb name="thumb"/>
+    </class>
+
+    <!--- the visual thumb the user drags to select a value -->
+    <class name="sliderthumb" extends="basesliderthumb">
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

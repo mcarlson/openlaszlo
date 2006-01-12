@@ -1,0 +1,28 @@
+<!-- a view name which conflicts with a class name should give a warning -->
+<canvas>
+
+  <class name="foo"/> <!-- should trigger a warning -->
+  <view name="foo" />
+
+  <class name="baz"/>
+  <view>
+    <view id="baz" /> <!-- should trigger a warning -->
+  </view>
+
+  <class name="blah"/>
+  <view id="blah" /> <!-- should trigger a warning -->
+
+  <class name="bar"/>
+
+  <!-- check that nested name does not conflict; no warning should happen from this case -->
+  <view> 
+   <view name="bar"/>
+  </view>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

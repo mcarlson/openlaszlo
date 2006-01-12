@@ -1,0 +1,15 @@
+<canvas debug="true">
+
+   <menubar name="mbarbottom" width="300" x="100" y="420">
+         <menu name="file" id="mfile" width="200" attach="top">
+            File
+            <method event="oninit">
+                this.setAttribute("attach", "bottom");
+            </method>
+            <menuitem text="New..." />
+            <menuseparator/>
+            <menuitem text="Open..." />
+        </menu>
+    </menubar>
+    
+</canvas>

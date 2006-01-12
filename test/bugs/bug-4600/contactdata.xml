@@ -1,0 +1,22 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<contacts>
+<person firstname="Chep" lastname="Young" email="chep@arwins.com" address="565 Laurel Canyon" city="Chicago" state="IL" zip="23789" webpage="http://www.laszlosystems.com/" />
+<person firstname="Antun" lastname="Karlovac" email="antun@antunkarlovac.com" address="2321 Russell St #3G" city="Berkeley" state="CA" zip="94705" home_country="USA" home_default="0" home_webpage="http://www.antunkarlovac.com" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<person firstname="Bret" lastname="Simister" email="bsimister@foo.com" address="1 Boynton Ct." city="Schnectady" state="NY" zip="12345" phone="555-1212"  webpage="http://www.mycoolsite.com/" />
+<person firstname="Caprice" lastname="Briggs" work_address="451 Zanzibar Court" email="caprice@foo.com" webpage="http://www.laszlosystems.com/" />
+<person firstname="Charles" lastname="Ember" work_address="555 5th street #1204" email="charlesemory@foo.com" webpage="http://www.laszlosystems.com/" />
+<person firstname="Cheryl" lastname="Erickson" work_address="991 Creed Road" email="chericks@foo.com" webpage="http://www.laszlosystems.com/" />
+<person firstname="Chris" lastname="Kimm" work_address="1233 Sallen Drive" email="ckimm@foo.com;mikc@oof.moc" phone="(415) 555-1212" webpage="http://www.laszlosystems.com/" />
+<person firstname="Colleen" lastname="Forbes" work_address="13 Rucker Road" email="colfor@foo.com" phone="555-1212" webpage="http://www.laszlosystems.com/" />
+<person firstname="Dan" lastname="Lewis" displayname="Dan Lewis" work_address="744 Fritsch Strasse" email="dlewis@foo.com" webpage="http://www.laszlosystems.com/" />
+<person firstname="Dan" lastname="Rokhsar" displayname="Dan Rokhsar" work_address="2211 Dejoie Alley" email="dsrokhsar@foo.gov" webpage="http://www.laszlosystems.com/" />
+<person firstname="Daniel" lastname="Roth" displayname="Daniel Roth" work_address="256 Temkin Lane" email="droth@somewhere.com" phone="415-555-1212" webpage="http://www.laszlosystems.com/" />
+<person firstname="David" lastname="Dorosin"  work_address="4113 Grig Street" mail="ddorosin@foo.com" webpage="http://www.laszlosystems.com/" />
+<person firstname="David" lastname="Temkin" displayname="David Temkin" work_address="33 Formation Way" email="temkin@foo.com" city="San Francisco" state="CA" zip="94113" phone="555-1212" webpage="http://www.laszlosystems.com/" />
+<person firstname="John" lastname="Smith" title="Mr" displayname="Copy" work_address="819 Andrea Avenue" email="nancy@foo.com" webpage="http://www.laszlosystems.com/" />
+<person firstname="Tommy" lastname="Stewart" work_address="40 Simister Boulevard" email="docstu@foo.edu" webpage="http://www.laszlosystems.com/" />
+<person firstname="Xavier" lastname="Pruskin" work_address="6565 Nabakov Way" email="thabo_lephutha@foo.com" home_default="0" home_phone="(207) 555-1219" work_city="Durham" state="MA" zip="04555" webpage="http://www.laszlosystems.com/" />
+</contacts>

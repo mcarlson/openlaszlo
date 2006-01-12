@@ -1,0 +1,6 @@
+<canvas>  
+  <resource name="horse" src="horse-3.jpg"/>
+  <text>
+    <img src="horse-3.jpg" width="20" height="20" vspace="50"/>
+  </text>
+</canvas>

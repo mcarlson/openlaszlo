@@ -1,0 +1,584 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="proxied">
+<head>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>Proxied and SOLO deployment</title>
+</head>
+
+<body>
+<fixme>
+These things should be converted to serverless operation. Except, that
+requires that the XML files be stored either on the same host as your
+web site or that there be a macromedia crossdomain.xml file where you
+get them from.
+</fixme>
+<fixme>
+Regarding the SOLO deploy wizard, it just zips everything in the apps
+directory, because the system doesn't know what resources etc might be
+needed by the app at runtime. So the expedient solution was to grab
+everything in the same directory.
+
+
+</fixme>
+<!-- Put Chapter title in h1 -->
+<h1>Proxied and SOLO Applications</h1>
+<p>
+</p>
+<h2>Review of deployment modes</h2>
+<p>
+As explained in <xref linkend="architecture"/>, there are two distinct ways in which    
+Laszlo applications can be <i>deployed</i>, that is, made available on the web:
+</p>
+
+<ol>
+	<li>Deploy SOLO (Standalone OpenLaszlo Output) from any HTTP Web server</li>
+	<li>Deploy with OpenLaszlo Server</li>
+</ol>
+<p>
+With SOLO deployment, the LZX source is pre-compiled into a stand-alone SWF
+file that can be placed within the HTML docs directory of a common HTTP Web
+Server (such as Apache or IIS). SOLO deployments are simple to manage, and
+supported by nearly any Web hosting service. </p>
+<p>
+Colloquially, SOLO deployment is sometimes called "severless," because the
+ OpenLaszlo Server is not required for operation of the application.
+</p>
+<p>
+With OpenLaszlo Server deployment, the LZX source is placed within the
+Web-apps directory of the OpenLaszlo Server, and is dynamically compiled.
+OpenLaszlo Server deployment requires a Java Application Server or servlet
+container. It provides additional capabilities dependent on the server,
+including support for SOAP, XML-RPC, Java-RPC and persistent connections.
+The OpenLaszlo Server is also required for applications that use some media formats that are not
+natively supported by the Flash player. The OpenLaszlo sever transcodes these media files "on the fly"
+into formats supported by the Flash player.
+</p>
+
+<p>
+OpenLaszlo Server deployment is also called "proxied" deployment, because the OpenLaszlo server
+is always running, and it mediates, or <i>proxies</i> communication between the Laszlo application
+running on the client machine and any back-end services or resources located elsewhere on the web.
+</p>
+<p>
+Deploying SOLO is generally more convenient than deploying with OpenLaszlo Sever, and often gives better performance. 
+</p>
+<note>
+Laszlo applications compiled with LPS 2.2 (or earlier) require access to a running copy of the 
+OpenLaszlo Server (called LPS in earlier releases) in order to make data (XML over HTTP), media, SOAP, Java Direct, and XML-RPC requests.  
+OpenLaszlo 3.0 removes this requirement for applications that make only certain kinds of data and media requests. 
+The rest of this chapter pertains to OpenLaszlo 3.0 and later releases.
+</note>
+
+<p>
+Open Laszlo 3.0 compiles to the SWF Version 6 and/or 7 (Macromedia Flash) file format. See <xref linkend="browser-integration"/> for discussion
+of issues related to differences in target format.
+</p>
+
+<h2>Proxied or SOLO? Your call</h2>
+<p>
+The decision about whether a Laszlo application will be deployed proxied or SOLO can sometimes be made by the system administrator responsible
+for making the application available on the web.  When an application does not make use of any features that require the presence of the 
+OpenLaszlo Server,
+the same source file can be used to create either proxied or 
+SOLO executable files. In this case the decision between proxied and SOLO deployment can be made at deployment time, and the deployment
+model is determined by the request type on the URL used to specify the file, as explained below.</p>
+<p>
+Most often, however, it will be you, the developer, who must decide on the deployment
+method. This is because you will know whether the application relies on the OpenLaszlo Server, and if it does rely on the server (and thus
+must be deployed proxied) you may
+want to make some internal optimizations that rely on this fact. In such cases the application may contain <code>proxied="true"</code>
+in the <tagname>canvas </tagname> tag, which means that trying to deploy it SOLO will generate an error.
+</p>
+<p>
+How do you decide whether to target proxied or SOLO deployment? Here is a heuristic:</p>
+<ol>
+	<li>Do you have the option of installing the OpenLaszlo Server on a deployment server? If not, you must deploy SOLO.</li>
+	<li>Does your application require services available only in proxied applications? If yes, you must deploy with OpenLaszlo Server.</li>
+	<li>If your application can be deployed in either manner, which gives the best performance?</li>
+</ol>
+<p>
+Each of these considerations is described briefly below.
+</p>
+  
+<p>
+The decision about whether to deploy an application proxied or unproxied may happen late in
+ the development process, possibly following performance measurement on the two modes of operation for that particular application.  
+</p>
+
+<p> 
+It is desirable to share libraries between applications that are designed for proxied operation, and applications that are designed 
+for unproxied operation.  To the extent that these libraries can operate in either mode, 
+it is desirable to make them usable, without source modifications, in either kind of application.
+</p>
+<note>
+Note that the default behavior is proxied. See below.
+</note>
+<h3>Availability of J2EE Server or Servlet Container</h3>
+<p>
+As explained in the <a href="../delpoy">System Administrator's Guide to Deploying Laszlo Applications</a>, deploying proxied Laszlo applications
+requires that you install a J2EE application server or servlet container.  OpenLaszlo comes with the Tomcat servlet container included,
+but, depending on how you have access to the web, it may not be practical or even possible for you to use this to make your applications
+generally available. So, before you decide to start development of a Laszlo application for, say, a hobby website, you should find out
+whether your ISP provides the capability for you to install a servlet container. If this is not practical for you, you can still develop and deploy
+SOLO applications.
+</p>
+
+<h3>Availability of OpenLaszlo Features</h3>
+<p>
+Access to the OpenLaszlo Server is required for certain run-time features, such as SOAP and XML-RPC requests, and for 
+processing certain types of media files. 
+</p>
+<p>
+Here is a list of features that require OpenLaszlo Server:</p>
+<ul>
+	<li> media types other than SWF, JPG, or MP3  </li>
+	<li> Persistent Connection</li>
+    <li> SOAP</li>
+    <li>XML-RPC</li>
+    <li>http response headers in XML requests</li>
+</ul>
+<p>
+If your application relies on any of these features, you cannot deploy it SOLO.
+</p>
+<p>
+In addition, there are differences between how proxied and SOLO applications handle some kinds of XML data
+and http responses.  See below.</p>
+<h3>Performance Considerations</h3>
+<p>
+If either deployment manner is available to you, the decision may come down to which works better. You should do test deployments under each
+method and see which gives the faster performance.</p>
+<p>
+The data transfer size and run-time performance may  be bigger or smaller, faster or slower.  
+If gzipped data is desired, for SOLO deployment, the XML services will need to gzip the data (since OpenLaszlo Sever will
+ no longer be in the picture).
+ Note that it's not necessary to gzip the swf file, swf6 and swf7 files are internally gzip compressed by the compile process. 
+It would be redundant to have the web server compress them as well.</p>
+
+<h3>Compile-time and run-time differences between proxied and SOLO applications</h3>
+<p>
+If an application is compiled for proxied operation, all data and media requests are proxied  and the remote 
+procedure calls (RPC) tags are supported. 
+</p>
+<p>
+If the canvas contains the <code>proxied="false"</code> attribute, that means the application will be deployed SOLO. 
+Data and media requests are unproxied, and the compiler performs 
+error detection:
+</p>
+<ul>
+	<li>All data and media requests are unproxied.</li>
+	<li>The presence of the &lt;connection&gt; or RPC tag results in a compiler warning.</li>
+	<li>The presence of e.g. &lt;view resource="http:logo.png"/&gt;, where the compiler can easily infer that the value of the resource attribute
+ will result in a runtime request for a media type that is not supported in an unproxied media request, results in a compiler warning.</li>
+	<li>A runtime request for an unsupported service (e.g. <code>myView.setResource('http:logo.png')</code>) will result in a debugger warning, if debugging is enabled. </li>
+</ul>
+<h4>Libraries</h4>
+<p>
+The &lt;canvas&gt; tag has an optional attribute <attribute>proxied="true|false|inherit"</attribute>, which defaults to "inherit".  
+If <code>proxied="true|false"</code>, the application can only be compiled in that mode.  
+It is an error to provide a request parameter with a different compiler setting, and the developer console UI disables options that
+ generate this request.  If <code>proxied="inherit"</code>, the application is compiled either for proxied or unproxied operation,
+ depending upon the 
+value of a compilation switch (which defaults to unproxied).
+</p>
+<p>
+In other words, a canvas file may include only library files that have the same value for their proxied attribute, or the (default) 
+value of "inherit".  You can't mix and match, and the presence of the &lt;library&gt; <attribute>proxied</attribute> attribute is a way to 
+document to developers and to the compiler that a library can only work in one mode of operation.
+</p>
+<h4>Whitespace, namespace and http response header considerations</h4>
+<p>
+In proxied applications, all XML data is parsed as it is passed through the OpenLaszlo server. In SOLO applications, XML data is passed directly to the application, and the data is parsed on the client. Because the parser implementations are slightly different in the OpenLaszlo Server and client, the following differences in data handling exist between proxied and SOLO applications. SOLO applications:</p>
+<ul>
+	<li>Do not trim whitespace </li>
+	<li>Do preserve xml namespaces  </li>
+	<li>When loading data, do not provide a way to access http headers.</li>
+</ul>
+<p>
+Also note that the client system not provide any useful error messages when your data has problems in it, whereas the OpenLaszlo Server can provide clues to what's going on.  This another reason why it's best to first develop and test your programs as proxied applications, and then make them SOLO.</p>
+
+
+<h2>Workflow</h2>
+<p>
+Whether you're working on proxied or on SOLO applications, you will 
+need to have the OpenLaszlo server installed on your development machine.
+The server is invoked during the edit-compile-debug cycle, as explained in <xref linkend="program-development"/>.
+ That means that the server is here to stay as a developer tool. 
+</p>
+<p>
+There are two ways to specify whether an application is compiled for proxied operation: the <code>'lzproxied' </code>query parameter, 
+and the <attribute>proxied</attribute> attribute of the &lt;canvas&gt; document root element.  Either of these can specify that the application is proxied,
+ that it is SOLO (unproxied), or that whether it is proxied is determined by another source.  If both of these mechanisms are used, they 
+must agree, otherwise it is a compiler error (for example, a <code>?proxied=true</code> request for an application that contains 
+<code>&lt;canvas proxied="false"&gt;</code>).  If neither is used, the application is proxied.</p>
+<p>
+Because the OpenLaszlo Server contains the compiler, developing and deploying steps can be intertwined, depending on the values of certain
+parameters. Various options are presented here and summarized below.
+</p>
+<h3>Access to remote sources</h3>
+<p>
+For security (to prevent malicious use), the Flash player requires that swf programs demonstrate that they have permission
+to access any files that they reference. There are two ways to do this.</p>
+<ul>
+	<li>If the files originate from the same domain as the application, access is allowed.</li>
+	<li>If the files do not originate from the same domain as the application, there must be a <code>crossdomain.xml</code> file at the top level of the domain from which they are served.</li>
+</ul>
+<p>
+For instance, say you have a Laszlo application that uses art assets from a remote source:</p>
+<pre>
+&lt;resource name="prettypicture" src="http://someURL/picture.gif"&gt;
+</pre>
+<p>
+where someURL is different from where the application is served.  Flash requires that a properly configured crossdomain.xml file be present at the top
+level of that domain to give you permission to access the file.  For instructions on how to do this, see the <a href="http://www.macromedia.com/cfusion/knowledgebase/index.cfm?id=tn_14213">Macromedia</a> documentation.
+</p>
+
+<p>
+Applications that are proxied do not need to do this, since the OpenLaszlo server proxies all requests, and there for from the point of view
+of the application on the client, all data is coming from the same place.
+</p>
+
+
+<h3>
+Development/deployment workflow with for serverless applications: 
+</h3>
+<p>
+The development process for serverless applications is a simple variation on the usual Laszlo cycle:
+</p>
+<ol>
+	<li># Develop the application using OpenLaszlo Server</li>
+	<li># Compile static (.swf) files</li>
+	<li># Place application files on web server</li>
+</ol>
+<p>
+Compiling <code>dir/canvas.lzx</code> creates the file <code>dir/canvas.lzx.swf</code>.
+</p>
+<h4>Compiling applications for SOLO deployment</h4>
+<p>
+There are two ways to compile an application to be deployed SOLO:
+</p>
+<ul>
+	<li>Precompiling the application by invoking the compiler from the command line</li>
+	<li>Compiling the application using OpenLaszlo Server and specifying unproxied deployment, as explained below.</li>
+</ul>
+<p>
+The compiler resides in the directory:
+</p>
+<pre>
+@VERSIONID@#/bin</pre>
+<p>
+Invoke the compiler with the command:
+</p>
+<pre>
+        lzc filename.lzx 
+</pre>
+<p>
+This will result in creation of the file:
+</p>
+<pre>
+        filename.swf
+</pre>
+<p>
+in same directory as the source. The compiled file can be deployed by any application server, such as apache.
+</p>
+<p>
+Alternatively you can cause the compilation as a side effect of requesting unproxied deployment, as explained in the next section.
+</p>
+
+
+<h3>How to specify proxied or SOLO deployment</h3>
+<p>
+You can specify deployment by using:
+</p> 
+<ol>
+	<li>the <code>lzproxied</code> query parameter to the lzx  request type in the URL, for example <code>http://somedomain.com/laszlo-app.lzx?lzproxied=false</code></li>
+	<li>the <code>proxied</code> attribute in the <code>&lt;canvas&gt;</code> tag.</li>
+	<li>the query parameter and attribute together.</li>
+</ol>
+<p>
+Requesting a SOLO application <code>/path/to/canvas.lzx</code> has the side effect of creating a file <code>/path/to/canvas.lzx.swf</code>.  This file, or the 
+directory that contains this file, can be copied to the <code>htdoc</code> directory of a server that doesn't include the Openlaszlo Sever.
+</p>
+<p>
+The file is called <code>canvas.lzx.swf</code> instead of <code>canvas.swf</code> to preserve Laszlo "branding"&#8212;just as the presence of .php or .jsp in
+ a URL is good for the awareness of PHP and Java, even though <code>.htaccess </code>can be configured not to require this filename extensions in the URL.
+  This also makes it less likely that compiling an application (for example, <code>logo.lzx</code>) will overwrite a file that it includes
+ (if <code>logo.lzx</code> includes <code>
+logo.swf</code>).
+</p>
+<p>
+The file is placed in the same directory as the source file so that relative references to datasets and media requests will work.
+</p>
+<h4>proxied attribute</h4>
+<p>
+The <code>proxied</code> attribute on the &lt;canvas&gt; tag can take the following values:</p>
+<ul>
+	<li>true: the application is proxied by the OpenLaszlo Server</li>
+	<li>false: the application is not proxied</li>
+	<li>inherit: the value is determined by the lzproxied query parameter</li>
+</ul>
+
+<h4>lzproxied query parameter</h4>
+
+<p>
+The query parameter to the application request URL, for example <code>'http://lps-3.0/hello.lzx'</code>, specifies whether the application 
+is compiled for proxied or unproxied operation. The <code>lzproxied</code> parameter can take the values <code>true</code> and <code>false</code>. 
+If  true, the application is proxied by the OpenLaszlo Server. 
+If false, the application is deployed SOLO.
+</p>
+<p>
+Add a query parameter, <code>'lzproxied'</code>, to the application request URL. For example, 
+<code>'http://lps-3.0/hello.lzx?proxied=true'</code>.  Like the 'debug' query parameter, this parameter acts as a compiler option, and 
+affects the way an application is compiled. 
+
+</p>
+
+<pre>
+{|
+! lzproxied query parameter
+!	&lt;canvas proxied=&gt;
+!	result
+|-
+| not present ||	not present ||	proxied
+|-
+| not present ||	inherit	 || proxied
+|-
+| not present ||	true ||	proxied
+|-
+| not present ||	false ||	unproxied
+|-
+| true	|| not present ||	proxied
+|-
+| true ||	inherit ||	proxied
+|-
+| true ||	true ||	proxied
+|-
+| true ||	false ||	error
+|-
+| false ||	not present ||	unproxied
+|-
+| false ||	inherit ||	unproxied
+|-
+| false ||	true ||	error
+|-
+| false ||	false ||	unproxied
+|}
+</pre>
+<p>
+The existence of the query parameter means that an application can work in either proxied or SOLO mode, can be compiled for either mode
+ without changes to its source code.  In particular, this makes it easy to compare the proxied and unproxied operation of an application,
+ and to hold off on committing to the deployment mode for an application.
+</p>
+<p>
+The existence of the query parameter also makes it possible to implement an HTTP-based user interface (in the form of additional controls 
+on the developer console) for specifying compiler options.
+</p>
+<p>
+It is also consistent with the debug and runtime target compiler options.
+</p>
+<h4>Passing Parameters to SOLO applications</h4>
+<p>
+See <xref linkend="browser-integration"/> for a discussion of how to deploy Laszlo applications within HTML pages.  Here's a summary
+of how this process needs to be modified for SOLO applications.</p>
+<p>
+If you are deploying a SOLO application using LzEmbed and wish to pass parameters down to the application from the base URL, you need to make some
+modifications to the stock html wrapper page that the server provides. 
+</p>
+<p>
+Here is an <code>lzEmbed</code> line that passes all of the query parameters down to the Laszlo app undamaged:</p>
+<pre>
+lzEmbed({url: 'main.lzx.swf?'+window.location.search.substring(1), bgcolor: '#ffffff', width: '100%', height: '100%'});
+</pre>
+<p>
+
+The thing that's different is the alteration to <code>main.lzx.swf? </code>from <code>main.lzx?lzt=swf</code> and the addition of 
+<code>'+window.location.search.substring(1)'</code>
+</p>
+
+
+<h4>Recompilation</h4>
+<p>
+During development, an HTTP request for a SOLO application that is backed by <code>/path/to/canvas.lzx</code> may cause the compiler 
+to create a file <code>/path/to/canvas.lzx.swf </code>(the object file).  Recompilation occurs when all of the following conditions are true:
+</p><ul>
+
+	<li>The allowRecompile OpenLaszlo Server configuration property is 'true'</li>
+	<li>The compMgrDependencyOption OpenLaszlo Server configuration property is not 'never'</li>
+	<li>One or more of the following conditions is true:
+    <ul>
+	   <li> The object file does not exist</li>
+	   <li> The object file is older than any of the application source files</li>
+	   <li> The value of the allowRecompile property is 'always'</li>
+    </ul>
+    </li>
+</ul>
+
+<p>
+An HTTP request for a SOLO application returns the object file from the source directory instead of from the LPS cache.
+</p>
+
+<h4>SOLO Deployment of a single file</h4>
+
+<ol>
+	<li> Using LPS, request the application URL.</li>
+	<li> Copy the .lzx.swf file to a directory on the deployment server.</li>
+</ol>
+
+
+<h4> SOLO Deployment of a directory</h4>
+<p>
+This is necessary to deploy an application that consists of several deployment files; for example, data and media files in the 
+source directory that are requested during application execution.
+</p>
+<ol>
+	<li> Using LPS, request the application URL.</li>
+	<li> Copy the source directory to the deployment server.</li>
+</ol>
+
+
+<h4>Serverless Sourceless Deployment</h4>
+<p>
+You can chose whether or not to make visible the source code to your application.  When you want to make sure that your source is not available, do this: </p>
+<ol>
+	<li> Using LPS, request the application URL.</li>
+	<li> Make a copy of the source directory.  The copy is the "staging directory".</li>
+	<li> Remove all .lzx files from the staging directory.  </li>
+	<li> Remove any other data and media files that are not referenced during application execution.</li>
+	<li> Copy the staging directory to the deployment server.</li>
+</ol>
+
+
+<h2>Examples</h2>
+<p>Here are examples of applications that do not require the OpenLaszlo server at run time:</p>
+<example extract="false" title="">
+  &lt;canvas proxied="false"&gt;
+    &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
+    &lt;text datapath="ds:/root/text()"/&gt;
+  &lt;/canvas&gt;
+</example>
+
+<example extract="false" title="">
+  &lt;canvas proxied="false"&gt;
+    &lt;include href="lib-ds-unproxied.lzx"/&gt;
+  &lt;/canvas&gt;
+</example>
+
+<example extract="false" title="">  
+  &lt;canvas proxied="false"&gt;
+    &lt;include href="lib-ds-default.lzx"/&gt;
+  &lt;/canvas&gt;
+</example>
+<p>
+with these support files:
+</p>
+<pre>
+lib-ds-proxied.lzx:
+</pre>
+<example extract="false" title=""> 
+  &lt;library proxied="true"&gt;
+    &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
+    &lt;text datapath="ds:/root/text()"/&gt;
+  &lt;/library&gt;
+</example>
+<pre>
+lib-ds-unproxied.lzx:
+</pre>
+<example extract="false" title=""> 
+  &lt;library proxied="false"&gt;
+    &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
+    &lt;text datapath="ds:/root/text()"/&gt;
+  &lt;/library&gt;
+</example>
+<pre>
+lib-ds-default.lzx:
+</pre>
+<example extract="false" title=""> 
+  &lt;library proxied="default"&gt;
+    &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
+    &lt;text datapath="ds:/root/text()"/&gt;
+  &lt;/library&gt;
+</example>
+<h3>Examples of Proxied applications</h3>
+<p>
+These programs create applications that use the OpenLaszlo Server to proxy the dataset request:
+</p>
+<example extract="false" title=""> 
+  &lt;canvas proxied="true"&gt;
+    &lt;datasource name="ds" src="http:data.xml" request="true"/&gt;
+    &lt;text datapath="ds:/root/text()"/&gt;
+  &lt;/canvas&gt;
+</example>
+<example extract="false" title=""> 
+  &lt;canvas proxied="true"&gt;
+    &lt;include href="lib-ds-proxied.lzx"/&gt;
+  &lt;/canvas&gt;
+</example>
+<example extract="false" title="">   
+  &lt;canvas proxied="true"&gt;
+    &lt;include href="lib-ds-default.lzx"/&gt;
+  &lt;/canvas&gt;
+</example>
+<p>
+Compiler errors are returned for these cases:
+</p>
+<p>
+A proxied canvas that includes an unproxied library:
+</p>
+<example extract="false" title="">  
+  &lt;canvas proxied="true"&gt;
+    &lt;!--Error:proxied canvas that includes an unproxied library:--&gt;
+    &lt;include href="lib-ds-unproxied.lzx"/&gt;
+  &lt;/canvas&gt;
+</example>
+<p>
+A unproxied canvas that includes a proxied library:
+</p>
+<example extract="false" title="Serverless canvas cannot contain proxied library">
+  &lt;canvas proxied="false"&gt;
+    &lt;!--Error:A serverless canvas that includes a proxied library--&gt;
+    &lt;include href="lib-ds-proxied.lzx"/&gt;
+  &lt;/canvas&gt;
+</example>
+<h3>Globally Proxied Media</h3>
+<p>
+Media requests use the global canvas attribute.
+</p>
+<p>
+These programs make media requests through the server:
+</p>
+<example extract="false" title="">  
+  &lt;canvas proxied="true"&gt;
+    &lt;view src="http:logo.jpg"/&gt;
+  &lt;/canvas&gt;
+</example>
+<example extract="false" title="">  
+  &lt;canvas proxied="inherit"&gt;
+    &lt;view src="http:logo.jpg"/&gt;
+  &lt;/canvas&gt;
+</example>
+<p>This example shows a data request that is mediated by the OpenLaszlo Server:</p>
+<example extract="false" title="Proxied">  
+  &lt;canvas&gt;
+    &lt;view src="http:logo.jpg"/&gt;
+  &lt;/canvas&gt;
+</example>
+<p>
+This program makes a direct (serverless) media requests:
+</p>
+<example extract="false" title="Serverless (direct) media request">  
+  &lt;canvas proxied="false"&gt;
+    &lt;view src="http:logo.jpg"/&gt;
+  &lt;/canvas&gt;
+</example>
+
+<fixme>
+The non-existent transport chapter needs to be rewritten/updated for serverless deployment.
+
+In particular, Cookies and HTTP Request/Response Headers will all need to be re-documented for server-less deployment, too.
+
+</fixme>
+
+</body>
+</html>
+<!--  X_LZ_COPYRIGHT_BEGIN 
+ Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              
+ Use is subject to license terms.                                            
+ X_LZ_COPYRIGHT_END  -->

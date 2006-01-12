@@ -1,0 +1,4 @@
+<library>
+  <include href="charts/addon/zoomarea.lzx" />
+  <include href="charts/addon/slider/slider.lzx" />
+</library>

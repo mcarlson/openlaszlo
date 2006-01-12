@@ -1,0 +1,46 @@
+<canvas debug="true">
+  <debug height="150" />
+
+  <script>
+    Debug.write('Expect Ok, Ok, Ok, Also Ok, Ok');
+    switch( 0 ) {
+    case 1: 
+      debug.write('Not Ok');
+      break;
+    default:
+      debug.write('Ok');
+    }
+    switch( 0 ) {
+    case 1: 
+      debug.write('Not Ok');
+      break;
+    default:
+    }
+    switch( 0 ) {
+    default:
+      debug.write('Ok');
+      break;
+    case 1: 
+      debug.write('Not Ok');
+    }
+    switch( 0 ) {
+    default:
+      debug.write('Ok');
+    case 2: 
+      debug.write('Also Ok');
+      break;
+    case 1: 
+      debug.write('Not Ok');
+    }
+    switch( 0 ) {
+    default:
+    case 1: 
+      debug.write('Ok');
+    }
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

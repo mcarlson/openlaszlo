@@ -1,0 +1,10 @@
+<!-- test checkbox text layout it was getting clipped at "tex" in the contacts app -->
+
+<canvas width="1024" height="800">
+   <checkbox id="cb" text="Send E-Mail plain text only" />
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

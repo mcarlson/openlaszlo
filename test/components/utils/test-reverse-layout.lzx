@@ -1,0 +1,71 @@
+<canvas height="1000" >
+    <include href="utils/layouts/reverselayout.lzx" />
+    <class name="blue" bgcolor="blue" width="20" height="20" />
+    <class name="red" bgcolor="red" width="20" height="20" />
+    <class name="green" bgcolor="green" width="20" height="20" />
+
+    <simplelayout axis="y" spacing="10" />
+     
+    <view id="t1" bgcolor="gray" >
+        <reverselayout id="l1" axis="x" />
+        <red />
+        <green />
+        <blue />
+    </view>
+
+    <view id="t2" bgcolor="gray" >
+        <reverselayout id="l2" axis="y" />
+        <red />
+        <green />
+        <blue />
+    </view>
+
+    <view id="t3" bgcolor="gray" width="100" height="100" >
+        <reverselayout id="l3" axis="x" />
+        <red />
+        <green />
+        <blue />
+    </view>
+
+    <view id="t4" bgcolor="gray" width="100" height="100" >
+        <reverselayout id="l4" axis="y" />
+        <red />
+        <green />
+        <blue />
+    </view>
+
+    <view layout="axis: x; spacing: 10"> 
+    <button> end: false
+        <method event="onclick">
+            l1.setAttribute('end', false);
+            l2.setAttribute('end', false);
+            l3.setAttribute('end', false);
+            l4.setAttribute('end', false);
+        </method>
+    </button>
+    <button> end: true
+        <method event="onclick">
+            l1.setAttribute('end', true);
+            l2.setAttribute('end', true);
+            l3.setAttribute('end', true);
+            l4.setAttribute('end', true);
+        </method>
+    </button>
+    </view>
+    <button> resize
+        <method event="onclick">
+            t1.animate('width', t1.width == 100 ? 200 : 100, 1000, false);
+            t1.animate('height', t1.height == 100 ? 200 : 100, 1000, false);
+            t2.animate('width', t1.width == 100 ? 200 : 100, 1000, false);
+            t2.animate('height', t1.height == 100 ? 200 : 100, 1000, false);
+            t3.animate('width', t1.width == 100 ? 200 : 100, 1000, false);
+            t3.animate('height', t1.height == 100 ? 200 : 100, 1000, false);
+            t4.animate('width', t1.width == 100 ? 200 : 100, 1000, false);
+            t4.animate('height', t1.height == 100 ? 200 : 100, 1000, false);
+        </method>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

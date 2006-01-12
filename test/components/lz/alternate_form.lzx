@@ -1,0 +1,64 @@
+<canvas>
+    <class name="labelledComponent">
+        <attribute name="text" type="text"/>
+        <simplelayout axis="x"/>
+        <text text="${parent.text}"/>
+    </class>
+
+    <dataset name="sendForm" src="http:testform.jsp" 
+             ondata="results.open()" type="http"/>
+
+    <window title="Form demo" resizable="true">
+
+        <form>
+            <submit name="submitForm" data="${sendForm}"/>
+
+            <simplelayout spacing="10" inset="10"/>
+
+            <labelledComponent> First name:
+                <edittext name="first"/>
+            </labelledComponent>
+
+            <labelledComponent> Last name:
+                <edittext name="last"/>
+            </labelledComponent>
+
+            <labelledComponent> Gender:
+                <radiogroup name="gender">
+                    <radiobutton value="1">Male</radiobutton>
+                    <radiobutton>Female</radiobutton>
+                </radiogroup>
+            </labelledComponent>
+
+            <labelledComponent name="payparent"> Payment:
+                <combobox name="pay" defaulttext="choose...">
+                    <textlistitem>Amex </textlistitem>
+                    <textlistitem>MasterCard </textlistitem>
+                    <textlistitem>Visa </textlistitem>
+                </combobox>
+            </labelledComponent>
+
+            <button enabled="${parent.payparent.pay.value != null}"
+                    isdefault="true"
+                    onclick="parent.submitForm.submit()">
+            Submit</button>
+        </form>
+    </window>
+    <modaldialog name="results" title="Survey Results">
+        <simplelayout/>
+        <view>
+            <simplelayout/>
+            <view datapath="sendForm:/*/*">
+                <simplelayout axis="x"/>
+                <text datapath="@name"/>
+                <text datapath="text()"/>
+            </view>
+        </view>
+        <button onclick="parent.close()" align="right">OK</button>
+    </modaldialog>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,51 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Basegrid">
+    <lztier>Base Component</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+       An abstract row-based container for data elements.
+    </lzshortdesc>
+    <lztag>base/basegrid.xml</lztag>
+</lzelement>
+
+<p><classname>basegrid</classname> is an abstract container for
+row-based data stored in a dataset.  Because
+<classname>basegrid</classname> uses <a
+href="lzlazyreplicationmanager.html">lazy replication</a><todo>should
+this be a dguide link instead?</todo>, it is an efficient way to
+present large datasets, and it abstracts some of the complications
+involved in maintaining a selection within a dataset.</p>
+
+<example>
+&lt;canvas height="150"&gt;
+  &lt;dataset name="contacts" request="true"
+      src="http:resources/contactsdata.xml"/&gt;
+
+  &lt;basegrid datapath="contacts:/resultset" width="200"
+               height="150"&gt;
+    &lt;basegridcolumn&gt;
+      &lt;text placement="header"&gt;Check 'em off&lt;/text&gt;
+      &lt;checkbox text="$path{ '@displayname'}" 
+                value="$path{'@checked'}"&gt;
+        &lt;method event="onvalue"&gt;
+          this.parent.parent.datapath.updateData();
+        &lt;/method&gt;
+      &lt;/checkbox&gt;
+    &lt;/basegridcolumn&gt;
+    &lt;scrollbar placement="content"/&gt;
+  &lt;/basegrid&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

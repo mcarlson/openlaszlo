@@ -1,0 +1,26 @@
+<canvas width="240" height="320" bgcolor="#FFFFFF" title="Embeds data from the LZX">
+    <dataset name="weatherdata">
+        <weather sourceurl="http://www.srh.noaa.gov/zipcity.php?inputstring=94116">
+           <forecast>
+               <day label="TODAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/shra.jpg" desc="Morning Showers" temp="Hi 65&#176; F"/>
+               <day label="TONIGHT" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/nra.jpg" desc="Numerous Showers" temp="Lo 55&#176; F"/>
+               <day label="SATURDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/shra.jpg" desc="Widespread Showers" temp="Hi 67&#176; F"/>
+               <day label="SATURDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/nra.jpg" desc="Widespread Showers" temp="Lo 55&#176; F"/>
+               <day label="SUNDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/sct.jpg" desc="Partly Cloudy" temp="Hi 60&#176; F"/>
+           </forecast>
+         </weather>
+    </dataset>
+
+    <view datapath="weatherdata:/weather[1]" height="25">
+        <view datapath="forecast[1]/day">
+            <text name="day" x="42" width="140" datapath="@label">Tonight</text>
+            <text name="desc" x="42" y="14" width="140" datapath="@desc">T-storms possible</text>
+            <text name="temp" x="168" datapath="@temp">Hi 80 F</text>
+        </view>
+        <simplelayout axis="y" spacing="10"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

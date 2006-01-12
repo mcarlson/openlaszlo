@@ -1,0 +1,310 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+    <title>Laszlo HTML Cheatsheet</title>
+</head>
+
+<body>
+<h1>Laszlo HTML Cheatsheet</h1>
+
+
+<h2>Index</h2>
+<ul>
+    <li><a href="#introduction">Introduction</a></li>
+    <li><a href="#basics">The Basics</a></li>
+    <li><a href="#files">Saving your Files</a></li>
+    <li><a href="#linking">Linking</a></li>
+</ul>
+
+
+<a name="introduction"></a>
+<h2>Introduction</h2>
+
+<p>
+HTML isn't very good for writing applications. We know that because it's our marketing strategy. However it is <i>very</i> good for writing content-based documents that can be written by just about anyone who can type, then viewed anywhere in the world instantly. 
+</p>
+
+<p>
+This document explains how we use HTML in Laszlo so that it is easy to write and maintain. In particular, this applies to:
+</p>
+
+<ul>
+    <li>Tutorials.</li>
+    <li>All bundled documentation.</li>
+    <li>Random pages on the website.</li>
+    <li>Reference wrapper files.</li>
+    <li>Pages that are both bundled and get posted on our website.</li>
+</ul>
+
+<p>
+I've taken great pains with designing the website to ensure that it's very easy to add and remove pages. In particular, the content is abstracted from the styles as much as possible. <i>In most cases, you should just be able to take an HTML file that you have written for download and drop it into the framework of the website, without worrying about sytles or formatting.</i> The should just read the website's stylesheet and display correctly. This means that in you could have different stylesheets for the web and for bundled files, but use the same content for both.
+</p>
+
+<p>
+The idea is that you write your document thinking about it's structure instead of it's final appearance. I wrote most of this document <i>without using a stylesheet</i>. I divided my document into sections and paragraphs and typed away, adding the stylesheet at the very end.
+</p>
+
+<p>
+In general I've written the stylesheets in such a way that you should be able to compose pages with all HTML knowledge obtained from a teach-yourself-html-in-31-seconds book. In other words it's very simple.
+</p>
+
+
+
+
+<a name="basics"></a>
+<h2>The Basics</h2>
+
+
+<p>
+Here's a really simple example:
+</p>
+
+<pre class="code">
+&lt;html&gt;
+&lt;head&gt;
+&lt;title&gt;My Title&lt;/title&gt;
+
+&lt;/head&gt;
+&lt;body&gt;
+&lt;!-- lz_content_start --&gt;
+
+&lt;p&gt;Hello, World!&lt;/p&gt;
+
+
+&lt;!-- lz_content_end --&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</pre>
+<p class="smaller"><i>A simple Laszlo HTML Page</i></p>
+
+<p>
+Notice how the Hello, World! is enclosed in paragraph (&lt;p&gt;) tags? That's required, even though many books will tell you that you can just write text inside of the body tag, outside of any tags. Similarly you have to open (&lt;p&gt;) and close (&lt;/p&gt;) the paragraph - some books tell you that it's OK to use standalone &lt;p&gt; tags <i>between</i> elements.
+</p>
+
+<p>
+As a general rule when composing or editing our HTML files, text always has to be inside one of these tags:
+</p>
+
+<ul>
+    <li><span class="code"><a href="#paragraph">&lt;p&gt;</a></span></li>
+    <li><span class="code"><a href="#span">&lt;span&gt;</a></span></li>
+    <li><span class="code"><a href="#headings">&lt;h1&gt;, &lt;h2&gt;, &lt;h3&gt;, &lt;h4&gt;</a></span></li>
+    <li><span class="code"><a href="#pre">&lt;pre&gt;</a></span></li>
+    <li><span class="code">&lt;li&gt; (inside of an &lt;ul&gt; or an &lt;ol&gt;)</span></li>
+</ul>
+
+<p>Of course that doesn't mean that you can't use other tags, but the above are the only tags which will ensure that the correct fonts get applied to a document. If you write text outside of the above tags, the fonts will seem wrong. </p>
+
+<p>Don't forget you can also write comments in your HTML:</p>
+
+<pre class="code">
+&lt;!-- This is a comment and it won't appear in my browser --&gt;
+Bad comment:
+&lt;!--This is a bad example--&gt;
+</pre>
+
+<p>
+It's important to add the spaces between the dashes (-) and the words, and you can have comments that span several lines.
+</p>
+
+
+<a name="paragraph"></a>
+<h3>The paragraph tag</h3>
+
+<p>The paragraph tag divides text into structured paragraphs. Use it even if doing one line. Text in paragraph tags will be automatically formatted. You can make it smaller by adding a style tag:</p>
+
+<pre>
+&lt;p class="smaller"&gt;This is a small paragraph.&lt;/p&gt;
+</pre>
+
+
+
+<a name="span"></a>
+<h3>The span tag</h3>
+
+<p>The span tag is used to apply a specific formatting style to selected areas of text. For example if you want red text within a paragraph tag or in a preformatted text tag:</p>
+
+<pre>
+&lt;p&gt;This is some &lt;span class="redText"&gt;red&lt;/span&gt; text.&lt;/p&gt;
+
+&lt;pre&gt;
+    &lt;view &lt;span class="redText"&gt;x="30"&lt;/span&gt; /&gt;
+&lt;/pre&gt;
+</pre>
+
+<p>The span class can also be used as an alternative to the paragraph tag if all you need is the regular formatting:</p>
+
+<pre>
+&lt;span class="regular"&gt;
+Here is some standard text, which will look similar to paragraph text.
+&lt;/span&gt;
+</pre>
+
+<p>The difference between span and p is that the span tag won't add space before and after the block of text it's enclosing like a paragraph tag will.</p>
+
+<p>Just like the paragraph tag, you can say:</p>
+
+<pre>
+&lt;span class="smaller"&gt;Here is some smaller text&lt;/span&gt;
+</pre>
+
+<p>If you want code examples <i>within</i> a paragraph, you can use the span tag with the code class:</p>
+
+<pre>
+&lt;p&gt;You should use the &lt;span class="code"&gt;attribute&lt;/a&gt; tag if you want
+better control of constraints.&lt;/p&gt;
+</pre>
+
+<p>However you can't use the span tag inside of another span tag.</p>
+
+
+
+
+<a name="headings"></a>
+<h3>Headings</h3>
+
+<p>It's best to use the feature of HTML that was <i>designed</i> for headings, rather than hacking a style to <i>look like</i> a heading. We use H1 through H4, which should cover most of your needs. H1 is rarely used - on most pages of the website, the top heading is H2. H1 might get used in the title page of the downloadable LZX reference.</p>
+
+<pre>
+&lt;h2&gt;A big heading&lt;/h2&gt;
+&lt;p&gt;Some text under the big heading&lt;/p&gt;
+
+&lt;h3&gt;A sub heading of the big heading&lt;/h3&gt;
+&lt;p&gt;Some text under the sub heading&lt;/p&gt;
+
+&lt;h4&gt;An even smaller heading&lt;/h4&gt;
+&lt;p&gt;Some text under the even smaller heading&lt;/p&gt;
+</pre>
+
+<p>There is no need to force extra space between the heading and whitespace (e.g. through the use of &lt;br&gt; tags.</p>
+
+<p>If you really need something smaller than H4, use bold text:</p>
+
+<pre>
+&lt;p&gt;
+&lt;b&gt;Sub-sub-sub heading&lt;/b&gt;&lt;br /&gt;
+Some text under the sub-sub-sub heading.
+&lt;/p&gt;
+</pre>
+
+<p>Notice how it's all actually part of the same paragraph.</p>
+
+
+
+
+
+
+
+<a name="pre"></a>
+<h3>Preformatted text</h3>
+
+<p>HTML ignores most whitespace, so in order to preserve it (for code examples), you must declare it using the &lt;pre&gt; tag. The pre tag also gives the text a courier typeface.</p>
+
+<pre>
+&lt;p&gt;See the LZX example below:&lt;/p&gt;
+
+&lt;pre class="code"&gt;
+&amp;lt;view x="50" y="50" width="300" 
+      height="20" 
+      bgcolor="red"&amp;gt;
+    &amp;lt;view x="50" y="50" bgcolor="blue" /&amp;gt;
+&amp;lt;/view&amp;gt;
+&lt;/pre&gt;
+</pre>
+
+<p>Usually we use the class="code" for code examples. It adds a gray background, and ensures consistent size. If you want monospaced text within regular text, use the <a href="#span">span</a> tag.</p>
+
+
+
+
+
+<a name="files"></a>
+<h2>Saving your files</h2>
+
+<p>You should always work with .html files, which are later converted to .php files for our website. If you have a bunch of files on the same subject keep them in the same folder.</p>
+
+
+
+
+
+
+<a name="linking"></a>
+<h2>Linking</h2>
+
+<p>Links come in three flavors:</p>
+
+<ol>
+    <li><a href="#relative-links">Relative</a></li>
+    <li><a href="#absolute-links">Absolute</a></li>
+    <li><a href="#jump-links">Jump (named anchor)</a></li>
+</ol>
+
+<a name="relative-links"></a>
+<h3>Relative Links</h3>
+<p>Relative links are links to other pages relative to the current page. For example, when you link from one tutorial to another, you'll be using a relative link. As mentioned above, use the .html extension of the files when linking - later this will get converted to .php for use on the website.</p>
+
+<pre class="code">
+&lt;p&gt;... see the &lt;a href="../scripting.html"&gt;Scripting tutorial&lt;/a&gt; 
+for more information.&lt;/p&gt;
+</pre>
+
+<p>When writing relative links to other files that you're working on, always use the html extension file name.</p>
+
+
+<a name="absolute-links"></a>
+<h3>Absolute Links</h3>
+
+<p>Absolute links take you to anywhere on the web. They are usually only used when we're linking to someone else's site or to our homepage.</p>
+
+<pre class="code">
+&lt;p&gt;... see the &lt;a href="http://www.laszlosystems.com/"&gt;Laszlo website&lt;/a&gt; 
+for news and updates.&lt;/p&gt;
+</pre>
+
+
+
+
+<a name="jump-links"></a>
+<h3>Jump Links (named anchors)</h3>
+
+<p>Jump links are links to elsewhere on the same page (like the link in the bulleted list above to down here). Note the preceding "#".</p>
+
+<pre class="code">
+&lt;p&gt;... see the &lt;a href="#views-section"&gt;Views Section&lt;/a&gt; 
+below for more info.&lt;/p&gt;
+</pre>
+
+<p>You have to declare the link manually, and you use the &lt;a&gt; tag for that, but with a name attribute instead of a href:</p>
+
+
+<pre class="code">
+<span color="red">&lt;a name="views-section"&gt;&lt;/a&gt;</span>
+&lt;h2&gt;Views Section&lt;/h2&gt;
+.....
+</pre>
+
+<p>In HTML it's not legal to use the empty XML-element style for a named anchor tag (&lt;a /&gt;). The tag must be empty as shown above. The names cannot contain spaces. Always try to use human-readable names. You can also append the name to a link to another html page, to jump directly to that point in the file.</p>
+
+<pre class="code">
+&lt;p&gt;... see the &lt;a href="<span color="red">sections.html#views-section</span>"&gt;Views Section&lt;/a&gt; 
+on the other page for more info.&lt;/p&gt;
+</pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

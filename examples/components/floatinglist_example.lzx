@@ -1,0 +1,137 @@
+<canvas bgcolor="#eaeaea">
+    <silverstyle name="silvercolors" canvascolor="null"/>
+    <greenstyle name="greencolors" canvascolor="null"/>
+    <bluestyle name="bluecolors" canvascolor="null"/>
+    <goldstyle name="goldcolors" canvascolor="null"/>
+    <whitestyle name="whitecolors" canvascolor="null"/>
+    <purplestyle name="purplecolors" canvascolor="null"/>
+    
+    <dataset name="items">
+        <item value="item1" >item one</item>
+        <item value="item2" >item two</item>
+        <item value="item3" >item three</item>
+        <item value="item4" >item four</item>
+    </dataset>
+    
+    <class name="sbutton" extends="button" >
+        <attribute name="nextX" value="0"/>
+        <attribute name="nextY" value="0"/>
+        
+        <fflist name="flist" />
+        
+        <method event="onclick">
+            flist.setVisible(!flist.visible);
+        </method>
+
+        <method name="animate">
+            genwaypoint();
+            xanim.cycle=true;
+            yanim.cycle=true;
+            xanim.doStart();
+            yanim.doStart();
+        </method>
+        <method name="stop">
+            xanim.cycle=false;
+            yanim.cycle=false;
+            xanim.stop();
+            yanim.stop();
+        </method>
+        
+        <method name="genwaypoint">
+            var randomx = Math.random();
+            var randomy = Math.random();
+            
+            this.setAttribute( 'nextX' , Math.round(Math.abs(canvas.width*randomx)) );
+            this.setAttribute( 'nextY' , Math.round(Math.abs(canvas.height*randomy)) );
+        </method>
+        
+        <animator name="xanim" start="false" attribute="x" to="${classroot.nextX}" duration="3000">
+            <attribute name="cycle" value="true"/>
+            <method event="onstop">
+                classroot.genwaypoint();
+                if (cycle) {
+                    this.doStart();
+                }
+            </method>
+        </animator>
+        <animator name="yanim" start="false" attribute="y" to="${classroot.nextY}" duration="3000">
+            <attribute name="cycle" value="true"/>
+            <method event="onstop">
+                if (cycle) {
+                    this.doStart();
+                }
+            </method>
+        </animator>
+    </class>
+    
+    <class name="fflist" extends="floatinglist" width="68" visible="false">
+        <textlistitem datapath="items:/item"
+                       text='$path{"text()"}'
+                       value='$path{"@value"}'/>
+        <method event="onx" reference="owner">
+            updateAttachLocation();
+            if (!visible) setVisible(true);
+        </method>
+        <method event="ony" reference="owner">
+            updateAttachLocation();
+        </method>
+    </class>
+    
+    <view name="content" height="${canvas.height}" width="${canvas.width}">
+        <view name="info" x="20" y="250">
+            <simplelayout/>
+            <text>Click on a button to show a floatinglist of the same style.</text>
+            <text>The labels indicate the floatinglist's attach location.</text>
+            <text></text>
+            <text>Notice that the floatinglists are aware of the canvas bounds and</text>
+            <text>always appear in a visible location.</text>
+            <text></text>
+            <checkbox name="animate">animate
+                <method event="onclick">
+                    if (value==true) {
+                        canvas.content.b1.animate();
+                        canvas.content.b2.animate();
+                        canvas.content.b3.animate();
+                        canvas.content.b4.animate();
+                        canvas.content.b5.animate();
+                        canvas.content.b6.animate();
+                    } else {
+                        canvas.content.b1.stop();
+                        canvas.content.b2.stop();
+                        canvas.content.b3.stop();
+                        canvas.content.b4.stop();
+                        canvas.content.b5.stop();
+                        canvas.content.b6.stop();
+                    }
+                </method>
+            </checkbox>
+        </view>
+        
+        <!-- middle -->
+        <sbutton name="b1" x="20" y="${canvas.height/2-this.height/2-20}" style="greencolors" text="green:right" oninit="flist.setAttribute('attach','right')"/>
+        
+        <!-- top left -->
+        <sbutton name="b2" x="20" y="20" style="silvercolors" text="silver:left" oninit="flist.setAttribute('attach','left')" />
+        
+        <!-- top -->
+        <sbutton name="b3" x="${canvas.width/2-this.width/2}" y="20" style="bluecolors" text="blue:top" oninit="flist.setAttribute('attach','top')"/>
+
+        <!-- top right -->
+        <sbutton name="b4" x="${canvas.width-this.width-20}" y="20" style="goldcolors" text="gold:right" oninit="flist.setAttribute('attach','right')"/>
+        
+        <!-- right -->
+        <sbutton name="b5" x="${canvas.width-this.width-20}" y="${canvas.height/2-this.height/2-20}" style="whitecolors" text="white:right" oninit="flist.setAttribute('attach','right')" />
+
+        <!-- bottom right -->
+        <sbutton name="b6" x="${canvas.width-this.width-20}" y="${canvas.height-this.height-20}" style="purplecolors" text="purple:right" oninit="flist.setAttribute('attach','right')" />
+
+    </view>
+
+    <view bgcolor="black" y="20" x="${canvas.width-1}"
+        height="${canvas.height-40}" width="1"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

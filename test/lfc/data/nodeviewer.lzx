@@ -1,0 +1,58 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- nodeviewer.lzx                                                      -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="800" height="800" debug="true">
+    <!-- setup local datasource -->
+    <script>
+        function assert( cond , msg ){
+            if ( ! cond ){
+                Debug.write( msg );
+            }
+        }
+    </script>
+    <class name="xnode" >
+        <simplelayout />
+        <text>Name:</text>
+        <text>Text:</text>
+        <view name="children" x="100">
+            <simplelayout/>
+            <xnode datapath="*" />
+        </view>
+    </class>
+        
+    <dataset name="ds" >
+        <nodea prop="first nodea" color="46521236432" > sometext </nodea>
+        <nodeb prop="first nodeb" color="1565336432" />
+        <nodea prop="second nodea" color="56521236432" > more text </nodea>
+        <nodeb prop="second nodeb" color="565336432" />
+        <nodea prop="third nodea" color="2565336432" >
+            hi there
+            <nodea prop="deeper nodea" color="13421772">text a </nodea>
+            <nodeb prop="deeper nodeb" color="12303291">text b </nodeb>
+            <nodea prop="second deeper nodea" color="46521236432">text 2a </nodea>
+        </nodea>
+        <nodea prop="fourth nodea" color="565336432"> text text </nodea>
+        <nodea prop="fifth nodea" color="565336432"> mozart </nodea>
+        <nodea prop="99ffkd" color="46521236432"> bach </nodea>
+        <nodea prop="Heloo" color="46521236432"> tchaikovsky </nodea>
+        <nodea prop="data stuff is" color="46521236432"> stravinsky </nodea>
+        <nodea prop="cool" color="46521236432"> debussy </nodea>
+        <nodea prop="when it works" color="46521236432"> rimsky-korsakov</nodea>
+    </dataset>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

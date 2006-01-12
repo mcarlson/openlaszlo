@@ -1,0 +1,93 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- xpath.lzx                                                             -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+
+<canvas width="800" height="600" debug="true">
+    <!-- setup local datasource -->
+    <dataset name="keys">
+        <row><key>7</key><key>8</key><key>9</key></row>
+        <row><key>4</key><key>5</key><key>6</key></row>
+        <row><key>1</key><key>2</key><key>3</key></row>
+        <row><key>0</key><key>.</key><key>Enter</key></row>
+    </dataset>
+
+    <view datapath="keys:/row[3]/key[2]"/>
+    <view datapath="keys:/row/key[2]"/>
+    <view datapath="keys:/row/key"/>
+    <view datapath="keys:/row[1]/key[2-]"/>
+    <view datapath="keys:/row[1]/key[-25]"/>
+    <!-- This XPath lookup should fail - there is no fourth row -->
+    <view datapath="keys:/row[1]/key[4]"/>
+    <view datapath="keys:/row[1]/key[1-2]"/>
+
+    
+    <!-- setup HTTP datasources -->
+    <datasource name="xml" timeout="1000">
+        <!-- setup URL(s) to load from datasource -->
+        <dataset name="timeout" request="true"
+         src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=10101"/>
+    </datasource>
+    <dataset name="error" request="true"
+         src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=80455"/>
+    <dataset name="data" request="true"
+         src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=80211"/>
+    
+    <view name="dataTest">
+        <datapointer name="timeout" xpath="timeout:/" 
+                     ontimeout="this.showTimeout();">
+        <method name="showTimeout">
+            Debug.write("Load timed out for request: " + this.getDataset().req);
+        </method>
+        </datapointer>
+
+        <datapointer name="error" xpath="error:/" onerror="this.showError();">
+        <method name="showError">
+            Debug.write("Error: " + this.getDataset().getErrorString());
+        </method>
+        </datapointer>
+
+        <datapointer name="data"  xpath="data:/" ondata="this.processData();"
+        oninit="Debug.write( 'dataset is ' + this.getDataset()  )">
+        <!-- When data is recieved from the datasource, do this -->
+        <method name="processData">
+            Debug.write("HTTP status: " + this.getDataset().getStatusCode());
+
+            if (this.getDataset().getStatusCode() != 200) {
+                return;
+            }
+
+            <!-- List headers -->
+            Debug.write("Load time: " + this.getDataset().getLoadTime());
+            Debug.write("Date: " + 
+            this.getDataset().getResponseHeader('date'));
+                                  
+            // Go to the root, get second 'day' node, get 'test' node's text
+            Debug.write("Test: " + this.runXPath('/weather[1]/forecast[1]/day[2]@temp'));
+
+            // Relative to the last position, back out twice (to 'forecast'), get 
+            // third 'day' node's 'temp' attribute
+            Debug.write("Day 3 Temperature: " + this.runXPath('../day[3]@temp'));
+
+            // Relative to the last position, back out twice (to root), get
+            // (first) radar node's 'src' attribute
+            Debug.write("Radar src: " + this.runXPath('../../radar[1]@src'));
+
+            // Relative to the last position, back out once (to root), get
+            // all attributes as object
+            var x = this.runXPath('../forecast[1]/day[1]@*');
+            // Look up 'temp' attribute
+            Debug.write("Day 1 Temperature: " + x["temp"]);
+
+            Debug.write("Root src: " + this.runXPath("/weather[1]@sourceurl"));
+        </method>
+        </datapointer>
+    </view>
+</canvas>

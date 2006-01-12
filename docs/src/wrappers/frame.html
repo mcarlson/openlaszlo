@@ -1,0 +1,74 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Resource Frame">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Media</lzcategory>
+    <lzshortdesc>
+      A frame of a multi-frame resource.
+    </lzshortdesc>
+    <lztag>tag-frame.xml</lztag>
+</lzelement>
+ 
+<p>The <tagname>frame</tagname> tag is used to define a single frame
+of a multi-frame <tagname>resource</tagname>.  A multi-frame resource
+contains several images which can be toggled among by script commands.
+For example:</p>
+
+<example extract="false" title="A resource with two frames">
+&lt;resource name="mfr"&gt;
+  &lt;frame src="f1.jpg"/&gt;
+  &lt;frame src="f2.jpg"/&gt;
+&lt;/resource&gt;
+</example>
+
+<p>
+Multiple frame tags can be declared consecutively to produce a single
+resource constructed of an unlimited number of frames.  Such composed
+resources are often used to conveniently implement mouse rollovers,
+button states, or other UI elements where alternate views of a
+resource are required.  Once a multi-frame resource has been defined
+and presented within a <classname>LzView</classname>, the developer
+can designate which frame is actively visible through the use of the
+view's <method>setResourceNumber</method> method.</p>
+
+<p>Multi-frame resources can be used in conjunction with components
+such as <classname>basebutton</classname> and
+<classname>multistatebutton</classname>, which pre-define complex
+button behavior using frames designated by the user.</p>
+
+<p>The following example manually implements a simple button with
+mouse rollover and down state behavior:</p>
+
+<example>
+&lt;canvas height="120"&gt;
+  &lt;!-- create the multi-frame resource and give it a name --&gt;
+  &lt;resource name="mybutton_rsrc"&gt;
+      &lt;!-- first frame is the mouseup state of the button --&gt;
+      &lt;frame src="images/basebutton/button-up.png"/&gt;
+      &lt;!-- second frame is the mouseover state of the button --&gt;
+      &lt;frame src="images/basebutton/button-over.png"/&gt;
+      &lt;!-- third frame is the mousedown state of the button --&gt;
+      &lt;frame src="images/basebutton/button-down.png"/&gt;
+  &lt;/resource&gt;
+
+  &lt;!-- include the resource in a view with mouse behaviors --&gt;
+  &lt;view resource="mybutton_rsrc" 
+        onmouseover="setResourceNumber(2)"
+        onmouseout="setResourceNumber(1)"
+        onmousedown="setResourceNumber(3)"
+        onmouseup="setResourceNumber(2)"/&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

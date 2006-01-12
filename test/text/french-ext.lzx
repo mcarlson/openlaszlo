@@ -1,0 +1,22 @@
+<canvas width="1200" >
+<debug x="200" fontsize="12"/>
+<method event="oninit">
+  Debug.setWrapLines(true);
+  Debug.showInternalProperties = true;
+</method>
+
+
+
+    <dataset name="myds" src="http:frenchdata.xml" request="true" 
+             ontimeout="Debug.write(this.name + ': timed out')"
+             onerror="Debug.write(this.name + ': error')"
+             ondata="Debug.write('Response: ' + this.getPointer().serialize())" >
+    </dataset>
+
+
+<list id="a2" toggleselected="true" oninit="selectItemAt(0)" width="130" shownitems="10">
+  <textlistitem datapath="myds:/combodata/embolo_type/item" text="$path{'text()'}" value="$path{'@value'}"/>
+</list>
+
+
+</canvas>

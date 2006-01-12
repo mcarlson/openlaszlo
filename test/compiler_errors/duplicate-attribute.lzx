@@ -1,0 +1,13 @@
+<!-- defines duplicate
+ named attributes,  compiler warning should be issued -->
+
+<canvas width="300" height="200" bgcolor="red"> 
+  <view>
+    <attribute name="foo" value="foobar"/>
+    <attribute name="foo" value="bazbaz"/>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,36 @@
+<canvas>
+  <view name="time" oninit="this.setupdel();" visible="true"  >
+    <attribute name="del"/>
+    <method name="setupdel">
+      del = new LzDelegate ( this, "setCurrentTime");
+      setCurrentTime();
+    </method>
+    <method name="setCurrentTime">
+      var currentTimeObj = new Date();
+      
+      var hourNum=currentTimeObj.getHours();
+      // Minutes
+      var minNum=currentTimeObj.getMinutes();
+      var secNum=currentTimeObj.getSeconds();
+      
+      // Assign to our dateTime text
+      
+      // Move the hands of the clock...
+      this.parent.hh.setattribute('rotation',hourNum*30-180+minNum/2);
+      this.parent.mh.setattribute('rotation',minNum*6-180+secNum/10);
+      this.parent.sh.setattribute('rotation',secNum*6-180);
+      // Checks the time every second
+      LzTimer.addTimer( del, 1000 ); 
+    </method>
+    
+  </view>
+  
+  <view name="hh" x="56" y="51" rotation="0" opacity="1" width="1" height="24" bgcolor="black" />
+  <view name="mh" x="56" y="51" rotation="0" opacity="1" width="1" height="30" bgcolor="black" />
+  <view name="sh" x="56" y="50" rotation="0" opacity="1"  width="1" height="34" bgcolor="black"/>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,189 @@
+<library>
+    
+
+    <class name="basegridrow" extends="basecomponent">
+        <attribute name="placement" value="rowparent" type="string"/>
+        <attribute name="defaultplacement" value="check" type="string"/>
+        <attribute name="selectable" type="boolean"/>
+        <attribute name="clickable" value="$once{selectable}"/>
+        <attribute name="selected" value="false"/>
+        <attribute name="onselected" value="null"/>
+        <attribute name="x" value="${ownerGrid.header.hcontent.x}"/>
+        <attribute name="focusable" value="true"/>
+        <attribute name="focustrap" value="true"/>
+
+        <attribute name="highlighted" value="false"/>
+        <attribute name="highlightColor" type="color" value="black"/>
+        <attribute name="selectedColor" type="color" value="black"/>
+        <attribute name="regularColor" type="color" value="black"/>
+        <attribute name="styleRegularColor" type="color" value="black"/>
+        <attribute name="lineColor" type="color"  value="black"/>
+
+        <attribute name="width" value="${Math.max( 
+                        ownerGrid.header.hcontent.width, ownerGrid.width )}" />
+
+        <!--- @keywords private (set by ownerGrid)-->
+        <attribute name="needsSetRegularColor" type="boolean"/>
+        <attribute name="bgcolor" 
+                   value="${this.getBGColor( this.highlighted, this.selected )}"/>
+
+        <method name="getBGColor" args="hi, sel">
+            if ( this.selected ) return this.selectedColor;
+            if ( this.highlighted ) return this.highlightColor;
+            return this.regularColor;
+        </method>
+
+        <method name="updateBGColor">
+            var nbg = this.getBGColor();
+            if ( nbg != this.bgcolor ){
+                this.setBGColor( nbg );
+            }
+        </method>
+
+        <method name="setRegularColor" >
+            var pos = this.datapath.xpathQuery( 'position()' );
+            var nextColor = null;
+            if ( pos % 2 == 0 )  nextColor = ownerGrid.bgcolor0;
+            if ( pos % 2 == 1 )  nextColor = ownerGrid.bgcolor1;
+            if ( nextColor == null ) nextColor = styleRegularColor;
+            if ( this.regularColor != nextColor ){
+                this.regularColor = nextColor;
+                this.updateBGColor();
+            }
+        </method>
+
+        <method event="ondata">
+            if ( this.needsSetRegularColor ) this.setRegularColor();
+            if ( highlighted ){
+                this.setAttribute( "highlighted" ,  false );
+            }
+            if ( ownerGrid.rowheight == null ){
+                ownerGrid._setRowHeight( this.height );
+            }
+        </method>
+
+        <method event="onfocus">
+            <![CDATA[ 
+            var n = parent.classroot.getIndexForItem( this );
+            //this forces the next row to be in view, if possible
+            //it's called only for its for side effect
+            parent.classroot.getItemAt( n + 1 );
+            var dir = LzKeys.isKeyDown( 'shift' ) ? -1 : 1;
+            if ( LzFocus.lastfocus && LzFocus.lastfocus.childOf( this ) ){
+                //because we can't tell if this is getting the focus as a
+                //result of tab or shift-tab, we need to check the key ourselves
+                //don't get confused by shift key!
+                immediateparent.classroot.clearSelection( );
+                var nextsel = this.getAdjacentRow( dir );
+            } else{
+                var nextsel = dir == 1? this.getNextSelection() :
+                                        this.getPrevSelection();
+            }
+            LzFocus.setFocus( nextsel );
+            ]]>
+        </method>
+
+        <method name="getPrevSelection">
+            <![CDATA[
+            var n = LzFocus.getPrev( this );
+            if ( n && n.childOf(this ) ) return n;
+            else {
+                return getAdjacentRow( 1 ) || n;
+            }
+            ]]>
+        </method>
+        <method name="getNextSelection">
+            <![CDATA[
+            var n = LzFocus.getNext( this );
+            if ( n && n.childOf(this ) ) return n;
+            else {
+                return getAdjacentRow( 1 ) || n;
+            }
+            ]]>
+        </method>
+
+        <method name="getAdjacentRow" args="dir">
+            <![CDATA[
+            var n = parent.classroot.getIndexForItem( this );
+            return parent.classroot.getItemAt( n + dir );
+            ]]>
+        </method>
+
+        <method name="setSelected" args="s">
+            <![CDATA[
+            this.selected = s;
+            if ( s ){
+                ownerGrid._setHiliteview( this , false );
+            }
+            if (this.onselected) this.onselected.sendEvent(this);
+            ]]>
+        </method>
+
+        <method name="determinePlacement" args="v,p,a">
+            if ( typeof( a.ownerColumn ) != "undefined" ){
+                v.parent = a.ownerColumn;
+            }
+            return this;
+        </method>
+
+        <method name="select">
+            if ( !immediateparent.classroot.selectable ) return;
+            immediateparent.classroot.select( this );
+        </method>
+
+        <method event="onclick">
+            LzFocus.setFocus( ownerGrid );
+            this.select();
+        </method>
+
+        <method name="domouseover" event="onmouseover">
+            if ( !selectable ) return;
+
+            parent.classroot._setHiliteview( this , true );
+            this.setAttribute( 'focusable' , false );
+        </method>
+
+        <method name="domouseout" event="onmouseout">
+            if ( !selectable ) return;
+            this.setAttribute( "highlighted" , false );
+            this.setAttribute( 'focusable' , true );
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            this.setAttribute ( "highlightColor", s.hilitecolor );
+            this.setAttribute ( "selectedColor", s.selectedcolor );
+            this.setAttribute ( "styleRegularColor", s.bgcolor );
+            this.setAttribute ( "lineColor", s.bordercolor );
+            this.setRegularColor();
+            this.updateBGColor();
+        </method>
+
+        <state apply="$once{parent.ownerGrid.showhlines}">
+            <view bgcolor="${parent.lineColor}" height="1" 
+                  options="ignorelayout">
+                <attribute name="width" value="${Math.max( 
+                                        parent.ownerGrid.header.hcontent.width, 
+                                        parent.ownerGrid.width )}" />
+            </view>
+        </state>
+        <!--- @keywords private Register the dependency of each row cell with
+              its column owner.-->
+        <method event="onaddsubview" args="sv">
+            if ( !sv [ "ownerColumn"] ) return;
+            sv._updateIt = this._updateIt;
+            var d = new LzDelegate( sv , "_updateIt", sv.ownerColumn,"onx");
+            d.register( sv.ownerColumn,"oncolwidth" );
+            sv._updateIt();
+        </method>
+        <attribute name="_updateIt" 
+                   value="function(){this.setX( this.ownerColumn.x );
+                                this.setWidth( this.ownerColumn.colwidth)}"/>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

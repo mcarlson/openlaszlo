@@ -1,0 +1,51 @@
+<canvas bgcolor="silver" validate="false" debug="true">
+    <debug x="260" height="100"/>
+    <simplelayout axis="x" spacing="20"/>
+    <constantlayout axis="y" value="20"/>
+
+
+    <basetabslider id="t" width="250" height="300">
+        <basetabelement id="te1" text="numbers" layout="spacing:5" selected="true">
+            <attribute name="defaultbuttongroup" value="true"/>
+            <radiogroup>
+                <radiobutton>one</radiobutton>
+                <radiobutton>two</radiobutton>
+                <radiobutton>three</radiobutton>
+            </radiogroup>
+            <checkbox>do something else</checkbox>
+            <button isdefault="true" onclick="parent.parent.selectNext()">Next</button>
+        </basetabelement>
+        <basetabelement id="te2" text="fruit" layout="spacing:5">
+            <attribute name="defaultbuttongroup" value="true"/>
+            <radiogroup>
+                <radiobutton>apple</radiobutton>
+                <radiobutton>orange</radiobutton>
+                <radiobutton>pear</radiobutton>
+            </radiogroup>
+            <checkbox>peeled</checkbox>
+            <button onclick="a.open()">help</button>
+            <combobox>
+                <textlistitem text="papaya"/>
+                <textlistitem text="cantelope"/>
+                <textlistitem text="kiwi"/>
+            </combobox>
+            <checkbox>I would like berries with that</checkbox>
+            <button isdefault="true" onclick="parent.parent.selectNext(true)">Next</button>
+        </basetabelement>
+        <basetabelement id="te3" text="pets" layout="spacing:5">
+            <attribute name="defaultbuttongroup" value="true"/>
+            <radiogroup>
+                <radiobutton>cat</radiobutton>
+                <radiobutton>dog</radiobutton>
+                <radiobutton>gerbil</radiobutton>
+            </radiogroup>
+            <checkbox>whatever</checkbox>
+            <button isdefault="true" onclick="debug.write('Submit')">Submit</button>
+        </basetabelement>
+    </basetabslider>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

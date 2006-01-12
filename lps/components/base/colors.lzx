@@ -1,0 +1,75 @@
+<library>
+
+    <!-- These colors are built in:
+    black = 0x000000
+    green = 0x008000
+    silver = 0xC0C0C0
+    lime = 0x00FF00
+    gray = 0x808080
+    olive = 0x808000
+    white = 0xFFFFFF
+    yellow = 0xFFFF00
+    maroon = 0x800000
+    navy = 0x000080
+    red = 0xFF0000
+    blue = 0x0000FF
+    purple = 0x800080
+    teal = 0x008080
+    fuchsia = 0xFF00FF
+    aqua = 0x00FFFF -->
+
+
+<script>
+    var offwhite = 0xf2f2f2;
+    var gray10 = 0x1a1a1a;
+    var gray20 = 0x333333;
+    var gray30 = 0x4d4d4d;
+    var gray40 = 0x666666;
+    var gray50 = 0x7f7f7f;
+    var gray60 = 0x999999;
+    var gray70 = 0xb3b3b3;
+    var gray80 = 0xcccccc;
+    var gray90 = 0xe5e5e5;
+    
+    var iceblue1 = 0x325693;
+    var iceblue2 = 0x5381CE;
+    var iceblue3 = 0xBAC4D5;
+    var iceblue4 = 0xD5E4F3;
+    var iceblue5 = 0xEEF1F5;
+    
+    var palegreen1 = 0x417641;
+    var palegreen2 = 0xB3D3B3;
+    var palegreen3 = 0xC0D49D;
+    var palegreen4 = 0xD3EAAA;
+    var palegreen5 = 0xEFF1E8;
+    
+    var gold1 = 0x8E6409;
+    var gold2 = 0xCBB14B;
+    var gold3 = 0xE6CF74;
+    var gold4 = 0xF8E496;
+    
+    var sand1 = 0xD4C6A1;
+    var sand2 = 0xD9D7C2;
+    var sand3 = 0xF2EEDB;
+    var sand4 = 0xF3EEE1;
+    
+    var ltpurple1 = 0x645698;
+    var ltpurple2 = 0xB7B0D1;
+    var ltpurple3 = 0xCBC1ED;
+    var ltpurple4 = 0xE9E7F0;
+    
+    var grayblue = 0xBEC2C8;
+    var graygreen = 0xC0CCC0;
+    var graypurple = 0x9F9DB1;
+   
+    var ltblue = 0xDDDDFF;
+    var ltgreen = 0xDDFFDD;
+</script>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

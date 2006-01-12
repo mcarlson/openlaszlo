@@ -1,0 +1,24 @@
+<canvas>
+    <debug y="200" height="100"/>
+
+    <resource name="tpRgt_multi">
+      <frame src="resources/top_rt_slct_+_up.png"/>
+      <frame src="resources/top_rt_slct_+_mo.png"/>
+      <frame src="resources/top_rt_slct_+_dn.png"/>
+      <frame src="resources/top_rt_slct_-_up.png"/>
+      <frame src="resources/top_rt_slct_-_mo.png"/>
+      <frame src="resources/top_rt_slct_-_dn.png"/>
+    </resource>
+
+    <multistatebutton name="r" resource="tpRgt_multi" maxstate="1" statelength="3" >
+        <method event="onclick">
+            if (this.statenum ==0) this.setAttribute('statenum',1)
+            else this.setAttribute('statenum',0);
+        </method>
+    </multistatebutton>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

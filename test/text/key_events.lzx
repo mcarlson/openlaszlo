@@ -1,0 +1,163 @@
+<canvas debug="true">
+<!--    <method event="onkeydown" reference="LzKeys" args="k">-->
+<!--        Debug.write("LzKeys onkeydown " + k  );-->
+<!--    </method>-->
+<!--    <method event="onkeyup" reference="LzKeys" args="k">-->
+<!--        Debug.write("LzKeys onkeyup " + k  );-->
+<!--    </method>-->
+    <debug y="70"/>
+    <class name="myinput" extends="inputtext">
+        <method event="onfocus">
+            Debug.write("name="+this.name);
+            Debug.write('multiline='+this.multiline+"  resizable="
+            + this.resizable + " fixedsize="+this.fixedsize);
+        </method>
+        <method event="onkeyup" args="k">
+          Debug.write('onkeyup '+ k  + " " +  this.name);
+        </method>
+        <method event="onkeydown" args="k">
+           // shiftDown = LzKeys.isKeyDown("shift");
+            Debug.write('onkeydown '+ k + " " +  this.name);
+            //_root.debug.write("...shiftDown="+shiftDown);
+        </method>
+            <method event="onkeypress" args="k">
+            //Debug.write('onkeypress '+ k + " " + this.name);
+            //Debug.write('onkeypress '+ k + " " + this.name);
+        </method>
+    </class>
+
+     <view>
+          <text width="30"/>
+          <text width="70">1</text>
+          <text width="70">2</text>
+          <text width="70">3</text>
+          <simplelayout axis="x" spacing="20"/>
+     </view>
+     <view>
+         <text width="30">A</text>
+         <view>
+            <text>multiline="true"</text>
+            <myinput name="a1" bgcolor="#EEEEEE"
+                 multiline="true">some text</myinput>
+             <simplelayout/>
+         </view>
+         <view>
+              <text>multiline="false"</text>
+              <myinput name="a2" bgcolor="#EEEEEE" multiline="false" >some text</myinput>
+             <simplelayout/>
+        </view>
+         <view>
+              <text> </text>
+              <myinput name="a3" bgcolor="#EEEEEE" >some text</myinput>
+             <simplelayout/>
+        </view>
+         <simplelayout axis="x" spacing="20"/>
+    </view>
+      <view height="20"/>
+
+         <view>
+              <text width="30">B</text>
+         <view>
+            <text>multiline="true"</text>
+            <myinput name="b1" bgcolor="#EEEEEE"
+                 multiline="true">b1 some<br/>text</myinput>
+             <simplelayout/>
+         </view>
+         <view>
+              <text>multiline="false"</text>
+              <myinput name="b2" bgcolor="#EEEEEE" multiline="false" >b2 some<br/>text</myinput>
+             <simplelayout/>
+        </view>
+         <view>
+              <text> </text>
+              <myinput name="b3" bgcolor="#EEEEEE" >b3 some<br/>text</myinput>
+             <simplelayout/>
+        </view>
+         <simplelayout axis="x" spacing="20"/>
+    </view>
+      <view height="20"/>
+
+
+     <view name="C">
+                      <text width="30">C</text>
+         <view name="one">
+            <text>multiline="true" height="50"</text>
+            <myinput name="c1" bgcolor="#EEEEEE"
+                 multiline="true" height="50">c1 some<br/>text</myinput>
+             <simplelayout/>
+         </view>
+         <view name="two">
+              <text>multiline="false" height="50"</text>
+              <myinput name="c2" bgcolor="#EEEEEE" height="50" multiline="false" >c2 some<br/>text</myinput>
+             <simplelayout/>
+        </view>
+         <view name="three">
+              <text>height="50"</text>
+              <myinput name="c3" bgcolor="#EEEEEE" height="50" >c3 some<br/>text</myinput>
+             <simplelayout/>
+        </view>
+         <simplelayout axis="x" spacing="20"/>
+    </view>
+
+     <view height="20"/>
+     <view name="D">
+                      <text width="30">D</text>
+         <view name="one" bgcolor="0xffffee">
+            <text>multiline="true"</text>
+            <text>height="50" width="50"</text>
+            <myinput name="d1" bgcolor="#EEEEEE"
+                multiline="true" height="50" width="50">some text<br/>more text</myinput>
+             <simplelayout/>
+         </view>
+         <view>
+              <text>multiline="false"</text>
+              <text>height="50"  width="50"</text>
+              <myinput name="d2" bgcolor="#EEEEEE" height="50"  width="50" multiline="false" >some text</myinput>
+             <simplelayout/>
+        </view>
+         <view>
+              <text>  </text>
+              <text>height="50"  width="50"</text>
+              <myinput name="d3" bgcolor="#EEEEEE" height="50"  width="50">some text</myinput>
+             <simplelayout/>
+        </view>
+         <simplelayout axis="x" spacing="20"/>
+    </view>
+
+    <view height="20"/>
+
+     <view>
+        <text width="30">E</text>
+         <view name="one">
+            <text>multiline="true"</text>
+            <text>height="50" width="50"</text>
+            <text>resizable="true"</text>
+            <myinput name="e1" bgcolor="#EEEEEE"
+                multiline="true" height="50" width="50"
+                resizable="true">some text</myinput>
+             <simplelayout/>
+         </view>
+         <view name="two">
+              <text>multiline="false"</text>
+              <text>height="50"  width="50"</text>
+              <text>resizable="true"</text>
+              <myinput name="e2" bgcolor="#EEEEEE" height="50"  width="50"
+                  resizable="true" multiline="false" >some text</myinput>
+             <simplelayout/>
+        </view>
+         <view name="three">
+              <text>  </text>
+              <text>height="50"  width="50"</text>
+              <text>resizable="true"</text>
+              <myinput name="e3" bgcolor="#EEEEEE" height="50"  width="50"
+                  resizable="true">some<br/>text</myinput>
+             <simplelayout/>
+        </view>
+         <simplelayout axis="x" spacing="20"/>
+    </view>
+    <simplelayout />
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

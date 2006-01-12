@@ -1,0 +1,123 @@
+<library>
+    <include href="lzunit/lzunit.lzx" />
+    <debug x="300"/>
+
+    <dataset name="dpdepend">
+        <r>
+            <a> <x n="1"/> <y n="1" yn="1"/> <y n="1" yn="2"/></a>
+            <a> <x n="2"/> <y n="2" yn="1"/> <y n="2" yn="2"/></a>
+            <b> <x n="3"/> <y n="3" yn="1"/> <y n="3" yn="2"/></b>
+        </r>
+    </dataset>
+    
+
+    <class name="TestDPDepend" extends="TestCase">
+        <datapointer name="mydp"/>
+
+        <method name="test1">
+            mydp.setAttribute( 'xpath' , "dpdepend:/" );
+            var oser = mydp.serialize();
+
+            mydp.setAttribute( 'rerunxpath' , false );
+
+            mydp.setAttribute( 'xpath' , "dpdepend:/r/a[1]/x[1]" );
+            
+            assertEquals( mydp.p , 
+                          dpdepend.childNodes[0].childNodes[0].childNodes[0] );
+            var op = mydp.p
+
+            var ne = new LzDataElement( 'x' , { n:0 } );
+            assertTrue( mydp.p.parentNode.insertBefore( ne , mydp.p ) );
+            //datapointer shouldn't move b/c rerunxpath not set
+            assertEquals( mydp.p , op );
+            //datapointer shouldn't move b/c rerunxpath not set
+
+            //still  pointing to second node
+            mydp.setAttribute( 'xpath' , "@n" );
+            assertEquals( mydp.data , "1");
+            assertTrue( mydp.selectPrev() );
+            //moving the datapointer with select trumps set xpath 
+            mydp.setAttribute( 'xpath' , "@n" );
+            assertEquals( 0 , mydp.data );
+            mydp.setNodeAttribute( 'n', 44 );
+            assertEquals( 44 , mydp.data );
+
+            mydp.setAttribute( 'xpath' , "@*" );
+            assertEquals( 44 , mydp.data.n );
+            mydp.setNodeAttribute( 'bar' , 'fox' );
+            assertEquals( 'fox' , mydp.data.bar );
+
+            mydp.setAttribute( 'xpath' , "name()" );
+            assertEquals( "x" , mydp.data );
+            mydp.setNodeName( 'foo' );
+            assertEquals( "foo" , mydp.data );
+            mydp.setAttribute( 'xpath' , "text()" );
+            assertEquals( "" , mydp.data );
+            var nt = ne.appendChild( new LzDataText( "end text" ) );
+            assertEquals( "end text" , mydp.data );
+            nt.setData( "new end" );
+            assertEquals( "new end" , mydp.data );
+            var nnt = ne.insertBefore( new LzDataText( "first text" ) ,
+                                       ne.getFirstChild() ); 
+            assertEquals( "first textnew end" , mydp.data );
+            var nnt = ne.insertBefore( new LzDataElement( "anel" ) ,
+                                       ne.getLastChild() ); 
+            assertEquals( "first textnew end" , mydp.data );
+
+            mydp.deleteNode();
+            mydp.setAttribute( 'xpath' , "dpdepend:/" );
+
+            assertEquals( oser , mydp.serialize() );
+        </method>
+
+        <method name="test2">
+            mydp.setAttribute( 'xpath' , "dpdepend:/" );
+            var oser = mydp.serialize();
+
+            mydp.setAttribute( 'rerunxpath' , true );
+
+            mydp.setAttribute( 'xpath' , "dpdepend:/r/a[2]/y[2]/@yn" );
+
+            assertEquals( 2, mydp.data );
+
+            mydp.p.parentNode.insertBefore ( new LzDataElement( 'y' , 
+                                            { y : "special" , yn : "special"}),
+                                                            mydp.p );
+
+            assertEquals( "special" , mydp.data );
+            var ndp = mydp.dupePointer();
+            ndp.setAttribute( 'rerunxpath' , false );
+            assertTrue( ndp.selectParent( 2 ) );
+            assertEquals( "r" , ndp.getNodeName() );
+
+            var nen=ndp.p.insertBefore ( new LzDataElement( 'a' , { s : true }),
+                                                      ndp.p.childNodes[1] );
+            
+            assertFalse( mydp.isValid() );
+            nen.appendChild( new LzDataElement( "y" , { yn: 'v' } ) );
+            assertFalse( mydp.isValid() );
+            nen.appendChild( new LzDataElement( "y" , { yn: 'v' } ) );
+            assertTrue( mydp.isValid() );
+            assertEquals( 'v' , mydp.data );
+            nen.setAttribute( 'nodeName' , "bar" );
+            assertTrue( mydp.isValid() );
+            assertEquals( 'special' , mydp.data );
+            nen.setAttribute( 'nodeName' , "a" );
+            var pnode = mydp.p.parentNode;
+            pnode.parentNode.removeChild( pnode );
+            assertEquals( "special" , mydp.data );
+            mydp.deleteNode( );
+            assertEquals( "2" , mydp.data );
+            mydp.setAttribute( 'xpath' , "dpdepend:/" );
+
+            assertEquals( oser , mydp.serialize() );
+        </method>
+    </class>
+
+
+</library>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

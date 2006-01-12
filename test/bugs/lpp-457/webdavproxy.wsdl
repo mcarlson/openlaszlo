@@ -1,0 +1,618 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://xml.apache.org/axis/wsdd/" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://xml.apache.org/axis/wsdd/" xmlns:intf="http://xml.apache.org/axis/wsdd/" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.2RC3
+Built on Feb 28, 2005 (10:15:14 EST)-->
+
+   <wsdl:message name="unlockRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+      <wsdl:part name="owner" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="mkwsResponse">
+
+      <wsdl:part name="mkwsReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="unlockResponse">
+
+      <wsdl:part name="unlockReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="mkcolResponse">
+
+      <wsdl:part name="mkcolReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="versioncontrolRequest1">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="locksResponse">
+
+      <wsdl:part name="locksReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="lockResponse">
+
+      <wsdl:part name="lockReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="lsResponse">
+
+      <wsdl:part name="lsReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getResponse">
+
+      <wsdl:part name="getReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="moveRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="src" type="soapenc:string"/>
+
+      <wsdl:part name="dst" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="delRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="versioncontrolRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="target" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="locksRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="versioncontrolResponse">
+
+      <wsdl:part name="versioncontrolReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="copyResponse">
+
+      <wsdl:part name="copyReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="versioncontrolResponse1">
+
+      <wsdl:part name="versioncontrolReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="putRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="filename" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="lsRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="options" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="mkcolRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="delResponse">
+
+      <wsdl:part name="delReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="copyRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="src" type="soapenc:string"/>
+
+      <wsdl:part name="dst" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="lockRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+      <wsdl:part name="timeout" type="soapenc:string"/>
+
+      <wsdl:part name="scope" type="soapenc:string"/>
+
+      <wsdl:part name="owner" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="mkwsRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="putResponse">
+
+      <wsdl:part name="putReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="moveResponse">
+
+      <wsdl:part name="moveReturn" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:message name="getRequest">
+
+      <wsdl:part name="uri" type="soapenc:string"/>
+
+      <wsdl:part name="userName" type="soapenc:string"/>
+
+      <wsdl:part name="password" type="soapenc:string"/>
+
+      <wsdl:part name="path" type="soapenc:string"/>
+
+      <wsdl:part name="filename" type="soapenc:string"/>
+
+   </wsdl:message>
+
+   <wsdl:portType name="WebDavProxy">
+
+      <wsdl:operation name="lock" parameterOrder="uri userName password path timeout scope owner">
+
+         <wsdl:input message="impl:lockRequest" name="lockRequest"/>
+
+         <wsdl:output message="impl:lockResponse" name="lockResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="put" parameterOrder="uri userName password filename path">
+
+         <wsdl:input message="impl:putRequest" name="putRequest"/>
+
+         <wsdl:output message="impl:putResponse" name="putResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="get" parameterOrder="uri userName password path filename">
+
+         <wsdl:input message="impl:getRequest" name="getRequest"/>
+
+         <wsdl:output message="impl:getResponse" name="getResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="copy" parameterOrder="uri userName password src dst">
+
+         <wsdl:input message="impl:copyRequest" name="copyRequest"/>
+
+         <wsdl:output message="impl:copyResponse" name="copyResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="ls" parameterOrder="uri userName password options path">
+
+         <wsdl:input message="impl:lsRequest" name="lsRequest"/>
+
+         <wsdl:output message="impl:lsResponse" name="lsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="del" parameterOrder="uri userName password path">
+
+         <wsdl:input message="impl:delRequest" name="delRequest"/>
+
+         <wsdl:output message="impl:delResponse" name="delResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="locks" parameterOrder="uri userName password path">
+
+         <wsdl:input message="impl:locksRequest" name="locksRequest"/>
+
+         <wsdl:output message="impl:locksResponse" name="locksResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="unlock" parameterOrder="uri userName password path owner">
+
+         <wsdl:input message="impl:unlockRequest" name="unlockRequest"/>
+
+         <wsdl:output message="impl:unlockResponse" name="unlockResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="mkcol" parameterOrder="uri userName password path">
+
+         <wsdl:input message="impl:mkcolRequest" name="mkcolRequest"/>
+
+         <wsdl:output message="impl:mkcolResponse" name="mkcolResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="move" parameterOrder="uri userName password src dst">
+
+         <wsdl:input message="impl:moveRequest" name="moveRequest"/>
+
+         <wsdl:output message="impl:moveResponse" name="moveResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="mkws" parameterOrder="uri userName password path">
+
+         <wsdl:input message="impl:mkwsRequest" name="mkwsRequest"/>
+
+         <wsdl:output message="impl:mkwsResponse" name="mkwsResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="versioncontrol" parameterOrder="uri userName password target path">
+
+         <wsdl:input message="impl:versioncontrolRequest" name="versioncontrolRequest"/>
+
+         <wsdl:output message="impl:versioncontrolResponse" name="versioncontrolResponse"/>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="versioncontrol" parameterOrder="uri userName password path">
+
+         <wsdl:input message="impl:versioncontrolRequest1" name="versioncontrolRequest1"/>
+
+         <wsdl:output message="impl:versioncontrolResponse1" name="versioncontrolResponse1"/>
+
+      </wsdl:operation>
+
+   </wsdl:portType>
+
+   <wsdl:binding name="WebDavProxySoapBinding" type="impl:WebDavProxy">
+
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+
+      <wsdl:operation name="lock">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="lockRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="lockResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="put">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="putRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="putResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="get">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="getRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="getResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="copy">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="copyRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="copyResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="ls">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="lsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="lsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="del">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="delRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="delResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="locks">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="locksRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="locksResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="unlock">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="unlockRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="unlockResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="mkcol">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="mkcolRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="mkcolResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="move">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="moveRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="moveResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="mkws">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="mkwsRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="mkwsResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="versioncontrol">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="versioncontrolRequest">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="versioncontrolResponse">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+      <wsdl:operation name="versioncontrol">
+
+         <wsdlsoap:operation soapAction=""/>
+
+         <wsdl:input name="versioncontrolRequest1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:input>
+
+         <wsdl:output name="versioncontrolResponse1">
+
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://xml.apache.org/axis/wsdd/" use="encoded"/>
+
+         </wsdl:output>
+
+      </wsdl:operation>
+
+   </wsdl:binding>
+
+   <wsdl:service name="WebDavProxyService">
+
+      <wsdl:port binding="impl:WebDavProxySoapBinding" name="WebDavProxy">
+
+         <wsdlsoap:address location="http://localhost:8080/rachmaninov/services/WebDavProxy"/>
+
+      </wsdl:port>
+
+   </wsdl:service>
+
+</wsdl:definitions>

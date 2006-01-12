@@ -1,0 +1,177 @@
+<library>
+    <include href="redmondfonts.lzx" />
+    <include href="base/basebutton.lzx" />
+    <resource src="./resources/lzwinstdbtnl_rsc.swf"
+              name="LzWinStdBtnL_rsc" />
+    <resource src="./resources/lzwinstdbtnm_rsc.swf"
+              name="LzWinStdBtnM_rsc" />
+    <resource src="./resources/lzwinstdbtnr_rsc.swf"
+              name="LzWinStdBtnR_rsc" />
+    <include href="redmondresources.lzx" />
+
+<!--
+// DEFINE OBJECT: Button
+// This is Windows-looking button. If no height is given, the default height
+// is used and a special resource configuration is employed which prevents the
+// button from being able to be resized at runtime in the y-axis, but which is
+// significantly lighter weight than the standard <b><i>Button</b></i>
+// configuration.
+//
+-->
+<class name="button" clickable="true" font="lztahoe8" fontsize="8" >
+    <attribute name="text" type="html" setter="setText(text)"/>
+    <attribute name="label" type="string" setter="setText(label)"/>
+    <attribute name="MIN_TEXT_BORDER" value="6" type="number"/>
+    <attribute name="FIXED_HEIGHT" value="24" type="number"/>
+    <!-- private -->
+    <attribute name="buttonstate" value="1" type="number"/>
+    <attribute name="titleshift" value="${this.buttonstate == 1 ? 0 : 1}"
+            type="number"/>
+    <attribute name="leftalign" value="false" type="number"/>
+    <attribute name="initcomplete" value="0" type="number"/>
+    <method name="construct" args="parent, args">
+       if (args['align'] == "left") this.leftalign = true;
+       super.construct(  parent, args );
+    </method>
+    <method event="oninit">
+        if (typeof(this['text']) == 'undefined') {
+            setAttribute('text', "button");
+        }
+
+        // if a height has not been set, use "standard" 3-part button
+        // otherwise we'll use a 9-part button, which can be resized
+        // both horizontally and vertically
+        if (!this.hassetheight) {
+            this.standard = true;
+            setAttribute('height', this.FIXED_HEIGHT);
+            this.standardstate.apply();
+        }  else {
+            this.standard = false;
+            this.resizeheightstate.apply();
+        }
+
+        // if a width has not been set, the button should size to its label
+        if (!this.hassetwidth) {
+            this.calcWidth();
+        }
+        // note: there is a bug that if pixellock is set in the class
+        // it sets the height, even if the height wasn't already set
+        // so we want to set the pixellock attribute after checking hassetheight
+        setAttribute('pixellock', true);
+        this.initcomplete = true;
+    </method>
+    <method name="calcWidth">
+        var textwidth=this.standard ? this.buttonviews.middle.title.width :
+                                    this.buttonviews.middle.middle.title.width;
+        this.setWidth(textwidth +
+                    2*this.MIN_TEXT_BORDER + 10);
+    </method>
+    <method name="setText" args="t">
+        this.text=t;
+        this.label=t;
+        if (this['ontext']) this.ontext.sendEvent();
+        if (this['onlabel']) this.onlabel.sendEvent();
+        if (this.initcomplete) {
+            // if a width has not been set, the button should size to its label
+            if (!this.hassetwidth) {
+                this.calcWidth();
+            }
+        }
+    </method>
+    <method event="onmouseup">
+        setAttribute('buttonstate', 1);
+    </method>
+    <method event="onmousedown">
+        setAttribute('buttonstate', 2);
+    </method>
+    <method event="onmousedragout">
+        setAttribute('buttonstate', 1);
+    </method>
+    <method event="onmousedragin">
+        setAttribute('buttonstate', 2);
+    </method>
+
+    <state name="standardstate">
+        <view name="buttonviews" width="100%" height="100%"
+            oninit="this.sendToBack()">
+            <view name="left" resource="LzWinStdBtnL_rsc">
+                <attribute name="frame" value="${classroot.buttonstate}"/>
+            </view>
+            <view name="middle">
+                <view resource="LzWinStdBtnM_rsc"
+                    stretches="both" width="100%">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <text name="title"
+                    x="${classroot.leftalign ? classroot.MIN_TEXT_BORDER + classroot.titleshift
+                        : parent.width/2-this.width/2+classroot.titleshift}"
+                    y="${parent.height/2-this.height/2+classroot.titleshift}"
+                    text="${classroot.label}"
+                    resize="true"/>
+            </view>
+            <view name="right" resource="LzWinStdBtnR_rsc">
+                <attribute name="frame" value="${classroot.buttonstate}"/>
+            </view>
+            <stableborderlayout axis="x"/>
+        </view>
+    </state>
+
+    <state name="resizeheightstate">
+        <view name="buttonviews"  width="100%" height="100%"
+            oninit="this.sendToBack()">
+            <view name="top" width="100%">
+                <view name="left" resource="LzWinFrameTL_rsc">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <view name="middle" resource="LzWinFrameTM_rsc" stretches="both">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <view name="right" resource="LzWinFrameTR_rsc">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <stableborderlayout axis="x"/>
+            </view>
+            <view name="middle" width="100%">
+                <view name="left" resource="LzWinFrameML_rsc"
+                    height="100%" stretches="height">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                    </view>
+                <view name="middle" bgcolor="#bbbbbb" height="100%">
+                    <text name="title" text="${classroot.label}"
+                        x="${classroot.leftalign ?
+                            classroot.MIN_TEXT_BORDER + classroot.titleshift
+                            : parent.width/2-this.width/2+classroot.titleshift}"
+                        y="${parent.height/2-this.height/2+classroot.titleshift}"
+                        valign="middle" resize="true"/>
+                </view>
+                <view name="right" resource="LzWinFrameMR_rsc"
+                    height="100%" stretches="height">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <stableborderlayout axis="x"/>
+            </view>
+            <view name="bottom" width="100%">
+                <view name="left" resource="LzWinFrameBL_rsc">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <view name="middle" resource="LzWinFrameBM_rsc" stretches="both">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <view name="right" resource="LzWinFrameBR_rsc">
+                    <attribute name="frame" value="${classroot.buttonstate}"/>
+                </view>
+                <stableborderlayout axis="x"/>
+            </view>
+            <stableborderlayout axis="y"/>
+        </view>
+    </state>
+
+</class>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

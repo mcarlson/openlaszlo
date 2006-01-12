@@ -1,0 +1,42 @@
+<canvas>
+	<!-- target set to rb1, this is supposed to work since 
+	     target is of type reference -->
+	<animator id="anm1" attribute="x" 
+	          to="30" target="rb1" relative="true"
+	          duration="500" start="false" />
+
+	<!-- target set to rb2 as a constraint oninit-->
+	<animator id="anm2" attribute="x" 
+	          to="30" target="$once{rb2}" relative="true"
+	          duration="500" start="false" />
+
+	<!-- no target set initially, rb3 will set it when clicked -->
+	<animator id="anm3" attribute="x" 
+	          to="30" relative="true"
+	          duration="500" start="false" />
+
+	<class name="redbox" bgcolor="red" width="20" height="20" />
+
+	<text x="10" y="10" > Click on boxes to animate them to the right. The Bug: case 1 does not work </text>
+	 
+	<view x="10" y="50" >
+		<simplelayout spacing="20" />
+		<text> (1) target set at compile time </text>
+		<text> (2) target set at compile time ( as constraint ) </text>
+		<text> (3) target set at runtime </text>
+	</view>
+
+	<view x="270" y="52" >
+		<simplelayout spacing="10" />
+		<redbox id="rb1" onclick="anm1.dostart()" />
+		<redbox id="rb2" onclick="anm2.dostart()"/>
+		<redbox id="rb3" onclick="anm3.setTarget(this);anm3.doStart()"/>
+	</view>
+	
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

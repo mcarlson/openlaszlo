@@ -1,0 +1,20 @@
+<canvas height="800">
+    <resource name="myresc">
+        <frame src="bush.jpg"/>
+        <frame src="bushflip.jpg"/>
+    </resource>
+
+    <view resource="bush.jpg"/>
+    <view>
+        <simplelayout/>
+        <text>Should be upside down!</text>
+        <view resource="bushflip.jpg"/>
+    </view>
+    <view resource="myresc" frame="2"/>
+    <simplelayout spacing="10"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

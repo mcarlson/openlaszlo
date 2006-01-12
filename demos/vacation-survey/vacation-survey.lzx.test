@@ -1,0 +1,15 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<ol>
+<li>On startup verify that:
+<ul>
+<li>Vacation servey is present
+</ul></li>
+<li>Choose each one of the destinations a few times</li>
+<li>trenton should bring up alert dialog </li>
+<li>reload app; survey totals should be remembered since last time (they are webapp global on the server)</li>
+</ol>
+TODO: MD Finish this app test plan

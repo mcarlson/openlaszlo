@@ -1,0 +1,83 @@
+<canvas height="600" bgcolor="0x75788C">
+
+<include href="../emerald-contrib/shadowbox.lzx"/>
+<include href="../emerald-contrib/tooltipview.lzx" />
+    
+<include href="richtexttoolbar.lzx"/>
+<include href="richtexteditor.lzx"/>
+<include href="formatfontface.lzx"/>
+<include href="formatfontcolor.lzx"/>
+<include href="formatbtn.lzx"/>
+<include href="linkdialog.lzx"/>
+
+    
+<simplelayout axis="y" spacing="5"/>
+
+
+<view name="toolbartop" width="650" x="50" height="200">
+    <!-- declare toolbar and include desired tools -->
+    <richtexttoolbar name="toolbar" editor="${grte}" height="30" width="${parent.width-5}" x="2" y="0" bgcolor="0xD4D7E5">
+        
+        <formatbtn name="boldbtn" format="bold" iconname="bold" icony="4" y="${(parent.height-this.height)/2}"
+            inactivetooltiptext="Bold"
+            activetooltiptext="Remove bold"
+        />
+        
+        <formatbtn name="underlinebtn" format="underline" iconname="underline" y="${(parent.height-this.height)/2}"
+            inactivetooltiptext="Underline"
+            activetooltiptext="Remove underline"
+        />
+        
+        <formatbtn name="italicbtn" format="italic" iconname="italic" icony="4" y="${(parent.height-this.height)/2}"
+            inactivetooltiptext="Italics"
+            activetooltiptext="Remove italics"
+        />
+        
+        <formatfontface name="fontfacecb" y="${(parent.height-this.height)/2}"/>
+        <formatfontcolor name="fontcolorcb" y="${(parent.height-this.height)/2}"/>
+        
+        <formatbtn name="linkbtn" format="link" iconname="link" icony="3" y="${(parent.height-this.height)/2}"
+            inactivetooltiptext="Create link"
+            activetooltiptext="Remove link">
+            <method name="doClick"> 
+                editor.linkpanel.show();
+            </method>
+        </formatbtn>
+        
+        <include href="formatremovebtn.lzx" />
+ 
+    </richtexttoolbar>
+    
+    <!-- include any RTE dialog panels -->
+    <linkdialog name="linkpanel"/>
+
+    <!-- include a RTE text area -->
+    <shadowbox name="messagebody" x="2" 
+                y="${parent.toolbar.height + parent.toolbar.y}"
+                width="${parent.width-5}" height="${parent.height - this.y - 30}" >
+        <richtexteditor id="grte" name="txt" 
+                x="0" y="0"
+                height="${parent.height}" 
+                width="${parent.width}"
+                defaultfontname="Verdana" 
+                defaultfontsize="24" 
+                defaultfontcolor="0x336699"
+                border="10">                    
+        </richtexteditor>
+    </shadowbox>
+    
+</view>
+<!-- debug -->    
+<button text="show html output">
+    <method event="onclick">
+        var s = String();
+        s = grte.getHTMLText();
+        var arrTemp = s.split("&lt;");
+        s = arrTemp.join(String.fromCharCode(13) + "&lt;");
+        testout.setText(s);
+    </method>
+</button>
+
+<inputtext width="300" height="400" id="testout" multiline="true">(test html output)</inputtext>
+
+</canvas>

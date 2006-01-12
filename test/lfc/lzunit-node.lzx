@@ -1,0 +1,68 @@
+<canvas title="lzunit-node" debug="true" >
+  <include href="lzunit" />
+
+  <class name="snode" extends="node" defaultplacement="subnode2">
+    <node name="subnode1"/>
+    <node name="subnode2"/>
+  </class>
+
+  <TestSuite>
+
+    <TestCase name="testNodeHierarchy">
+    
+      <node name="n1" id="node1">
+        <node name="a"/>
+        <node name="b"/>
+      </node>
+      
+      <method name="testBasicAttributes">
+        assertEquals("n1", n1.name);
+        assertEquals("node1", n1.id);
+      </method>
+      
+      <method name="testSubNodes">
+        var sn = n1.subnodes;
+        assertEquals(2, sn.length);
+        assertEquals("a", sn[0].name);
+        assertEquals("b", sn[1].name);
+      </method>
+      
+      <method name="testParent">
+        var sn = n1.subnodes;
+        assertEquals(n1, sn[0].parent);
+        assertEquals(n1, sn[1].parent);
+      </method>
+      
+      <method name="testChildOf">
+        var sn = n1.subnodes;
+        assertTrue(sn[0].childOf(n1));
+        assertTrue(sn[1].childOf(n1));
+      </method>
+      
+      <method name="testImmediateParent">
+        var sn = n1.subnodes;
+        assertEquals(n1, sn[0].immediateparent);
+        assertEquals(n1, sn[1].immediateparent);
+      </method>
+      
+      <method name="testNodeLevel">
+        var sn = n1.subnodes;
+        assertEquals(n1.nodeLevel + 1, sn[0].nodeLevel);
+        assertEquals(n1.nodeLevel + 1, sn[1].nodeLevel);
+      </method>
+      
+    </TestCase>
+    
+    <TestCase name="testClassRoot">
+    
+      <snode name="sn1"/>
+      
+      <method name="testCR">
+        assertEquals(sn1, sn1.subnode1.classroot);
+      </method>
+      
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>

@@ -1,0 +1,36 @@
+<canvas >
+	<include href="redmond/redmondinputtext.lzx"/>
+	<simplelayout axis="x"/>
+	<view>
+		<text>inputtext</text>
+		<text>text</text>
+		<text>simpleinputtext</text>
+		<text>edittext</text>
+		<text>windowtext</text>
+		<simplelayout/>
+	</view>
+	<view>
+	<simplelayout/>
+    <inputtext width="300" bgcolor="0xe0c0c0">
+      line of <u>text</u>
+    </inputtext>
+    <text width="300" bgcolor="0xc0e0c0">
+      line of <u>text</u>
+    </text>
+    <simpleinputtext width="300">
+      line of <u>text</u>
+    </simpleinputtext>
+    <edittext width="300">
+      line of <u>text</u>
+    </edittext>
+    <windowtext width="300">
+      line of <u>text</u>
+    </windowtext>
+    
+    </view>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

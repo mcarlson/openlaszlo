@@ -1,0 +1,63 @@
+<canvas debug="true">
+    <dataset name="myData">
+        <myXML>
+<!--  THIS DATA IS COMMENTED OUT, TAKE THE COMMENTS OUT TO SEE WORKING VERSION--> 
+            <person show="simpsons"/>
+            <person show="tothing"/>
+            <person show="somethingelse"/>
+        </myXML>
+    </dataset>
+
+
+    <view name="myTable">
+        <simplelayout axis="y" />
+        <view name="rowOfData" datapath="myData:/myXML[1]/person[1]">
+            <text datapath="@show" />
+        </view>
+    </view>
+
+    <button text="setOrder" y="70">
+        <method event="onclick">
+            this.parent.myTable.rowOfData.datapath.setOrder("@show", "ascending");
+        </method>
+    </button>       
+    <button text="replicate" y="100">
+        <method event="onclick">
+            this.parent.myTable.rowOfData.setDatapath( "myData:/myXML[1]/person");
+        </method>
+    </button>       
+    <!-- also make sure you can set comparator before a view replicates -->
+    <dataset name="numData">
+        <myXML>
+            <num show="331"/>
+            <num show="9"/>
+            <num show="112"/>
+        </myXML>
+    </dataset>
+
+    <view x="300">
+        <simplelayout/>
+        <text>Dic sort</text>
+        <text >
+            <datapath xpath="numData:/myXML/num/@show"
+                      sortpath="@show"
+                      sortorder="ascending"/>
+        </text>
+    </view>
+    <view x="350">
+        <simplelayout/>
+        <text>Num sort</text>
+        <text >
+            <datapath xpath="numData:/myXML/num/@show"
+                      sortpath="@show"
+                      sortorder="$once{ function( a , b ){ return Number( a ) &gt; Number( b) ? 1: -1}}"/>
+        </text>
+    </view>
+
+</canvas>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

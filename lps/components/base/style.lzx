@@ -1,0 +1,155 @@
+<library>
+<include href="base/colors.lzx"/>
+<include href="base/basefocusview.lzx"/>
+<include href="base/basefocusview.lzx"/>
+<include href="base/componentmanager.lzx"/>
+
+<!--- contains style attributes which are applied to components to modify their look -->
+<class name="style" extends="node">
+    <!--- this is a style object
+          @keywords readonly -->
+    <attribute name="isstyle" value="true"/>
+
+    <!--- canvas color, default: null (will use whatever is specified
+        as the canvas bgcolor, default: white) -->
+    <attribute name="canvascolor" value="null" when="once"
+        setter="setCanvasColor( canvascolor )" type="color"/>
+
+    <!--- color for text, default: black -->
+    <attribute name="textcolor" value="gray10" when="once"
+        setter="setStyleAttr( textcolor, 'textcolor')"  type="color"/>
+
+    <!--- background color for text areas, default: white -->
+    <attribute name="textfieldcolor" value="white" when="once"
+        setter="setStyleAttr( textfieldcolor, 'textfieldcolor' )" type="color"/>
+
+    <!--- used as the text color with 'hilitecolor' to highlight an item,
+        such as when mouse is over a menu item  default: iceblue1 -->
+    <attribute name="texthilitecolor" value="iceblue1" when="once"
+        setter="setStyleAttr( texthilitecolor, 'texthilitecolor')" type="color"/>
+
+    <!--- used as the text color with 'selectedcolor' to color the
+        selected item default: iceblue1 -->
+    <attribute name="textselectedcolor" value="black" when="once"
+        setter="setStyleAttr( textselectedcolor, 'textselectedcolor')" type="color"/>
+
+    <!--- used as the text color when a component is disabled default: gray60 -->
+    <attribute name="textdisabledcolor" value="gray60" when="once"
+        setter="setStyleAttr( textdisabledcolor, 'textdisabledcolor')" type="color"/>
+
+    <!--- used for colorizing a component, components will typically use
+        varying shades of this color. Default: offwhite -->
+    <attribute name="basecolor" value="offwhite" when="once"
+        setter="setStyleAttr( basecolor, 'basecolor')" type="color"/>
+
+    <!--- used for colorizing the backgrounds of content areas, such
+          as the background in tabslider's content, and window's content
+          default: white -->
+    <attribute name="bgcolor" value="white" when="once"
+        setter="setStyleAttr( bgcolor, 'bgcolor')" type="color"/>
+
+    <!--- used when the background color changes to highlight an item,
+        such as when mouse is over a menu item  default: iceblue3 -->
+    <attribute name="hilitecolor" value="iceblue4" when="once"
+         setter="setStyleAttr( hilitecolor, 'hilitecolor')" type="color"/>
+
+    <!--- used when an item is selected, such as in a list  default: iceblue4 -->
+    <attribute name="selectedcolor" value="iceblue3" when="once"
+         setter="setStyleAttr( selectedcolor, 'selectedcolor')" type="color"/>
+
+    <!--- used when an item is disabled default: gray30 -->
+    <attribute name="disabledcolor" value="gray30" when="once"
+         setter="setStyleAttr( disabledcolor, 'disabledcolor')" type="color"/>
+
+    <!--- used to color the frame of a component for those that have a visual
+        border.  Default: gray40 (a medium dark gray) -->
+    <attribute name="bordercolor" value="gray40" when="once"
+        setter="setStyleAttr( bordercolor, 'bordercolor')" type="color"/>
+
+    <!--- the line width used in those components that have a visual border,
+        default: 1-->
+    <attribute name="bordersize" value="1" when="once"
+        setter="setStyleAttr( bordersize, 'bordersize')"/>
+
+    <!--- background color for menu items, defaults to the 'textfieldcolor' -->
+    <attribute name="menuitembgcolor" value="textfieldcolor"
+        when="once" />
+
+    <!--- if true, this style is the default style for components  -->
+    <attribute name="isdefault" value="false" setter="_setdefault(isdefault)"/>
+
+    <!--- @keywords private  -->
+    <attribute name="onisdefault" value="null"/>
+
+    <!--- set a specific style attribute
+          @keywords private -->
+    <method name="_setdefault" args="def"> <![CDATA[
+        this.isdefault = def;
+        if (isdefault) {
+            global._componentmanager.service.setDefaultStyle(this);
+            if (typeof(this.canvascolor) != "undefined") {
+                 canvas.setBGColor(this.canvascolor);
+            }
+        }
+        if (this.onisdefault) this.onisdefault.sendEvent(this);
+    ]]> </method>
+
+    <!--- @keywords private  -->
+    <attribute name="onstylechanged" value="null"/>
+
+    <!--- set a specific style attribute
+          @keywords private -->
+    <method name="setStyleAttr" args="val, prop"> <![CDATA[
+        this[ prop ] = val;
+        if (this['on' + prop]) this['on' + prop].sendEvent(prop);
+        if (this.onstylechanged) this.onstylechanged.sendEvent(this);
+    ]]> </method>
+
+    <!--- set canvas bgcolor if not already set
+          @keywords private -->
+    <method name="setCanvasColor" args="newcolor"> <![CDATA[
+            if (this.isdefault && newcolor != null) { canvas.setBGColor(newcolor); }
+            this.canvascolor = newcolor;
+            if (this.onstylechanged) this.onstylechanged.sendEvent(this);
+    ]]> </method>
+
+    <!--- returns a new style object which is based on this one
+        with only specified attributes modified
+        <br/>param dictionary args: the attributes for the new style
+    -->
+    <method name="extend" args="args">
+        var temp = {};
+        for (var p in args) {
+            temp[p] = args[p];
+        }
+        temp.__proto__ = this;
+
+        new LzDelegate(temp, '_forwardstylechanged', this, 'onstylechanged');
+        return temp;
+    </method>
+
+    <!--- called if this style extends another
+        so that the onstylechanged event will get propagated
+        @keywords private -->
+    <method name="_forwardstylechanged"> <![CDATA[
+        if (this.onstylechanged) this.onstylechanged.sendEvent(this);
+    ]]> </method>
+
+</class>
+
+<!--
+    _componentmanager.service is used to set the default style,
+    so the service must be created before a style instance is
+ -->
+<script>
+
+   _componentmanager.service = new _componentmanager( canvas , null,
+                                                        null, true );
+</script>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

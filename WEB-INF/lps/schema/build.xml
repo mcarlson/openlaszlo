@@ -1,0 +1,123 @@
+<project name="schema" default="build">
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+  <description>
+      This is the build file for the LPS schema.
+  </description>
+
+  <!-- Define contrib tasks -->
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <property environment="env"/>
+
+  <target name="init">
+    <tstamp/>
+    <property name="build" value="./build"/>
+    <property name="rnc" value="lzx.rnc"/>
+    <property name="docrng" value="lzxdoc.rng"/>
+    <property name="rng" value="lzx.rng"/>
+    <property name="dtd" value="lzx.dtd"/>
+    <property name="xsd" value="lzx.xsd"/>
+    <property name="html" value="lzx-reference.html"/>
+    <property name="python.exec" value="python" />
+    <mkdir dir="build"/>
+  </target>
+
+  <target name="rng" depends="init"
+          description="Generate RNG schema file">
+    <outofdate>
+      <sourcefiles>
+        <fileset dir="." includes="${rnc},strip-docs.xsl,strip-private.xsl"/>
+      </sourcefiles>
+      <targetfiles path="build/lzx.direct.rng"/>
+      <sequential>
+        <java fork="true"
+              classname="com.thaiopensource.relaxng.output.Driver">
+          <classpath>
+            <pathelement location="${ANT_HOME}/lib/trang.jar"/>
+            <pathelement path="${java.class.path}"/>
+          </classpath>
+          <arg value="${rnc}"/>
+          <arg value="build/lzx.direct.rng"/>
+        </java>
+      </sequential>
+    </outofdate>
+    <style in="build/lzx.direct.rng" out="${rng}" style="strip-docs.xsl"/>
+    <style in="build/lzx.direct.rng" out="${docrng}" style="strip-private.xsl"/>
+    <!-- this depends on a newer version of jing -->
+    <!--java fork="true"
+	  classname="com.thaiopensource.relaxng.output.Driver">
+      <classpath>
+        <pathelement location="${ANT_HOME}/lib/trang.jar"/>
+	<pathelement path="${java.class.path}"/>
+      </classpath>
+      <arg value="${docrng}"/>
+      <arg value="build/lzx.rnc"/>
+    </java-->
+  </target>
+
+  <target name="dtd" 
+          description="Generate DTD" depends="rng">
+    <if><not>
+      <uptodate srcfile="${rng}" targetfile="${dtd}"/>
+    </not>
+    <then>
+      <exec executable="${python.exec}" taskname="rng2dtd" failonerror="true" >
+        <arg value="rng2dtd.py"/>
+        <arg value="${rng}"/>
+        <arg value="-o"/>
+        <arg value="${dtd}"/>
+      </exec>
+    </then></if>
+  </target>
+
+  <target name="clean" 
+          description="Remove generated schema files" depends="init">
+    <delete dir="${build}"/>
+    <delete file="${docrng}"/>
+    <delete file="${rng}"/>
+    <delete file="${xsd}"/>
+    <delete file="${dtd}"/>
+    <delete quiet="true">
+      <fileset dir="." defaultexcludes="no" includes="**/*~"/>
+      <fileset dir="." defaultexcludes="no" includes="**/*.pyc"/>
+    </delete>
+  </target>
+
+  <target name="build" 
+          description="Build generated schema files" depends="rng,dtd">
+      <if>
+        <not><uptodate srcfile="${rnc}" targetfile="${xsd}"/></not>
+        <then>
+          <java fork="true" failonerror="true"
+                classname="com.thaiopensource.relaxng.output.Driver"
+                output="log.trang">
+               <classpath>
+                   <pathelement location="${ANT_HOME}/lib/trang.jar"/>
+                   <pathelement path="${java.class.path}"/>
+                </classpath>
+              <arg value="${rnc}"/>
+              <arg value="${xsd}"/>
+          </java>
+          <exec executable="grep">
+            <!-- Remove expected warnings. -->
+            <arg line="-v 'Warning.*cannot \(be \)\?represent.*approximating' log.trang"/>
+          </exec>
+          <delete file="log.trang"/>
+        </then></if>
+  </target>
+
+  <target name="doc"
+          description="Generate docs (none)"/>
+
+  <target name="test"
+          description="Run schema related tests (none)"/>
+
+  <target name="all" 
+          description="Clean, build, doc, and test" 
+          depends="clean,build,doc,test"/>
+</project>

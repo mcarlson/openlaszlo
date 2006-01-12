@@ -1,0 +1,11 @@
+<canvas font="helmet">
+    <font src="helmetr.ttf" name="helmet" />
+    <simplelayout axis="y"/>
+    <text>helmet</text>
+    <text font="helmet">helmet</text>
+    <text><font face="helmet">helmet</font></text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

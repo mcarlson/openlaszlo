@@ -1,0 +1,32 @@
+ <library>
+    <!-- class: panel +++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <!-- this is a beveled panel used as the background of a menu           -->
+    <!-- ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ -->
+    <class name="beveledpanel" >
+        <attribute name="color" value="0xBDBDBD"/>
+        <view name="top" width="100%" >
+            <view name="l" resource="resources/lzwinframetl_rsc.swf" />
+            <view name="m" resource="resources/lzwinframetm_rsc.swf" stretches="width" />
+            <view name="r" resource="resources/lzwinframetr_rsc.swf" />
+            <stableborderlayout axis="x"/>
+        </view>
+        <view name="mid" width="100%" >
+            <view name="l" resource="resources/lzwinframeml_rsc.swf" height="100%" stretches="height"/>
+            <view bgcolor="${classroot.color}"  height="100%" />
+            <view name="r" resource="resources/lzwinframemr_rsc.swf"  height="100%" stretches="height"/>
+            <stableborderlayout axis="x"/>
+        </view>
+        <view name="bot" width="100%">
+            <view name="l" resource="resources/lzwinframebl_rsc.swf" />
+            <view name="m" resource="resources/lzwinframebm_rsc.swf"  stretches="width"/>
+            <view name="r" resource="resources/lzwinframebr_rsc.swf" />
+            <stableborderlayout axis="x"/>
+       </view>
+       <stableborderlayout axis="y"/>
+    </class>
+ </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,64 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<ol>
+<li>on startup Verify that:
+<ul>
+	<li>All 10 albums are displayed with titles, cover, price and artist</li>
+</ul>
+<li>click on the "i" under "Break Like The Wind" and verify that:
+<ul>
+<li>search field is displayed</li>
+<li>back to reccomendations link is displayed</li>
+<li>large album cover graphic is displayed</li>
+<li>Album title is displayed</li>
+<li>artist is displayed </li>
+<li>Lable is displayed</li>
+<li>release date is displayed</li>
+<li>availablity is displayed</li>
+<li>List Price is displayed</li>
+<li>Our Price is displayed</li>
+<li>Cart button is displayed</li>
+<li>List button is displayed</li>
+<li>the "Editorial Review" tabslider is open and an editorial review is displayed</li>
+<li>clicking the "Tracks" tabslider displays the same number of tracks displayed in the tabslider heading</li>
+<li>clicking on the "Customer Reviews" tabslider displays the same number of reviews displayed in the tabslider heading</li>
+</li>
+<li>clicking on a customer review displays a text review and a scroll bar thumb on the right</li>
+<li>double-clicking on the large album cover causes the "shopping cart" vtab to bounce</li>
+<li>Clicking on the cart button causes the "shopping cart" vtab to bounce</li>
+<li>clicking the list button causes the "wish list" vtab to bounce</li>
+<li>Dragging the album cover over the "shopping cart" vtab causes it to bounce</li>
+<li>Dragging the album cover over the "Wish List" vtab causes the it to bounce</li>
+
+</ul></li>
+<li>Perform a serarch for "U2", Verify that:
+<ul>
+<li>clicking on an album title brings up a detailed view for that album</li>
+<li>The detailed view contains all the same data fields as the album in step 1</li>
+<li>clicking on the searh results tab closes the searh results list</li>
+<li>clicking on the "shopping cart" vtab opens the shopping cart</li>
+<li>the shopping cart conatins no less than two album entries</li>
+<li>dragging the bottom of the shopping cart vtab to the right causes the display to shrink correspondingly</li>
+<li>Clicking the wishlist vtab opens the wishlist are a without altering the size of the shopping cart</li>
+<li>That the wishlist contains no less than 2 album entries<i>This needs better explainations, if it's wrong, where did it go wrong?</i></li>
+<li>dragging the bottom of the wish list vtab to the right causes the display to shrink correspondingly without  altering the size of the shopping cart</li>
+</ul></li>
+<li>Click on check out and verify that:
+<ul><li>The shipping address tabslider is open</li>
+<li>the shipping address tabslider contains 3 addresses and radio buttons</li>
+<li>clicking on add a new address presents you with a new address form</li>
+<li>text can be entered in all address fields</li>
+<li>clicking cancel dismisses the address form and that no new address information is diaplsyed on the address selection form</li>
+<li>clicking add a new address presents you with a new <i>empty</i> address form</li>
+<li>put the word "new address" ain fullane and clicking ok returns you to the main form</li>
+<li>That there is now an entyr in the selection panel</li>
+<li>the radio buttons next to all four addresses can be selected</li>
+<li>clicking edit under laszlo presents an edit address form</li>
+<i>there is a ton still to write up here..</i>
+
+</ul></li>
+</ol>
+<br>
+A number of debugger warnings are known to exist with this app, but fail it anyway

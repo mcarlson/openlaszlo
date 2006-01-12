@@ -1,0 +1,4 @@
+ <canvas proxied="true">
+   <!-- load dataset proxied -->
+   <include href="lib-ds-proxied.lzx"/>
+ </canvas>

@@ -1,0 +1,97 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- contactlist.lzx                                                       -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Display a list from a datasource (xml file)                           -->
+<!-- Open details panel with more info from datasource                     -->
+<!-- Concepts: databinding, datareplication, dynamic layout, animation     -->
+<!--                                                                       -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas bgcolor="#eaeaea" width="220" height="462" proxied="false" >
+    <inittimer/>
+    <font src="bitstream-vera-1.10/verabd.ttf" name="boldfont"/>
+
+    <dataset src="contactsdata.xml" name="mydata" type="http" request="true"/>
+
+    <resource name="tab_top_mid">
+        <frame src="art/top_btn_mid.swf"/>
+        <frame src="art/top_btn_mid_mo.swf"/>
+        <frame src="art/top_btn_mid_dn.swf"/>
+    </resource>
+    <resource name="tab_bot_mid" src="art/bot_btn_mid.swf"/>
+
+    <class name="row" height="30" bgcolor="0xE7E7D6" width="100%">
+        <attribute name="minheight" value="30"/>
+        <attribute name="maxheight" value="85"/>
+
+        <view name="small"
+            width="100%">
+            <basebutton resource="tab_top_mid" clickable="true"
+                width="${parent.width}"
+                stretches="both">
+                 <method event="onclick">
+                     if (classroot.height == classroot.minheight) {
+                        classroot.open.setAttribute('visible',true);
+                        newheight = classroot.maxheight;
+                     } else {
+                        classroot.open.setAttribute('visible',false);
+                        newheight = classroot.minheight;
+                     }
+                     classroot.animate('height', newheight, 300);
+                 </method>
+                </basebutton>
+            <text x="10" y="4" datapath="@displayname" width="100%"/>
+
+        </view>
+        <view x="10" name="open" width="100%"
+            visible="false">
+            <text datapath="@email" width="100%"/>
+            <text datapath="@work_address" width="100%"/>
+            <text datapath="@work_webpage" width="100%"/>
+            <simplelayout axis="y"/>
+        </view>
+        <view name="bottom" width="100%" resource="tab_bot_mid"
+            stretches="both"/>
+        <stableborderlayout axis="y" />
+        <simplelayout axis="y"/>
+    </class>
+
+    <view name="contactsborder" bgcolor="0x676767"
+        width="220" height="462">
+        <text name="test" x="5" y="1" fgcolor="white">contacts</text>
+        <view datapath="mydata:/resultset"
+            x="2" y="20" width="218" height="438" clip="true">
+            <view width="${parent.width-16}">
+                <row>
+                   <datapath xpath="result">
+                    <method event="onclones" args="clones">
+                        Debug.write('onclones');
+                        var lastclone = clones[ clones.length - 1 ];
+                        if ( !this.doneDel ){
+                            this.doneDel = new LzDelegate( this, 'replicationDone');
+                        } else {
+                            this.doneDel.unregisterAll();
+                        }
+                        this.doneDel.register( lastclone , "oninit" );
+                    </method>
+                    <method name="replicationDone">
+                        Debug.write( 'REPLICATION IS DONE! ', getTimer());
+                    </method>
+                    </datapath>
+                </row>
+                <simplelayout axis="y"/>
+            </view>
+            <scrollbar axis="y"/>
+            <simplelayout axis="x"/>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

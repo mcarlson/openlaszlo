@@ -1,0 +1,49 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Debug">
+    <lztier>Development Component</lztier>
+    <lzcategory>Development</lzcategory>
+    <lzshortdesc>
+        Enable debugging for the application
+    </lzshortdesc>
+    <lztag>tag-debug.xml</lztag>
+    <lzapi>api-debug.xml</lzapi>
+</lzelement>
+
+<p>The <tagname>debug</tagname> tag controls the initial appearance
+and options of the debugger when debugging is enabled.  Debugging is
+enabled either by including the <code>debug="true"</code> option on
+the <tagname>canvas</tagname> tag, or adding the
+<code>?debug=true</code> query argument to the application's URL.</p>
+
+<example class="program" id="debug-1"
+         title="debug tag">
+&lt;canvas debug="true" height="120"&gt;
+  &lt;debug width="100" height="50" x="5" y="5" fontsize="8"/&gt;
+  &lt;script&gt;
+    Debug.write("Hello world!");
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The debug tag controls the appearance of the debugger when
+debugging is on.  It does not cause the application to be compiled
+with debugging mode enabled.  Only the debug option on the canvas and
+the debug query parameter of the URL do this.</p>
+
+<p>For more information, see the <a
+href="${dguide}debugging.html">Debugging</a> chapter of the
+Guide.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,5 @@
+<canvas proxied="true">
+  <import name="lib" href="view-library.lzx" />
+  <simplelayout />
+  <button onclick="lib.load()">Load view-library.lzx </button>
+</canvas>

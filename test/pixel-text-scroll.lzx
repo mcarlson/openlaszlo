@@ -1,0 +1,129 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- pixel-text-scroll.lzx                                                 -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<!-- 
+
+  Demonstrates the use of the LzPixelTextScrollVertical component
+
+-->
+
+<canvas width="1000" height="800" >
+<include href="redmond"/>
+
+<script>
+ <![CDATA[
+function addTest(n) { 
+     var i;
+     var line = 0;
+     var newline = "";
+     if (!(bar.multiline)) {
+         newline = "\n";
+     }
+     z = "";
+     for(i=0; i < n; i++) { 
+         var str = "Line number " + ( line++)  + " In quis augue et massa porta consequat. Nullam purus metus, consectetuer quis, pretium vel, elementum in, libero. Cras sem ligula, ultrices vel, erat. Aenean leo tortor, dapibus sed, viverra eget, feugiat nec, lectus. Vivamus id nunc.";
+         z += str.substr(0,cols.gettext()) + newline;
+     }
+     bar.setText(z);
+     bar.setNLines(n);
+     vscroll.setAttribute('scrollmax', bar.scrollheight); 
+ }   
+   ]]>
+
+</script>
+
+<!-- **** Test input text scrolling *** -->
+
+<window id="v2"  y="10" x="420" width="400" height="375" resizable="true">
+  <resizelayout axis="x" />
+  <inputtext name="intext"  id="intext"
+        options="releasetolayout"
+        height="${parent.height - 50}"
+        bgcolor="#acdcef" selectable="true"
+        multiline="true">Hello Input World!</inputtext>
+
+  <scrollbar id="vscroll2" name="vscroll"
+                   axis="y"
+                   scrollattr="yscroll"
+                   scrollmax="1400"
+                   oninit="scrolltarget = parent.intext" />
+
+</window>
+
+
+
+<!-- **** Test output text scrolling *** -->
+
+<window id="v1"  y="10" x="10" width="400" height="375" resizable="true">
+  <resizelayout axis="x" />
+  <text name="bar"  id="bar" 
+        options="releasetolayout"
+        height="${parent.height - 50}"
+        bgcolor="#cccccc" selectable="true"
+        multiline="false">Hello Output World!</text>
+
+  <scrollbar id="vscroll" name="vscroll"
+             axis="y" scrollmax="400"
+             scrollattr="yscroll" oninit="scrolltarget = parent.bar" />
+</window>
+ 
+
+<!-- **** Test plain old view scrolling *** -->
+
+<window y="450" x="10" width="350" height="300" clip="true">
+   <resizelayout axis="x" />
+    <view  id="t1" options="releasetolayout">
+       <simplelayout axis="y" />
+       <view id="t2" bgcolor="red" height="100" width="${parent.width}"><text>The colors of the rainbow</text></view>
+       <view bgcolor="0xee9a00" height="100" width="${parent.width}"/>
+       <view bgcolor="yellow" height="100" width="${parent.width}"/>
+       <view id="t3" bgcolor="green" height="100" width="${parent.width}"/>
+       <view bgcolor="blue" height="100" width="${parent.width}"/>
+       <view bgcolor="purple" height="100" width="${parent.width}"><text y="${parent.height - this.height}">This is the bottom</text></view>
+    </view>
+    <scrollbar id="vscroll3" axis="y"  />
+</window>
+
+
+<view id="v3" width="100" bgcolor="#0000cc" x="830" 
+     oninit='Debug.setAttribute("x", 380); Debug.setAttribute("y", 447); Debug.setAttribute("height", 300); Debug.setAttribute("width", 400); ' >
+  <simplelayout axis="y" spacing="3" />
+  <button width="100" label="Add Text 10" onclick="addTest(10)" />
+  <button width="100" label="Add Text 50" onclick="addTest(50)" />
+  <button width="100" label="Add Text 100" onclick="addTest(100)" />
+  <button width="100" label="Add Text 250" onclick="addTest(250)" />
+  <button width="100" label="Add Text 1K" onclick="addTest(1000)" />
+  <button width="100" label="Add Text 2K" onclick="addTest(2000)" />
+  <button width="100" label="Clear Text" onclick="bar.setText('')" />
+  <button width="100" label="Set Height 200" onclick="v1.setHeight(200)" />
+  <button width="100" label="Set Height 400" onclick="v1.setHeight(400)" />
+  <button width="100" label="Set Height 600" onclick="v1.setHeight(600)" />
+  <button width="100" label="Set Height 800" onclick="v1.setHeight(800)" />
+  <button width="100" label="Multiline=TRUE" onclick="bar.setMultiline(true)" />
+  <button width="100" label="Multiline=FALSE" onclick="bar.setMultiline(false)" />
+
+  <button width="100" label="YScroll 1 " onclick="bar.setattribute('yscroll', bar.yscroll + 1)" />
+  <button width="100" label="YScroll -1 " onclick="bar.setattribute('yscroll', bar.yscroll - 1)" />
+
+  <button width="100" label="Status " onclick="parent.showstatus()" />
+   <text>Sample Text Columns</text>
+  <windowtext id="cols" width="100">80</windowtext>
+
+</view>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

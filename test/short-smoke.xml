@@ -1,0 +1,12 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- LPS Test suites -->
+
+<test-suites>
+    <suite name="Short smoke tests"
+           directory="test/smoke"
+           test="lps" />
+
+</test-suites>

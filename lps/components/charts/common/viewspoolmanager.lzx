@@ -1,0 +1,153 @@
+<library>
+    <!--- @keyword private 
+    Manage a hash table of viewspool 
+    -->
+    <class name="viewspoolmanager">
+        <attribute name="pools"/>
+        <!-- return a views pool -->
+        <method name="getPool" args="parent, className">            
+            if(this.pools == null)
+            {   
+                this.pools = new Object();             
+                parent["_pools"] = this.pools;
+            }
+            
+            var pool = this.pools[className];
+            if(!pool)
+            {
+                pool =  new viewspool(parent); 
+                debug.write(pool);
+                pool.parentview = parent;  
+                pool.viewclass = className;
+                this.pools[className] = pool;                                                                                
+            }
+            return pool;           
+        </method>
+       
+        <!-- put are the view back to the pools -->         
+        <method name="reclaimAll">
+        <![CDATA[             
+             for( var k in this.pools)
+             {                
+                this.pools[k].reclaimAll();
+             }
+        ]]>
+        </method>        
+    </class>
+    
+    <!--- @keyword private
+     Represents a pool of view -->
+    <class name="viewspool" extends="node">             
+        <attribute name="unused" value="$once{[]}"/>
+        <attribute name="used" value="$once{[]}"/>
+        <attribute name="parentview" value="$once{null}"/>
+        <attribute name="viewclass" type="string" value="$once{null}"/>
+        
+        <!-- get a view the pool -->
+        <method name="getView" args="args">
+            var marker = null;
+            if(this.unused.length > 0)
+            {
+                marker = this.unused.pop();                 
+            }
+            else
+            {
+                marker =  new global[viewclass](parentview, args);                               
+            }
+            this.used.push(marker);
+            marker.setVisible(true);
+            return marker;            
+        </method>
+        
+        <!-- return all the view to the pool -->
+        <method name="reclaimAll">
+        <![CDATA[
+             for(var i = 0; i < this.used.length; i++)
+             {
+                this.used[i].setVisible(false);
+                
+                if(this.used[i]["clear"] != null)
+                {
+                    this.used[i].clear();
+                }
+             }
+             this.unused = this.unused.concat(this.used);
+             this.used = [];
+        ]]>
+        </method>
+    </class> 
+  
+    <!--- @keyword private  
+        Manage a hash table of viewslist 
+     -->
+    <class name="viewlistmanager">
+        <attribute name="pools" value="${new Object()}"/>
+        <!-- return a views pool -->
+        <method name="getList" args="parent, className, id">            
+
+            if(this["pools"] == null)
+            {   
+                this.pools = new Object();             
+            }
+            
+            var listName = className;
+            if(id != null)
+            {
+                listName += id;                
+            }
+            
+            var pool = this.pools[listName];
+            if(!pool)
+            {
+                pool =  new viewslist(parent);                 
+                pool.parentview = parent;  
+                pool.viewclass = className;
+                this.pools[listName] = pool;                                                                                
+            }
+            return pool;           
+        </method>
+       
+        <!-- put are the view back to the pools -->         
+        <method name="reclaimAll">
+        <![CDATA[             
+             for( var k in this.pools)
+             {                
+                this.pools[k].reclaimAll();
+             }
+        ]]>
+        </method>        
+    </class>  
+    
+     <!--- @keyword private
+     a pool of ordered view  
+     -->
+    <class name="viewslist" extends="node">             
+        <attribute name="list" value="$once{[]}"/>
+        <attribute name="parentview" value="${parent}"/>
+        <attribute name="viewclass" type="string" value="$once{null}"/>
+        
+        <!-- get a view the pool -->
+        <method name="getViewAt" args="index, args">            
+            if(this.list[index] == null)
+            {
+                this.list[index] = new global[viewclass](parentview, args);                 
+            }
+            else
+            {
+                this.list[index].setVisible(true);
+            }
+            return this.list[index];            
+        </method>   
+        
+        <!-- put are the view back to the pools -->         
+        <method name="reclaimAll">
+        <![CDATA[             
+             for(var i = 0; i < list.length; i++)
+             {                
+                list[i].setVisible(false);
+                //list[i].clear();
+             }
+        ]]>
+        </method>            
+    </class>  
+</library>   

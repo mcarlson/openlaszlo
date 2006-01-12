@@ -1,0 +1,23 @@
+<canvas>
+    <font name="Helmet">
+        <face src="helmetr.ttf" />
+        <face src="helmetb.ttf"  style="bold" />
+    </font>
+    <!-- TEXT FOR MY CLOCK  -->
+    <simplelayout/>
+    <!-- remove width="100" below, and it works -->
+    <text id="myclocktext" width="100" font="Helmet" fontstyle="bold" 
+            bgcolor="red"
+            fontsize="12" fgcolor="0x394660" >London
+    </text>
+    <text name="showlen" text="${myclocktext.getTextWidth()}"/>
+    <button onclick="myclocktext.measuredirty = true;
+myclocktext.ontext.sendEvent()"
+
+         >Force update</button>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

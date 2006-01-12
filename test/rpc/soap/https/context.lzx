@@ -1,0 +1,101 @@
+<canvas debug="true" height="800" width="1000">
+
+    <debug x="20" y="200" width="470" height="370" />
+
+    <dataset name="amazonDset1" />
+
+    <!-- Amazon SOAP service object -->
+    <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"
+          secure="true" secureport="8443">
+        <method event="onload">
+            Debug.write('amazon soap service stub loaded');
+            status.setVisible(false);
+        </method>
+
+        <method event="onerror" args="error">
+            debug.write('amazon onerror:', error);
+            status.setVisible(false);
+            erralert.setAttribute('text', 'error loading amazon: ' + error);
+            erralert.open();
+        </method>
+
+        <method event="ondata" args="value">
+            debug.write('amazon ondata:', value);
+            status.setVisible(false);
+        </method>
+
+    </soap>
+
+
+    <view y="10" layout="inset: 20; axis: x; spacing: 5" >
+
+        <edittext id="search" />
+
+        <!-- search button -->
+        <button text="search">
+
+            <method event="onclick">
+                status.setVisible(true);
+                if (! this.myKSR1.invoke() ) {
+                    status.setVisible(false);
+                }
+            </method>
+
+            <!-- this can also be declared inside of myKSR1 -->
+            <method event="ondata" args="data">
+                status.setVisible(false);
+                Debug.write('got data:', data);
+            </method>
+
+            <!-- this can also be declared inside of myKSR1 -->
+            <method event="onerror" args="errmsg">
+                status.setVisible(false);
+                Debug.write('got error:', errmsg);
+                erralert.setAttribute('text', 'error: ' + errmsg)
+                erralert.open();
+            </method>
+
+            <remotecall name="myKSR1" funcname="KeywordSearchRequest" 
+                        remotecontext="$once{canvas.amazon}" 
+                        dataobject="amazonDset1">
+                <param>
+                    <method name="getValue">
+                        var obj = new canvas.amazon.proto.KeywordRequest();
+                        obj.keyword = search.getText();
+                        obj.page = 1;
+                        obj.mode = 'book';
+                        obj.tag = 'webservices-20';
+                        obj.type = 'lite';
+                        obj.devtag = 'your-dev-tag';
+                        obj.format = 'xml';
+                        obj.version = '1.0';
+                        return obj;
+                    </method>
+                </param>
+
+            </remotecall>
+
+        </button>
+
+    </view>
+
+    <!-- databound view -->
+    <view bgcolor="red" layout="axis: y" y="50">
+        <view>
+            <datapath xpath="amazonDset1:/Details/Details" pooling="true" />
+            <text datapath="ProductName/text()" resize="true"/>
+        </view>
+    </view>
+
+    <view id="status">
+        <view width="${canvas.width}" height="${canvas.height}" bgcolor="black" opacity=".8" />
+        <text x="50" y="50" fgcolor="yellow">Please wait...</text>
+    </view>
+
+    <alert id="erralert" width="300" height="200" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

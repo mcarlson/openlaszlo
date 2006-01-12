@@ -1,0 +1,38 @@
+<canvas>
+    <class extends="dragstate" name="fadeDragger" pooling="true">
+        <method event="onapply">
+            parent.bringToFront();
+            parent.setAttribute('opacity',.5)
+        </method>
+
+        <method event="onremove">
+            parent.setAttribute('opacity',1)
+        </method>
+
+        <!-- Shadow below element -->
+        <view name="hShadow" x="10" y="${parent.body.height}"
+            width="${parent.body.width}" height="10"
+            opacity=".2" bgcolor="black"/>
+
+        <!-- Shadow to the right of element -->
+        <view name="vShadow" x="${parent.body.width}" y="10"
+            width="10" height="${parent.body.height - 10}"
+            opacity=".2" bgcolor="black"/>
+    </class>
+
+
+    <!-- Blue box -->
+    <view onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()">
+        <fadeDragger name="myFadeDragger"/>
+        <view name="body" width="100" height="100" bgcolor="blue"/>
+    </view>
+
+    <!-- Red box -->
+    <view x="100" y="100"
+        onmousedown="myFadeDragger.apply()"
+        onmouseup="myFadeDragger.remove()">
+        <fadeDragger name="myFadeDragger"/>
+        <view name="body" width="200" height="200" bgcolor="red"/>
+    </view>
+</canvas>

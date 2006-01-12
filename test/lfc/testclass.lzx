@@ -1,0 +1,41 @@
+<canvas debug="true" width="1024">
+ <view oninit="
+  Debug.setx(250);
+  Debug.sety(150);
+ "/>
+    <class name="mywindow" extends="window" x="100" title="my">
+        <attribute name="testprop" value="prop" type="string"/>
+        <attribute name="testprop2" value="prop2" type="string"/>
+        <method name="closeWindow" >
+            Debug.write( "closeWindow in my" );
+            super.closeWindow();
+        </method>
+        <method name="testCall" >
+            Debug.write( "test it and testprop is " + this.testprop );
+        </method>
+        <button onclick="this.parent.testCall()" width="47" >test</button>
+    </class>
+
+    <class name="mymywindow" extends="mywindow" title="mymy"
+           closeable="true" testprop2="interpretedWrong">
+        <attribute name="testprop" value="bar" type="string" />
+        <method name="closeWindow" >
+            Debug.write( "closeWindow in mymy" );
+            super.closeWindow();
+        </method>
+        <method name="testCall" >
+            Debug.write( "in the subclass testCall; testProp2 = " + this.testprop2);
+            super.testCall();
+        </method>
+        <button onclick="Debug.write( 'hi' )" y="40" width="47" >mymy</button>
+    </class>
+
+    <mymywindow name="m"/>
+    <mywindow x="${m.x+m.width}"/>
+    <mymywindow y="200" title="inst" testprop="instanceTestProp"
+                testprop2="instTP2"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

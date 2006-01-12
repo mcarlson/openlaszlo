@@ -1,0 +1,45 @@
+<canvas>
+    <debug x="170" y="200" height="300"/>
+    <class bgcolor="blue" width="50" height="50"
+            onfocus="dot.setVisible( true )" 
+            name="foc"
+            focusable="true"
+            clickable="true"
+            onblur="dot.setVisible( false )">
+        <attribute name="text" type="html" value=""/>
+        <text text="${parent.text}"/>
+        <view name="dot" visible="false" bgcolor="red" width="10" height="10"/>
+    </class>
+
+    <view>
+        <foc> A
+            <method event="onblur">
+                LzFocus.setFocus( friend );
+            </method>
+        </foc>
+        <simplelayout spacing="10" />
+        <button/>
+        <foc id="friend"  onfocus="LzFocus.setFocus( nextfriend )"/>
+        <foc id="nextfriend" onfocus="LzFocus.setFocus( lastfriend )"/>
+        <foc id="lastfriend" > B </foc>
+    </view>
+    <simplelayout axis="x" spacing="10"/>
+    <view layout="axis: y;spacing: 2">
+        <foc onblur="LzFocus.setFocus( parent.last )" text="C"/>
+        <foc text="F" onblur="LzFocus.clearFocus()"/>
+        <foc text="E" onblur="LzFocus.prev();LzFocus.prev()"/>
+        <foc name="last"  text="D" onblur="LzFocus.prev();LzFocus.prev()"/>
+    </view>
+
+
+    <method event="onfocus" reference="LzFocus" args="f">
+        Debug.write( 'focus:' , f );
+        if ( f != LzFocus.getFocus()) Debug.write( 'UHOH! Focus mismatch!' );
+    </method>
+
+          
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

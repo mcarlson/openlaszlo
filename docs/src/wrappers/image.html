@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="image">
+    <lztier>Text Markup</lztier>
+    <lzcategory>media</lzcategory>
+    <lzshortdesc>
+        A way to import images
+    </lzshortdesc>
+    <lztag>base/image.xml</lztag>
+</lzelement>
+
+<example title="image">
+&lt;canvas debug="true"&gt;
+    &lt;dataset name="imagedata"&gt;
+        &lt;image url="http://www.laszlosystems.com/images/horses/horse-1-sm.jpg"/&gt;
+    &lt;/dataset&gt;
+
+    &lt;wrappinglayout/&gt;
+    &lt;image src="http://www.laszlosystems.com/images/horses/horse-1-sm.jpg"/&gt;
+    &lt;image datapath="imagedata:/image/@url"/&gt;
+    &lt;image prefix="http://www.laszlosystems.com/images/horses/" src="horse-1-sm.jpg"/&gt;
+    &lt;image src="http://www.laszlosystems.com/images/horses/horse-1-sm.jpg"/&gt;
+    &lt;image&gt;
+        &lt;text&gt;Click me&lt;/text&gt;
+        &lt;method event="onclick"&gt;
+            this.setAttribute('src', 'http://www.laszlosystems.com/images/horses/horse-1-sm.jpg');
+        &lt;/method&gt;
+    &lt;/image&gt;
+    &lt;image forcereload="true"&gt;
+        &lt;text&gt;Click me to reload&lt;/text&gt;
+        &lt;method event="onclick"&gt;
+            this.setAttribute('src', 'http://www.laszlosystems.com/images/horses/horse-1-sm.jpg');
+        &lt;/method&gt;
+    &lt;/image&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+
+</html>

@@ -1,0 +1,20 @@
+<canvas width="220" height="220">
+  <drawview>
+    <method event="oninit">
+      var a = 0;
+      var y1 = 0;
+      var x1 = 0;
+      for (var i=0; i != 360 ; i+=10){
+        a = (i)* ((2*Math.PI)/360);
+        y1 = 100 * Math.sin(a);
+        x1 = 100 * Math.cos(a);
+        this.moveTo(110,110);
+        this.lineTo(110+x1, 110+y1);
+        this.lineTo(110,110+y1);
+      }
+      this.strokeStyle = 0;
+      this.lineWidth = 1;
+      this.stroke();
+    </method>
+  </drawview>
+</canvas>

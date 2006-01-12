@@ -1,0 +1,176 @@
+<library>
+    <class name="logininput" bgcolor="black" 
+           onfocus="LzFocus.setFocus( t )">
+        <method name="getText">
+            return this.t.getText();
+        </method>
+
+        <inputtext name="t" x="1" y="1" width="${ parent.width - 2 }" 
+                   height="${ parent.height - 2 }" bgcolor="white">
+            <method event="onkeyup" args="k">
+                if ( 13 == k ) {
+                    classroot.parent.parent.gotEnter( classroot );
+                }
+            </method>
+        </inputtext>
+    </class>
+
+     <view name="intro" width="${ canvas.width }" height="${ canvas.height }" 
+           bgcolor="#80807E"  initstage="early" >
+
+        <view id="loadWindow" align="center"
+              y="${ (canvas.height/3)-(this.height/2) }" 
+              width="300" height="100"
+              pixellock="true" >
+
+            <method event="oninit" reference="canvas">
+                // with canvas.oninit event all views are loaded so...
+                // start transition to login screen
+                // first hide progressbar and then grow the 
+                // window to necessary width/height.
+                
+                this.loadView.animate( "opacity" , 0 , 700 );
+                this.animate("width", this.loginView.width + 7,
+                                      700,false, {motion:"easein"} );
+
+                var anm = loadWindow.animate( "height",
+                                              this.loginView.height+44,
+                                              700,
+                                              false,
+                                              {motion:"easein"} );
+
+                var delg = new LzDelegate( loginView.fadeUp, "doStart",
+                                           anm, "onstop");
+            </method>
+            
+            <dash_shadow x="-3" y="0" width="${ parent.width + 10 }" 
+                         height="${ parent.height + 10 }" options="ignorelayout"/>
+
+            <view name="window" width="${ parent.width }" height="${ parent.height }">
+                <simplelayout axis="y"/>
+                <view name="top" width="${ parent.width }">
+                    <stableborderlayout axis="x"/>
+                    <view resource="loadTopLft"/>
+                    <view>
+                        <view height="30" width="${ parent.width }" 
+                              bgcolor="#303030"/>
+                        <view height="1" y="30" width="${ parent.width }" 
+                              bgcolor="black"/>
+                    </view>
+                    <view resource="loadTopRt"/>
+                </view> 
+                <view name="middle" 
+                      width="${ parent.width }" 
+                      height="${ parent.height - parent.top.height -
+                                 parent.bottom.height }">
+                    <stableborderlayout axis="x"/>
+                    <view resource="loadMidLft" stretches="height" 
+                          height="${ parent.height }"/>
+                    <view bgcolor="#C26E54" height="${ parent.height }"/>
+                    <view resource="loadMidRt" 
+                          stretches="height" height="${ parent.height }"/>
+                </view> 
+                <view name="bottom" width="${ parent.width }">
+                    <stableborderlayout axis="x"/>
+                    <view resource="loadBotLft" name="left"/>
+                    <view resource="loadBotMid" stretches="width" 
+                          height="${ parent.left.height }" bgcolor="#C26E54"/>
+                    <view resource="loadBotRt"/>
+                </view>
+            </view>
+
+            <view name="loadView" y="40" width="${ parent.width }" >
+                <view resource="loading" align="center" />
+                <view name="loadWell" resource="loadWell" 
+                      align="center" y="29"/>
+                <view name="loadBar" x="${ parent.loadWell.x + 1 }" 
+                      y="31" width="${ Math.floor( parent.loadWell.width *
+                                                   canvas.percentcreated) - 2 }">
+                    <stableborderlayout axis="x"/>
+                    <view resource="progbarLft"/>
+                    <view resource="progBarMid" stretches="width"/>
+                    <view resource="progBarRt" />
+                </view>
+            </view>
+
+            <view name="loginView" x="4" y="31" width="300"  opacity="0"
+                  visible="${this.opacity == 0 ? false : true }"
+                  font="veraroman" >
+                <animator attribute="opacity" name="fadeUp" to="1" 
+                          duration="500" start="false"/>
+                <view name="top" x="6" >
+                    <view y="8" name="textArea">
+                        <view>
+                            <text font="vera" fontsize="12" 
+                                opacity=".8" height="18"> 
+                                Sign in to chat 
+                            </text>
+                            <text fontsize="10" y="2">
+                                (information not saved)
+                            </text>
+                            <simplelayout axis="x" spacing="10"/>
+                        </view>
+                        <view name="namePart" font="veraroman" fontsize="12" >
+                            <text fontsize="12" >Name</text> 
+                            <logininput height="20" width="170" x="50" 
+                                        name="nameInput"/>
+                        </view>
+                        <view name="titlePart" font="veraroman" fontsize="12" >
+                            <text fontsize="12">Title</text> 
+                            <logininput height="20" x="50" width="170" 
+                                        name="titleInput"/>
+                        </view>
+                        <method name="gotEnter" args="fromView">
+                            if ( fromView == namePart.nameInput ){
+                                LzFocus.setFocus( titlePart.titleInput );
+                            } else {
+                                parent.signinButton.onclick.sendEvent();
+                            }
+                        </method>
+                        <simplelayout axis="y" spacing="10"/>
+                    </view>
+                    <basebutton y="66" x="230" resource="signin_btn" 
+                                name="signinButton"
+                                width="${Math.floor(44.0*height/16.0)}"
+                                stretches="both" height="20" >
+                        <method event="onclick">
+                            var usr = parent.textArea.namePart.nameInput.getText();
+                            canvas.connection.setAuthParam('usr=' + usr);
+                            canvas.connection.connect();
+                            canvas.showdashboard();
+                        </method>
+                    </basebutton>
+                </view>
+                  
+                <view opacity="0.5" x="6"  width="${ parent.top.width }" >
+                    <view  bgcolor="black" height="1" width="100%"/>
+                    <view  y="1" bgcolor="white" height="1" width="100%"/>
+                </view>
+                  
+                <view name="bottom" x="6">
+                    <text font="vera" fontsize="12" opacity=".8">
+                        or enter as a guest.
+                    </text>
+                    <basebutton resource="guest_btn"  x="230" 
+                                stretches="both" height="20" 
+                                width="${Math.floor(44.0*height/16.0)}">
+                        <method event="onclick">
+                            canvas.connection.setAuthParam('usr=guest');
+                            canvas.connection.connect();
+                            canvas.showdashboard();
+                        </method>
+                    </basebutton>
+                </view>
+                  
+                  <simplelayout axis="y" spacing="10"/>
+            </view>
+
+        </view>
+
+    </view>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

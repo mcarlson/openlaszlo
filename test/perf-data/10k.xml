@@ -1,0 +1,54 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<resultset>
+<result id="30" firstname="David" lastname="Dorosin" displayname="David Dorosin" email="ddorosin@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="31" firstname="David Pruskin" displayname="David Pruskin" email="thabo_lephutha@foo.com" home_default="0" home_phone="(207) 555-1219" work_address="507 Stacjpole Road" work_city="Durham" work_state="Ma" work_zip="04555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="32" firstname="David" lastname="Temkin" displayname="David Temkin" email="temkin@foo. 201" home_address="San francisco" home_default="1" home_phone="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="35" firstname="Don" lastname="Hayler" displayname="Don Hayler" home_default="0" home_phone="(415) 555-1212" work_address="2015 33rd ave" work_default="0" work_office="(415) 555-1212" work_webpage="http://www.laszlosystems.com/" />
+<result id="36" displayname="ebloch@foo.com" email="email;fdsfds" home_default="1" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="37" displayname="eedeebee@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="38" firstname="Eric" lastname="Bloch" displayname="Eric Bloch" email="bloch@foo.com" home_default="0" home_phone="(415) 555-1212" home_mobile="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="39" displayname="Eva Manolis" email="eva@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="40" firstname="Felicity" lastname="Buxton" displayname="Felicity Buxton" email="msbuxton12345@foo.com" home_default="0" home_phone="(510) 555-1212" work_default="0" work_office="(510) 555-1212" work_webpage="http://www.laszlosystems.com/" />
+<result id="41" displayname="gadfly@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="42" firstname="Gary" lastname="Helfand" displayname="Gary Helfand" email="gaz@foo.net" home_default="0" home_phone="(415) 555-1212" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="43" firstname="Boo" middlename="B" lastname="Ginsbreg" displayname="BooBooBoy" nickname="BooBooBoy" email="bom@flkjsd.vom;bb@b.bom" home_default="1" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="44" firstname="Helen" lastname="Langhammer" displayname="Helen Langhammer" email="helen.langhammer@foo.com" home_default="0" work_default="0" work_webpage="http://www.laszlosystems.com/" />
+<result id="x110" firstname="xSarah Kim" lastname="xBradley" displayname="xSarah Kim Bradley" email="xsarah@foo.com" home_default="x0" work_default="x0" work_office="x(415) 555-1212" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x111" firstname="xScott" lastname="xAlpert" displayname="xScott Alpert" email="xscooter_alpert@foo. 82nd Street" home_address="x#3d" home_city="xNew York" home_state="xNe" home_zip="x10024" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x112" firstname="xSheldon" lastname="xBloch" displayname="xBloch, Sheldon" email="xsbloch@foo.com" home_default="x0" home_phone="x508-879-454" home_mobile="x(508) 555-1212" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x113" firstname="xSimone" lastname="xSolondz" displayname="xSimone Solondz" email="xsimone@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x114" displayname="xsteele@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x115" firstname="xSteve" lastname="xGinsberg" displayname="xSteve Ginsberg" email="xsteve@foo.com" home_default="x0" home_phone="x(415) 555-1212" home_mobile="x(415) 555-1212" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x116" firstname="xSteve" lastname="xPeters" displayname="xSteve Peters" email="xscp@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x117" displayname="xsupport@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x118" firstname="xSusan" lastname="xBernstein" displayname="xSusan Bernstein" email="xaubeausoleil@foo.com" home_default="x0" home_phone="x(415) 555-1212" home_mobile="x(415) 555-1212" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x119" firstname="xTed and Cheryl" lastname="xHall" displayname="xTed and Cheryl Hall" email="xtachall@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x120" firstname="xTest" lastname="xRequest" displayname="xTest Request" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x121" firstname="xTim" lastname="xStern" displayname="xStern Tim" email="xtim.stern@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x122" firstname="xTommibeth" lastname="xJosephs" displayname="xTommibeth Josephs" email="xtommibeth@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x123" firstname="xVince and Jen" lastname="xBohner" displayname="xVince and Jen Bohner" email="xjenvince@foo.net" home_default="x0" home_phone="x(415) 555-1212" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x153" firstname="xArt" lastname="xMedlar" displayname="xArt Medlar" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x125" firstname="xWiltse" lastname="xCarpenter" displayname="xWiltse Carpenter" email="xwiltse@foo.com" home_default="x0" home_phone="x(415) 555-1212" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x126" displayname="xYossie Silverman" email="xyossie@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x162" firstname="xJames" lastname="xFinn" title="xMr." displayname="xJames Finn" email="xjames@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x147" firstname="xPaulina" lastname="xPriss" displayname="xPaulina Priss" email="xpp@ppnet.net" home_default="x1" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x155" firstname="xDilip" lastname="xKrishnagiri" title="xMr" displayname="xDilip Krishnagiri" email="xdilip@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x156" firstname="xVictor" lastname="xMilter" title="xMr" displayname="xVictor Milter" email="xvictor@foo.com" home_default="x1" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x157" firstname="xMichelle" lastname="xSelak" title="xMs" displayname="xMichelle Selak" email="xmichelle@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x158" firstname="xJohn" middlename="xFrancis" lastname="xUnson" title="xMr" displayname="xUnson John Francis" email="xjf@foo.com" home_default="x1" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x159" firstname="xAntony" middlename="xX" lastname="xJoseph" title="xMr" displayname="xJoseph Antony X" nickname="xqaguy!" email="xantony@foo.com" home_default="x1" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x160" firstname="xPete" middlename="xTheGuy" lastname="xAlcorn" title="xMr" displayname="xPete Alcorn TheGuy" email="xpete@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x163" firstname="xarthur" middlename="xd" lastname="xblaba" title="xasdasd" displayname="xarthur blaba d" email="xasdasd@asdawedqwe" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x164" firstname="xAnne" lastname="xGardner" title="xMs." displayname="xAnne Gardner" email="xanne@foo.com" home_default="x1" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x165" firstname="xJohn" lastname="xPeyton" displayname="xJohn Peyton" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x3" displayname="xAdam Wolff" email="xadam@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x4" firstname="xAlex" lastname="xB" displayname="xAlex B" email="xalexb@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x6" firstname="xAnn" lastname="xSussman" displayname="xAnn Sussman" email="xramdomann1@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x92" firstname="xOliver" lastname="xSteele" displayname="xOliver Steele" email="xosteele@foo.com" home_default="x0" home_phone="x617 555-1212" work_default="x0" work_office="x617-555-1212" work_webpage="xhttp://www.laszlosystems.com/" />
+<result id="x93" displayname="xOliver Steele" email="xsteele@foo.com" home_default="x0" work_default="x0" work_webpage="xhttp://www.laszlosystems.com/" />
+
+<result id="x124" firstname="xVoicemail" lastname="xHome" displayname="xVoicemail Home" home_default="x0" work_default="x0" work_office="x(415) 555-1212" work_webpage="xhttp://www.laszlosystems.com/" />
+</resultset>

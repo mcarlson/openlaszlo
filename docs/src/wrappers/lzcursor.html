@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzCursor"> 
+	<lztier>Service</lztier>
+	<lzcategory>Menu and Command</lzcategory> 
+    <lzshortdesc>Provides methods for changing the mouse cursor.</lzshortdesc> 
+	<lzapi>api-lzcursor.xml</lzapi>
+</lzelement> 
+
+<p>The <classname>LzCursor</classname> service provides methods for
+changing the mouse cursor. For example:</p>
+
+<example>
+&lt;canvas height="30"&gt;
+  &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
+
+  &lt;view bgcolor="yellow" cursor="waitcursor"&gt;
+    &lt;text&gt;Roll over to change the cursor&lt;/text&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>This example changes the cursor for 1/2 second when the button is
+clicked:</p>
+
+<example title="Changing the cursor with LzCursor">
+&lt;canvas height="30"&gt;
+  &lt;resource name="waitcursor" src="redmond/resources/lzwaitcursor_rsc.swf"/&gt;
+  &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
+    &lt;method name="setCursor"&gt;
+      LzCursor.setCursorGlobal('waitcursor');
+      var del= new LzDelegate(LzCursor, 'unlock');
+      LzTimer.addTimer(del, 500);
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

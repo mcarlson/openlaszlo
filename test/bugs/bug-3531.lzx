@@ -1,0 +1,26 @@
+<canvas debug="true">
+    <dataset name="ds">
+		<record/>
+		<record/>
+		<record/>
+		<record/>
+    </dataset>
+
+    <simplelayout/>
+    <button>Delete it
+        <method event="onclick">
+            Debug.write( "WAS: " + rootview.subviews)
+            rootview.datapath.deleteNode();
+            Debug.write( "NOW: " + rootview.subviews)
+        </method>
+    </button>
+
+    <view name="rootview" layout="axis:'x'" datapath="ds:/">
+        <text datapath="record/position()"/>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,11 @@
+<canvas width="640" height="480" debug="true">
+    <inputtext width="200" height="200" name="ttext">
+        No way to put a newline in compiled text.
+    </inputtext>
+    <button y="22" onclick='ttext.setText( "put cursor at\nend and type" );'> test </button>
+    <simplelayout/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

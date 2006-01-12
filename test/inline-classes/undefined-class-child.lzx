@@ -1,0 +1,12 @@
+<!-- This should result in a compilation warning, not a stack trace. -->
+<canvas>
+  <?lzc class="c1" inline-only="true"?>
+  <class name="c1">
+    <c2/>
+  </class>
+  <c1/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

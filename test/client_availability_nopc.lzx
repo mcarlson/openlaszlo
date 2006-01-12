@@ -1,0 +1,350 @@
+<!-- client availability test -->
+
+<canvas width="800" height="600">
+
+    <silverstyle name="silvercolors"/>
+    <greenstyle name="greencolors"/>
+    <bluestyle name="bluecolors"/>
+    <goldstyle name="goldcolors"/>
+    <whitestyle name="whitecolors"/>
+    <purplestyle name="purplecolors"/>
+
+    <dataset name="chatDset">
+    	<chatdata/>
+    </dataset>
+
+    <debug x="450" y="200" height="200"/>
+	<view id="s1" x="20" y="20">
+		<view layout="spacing:20">
+            <text>Choose a style to change colors...</text>
+
+            <view name="stylechooser" layout="axis:x; spacing:4">
+                <text>Style:</text>
+                <combobox width="120" editable="false">
+                    <textlistitem text="silver" >
+                        <method event="onselected">
+                            canvas.silvercolors.setAttribute("isdefault", true);
+                        </method>
+                    </textlistitem>
+                    <textlistitem text="green" >
+                        <method event="onselected">
+                            canvas.greencolors.setAttribute("isdefault", true);
+                        </method>
+                    </textlistitem>
+                    <textlistitem text="blue" selected="true">
+                        <method event="onselected">
+                            canvas.bluecolors.setAttribute("isdefault", true);
+                        </method>
+                    </textlistitem>
+                    <textlistitem text="gold" >
+                        <method event="onselected">
+                            canvas.goldcolors.setAttribute("isdefault", true);
+                        </method>
+                    </textlistitem>
+                    <textlistitem text="white">
+                        <method event="onselected">
+                            canvas.whitecolors.setAttribute("isdefault", true);
+                        </method>
+                    </textlistitem>
+                    <textlistitem text="purple" >
+                        <method event="onselected">
+                            canvas.purplecolors.setAttribute("isdefault", true);
+                        </method>
+                    </textlistitem>
+                </combobox>
+
+            </view>
+            <tabslider width="250" height="200">
+                <tabelement text="holiday cheer" selected="true">
+                    <radiogroup>
+                        <radiobutton text="peace on earth"/>
+                        <radiobutton text="joy to the world"/>
+                        <radiobutton text="happy new year"/>
+                    </radiogroup>
+                </tabelement >
+                <tabelement text="housewares">
+                    <simplelayout axis="y" spacing="10"/>
+                    <checkbox text="stainless steel" />
+                    <checkbox text="glassware" />
+                </tabelement>
+                <tabelement text="isotope">
+                    <text multiline="true" width="${immediateparent.width}">
+                        Atoms that have the same number of protons but a different number of neutrons. They are atoms of the same element that have different masses. The isotope number is the number of protons plus the number of neutrons.
+                    </text>
+                </tabelement>
+                <tabelement text="etymology">
+                    <text multiline="true" width="${immediateparent.width}">
+                        [iso- + Greek topos, place (so called because the isotopes of a chemical element occupy the same position in the periodic table of elements).]
+                    </text>
+                </tabelement>
+                <tabelement text="whale bones"/>
+            </tabslider>
+
+            <tabs>
+                <tabpane>Insecticides
+                    <simplelayout spacing="10"/>
+                    <button height="22">Remove</button>
+                    <radiogroup>
+                        <radiobutton>Yes, I want to know more</radiobutton>
+                        <radiobutton>No, I prefer to remain blissfully unaware</radiobutton>
+                        <radiobutton>Please tell my neighbor, who may tell me</radiobutton>
+                    </radiogroup>
+                </tabpane>
+                <tabpane selected="true">Parcheesi
+                    <text >On my honor I will do my best </text>
+                    <button height="22">Testify</button>
+                    <simplelayout spacing="10"/>
+                </tabpane>
+                <tabpane text="Subliminal">
+                    <button height="22" >Submit</button>
+                </tabpane>
+            </tabs>
+	    </view>
+
+        <window text="test window" width="250" height="250"
+            x="410" y="180"
+            resizable="true"
+            id="fw" title="Frosty the Snowman"
+            >
+            <menubar name="mbar" placement="menubar">
+                 <menu name="file" id="mfile" width="80">File
+                     <menuitem text="item 1" />
+                     <menuitem text="item 2" />
+                     <menuseparator/>
+                     <menuitem  id="MWS" text="item 3" >
+                         <menu name="subedit" >subedit
+                             <menuitem text="subitem 1" />
+                             <menuitem text="subitem 2" />
+                         </menu>
+                     </menuitem>
+                 </menu>
+
+                 <menu name="Options" >Document
+                     <menuitem  text="option 1" />
+                     <menuitem  text="option 2" />
+                     <menuitem  text="option 3" />
+                     <menuitem  text="option 4" />
+                     <menuitem  text="option 5" />
+                     <menuitem  text="option 6" />
+                 </menu>
+            </menubar>
+<view name="frosty">
+    <method event="oninit">
+        //debug.write("Frosty's parent: " + this.parent);
+    </method>  
+<text multiline="true" 
+      x="6"
+      height="450" width="420">
+<pre>
+Frosty the Snowman, was a jolly happy soul,
+With a corncob pipe and a button nose, and two eyes made of coal.
+Frosty the Snowman, is a fairytale, they say.
+He was made of snow, but the children know he came to life one day.
+There must have been some magic in that old silk hat they found,
+For when they placed it on his head, he began to dance around!
+Ohhhhhhh, Frosty, the Snowman, was a live as he could be;
+and the children say he could laugh and play,
+just the same as you and me.
+
+Thumpety thump, thump, thumpety thump, thump,
+look at Frosty go.
+Thumpety thump, thump, thumpety thump, thump,
+over the hills of snow.
+
+Frosty the Snowman, knew the sun was hot that day,
+so he said, "Let's run, and we'll have some fun now, before I melt away."
+Down to the village, with a brooomstick in his hand,
+Running here and there, all around the square,
+sayin', "Catch me if you can."
+He led them down the streets of town, right to the traffic cop;
+and only paused a moment, when he heard him holler, "Stop!"
+For Frosty, the Snowman, had to hurry on his way,
+But he waved goodbye, sayin' "Don't cry, I'll be back again some day." 
+</pre>
+</text>
+<button onclick="parent.setAttribute('y',0);
+parent.parent.setAttribute('width','250');
+                 parent.parent.setAttribute('height','250');
+                 parent.parent.setAttribute('x','410');
+                 parent.parent.setAttribute('y','180');">Reset Frosty Window</button>
+<simplelayout/>
+</view>
+            <scrollbar/>
+        </window>
+
+		<view layout="spacing:14">
+			<button height="22">Submit</button>
+			<button height="22">Cancel</button>
+			<button height="22">OK</button>
+			<button height="22">Revert</button>
+			<button height="22" enabled="false">disabled</button>
+
+			<combobox width="100">
+				<textlistitem text="pistachio" selected="true"/>
+				<textlistitem text="chocolate chip"/>
+				<textlistitem text="coffee"/>
+			</combobox>
+
+			<radiogroup>
+				<radiobutton text="tension"/>
+				<radiobutton text="distance"/>
+				<radiobutton text="delerium"/>
+				<radiobutton text="froth"/>
+				<radiobutton text="persuasion"/>
+			</radiogroup>
+	    </view>
+
+		<view layout="spacing:20">
+            <view layout="spacing:10">
+                <checkbox text="I want to take a weekend flight"/>
+                <checkbox text="Also search airports within 70 miles"/>
+                <checkbox text="I prefer non-stop flights"/>
+            </view>
+            <view layout="spacing:5">
+                <edittext width="200" text="text entry here"/>
+                <edittext width="200" text="disabled" enabled="false"/>
+            </view>
+		</view>
+
+		<simplelayout axis="x" spacing="20"/>
+	</view>
+
+<window title="Chat Mockup Window" resizable="true" name="chatWindow" width="450" height="200" 
+	x="${canvas.width - this.width}" y="${canvas.height - this.height}">
+
+    <view id="viewChat" width="${parent.width}" height="${parent.height}" x="0" y="0" bgcolor="${parent.bgcolor}"> 
+        
+        <datapointer name="chatPtr" xpath="chatDset:/chatdata" rerunxpath="true"/>
+
+        <view width="352" height="107" x="4" y="4" bgcolor="#000000" />
+        <view name="chatView" width="350" height="105" x="5" y="5" bgcolor="#ffffff" clip="true">
+            <view name="svpar">
+                <method name="adjustScroll">
+                <![CDATA[
+                    if (this.parent.height < 0) return;
+                        var cvDif=this.parent.height-this.height;
+                        if ((cvDif) < 0){
+                            this.setY(cvDif);
+                            this.parent.scrollbar.updateThumbPos();
+                        }
+                    ]]>
+                </method>
+                <view name="sview" oninit="this.parent.adjustScroll();">
+                    <datapath xpath="chatDset:/chatdata/message" />
+
+                    <text width="${parent.parent.parent.width}" multiline="true" 
+                          selectable="true" datapath="text()" />
+                </view>
+                <simplelayout axis="y" spacing="2"/>
+            </view>
+            <scrollbar name="scrollbar" axis="y"/>
+        </view>
+
+        <view name="sendView" x="0" y="115">
+            <text>msg:</text>
+            <edittext name="msg" width="200" />
+            <button id="bSend" name="send" width="50" height="24" onclick="this.handler();">
+                Send
+                <method name="handler">
+                    var message = this.parent.msg.getText();
+                    if (message!=null &amp;&amp; message!="") {
+						viewChat.chatPtr.addNode("message", message);
+                        this.parent.msg.setText("");
+                    }
+                </method>
+            </button>
+            
+            <button name="clear">Clear messages
+                <method event="onclick">
+                	var rt = viewChat.chatPtr.p
+                	var c
+                	while((c = rt.getFirstChild()) != null)
+						rt.removeChild(c)
+                </method>
+            </button>
+            
+            <simplelayout axis="x" spacing="5"/>
+        </view>
+
+
+    </view> <!-- viewChat -->
+
+    <method event="onkeyup" reference="LzKeys" args="k">
+        if ( k == 13 ) {
+            bSend.handler();
+        }
+    </method>
+</window>
+
+
+
+<window height="150" title="Another Clock" x="0" y="${canvas.height - this.height}">
+  <edittext width="112" text="${this.parent.time.textTime}"/>
+  <view name="time" oninit="this.setupdel();" visible="true" width="100" height="100" >
+    <attribute name="del"/>
+    <attribute name="textTime" value="''" when="once"/>
+    <method name="setupdel">
+      del = new LzDelegate ( this, "setCurrentTime");
+      setCurrentTime();
+    </method>
+    <method name="setCurrentTime">
+      var currentTimeObj = new Date();
+      
+      var dayNum=currentTimeObj.getDay();
+      var dayArray = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+      // Hour
+      var hourNum=currentTimeObj.getHours();
+      if (hourNum > 12){
+        hourNum-=12;
+        var hourLabel="PM";
+      }else{
+        var hourLabel="AM";
+      }
+      
+      // Minutes
+      var minNum=currentTimeObj.getMinutes();
+      var secNum=currentTimeObj.getSeconds();
+
+      this.setAttribute("textTime",  dayArray[dayNum] + ':' + hourLabel + ':' + hourNum + ':' + minNum + ':' + secNum);
+      
+      // Assign to our dateTime text
+      this.parent.currentTime.setText( hourLabel);
+      this.parent.currentDay.setText( dayArray[dayNum]);
+      
+      // Move the hands of the clock...
+      this.parent.hh.setattribute('rotation',hourNum*30-180+minNum/2);
+      this.parent.hhs.setattribute('rotation',hourNum*30-180+minNum/2);
+      
+      this.parent.mh.setattribute('rotation',minNum*6-180+secNum/10);
+      this.parent.mhs.setattribute('rotation',minNum*6-180+secNum/10);
+      
+      //this.parent.sh.animate('rotation',secNum*6-180,800);
+      //this.parent.shs.animate('rotation',secNum*6-180,800);
+
+      this.parent.sh.animate('rotation',6,800,true);
+      this.parent.shs.animate('rotation',6,800,true);
+      
+      // Checks the time every second
+      LzTimer.addTimer( del, 1000 ); 
+    </method>
+    
+  </view>
+
+
+  <text x="72" y="43" name="currentTime" fontsize="10"/>
+  <text x="23" y="43" name="currentDay" fontsize="10"/>
+
+  <view name="hhs" x="56" y="51" ><view x="-1.5" rotation="0" opacity=".2" width="3" height="24" bgcolor="black"/></view>
+  <view name="mhs" x="56" y="51" ><view x="-1.5" rotation="0" opacity=".2" width="3" height="34" bgcolor="black"/></view>
+  <view name="shs" x="56" y="51" ><view x="-.5" rotation="0" opacity=".2" width="1" height="35" bgcolor="black"/></view>
+  
+  <view name="hh" x="55" y="50" ><view x="-1.5" rotation="0" opacity="1" width="3" height="24" bgcolor="black" /></view>
+  <view name="mh" x="55" y="50" ><view x="-1.5" rotation="0" opacity="1" width="3" height="34" bgcolor="black" /></view>
+  <view name="sh" x="55" y="50" ><view x="-.5" rotation="0" opacity="1"  width="1" height="35" bgcolor="black"/></view>
+
+</window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

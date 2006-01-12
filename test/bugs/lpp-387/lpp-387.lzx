@@ -1,0 +1,12 @@
+<canvas>
+<import href="testlib.lzx" name="testlib" stage="defer"/>
+
+<button text="Load library" onclick="testlib.load()" 
+  x="20" y="20">
+</button>
+
+<method event="oninit" reference="canvas">
+   Debug.write( "canvas oninit()" );
+</method>
+
+</canvas>

@@ -1,0 +1,100 @@
+/* Stylesheet for LZX Documentation */
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+@import "styles.css";
+
+div.book, div.chapter, div.part, div.preface, div.appendix, div.index, div.glossary {
+    padding-left : 60;
+    padding-top : 20;
+    padding-right : 100;  
+}
+
+.toc .section {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 12px;
+    font-style: normal;
+    line-height : 18px;
+    font-weight : normal;
+    color: #333399;
+    margin-left : 10;
+}
+
+h1 { margin-left : -45; }
+h2 { margin-left: -30; }
+h3 { margin-left : -15; }
+
+td { 
+    vertical-align: top;
+}
+
+.remark {
+    background-color: yellow;
+}
+
+/* Inline markup */
+
+/* Emphasis inside a program listing is bold blue, instead of italic */
+pre em {
+    color: blue;
+    font-weight: bold;
+    font-style: normal;
+}
+
+/* This is used in the ECMAScript chapter to mark unsupported APIs */
+.strikeout {
+    font-variant: italic;
+    color: red;
+}
+
+
+/* Live examples */
+
+.example, .informalexample {
+    margin-top: 5pt;
+    margin-bottom: 5pt;
+    border-left: 1px solid #7b839a;
+    border-right: 1px solid #7b839a;
+    border-top: 1px solid #b0b8cf;
+    border-bottom: 1px solid #8E96AD;
+    background-color: #E0E0E0;
+}
+
+.example .title, .informalexample .title {
+    margin-top: 0pt;
+    margin-bottom: 0pt;
+    padding-top: 0pt;
+    padding-bottom: 0pt;
+    padding-left: 10pt;
+    border-bottom: 1pt solid black;
+    
+    background-color: #7b839a;
+    color : #ffffff;
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 10px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.embedded-canvas {
+    background-color: white;
+    width: 100%;
+}
+
+.example table, .informalexample table {
+    width: 100%;
+    background-color: #E0E0E0;
+}
+
+.example .programlisting, .informalexample .programlisting {
+    margin: 0 0 0 0;
+    padding-top: 10pt;
+    padding-bottom: 10pt;
+    padding-left: 7pt;
+}
+
+.edit-button {
+    padding-left: 7pt;
+}

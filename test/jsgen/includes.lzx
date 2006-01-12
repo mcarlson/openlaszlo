@@ -1,0 +1,10 @@
+<canvas>
+  <include href="includes/a.lzx"/>
+  <include href="file:includes/a.lzx"/>
+  <script src="includes/script.js"/>
+  <script src="includes/ws.js"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,35 @@
+<library>
+<class name="divisionlayout" extends="layout" >
+    <attribute name="axis" value="y" setter="this.setAxis( axis )" 
+               type="string" />
+               
+    <method name="setAxis" args="a" >
+        this.axis = a;
+        this.sizeAxis = a == "x" ? "width" : "height"
+    </method>
+
+
+    <method name="update">
+        <![CDATA[        
+        if ( this.locked ) return;        
+        var l = this.subviews.length;
+        var spacing = 0;
+        if( l > 1)
+        {
+            spacing = (this.immediateparent.getAttribute( this.sizeAxis)- this.subviews[l - 1].getAttribute( this.sizeAxis))  / (l - 1);
+        }
+        var c = 0;            
+        for(var i=0; i < l; i++) {
+            var s = this.subviews[i]; 
+            //debug.write(c);
+            s.setAttribute( this.axis , Math.Round(c) );
+            c += spacing;
+        }        
+        ]]>
+    </method>
+</class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

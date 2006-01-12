@@ -1,0 +1,67 @@
+<canvas height="550" bgcolor="0xeaeaea">
+    <font name="smallfont" src="verity/verity9.ttf"/>
+    <class name="box" extends="basecomponent"
+        focusable="false" height="10" width="10" />
+
+    <view x="40" y="40">
+        <view>
+            <simplelayout axis="y" spacing="2"/>
+            <button width="100">Cancel</button>
+             <text>button with width specified</text>
+        </view>
+
+        <view>
+            <simplelayout axis="y" spacing="2"/>
+            <button height="30">Click Me</button>
+            <text y="10">button with height specified</text>
+        </view>
+
+        <view>
+            <simplelayout axis="y" spacing="2"/>
+            <button isdefault="true">Submit</button>
+            <text>default button sized to text</text>
+        </view>
+
+        <view layout="axis:y; spacing:2">
+            <view layout="axis:x; spacing:40">
+                <button width="32" height="32">
+                    <view resource="icons/plane_icon.swf"  x="5" y="5"/>
+                </button>
+                <button width="40" height="40" text="travel" text_y="24" font="smallfont">
+                    <view resource="icons/plane_icon.swf"  x="9" y="4"/>
+                </button>
+                <button text_x="20" width="70" text="Search">
+                    <view x="6" bgcolor="yellow" height="10" width="10" valign="middle"/>
+                </button>
+            </view>
+            <text y="8">icon buttons, with and without text</text>
+        </view>
+
+        <view>
+            <button id="left1" style="{basecolor:0xbbffbb}" text="foo" width="100"/>
+            <view >
+                <simplelayout axis="x" spacing="2"/>
+                <text>button tinted this hue </text>
+                <view height="12" width="12" y="2" bgcolor="black">
+                    <box bgcolor="0xbbffbb" x="1" y="1"/>
+                </view>
+            </view>
+            <button id="left2" style="{basecolor:0xbbbbff}" text="foo" width="100"/>
+            <view>
+                <simplelayout axis="x" spacing="2"/>
+                <text>button tinted this hue </text>
+                <view height="12" width="12" y="2" bgcolor="black">
+                    <box bgcolor="0xbbbbff" x="1" y="1"/>
+                </view>
+            </view>
+            <simplelayout axis="y" spacing="10"/>
+        </view>
+        <simplelayout axis="y" spacing="20"/>
+     </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,274 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="comp-intro">
+<head>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>Introduction to Components</title>
+</head>
+
+<body>
+
+<!-- Put Chapter title in h1 -->
+<h1>Introduction to Components</h1>
+
+<p>Laszlo components are high-level objects that implement common user-interface functions. 
+They range from relatively simple objects such as <tagname link="true">button</tagname> to complex objects
+such as <tagname link="true">form</tagname> and <tagname link="true">grid</tagname>.
+</p>
+<p>
+Components written by Laszlo Systems, Inc., and supplied with LPS are called <glossterm>LZ components</glossterm>. 
+</p>
+<h2>Overview</h2>
+<p>
+This tutorial introduction is intended to make you aquainted with the variety of Laszlo components and show how to use their
+basic features. Later chapters explain how to use advanced features of components and how to create your own components.
+
+</p>
+<p>
+The simplest way to build a Laszlo application is to use LZ components "out of the box" with their default
+behaviors. This chapter includes a few such examples. It also includes a few example that use concepts that have not yet been introduced.
+Don't worry if you don't understand exactly how they work.  The idea here is to get aquainted with the general "feel" of a Laszlo
+application that is built mostly from components. The subsequent tutorials present the concepts you'll need in order to create your
+own applications.
+</p>
+<h3>A Sampler</h3>
+<p>
+Before reading this chapter about how to use components to build a Laszlo application, you should take a few
+moments to get familiar with the range of components that ship with LPS. 
+</p>
+<p>
+The example below shows a miscellaneous collection of components. It's an abreviated version of the sampler
+in the <a href="../../laszlo-explorer">Laszlo Explorer,</a> which contains a visual tour of all the components. The code that implements
+these components may look a little intimidating if you have not worked with this kind of language before, but don't be put off.
+In fact you may not even want to look at the code yet. Your goal here is to start thinking about the kinds of things you can do in 
+a Laszlo application, and components provide your quickest route to productivity.</p>
+<p>
+The <a href="../reference">LZX Reference</a> documents all the tags, attributes and methods associated with each component.
+</p>
+<example title="Components miscellany">
+&lt;canvas width="800" height="500"&gt;
+    &lt;silverstyle name="silvercolors"/&gt;
+    &lt;greenstyle name="greencolors"/&gt;
+    &lt;bluestyle name="bluecolors"/&gt;
+    &lt;view id="s1" x="20" y="20"&gt;
+        &lt;view layout="spacing:20"&gt;
+            &lt;text&gt;Choose a style to change colors...&lt;/text&gt;
+
+            &lt;view name="stylechooser" layout="axis:x; spacing:4"&gt;
+                &lt;text&gt;Style:&lt;/text&gt;
+                &lt;combobox width="120" editable="false"&gt;
+                    &lt;method event="onselect"&gt;
+                        var colorchoice = this.getText();
+                        canvas[colorchoice+'colors'].setAttribute("isdefault", true);
+                    &lt;/method&gt;
+
+                    &lt;textlistitem text="silver"/&gt;
+                    &lt;textlistitem text="green"/&gt;
+                    &lt;textlistitem text="blue" selected="true"/&gt;
+                &lt;/combobox&gt;
+
+            &lt;/view&gt;
+            &lt;tabslider width="250" height="200"&gt;
+                &lt;tabelement text="holiday cheer" selected="true"&gt;
+                    &lt;radiogroup&gt;
+                        &lt;radiobutton text="peace on earth"/&gt;
+                        &lt;radiobutton text="joy to the world"/&gt;
+                        &lt;radiobutton text="happy new year"/&gt;
+                    &lt;/radiogroup&gt;
+                &lt;/tabelement&gt;
+                &lt;tabelement text="housewares"&gt;
+                    &lt;simplelayout axis="y" spacing="10"/&gt;
+                    &lt;checkbox text="stainless steel"/&gt;
+                    &lt;checkbox text="glassware"/&gt;
+                &lt;/tabelement&gt;
+                &lt;tabelement text="isotope"&gt;
+                    &lt;text multiline="true" width="${immediateparent.width}"&gt;
+                        Atoms that have the same number of protons but a different number of neutrons. They are atoms of the same element that have different masses. The isotope number is the number of protons plus the number of neutrons.
+                    &lt;/text&gt;
+                &lt;/tabelement&gt;
+            &lt;/tabslider&gt;
+
+            &lt;tabs&gt;
+                &lt;tabpane&gt;Insecticides
+                    &lt;simplelayout spacing="10" inset="10"/&gt;
+                    &lt;radiogroup&gt;
+                        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
+                        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
+                        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
+                    &lt;/radiogroup&gt;
+                &lt;/tabpane&gt;
+                &lt;tabpane text="Subliminal"&gt;
+                    &lt;button height="22"&gt;Submit&lt;/button&gt;
+                &lt;/tabpane&gt;
+            &lt;/tabs&gt;
+        &lt;/view&gt;
+
+        &lt;window text="test window" width="250" height="250" x="410" y="180" resizable="true" id="fw" title="A Simple Window"&gt;
+            &lt;menubar name="mbar" placement="menubar"&gt;
+                 &lt;menu name="file" id="mfile" width="80"&gt;File
+                     &lt;menuitem text="item 1"/&gt;
+                     &lt;menuseparator/&gt;
+                     &lt;menuitem id="MWS" text="item 3"&gt;
+                         &lt;menu name="subedit"&gt;subedit
+                             &lt;menuitem text="subitem 1"/&gt;
+                             &lt;menuitem text="subitem 2"/&gt;
+                         &lt;/menu&gt;
+                     &lt;/menuitem&gt;
+                 &lt;/menu&gt;
+                 &lt;menu name="Options"&gt;Document
+                     &lt;menuitem text="option 1"/&gt;
+                     &lt;menuitem text="option 2"/&gt;
+                 &lt;/menu&gt;
+            &lt;/menubar&gt;
+            &lt;scrollbar/&gt;
+        &lt;/window&gt;
+
+        &lt;view layout="spacing:14"&gt;
+            &lt;button height="22"&gt;Submit&lt;/button&gt;
+            &lt;button height="22" enabled="false"&gt;disabled&lt;/button&gt;
+
+            &lt;combobox width="100"&gt;
+                &lt;textlistitem text="pistachio" selected="true"/&gt;
+                &lt;textlistitem text="chocolate chip"/&gt;
+            &lt;/combobox&gt;
+
+            &lt;radiogroup&gt;
+                &lt;radiobutton text="tension"/&gt;
+                &lt;radiobutton text="distance"/&gt;
+            &lt;/radiogroup&gt;
+        &lt;/view&gt;
+
+        &lt;view layout="spacing:20"&gt;
+            &lt;view layout="spacing:10"&gt;
+                &lt;checkbox text="I want to take a weekend flight"/&gt;
+                &lt;checkbox text="Also search airports within 70 miles"/&gt;
+            &lt;/view&gt;
+            &lt;view layout="spacing:5"&gt;
+                &lt;edittext width="200" text="text entry here"/&gt;
+                &lt;edittext width="200" text="disabled" enabled="false"/&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+        &lt;simplelayout axis="x" spacing="20"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<p></p>
+<h3>Form components and "general" components</h3>
+<p>
+You will
+notice that the Laszlo Explorer groups components into "form components" and "general components."  This is merely a 
+heuristic grouping of those components that usually appear within a <tagname link="true">form</tagname> tag and those
+that don't. There is no essential difference; for example, the <tagname>button</tagname> tag can be contained in a 
+<tagname>view</tagname> or <tagname>window</tagname>&#8212; it does not have to be contained in a <tagname>form</tagname>.
+</p>
+<h2>Building with Components</h2>
+<p>
+In this section we'll explore the various ways to use components into Laszlo applications:
+</p>
+<ul>
+	<li>using tags</li>
+	<li>using script APIs</li>
+	<li>using databinding</li>
+</ul>
+<p>
+As mentioned above, the concepts of scripting and databinding are presented in later chapters. Don't worry if you're not
+completely comfortable with these topics.
+</p>
+<h3>Using Tags</h3>
+<p>
+The simplest way to us the components is in an application that has tags only&#8212;no script.  The following trivial example shows
+what this looks like.
+</p> 
+<example title="Componentes example-tags only">
+&lt;canvas height="100"&gt;
+    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
+    &lt;list shownitems="4"&gt;
+        &lt;textlistitem&gt;judy&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;ann&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;betsy&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;sarah&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;carol&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;danah&lt;/textlistitem&gt;
+    &lt;/list&gt;
+
+    &lt;radiogroup&gt;
+        &lt;radiobutton text="apple"/&gt;
+        &lt;radiobutton text="cherry"/&gt;
+        &lt;radiobutton text="key lime"/&gt;
+    &lt;/radiogroup&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+As a practical matter, of course, you will usually need to use need to use some script, whether in a method, or, less
+frequently, to create a component within a <tagname link="true">script</tagname> element.
+</p>
+<h3>Creating components from script API</h3>
+<p>
+In addition to declaring components in tags, you can create and manipulate components from script. 
+</p>
+<p>
+The following example shows how you can create buttons using tags and script.
+</p>
+<example title="Creating components from script">
+&lt;canvas height="150"&gt;
+  &lt;simplelayout/&gt;
+  &lt;!--Here is a button created with a tag --&gt;
+  &lt;button name="framitz" width="50"&gt;
+   hello
+  &lt;/button&gt;
+  &lt;script&gt;
+  //And here is a button created with using script 
+   var b = new button();
+   b.setattribute("width", 50);
+    b.setattribute("height", 50);
+   &lt;/script&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<p>
+ In the example below,
+the <code>onclick</code> method procedurally adds an item to the <tagname>list </tagname> component.</p>
+<example title="Component APIs">
+&lt;canvas height="150"&gt;
+    &lt;simplelayout spacing="10"/&gt;
+    &lt;list id="mylist" height="82"&gt;     
+        &lt;textlistitem text="something"/&gt;
+    &lt;/list&gt;
+
+    &lt;view layout="axis:x;spacing:4" &gt;
+        &lt;edittext id="item" text="new item"/&gt;
+        &lt;button text="Add" isdefault="true"&gt;
+         <em>   &lt;method event="onclick"&gt;
+               mylist.addItem(item.getText());
+            &lt;/method&gt;</em>
+        &lt;/button&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<h3>Data-Driven Components</h3>
+<p>
+A third way to create components is through databinding.  In the example below, a new component <code>textlistitem</code> is created
+for each matching node in the "mydata" dataset.
+</p>
+<example title="Data-Driven Components" >
+&lt;canvas height="200"&gt;
+    &lt;dataset name="mydata" src="../contacts.xml" request="true"/&gt;
+    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
+    &lt;list id="a"&gt;
+        &lt;textlistitem datapath="mydata:/contacts/person"
+                      text="$path{'@firstname'}"/&gt;
+    &lt;/list&gt;
+
+    &lt;list id="b" shownitems="4"&gt;
+        &lt;textlistitem datapath="mydata:/contacts/person"
+                      text="$path{'@firstname'}"/&gt;
+    &lt;/list&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

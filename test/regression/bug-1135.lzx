@@ -1,0 +1,13 @@
+<canvas>
+  <view height="${this.immediateparent.getMouse( 'x' )}" 
+        width="1" 
+        x="100" 
+        y="100" 
+        bgcolor="red" 
+        rotation="45"/>
+<text>You should see a red line that grows and shrinks as you move the mouse along X</text>
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

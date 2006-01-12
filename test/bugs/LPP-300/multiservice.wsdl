@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wsdl:definitions targetNamespace="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws" xmlns:apachesoap="http://xml.apache.org/xml-soap" xmlns:impl="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws" xmlns:intf="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns1="http://DefaultNamespace" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdlsoap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+<!--WSDL created by Apache Axis version: 1.2RC1
+Built on Oct 20, 2004 (02:48:15 PDT)-->
+ <wsdl:types>
+  <schema targetNamespace="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws" xmlns="http://www.w3.org/2001/XMLSchema">
+   <import namespace="http://schemas.xmlsoap.org/soap/encoding/"/>
+   <complexType name="ArrayOf_soapenc_string">
+    <complexContent>
+     <restriction base="soapenc:Array">
+
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="soapenc:string[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_xsd_anyType">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="xsd:anyType[]"/>
+     </restriction>
+
+    </complexContent>
+   </complexType>
+   <complexType name="ArrayOf_tns1_MyClass">
+    <complexContent>
+     <restriction base="soapenc:Array">
+      <attribute ref="soapenc:arrayType" wsdl:arrayType="tns1:MyClass[]"/>
+     </restriction>
+    </complexContent>
+   </complexType>
+
+   <complexType name="MyClass">
+    <sequence/>
+   </complexType>
+
+  </schema>
+
+ </wsdl:types>
+
+   <wsdl:message name="objectsResponse">
+
+      <wsdl:part name="objectsReturn" type="impl:ArrayOf_xsd_anyType"/>
+   </wsdl:message>
+
+   <wsdl:message name="int_doubleResponse">
+      <wsdl:part name="int_doubleReturn" type="xsd:double"/>
+   </wsdl:message>
+
+   <wsdl:message name="versionRequest">
+   </wsdl:message>
+
+   <wsdl:message name="float_floatRequest">
+      <wsdl:part name="n" type="xsd:float"/>
+   </wsdl:message>
+
+   <wsdl:message name="reverseRequest">
+      <wsdl:part name="str" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:message name="reverseResponse">
+      <wsdl:part name="reverseReturn" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:message name="float_floatResponse">
+      <wsdl:part name="float_floatReturn" type="xsd:float"/>
+   </wsdl:message>
+
+   <wsdl:message name="int_intRequest">
+      <wsdl:part name="n" type="xsd:int"/>
+   </wsdl:message>
+
+   <wsdl:message name="myclassarrResponse">
+      <wsdl:part name="myclassarrReturn" type="impl:ArrayOf_tns1_MyClass"/>
+   </wsdl:message>
+
+   <wsdl:message name="stringsResponse">
+      <wsdl:part name="stringsReturn" type="impl:ArrayOf_soapenc_string"/>
+   </wsdl:message>
+
+   <wsdl:message name="double_doubleRequest">
+      <wsdl:part name="n" type="xsd:double"/>
+   </wsdl:message>
+
+   <wsdl:message name="int_floatRequest">
+      <wsdl:part name="n" type="xsd:int"/>
+   </wsdl:message>
+
+   <wsdl:message name="objectsRequest">
+      <wsdl:part name="str" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:message name="versionResponse">
+      <wsdl:part name="versionReturn" type="xsd:string"/>
+   </wsdl:message>
+
+   <wsdl:message name="boolean_booleanResponse">
+      <wsdl:part name="boolean_booleanReturn" type="xsd:boolean"/>
+   </wsdl:message>
+
+   <wsdl:message name="myclassRequest">
+   </wsdl:message>
+
+   <wsdl:message name="boolean_booleanRequest">
+      <wsdl:part name="n" type="xsd:boolean"/>
+   </wsdl:message>
+
+   <wsdl:message name="myclassarrRequest">
+   </wsdl:message>
+
+   <wsdl:message name="myclassResponse">
+      <wsdl:part name="myclassReturn" type="tns1:MyClass"/>
+   </wsdl:message>
+
+   <wsdl:message name="int_intResponse">
+      <wsdl:part name="int_intReturn" type="xsd:int"/>
+   </wsdl:message>
+
+   <wsdl:message name="int_floatResponse">
+      <wsdl:part name="int_floatReturn" type="xsd:float"/>
+   </wsdl:message>
+
+   <wsdl:message name="double_doubleResponse">
+      <wsdl:part name="double_doubleReturn" type="xsd:double"/>
+   </wsdl:message>
+
+   <wsdl:message name="int_doubleRequest">
+      <wsdl:part name="n" type="xsd:int"/>
+   </wsdl:message>
+
+   <wsdl:message name="stringsRequest">
+      <wsdl:part name="str" type="xsd:string"/>
+      <wsdl:part name="n" type="xsd:int"/>
+   </wsdl:message>
+
+   <wsdl:portType name="LPSTest">
+      <wsdl:operation name="reverse" parameterOrder="str">
+         <wsdl:input message="impl:reverseRequest" name="reverseRequest"/>
+         <wsdl:output message="impl:reverseResponse" name="reverseResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="LPSTestSoapBinding" type="impl:LPSTest">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="reverse">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="reverseRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://DefaultNamespace" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="reverseResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+
+   <wsdl:portType name="FOOTest">
+      <wsdl:operation name="fooverse" parameterOrder="str">
+         <wsdl:input message="impl:reverseRequest" name="reverseRequest"/>
+         <wsdl:output message="impl:reverseResponse" name="reverseResponse"/>
+      </wsdl:operation>
+   </wsdl:portType>
+
+   <wsdl:binding name="FOOTestSoapBinding" type="impl:FOOTest">
+      <wsdlsoap:binding style="rpc" transport="http://schemas.xmlsoap.org/soap/http"/>
+      <wsdl:operation name="fooverse">
+         <wsdlsoap:operation soapAction=""/>
+         <wsdl:input name="reverseRequest">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://DefaultNamespace" use="encoded"/>
+         </wsdl:input>
+         <wsdl:output name="reverseResponse">
+            <wsdlsoap:body encodingStyle="http://schemas.xmlsoap.org/soap/encoding/" namespace="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws" use="encoded"/>
+         </wsdl:output>
+      </wsdl:operation>
+   </wsdl:binding>
+
+
+   <wsdl:service name="LPSTestService">
+      <wsdl:port binding="impl:LPSTestSoapBinding" name="LPSTest">
+         <wsdlsoap:address location="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws"/>
+      </wsdl:port>
+      <wsdl:port binding="impl:FOOTestSoapBinding" name="FOOTest">
+         <wsdlsoap:address location="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws"/>
+      </wsdl:port>
+   </wsdl:service>
+
+   <wsdl:service name="AnotherTestService">
+      <wsdl:port binding="impl:LPSTestSoapBinding" name="LPSTest">
+         <wsdlsoap:address location="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws"/>
+      </wsdl:port>
+      <wsdl:port binding="impl:FOOTestSoapBinding" name="FOOTest">
+         <wsdlsoap:address location="http://localhost:8080/lps-dev/test/rpc/soap/java/LPSTest.jws"/>
+      </wsdl:port>
+   </wsdl:service>
+
+</wsdl:definitions>

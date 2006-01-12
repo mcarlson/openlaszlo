@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2_2.dtd">
+
+<web-app>
+
+    <display-name>Message History</display-name>
+    <description>Webapp to store history of messages.</description>
+
+    <servlet>
+        <servlet-name>History</servlet-name>
+        <servlet-class>org.openlaszlo.servlets.HistoryServlet</servlet-class>
+        <init-param>
+            <param-name>AGENT_URL</param-name>
+            <param-value>http://localhost:8080/server-api/History</param-value>
+        </init-param>
+        <init-param>
+            <param-name>AGENT_GROUP</param-name>
+            <param-value>history</param-value>
+        </init-param>
+        <init-param>
+            <param-name>AGENT_DATASET</param-name>
+            <param-value>history</param-value>
+        </init-param>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>History</servlet-name>
+        <url-pattern>/History</url-pattern>
+    </servlet-mapping>
+
+    <welcome-file-list>
+        <welcome-file>index.html</welcome-file>
+    </welcome-file-list>
+</web-app>

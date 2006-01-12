@@ -1,0 +1,93 @@
+<!-- make sure that font info is propagated when a class is instantiated. 
+Note, calculation of compile-time text widths is not being tested here.
+We are just looking to see that the correct font name,size,style are
+prsent.
+
+
+
+5 lines of input text should appear, with input text in various fonts
+as shown
+
+[1] Arioso bold 24 
+[2] Arioso bold 24 
+[3] Arioso bold 24    		{ red background} 
+[4] Times Roman bold 24		{ yellow background color}
+[5] Times Roman bold size unset    { blue background color; should be size 30}
+
+
+
+--> 
+ <canvas width="800" height="800"> 
+    <include href="utils/layouts/alllayouts.lzx" /> 
+    <splash /> 
+
+
+    <font name="Arioso" src="ariosob.ttf" style="bold" />
+    <font name="Arioso" src="ariosor.ttf" />
+
+
+    <font name="Times Roman" src="timmonsr.ttf" /> 
+    <font name="Times Roman" src="timmonsb.ttf"  style="bold" />
+
+
+    <!-- basic font propagation --> 
+    <simplelayout /> 
+    <view font="Arioso"> 
+        <view fontsize="24"> 
+            <!-- should be arioso bold 24 --> 
+            <inputtext fontstyle="bold" >[1] Arioso bold 24 
+            </inputtext> 
+        </view> 
+    </view> 
+
+
+    <!-- class is a inputtext --> 
+    <class name="isa" extends="inputtext" /> 
+    <view font="Arioso"> 
+        <view fontsize="24"> 
+            <!-- should be arioso bold 24 --> 
+            <isa fontstyle="bold" > [2] Arioso bold 24 
+            </isa> 
+        </view> 
+    </view> 
+
+
+    <!-- class has a inputtext --> 
+    <class name="hasa" bgcolor="red" > 
+        <inputtext width="300">[3] Arioso bold 24</inputtext> 
+    </class> 
+    <view font="Arioso"> 
+        <view fontsize="24" fontstyle="bold" > 
+            <hasa/> 
+        </view> 
+    </view> 
+
+
+    <!-- class changes font info --> 
+    <class name="changes" font="Times Roman" bgcolor="blue"> 
+    </class> 
+    <view font="Arioso"> 
+        <changes fontsize="24"> 
+            <!-- should be Times Roman bold 24 --> 
+            <inputtext fontstyle="bold" width="300" > [4] Times Roman bold 24 
+            </inputtext> 
+        </changes> 
+    </view> 
+
+
+    <!-- class changes font info and has a font--> 
+    <class name="hardest" font="Times Roman" bgcolor="yellow"> 
+        <inputtext fontstyle="bold" width="500" >[5] Times Roman bold size unset</inputtext> 
+    </class> 
+    <view font="Arioso" > 
+        <!-- should be Times Roman bold 30 --> 
+        <hardest fontsize="30" /> 
+    </view> 
+
+
+     
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

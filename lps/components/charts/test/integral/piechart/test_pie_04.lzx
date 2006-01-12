@@ -1,0 +1,46 @@
+<canvas width="1000" height="900" debug="false">
+    <include href="charts/styles/strokestyle.lzx"/>
+    <include href="charts/styles/chartstyle.lzx"/>
+    <include href="chartstyle.lzx"/>
+
+    <dataset name="baseball" src="../../data/pie-data2.xml"/>
+    <font name="myverity" src="verity/verityplus11.ttf"/>    
+
+
+    <piechart id="chart1" width="500" height="500" topMargin="40" bottomMargin="40" leftMargin="40" rightMargin="40"
+     datalabelEnabled="false" datalabelColumn="label" style="defaultchartstyle04">
+
+
+        <dataseries datapath="baseball:/records">
+            <datacolumn name="x" columndatapath="record/@year" datatype="number"/>
+            <datacolumn name="label" columndatapath="record/@attendance"/>
+
+            <dataseries label="wins">
+                <datacolumn  name="y" columndatapath="record/@wins" datatype="number"/>
+            </dataseries>
+
+        </dataseries>
+    </piechart>
+
+        <legend name="legendbox" legendborder="false" direction="vertical" fillColor="#99CCFF"
+                chart="${chart1}" x="${chart1.x + chart1.width + 20}" y="${(chart1.y + chart1.height)/2}">
+            <method event="onitemmouseover" args="item">
+                var piepiece = this.getChartInstance().plotarea.arrPiePieces[item.identifier];
+                piepiece.renderInnerWedge();
+            </method>
+
+            <method event="onitemmouseout" args="item">
+                var piepiece = this.getChartInstance().plotarea.arrPiePieces[item.identifier];
+                piepiece.renderWedge();
+            </method>
+        </legend>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.
+* Use is subject to license terms.
+* X_LZ_COPYRIGHT_END
+****************************************************** -->
+<!-- @LZX_VERSION@
+   -->

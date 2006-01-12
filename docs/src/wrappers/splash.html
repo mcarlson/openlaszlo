@@ -1,0 +1,57 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Splash">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Structure</lzcategory>
+    <lzshortdesc>
+      Controls the presentation while the application is loading.
+    </lzshortdesc>
+    <lztag>tag-splash.xml</lztag>
+</lzelement>
+
+<p>The <tagname>splash</tagname> tag controls the presentation while
+the application is loading.</p>
+
+<p>If the <tagname>splash</tagname> element is present but is empty, a
+progress bar is displayed while the application is loading. For
+example:</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;splash/&gt;
+&lt;canvas&gt;
+</example>
+
+<p>The <tagname>splash</tagname> element may contain
+<a href="splash-view.html">view</a> elements, to define the position and
+behavior of resources that are displayed during the load process; however,
+these <a href="splash-view.html">view</a> elements have a limited feature set.
+For example, the following program positions an image on the canvas, which
+is removed once the application is loaded.  Multiple images can be
+positioned, and the <attribute>persistent</attribute> attribute can be
+used to leave the views containing these images on the canvas once the
+load process is complete.</p>
+
+<example extract="false">
+&lt;canvas&gt;
+  &lt;splash&gt;
+    &lt;view resource="images/logo.png"/&gt;
+  &lt;/splash&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<p>Also see the <a href="${demos}contacts/contacts.lzx">contacts</a> example.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

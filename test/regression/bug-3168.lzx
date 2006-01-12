@@ -1,0 +1,107 @@
+<canvas width="1000" height="1000" debug="true">
+
+    <debug x="400" height="300" />
+    <attribute name="defaultstyle" value="${greenstyle}"/>
+
+    <view x="5">
+        <simplelayout spacing="10"/>
+
+        <text>tabalign: left</text>
+        <tabs id="one" tabalign="left" >
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>tabalign: center</text>
+        <tabs id="two"  width="300" tabalign="center">
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>tabalign: right</text>
+        <tabs id="three"  width="300" tabalign="right">
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>tabalign: left, tabspacing: 10</text>
+        <tabs id="four"  width="300" tabalign="left" tabspacing="10">
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>tabalign: center, tabspacing: 10</text>
+        <tabs id="five"  width="300" tabalign="center" tabspacing="10">
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>tabalign: right, tabspacing: 10</text>
+        <tabs id="six"  width="300" tabalign="right" tabspacing="10">
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>tabalign: center, animate tabspacing to 50</text>
+        <tabs id="seven"  width="300" tabalign="center" 
+              oninit="this.animate('tabspacing', 50, 3000)">
+            <tabpane name="one">one
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">two
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">three
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

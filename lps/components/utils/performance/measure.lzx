@@ -1,0 +1,277 @@
+<!--
+ $Id$
+-->
+
+<library>
+
+<!--
+  Simple time measurement framework
+-->
+
+<text id="measurements" multiline="true" font="monospace" selectable="true">
+    <attribute name="visible" value="false"/>
+    <attribute name="width" value="$once{canvas.width}"/>
+    <attribute name="height" value="$once{canvas.height}"/>
+    <method name="write" args="s">
+        if (!this.visible) this.setAttribute('visible', true);
+        this.addText( s + "\n" );
+    </method>
+</text>
+
+<script>
+  //---
+  // Meter
+  //
+  // A meter is used to to accumulate a count, total, max, min, and
+  // mean^2 of a set of data points.  These accumulated values can be
+  // used to report number, total, average and deviation of the data
+  // set.
+  //
+  // @param String name: the name of the meter
+  //---
+  function Meter (name, units) {
+    this.name = "";
+    this.units = "";
+    switch (arguments.length) {
+      case 2:
+        this.units = units;
+      case 1:
+        this.name = name;
+    }
+    this.count = 0;
+    this.total = 0.0;
+    this.meanSquared = 0.0;
+    this.max = 0;
+    this.min = Infinity;
+  }
+
+  //---
+  // Accumulate a value, which will increment the count of events and
+  // update max, min, and the running mean^2
+  //---
+  Meter.prototype.accumulate = function (amount) {
+    <![CDATA[
+    var count = this.count + 1;
+    var total = this.total;
+    var meanSquared = this.meanSquared;
+
+    // We accumulate a running mean^2, which minimizes overflow but
+    // sacrifices numerical stability for small variances, so sez jga.
+    this.count = count;
+    this.total = total + amount;
+    this.meanSquared += amount * amount;
+    //      (meanSquared / count) * (count - 1.0)
+    //      + (amount / count) * amount;
+
+    if (amount > this.max) {
+      this.max = amount;
+    }
+    if (amount < this.min) {
+      this.min = amount;
+    }
+    ]]>
+  }
+
+  //---
+  // Subtract overhead
+  //--
+  Meter.prototype.subtractOverhead = function (overhead) {
+    with (this) {
+      total -= overhead.total;
+      meanSquared -= overhead.meanSquared;
+      min -= overhead.min;
+      max -= overhead.max;
+    }
+  }
+
+  //---
+  // pad or trim a string to a specified length
+  //
+  // @param String str: the string to pad
+  // @param Integer len: the desired width, if negative pad on the left
+  // @param Integer dec: ensure dec characters to the right of '.', padding with 0.
+  //---
+  Meter.prototype.pad = function (str, len, dec) {
+    <![CDATA[
+    switch (arguments.length) {
+      case 1:
+        len = ('' + str).length;
+      case 2:
+        dec = null;
+    }
+    if (dec != null) {
+      precision = Math.pow(10, (- dec));
+      str = Math.round(str/precision)*precision;
+    }
+    // coerce to be string
+    str = '' + str;
+    var strlen = str.length;
+    var left = false;
+    if (dec != null) {
+      var decimal = str.lastIndexOf('.');
+      if (decimal == -1) {
+        var decimals = 0;
+        str += '.';
+      } else {
+        var decimals = strlen - (decimal + 1);
+      }
+      for (var i = decimals; i < dec; i++) str += '0';
+    }
+    strlen = str.length;
+    if (! len) {
+      return str;
+    }
+    if (len < 0) {
+      len = (- len);
+      left = true;
+    }
+    if (strlen > len) {
+      if (dec != null) {
+        return str;
+      } else {
+        return str.substring(0, len);
+      }
+    }
+    if (left) {
+      for (var i = strlen; i < len; i++) str = ' ' + str;
+    } else {
+      for (var i = strlen; i < len; i++) str = str + ' ';
+    }
+    return str;
+    ]]>
+  }
+
+  //---
+  // String version of a meter.  The name, mean, sigma, range and
+  // count.
+  //---
+  Meter.prototype.toString = function () {
+   with (this) {
+     var mean = total / count;
+     return pad(name, -30) + ': ' +
+       pad(mean, -8, 2) + units + ' ' +
+       // This should be greek small letter sigma (&#x3C3;), meaning
+       // 'standard deviation', but it is not supported in Flash 5 so I
+       // am using plus-minus sign (&#xB1;) instead.
+       '&#xB1;' +
+       pad(Math.sqrt((meanSquared - ((total /count) * total)) / (count-1)), 8, 2) +
+       // This is the range and number of samples
+       ' ' + '[' + pad(min, null, 2) + '..' + pad(max, null, 2) + ']' +
+       '/' + count;
+    }
+  }
+
+  //---
+  // Measure the cost of an operation
+  //
+  // @param object targets: A hashmap of functions to measure.  If
+  // there is a member with the key 'empty', it is used to calculate
+  // the measurement overhead (which is subtracted from the time of all
+  // other targets).
+  //
+  // @param integer iterations: Number of iterations of the inner loop
+  // of each target.  Short operations need to be iterated sufficiently
+  // that the microsecond clock can measure them.  Default 
+  // Measurement.defaultIterations.
+  //
+  // @param integer trials: Number of trials to average over.
+  // Measurements are repeated to reduce the perturbation due to
+  // garbage collection or other asynchronous operations in the
+  // runtime.  Default Measurement.defaultTrials.
+  //
+  // @param boolean background: Whether or not to run the trials in
+  // the idle loop (to avoid "Player running slowly").  Default
+  // Measurement.defaultRunInBackground.
+  //--
+  function Measurement (targets, iterations, trials, background) {
+    // Default arguments
+    this.targets = targets;
+    this.iterations = Measurement.defaultIterations;
+    this.trials = Measurement.defaultTrials;
+    this.runInBackground = Measurement.defaultRunInBackground;
+    switch (arguments.length) {
+      case 0:
+        Debug.write("No measurement targets");
+        return;
+      case 4:
+        this.runInBackground  = background;
+      case 3:
+        this.trials = trials;
+      case 2:
+        this.iterations = iterations;
+    }
+    measurements.write("iterations = "+this.iterations);
+
+    // Measure each target trials times
+    this.meters = {};
+    for (var key in targets) {
+      this.meters[key] = new Meter(key, 'us');
+    }
+    this.scale = 1000; // microseconds
+    this.count = 0;
+  }
+
+  Measurement.defaultTrials = 30;
+  Measurement.defaultIterations = 500;
+  Measurement.defaultRunInBackground = true;
+
+  Measurement.prototype.run = function () {
+    if (this.runInBackground) {
+      this.background();
+    } else {
+      this.foreground();
+    }
+  }
+
+  Measurement.prototype.foreground = function () {
+    <![CDATA[
+    this.delegate = null;
+    while (this.measureStep());
+    ]]>
+  }
+
+  Measurement.prototype.background = function () {
+    this.delegate = new LzDelegate(this, 'measureStep' ,
+                                   LzIdle , "onidle" );
+  }
+
+  Measurement.prototype.measureStep = function () {
+    <![CDATA[
+    with (this) {
+      if (count < trials) {
+        for (var key in targets) {
+          var target = targets[key];
+          var start = (new Date).getTime();
+          target();
+          var end = (new Date).getTime();
+          meters[key].accumulate((end - start)*scale/iterations);
+        }
+        this.count++;
+        return true;
+      }
+      // Stop background loop
+      if (delegate != null) {
+        delegate.unregisterAll();
+      }
+      var overhead = meters['empty'];
+      delete targets['empty'];
+      measurements.write(overhead.toString());
+      for (var key in targets) {
+        if (overhead != null) {
+            // meters[key].subtractOverhead(overhead);
+        }
+        // Report results
+        measurements.write(meters[key].toString());
+      }
+      return false;
+    }
+    ]]>
+  }
+
+</script>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

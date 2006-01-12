@@ -1,0 +1,28 @@
+<canvas width="1000" height="1000">
+    <include href="utils/layouts/alllayouts.lzx" />
+
+ <view name="test">
+   <simplelayout axis="y"/> 
+   <text>This is some plain text.</text>
+   <text id="ttext" multiline="true" name="debugme" height="250">
+This is some multiline text with &lt;, &gt;, and &amp; chars.<br/>It has a linebreak before this line.<br/>And also before this one.<br/>
+   This line of  text         should be normalized.
+<pre>
+
+  But this paragraph is
+  preformatted so that
+  linebreaks occurs at 
+  the ends of lines with newlines.
+  And    we    do   not  normalize   text   here.
+
+Double line break before that.
+</pre>
+<p>   Now we are     back             to normalized           text.</p>This is the last line.    </text>
+
+</view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,146 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+<library>
+  <class name="__krosscore_tooltipManager__tooltip" bgcolor="white"  
+         opacity="0"
+         width="${body.width+2}" height="${body.height+2}"
+         >
+    
+    
+    <animator name="ANI_fadeIn" attribute="opacity" to="1" duration="200" start="false"/>
+    
+    <view bgcolor="black" y="0" width="${parent.width}" height="1"/>
+    <view bgcolor="black" y="${parent.height-1}"    width="${parent.width}" height="1"/>
+    
+    <view bgcolor="black" x="0"                        height="${parent.height}" width="1"/>
+    <view bgcolor="black" x="${parent.width-1}"        height="${parent.height}" width="1"/>
+    
+    <view     name="body"
+                x="1"
+                y="1"
+                bgcolor="white" width="${label.width+2}" height="${label.height+2}">
+      <text name="label" resize="true" >Replace Me</text>
+    </view>
+  </class>
+  
+  
+  <class name="tooltipManager" extends="node" >
+    <attribute name="onMouseOverDelegateArray" value="[]"/>
+    <attribute name="onMouseOutDelegateArray" value="[]"/>
+    
+    <attribute name="__currentTooltip" value="[]"/>
+    <attribute name="__timerDelegate" value="[]"/>
+    <attribute name="__currentComponent" value="[]"/>
+    
+    
+    <method name="register" args="component">
+      <![CDATA[
+      { //register mouse over delegate
+        var over_delegate = new LzDelegate(this,"doMouseover");
+        this.getAttribute("onMouseOverDelegateArray").push(over_delegate);
+        over_delegate.register(component,"onmouseover");
+      }
+      {    //register mouse out delegate
+        var out_delegate = new LzDelegate(this,"doMouseout");
+        this.getAttribute("onMouseOutDelegateArray").push(out_delegate);
+        out_delegate.register(component,"onmouseout");
+      }
+      //Debug.write("Component registered",component);
+    ]]>
+    </method>
+    
+    
+    <method name="doMouseover" args="component">
+      //Debug.write("Calling mouseover delegate",component);
+      var timerDelegate = new LzDelegate( this, "showTooltip",component,"name");
+      this.setAttribute("__timerDelegate",timerDelegate);
+      this.setAttribute("__currentComponent",component);
+      LzTimer.addTimer( timerDelegate, 300 );
+      
+      //this.showTooltip(component);
+    </method>
+    
+    <method name="doMouseout" args="component">
+      //Debug.write("Calling mouseout delegate",component);
+      this.setAttribute("__currentComponent",[]);
+      
+      
+      var timerDelegate = this.getAttribute("__timerDelegate");
+      LzTimer.removeTimer(timerDelegate);
+      this.setAttribute("__timerDelegate",[]);
+      
+      this.destroyTooltip(component);
+    </method>
+    
+    <method name="showTooltip" >
+      <![CDATA[
+      var component = this.getAttribute("__currentComponent");
+      //Debug.write("showTooltip entry ",component);
+      
+      var tooltip = new __krosscore_tooltipManager__tooltip(canvas,null);
+      var tooltipWidth = tooltip.getAttribute("width");
+      
+      var myDesc = component.getAttribute("__krosscore_tooltip");
+      if (typeof(myDesc) != "undefined") {
+        tooltip.body.label.setAttribute("text",myDesc);        
+      }
+      
+      //Debug.write("myDesc = "+myDesc);
+      //Debug.write("tooltip = "+tooltip.body.label.getAttribute("text"));
+      
+      
+      var xPos = canvas.getMouse("x");
+      var xDelta = canvas.width - (xPos + tooltipWidth + 5);
+      //Debug.write(xDelta);
+      if(xDelta < 0) {
+        xPos += xDelta;
+      }
+      //Debug.write("xPos = "+xPos);
+      
+      
+      var yPos = canvas.getMouse("y");
+      if(yPos > (canvas.height/2)) {
+        yPos -= 30; /* avoid the cursor above */
+      } else {
+        yPos += 25; /* avoid the cursor below */
+      }
+      
+      tooltip.setAttribute("x",xpos);
+      tooltip.setAttribute("y",yPos);
+      //tooltip.setAttribute("opacity",1);
+      tooltip.ANI_fadeIn.doStart();
+      this.setAttribute("__currentTooltip",tooltip);
+    ]]>
+    </method>
+    
+    <method name="destroyTooltip" args="component">
+      var tooltip = getAttribute("__currentTooltip");
+      tooltip.destroy();
+      this.setAttribute("__currentTooltip",[]);
+    </method>
+    
+  </class>
+  
+  <class name="tooltip" extends="node">
+    <attribute name="text" type="html" setter="setText(text)"/>
+    <attribute name="manager"  />
+    
+    <method name="setText" args="text">
+      Debug.write("tooltip text changed...");
+      this.text = text;
+      parent.setAttribute("__krosscore_tooltip",this.getAttribute("text"));
+    </method>
+    
+    <method event="oninit">
+      <![CDATA[
+      //Debug.write("Manager = ",blah);
+      manager.register(parent);
+      ]]>
+    </method>
+  </class> 
+  
+  
+</library>

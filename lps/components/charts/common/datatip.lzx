@@ -1,0 +1,31 @@
+<library> 
+    <include href="label.lzx"/>
+
+    <!--- tooltip is a tool tip to be use be the chart elements such as the plot area -->
+    <class name="datatip" visible="false" extends="label" enableCache="false">
+        <!--- sets visible to true and positioned the object
+            @keyword private-->
+        <method name="show" args="txt">
+            this.setVisible(true);
+            this.bringToFront();   
+            this.setX(parent.getMouse("x") - 5);
+            this.setY(parent.getMouse("y") - 15);
+            
+            this.render(txt);
+            
+        </method>
+        <!--- sets visible to false
+            @keyword private-->
+        <method name="hide">
+            this.setVisible(false);
+        </method>                
+    </class>    
+</library>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@  -->

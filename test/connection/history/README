@@ -1,0 +1,15 @@
+To run test case
+A. Install history webapp by:
+
+    1. cd xxx/qa/test/connection/server-api/WEB-INF
+    2. ant build install
+    3. You'll be able to access the history webapp at http://localhost:8080/History
+
+B. Install LPS with configuration in xxx/qa/test/configs/config-history
+C. Run history.lzx: http://localhost:8080/lps-xxx/qa/test/connections/history/history.lzx
+D. Type in any username.
+
+* T_LZ_COPYRIGHT_BEGIN ******************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Use is subject to license terms.                                          *
+* T_LZ_COPYRIGHT_END ********************************************************

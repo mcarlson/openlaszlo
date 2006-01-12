@@ -1,0 +1,110 @@
+<library >
+    <include href="lzunit/lzunit.lzx" />
+    <script>
+        <![CDATA[
+
+        ]]>
+    </script>
+
+    <class name="TestDatanode" extends="TestCase">
+        <method name="test1">
+            <![CDATA[
+            this.zdat = new LzDataElement( "foo" , { x : 33 , y : "plop" } ,
+                                                [ new LzDataElement ("a" ) , 
+                                                new LzDataText( "some text" ) ,
+                                                new LzDataElement( "b" ) ] );
+
+            assertEquals( zdat.nodeName , "foo"  ); 
+            assertEquals( zdat.serialize() , '<foo x="33" y="plop"><a/>some text<b/></foo>'); 
+
+
+            zdat.insertBefore ( new LzDataElement( "aa" ), zdat.childNodes[1] );
+
+            zdat.replaceChild (new LzDataElement( "bb" ), zdat.childNodes[3] );
+            
+            zdat.removeChild ( zdat.childNodes[0] );
+
+            zdat.appendChild ( new LzDataText( "more text" ) );
+
+            assertTrue( zdat.hasChildNodes () );
+            assertFalse( (new LzDataElement()).hasChildNodes());
+            assertEquals(zdat.serialize(),
+                    '<foo x="33" y="plop"><aa/>some text<bb/>more text</foo>' );
+
+            zdat.appendChild( zdat.cloneNode ( ) );
+            zdat.appendChild( zdat.cloneNode ( true ) );
+
+            zdat.setAttr ( 'z' , 77 );
+
+            assertEquals( zdat.serialize() , 
+                        '<foo z="77" x="33" y="plop"><aa/>some text<bb/>more text<foo y="plop" x="33"/><foo y="plop" x="33"><aa/>some text<bb/>more text<foo x="33" y="plop"/></foo></foo>' );
+
+            assertEquals( 77,  zdat.getAttr( 'z' ) );
+            zdat.removeAttr( "y" );
+            assertTrue( zdat.hasAttr( 'z' ) );
+            assertFalse( zdat.hasAttr( 'y' ) );
+
+            assertEquals( zdat.getFirstChild ().serialize() , "<aa/>" );
+            assertEquals( zdat.getLastChild().getLastChild ().attributes.y, 
+                                                                    "plop" );
+
+
+            assertUndefined ( zdat.getPreviousSibling () , null );
+
+            //zdat.getNextSibling ();
+            assertEquals( zdat.getLastChild().getPreviousSibling().attributes.x , 33 );
+            assertEquals( zdat.getFirstChild().getNextSibling().data , "some text" );
+            assertEquals( zdat.getFirstChild().getNextSibling().getNextSibling().serialize() , "<bb/>" );
+
+
+
+            //zdat.getAttrNode (name);
+            //zdat.setAttrNode (newAttr);
+            zdat.removeChild( zdat.getLastChild() );
+            zdat.removeChild( zdat.getLastChild() );
+            assertEquals( '<foo z="77" x="33"><aa/>some text<bb/>more text</foo>' , zdat.serialize() );
+
+
+            zdat.getFirstChild().setChildNodes( [ new LzDataElement( 'first' ),
+                                                new LzDataText( 'second' ) ] );
+            assertEquals( '<foo z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</foo>' , zdat.serialize() );
+
+            zdat.setNodeName ( "myx" );
+            assertEquals( '<myx z="77" x="33"><aa><first/>second</aa>some text<bb/>more text</myx>' , zdat.serialize() );
+
+
+            //zdat.setOwnerDocument ( ownerDoc );
+
+            //zdat.removeAttributeNode (oldAttr) ;
+
+            zdat.appendChild( new LzDataElement( 'aa' , {r :22} ) );
+            var arr = zdat.getElementsByTagName ( 'aa' ) ;
+
+            assertEquals( arr[ 0 ].serialize() , "<aa><first/>second</aa>" );
+            assertEquals( arr[ 1 ].serialize() , '<aa r="22"/>' );
+
+            //zdat.setAttrNS (namespaceURI, qualifiedName, ;
+            //zdat.getAttrNS ( "local" , "foo") ;
+
+            //zdat.removeAttributeNS (namespaceURI, localName) ;
+
+            //zdat.getAttrNodeNS (namespaceURI, localName) ;
+
+            //zdat.setAttrNodeNS (newAttr) ;
+
+            //zdat.getElementsByTagNameNS (namespaceURI, localName) ;
+
+            //zdat.hasAttributeNS (namespaceURI, localName) ;
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!--
+
+        Debug.write( LzText.prototype.escapeText( zdat.serialize() ) );
+-->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

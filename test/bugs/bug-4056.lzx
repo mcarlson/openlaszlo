@@ -1,0 +1,41 @@
+<canvas debug="true">
+    <include href="lzunit/lzunit.lzx" />
+    <debug x="300"/>
+
+    <dataset name="dpdepend">
+        <x n="1"/>
+    </dataset>
+    
+
+    <TestSuite>
+        <TestCase>
+            <datapointer name="mydp"/>
+
+            <method name="test1">
+
+                mydp.setAttribute( 'rerunxpath' , false );
+
+                mydp.setAttribute( 'xpath' , "dpdepend:/x[1]" );
+
+                var op = mydp.p
+
+                var ne = new LzDataElement( 'x' , {n: 0});
+                AssertTrue( mydp.p.parentNode.insertBefore( ne , mydp.p ) );
+                //datapointer shouldn't move b/c rerunxpath not set
+                AssertEquals( mydp.p , op );
+                debug.write(mydp.p, op)
+
+                //still  pointing to second node
+                mydp.setAttribute( 'xpath' , "@n" );
+                AssertEquals( mydp.data , "1");
+
+            </method>
+
+        </TestCase>
+    </TestSuite>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,25 @@
+<!-- This should compile without warnings.  The left and center columns should look the same. -->
+<canvas layout="axis: y" fontsize="24">
+  <view layout="axis: x">
+    <view layout="axis: y">
+      <text font="_sans">Sans-serif_</text>
+      <text font="_serif">Serif_</text>
+      <text font="_typewriter">Mono_</text>
+    </view>
+    <view layout="axis: y">
+      <text font="sans-serif">Sans-serif</text>
+      <text font="serif">Serif</text>
+      <text font="mono">Mono</text>
+    </view>
+
+    <view layout="axis: y">
+      <text font="Helvetica">Helvetica</text>
+      <text font="Times">Times</text>
+      <text font="Courier">Courier</text>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

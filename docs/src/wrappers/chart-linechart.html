@@ -1,0 +1,108 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="linechart">
+    <lztier>Charts and Graphs</lztier>
+    <lzcategory>Charts and Graphs</lzcategory>
+    <lzshortdesc>
+        A line chart
+    </lzshortdesc>
+    <lztag>charts/linechart/linechart.xml</lztag>
+</lzelement>
+<warning>This component is Beta quality and is subject to revision</warning>
+<example title="A linechart">
+<fixme>
+&lt;canvas width="1000" height="900"&gt;
+    &lt;include href="charts/styles/chartstyle.lzx"/&gt;
+    &lt;include href="charts/addon/zoomarea.lzx"/&gt;
+    &lt;include href="chartstyle.lzx"/&gt;
+    
+    &lt;dataset name="baseball" src="../../data/redsox-data.xml"/&gt; 
+    &lt;font name="myverity" src="verity/verityplus11.ttf"/&gt;    
+    
+    
+    &lt;button&gt;undo
+        &lt;method event="onclick"&gt;
+            chart1.undo(500);
+        &lt;/method&gt;
+    &lt;/button&gt;
+    &lt;button x="100"&gt; show all points
+        &lt;method event="onclick"&gt;
+            chart1.changeBound(chart1.defaultminx, chart1.defaultminy, 
+                 chart1.defaultmaxx,chart1.defaultmaxy, 1000, true);
+        &lt;/method&gt;
+    &lt;/button&gt;
+    &lt;view name="title" x="${chart1.width/2}" y="30" &gt;
+        &lt;text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF"&gt;
+          Line Chart with Zoom Interaction
+        &lt;/text&gt;
+    &lt;/view&gt;
+        &lt;!-- LEGEND ASSOCIATED WITH THE CHART --&gt;
+        &lt;legend name="legendbox" 
+                chart="${chart1}"
+                legendFont="serif"
+                legendFontsize="14" 
+                legendborder="false"
+                x="600"
+                y="350"
+                direction="vertical"&gt;
+          &lt;method event="onitemmouseclick" args="item"&gt;
+              var topseries = this.getChartInstance().getDataSeries();
+
+              topseries.getDataSeries(item.identifier).enabled = item.linevisible;
+              this.getChartInstance().renderPlotArea();
+              item.linevisible = !item.linevisible;
+          &lt;/method&gt; 
+        &lt;/legend&gt;
+
+    &lt;linechart id="chart1" y="60" width="600" height="500" style="chartstyle01" 
+        datatipColumn="datatip" dataPointsEnabled="true" datatipEnabled="true" verticalGridLines="true" horizontalGridLines="false"
+        datalabelEnabled="true" datalabelColumn="datalabels" valueregionsenabled="true"&gt;
+
+
+        &lt;dataseries datapath="baseball:/records"&gt;
+            &lt;datacolumn name="x" columndatapath="record/@year" datatype="number"/&gt;
+            &lt;dataseries label="wins"&gt;
+                &lt;datacolumn  name="y"   columndatapath="record/@wins" datatype="number"/&gt;
+                &lt;datacolumn name="datatip" columndatapath="record"&gt;
+                    &lt;method name="processData" args="d"&gt;
+                        return "( " + d.attributes.year + ", " + d.attributes.wins + ")";
+                    &lt;/method&gt;
+                &lt;/datacolumn&gt;
+            &lt;/dataseries&gt;
+            &lt;dataseries label="losses"&gt;
+                &lt;datacolumn name="y" columndatapath="record/@losses" datatype="number"/&gt;
+                &lt;datacolumn name="datatip" columndatapath="record"&gt;
+                    &lt;method name="processData" args="d"&gt;
+                        return "( " + d.attributes.year + ", " + d.attributes.losses + ")";
+                    &lt;/method&gt;
+                &lt;/datacolumn&gt;
+            &lt;/dataseries&gt;
+            &lt;datacolumn name="datalabels" columndatapath="record/@attendance"/&gt;
+        &lt;/dataseries&gt;
+        
+        &lt;horizontalaxis name="haxis" title="X Axis" interval="10" type="linear" columnName="x" titleLocation="high"  majorTickEnabled="true" minorTickEnabled="true"/&gt;
+        &lt;verticalaxis name="vaxis" title="Y Axis title" type="linear" columnName="y"  titleLocation="low" minorTickEnabled="false" /&gt;
+        
+        &lt;valuepoints label="(1925,95)" tip="Year: 1925 - Games: 95" datax="1920" datay="95" /&gt;
+        &lt;valuepoints label="(1950,78)" tip="Year:1950 - Games: 78" datax="1950" datay="78" /&gt;
+        &lt;valuepoints label="(1975,63)" tip="Year:1975 - Games: 63" datax="1975" datay="63" /&gt;
+        &lt;valuepoints label="(2000,50)" tip="Year:2000 - Games: 50" datax="2000" datay="50" /&gt;
+        
+        &lt;valueregion data1="95" data2="110" 
+                axis="y" 
+                label="Win/Losses Games: 95 to 110"
+                tip="Horizontal Value Region"/&gt;
+        
+        &lt;zoomarea duration="2000" enabled="true"/&gt; 
+    &lt;/linechart&gt;
+ &lt;/canvas&gt;
+</fixme>
+</example>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Tabpane">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A tabpane houses content to be shown within a tabs component when its
+        correlated tab is selected.
+    </lzshortdesc>
+    <lztag>lz/tabpane.xml</lztag>
+</lzelement>
+
+<p><classname>tabpane</classname> is the visual container for content
+in <classname>basetabs</classname>. The difference between this class
+and <classname>basetabpane</classname> is that
+<classname>tabpane</classname> has a background
+<classname>swatchview</classname> that is set by whatever the default
+style is.</p>
+
+<p>Note that the content of tabpane is
+<code>initstage="late"</code>. You can override this by explicitly
+setting your <attribute>initstage</attribute> preference on
+tabpane.</p>
+
+<example extract="false">
+&lt;tabpane initstage="normal"&gt;
+  &lt;!-- ...content... --&gt;
+&lt;/tabpane&gt;
+</example>
+
+<p>For every <tagname>tabpane</tagname> declared, a corresponding
+<classname link="true">tab</classname> is created.</p>
+
+<example title="tabpane">
+&lt;canvas width="250" height="150" &gt;
+  &lt;include href="base"/&gt;
+
+  &lt;simplelayout axis="y" spacing="5"/&gt;
+  &lt;text x="10" multiline="true" width="200"&gt;
+      First two are tabpanes, the last one is a basetabpane
+  &lt;/text&gt;
+  &lt;basetabs x="10" tabclass="tab" bgcolor="green"&gt;
+    &lt;tabpane&gt;
+      &lt;text&gt;one&lt;/text&gt;
+    &lt;/tabpane&gt;
+    &lt;tabpane&gt;
+      &lt;text&gt;two&lt;/text&gt;
+    &lt;/tabpane&gt;
+    &lt;basetabpane&gt;
+      &lt;text&gt;three&lt;/text&gt;
+    &lt;/basetabpane&gt;
+  &lt;/basetabs&gt;
+&lt;/canvas&gt;
+</example>
+
+<p><b>See also:</b><br/>
+<tt>tab, tabscontent, tabs, basetabpane</tt>
+</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

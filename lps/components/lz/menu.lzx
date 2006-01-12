@@ -1,0 +1,691 @@
+<library>
+    <include href="button.lzx" />
+    <include href="base/basescrollbar.lzx" />   
+    <include href="lz/list.lzx" />
+    <include href="lz/textlistitem.lzx" />
+    <include href="lz/floatinglist.lzx" />
+    
+    <!-- resources for menuarrow class -->
+    <resource name="menuarrow_rsrc" >
+        <frame src="resources/menu/menu_arrow_rt.swf"/>
+        <frame src="resources/menu/menu_arrow_lft.swf"/>
+    </resource>
+
+    <!-- class: menubar -->
+    <class name="menubar"
+           extends="basecomponent" focusable="false">
+         <attribute name="defaultplacement" value="mbarcontent" type="string" />
+        <!--- the default height is 20 pixels -->
+        <attribute name="height" value="20" />
+        <!--- in a window, the menubar's width  needs to extend one more pixel 
+             past its container ( which has the same width as the content ) so
+             it's default width is immediateparent.width + 1 -->
+        <attribute name="width"  value="${immediateparent.width + 1}"/>
+        <!--- @keyword private -->
+        <attribute name="_clickcounter" value="0" />
+        <!--- @keyword private -->
+        <attribute name="_openedmenu" value="0" />
+        
+
+        <!-- background views  -->
+            <view name="_outerbezel"
+                  resource="lzbutton_bezel_outer_rsc" stretches="both"
+                  width="${parent.width-1}" 
+                  height="${parent.height-1}" />
+            <view name="_innerbezel" 
+                  resource="lzbutton_bezel_inner_rsc" stretches="both"
+                  x="1" y="1" 
+                  width="${parent.width-3}" 
+                  height="${parent.height-3}" />
+            <view name="_face" 
+                  resource="lzbutton_face_rsc" stretches="both"
+                  x="2" y="2" 
+                  width="${parent.width-4}" 
+                  height="${parent.height-4}"/>
+
+        <!-- a basetracker to hold and track the menuButtons when the mouse is 
+             down -->
+        <basetrackgroup name="mbarcontent" 
+                        layout="axis:x; spacing:-2"
+                        deactivateevents="[]" height="100%"/> 
+
+        
+        <!--- opens ( or closes ) requested menu and closes any other menus that are currently opened
+              @param Menu menuref: the menu to be opened or closed
+              @param Boolean openit: true to open menu, false to close it -->
+        <method name="openMenu" args="menuref,openit"> <![CDATA[
+                
+            if ( menuref == this._openedmenu ){
+                if ( openit ) return; // don't reopen menu if already opened
+                else {
+                    this._openedmenu._menubutton.showUp();
+                    this._openedmenu.setOpen( false );
+                    this._openedmenu = 0;
+                    
+                    // deactiavte basetracker
+                    this.mbarcontent.deactivateTrackgroup();
+                    
+                    // set clickcounter back to zero
+                    this._clickcounter = 0;
+                    this._openedmenu = 0;
+                }
+            } else {
+                // about to open/close a different menu so ...
+                // close the previously opened menu 
+                if ( this._openedmenu ) {
+                    this._openedmenu._menubutton.showUp();
+                    this._openedmenu.close();
+                }
+            
+                // now open/close requested menu
+                if ( menuref != null) {
+                    menuref.setOpen( openit );
+                    if ( openit ) this._openedmenu = menuref
+                } else this._openedmenu = 0
+
+            }
+        ]]></method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                setTint( _outerbezel, s.basecolor);
+                setTint( _innerbezel, s.basecolor);
+                setTint( _face, s.basecolor);
+            }
+        </method>
+
+    </class> <!-- end menubar -->
+
+    <!-- An instance of this class automatically created when a menuitem has a submenu.-->
+    <class name="menuarrow" resource="menuarrow_rsrc"
+           x="${parent.width - width - 5}" 
+           y="5" />
+
+    <!-- An instance of this class automatically created when a menu is a subview
+        of a menubar -->
+    <class name="menubutton" extends="button" 
+           respondtomouseout="false"
+           height="${parent.height}" doesenter="false" focusable="false">
+          
+        <!--- this method is called to override the default event handling inherited
+             from button @keywords private -->          
+        <method name="registerEventHandlers"> <![CDATA[
+            // ignore the default event handling from the button class.
+            // new event handling is defined in methods below.
+        ]]> </method>
+
+        <!--- @keywords private -->
+        <method event="onmousedown" >
+            // a menu button only exists within a menubar so
+            // toggle menubar's clickcounter between 0 and 1
+            this.parent._clickcounter += 1; // this.parent is a menubar
+            if ( this.parent._clickcounter > 1 ) this.parent._clickcounter = 0;
+            this.showDown();
+        </method>
+
+        <!--- override the button's showDown method to also display the associated menu
+              @keywords private -->
+        <method name="showDown" >
+            super.showDown();
+            if ( this._menuref ) 
+                parent.openMenu(this._menuref,true);
+        </method>
+        
+        <!--- @keywords private -->
+        <method event="onmousetrackup" >
+            // on first click keep the button down
+            // on second click treat it like a onmouseupinside for the button
+            if ( this.parent._clickcounter == 0) {
+                this.showOver();
+                // close the menu associated with this menuitem
+                if ( this._menuref ) 
+                    parent.openMenu( this._menuref, false );
+            }
+        </method>
+
+        <!--- the showOver method is blocked because it responds to onclick. 
+             this method effectively replaces that method  @keywords private-->
+        <method event="onmouseover">
+            // if the clickcounter == 1 then a rollover action is like a
+            // mousedown, otherwise do a normal rollover.
+            if ( this.parent._clickcounter ) {
+                this.showDown();
+            } else {
+                this.showOver();
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method event="onmouseout" name="showout" >
+            if ( !this.parent._clickcounter ) {
+                this.showUp();
+            }
+        </method>
+
+
+        <!--- @keywords private -->
+        <method event="onmousetrackover" >
+            this.showDown();
+        </method>
+
+        <!--- @keywords private -->
+       <method event="onmousetrackout" >
+            //this.myshowup();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="toString"  >
+           return "MENU BUTTON title =" + this.text;
+       </method>
+
+    </class> <!-- END menubutton -->
+
+    <!--- A beveled line used to visually separate menu items -->
+    <class name="menuseparator" width="100%"
+           opacity="1" height="6" extends="basecomponent" focusable="false">
+        
+        <!--- the number of pixels to inset the menuseparartor from the sides of the menu -->
+        <attribute name="xinset" value="3" type="number" />
+
+        <view  x="${parent.xinset}" width="${parent.width - 2*parent.xinset}"
+            bgcolor="black" height="1" y="3" opacity=".5"/>
+
+        <view  x="${parent.xinset}" width="${parent.width - 2*parent.xinset}"
+            bgcolor="white" height="1" y="4"/>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                //parent.setAttribute('bgcolor',s.menuitembgcolor);
+                this.setBGColor(s.textfieldcolor);
+            }
+        </method>
+    </class>
+    
+    
+    <class name="menuitem" extends="textlistitem" 
+            focusable="false">
+
+        <!--- @keywords private-->
+        <attribute name="delaytime" value="300" />
+        
+        <!--- the command object assigned to be executed when this menuitem is selected -->
+        <attribute name="command"   value="null" 
+                   setter="this.setCommand( command )"   when="once" />
+                           
+        <!--- this event is sent to the menuitem when it is seleted -->
+        <attribute name="onselect"         value="null" />
+
+        <!---  @keywords private -->
+        <attribute name="_doshowsubmenu"   value="false" />
+        
+        <!---  @keywords private -->
+        <attribute name="_submenu"         value="null" />
+        
+        <!---  @keywords private -->
+        <attribute name="showsubmenu_del"  value="null" />
+        
+        <!---  @keywords private -->         
+        <attribute name="hidesubmenu_del"  value="null" />
+                                           
+        <state name="commandstate" apply="false">
+            <text name="cmdkeys" 
+                  x="${parent.width - 90}"
+                  y="${classroot.text_y}" width="90" />
+        </state>
+                         
+        <!---  @keywords private -->         
+        <method name="init">
+            super.init();
+            // now that the menuitem is inited make sure the floatinglist
+            // constraints are updated by resetting the attachtarget
+            if ( this._submenu ) this._submenu.flist.setAttribute('attachtarget',this);
+        </method>
+        
+         <!---  @keywords private -->
+        <method event="onmouseover" >
+            // listitem ( that menuitem extends) is resposible for the visual
+            // changes when a menuitem is hilited.
+            // If a menuitem also has a submenu then that is displayed by calling...
+            if ( _submenu ) this._opensubmenu( true );
+        </method>
+        
+         <!---  @keywords private -->
+        <method event="onmousetrackover" >
+            // listitem ( that menuitem extends) is resposible for the visual
+            // changes when a menuitem is hilited.
+            // If a menuitem also has a submenu then that is displayed by calling...
+            if ( _submenu ) this._opensubmenu( true );
+        </method>
+
+         <!---  @keywords private -->
+         <method event="onmousetrackout" >
+            // don't need to unhilite listitem, parent view
+            // will do this when another listitem is hilited
+            // this is needed for menus
+            //_ipclassroot.setHilite( null );
+        </method>
+                
+         <!---  @keywords private -->
+         <method event="onmousetrackup">
+        <![CDATA[
+            if ( !_submenu && this.enabled ) {
+                // no submenu so execute the menu command
+                // and close this menuitem's menu and all of its hierarchy
+                parent.owner.open( false );
+                if ( command ) command.onselect.sendEvent();
+                if ( onselect  ) this.onselect.sendEvent();
+            } 
+            // else do nothing because hiliting this menuitem
+            // has already opened the submenu if there is one       
+        ]]>
+        </method>
+        
+         <!---  Called automatically by the menu. The default action uses the colors
+                defined in a styles object to change the colors of the background and text. 
+                @params boolean ishilite: true shows hilite and false restores it back-->
+         <method name="setHilite" args="ishilite" >
+            super.setHilite( ishilite );
+            if ( !_initcomplete ) return;
+            if (ishilite){
+                if ( _submenu ) this._menuarrow.setAttribute('fgcolor',this.style.texthilitecolor);
+            } else {
+                if ( _submenu ) {
+                    this._menuarrow.setAttribute('fgcolor',0x000000);
+                    this._opensubmenu( false );
+                }
+            }
+        </method>
+                
+        <!--- if a menuitem is hilited and has a submenu then this method is 
+             called by a delegate after a period of time specified by delaytime 
+             @keywords private -->
+        <method name="showSubmenu" >
+            // this method is called by a delegate which was activated by a timer.
+            // First, make sure we still want to show the submenu by checking
+            // the _doshowsubmenu flag.
+            if ( _doshowsubmenu ) this._submenu.setOpen(true);
+        </method>
+
+        <!--- if a menuitem is unhilited and has a submenu then this method is 
+             called by a delegate after a period of time specified by delaytime
+             @keywords private -->
+        <method name="hideSubmenu" >
+            if ( !_doshowsubmenu ) this._submenu.setOpen(false);
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="_opensubmenu" args="doopen" >
+            if ( doopen ) {
+                this._doshowsubmenu = true;
+                if (!this.showsubmenu_del) this.showsubmenu_del = new LzDelegate(this,'showSubmenu');
+                LzTimer.addTimer( this.showsubmenu_del, delaytime );
+            } else  {
+                this._doshowsubmenu = false;
+                if (!this.hidesubmenu_del) this.hidesubmenu_del = new LzDelegate(this,'hideSubmenu');
+                LzTimer.addTimer( this.hidesubmenu_del, delaytime );
+            }
+        </method>
+                        
+        <!--- @keywords private -->
+        <method name="setSelected" args="isSelected" >
+            // menus don't keep a selection in this version
+            // so override this method to block the list's
+            // selection manager.
+            // super.setSelected( isSelected );
+        </method>
+                    
+        <!--- call this method to set the command associated with a menuitem 
+             @param Command cmd: -->
+       <method name="setCommand" args="cmd" >
+            this.command = cmd;
+            if ( this.command ) {
+                // force the appplication of this state
+                // because order of execution demands it.
+                this.commandstate.apply( true );
+                var t = command.keysToString();
+                this.cmdkeys.setText(t);
+            }
+        </method>       
+                    
+        <!--- @keywords private -->
+        <method name="toString" >
+            return "menuitem text =" + this.text; 
+        </method>                               
+
+        <!--- @keywords private -->
+        <method name="_showEnabled"> <![CDATA[
+             if (_initcomplete) {
+                _applystyle();
+            }
+        ]]>
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                super._applystyle(s);
+                if (command) {
+                    if (_enabled) {
+                         if (hilited) {
+                             this.cmdkeys.setAttribute('fgcolor', style.texthilitecolor);
+                         }
+                         else if (selected) {
+                             this.cmdkeys.setAttribute('fgcolor', style.textselectedcolor);
+                         } else {
+                             this.cmdkeys.setAttribute('fgcolor', style.textcolor);
+                         }
+                    } else {
+                        this.cmdkeys.setAttribute( "fgcolor", style.textdisabledcolor );
+                    }
+                }
+            }
+        </method>
+
+   </class> <!-- menuitem -->
+    
+   <class name="menufloatinglist" extends="floatinglist"
+          bgcolor="0x445566" autoscrollbar="false"
+          visible="false" focusable="false">
+          
+        <!--- @keywords private -->
+        <attribute name="issubmenu" value="false" />
+        
+        <!--- @keywords:  private -->
+        <attribute name="_updateifsubmenu" value="true" />
+                    
+        <!--- setHilite is called by the list class, and it overridden here to support 
+              heirarchical menus -->
+        <method name="setHilite" args="v" >
+            super.setHilite( v );
+            if ( v )  {
+                if ( issubmenu ) {
+                    // because this floatinglist belongs to a menu that is actually a submenu
+                    // we need to rehilite the menuitem that owns this submenu.
+                    // owner.parent = the menuitem that owns this submenu
+                    // owner.parent.parent = floating list that contains that menuitem.
+
+                    // however, we only want to do this once, not everytime we hilite
+                    // a mnenuitem within the submenu, so frist check to see if we
+                    // need to update those objects that own and manage this usbmenu.
+                    if ( _updateifsubmenu ) {
+                        owner.parent._doshowsubmenu = true;
+                        owner.parent.parent.setHilite( owner.parent );
+                        // we did it so now don't do again until this menu
+                        // is closed and reopened.
+                        this._updateifsubmenu = false;
+                    }
+                }
+            } else { // need to clear hilite                
+                if ( _hiliteview )  {
+                    this_hiliteview.setHilite( false );
+                    this._hiliteview= null;
+                }
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method event="onmousetrackout" reference="this.interior" >
+            this.setHilite(null);
+        </method>
+        
+        <!--- @keywords private -->
+        <method event="ontracking" >
+            // TODO: this is causing problems?
+            // Debug.write('ontracking');
+        </method>               
+    </class>
+   
+
+    <!-- class: menu -->
+    <class name="menu" width="150" extends="basecomponent" focusable="false">
+        <!--- the test that appears in the menu button if the menu is a subview of a menubar -->
+        <attribute name="text"     value="menutitle" type="html" />
+
+        <!--- a boolean indicating whether or not the menu is in opened -->
+        <attribute name="opened"   value="false" setter="this.setOpen( opened )" />
+        
+          <!--- @keywords private -->
+          <attribute name="onopened" value="null" />
+          
+          <!--- @keywords private - need to deprecate-->        
+        <attribute name="menu_ref" value="false" />
+
+        <!--- @keywords private -->
+        <attribute name="flist" value="null" />
+        
+        <!--- a string to indicate how the floating part of the menu attaches to 
+              the menubutton or menuitem. Possible values are: 'top', 'bottom', 'left', and 'right' -->
+        <attribute name="attach"   value="bottom" type="string" />
+
+        <method event="onattach">
+            if (this.flist != null)
+                this.flist.setAttribute("attach", this.attach);
+        </method>
+        
+        <!--- @keywords private -->
+         <method event="onconstruct" >
+            // create a floating list. Though the parent for this floating
+            // list is this menu, the floating list will be created on the
+            // canvas and its owner attribute will point to this menu.
+            var w = width;
+            if ( (this.parent) instanceof menubar) { 
+                // menu's parent is a menubar so create a floating list
+                // with the following parameters...
+                // create a floating list that will attach to the bottom
+                // of the menubutton by default ( the floating list is 
+                // canvas-aware and will try to display itself below the menubutton ).
+                // if this does not work, then it will try above it.
+                this.flist = new menufloatinglist(this,
+                             { attach:'bottom',
+                               attachoffset:-2,
+                               width:w,
+                               shadowcrn:1 });  
+                               // border_top:0, border_bottom:0,
+            } else if ( (this.parent) instanceof  menuitem ) { 
+                // menu's parent is a menuitem so attach the floatinglist to 
+                // the right ( again canvas-aware will try right but display left
+                // if necessary )
+                this.flist = new menufloatinglist(this,
+                             { attach:'right',
+                               width:w,
+                               issubmenu:true, 
+                               shadowcrn:2 });  
+            } else {
+                // menu's parent is some other type of view so attach the 
+                // floatinglist to the value of 'attach' attribute
+                var atch = this.attach; 
+                this.flist = new menufloatinglist(this,
+                             { attach:atch,
+                               width:w, 
+                               shadowcrn:1 });             
+            }
+            
+            // By default the floating list's target will be constrained to the
+            // menu's parent. This  private variable wil be change if necessary
+            this._flisttarget = this.parent;
+                        
+            if ( parent instanceof menubar ) {
+                // Since the parent is a menubar ...
+                          
+                // Create a menubutton and have the menu keep a reference to it.
+                this._menubutton = new menubutton( parent,{text:this.text}, null, true);
+                
+                //Likewise, have the menubutton keep a reference to this menu
+                this._menubutton._menuref = this;
+                
+                // Have the floating list constrain to the menubutton and not
+                // the parent of the menu ( which would have been menubar in
+                // this case )
+                this._flisttarget = this._menubutton;
+                                
+            } else if ( parent instanceof  menuitem ) {
+                // insert an arrow into the target
+                new menuarrow( this._flisttarget, { name:'_menuarrow' } );
+                
+                // have the menuitem keep a reference to its submenu
+                this.parent._submenu = this;
+            } 
+        </method>
+        
+        <!--- @keywords private -->
+         <method name="init" >
+            // need to wait until here when the width and heights of the target
+            // set before I activate the constraints
+            super.init();
+            this.flist.setAttachTarget(this._flisttarget);
+        </method>
+        
+        <!-- instantiate children of menu in its floatinglist instead of itself.
+             this method is called autmatically.
+             @param array childrenarray: an array of nodes to be created-->                
+        <method name="createChildren" args="childrenarray" ><![CDATA[
+            this.flist.createChildren(childrenarray);
+        ]]></method>
+        
+        <!--- @keywords private -->
+         <method name="childOfMenuHierarchy" args="v">
+            var result = v.childOf( this ) || v.childOf( flist );
+            if ( result ) return true; //don't need to check any further
+            
+            // Now check to make sure that mousedown has not occurred in another
+            // part of the menu hierarchy
+
+            if ( v instanceof  menuitem ) {
+                var aMenuRef = v.parent.owner;
+                while ( aMenuRef instanceof menu) {
+                    result = ( this == aMenuRef );
+                    if (result) break;
+                    if (aMenuRef.parent.parent['owner'] == null) break;
+                    aMenuRef = aMenuRef.parent.parent.owner;
+                }
+            }
+            return result;
+        </method>
+
+        <!--- @keywords private -->
+        <method name="passModeEvent" args="event,view" > <![CDATA[
+            // Once a view has been made modal, this method
+            // gets called by the system ONLY when a user clicks on
+            // a view 'outside' the contents of this view.  
+            if ( event == 'onmousedown' ) {
+                if ( view != null ) { // view is a clickable view
+                    // view is not LITERALLY part of the class hierarchy but
+                    // it maybe part of the floatingview of this menu, or part
+                    // of the parent view that contains this menu 
+                                            
+                    var inMenu = this.childOfMenuHierarchy( view ) || 
+                                 view.childOf( parent );
+                    if ( !inMenu ) {
+                        // view is REALLY outside of the menu so close the menu
+                        this.open(false);
+                    }
+                } else { // view is not a clickable view so close the menu
+                    this.open(false);
+                }
+            }
+            // since a menu is not strictly modal ( 'fragile' ), always return
+            // true to pass the event to the object that was clicked on
+            return true; 
+        ]]> </method>
+
+        <!--- finds the top most menu in the heirarchy associated with this menu -->
+        <method name="getTopMenu"  ><![CDATA[
+            // this is called by a menu so start with this
+            var mc = this;
+            // iterate up the parent chain starting with this menu's parent
+            var mcp = mc;
+            while ( mcp != canvas ){
+                if ( mcp instanceof menu ){
+                    mc = mcp;
+                }
+                // in case view is contained within a floating list
+                if ( mcp['owner'] ) mcp = mcp.owner;
+                else mcp = mcp.parent;
+            }
+            // return this or another menu that own's this one
+            return mc;
+        ]]></method>
+        
+        <!--- The general method to open/close a menu starting with itself
+             and then moving 'up' the hierarchy to open/close the other
+             menus in the hierarchy. 
+             @param boolean openit: true opens menu, false closes it-->                
+        <method name="open"  args="openit"> <![CDATA[
+            // this is called by a menu so start with this
+            var mc = this;
+            // iterate up the parent chain starting with this menu's parent
+            // and as we iterate open/close as we go
+            var mcp = mc;
+            while ( mcp != canvas ){
+                if ( mcp instanceof menu ){
+                    mc = mcp;
+                    mc.setOpen( openit );
+                } else if ( mcp instanceof menubar){
+                    mcp.openMenu( mc, openit )
+                }
+                // in case view is contained within a floating list
+                if ( mcp['owner'] ) mcp = mcp.owner;
+                else mcp = mcp.parent;
+            }
+            // return this or another menu that own's this one
+            // return mc;
+        ]]></method>
+
+
+        <!--- The general method to close a menu starting with itself
+             and then moving 'down' the hierarchy to close all the other
+             menus in the hierarchy. -->                
+        <method name="close" > <![CDATA[                
+            var mi;
+            for (var k=0; k < this.flist.interior.content.subviews.length ; k++) {          
+                mi = this.flist.interior.content.subviews[k];
+                if ( mi instanceof menuitem){
+                    if ( mi._submenu ) mi._submenu.close();
+                }
+            }
+            this.setOpen(false);
+        ]]></method>
+
+
+        <!--- Only Hides and shows the floating list associated with the menu.
+              It does not effect any other part of the menu's heirarchy.
+              to open a menu within a heirarchy use open() instead of setOpen()
+             @param boolean isopened: true opens menu, false closes it-->                
+        <method name="setOpen" args="isopened" >
+            if ( _initcomplete ){
+                if ( this.opened == isopened ) return;
+                this.opened = isopened;
+                if ( isopened ){
+                    LzModeManager.makeModal( this );
+                                
+                    this.flist.bringToFront();
+                    this.flist.setHilite(null);
+                    this.flist.setAttribute('tracking',true);
+                    this.flist._updateifsubmenu = true;
+                    this.flist.setVisible( true );
+                } else {
+                    LzModeManager.release( this );
+                    this.flist.setHilite(null);
+                    this.flist.setAttribute('tracking',false);
+                    this.flist.setVisible( false );
+                }
+                if ( onopened ) this.onopened.sendEvent( this.opened );
+            } else this.opened = isopened;
+        </method>
+
+        <!--- open and closes the menu 
+              @keywords private -->
+         <method name="toggle" >
+            this.setOpen(!this.opened);
+        </method>
+
+    </class> <!-- end menu -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

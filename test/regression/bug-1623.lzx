@@ -1,0 +1,19 @@
+<canvas>
+    <dataset name="mydat">
+        <record a="3">99</record>
+        <record a="4">98</record>
+        <record a="5">97</record>
+        <record a="6">96</record>
+        <record a="7">95</record>
+    </dataset>
+    <view datapath="mydat:/record" id="repar">
+        <text datapath="@a" onclick="repar.setOrder( '@a' )" />
+        <text datapath="text()" onclick="repar.setOrder( 'text()')"/>
+        <simplelayout axis="x"/>
+    </view>
+    <simplelayout/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

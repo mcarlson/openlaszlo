@@ -1,0 +1,36 @@
+<canvas layout="spacing: 5">
+  <include href="bouncing-box.lzx"/>
+  
+  <tabs>
+    <tabpane>Vertical
+      <simplelayout axis="y" spacing="5"/>
+      <text>A text control</text>
+      <edittext>Editable text</edittext>
+      <checkbox>Checkbox</checkbox>
+      <button>Button</button>
+    </tabpane>
+    
+    <tabpane>Horizontal
+      <simplelayout spacing="5"/>
+      <view layout="axis: x; spacing: 5">
+        <text valign="middle">A text control</text>
+        <edittext>Editable text</edittext>
+      </view>
+      <view layout="axis: x; spacing: 5">
+        <checkbox valign="middle">Checkbox</checkbox>
+        <button>Button</button>
+      </view>
+    </tabpane>
+    
+    <tabpane>Resizing
+      <view id="resizer" bgcolor="blue" layout="spacing: 5">
+        <bouncer/><bouncer/><bouncer/>
+      </view>
+      <text multiline="true" width="${resizer.width}"
+            fontstyle="bold">
+        The blue view sizes to contain the red boxes.  (Click and
+        hold a box.)
+      </text>
+    </tabpane>
+  </tabs>
+</canvas>

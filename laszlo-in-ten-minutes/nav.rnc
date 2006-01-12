@@ -1,0 +1,39 @@
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+default namespace = ""
+
+start =
+  element menu {
+    element section {
+      itemAttributes,
+       ( topic*
+       | item*)
+    }+
+  }
+
+topic =
+  element topic {
+    itemAttributes,
+    item*
+  }
+
+item =
+  element item {
+    itemAttributes,
+    element subitem {
+      itemAttributes*
+    }?
+  }
+
+itemAttributes =
+  attribute action { "edit" | "explore" | "popup" | "source" }?,
+  attribute name { text },
+  attribute params { string }?,
+  attribute popup { xsd:anyURI }?,
+  attribute src { xsd:anyURI },
+  attribute text { text }?,
+  attribute title { text }?,
+  attribute target { xsd:ID }?,
+  attribute type { "popup" }?

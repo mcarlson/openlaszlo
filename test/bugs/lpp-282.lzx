@@ -1,0 +1,12 @@
+<canvas debug="true">
+
+   <method event="oninit"><![CDATA[
+       // No space between xml directive and first node. Parsed ok.
+       Debug.write('good:', LzDataNode.stringToLzData('<?xml?><good/>'));
+
+       // Space between xml directive and first node. Parse fails.
+       Debug.write('bad:', LzDataNode.stringToLzData('<?xml?> <bad/>'));
+       ]]>
+   </method>
+
+</canvas>

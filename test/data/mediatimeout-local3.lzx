@@ -1,0 +1,49 @@
+<canvas width="1200" height="800" debug='true'  medialoadtimeout="5000" proxied="false">
+  <debug x="200"/>
+  <simplelayout/>
+
+  <view x="0" y="0" id="v1"  resource="http:foo.html"/>
+  <view x="100" y="100" id="v2"  resource="http:foo.html"/>
+  <view x="200" y="200" id="v3"  resource="http:images/nbkn.jpg"/>
+  <view x="300"  y="300" id="v5"  resource="http:images/bkn.jpg"/>
+  <view x="400" y="400"  id="v6" resource="http:images/nsct.jpg"/>
+  <view x="500" y="500" id="v7" resource="http:images/nsn.jpg"/>
+
+
+
+    <!-- employee dataset -->
+    <dataset type="http" name="personData1" src="http:testdata.xml"/>
+    <dataset type="http" name="personData2" src="http:testdata.xml"/>
+    <dataset type="http" name="personData3" src="http:testdata.xml"/>
+    <dataset type="http" name="personData4" src="http:testdata.xml"/>
+    <!-- data view -->
+    <class name="PersonView" extends="view" bgcolor="#cccccc" width="200" height="200">
+        <attribute name="dpath" type="string"/>
+        <simplelayout/>
+        <view name="rowOfData" >
+            <simplelayout axis="x" />
+            <text datapath="firstName/text()" />
+            <text datapath="lastName/text()" />
+            <text datapath="modifyDate/text()" />
+            <text datapath="@id" />
+        </view>
+        <method event="oninit">
+            var d = canvas.datasets[this.dpath];
+            rowOfData.setDatapath(this.dpath+':/persons/person');
+            Debug.write("sending request for person data.");
+            d.doRequest();
+        </method>
+    </class>
+
+    <view >
+      <simplelayout spacing="2" axis="x"/>
+      <PersonView dpath="personData1"/>
+      <PersonView dpath="personData2"/>
+      <PersonView dpath="personData3"/>
+      <PersonView dpath="personData4"/>
+
+    </view>
+
+
+
+</canvas>

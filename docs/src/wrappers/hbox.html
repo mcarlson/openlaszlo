@@ -1,0 +1,35 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="hbox">
+    <lztier>LZ Components</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+        A horizontal box
+    </lzshortdesc>
+    <lztag>base/hbox.xml</lztag>
+</lzelement>
+<p>
+The <tagname>hbox</tagname> provides a convenient way to organize a simple horizontal layout.
+<example title="hbox">
+&lt;canvas height="30" &gt;
+    &lt;hbox spacing="10"&gt;
+        &lt;method event="onclick"&gt;
+            this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
+        &lt;/method&gt;
+        &lt;text&gt;click&lt;/text&gt;
+        &lt;text&gt;to&lt;/text&gt;
+        &lt;text&gt;animate&lt;/text&gt;
+        &lt;text&gt;spacing&lt;/text&gt;
+    &lt;/hbox&gt;
+&lt;/canvas&gt;
+</example>
+</p>
+
+</body>
+</html>

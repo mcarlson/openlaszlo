@@ -1,0 +1,184 @@
+<html id="art_assets" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Art assets</title>
+</head>
+
+<body>
+
+<h1>Intoduction to Media and Art Assets</h1>
+<p>This tutorial provides an informal overview of how to use media resources such
+as images, video and audio in Laszlo applications. These topics are covered in greater depth in
+<xref linkend="media-resources"/>.</p>
+
+<p>Being able to bring in art assets is not just for pictures - you can create your own custom viewsystem too.</p>
+
+
+<h2><a name="basics"/>Resources</h2>
+<p>
+
+In Laszlo applications, <tagname>view</tagname>s are the fundamental visible entities, and resources
+are externally generated media to be incorporated in applications. Resources are made available by being
+attatched to views. Thus in Laszlo applications you don't"insert an image"; 
+instead you insert a view whose resource is an image. 
+</p>
+
+<p>Let's look at the simplest way of including an art asset (resource). 
+In this case, a GIF image:</p>
+
+<example title="Using 'resource'">
+&lt;canvas width="500" height="80"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>This tiny Laszlo application loads an image called <code>smiley.gif</code> 
+(which is located in <code>resources</code>, a subdirectory of the one that contains the application).</p>
+<p>To position an image, position the view that contains that image as a resource:</p>
+
+ <example title="positioning images'">
+ &lt;canvas width="500" height="100"&gt;
+   &lt;view resource="../resources/smiley.gif"/&gt;
+   &lt;view <em>x="50" y="50"</em> resource="../resources/smiley.gif"/&gt;
+ &lt;/canvas&gt;
+</example>
+
+<p>We'll come to changing the size of an image later.</p>
+
+<!--
+        <td><img src="img/d_t_art_2.gif" alt="Two smiley faces" width="300" height="240" border="1"/></td>
+-->
+
+<h2><a name="including"/>Ways to include resources</h2>
+
+<p>In the example above, we included an image from the current local directory that was loaded when the application was compiled on the server. This may or may not be right for the particular application, so LZX has four ways to load images:</p>
+
+<h3>Loading resources at compile time</h3>
+<p>The resource gets bundled with the rest of the application when it is compiled on the server, so there will be a larger initial download, but the images will display instantly.</p>
+
+<p>All of these four methods will eventually show the same result on screen:</p>
+<example extract="false" title="Local pathname">
+&lt;canvas width="500" height="100"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<example extract="false" title="Using the resource global identifier">
+&lt;canvas width="500" height="100"&gt;
+  <em>&lt;resource name="smileyFaceImg" src="../resources/smiley.gif"/&gt;</em>
+  &lt;view resource="<em>smileyFaceImg</em>"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+<h3>Loading resources at run-time</h3>
+<p>The resource does not get loaded until the view is initialized, so the rest of the application will load and there may be a visible delay. The initial download will be smaller, because the images are not bundled with it. The server that does the compiling requests the image (if it resides on a different server), and it routes it to the app that is already running in the client.</p>
+
+<example extract="false" title="Absolute referencing">
+&lt;canvas&gt;
+  &lt;view resource="<em>http://www.laszlosystems.com/images/smiley.gif</em>"&gt;
+&lt;/canvas&gt;
+</example>
+
+<example extract="false" title="Local referencing">
+&lt;canvas&gt;
+  &lt;view resource="<em>http:</em>../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The best way to include a resources that are part of your application 
+is usually with the global identifier (using the <tagname>resource</tagname> tag). That way all resources
+ can be included in one place, and if you need to change a resource's location or the resource itself, you only 
+need to change it once. (Reasons to use other ways of including resources are described in later chapters.)</p>
+
+<h2><a name="types"/>File types</h2>
+
+<example title="Stretching resources">
+&lt;canvas width="500" height="200"&gt;
+  &lt;resource name="sourFace" src="<em>../resources/sourface.png</em>"/&gt;
+  &lt;resource name="smileyFace" src="../resources/smiley.gif"/&gt;
+  
+  &lt;view resource="smileyFace" x="10" y="10"/&gt;
+  &lt;view resource="sourFace" x="50" y="10"/&gt;
+  
+  &lt;view x="10" y="50" width="363" height="242" 
+  <em>stretches="both"</em> resource="../resources/sunset.jpg"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p> Laszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to <code>both</code>, <code>width</code> or <code>height</code>.</p>
+
+<h2><a name="multiframe"/>Multi-frame Resources</h2>
+
+<p>Resources can be multi frame, meaning that a single resource is actually made up of a number of different resources, each of which can only be shown one at a time.</p>
+
+<p>The format for doing this is:</p>
+
+<example title="Multiframe Resources">
+&lt;canvas width="500" height="100"&gt;
+  &lt;resource name="face"&gt;
+    &lt;frame src="../resources/sourface.png"/&gt;
+    &lt;frame src="../resources/smiley.gif"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;view x="150" y="50" resource="face"
+         onclick="this.setResourceNumber(2);"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The resources nested within the resource tag are numbered starting with 1.</p>
+<p>As you can see, Laszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to either <code>both</code>, <code>width</code> or <code>height</code>.</p>
+
+<h2><a name="swfs"/>Working with SWFs</h2>
+
+<p>You can treat SWFs as resources, whether they are animated or not:</p>
+
+<example title="Working with swf files">
+&lt;canvas width="500" height="100"&gt;
+  &lt;view resource="../resources/still_swf.swf"/&gt;
+  &lt;view x="150" y="20" resource="../resources/anim_swf.swf"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Any animation will loop <i>ad infinitum</i>. You will probably want to control the animation of a SWF from the script in your application. To prevent it from playing, we can tell it to stop when the view is initialized:</p>
+
+<pre>&lt;view x="150" y="20" resource="anim_swf.swf" <em>oninit="this.stop();"</em>/&gt;</pre>
+
+<example title="Stopping swf animations">
+&lt;canvas width="500" height="150"&gt;
+  &lt;view name="spinningClock" resource="../resources/clock.swf" 
+        onclick="this.stop();"
+        clickable="true"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Clicking on the image will cause the animation to stop. The <event>onclick</event> event handler will be covered in the "Scripting" tutorial.</p>
+
+<p>Instead of just using <method>stop</method>, we could have passed the <method>stop</method> method an argument of which frame to stop at.
+ In addition, we could have used the <method>play</method> method (also with optional frame argument) to play from a given frame.</p>
+
+<p>We can't really progress beyond this point without covering scripting, but here is a preview of some of 
+the other
+ attributes and methods of <tagname>view</tagname>s that pertain to resources:</p>
+
+<dl>
+  <dt><attribute>view.playing</attribute></dt><dd>
+  <p>An attribute that is true if the SWF is currently playing; false if it is stopped.</p></dd>
+  
+  <dt><attribute>view.frame</attribute></dt><dd>
+  <p>The number of the current frame.</p></dd>
+  
+  <dt><attribute>view.totalframes</attribute></dt><dd>
+  <p>The total number of frames in the SWF.</p></dd>
+
+  <dt><code>view.seek(n)</code></dt><dd>
+  <p>Jumps forward or backward <i>n</i> seconds through the SWF.</p></dd>
+</dl>
+<p>These and other APIs are discussed in greater detail in <xref linkend="media-resources"/>.</p>
+</body>
+</html>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

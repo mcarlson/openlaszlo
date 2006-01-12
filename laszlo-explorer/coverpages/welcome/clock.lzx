@@ -1,0 +1,136 @@
+<!--=======================================================================-->
+<!-- clocks.lzx                                                            -->
+<!--                                                                       -->
+<!-- library classes for the world clocks class                            -->
+<!--                                                                       -->
+<!-- Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+<library>
+
+    <!-- IMAGE RESOURCES -->
+    <resource name="clockbkgnd"     src="images/lzclock_bkgrnd_final.swf" />
+    <resource name="hourhand"       src="images/lzclock_hourhand2.swf" />
+    <resource name="minutehand"     src="images/lzclock_minutehand2.swf" />
+    <resource name="secondhand"     src="images/lzclock_secondhand2.swf" />
+    <resource name="secondhandshdw" src="images/lzclock_secondhandshdw.swf" />
+    <resource name="glasshilite"         src="images/lz_clock_hilite.swf" />
+    <resource name="cap"            src="images/lzclock_centercap.swf" />
+
+    <font name="Kgr" >
+        <face src="kroeger-6-plain-regular.ttf" />
+    </font>
+
+    <!-- CLASS: CLOCK -->
+    <class name="clock" resource="clockbkgnd">
+
+        <attribute name="stretches"      value="both"/>
+        <attribute name="width"          value="${this.unstretchedwidth *.5}"/>
+        <attribute name="height"         value="${this.width}"/>
+        <attribute name="act_height"     value="${this.unstretchedheight}"/>
+        <attribute name="act_width"      value="${this.unstretchedwidth}" />
+        <attribute name="lasthour"       value="0" />
+        <attribute name="lastminute"     value="0" />
+        <attribute name="timezoneoffset" value="0" />
+
+
+        <!-- AM or PM -->
+        <text font="Helmet" fontsize="14" name="dayandampm" x="130" y="132" visible="false" >SUN  AM
+            <method event="ontext" >
+                this.setX(100 - Math.floor(this.getTextWidth()/2.0));
+                this.setVisible(true);
+            </method>
+        </text>
+
+        <!-- HOUR HAND -->
+        <view name="hhs" resource="hourhand" x="${parent.act_width/2.0}" y="${parent.act_height/2.0}"
+              width="0" height="0"
+              opacity=".5" fgcolor="0x0"/>
+        <view name="hh"  resource="hourhand" x="${parent.act_width/2.0 -3}" y="${parent.act_height/2.0 -3}" />
+
+        <!-- MINUTE HAND -->
+        <view name="mhs" resource="minutehand" x="${parent.act_width/2.0}" y="${parent.act_height/2.0}"
+              width="0" height="0"
+              opacity=".5" fgcolor="0x0"/>
+        <view name="mh"  width="0" height="0" resource="minutehand" x="${parent.act_width/2.0 -3}" y="${parent.act_height/2.0 -3}" />
+
+        <!-- SECOND HAND -->
+        <view name="shs" resource="secondhandshdw" x="${parent.act_width/2.0}" y="${parent.act_height/2.0}"
+              width="0" height="0"
+              opacity=".5" />
+        <view name="sh"  width="0" height="0"
+              resource="secondhand" x="${parent.act_width/2.0 -3}" y="${parent.act_height/2.0 -3}" />
+
+        <!-- CAP -->
+        <view resource="cap" x="${parent.act_width/2.0 -3}" y="${parent.act_height/2.0 -3}" />
+
+        <!-- GLASS HILITE -->
+        <view resource="glasshilite" />
+
+        <method name="setCurrentTime">
+        <![CDATA[
+            // Get the current date and time local to this machine
+            var currentTimeObj = new Date();
+
+            // Tranlsate the time to the cities local time
+            currentTimeObj.setTime(currentTimeObj.getTime() + currentTimeObj.getTimezoneOffset()*60*1000); // UTC time
+            currentTimeObj.setTime(currentTimeObj.getTime() + + this.timezoneoffset*60*60*1000); // local to city
+            var hourNum = currentTimeObj.getHours();
+
+            // change time and get day
+            var dayNum   = currentTimeObj.getDay();
+            var dayArray = ["Sun","Mon","Tue","Wed","Thur","Fri","Sat"];
+
+            // Get PM or AM
+            if (hourNum > 11) {
+                hourNum-=12; // for clock representation
+                var hourLabel="PM";
+            } else {
+                var hourLabel="AM";
+            }
+            this.dayandampm.setText(dayArray[dayNum] + " " + hourLabel);
+
+            // Get Minutes and Seconds
+            var minNum=currentTimeObj.getMinutes();
+            var secNum=currentTimeObj.getSeconds();
+
+            // Move the hands of the clock...
+            var dur = 700;
+            if ( (this.lasthour != hourNum*30) || (this.lastminute != minNum*6) ){
+                  this.lasthour = hourNum*30;
+                  var hourPart = hourNum * 30 + ( minNum / 2 );
+                  this.hh.animate('rotation',hourPart,dur);
+                  this.hhs.animate('rotation',hourPart,dur);
+            }
+
+            if ( this.lastminute != minNum*6 ){
+                  this.lastminute = minNum*6;
+                  this.mh.animate('rotation',this.lastminute,dur);
+                  this.mhs.animate('rotation',this.lastminute,dur);
+            }
+            this.shs.setAttribute('rotation',secNum*6,dur);
+            this.sh.setAttribute('rotation',secNum*6,dur);
+
+        ]]>
+        </method>
+
+        <!-- This method is called everytime the global object 'secondtimer'(see below) -->
+        <!-- sends an onsecond event -->
+        <method event="onsecond" reference="secondtimer" >
+            this.setCurrentTime();
+        </method>
+
+
+        <method name="setTimeZone" args="tzo" >
+            this.timezoneoffset = tzo;
+        </method>
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

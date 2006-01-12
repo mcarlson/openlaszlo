@@ -1,0 +1,71 @@
+<canvas debug="true" width="800">
+    <class name="SequentialAnimation" extends="node">
+        <attribute name="list" value="$once{new Array()}"/>
+        <attribute name="index" value="$once{-1}"/>
+        <method name="add" args="anim">
+            list.push(anim);
+            debug.write("list: " + list);
+        </method>
+        <method name="myStart">
+            nextAnimation();
+        </method>
+        <method name="nextAnimation">
+            if (typeof(del) != "undefined")
+            	this.del.unregisterAll();
+            if (typeof(stopdel) != "undefined")
+            	this.stopdel.unregisterAll();
+            
+            var animation = list[++this.index];
+            if (!animation) return;
+            debug.write( '==== nextAnimation called ====' );
+            debug.write( animation );
+            this.del = new LzDelegate(this, "nextAnimation");
+            this.del.register(animation, "onstop");
+            this.stopdel = new LzDelegate(this, "announceStop");
+            this.stopdel.register(animation, "onstop");
+            animation.doStart();   
+        </method>
+        <method name="announceStop">
+            debug.write( 'onstop event fired &lt;&lt;&lt;' );
+        </method>
+    </class>
+    
+    
+    <class name="ShoppingCartBlock" width="300" bgcolor="#112233">
+        <!-- <method event="onx">
+            debug.write( 'x: ' + this.x );
+        </method> -->
+        <view width="300" height="100" bgcolor="red">
+            <button text="test" onclick="bump()">
+            <method name="bump">
+                debug.write("bump: ");
+                var animations = new SequentialAnimation();
+                animations.add(
+                    new LzAnimator(classroot, { attribute : "x", 
+                                                to:100, 
+                                                duration : 1000, 
+                                                start : 
+false} ));                                        
+                animations.add(
+                    new LzAnimator(classroot, { attribute : "x", 
+                                                to:0, 
+                                                duration : 1000, 
+                                                start : false}));
+                animations.myStart();
+            </method>
+            </button>
+            <simplelayout axis="x"/>
+        </view>
+        <simplelayout axis="y"/>
+
+    </class>
+
+    <view name="main" >
+        <ShoppingCartBlock  name="shoppingCart"/>
+    </view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,29 @@
+<library>
+<class name="constantlayout" extends="layout" >
+
+    <!--- The axis in which this layout operates either 'x' or 'y'.  -->
+    <attribute name="axis" value="y" type="string" />
+
+    <!--- The constant value that is applied to the attribute
+          ( defined in 'axis' as 'x' or 'y' ) of each subview in the layout. --> 
+    <attribute name="value" />
+
+    <!--- This method is called automatically by the layout. However it can be called directly to force the
+          layout to update -->
+    <method name="update">
+        <![CDATA[
+        var l = this.subviews.length;
+            
+        for(var i=0; i < l; i++) {
+            this.subviews[i].setAttribute( this.axis , this.value ); 
+        } 
+        ]]>
+    </method>
+</class>
+</library>
+<!-- This file will be obsoleted, isnteal use: /utrils/layouts/library,lzx -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Button">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        The button class provides a simple pushbutton.
+    </lzshortdesc>
+    <lztag>lz/button.xml</lztag>
+</lzelement>
+
+<p>The <tagname>button</tagname> tag provides a simple button. The
+button is rectangular and typically displays a text label describing
+its action. The button adjusts to fit the label.</p>
+
+<example class="code" title="Simple button">
+&lt;canvas height="30"&gt;	
+  &lt;button onclick="animate('x', 100, 1000, true)"&gt;
+    Move me
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>If you need to format the text using additional tags such as
+<tagname>b</tagname>, add the text inside the button tags instead of
+using the <attribute>text</attribute> attribute.</p>
+
+<example class="code" title="XHTML button">
+&lt;canvas height="30"&gt;	
+  &lt;button onclick="animate('x', 100, 1000, true)"&gt;
+    Move &lt;b&gt;me&lt;/b&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>A <tagname>button</tagname> may contain both XHTML markup, and
+object tags such as <tagname>attribute</tagname> and
+<tagname>method</tagname>.</p>
+
+<example class="code" title="XHTML button">
+&lt;canvas height="30"&gt;	
+  &lt;button onclick="moveHoriz(5);"&gt;
+    Move &lt;b&gt;me&lt;/b&gt;
+    &lt;method name="moveHoriz" args="moveAmount"&gt;
+      this.setAttribute("x", this.x+moveAmount);
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<component-design id="button" title="Button"/>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

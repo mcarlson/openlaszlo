@@ -1,0 +1,8 @@
+<library>
+  <view width="40" height="40" bgcolor="green" >
+    <state name="goBlue" apply="false">
+</state>
+    <state name="goRed" apply="true">
+</state>
+  </view>
+</library>

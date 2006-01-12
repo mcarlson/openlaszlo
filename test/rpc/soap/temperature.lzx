@@ -1,0 +1,43 @@
+<canvas debug="true" height="800" width="1000">
+
+    <debug x="280" width="470" height="370" />
+
+    <soap name="temperature" 
+          wsdl="http://developerdays.com/cgi-bin/tempconverter.exe/wsdl/ITempConverter">
+
+        <method event="onload">
+            Debug.write('temperature soap service stub loaded');
+        </method>
+
+        <!-- if error isn't handled by remotecall, the error is propogated up to
+             soap -->
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+
+        <remotecall name="ftoc" funcname="FtoC" >
+            <param value="100" />
+            <method event="ondata" args="value">
+                Debug.write('f is 100, c is', value);
+            </method>
+        </remotecall>
+
+        <remotecall name="ctof" funcname="CtoF" >
+            <param value="0" />
+            <method event="ondata" args="value">
+                Debug.write('c is 0, f is', value);
+            </method>
+        </remotecall>
+
+    </soap>
+
+    <view layout="spacing: 5" >
+        <button text="ftoc" onclick="temperature.ftoc.invoke()" />
+        <button text="ctof" onclick="temperature.ctof.invoke()" />
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

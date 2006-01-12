@@ -1,0 +1,40 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Grid">
+    <lztier>LZ Components</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+       Presents a grid backed by a datasource.
+    </lzshortdesc>
+    <lztag>lz/grid.xml</lztag>
+</lzelement>
+
+<p>A <classname>grid</classname> is be used to present data in a
+dataset. Although it can be configured using
+<tagname>gridcolumn</tagname> and <tagname>gridtext</tagname>, by
+default it will present an editable field either for each attribute in
+the first data node in the grid. If no attributes are found, a column
+will be presented for the each of the <code>name()</code> and
+<code>text()</code> fields of the nodes using
+<classname>gridtext</classname> columns.</p>
+
+<example>
+&lt;canvas height="250"&gt;
+  &lt;dataset name="weatherdata" request="true"
+           src="http://www.laszlosystems.com/cgi-pub/weather.cgi?zip=10022"/&gt;
+
+  &lt;grid datapath="weatherdata:/weather" contentdatapath="forecast/day"/&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

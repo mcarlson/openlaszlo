@@ -1,0 +1,165 @@
+<canvas>
+  <debug x="300"/>
+    <include href="new-baselistem.lzx"/> <!-- *** integrate into components -->
+  
+    
+        
+        
+        
+
+    <dataset name="dsList">
+        <root>
+            <person first="Max" last="Carlson"/>
+            <person first="Adam" last="Wolff"/>
+            <person first="Sarah" last="Allen"/>
+            <person first="Andrew" last="McClain"/>
+        </root>
+    </dataset>
+
+    <dataset name="dsNewPerson">
+        <person first="" last="">
+            <details work="" home="">
+            </details>
+        </person>
+    </dataset>
+
+    <dataset name="dsLoader" type="http" src="details.xml"
+             ondata="gCurrentContact.gotDetails( this.getFirstChild() )"/>
+    
+    <datapointer name="gCurrentContact">
+        <attribute name="awaitingdetails" value="null"/>
+
+        <method event="onp">
+            //set query param to match this contact
+            //dsLoader.setQuery...
+            if ( this.xpathQuery( 'details' ) ) return;
+            Debug.write( 'requesting details for ' , this.p );
+            this.awaitingdetails = this.p;
+            dsLoader.doRequest();
+        </method>
+
+        <method name="gotDetails" args="node">
+            this.awaitingdetails.appendChild ( node );
+        </method>
+
+        <method name="ensureInList">
+            if ( this.getDataset() != dsList ){
+                //send to server...
+                this.okToAdd();
+            }
+        </method>
+
+        <method name="okToAdd">
+            dsList.getFirstChild().appendChild( this.p );
+        </method>
+
+       <method name="deleteIt">
+            dsList.getFirstChild().removeChild( this.p );
+            this.setPointer(null);
+       </method>
+    </datapointer>
+
+    <window title="contacts" height="200">
+        <simplelayout/>
+        <view>
+            <simplelayout axis="x"/>
+            <button>New
+                <method event="onclick">
+                    var newContact= dsNewPerson.getFirstChild().cloneNode( true );
+                    gCurrentContact.setPointer( newContact );
+                </method>
+            </button>
+
+            <button>Delete
+                <method event="onclick">
+                    gCurrentContact.deleteIt();
+                </method>
+            </button>
+        <combobox width="94" editable="false" > 
+          <method event="onvalue">
+            // Set the sort order
+            contacts.content.firstNode.setAttribute('sortpath',
+                                                             this.value);
+          </method> 
+            <textlistitem text="Last Name" value="'@last'" selected="true"/>
+            <textlistitem text="First Name" value="'@first'"/>
+            
+        </combobox>
+        </view>
+        <!-- breaks with:
+                resize && newbaselistitem
+            not lazy, newbaselistitem
+            not resize, basevaluecomponent
+            -->
+        <view name="frame" height="100" bgcolor="0xEEEEEE" clip="true">
+        <view><baselist id="contacts" datapath="dsList:/root" dataoption="resize">
+            <simplelayout axis="x"/>
+              <view name="content"> 
+                   <newbaselistitem name="firstNode" datapath="person" bgcolor="0xEEFFEE">
+                    <method name="setSelected" args="s">
+                        super.setSelected(s);
+                        
+                        Debug.write("setSelected ", s, " ", this.height);
+                        var color = s ? '0x99DD11' : null;
+                        var height = s ? 24 : 16;
+                        this.first.setBGColor(color);
+                        this.last.setBGColor(color);
+                        this.setHeight(height);
+                    </method>
+                    <method name="updateContact" event="onselect">
+                        gCurrentContact.setPointer( this.datapath.p );
+                    </method>
+                    <method event="onclick">
+                        this.updateContact();
+                    </method>
+                        <simplelayout axis="x"/>
+                        <text name="first" datapath="@first"/>
+                        <text name="last" datapath="@last"/>
+                   </newbaselistitem>
+                   <simplelayout/>
+            </view>
+        </baselist></view>
+        <scrollbar/>
+        </view>
+    </window>
+
+    <window title="details" y="250" width="200" height="250" id="gDetailsWin">
+        <datapath p="${gCurrentContact.p}">
+            <attribute name="dataControlsVisibility" value="false"/>
+        </datapath>
+        <view>
+            <simplelayout axis="x"/>
+            <text datapath="@first"/>
+            <text datapath="@last"/>
+        </view>
+        <simplelayout/>
+        <text datapath="details/@work"/>
+        <text datapath="details/@home"/>
+    </window>
+
+    <window title="editor" x="250" width="200" height="200" id="gEditWin">
+        <datapath p="${gCurrentContact.p}">
+            <attribute name="dataControlsVisibility" value="false"/>
+        </datapath>
+        <view>
+            <simplelayout axis="x"/>
+            <edittext datapath="@first"/>
+            <edittext datapath="@last"/>
+        </view>
+        <simplelayout/>
+        <edittext datapath="details/@work"/>
+        <edittext datapath="details/@home"/>
+        <button>Update
+            <method event="onclick">
+                parent.datapath.updateData();
+                gCurrentContact.ensureInList();
+            </method>
+            
+        </button>
+    </window>
+   
+    </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

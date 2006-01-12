@@ -1,0 +1,34 @@
+<canvas width="1000" height="1000" debug="true">
+	<resource name="OG" src="olivergray.jpg" />
+	<resource name="OP" src="oliverpurplecenter.swf" />
+	<resource name="OC" src="olivercropped.jpg" />
+	<!-- TEST 1 -->
+	
+	<view name="oliver_jpg" bgcolor="red" resource="OG" x="100" y="100" onclick="this.animate('rotation',90,1000,true);debug.write('Oliver.jpg WIDTH,HEIGHT=' + this.getWidth() + ',' + this.getHeight())"/>	
+
+	<view name="red_view" bgcolor="red" resource="OP" x="400" y="100" onclick="this.animate('rotation',90,1000,true);debug.write('OliverCentered.swf WIDTH,HEIGHT=' + this.getWidth() + ',' + this.getHeight())"/>
+	
+	
+	<view name="green_view" x="400" y="300" bgcolor="green" >
+		<view name="oliver_jpg" bgcolor="red" resource="OG" x="${-this.width/2.0}" y="${-this.height/2.0}"  onclick="this.parent.animate('rotation',45,1000,true);debug.write( this + 'WIDTH,HEIGHT=' + this.parent.getWidth() + ',' + this.parent.getHeight())"/>		
+	</view>
+
+
+	<view name="yellow_view" x="400" y="500" bgcolor="yellow" >
+		<view name="oliver_crp" bgcolor="red" resource="OC" x="${-this.width/2.0}" y="${-this.height/2.0}"  stretches="both" width="100%" height="100%" onclick="this.parent.animate('rotation',45,1000,true);debug.write( this + 'WIDTH,HEIGHT=' + this.getWidth() + ',' + this.getHeight());debug.write( this.parent + 'WIDTH,HEIGHT=' + this.parent.getWidth() + ',' + this.parent.getHeight())"/>		
+	</view>
+	
+	
+	<view bgcolor="gray" x="600" y="400" width="150" height="30" 
+		onclick="canvas.yellow_view.animate('height',20,1000,true);
+	 			canvas.yellow_view.animate('rotation',30,1000,true);
+	 			debug.write( canvas.yellow_view + 'WIDTH,HEIGHT=' + canvas.yellow_view.getWidth() + ',' + canvas.yellow_view.getHeight());
+	 			debug.write( canvas.yellow_view.oliver_crp + 'WIDTH,HEIGHT=' + canvas.yellow_view.oliver_crp.getWidth() + ',' + canvas.yellow_view.oliver_crp.getHeight())" >
+	 	<text align="center" y="10" >ROTATE AND EXPAND</text>
+	 </view> 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

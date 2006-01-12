@@ -1,0 +1,11 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<data>
+    <record a="1"> some Text </record>
+    <record a="2"> <a/> <b> fdksjhf</b> <c/></record>
+    <foo a="11"> some Text </foo>
+    <match2> <aa/> <bb first="true"/> <bb> some </bb> <cc/> </match2>
+    <match2> <ee/> <ff/> <bb> otherbb </bb> <bb last="true"/> </match2>
+</data>

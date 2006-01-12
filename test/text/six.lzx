@@ -1,0 +1,43 @@
+<canvas height="600" >
+
+<class name="tester">
+    <simplelayout axis="y" spacing="-2" />
+    <text pixellock="true">012345678906162636465676869</text>
+    <text pixellock="true">0</text>
+    <text pixellock="true">1</text>
+    <text pixellock="true">2</text>
+    <text pixellock="true">3</text>
+    <text pixellock="true">4</text>
+    <text pixellock="true">5</text>
+    <text pixellock="true">6</text>
+    <text pixellock="true">7</text>
+    <text pixellock="true">8</text>
+    <text pixellock="true">9</text>
+    <text pixellock="true">10</text>
+    <text pixellock="true">11</text>
+    <text pixellock="true">12</text>
+    <text pixellock="true">13</text>
+    <text pixellock="true">14</text>
+    <text pixellock="true">15</text>
+    <text pixellock="true">16</text>
+    <text pixellock="true">17</text>
+    <text pixellock="true">18</text>
+    <text pixellock="true">19</text>
+</class>
+
+<tabslider width="300" height="500">
+    <tabelement text="roman">
+        <tester />
+    </tabelement>
+    <tabelement text="bold">
+        <tester fontstyle="bold" />
+    </tabelement>
+    <tabelement text="italic">
+        <tester fontstyle="italic" />
+    </tabelement>
+</tabslider>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

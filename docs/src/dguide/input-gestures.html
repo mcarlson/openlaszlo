@@ -1,0 +1,401 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="input-devices">
+<head>
+  <title>Input Devices and Gestures</title>
+</head>
+
+<body>
+
+<h1>Input Devices and Gestures</h1>
+
+<!--=========================================================================-->
+<!-- Major sub-heads in h2, etc                                                               -->
+<!--=========================================================================-->
+<h2>Overview</h2>
+<p>
+	This chapter explains how to incorporate mouse and keyboard input into an OpenLaszlo application. This capter will cover the basic concepts
+	as well as more advanced topics such as tracking the mouse across multiple views while the mouse is down. 
+</p>
+
+<h2>The Mouse</h2>
+
+<p>
+	Interaction with a view via the mouse is fundamental to all applications. These sections will explore the basic concepts as well
+	some more advanced topics.
+</p>
+<h3>Basic Mouse Events</h3>
+<p> Interacting with the example below displays the five basic mouse events that can be recognized by a view.
+</p> 
+<p> <b>Mouse events</b>: onmouseover, onmouseout, onmousedown, onmouseup, onclick </p>
+<p>
+	Though onmouseup and onclick are similar, onmouseup is sent whenever the user lets up on the mouse, while 
+	onclick is only sent when the user lets up on the mouse and the cursor is still contianed within the boundary of the view.
+</p>
+
+<example title="The basic mouse events" >
+&lt;canvas height="40"&gt;
+  &lt;view bgcolor="red"
+        onmouseover="txt.setText('onmouseover')"
+        onmouseout="txt.setText('onmouseout')"
+        onmousedown="txt.setText('onmousedown')"
+        onmouseup="txt.setText('onmouseup')"
+        onclick="txt.setText('onmouseup, onclick')"
+        x="10" y="10" width="20" height="20"/&gt;
+
+  &lt;text id="txt"
+        x="40" y="11" width="150"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<h3>Making Views Clickable</h3>
+<p>
+	A view will only respond to mouse events when its attribute clickable="true". Views, by default, are not clickable. 
+	If, however,  any of the mouse events are included in a view's tag ( like above ) then clickable will be set to true automatically.
+    In the example below, there are no mouse events decalred within the tag itself, only in its methods. In this case it becomes
+    necessary to explicity define clickable="true" for the view.
+</p>
+
+<example title="Making views clickable" >
+&lt;canvas height="40"&gt;
+  &lt;view bgcolor="red" clickable="true"
+         x="10" y="10"
+         width="20" height="20"&gt;
+    &lt;method event="onmousedown"&gt;
+      this.setWidth(30);
+      this.setheight(30);
+      this.setX(5);
+      this.setY(5);
+    &lt;/method&gt;
+    &lt;method event="onmouseup"&gt;
+      this.setWidth(20);
+      this.setheight(20);
+      this.setX(10);
+      this.setY(10);
+    &lt;/method&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<h3>Cursor Management</h3>
+<p>
+The cursor automatically changes to a hand when it is over a clickable view, but if a custom cursor is desired, then
+this can be accomplished by defining a custom resource for the cursor and using it with LzCursor service as shown below.
+</p>
+
+<example title="Changing the cursor">
+&lt;canvas height="30"&gt;
+  &lt;resource name="waitcursor" src="resources/lzwaitcursor_rsc.swf"/&gt;
+  &lt;button onclick="setCursor()" text="Click me to change the cursor for 1/2 second"&gt;
+    &lt;method name="setCursor"&gt;
+      LzCursor.setCursorGlobal('waitcursor');
+      // call LzCursor.restoreCursor() after 1/2 second
+      var del= new LzDelegate(LzCursor, 'restoreCursor');
+      LzTimer.addTimer(del, 500);
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<h4>Disablng the "hand" cursor</h4>
+<p>By setting <method>LzCursor.showHandCursor</method> to true or false, you show or hide the hand cursor for all clickable views.
+This means that you can, for example, prevent clicks from traveling
+through windows, without the hand cursor appearing.</p>
+<p>Here is an example showing the hand cursor turned on and off.</p>
+<example title="enabling and disabling the hand cursor">
+&lt;canvas&gt;
+    &lt;view width="100" height="100" bgcolor="green"&gt;
+        &lt;method event="onclick"&gt;
+            LzCursor.showHandCursor(true);
+        &lt;/method&gt;
+    &lt;/view&gt;
+    &lt;view x="110" width="100" height="100" bgcolor="yellow"&gt;
+        &lt;method event="onmouseover"&gt;
+            LzCursor.showHandCursor(true);
+        &lt;/method&gt;
+        &lt;method event="onmouseout"&gt;
+            LzCursor.showHandCursor(false);
+        &lt;/method&gt;
+    &lt;/view&gt;
+    &lt;view x="220" width="100" height="100" bgcolor="red"&gt;
+        &lt;method event="onclick"&gt;
+            LzCursor.showHandCursor(false);
+        &lt;/method&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<h3>Custom buttons</h3>
+<p>Creating a custom button that changes its images with onmouseup, onmouseover, and onmousedown is
+is a common practice.  Here is an example using the <tagname link="true">basebutton</tagname> tag 
+
+</p>
+
+<example title="Creating a custom button using basebutton">
+&lt;canvas height="150"&gt;
+  &lt;!-- first create the multi-frame resource and give it a name --&gt;
+  &lt;resource name="mybutton_rsrc"&gt;
+    &lt;!-- first frame MUST be the mouseup state of the button --&gt;     
+    &lt;frame src="resources/button-up.png"/&gt;
+    &lt;!-- second frame MUST be the mouseover state of the button --&gt;
+    &lt;frame src="resources/button-over.png"/&gt;
+    &lt;!-- third frame MUST be the mousedown state of the button --&gt;
+    &lt;frame src="resources/button-down.png"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;!-- Second, assign the resource to a basebutton tag --&gt;
+  &lt;basebutton resource="mybutton_rsrc"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<h3>Dragging Views</h3>
+<p>Dragging a view can be accomplished with the use of a dragstate. When a dragstate is applied, views
+can be dragged freely or constrained to a boudnary as well as an axis.
+The example below shows the use of a dragstate with its max, min, and axis attributes.</p>
+
+<example title="dragging a view" >
+&lt;canvas height="120"&gt;
+  &lt;simplelayout spacing="3"/&gt;
+  
+  &lt;text&gt;dragging within a bounded area&lt;/text&gt;
+  &lt;view bgcolor="yellow" height="40" width="160"&gt;
+    &lt;view bgcolor="red" width="20" height="20" 
+          onmousedown="this.dragger.apply()"
+          onmouseup="this.dragger.remove()"&gt;
+      &lt;dragstate name="dragger"
+          drag_min_x="0"
+          drag_max_x="$once{parent.width - this.width}"
+          drag_min_y="0"
+          drag_max_y="$once{parent.height - this.height}"
+          drag_axis="both"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+  
+  &lt;text&gt;dragging along the x-axis&lt;/text&gt;
+  &lt;view bgcolor="yellow" height="40" width="160"&gt;
+    &lt;view bgcolor="red" width="20" height="20" 
+          onmousedown="this.dragger.apply()"
+          onmouseup="this.dragger.remove()"&gt;
+      &lt;dragstate name="dragger"
+          drag_min_x="0"
+          drag_max_x="$once{parent.width - this.width}"
+          drag_min_y="0"
+          drag_max_y="$once{parent.height - this.height}"
+          drag_axis="x"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+ &lt;/canvas&gt;
+</example>
+<?ignore
+<p>Having other views respond while a view is being dragged ... </p>
+
+?>
+<h2>Tracking the Mouse</h2>
+<h3>Tracking the mouse within a single view</h3>
+<p>
+This simple program shows how to do basic mousetracking in a view:
+</p>
+<example height="500" width="500" title="Simple mouse tracking">
+&lt;canvas height="500" width="500" debug="true"&gt;
+   &lt;debug y="300"/&gt;
+   &lt;view width="300" height="300" bgcolor="red" clickable="true" &gt;
+       &lt;attribute name="moustracker_del" value="$once{ new LzDelegate( this, 'trackmouse' )}" /&gt;
+         &lt;method event="onmousedown" &gt;
+           moustracker_del.register(LzIdle,'onidle');
+       &lt;/method&gt;
+
+       &lt;method event="onmouseup" &gt;
+           moustracker_del.unregisterAll();
+       &lt;/method&gt;
+
+       &lt;method name="trackmouse" &gt;
+           Debug.write("mousex,mousey =", this.getMouse('x'),this.getMouse('y'));
+       &lt;/method&gt;
+         &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+This generates a lot of points, but you can decide how much data to filter or not in the trackmouse method.
+</p>
+
+<h3>Tracking the Mouse in overlapping views</h3>
+<p>
+	Once the mouse is down in relation to a specific view, onmouseover and onmouseout events
+	are only sent to that view. This makes it diffcult to track the mouse over other views.
+	This section explains how to accomplish this, first by using a base component called basetrackgroup, and then with the low level APIs
+	that basetrackgroup is built upon.
+</p>
+
+<p>
+	In the example below, notice that the onmouseover and onmouseout events change the size of the view
+	while the onmousetrackover and onmousetrackout events change the color of the view. As you drag the mouse, the first view
+	will continue to change it size and color while the other views will only change their color. Again, 
+	this is because the basic onmouseover and onmouseout events are only being sent to the first view that was clicked. 
+	However, onmousetrackover and onmousetrackout are sent all views while the mouse is down.
+</p>
+<example title="Using basetrackgroup">
+&lt;canvas height="160"&gt;
+  &lt;class name="myTrackableView" bgcolor="red"
+         onmouseover="setWidth(70)" 
+         onmouseout="setWidth(60)"
+         onmouseup="setAttribute('bgcolor', 0xFF0000)"
+         width="60" height="30"&gt;
+
+    &lt;!-- Use methods for mouse-tracking events --&gt;
+    &lt;method event="onmousetrackover"&gt;
+      setAttribute('bgcolor', 0x0000FF); //blue
+    &lt;/method&gt;
+
+    &lt;method event="onmousetrackout"&gt;
+      setAttribute('bgcolor', 0xFF0000); //red
+    &lt;/method&gt;
+
+    &lt;method event="onmousetrackup"&gt;
+      setAttribute('bgcolor', 0xFF0000); //red
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;text&gt;Click on any red view and drag the mouse. &lt;/text&gt;
+  &lt;basetrackgroup bgcolor="yellow"
+                  x="20" y="40"&gt;
+    &lt;myTrackableView/&gt;
+    &lt;myTrackableView/&gt;
+    &lt;myTrackableView/&gt;
+    &lt;simplelayout axis="y" spacing="5"/&gt;
+  &lt;/basetrackgroup&gt;
+&lt;/canvas&gt;
+</example>
+<a name="view_source"/>
+<h2>"View Source" right click menu item </h2>
+<p>
+ The default canvas context (right click) menu has a "view source" 
+ item. 
+</p>
+<p>
+For an application <tt>framitz.lzx</tt> that is deployed proxied (using the OpenLaszlo Server), this will fetch 
+<tt>framitz.lzx?lzt=source</tt> in a new browser window. If you don't wish to make source visible, set <tt>allowRequestSOURCE=false </tt>in WEB-INF/lps/config/lps.properties.
+</p>
+<p>
+To preserve the "about OpenLaszlo" information while disabling source, you can use a method like the following, on the canvas:
+</p>
+<example extract="false" title="Disabling 'View Source'">
+&lt;method event="oninit"&gt;
+this.removeViewSourceMenu();
+&lt;/method&gt;
+
+&lt;method name="removeViewSourceMenu"&gt;
+var cm1 = new ContextMenu();
+cm1.hideBuiltInItems();
+cm1.addItem(this.__LZdefaultMenuItem);
+this.setContextMenu(cm1);
+&lt;/method&gt;
+</example>
+<p>
+SOLO deployed applications, say, <tt>framitz.lzx</tt>, will attempt to fetch <tt>"framitz.lzx.zip"</tt>.This assumes that a copy 
+of the source will be placed there if you desire to make your source visible. If you don't wish to share code of your SOLO application, use the method above to disable the ViewSourceMenu.
+
+</p>
+<h2>Keyboard Input</h2>
+<p>
+In OpenLaszlo applications, the keyboard input can be accepted by the view which has the keyboard "focus".  The <classname link="true">LzFocus</classname> service allows you to set and control the focus.  The opposite of focus is "blur", as discussed below.
+</p>
+<h3>Focus and the LzFocus service</h3>
+<p>A focusable view is a view whose <attribute>focusable</attribute> attribute is true (the
+default value).  When the user clicks on a focusable view, the focus
+is set to that view.  If the view is different from the previously
+focused view, an <event>onblur</event> is sent to the previously
+focused view, and an <event>onfocus</event> is sent to the newly focused
+view.</p>
+<p>
+To prevent a view from taking keyboard input, you can set its <code>focusable</code> attribute to "false".</p>
+<h3>Focus trap and the focus group</h3>
+<p><dfn>Focus trap</dfn>: A view's focus trap is its most direct ancestor
+whose <attribute>focustrap</attribute> attribute is true, or the canvas.  A view's <dfn>focus
+group</dfn> is the set of focusable views that are descendants of the focus
+trap, and are not descendants of any more immediate ancestor whose
+<attribute>focustrap</attribute> attribute is also true.</p>
+
+<p>The effect of this definition is that tabbing within the children
+of a view that has a true <attribute>focustrap</attribute>, such as
+a window, will tab to another child of the same view, but won't tab to
+a view within another window.</p>
+
+<p>The <a href="${demos}contacts">Contacts demo</a> demonstrates the
+use of keyboard focus.  Double-click on a name to open the details
+window.  Click in a text, and then press tab and shift-tab to move to
+other text fields within the same focus group.</p>
+<h4>Using Tab key to move within a focus group</h4>
+<p>When the tab key is pressed, the focus moves to the next
+focusable view within the current <i>focus group</i>.    If there is no next view, the first view
+within the current focus group is selected.  Similarly, shift-tab
+selects the previous focusable view.  If there is no previous view,
+the last view within the current focus group is selected.</p>
+
+<p>A view can override the <method>getNextSelection</method> and
+<method>getPrevSelection</method> methods to change this default behavior.
+The tab and shift tab keys select the view returned by calling
+<method>getNextSelection</method> and <method>getPrevSelection</method>,
+respectively, on the view that currently has the keyboard focus.</p>
+<h4>Programmatic control of focus group</h4>
+<p>In addition to the tab key, focus within a focus group can also be set under programmatic control, by calling the 
+<method>LzFocus.setFocus</method>, <method>LzFocus.next</method>, and
+<method>LzFocus.prev</method> methods.</p>
+<h3>Reading Key Values </h3>
+<p>
+One way of integrating keyboard input into your application is to have a focusable view capture pressed key codes. Only one view can be focusable at any one time. In this example, we're making that view focused oninit (although in a larger application, you could bring focus to that view using the tab key, or you could write an onclick method to tell it to focus).</p>
+<p>
+The example below illustrates use of <tagname>LzFocus</tagname> to make a view able to accept keyboard input.</p>
+<example title="Reading Key Values">
+&lt;canvas  height="200" debug="true"&gt;
+    &lt;debug x="110" y="15" /&gt;
+
+    &lt;!-- NOTE: Even though the view below takes focus oninit,
+               in some browsers you might still need to click on the
+               application itself, to take the focus away from the 
+               browser itself and to the Flash Player. --&gt;
+
+    &lt;view width="100" height="100" bgcolor="0x333399"
+          focusable="true"
+          oninit="LzFocus.setFocus(this)"&gt;
+
+        &lt;method event="oninit"&gt;
+            this.keyCodes = new Array()
+            this.keyCodes[65] = "A for Apple";
+            this.keyCodes[76] = "L for Laszlo";
+            this.keyCodes[79] = "O for Optometrist";
+            this.keyCodes[83] = "S for Sammy";
+            this.keyCodes[90] = "Z for Zebra";
+        &lt;/method&gt;
+
+        &lt;method event="onkeydown" args="akeycode"&gt;
+            // respond here    
+            Debug.write( "Key pressed: " + akeycode );
+            if ( this.keyCodes[akeycode] != undefined ) {
+                Debug.write( this.keyCodes[akeycode] );
+            } else {
+                Debug.write( "you pressed: " + String.fromCharCode(akeycode) );
+            }
+        &lt;/method&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<?ignore
+<example title="Creating and using LzTrackgroups">
+
+</example>
+<!--
+<h4>Tracking APIs</h4>
+-->
+
+<todo>
+<h2>The Keyboard ( section under construction )</h2>
+
+<h3>Focusing on a View</h3>
+<h3>Basic Keyboard Events</h3>
+<h3>While the Key is down...</h3>
+<h3>Using Modifier keys: Option, Shift, and Control</h3>
+</todo>
+?>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

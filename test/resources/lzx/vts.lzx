@@ -1,0 +1,108 @@
+<!--
+==============
+ * Copyright (c) 2001, 2002 Laszlo Systems, Inc. 
+ * All Rights Reserved. 
+ * 
+ * This software is the proprietary information of Laszlo Systems, Inc. 
+ * Use is subject to license terms. 
+==============
+-->
+<library>
+    
+    <!-- CLASS: tabelement  =============================================== -->
+    <!-- ================================================================== -->
+    <class name="tabelement" clickable="true" 
+           height="${parent.height}"
+           onmouseup="this.parent.openTab(this,true)"  >
+           
+        <!-- ATTRIBUTES -->
+        <attribute name="minwidth" value="0" setter="this.minwidth = minwidth == 0 ? this.parent.minTabWidth:minwidth" />
+        <attribute name="openwidth" value="null" setter="this.openwidth = openwidth == null ? this.parent.openWidth:openwidth"/>
+        <attribute name="width" value="this.minwidth" when="once" /> <!-- used to say value="this.minwidth" when="always" -->
+
+        <!-- METHODS -->
+        <method name="open" args="h,d,withAnimation" >
+            if (this.openWidth!=null) {
+               h=this.openWidth;
+            }
+            if( withAnimation ) {
+               this.animate("width",h,d,true);
+            } else {
+                this.setAttribute("width",h);
+            }
+        </method>
+ 
+        <method name="close" args="h,d">
+            this.animate("width",h,d,true);
+        </method>
+        
+        <method name="init" >
+            super.init();
+            this.parent.update();  //update the tabSlider
+        </method>
+    </class>
+
+    <!-- CLASS: tabslider  ================================================ -->
+    <!-- ================================================================== -->
+    <class name="tabslider" >
+    
+        <!-- ATTRIBUTES -->
+        <attribute name="slideDuration" value="1000" />
+        <attribute name="spacing" value="0" />
+        <attribute name="minTabWidth" value="20" />
+        <attribute name="opennedTab" value="null" />
+        <attribute name="openwidth" value="null"/>
+        
+        <!-- LAYOUTS -->
+        <simplelayout axis="x"/>
+        
+        <!-- METHODS -->
+        <method name="init" >
+            this.dl = new LzDelegate(this,"update",this,"onwidth");
+            super.init();
+            this.reset();
+         </method>
+
+        <method name="reset" >
+            this.layouts[0].spacing = this.spacing; 
+            this.layouts[0].reset();
+            this.calcAvailableWidth();
+        </method>
+
+        <method name="update" >
+            <![CDATA[
+            this.calcAvailableWidth();
+            if (this.opennedTab) this.opennedTab.setAttribute("width",this.opennedTab.minwidth + this.availableWidth);
+            ]]>            
+        </method>
+               
+        <method name="openTab" args="tabelement,withAnimation" >
+            <![CDATA[
+			if (this.opennedTab != tabelement) {
+                tabelement.open(this.availableWidth,this.slideDuration, withAnimation)
+                if (this.opennedTab != null) this.opennedTab.close(-this.opennedTab.width + this.opennedTab.minwidth, this.slideDuration);
+                this.opennedTab = tabelement;
+            } else {
+                // DO I NEED A METHOD HERE TO OVERRIDE?
+            }
+            ]]>
+        </method>
+        
+        <method name="calcAvailableWidth" >
+            <![CDATA[
+            this.availableWidth = 0;
+            for( var m=0; m < this.subviews.length; m++) {
+                this.availableWidth += this.subviews[m].minwidth +   
+                this.spacing;
+            }
+            this.availableWidth = Math.max(0,this.getAttribute("width") -     
+                                   this.availableWidth + this.spacing);
+            ]]>            
+        </method>
+        
+   </class> 
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

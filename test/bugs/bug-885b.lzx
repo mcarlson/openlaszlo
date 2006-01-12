@@ -1,0 +1,22 @@
+<canvas>
+<include href="debugger"/>
+<script>
+function f() {
+  var value = 'value';
+  for (var i in [1,2,3,4,5])
+    if (i == 3)
+      break;
+  Debug.write("returning " + value);
+  return value;
+}
+function g() {
+  var value = f();
+  Debug.write("received " + value);
+}
+g();
+</script>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

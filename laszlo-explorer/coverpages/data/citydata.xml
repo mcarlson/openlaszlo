@@ -1,0 +1,22 @@
+<!--=======================================================================-->
+<!-- citydata.xml                                                          -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+<cities>
+	<city x="130" y="80" labelposition="4" >
+		<name>Boston</name>
+		<timezone>3</timezone>
+	</city>
+	<city x="90" y="80" labelposition="2" >
+		<name>Denver</name>
+		<timezone>3</timezone>
+	</city>
+	<city x="33" y="65" labelposition="2" >
+		<name>San Francisco</name>
+		<timezone>3</timezone>
+	</city>
+</cities>

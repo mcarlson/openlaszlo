@@ -1,0 +1,131 @@
+<canvas width="800" height="800" debug="true">
+
+    <debug x="300" y="20" width="500" height="400" />
+
+    <include href="rpc/webapprpc.lzx" />
+
+    <webapprpc id="webapp" secure="true" secureport="8443">
+
+        <method event="onload">
+            Debug.write('webapp object loaded');
+        </method>        
+
+        <method event="ondata" args="data">
+            if (data == LzRPC.t_void) {
+                Debug.write("default ondata: void");
+            } else {
+                Debug.write("default ondata:", data);
+            }
+        </method>
+
+        <method event="onerror" args="error">
+            Debug.write("default onerror:", error);
+        </method>
+
+        <remotecall funcname="getMajorVersion" />
+
+        <remotecall funcname="getMinorVersion" />
+
+        <remotecall name="htmlGetMimeType" funcname="getMimeType">
+            <param value="'foo.html'" />
+        </remotecall>
+
+        <remotecall name="swfGetMimeType" funcname="getMimeType">
+            <param value="'foo.swf'" />
+        </remotecall>
+
+        <remotecall funcname="getServerInfo" />
+
+        <remotecall funcname="getServletContextName" />
+
+        <!-- look in your servlet container's log for this message-->
+        <remotecall funcname="log">
+            <param value="'a message'" />
+        </remotecall>
+
+        <remotecall name="getmyattr" funcname="getAttribute">
+            <param value="'myattr'" />
+        </remotecall>
+
+        <remotecall name="getmyother" funcname="getAttribute">
+            <param value="${'myother'}" />
+        </remotecall>
+
+        <remotecall funcname="getAttributeNames" />
+
+        <remotecall name="removemyattr" funcname="removeAttribute">
+            <param value="'myattr'" />
+        </remotecall>
+
+        <remotecall name="removemyother" funcname="removeAttribute">
+            <param value="'myother'" />
+        </remotecall>
+
+        <remotecall name="setmyattr" funcname="setAttribute">
+            <param value="'myattr'" />
+            <param value="'MY ATTRIBUTE'" />
+        </remotecall>
+
+        <remotecall name="setmyother" funcname="setAttribute">
+            <param value="'myother'" />
+            <param value="'MY OTHER'" />
+        </remotecall>
+
+    </webapprpc>
+
+
+    <view layout="spacing: 5">
+        <button text="load webapp" onclick="webapp.load()" />
+
+        <button text="getMajorVersion" onclick="webapp[this.text].invoke()" />
+        <button text="getMinorVersion" onclick="webapp[this.text].invoke()" />
+
+        <button text="htmlGetMimeType" onclick="webapp[this.text].invoke()" />
+        <button text="swfGetMimeType" onclick="webapp[this.text].invoke()" />
+        <button text="getServerInfo" onclick="webapp[this.text].invoke()" />
+        <button text="getServletContextName" onclick="webapp[this.text].invoke()" />
+        <!-- look in your servlet container's log for this message-->
+        <button text="log" onclick="webapp[this.text].invoke()" />
+        <button text="clear debug window " onclick="Debug.clear()" />
+
+        <view x="20" layout="spacing: 5">
+
+            <attribute name="myDel" value="null" type="expression" />
+
+            <method event="oninit">
+                this.myDel = new LzDelegate(this, 'myhandler');
+            </method>
+
+            <method name="myhandler" args="data">
+                Debug.write('myhandler:', data);
+            </method>
+
+            <button text="setmyattr" onclick="webapp[this.text].invoke()" />
+
+            <button text="setmyother" onclick="webapp[this.text].invoke()" />
+
+            <button text="getmyattr" onclick="webapp[this.text].invoke()" />
+
+            <button text="getmyother" onclick="webapp[this.text].invoke()" />
+
+            <button text="getAttributeNames" onclick="webapp[this.text].invoke()" />
+
+            <button text="getmyattr (w/params)" onclick="webapp.getmyattr.invoke(['myattr'])" />
+
+            <button text="getmyattr (w/params and delegate)">
+                <method event="onclick">
+                    webapp.getmyattr.invoke(['myattr'], parent.mydel);
+                </method>
+            </button>
+
+            <button text="removemyattr" onclick="webapp[this.text].invoke()" />
+
+            <button text="removemyother" onclick="webapp[this.text].invoke()" />
+
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

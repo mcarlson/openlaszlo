@@ -1,0 +1,127 @@
+<canvas debug="true" height="800" width="1000">
+
+    <debug x="280" width="470" height="370" />
+
+    <dataset name="amazonDset1" />
+    <dataset name="amazonDset2" />
+
+    <soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl">
+
+        <attribute name="myobject1" value="null" type="expression" />
+        <attribute name="myobject2" value="null" type="expression" />
+
+        <method event="onload">
+            Debug.write('amazon soap service stub loaded');
+
+            this.setAttribute('myobject1', new amazon.proto.KeywordRequest());
+            this.myobject1.keyword = 'services';
+            this.myobject1.page = 1;
+            this.myobject1.mode = 'book';
+            this.myobject1.tag = 'webservices-20';
+            this.myobject1.type = 'lite';
+            this.myobject1.devtag = 'your-dev-tag';
+            this.myobject1.format = 'xml';
+            this.myobject1.version = '1.0';
+
+            this.setAttribute('myobject2', new amazon.proto.KeywordRequest());
+            this.myobject2.keyword = 'mail';
+            this.myobject2.page = 1;
+            this.myobject2.mode = 'book';
+            this.myobject2.tag = 'webservices-20';
+            this.myobject2.type = 'lite';
+            this.myobject2.devtag = 'your-dev-tag';
+            this.myobject2.format = 'xml';
+            this.myobject2.version = '1.0';
+        </method>
+
+        <!-- if error isn't handled by remotecall, the error is propogated up to
+             soap -->
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+
+        <remotecall name="myKSR1" funcname="KeywordSearchRequest"
+                    dataobject="amazonDset1">
+
+            <param value="${canvas.amazon.myobject1}" />
+
+            <method event="ondata" args="value">
+                Debug.write('one:', value);
+            </method>
+
+        </remotecall>
+
+        <remotecall name="myKSR2" funcname="KeywordSearchRequest" 
+                    inforeturnvalue="true">
+            <param value="${canvas.amazon.myobject2}" />
+            <method event="ondata" args="retval">
+                Debug.write('two(seqnum=' + retval.seqnum + '):', retval.data);
+            </method>
+        </remotecall>
+
+    </soap>
+
+    <method name="handler" args="data">
+        Debug.write('handler(seqnum=' + data.seqnum + '):', data);
+    </method>
+
+
+    <script>
+        canvas.mydel = new LzDelegate(canvas, 'handler');
+        canvas.mydel.dataobject = amazonDset2;
+    </script>
+
+    <view layout="spacing: 5" >
+        <button text="load" onclick="amazon.load()" />
+        <button text="myksr1 invoke" onclick="amazon.myKSR1.invoke()" />
+        <button text="myksr1 invoke w/params" 
+                onclick="amazon.myKSR1.invoke([ canvas.amazon.myobject1 ])" />
+        <button text="myksr2 invoke">
+            <method event="onclick">
+                var seqnum = amazon.myKSR2.invoke();
+                Debug.write('request seqnum:', seqnum);
+            </method>
+        </button>
+        <button text="myksr2 invoke w/params">
+            <method event="onclick">
+                var seqnum = amazon.myKSR2.invoke([ canvas.amazon.myobject2 ]);
+                Debug.write('request seqnum:', seqnum);
+            </method>
+        </button>
+        <button text="myksr2 invoke w/params and delegate">
+            <method event="onclick">
+                var seqnum = 
+                    amazon.myKSR2.invoke([ canvas.amazon.myobject2 ], 
+                                         canvas.mydel);
+                Debug.write('request seqnum:', seqnum);
+            </method>
+        </button>
+        <button text="invoke KeywordSearchRequest proxy function">
+            <method event="onclick">
+                var seqnum = 
+                    amazon.proxy.KeywordSearchRequest([ canvas.amazon.myobject1 ], 
+                                                      canvas.mydel);
+                Debug.write('request(seqnum=' + seqnum + ')');
+            </method>
+        </button>
+        <view bgcolor="red" layout="axis: y" >
+            <view>
+                <datapath xpath="amazonDset1:/Details/Details" pooling="true" />
+                <text datapath="ProductName/text()" resize="true"/>
+            </view>
+        </view>
+
+        <view bgcolor="teal" layout="axis: y" >
+            <view>
+                <datapath xpath="amazonDset2:/Details/Details" pooling="true" />
+                <text datapath="ProductName/text()" resize="true"/>
+            </view>
+        </view>
+
+    </view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

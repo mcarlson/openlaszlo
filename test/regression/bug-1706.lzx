@@ -1,0 +1,30 @@
+<canvas debug="true">
+    <include href="utils/layouts/wrappinglayout.lzx" />
+    <dataset name="my_data" request="false" src="../resources/xml/mydata.xml" type="http">
+    </dataset>
+
+    <simplelayout spacing="5" />
+    <button>
+        Do Request
+        <method event="onclick">
+            canvas.datasets.my_data.doRequest();
+            myLayout.update();
+        </method>
+    </button>
+
+    <view bgcolor="0xe5e5e5" >
+        <view width="120" datapath="my_data:/items[1]">
+            <wrappinglayout id="myLayout" xspacing="5" yspacing="2"/>
+            <view bgcolor="0xffffff" width="25" 
+                  datapath="item">
+                <text datapath="@name" resize="true"/>
+            </view>
+        </view>
+    </view>
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

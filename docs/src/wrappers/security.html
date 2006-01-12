@@ -1,0 +1,106 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Security">
+    <lztier>RPC Components</lztier>
+    <lzcategory>RPC</lzcategory>
+    <lzshortdesc>
+        Secures Java classes for JavaRPC.
+    </lzshortdesc>
+    <lztag>tag-security.xml</lztag>
+</lzelement>
+
+<p>Java classes used in JavaRPC application must be declared in a security
+element. Classes not defined in a security element are not allowed to be
+accessed or instantiated. The format of the security element looks like:</p>
+
+<example extract="false">
+&lt;security&gt;
+    &lt;allow&gt;
+        &lt;pattern&gt;CLASS1&lt;/pattern&gt;
+        &lt;pattern&gt;CLASS2&lt;/pattern&gt;
+        ...
+        &lt;pattern&gt;CLASSN&lt;/pattern&gt;
+    &lt;/allow&gt;
+&lt;/security&gt;
+</example>
+
+<p>Each &lt;pattern&gt; is a regular expression.</p>
+
+<example extract="false" 
+         title="Allow classes that start with org.openlaszlo">
+&lt;security&gt;
+    &lt;allow&gt;
+        &lt;pattern&gt;^org\.openlaszlo&lt;/pattern&gt;
+    &lt;/allow&gt;
+&lt;/security&gt;
+</example>
+
+<p>A javarpc object who's class is not declared in a security tag will result in
+a load error.</p>
+
+<example>
+&lt;canvas debug="true" height="300"&gt;
+ 
+    &lt;debug x="10" y="40" height="240" /&gt;
+
+    &lt;security&gt;
+        &lt;allow&gt;
+            &lt;pattern&gt;^examples\.ConstructExample&lt;/pattern&gt;
+        &lt;/allow&gt;
+    &lt;/security&gt;
+
+    &lt;!-- See $LPS_HOME/WEB-INF/classes/examples/ConstructExample.java for java
+        source. --&gt;
+    &lt;javarpc name="ce" scope="session" classname="examples.ConstructExample"
+             createargs="[1]" autoload="false"&gt;
+        &lt;method event="onerror" args="err"&gt;
+            Debug.write("onerror:", err)
+        &lt;/method&gt;
+        &lt;method event="onload"&gt;
+            Debug.write("proxy loaded:", this.proxy);
+        &lt;/method&gt;
+    &lt;/javarpc&gt;
+
+    &lt;!-- See $LPS_HOME/WEB-INF/classes/examples/TypesExample.java for java
+         source. This will fail because class is not declared in security
+         pattern--&gt;
+    &lt;javarpc name="te" scope="session" classname="examples.TypesExample"
+             autoload="false"&gt;
+        &lt;method event="onerror" args="err"&gt;
+            Debug.write("onerror:", err)
+        &lt;/method&gt;
+        &lt;method event="onload"&gt;
+            Debug.write("proxy loaded:", this.proxy);
+        &lt;/method&gt;
+    &lt;/javarpc&gt;
+    
+    &lt;view x="10" y="10" layout="axis: x; spacing: 5"&gt;
+        &lt;button text="Load ConstructExample (allowed)"
+                onclick="canvas.ce.load()" /&gt;
+        &lt;button text="Load TypesExample (not allowed)" 
+                onclick="canvas.te.load()" /&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</example>
+
+
+<seealso>
+<classes><a href="${reference}rpc.html">rpc</a></classes>
+<classes><a href="${reference}javarpc.html">javarpc</a></classes>
+<a href="${dguide}rpc.html">Developer's Guide: RPC chapter</a>
+<a href="${dguide}rpc-javarpc.html">Developer's Guide: JavaRPC chapter</a>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

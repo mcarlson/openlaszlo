@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="View">
+    <lztier>LFC</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        The most basic viewable element.
+    </lzshortdesc>
+    <lztag>tag-view.xml</lztag>
+    <lzapi>api-lzview.xml</lzapi>
+</lzelement>
+
+<p>The <tagname>view</tagname> is the most basic viewable element in a
+Laszlo application. Anything that is displayed on the canvas is a view
+or extends the view class. A view is a rectangle, which can be visible or invisible, and which can contain other views or display "resources" such as images,
+.swf files, or other supported media. One view controls one
+displayable resource. The view system is strictly hierarchical; that is, each <code>view </code> has
+ a single parent but can have multiple children.
+</p>
+<p>
+The following code shows one view nested inside another:</p>
+  
+<example class="code">
+&lt;canvas height="50" width="500"&gt;
+  &lt;view width="50" height="50" bgcolor="red"&gt;
+    &lt;view width="30" height="30" bgcolor="blue"/&gt;
+  &lt;/view&gt; 
+&lt;/canvas&gt;
+</example>
+
+<p><classname>LzView</classname> extends <classname>LzNode</classname>,
+which is the fundamental abstract class of LZX.</p>
+
+<p>For more a gentle introduction to views please see the <a
+href="${tutorials}">Laszlo tutorials</a>, particularly <a
+href="${tutorials}laszlo_basics.html">Laszlo Basics</a> and <a
+href="${tutorials}views.html">Understanding Views</a>.  For a more
+rigorous explanation of views see the<a href="${dguide}">Developer's Guide</a>, particularly the <a
+href="${dguide}views.html">views</a> chapter.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

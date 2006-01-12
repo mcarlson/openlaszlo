@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persons xmlns:foo="foo.bar" xmlns:secret="secret.names">
+
+    
+        <foo:person id ="1" name="jonny" secret:name="freddy">
+            <firstName>Dan</firstName>
+            <lastName>McGowan</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+                <address id ="1" code="ML">
+                    <line1>2210 North 184th Street</line1>
+                    <line2></line2>
+                    <city>Shoreline</city>
+                </address>
+            
+        </foo:person>
+
+        <foo:person id ="4" name="bret" secret:name="bart">
+            <firstName>Bret</firstName>
+            <lastName>Simister</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+                <address id ="1" code="ML">
+                    <line1>1313 Mockingbird Lane</line1>
+                    <line2></line2>
+                    <city>Smallstown</city>
+                </address>
+            
+        </foo:person>
+
+    
+        <person id ="2">
+            <firstName>Barry</firstName>
+            <lastName>Bonds</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+        </person>
+    
+        <person id ="3">
+            <firstName>Jeff</firstName>
+            <lastName>Beck</lastName>
+            <modifyDate>3/25/05</modifyDate>
+            
+        </person>
+    
+
+</persons>

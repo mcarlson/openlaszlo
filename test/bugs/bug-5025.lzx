@@ -1,0 +1,67 @@
+<canvas bgcolor="0x2288aa">
+  <drawview width="200" height="200" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">  
+    <dragstate name="dragger"/>
+    <method event="oninit">
+      
+      this.moveTo(11,0);
+      // top right
+      this.moveTo(this.width-11,0);
+      this.quadraticCurveTo(this.width,0,this.width,11);
+      this.lineTo(this.width,0);
+      this.lineTo(this.width-11,0);
+      this.closePath;
+      this.closePath;
+      this.fillStyle = 0xaeaeae;
+      
+      this.fill();      
+      
+      
+      
+      // bot right 
+      this.lineTo(this.width,this.height-11);
+      this.quadraticCurveTo(this.height,this.width,this.width-11,this.height);
+      
+      // bot left 
+      this.lineTo(11,this.height);
+      this.quadraticCurveTo(0,this.height,0,this.height-11);
+      
+      // top left
+      this.lineTo(0,11);
+      this.quadraticCurveTo(0,0,11,0);
+      this.closePath;
+      this.fillStyle = 0xaeaeae;
+      
+      //this.fill();      
+    </method>
+    <drawview width="200" height="200">
+      <method event="oninit">      
+      this.moveTo(11,0);
+      // top right
+      this.lineTo(this.width-11,0);
+      this.quadraticCurveTo(this.width,0,this.width,11);
+      
+      // bot right 
+      this.lineTo(this.width,this.height-11);
+      this.quadraticCurveTo(this.height,this.width,this.width-11,this.height);
+      
+      // bot left 
+      this.lineTo(11,this.height);
+      this.quadraticCurveTo(0,this.height,0,this.height-11);
+      
+      // top left
+      this.lineTo(0,11);
+      this.quadraticCurveTo(0,0,11,0);
+      this.closePath;
+      this.fillStyle = 0xaeaeae;
+      
+      //this.fill();      
+      
+      
+      this.strokeStyle = 0x000000;
+      this.lineWidth = 1;
+      this.stroke();
+      
+    </method>
+    </drawview>
+  </drawview>
+</canvas>

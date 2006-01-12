@@ -1,0 +1,407 @@
+<canvas bgcolor="silver" validate="false" height="800" width="1000">
+
+    <debug height="100"/>
+
+    <font name="vera_super" src="verity/verity11.ttf"/>
+    <font name="vera_super_small" src="verity/verity9.ttf"/>
+    <font name="vera_super_bold" src="verity/verity11bold.ttf"/>
+
+    <dataset name="authdataset" type="http" src="http:authenticator.jsp">
+        <method event="ondata">
+            var dptr = authdataset.getPointer();
+            var code = dptr.xpathQuery('/authentication[1]/status[1]/@code');
+            var rt = dptr.xpathQuery('/authentication[1]/status[1]/@rt');
+            var message = dptr.xpathQuery('/authentication[1]/status[1]/@message');
+
+            lusr.setText('');
+            lpwd.setText('');
+
+            if (code == 'fail') {
+                if (rt == 'login') {
+                    loginerror.setVisible(true);
+                    loginerror.setText(message);
+                } else if (rt == 'register') {
+
+                    if (message.indexOf('not available') != -1) {
+                        regbut.try_another_username(message);
+                    } else {
+                        // This shouldn't happen if all fields
+                        // are filled in correctly.
+                        Debug.write('registration failure');
+                    }
+                }
+                return;
+            } 
+
+            loginerror.setVisible(false);
+
+            screen1.a.setTo(0);
+            screen1.a.doStart();
+
+            if (rt == 'login') {
+                screen2.a.setTo(1);
+                screen2.a.doStart();
+            } else if (rt == 'register') {
+
+                regsuccess.a.setTo(1);                
+                regsuccess.a.doStart();
+
+                tmessage.setText('Required fields will be in bold');
+                tusernamemsg.setText('Select the name you would like to use to log in.  (Please note that you will be able to use your account immediately)');
+                tmessage.setAttribute('fgcolor', 0x4d4d4d);
+//                tusernamemsg.setAttribute('fgcolor', 0x4d4d4d);
+
+            }
+
+        </method>
+        <method event="ontimeout">
+            debug.write('request timed out');
+        </method>
+    </dataset>
+
+    <class name="register">
+        <attribute name="fx" value="130" />
+        <form>
+            <submit id="regsub" data="${authdataset}" />
+            <view x="15" y="13" pixellock="true">
+
+                <text id="tmessage">Required fields will be in bold</text>
+                <view>
+                    <simplelayout axis="x" spacing="2" />
+                    <text id="tname" font="vera_super_bold" fgcolor="0x4d4d4d" 
+                          text="Name:" />
+                    <radiogroup id="lsalutation" name="lsalutation" y="2" 
+                                layout="class:simplelayout; axis:x; spacing:2">
+                        <radiobutton id="rgdef" value="0" text="Mr."/> 
+                        <radiobutton value="1" text="Mrs."/> 
+                        <radiobutton value="2" text="Ms."/> 
+                    </radiogroup>
+                    <edittext id="aname" name="aname" 
+                              x="${ lsalutation.x + lsalutation.width + 2 }" 
+                              width="${classroot.fx + 200 - this.x}" />
+                </view>
+                <view>
+                    <text id="tcompany" font="vera_super_bold" 
+                          fgcolor="0x4d4d4d" text="Company:" />
+                    <edittext id="company" name="company" x="${classroot.fx}" 
+                              width="200" />
+                </view>
+                <view>
+                    <view>
+                        <text id="temail" font="vera_super_bold" 
+                              fgcolor="0x4d4d4d" text="Email:" />
+                        <edittext id="email" name="email" x="${classroot.fx}" 
+                                  width="200" />
+                    </view>
+                    <text x="${classroot.fx}" y="22" multiline="true" 
+                          width="190" font="vera_super_small">
+                        Specify an email address for receipt of the software 
+                        download URL link
+                    </text>
+                </view>
+                <view>
+                    <view>
+                        <text id="tusername" font="vera_super_bold" 
+                              fgcolor="0x4d4d4d" text="Username:" />
+                        <edittext id="username" name="username" 
+                                  x="${classroot.fx}" width="200" />
+                    </view>
+                    <text x="${classroot.fx}" y="22" fgcolor="0x4d4d4d" multiline="true" 
+                          height="36" width="190" font="vera_super_small" id="tusernamemsg">
+                        Select the name you would like to use to log in. 
+                        (Please note that you will be able to use your account
+                        immediately).
+                    </text>
+                </view>
+                <view>
+                    <text id="tpassword" font="vera_super_bold" 
+                          fgcolor="0x4d4d4d" text="Password:" />
+                    <view height="${password.height}">
+                        <edittext id="password" name="password" 
+                                  x="${classroot.fx}" width="100" />
+                        <text id="perror" width="100" fgcolor="0xff0000"
+                              multiline="true" visible="false" y="10"
+                              x="${password.x + password.width + 5}">
+                            Passwords<br/>do not match.
+                        </text>
+                    </view>
+                </view>
+                <view>
+                    <text id="tpassword2" font="vera_super_bold" 
+                          fgcolor="0x4d4d4d" text="Confirm Password:" />
+                    <edittext id="password2" name="password2" 
+                              x="${classroot.fx}" width="100" />
+                </view>
+                <view>
+                    <text>Website:</text>
+                    <edittext id="website" name="website" 
+                              x="${classroot.fx}" width="180"/>
+                </view>
+                <view>
+                    <text>Phone Number:</text>
+                    <edittext id="phone" name="phone" width="180"
+                              x="${classroot.fx}" />
+                </view>
+                <view>
+                        <text resize="true">How did you hear about Laszlo?</text>
+                        <edittext name="referrer" id="referrer" width="315" />
+                        <checkbox name="sendnews" id="sendnews" x="10">
+                            Please do not send me Laszlo newsletter emails
+                        </checkbox>
+                        <simplelayout axis="y" spacing="6"/>
+                </view>
+                <button id="regbut" isdefault="true" height="22" x="260" text="Submit">
+                    <method event="onclick">
+                    <![CDATA[
+                        this.reset();
+
+                        var isOk = true;
+
+                        if (aname.getText() == '') {
+                            tname.setAttribute('fgcolor', 0xff0000);
+                            isOk = false;
+                        }
+
+                        if (company.getText() == '') {
+                            tcompany.setAttribute('fgcolor', 0xff0000);
+                            isOk = false;
+                        }
+
+                        if (email.getText() == '') {
+                            temail.setAttribute('fgcolor', 0xff0000);
+                            isOk = false;
+                        }
+
+                        if (username.getText() == '') {
+                            tusername.setAttribute('fgcolor', 0xff0000);
+                            isOk = false;
+                        }
+
+                        var p1 = password.getText()
+                        var p2 = password2.getText()
+                        if (p1 == '' && p2 =='') {
+                            tpassword.setAttribute('fgcolor', 0xff0000);
+                            tpassword2.setAttribute('fgcolor', 0xff0000);
+                            isOk = false;
+                        } else if (p1 != p2) {
+                            tpassword.setAttribute('fgcolor', 0xff0000);
+                            tpassword2.setAttribute('fgcolor', 0xff0000);
+                            perror.setVisible(true); 
+                            isOk = false;
+                        }
+
+                        if (! isOk) {
+                            tmessage.setText('Please fill in all required fields');
+                            tmessage.setAttribute('fgcolor', 0xff0000);
+                            return;
+                        }
+
+                        var s;
+                        if      (lsalutation.value == 0) s = 'mr';
+                        else if (lsalutation.value == 1) s = 'mrs';
+                        else if (lsalutation.value == 2) s = 'ms';
+
+                        canvas.authdataset.setQueryParams(null);
+                        var obj = { rt: 'register', name: aname.getText(), salutation: s };
+                        canvas.authdataset.setQueryParams(obj);
+                        regsub.submit();
+                    ]]>
+                    </method>
+
+                    <method name="try_another_username" args="mesg">
+                    <![CDATA[
+                        tusername.setAttribute('fgcolor', 0xff0000);
+//                        tusernamemsg.setAttribute('fgcolor', 0xff0000);
+                        tusernamemsg.setText('<br/>' + mesg);
+                    ]]>
+                    </method>
+
+                    <!-- This will reset all text to their original fgcolor. -->
+                    <method name="reset">
+                         tname.setAttribute('fgcolor', 0x4d4d4d);
+                         tcompany.setAttribute('fgcolor', 0x4d4d4d);
+                         temail.setAttribute('fgcolor', 0x4d4d4d);
+                         tusername.setAttribute('fgcolor', 0x4d4d4d);
+//                         tusernamemsg.setAttribute('fgcolor', 0x4d4d4d);
+                         tpassword.setAttribute('fgcolor', 0x4d4d4d);
+                         tpassword2.setAttribute('fgcolor', 0x4d4d4d);
+                         perror.setVisible(false);
+                    </method>
+                </button>
+                <simplelayout axis="y" spacing="17"/>
+            </view>
+        </form>
+    </class>
+
+    <view id="screen1">
+        <animator name="a" attribute="opacity" duration="500" start="false" />
+
+        <simplelayout axis="x" spacing="20"/>
+        <constantlayout axis="y" value="25"/>
+      
+        <view>
+            <simplelayout axis="y" spacing="10"/>
+            <text x="20">Register for download to Laszlo</text>
+            <text x="20" multiline="true">
+                Please register to access the free software download<br/>
+                page, participate in the Developer Forums and join<br/>
+                the Laszlo Developer Program.<br/><br/>
+                If you are a returning member, please log in. Your<br/><br/>
+                information is strictly confidential and will never<br/>
+                be distributed outside our company. Thank you for<br/>
+                your interest in Laszlo!
+            </text>
+        </view>
+
+        <tabslider id="ts" width="370" height="580">
+        
+            <tabelement id="logintab" text="Log In" selected="true">
+                <text id="loginerror" y="15" fgcolor="0xff0000" resize="true" 
+                      selectable="true" visible="false" 
+                      x="${Math.round((parent.width-this.width)/2)}" />
+                <form y="30" x="${Math.round((parent.width-this.width)/2)}">
+                    <submit id="loginsub" data="${authdataset}" />
+                    <simplelayout axis="y" spacing="10"/>
+                    <view>
+                        <text resize="true">Username:</text>
+                        <edittext id="lusr" name="usr" width="180"/>
+                        <simplelayout axis="y" spacing="6"/>
+                    </view>
+                    <view>
+                        <text>Password:</text>
+                        <edittext id="lpwd" name="pwd" width="180"/>
+                        <simplelayout axis="y" spacing="6"/>
+                    </view>
+                    <view x="${Math.round((parent.width-this.width)/2)}" pixellock="true">
+                        <simplelayout axis="x" spacing="10"/>
+                        <button isdefault="true" height="22" text="Log In">
+                            <method event="onclick">
+                                canvas.authdataset.setQueryParams(null);
+                                canvas.authdataset.setQueryParams( { rt: 'login' } );
+                                loginsub.submit();
+                            </method>
+                        </button>
+                        <button onclick="ts.selectNext()" height="22" text="Register" />
+                    </view>
+                </form>
+            </tabelement>
+            
+            <tabelement text="Register">
+                <register />
+            </tabelement>
+            
+        </tabslider>
+    </view>
+    
+    <view id="screen2" x="311" y="25" width="370" height="580" bgcolor="#000000"
+          opacity="0">
+        <animator name="a" attribute="opacity" duration="500" start="false" />
+
+        <view x="1" y="1" width="${parent.width-2}" height="${parent.height-2}"
+              bgcolor="#f2f2f2" datapath="authdataset:/authentication[1]/registration[1]">
+
+            <simplelayout axis="y" spacing="20" />
+
+            <view />
+
+            <text x="${Math.round((parent.width-this.width)/2)}" font="vera_super_bold" 
+                  fgcolor="0x4d4d4d" datapath="@username" resize="true">
+                <method name="setText">
+                    if (typeof(this.datapath.data) != 'undefined') {
+                        super.setText(this.datapath.data + "'s information");
+                    }
+                </method>
+            </text>
+
+            <view x="20">
+                <simplelayout axis="y" spacing="5" />
+
+                <text datapath="name/text()" resize="true">
+                    <method name="setText">
+                        if (typeof(this.datapath.data) != 'undefined') {
+                            var salutation = 
+                                this.datapath.xpathQuery("/authentication[1]/registration[1]/salutation[1]/text()");
+                            if      (salutation == 'mr')  salutation = 'Mr.';
+                            else if (salutation == 'mrs') salutation = 'Mrs.';
+                            else if (salutation == 'ms')  salutation = 'Ms.';
+
+                            super.setText(salutation + ' ' + this.datapath.data);
+                        }
+                    </method>
+                </text>
+
+                <text datapath="company[1]/text()" resize="true" />
+                <text datapath="email[1]/text()" resize="true" />
+                <text datapath="website[1]/text()" resize="true" />
+                <text datapath="phone[1]/text()" resize="true" />
+                <text datapath="sendnews[1]/text()" resize="true">
+                    <method name="setText">
+                        if (typeof(this.datapath.data) != 'undefined') {
+                            var yesOrNo =
+                                (this.datapath.data == 'true' ? 'yes' : 'no');
+                            super.setText("Receive Laszlo newsletter emails? " + yesOrNo);
+                        }
+                    </method>
+                </text>
+            </view>
+
+            <button x="${Math.round((parent.width-this.width)/2)}">Logout
+
+                <method event="onclick">
+                    logintab.setAttribute('selected', true);
+
+                    aname.setText('');
+                    company.setText('');
+                                        email.setText('');
+                    username.setText('');
+                    password.setText('');
+                    password2.setText('');
+                    website.setText('');
+                    phone.setText('');
+                    referrer.setText('');
+                    rgdef.setAttribute('selected', true);
+                    sendnews.setValue(false);
+                    regbut.reset();
+
+                    screen2.a.setTo(0);
+                    screen1.a.setTo(1);
+                    screen2.a.doStart();
+                    screen1.a.doStart();
+                    
+                </method>
+            </button>
+
+        </view>
+    </view>
+
+    <view id="regsuccess" x="311" y="25" width="370" height="580" bgcolor="#000000"
+          opacity="0">
+        <animator name="a" attribute="opacity" duration="500" start="false" />
+
+        <view x="1" y="1" width="${parent.width-2}" height="${parent.height-2}"
+              bgcolor="#f2f2f2" >
+
+            <simplelayout axis="y" spacing="20" />
+
+            <view />
+
+            <text x="${Math.round((parent.width-this.width)/2)}" font="vera_super_bold" 
+                  fgcolor="0x4d4d4d" resize="true" text="Successful registration">
+            </text>
+
+            <button x="${Math.round((parent.width-this.width)/2)}">Continue
+                <method event="onclick">
+                    regsuccess.a.setTo(0);
+                    regsuccess.a.doStart();
+                    screen2.a.setTo(1);
+                    screen2.a.doStart();
+                </method>
+            </button>
+        </view>
+    </view>    
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

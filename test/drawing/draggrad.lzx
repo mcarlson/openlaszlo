@@ -1,0 +1,54 @@
+<canvas width="800" height="600">
+
+  <class name="grad" extends="drawview" width="150" height="150" onmousedown="this.dragger.apply()" onmouseup="this.dragger.remove()">
+        <dragstate name="dragger"/>
+    <attribute name="x0" type="number" value="0"/>
+    <attribute name="y0" type="number" value="0"/>
+    <attribute name="x1" type="number" value="75"/>
+    <attribute name="y1" type="number" value="75"/>
+    <attribute name="isRadial" type="boolean" value="true"/>
+    <method event="onidle" reference="LzIdle">
+        this.clear();
+            this.beginPath();
+            this.lineTo(this.width, 0);
+            this.lineTo(this.width, this.height);
+            this.lineTo(0, this.height);
+            this.lineTo(0, 0);
+            this.closePath();
+            
+            if (isRadial) {
+                var g = this.createRadialGradient(x0,y0,2,x1,y1);
+            } else {
+                var g = this.createLinearGradient(x0,y0,x1,y1);
+            }
+            //this.globalAlpha = 0;
+            g.addColorStop(0, 0x0cc888);
+            this.globalAlpha = 1;
+            g.addColorStop(1, 0xb60cc1);
+            this.fillStyle = g;
+            this.fill();
+
+            this.beginPath();
+            this.moveTo(x0,y0);
+            this.lineTo(x1,y1);
+
+            // this.needsWork();
+            this.lineTo( x1-5, y1-5);
+            this.lineTo( x1+5, y1+5);
+            this.lineTo( x1-5, y1+5);
+            this.lineTo( x1+5, y1-5);
+            this.strokeStyle = 0;
+            this.lineWidth = 2;
+            this.stroke();
+        </method>
+    </class>
+  <simplelayout/>
+    <grad x="100" y="200" x0="75" y0="75" x1="${this.getMouse('x')}" y1="${this.getMouse('y')}"/>
+    <grad isRadial="false" x="400" y="200" x0="75" y0="75" x1="${this.getMouse('x')}" y1="${this.getMouse('y')}"/>
+    <grad x="0" y="200" x0="0" y0="0" x1="150" y1="150"/>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

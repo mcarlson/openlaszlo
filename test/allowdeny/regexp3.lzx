@@ -1,0 +1,45 @@
+<!-- See WEB-INF/lps/config-test/allowdeny/lps.xml for patterns -->
+<!-- that match this test case.                                 -->
+<canvas width="1000" height="1000" debug="true">
+    <view width="1000" height="1000" >
+        <button text="switch image" x="10" y="10"
+                onclick="this.parent.doIt()" />
+        <view name="img" x="100" y="100" bgcolor="#EFFFFF"
+              resource="http://www.10th-avenue.com/~bloch/beavis.jpg" 
+              clickable="true" >
+        </view>
+        <method name="init" >
+            Debug.setX(300);
+            Debug.write("Initializing (allowed)");
+            super.init();
+            this.nextImage = 2;
+        </method>
+        <method name="doIt" >
+            switch (this.nextImage) {
+              case 1:
+                Debug.write("Loading beavis (allowed)");
+                this.img.setSource("http://www.10th-avenue.com/~bloch/beavis.jpg");
+                this.nextImage = 2;
+                break;
+            case 2:
+                Debug.write("Loading oddtodd (allowed)");
+                this.img.setSource("http://www.oddtodd.com/wordup.swf");
+                this.nextImage = 3;
+                break;
+            case 3:
+                Debug.write("Loading horses (allowed)");
+                this.img.setSource("http://www2.images.com/webimages/gps/thumb/hor%2003%20mak002.jpg");
+                this.nextImage = 1;
+                break;
+             default:
+                 break;
+            } 
+        </method>
+    </view>
+
+</canvas>    
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,18 @@
+<canvas>
+    <dataset name="ds" src="http:httpecho.jsp" type="http"
+             ondata="res.setText( res.escapeText( this.serialize() ) )"/>
+    <simplelayout/>
+    <edittext name="a"/>
+    <edittext name="b"/>
+    <button onclick="ds.setQueryParam( a.getText(), b.getText() )">Add</button>
+    <button onclick="ds.setQueryParams( )">Clear</button>
+    <button onclick="res.setText( 'requesting' );ds.doRequest()">
+        Request
+    </button>
+    <text width="600" height="300" name="res" multiline="true"
+          text="response goes here"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

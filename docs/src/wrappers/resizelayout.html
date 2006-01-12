@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Resizelayout">
+    <lztier>Utility Component</lztier>
+    <lzcategory>layout</lzcategory>
+    <lzshortdesc>
+        A layout with fixed and stretchable views.
+    </lzshortdesc>
+    <lztag>utils/layouts/resizelayout.xml</lztag>
+</lzelement>
+
+
+<p><classname>resizelayout</classname> extends
+<classname>LzLayout</classname>, and therefore is responsible for
+arranging a set of views. Like <classname>simplelayout</classname>,
+<classname>resizelayout</classname> positions a set of views
+vertically or horizontally depending on the axis specified. The
+difference is that <classname>resizelayout</classname> can also
+stretch views.</p>
+animatorgorup
+connectiodnatasource
+combobox lzlaydreplciaton
+
+<example>
+&lt;canvas height="100"&gt;
+  &lt;view bgcolor="yellow" width="200"&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" width="50"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;<em>simplelayout</em> axis="x" spacing="10"/&gt;
+  &lt;/view&gt;
+  
+  &lt;view y="40" bgcolor="yellow" width="200"&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" <em>options="releasetolayout"</em>/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;<em>resizelayout</em> axis="x"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<img src="images/resizelayout/resizelayout_image1.jpg" width="200" height="70" />
+-->
+
+<p>This example is similar to the one used in
+<classname>stableborderlayout</classname>, and is in fact visually
+equivalent. This is because <classname>stableborderlayout</classname>
+is a special case of <classname>resizelayout</classname> that is
+optimized for the common occurrence of having two fixed views with one
+stretchable view between them.</p>
+
+<p>Unlike <classname>stableborderlayout</classname>,
+<classname>resizelayout</classname> works with any number of
+views. All the views that are controlled by a
+<classname>resizelayout</classname> are assumed to be fixed size until
+defined differently. <todo>move the following dfn to the dguide, and
+link to it from here</todo> A view is defined as stretchable using the
+attribute <code>options="releasetolayout"</code>.  These views will
+stretch to fill in the space that is not taken by the fixed views. The
+resizelayout uses the width (or height) of its view to determine the
+total amount of space to fill, and then those subviews are placed and
+stretched to fill that space.  If there is more than one subview that
+is stretchable, then the available space is split evenly between those
+subviews.</p>
+
+<p>Then next example demonstrates what happens when two views are
+stretchable. The difference between the top and bottom views is only
+the spacing attribute.</p>
+
+<example>
+&lt;canvas height="100"&gt;
+  &lt;view bgcolor="yellow" width="300"&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" options="releasetolayout"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" options="releasetolayout"/&gt;
+    &lt;resizelayout axis="x"/&gt;
+  &lt;/view &gt;
+
+  &lt;view y="40" bgcolor="yellow" width="300"&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" options="releasetolayout"/&gt;
+    &lt;view bgcolor="blue" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" options="releasetolayout"/&gt;
+    &lt;resizelayout axis="x" <em>spacing="5"</em>/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<!--
+<img src="images/resizelayout/resizelayout_image2.jpg" width="301" height="69" />
+-->
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

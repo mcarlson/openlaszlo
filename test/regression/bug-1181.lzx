@@ -1,0 +1,10 @@
+<canvas layout="class: simplelayout; axis: y">
+	<text>These</text>
+	<text>words</text>
+	<text>should</text>
+	<text>be stacked</text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,118 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Animator">
+    <lztier>LFC</lztier>
+    <lzcategory>Animation</lzcategory>
+    <lzshortdesc>
+        Changes the value of another object's attribute over time.
+    </lzshortdesc>
+    <lztag>tag-animator.xml</lztag>
+    <lzapi>api-lzanimator.xml</lzapi>
+</lzelement>
+
+<p>Animators change the value of an object's attribute over a
+specified duration in milliseconds. For example, the following program
+defines an animator for a window that moves it to a position of x=100
+over 1 second (1000 milliseconds).</p>
+
+<example class="code" extract="false">
+&lt;canvas>
+  &lt;window>
+    &lt;animator attribute="x" to="100" duration="1000"/>
+  &lt;/window>
+&lt;/canvas>
+</example>
+
+<p>See the <a href="${dguide}animation.html">Guide</a> for a complete discussion of
+animators and animation in Laszlo applications.</p>
+
+<!--<p>An animator will start with the current value of an attribute
+unless otherwise specified.  In this next example, the program defines
+an animator for a window that first moves the window to a position of
+x="50", and then animates the window to a position of x="100" over 1
+second.</p>
+
+<pre class="program" id="animator-2">
+&lt;canvas>
+  &lt;window x="50" >
+    &lt;animator attribute="x" from="50" to="100" duration="1000"/>
+  &lt;/window>
+&lt;/canvas>
+</pre>
+
+<p>Animators, by default, change an object's attribute by easing in
+and out of the "from" and "to" values. Running the above sample
+programs, shows a window that accelerates in and out of its
+position. This nonlinear behavior can be minimally controlled with the
+use of the <b>motion</b> attribute. For example, the following code
+shows a window which moves linearly across the screen, in contrast to
+examples above.  For this release, the complete set of values for the
+motion tag are: easeboth, easein, easeout, and linear.</p>
+
+<pre class="program" id="animator-3">
+&lt;canvas>
+  &lt;window>
+    &lt;animator attribute="x" to="100" duration="1000" motion="linear" />
+  &lt;/window>
+&lt;/canvas>
+</pre>
+
+<p>Animators, like views, can be named so that they can be controlled
+later via scripts. This next example shows a common practice to
+activate an animator when an view is clicked, rather than when a view
+is first instantiated. Animators can be initially dormant by setting
+<b>start="false"</b>, and then activated on demand by calling its
+<b>start()</b> method</p>
+
+<pre class="program" id="animator-4">
+&lt;canvas>
+  &lt;view bgcolor="red" width="100" height="100" onclick="this.myAnimator.start()" >
+    &lt;animator name="myAnimator" attribute="x" to="100" duration="1000" start="false" />
+  &lt;/view>
+&lt;/canvas>
+</pre>
+
+<p>Animators, can also animate objects relative to their current
+values.  This means that the goal of the animator is actually the "to"
+value + the objects's current value.  Starting with the example above,
+and including <b>relative="true"</b> to the set of attribues, creates
+a view that animates 100 pixels to the right every time it is
+clicked</p>
+
+<pre class="program" id="animator-5">
+&lt;canvas>
+  &lt;view bgcolor="red" width="100" height="100" onclick="this.myAnimator.start()" >
+    &lt;animator name="myAnimator" attribute="x" to="100" duration="1000" start="false" relative="true" />
+  &lt;/view>
+&lt;/canvas>
+</pre>
+
+<p>More than one animator can be added to an object, and the set will
+be processed simultaneously. the code below shows an object moving
+diagonally by using an both "x" and "y" animator</p>
+
+<pre class="program" id="animator-6">
+&lt;canvas>
+  &lt;view bgcolor="red" width="100" height="100"  >
+    &lt;animator attribute="x" to="100" duration="1000" />
+    &lt;animator attribute="y" to="100" duration="1000" />
+  &lt;/view>
+&lt;/canvas>
+</pre>
+
+<p>Now, if you wanted to process the two animators above sequentially,
+i.e. one after the other, then you need to use <a
+href="animatorgroup.html">animatorgroup</a></p>
+-->
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

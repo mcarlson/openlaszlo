@@ -1,0 +1,59 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Audio">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Media</lzcategory>
+    <lzshortdesc>
+        Imports an audio file.
+    </lzshortdesc>
+    <lztag>tag-audio.xml</lztag>
+</lzelement>
+
+<warning>This tag is obsolete.  Its functionality has been replaced by
+the <tagname>resource</tagname> tag.</warning>
+
+<p>The <tagname>resource</tagname> tag defines another way to import a
+sound into an application.  The <tagname>resource</tagname> tag can
+also be used to import images and movies.</p>
+
+<p>The <tagname>audio</tagname> tag imports an audio file.  The file
+is included in the application when the application is compiled.  The
+tag has a required <attribute>src</attribute> attribute.  The value of
+this attribute is a filename, that is resolved relative to the source
+file that contains the <tagname>audio</tagname> tag.  The file should
+contain an mp3 file.</p>
+
+<p> The <classname>LzAudio</classname> service can be used from
+JavaScript to play the clip.  The string that is passed to the
+<method>LzAudio.playSound</method> method should match the value of
+the <attribute>name</attribute> attribute of an
+<attribute>audio</attribute> tag.</p>
+
+<example>
+&lt;canvas height="150"&gt;
+  &lt;audio src="resources/poof.mp3" name="poof"/&gt;
+  &lt;button text="Poof"
+          onclick="LzAudio.playSound('poof');"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Also see the <a href="${examples}audio.lzx">audio</a> example.</p>
+
+<todo>Move the following information into the Guide</todo>
+
+<p>The audio clip must be an MP3 file at one of the following sample
+rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no more than
+160kbps.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

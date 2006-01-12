@@ -1,0 +1,54 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Reverselayout">
+    <lztier>Utility Component</lztier>
+    <lzcategory>layout</lzcategory>
+    <lzshortdesc>
+    A layout for arranging siblings vertically or horizontally in 
+    reverse order.
+    </lzshortdesc>
+    <lztag>utils/layouts/reverselayout.xml</lztag>
+</lzelement>
+
+<p><classname>reverselayout</classname> is just like
+<classname>simplelayout</classname>, except that the order of the
+views it keeps is reversed (bottom to top, or right to left).</p>
+
+<p><classname>reverselayout</classname> extends
+<classname>LzLayout</classname>, and therefore it is responsible for
+arranging all of the subviews for the view that it is attached to. The
+attributes of a view that <classname>reverselayout</classname> effects
+are the <attribute>x</attribute> and <attribute>y</attribute>
+values.</p>
+
+<example title="Example reverselayout">
+&lt;canvas height="60" bgcolor="yellow" &gt;
+  &lt;include href="utils/layouts/reverselayout.lzx"/&gt;
+  &lt;reverselayout axis="x" spacing="10"/&gt;
+  &lt;text text="one"/&gt;
+  &lt;text text="two"/&gt;
+  &lt;text text="three"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<example title="Example reverselayout with end='false'">
+&lt;canvas height="60" bgcolor="yellow" &gt;
+  &lt;include href="utils/layouts/reverselayout.lzx"/&gt;
+  &lt;reverselayout axis="x" end="false" spacing="10"/&gt;
+  &lt;text text="one"/&gt;
+  &lt;text text="two"/&gt;
+  &lt;text text="three"/&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,33 @@
+<canvas width="1024" height="768">
+
+    <debug x="20" y="320" />
+
+    <include href="lz/tree.lzx" />
+
+    <dataset name="foobar">
+        <product name="fruits" isopen="true">
+            <apples name="apples" isopen="true">
+                <type name="red delicious apple" isleaf="true" />
+                <type name="fuji apple" isleaf="true" />
+            </apples>
+            <oranges name="oranges" isopen="true">
+                <type name="navel" isleaf="true" />
+            </oranges>
+        </product>
+    </dataset>
+
+    <tree id="one" x="20" y="20" datapath="foobar:/" showroot="false">
+        <tree open="true" text="$path{'@name'}" 
+              isleaf="$path{'@isleaf'}" datapath="*" />
+    </tree>
+
+    <tree id="two" x="150" y="20" datapath="foobar:/" showroot="false">
+        <tree open="$path{'@isopen'}" text="$path{'@name'}" 
+              isleaf="$path{'@isleaf'}" datapath="*" />
+    </tree>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,14 @@
+<canvas>
+    <font src="helmetb.ttf" name="myfont" />
+    <dataset name="weatherdata" type="http" request="true"
+        src="http://localhost:8080/lps/sample-apps/contacts/contactsdata.xml"/>
+    <simplelayout/>
+    <text font="myfont">Right font</text>
+    <grid font="myfont" datapath="weatherdata:/resultset"/>
+
+        
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

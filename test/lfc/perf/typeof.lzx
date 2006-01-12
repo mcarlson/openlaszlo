@@ -1,0 +1,100 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+
+  <script>
+  <![CDATA[
+    // Things to take the type of
+    var typeNumber = 3;
+    var typeString = "foo";
+    var typeObject = {};
+    var typeArray = []
+    
+    // override definition in included file
+    defaultIterations = 1000;
+    
+    function MyClass() { };
+
+    var typeInstance = new MyClass();
+
+
+    // Empty baseline loop
+    function emptyTest () {
+      }
+
+    function typeofNumber () {
+        typeof(typeNumber) == 'number';
+    }
+
+    function typeofString () {
+        typeof(typeString) == 'string';
+    }
+
+    function typeofObject () {
+        typeof(typeObject) == 'object';
+    }
+    
+    function typeofArray() {
+        typeof(typeArray) == 'object';
+    }
+
+    function typeofInstance () {
+        typeof(typeInstance) == 'object';
+    }
+
+    function instanceofNumber () {
+        typeNumber instanceof Number;
+    }
+
+    function instanceofString () {
+        typeString instanceof String;
+    }
+
+    function instanceofObject () {
+        typeObject instanceof Object;
+    }
+
+    function instanceofInstance () {
+        typeObject instanceof MyClass;
+    }
+
+    function notInstanceofNumber () {
+        typeObject instanceof Number;
+    }
+
+    function notInstanceofString () {
+        typeObject instanceof String;
+    }
+
+    function notInstanceofObject () {
+        typeString instanceof Object;
+    }
+
+    function notInstanceofInstance () {
+        typeString instanceof MyClass;
+    }
+
+  addTest("emptyTest");
+  addTest("typeofNumber");
+  addTest("typeofString");
+  addTest("typeofObject");
+  addTest("typeofInstance");
+  addTest("instanceofNumber");
+  addTest("instanceofString");
+  addTest("instanceofObject");
+  addTest("instaceofArray");
+  addTest("instanceofInstance");
+  addTest("notInstanceofNumber");
+  addTest("notInstanceofString");
+  addTest("notInstanceofObject");
+  addTest("notInstanceofInstance");
+
+  runTests('typeof/instanceof Timings' , 10 );
+
+  ]]>
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

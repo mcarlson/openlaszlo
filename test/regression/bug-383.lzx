@@ -1,0 +1,8 @@
+<canvas>
+<resource name="myCursor" src="../resources/swf/square.swf"/>
+<view bgcolor="#22AABB" width="200" height="200" cursor="myCursor" x="50" y="50"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

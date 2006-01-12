@@ -1,0 +1,77 @@
+<?xml version="1.0"?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<book xmlns:xi="http://www.w3.org/2003/XInclude">
+  <title>Laszlo Tutorials</title>
+  <bookinfo>
+    <corpauthor>Laszlo Systems, Inc.</corpauthor>
+    <copyright>
+      <year>2001</year>
+      <year>2002</year>
+      <year>2003</year>
+      <year>2004</year>
+      <year>2005</year>
+      <holder>Laszlo Systems, Inc.</holder>
+    </copyright>
+    <legalnotice>
+      <para>
+        All Rights Reserved. Unauthorized use, duplication or distribution
+        is strictly prohibited. This is the proprietary information of
+        Laszlo Systems, Inc. Use is subject to license
+        terms.
+      </para>
+    </legalnotice>
+  </bookinfo>
+
+<!-- 
+The Laszlo Systems website may contain more recent versions of these
+tutorials, as well as new tutorials that may have been posted after
+the release of LPS that you have.  See <a target="_blank"
+href="http://www.laszlosystems.com/developers/learn/documentation/tutorials/">http://www.laszlosystems.com/developers/learn/documentation/tutorials</a>. -->
+
+<xi:include href="laszlo_basics.dbk"/>
+<!--A brief introduction to constructing Laszlo Applications-->
+
+<xi:include href="views.dbk"/>
+<!--An introduction to the Laszlo Foundation Classes view system,
+     which allows you to specify how on-screen elements of your
+     application interact with each another-->
+
+<xi:include href="art_assets.dbk"/>
+<!--How to incorporate visual resources, such as .jpg and .gif files,
+     into your Laszlo application-->
+
+<xi:include href="text.dbk"/>
+<!--Using text and fonts in Laszlo application-->
+
+<xi:include href="scripting.dbk"/>
+<!--How to incorporate JavaScript into your Laszlo applications An
+     understanding of JavaScript (or ActionScript) is assumed her-->
+
+<xi:include href="calculator.dbk"/>
+<!--This tutorial puts together all you have learned in the earlier
+     tutorials and steps you through the creation of a simple
+     calculato-->
+
+<xi:include href="classes.dbk"/>
+<!--This tutorial shows you how to write custom,
+    reusable classes to streamline and minimize code-->
+
+<xi:include href="window.dbk"/>
+<!--This advanced tutorial shows you how to make a draggable,
+     resizable window similar to the windows used in our Dashboard
+     demo-->
+
+<xi:include href="data.dbk"/>
+<!--An introduction to using XML data within the Laszlo applications-->
+
+<xi:include href="data_app.dbk"/>
+<!--This advanced data tutorial shows you how to view and
+update server-side data-->
+<xi:include href="drawview-intro.dbk"/>
+<!-- An introduction to drawview, taken from the tip of the week -->
+<!--xi:include href="solo.dbk"/-->
+<!-- A simple walk-through of the steps to deploying solo, derived from tip of week -->
+</book>

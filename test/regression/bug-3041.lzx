@@ -1,0 +1,10 @@
+<canvas>
+    <window width="350" height="300"
+        title= "Button shouldn't overhang window after click">
+        <button onclick="this.animate( 'x' , 300 , 1000 , true )"/>
+    </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,7 @@
+<canvas width="640" height="480" bgcolor="0xeeeeee" debug="true">
+	<view bgcolor="0xffcc00" width="320" height="240" valign="middle" align="center"/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

@@ -1,0 +1,69 @@
+<library>
+    <include href="lzunit"/>
+    
+    <dataset name="mapDset" />
+    <dataset name="listDset" />
+    <dataset name="scalarDset" />
+
+    <class name="DataBinding" extends="TestCase">
+        
+        <simplelayout axis="x" spacing="5" />
+        
+        <text name="scalar_data" datapath="scalarDset:/text()" 
+              bgcolor="0xe0e0e0" resize="true" />
+        <view name="list_data" bgcolor="yellow" layout="axis: y">
+            <text datapath="listDset:/*/text()"/>
+        </view>
+        <view name="object_data" bgcolor="green" layout="axis: y">
+            <text datapath="mapDset:/*/text()" />
+        </view>
+        
+        <javarpc name="remote" scope="session" id="xxx"
+                 classname="org.openlaszlo.test.xmlrpc.TypeMap">
+            
+            <method event="onerror" args="msg">
+                canvas.setAttribute('runTests', canvas.runTests + 1)
+                parent.onerror.sendEvent(msg);
+            </method>
+
+            <remotecall funcname="getMappedObject" dataobject="mapDset">
+                <method event="ondata">
+                    classroot.assertTrue(mapDset.childNodes != null)
+                </method>
+            </remotecall>
+
+
+            <remotecall funcname="getList" dataobject="listDset">
+                <method event="ondata">
+                    classroot.assertTrue(listDset.childNodes != null)
+                </method>
+            </remotecall>
+
+            <remotecall funcname="getDouble" dataobject="scalarDset">
+                <method event="ondata" args="data">
+                    classroot.assertTrue(scalarDset.childNodes != null)
+                    classroot.assertTrue(scalarDset.childNodes[0].data == data)
+                </method>
+            </remotecall>
+
+            
+            <method event="onload">
+                classroot.assertTrue( ( this.proxy != null ) );
+                this.getDouble.invoke()
+                this.getMappedObject.invoke()
+                this.getList.invoke()
+            </method>
+
+            <method event="onerror" args="err">
+                classroot.error(err)
+            </method>
+            
+        </javarpc>
+    </class>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+</library>

@@ -1,0 +1,23 @@
+<canvas>
+<font name="Helvetica" src="helmetr.ttf" />
+<font name="Helvetica" src="helmetb.ttf"  style="bold"/>
+<font name="Helvetica" src="helmeti.ttf"  style="italic"/>
+<font name="Helvetica" src="helmetbi.ttf" style="bold italic"/>
+
+<font name="lztahoe8" src="lztahoe8.ttf"/>
+<text id="ttext"
+        multiline="true" font="Helvetica" name="debugme"
+        fontsize="22" width="300" resize="true" >
+
+this is default <b>bold</b> and <i>italic</i>
+and <b><i>bold italic</i></b>
+<font size="20">big</font> textual long lines another
+            long line and <font color="green">green</font> and
+            <font face="lztahoe8" size="16" >pixel font</font> text
+       </text>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

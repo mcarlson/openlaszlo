@@ -1,0 +1,64 @@
+
+<canvas>
+    <dataset name="hier">
+        <all>
+            <cat name="cat1">
+                <item>Foo1</item>
+                <item>Bar1</item>
+                <item>Slop1</item>
+                <item>Plop1</item>
+            </cat>
+            <cat name="cat2">
+                <item>Foo2</item>
+                <item>Bar2</item>
+                <item>Slop2</item>
+                <item>Plop2</item>
+            </cat>
+            <cat name="cat3">
+                <item>Foo3</item>
+                <item>Bar3</item>
+                <item>Slop3</item>
+                <item>Plop3</item>
+            </cat>
+        </all>
+    </dataset>
+    <simplelayout spacing="20"/>
+
+    <view>
+        <simplelayout axis="x"/>
+        <combobox>
+            <textlistitem datapath="hier:/all/*" text="$path{'@name'}"/>
+            <method event="onselect">
+                combo2.datapath.setFromPointer( this.getSelection().datapath );
+            </method>
+        </combobox>
+
+        <combobox id="combo2">
+            <datapath/>
+            <textlistitem  datapath="*" text="$path{'text()'}"/>
+        </combobox>
+    </view>
+
+    <view>
+        <simplelayout axis="x"/>
+        <view name="sameidea">
+            <simplelayout/>
+            <text datapath="hier:/all/*" text="$path{'@name'}">
+                <method event="onclick">
+                    sameidea2.datapath.setFromPointer( this.datapath );
+                </method>
+            </text>
+        </view>
+
+        <view id="sameidea2">
+            <datapath/>
+            <text datapath="*" text="$path{'text()'}"/>
+            <simplelayout/>
+        </view>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

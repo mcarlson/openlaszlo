@@ -1,0 +1,135 @@
+<library>
+  <resource name="lzedittext_bezel_inner_rsc">
+    <frame src="lz/resources/bezel_inner_dn.swf" />
+    <frame src="lz/resources/outline_dsbl.swf" />
+  </resource>
+  <resource name="lzedittext_bezel_outer_rsc">
+    <frame src="lz/resources/bezel_outer_dn.swf" />
+    <frame src="lz/resources/transparent.swf" />
+  </resource>
+  
+  <class name="_scrollinputfield" extends="inputtext">
+    <attribute name="lineheight" value="26" />
+    <attribute name="maxheight"
+               value="${this.height + this.lineheight * (this.maxscroll - 1)}" />
+    <attribute name="onpos" value="null" />
+    <attribute name="pos" value="0" setter="setPos(pos);" />
+    
+    <method event="onmaxscroll"></method>
+    
+    <method name="setPos" args="p">
+      if (this.isinited) { this.setScroll(1 - (p /
+        this.lineheight)); this.pos = p; if (this.onpos)
+        this.onpos.sendEvent(p); }
+    </method>
+    <method event="onscroll">
+      this.setPos(-this.lineheight * (this.scroll - 1), true);
+    </method>
+  </class>
+  
+  <class name="scrollinputtext" bgcolor="#ffffff"
+         extends="baseformitem" focusable="false" clip="true">
+    <attribute name="text" setter="setText(text)" type="html"/>
+    
+    <method name="init">
+      super.init();
+      this.setText(this.text);
+    </method>
+    
+    <method name="applyData" args="d">
+      <![CDATA[
+        this.setAttribute('text',d);
+        
+        this.field.setText(d);
+      ]]>
+    </method>
+    
+    <method name="getText">
+      <![CDATA[
+        var text = this.field.getText();
+        
+        text = this.replace(text, "\r", "\n");
+        
+        return text;
+      ]]>
+    </method>
+    
+    <method name="setText" args="t">
+      <![CDATA[
+        if (t == null) t = '';
+        this.text = t;
+        if (this.isinited) this.field.setText(t)
+        if (this['ontext']) this.ontext.sendEvent(t)
+        
+        return t;
+      ]]>
+    </method>
+    
+    <method name="getValue">
+      <![CDATA[
+        return this.getText();
+      ]]>
+    </method>
+    
+    <method name="refresh">
+      <![CDATA[
+        if (this.datapath.p &&
+            this.datapath.p.hasChildNodes()) {
+          this.field.setText(this.datapath.p.getFirstChild().data);
+        }
+      ]]>
+    </method>
+    
+    <method name="replace" args="text,c1,c2">
+      <![CDATA[
+        var arr = s.split(c1);
+        return arr.join(c2);            
+      ]]>
+    </method>
+    
+    <view name="_outerbezel" resource="lzedittext_bezel_outer_rsc"
+          width="${parent.width-1}" height="${parent.height-1}"
+          stretches="both" />
+    <view name="_innerbezel" resource="lzedittext_bezel_inner_rsc"
+          x="1" y="1" width="${parent.width-3}" height="${parent.height-3}"
+          stretches="both" />
+    <_scrollinputfield name="field"
+                       multiline="true" x="3" y="4"
+                       width="${parent.width - 6}" height="${parent.height - 6}" >
+      <method event="onfocus" args="s">
+        <![CDATA[
+          if (parent['onfocus']) parent.onfocus.sendEvent(s);
+        ]]>
+      </method>
+      
+      <method event="onblur" args="s">
+        <![CDATA[
+          parent.setText(parent.getText()); 
+          if (parent['onblur']) parent.onblur.sendEvent(s);
+        ]]>
+      </method>
+      <method event="onkeyup" args="k">
+        <![CDATA[
+          if (parent['onkeyup']) parent.onkeyup.sendEvent(k);
+        ]]>
+      </method>
+      <method event="onkeydown" args="k">
+        <![CDATA[
+          if (parent['onkeydown']) parent.onkeydown.sendEvent(k);
+        ]]>
+      </method>
+    </_scrollinputfield>
+    <scrollbar name="sb" axis="y" scrollattr="pos"
+               stepsize="${parent.field.lineheight}"
+               scrollmax="${parent.field.maxheight}" 
+               scrolltarget="parent.field"
+               x="${parent.width - this.width - 1}"
+               y="1"
+               height="${parent.height - 2}"/>
+  </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

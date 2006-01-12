@@ -1,0 +1,42 @@
+<!--=======================================================================-->
+<!-- server admin cover page for Laszlo Explorer                           -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+<html>
+<head>
+<link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+<h1>Server Admin</h1>
+  <div class="desc">
+  <p>The "Admin Console" offers a graphical user interface for
+   accessing server commands.  This is written entirely in LZX using standard
+   Laszlo components.
+  </p>
+  <p>Server commands can be executed directly using adminstrative
+  'lzt' request types.  Some common commands are listed below.  You can click
+  the links to execute the commands.
+  </p>
+    <ul>
+        <li><a href="foo.lzx?lzt=clearcache&pwd=laszlo">Clear cache</a></li>
+        <li><a href="foo.lzx?lzt=stat&pwd=laszlo">Server statistics</a></li>
+        <li><a href="foo.lzx?lzt=cacheinfo&pwd=laszlo">Cache statistics</a></li>
+        <li><a href="foo.lzx?lzt=cacheinfo&details=1&pwd=laszlo">Cache details</a></li>
+
+        <li><a href="foo.lzx?lzt=errorcount&pwd=laszlo">LPS Error count</a></li>
+        <li><a href="foo.lzx?lzt=errorcount&clear=1&pwd=laszlo">Clear LPS error count</a></li>
+        <li><a href="foo.lzx?lzt=serverinfo&pwd=laszlo">LPS server info</a></li>
+        <li><a href="foo.lzx?lzt=log&pwd=laszlo">Current LPS log file (can be long)</a></li>
+     </ul>
+   <p>This distribution is configured for development, for deployment details see
+   <a href="../../docs/guide/deployers-guide.html" target="laszlo-dguide">Deploying Laszlo Applications</a> in the Developers Guide.
+    </p>
+
+    </div>
+  </center>
+</body>
+</html>

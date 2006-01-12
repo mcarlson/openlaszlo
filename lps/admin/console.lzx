@@ -1,0 +1,68 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- console.lzx                                                            -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas title="LPS admin console" width="640" height="620" bgcolor="#eaeaea"
+        maxtextwidth="2000">
+
+    <include href="consolelib.lzx" />
+
+    <class name="mytabpane" extends="tabpane">
+        <attribute name="requested" value="false" type="boolean" />
+        <method event="onvisible" args="v">
+        <![CDATA[
+            if (v && ! this.requested) {
+                this.setAttribute("requested", true);
+                info.request();
+            }
+        ]]>
+        </method>
+    </class>
+
+        <simplelayout axis="y" spacing="10" />
+
+        <view height="5"/>
+        <view name="form" fontsize="12" >
+            <simplelayout axis="x" spacing="5" />
+            <text font="mono" >Admin password:</text>
+            <inputtext id="pwd" password="true" font="monob" bgcolor="#fafafa" 
+                       width="100">
+                <method event="oninit">
+                    if (typeof(global.password) != "undefined") {
+                        this.setText(global.password);
+                    }
+                </method>
+            </inputtext>
+        </view>
+
+        <tabs x="3" width="${parent.width - 10}" height="${parent.height - 41}">
+            <mytabpane text="server">
+                <serverinfo name="info" width="${parent.parent.width - 6}" 
+                            height="${parent.parent.height - 40}" />
+            </mytabpane>
+            <mytabpane text="cache">
+                <cacheinfo name="info" width="${parent.parent.width}" 
+                           height="${parent.parent.height - 40}"/>
+            </mytabpane>
+            <tabpane text="version">
+                <version name="info" width="${parent.parent.width}" 
+                         height="${parent.parent.height - 40}" />
+            </tabpane>
+            <mytabpane text="log">
+                <logconfig name="info" width="${parent.parent.width - 5}"
+                           height="${parent.parent.height - 40}" />
+            </mytabpane>
+        </tabs>
+
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

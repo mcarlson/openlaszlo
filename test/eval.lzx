@@ -1,0 +1,35 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- eval.lzx                                                              -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="1000" height="1000" debug="true">
+    <splash/>
+
+    <window id="evalwin" title="Debugger/Interpreter Window" width="350"
+            height="200" x="500" resizable="true">
+        <view name="myview">
+            <simplelayout axis="y" spacing="5" />
+            <text name="mytext" width="200">Enter script to evaluate:</text>
+            <method name="testeval">
+                var expr = this.expr.getText();
+                Debug.evalString(expr);
+                Debug.write("Eval "+ expr);
+            </method>
+            <edittext multiline="true" height="100" width="300" name="expr" text="evalwin.animate('y',1000,true);" />
+            <button x="20" height="20" text="Eval" width="75"  onclick="this.parent.testeval()"/>
+        </view>
+   </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

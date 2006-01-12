@@ -1,0 +1,51 @@
+ <library>
+   <include href="base/basebutton.lzx" />
+
+   <!-- A basebutton that sends an onmousestilldown event while the mouse is
+        held down. -->
+   <class name="basebuttonrepeater" extends="basebutton">
+       <!---  @keywords private -->
+       <attribute name="_lasttime" value="0"/>
+       <!---  @keywords private -->
+       <attribute name="stillDownDelegate" value="0"/>
+       <!---  @keywords private -->
+       <method name="stillDownEventGenerator">
+            var now = (new Date()).getTime();
+            var diff = now - this._lasttime;
+            this._lasttime = now;
+
+            if (this.isMouseDown) {
+                var next; 
+                if (diff > 600) {
+                    next = 500;
+                } else {
+                    next = 50;
+                    this.onmousestilldown.sendEvent();
+                }
+                LzTimer.resetTimer( this.stillDownDelegate, next );
+            }
+       </method>
+
+       <!--- @keywords private -->
+        <method event="onmousedown">
+            var now = new Date();
+            this._lasttime = now.getTime();
+            this.isMouseDown = true;
+            if (!this.stillDownDelegate) {
+               this.stillDownDelegate = new LzDelegate( this, "stillDownEventGenerator");
+           }
+            LzTimer.addTimer( this.stillDownDelegate, 500 );
+        </method>
+        <!--- @keywords private -->
+        <method event= "onmouseup">
+            this.isMouseDown=false;
+            LzTimer.removeTimer( this.stillDownDelegate );
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

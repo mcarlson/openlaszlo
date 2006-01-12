@@ -1,0 +1,22 @@
+<canvas debug="true">
+	<script>
+		var excount = 0
+	</script>
+    <node name="simplenode" oninit="Debug.write( 'hi from ' + this )"/>
+    <class name="exnode" extends="node">
+        <method event="onconstruct">
+            global.excount++;
+        </method>
+        <method name="mymeth">
+            Debug.write( "total of " + global.excount + " exnodes" );
+        </method>
+    </class>
+    <exnode/>
+    <exnode/>
+    <exnode oninit="this.mymeth()"/>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,16 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<list>
+    <item value="item0">text 0</item>
+    <item value="item1">text 1</item>
+    <item value="item2">text 2</item>
+    <item value="item3">text 3</item>
+    <item value="item4">text 4</item>
+    <item value="item5">text 5</item>
+    <item value="item6">text 6</item>
+    <item value="item7">text 7</item>
+    <item value="item8">text 8</item>
+    <item value="item9">text 9</item>
+</list>

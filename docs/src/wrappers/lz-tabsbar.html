@@ -1,0 +1,79 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Tabsbar">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        The lz tabsbar class for laying out tab items.
+    </lzshortdesc>
+    <lztag>lz/tabsbar.xml</lztag>
+</lzelement>
+
+<p>A <classname>tabsbar</classname> is a container that uses a default
+x-axis <classname>simplelayout</classname> with a spacing of -15 to
+lay out its tab children (which have extra spacing on each side) so they
+overlap.</p>
+<p>
+This it the default tab bar created by tabpane. This class is dependent on
+tabs (or any subclass of basetabs) and shouldn't be used by
+itself. The default layout for its subviews is "class: simplelayout;
+axis: x; spacing: -15". You can pass the name of this class in the 'barclass' attribute of tabpane, basetabpane, basetabs, and tabs. Tabs
+          uses this class as its default 'barclass'.
+</p>
+
+<example>
+&lt;canvas width="400" height="100"&gt;
+  &lt;include href="lz"/&gt;
+
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+
+  &lt;view layout="class: simplelayout; axis: y; spacing: 5"
+        bgcolor="red"&gt;
+    &lt;text&gt;basetabs barclass=basetabsbar&lt;/text&gt;
+    &lt;basetabs y="10" tabclass="tab" barclass="basetabsbar"&gt;
+      &lt;basetabpane text="one"&gt;
+        &lt;text&gt;one&lt;/text&gt;
+      &lt;/basetabpane&gt;
+      &lt;basetabpane text="two"&gt;
+        &lt;text&gt;two&lt;/text&gt;
+      &lt;/basetabpane&gt;
+      &lt;basetabpane text="three"&gt;
+        &lt;text&gt;three&lt;/text&gt;
+      &lt;/basetabpane&gt;
+    &lt;/basetabs&gt;
+  &lt;/view&gt;
+
+  &lt;view layout="class: simplelayout; axis: y; spacing: 5"
+        bgcolor="yellow"&gt;
+    &lt;text&gt;basetabs barclass=tabsbar&lt;/text&gt;
+    &lt;basetabs y="10" tabclass="tab" barclass="tabsbar"&gt;
+      &lt;basetabpane text="one"&gt;
+        &lt;text&gt;one&lt;/text&gt;
+      &lt;/basetabpane&gt;
+      &lt;basetabpane text="two"&gt;
+        &lt;text&gt;two&lt;/text&gt;
+      &lt;/basetabpane&gt;
+      &lt;basetabpane text="three"&gt;
+        &lt;text&gt;three&lt;/text&gt;
+      &lt;/basetabpane&gt;
+    &lt;/basetabs&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<tags>tab tabs basetabsbar</tags>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

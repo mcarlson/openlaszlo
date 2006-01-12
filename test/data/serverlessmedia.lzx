@@ -1,0 +1,126 @@
+<canvas width="800">
+    <attribute name="proxied" value="${ doprox.value }"/>
+    <debug y="300" width="450"/>
+    <class name="loadtarget">
+
+        <simplelayout/>
+
+        <text text="$once{classroot.name}" fontstyle="bold"/>
+
+        <view name="loadparent" width="100" height="100" clip="true">
+            <view name="loadview" visible="true"/>
+        </view>
+
+        <attribute name="status" type="string" value="no url"/>
+        
+        <method name="load" args="u">
+            this.setAttribute( "status" , "loading" );
+            loadparent.loadview.setSource( u );
+        </method>
+
+        <method event="onerror" reference="loadparent.loadview">
+            this.setAttribute( "status" , "error" );
+        </method>
+
+        <method event="onload" reference="loadparent.loadview">
+            this.setAttribute( "status" , "loaded" );
+        </method>
+
+        <method event="ontimeout" reference="loadparent.loadview">
+            this.setAttribute( "status" , "timeout" );
+        </method>
+
+        <view>
+            <simplelayout axis="x"/>
+            <view width="40">
+                <attribute name="loadview" 
+                           value="$once{classroot.loadparent.loadview}"/>
+                <simplelayout/>
+                <text>Status:</text>
+                <text>Width:</text>
+                <text>Height:</text>
+                <text>Frame:</text>
+                <text>Total:</text>
+                <view bgcolor="blue" height="10" 
+                      width="${100 * parent.loadview.loadperc}"/>
+            </view>
+            <view>
+                <attribute name="loadview" 
+                           value="$once{classroot.loadparent.loadview}"/>
+                <simplelayout/>
+                <text text="${ classroot.status}"/>
+                <text text="${ parent.loadview.width}"/>
+                <text text="${ parent.loadview.height}"/>
+                <text text="${ parent.loadview.frame}"/>
+                <text text="${ parent.loadview.totalframes}"/>
+            </view>
+        </view>
+    </class>
+
+    <simplelayout inset="20" spacing="30"/>
+    <checkbox id="doprox" value="false">Use LPS as proxy</checkbox>
+    <view>
+        <simplelayout axis="x"/>
+        <combobox width="280" name="src">
+            <textlistitem>
+                d_c_train_lzx.jpg
+            </textlistitem>
+            <textlistitem>
+                http://localhost:8080/lps-dev/test/lfc/media/calendar.swf
+            </textlistitem>
+            <textlistitem>
+                http://adam.blips.com:8080/lps-dev/test/lfc/media/calendar.swf
+            </textlistitem>
+            <textlistitem>
+                media/calendar.swf
+            </textlistitem>
+            <textlistitem>
+                media/notthere.swf
+            </textlistitem>
+            <textlistitem>
+                http://www.laszlosystems.com/lps/my-apps/video/assets/calendar.swf
+            </textlistitem>
+            <textlistitem>
+                ../../examples/image-loading/galofixe.swf
+            </textlistitem>
+            <textlistitem>
+                ../../examples/image-loading/logo.swf
+            </textlistitem>
+            <textlistitem>
+                http://laszlosystems.com/lps/my-apps/video/assets/amazon.swf
+            </textlistitem>
+            <textlistitem>
+                http://laszlosystems.com/img/d_c_train_lzx.jpg
+            </textlistitem>
+            <textlistitem>
+                http://laszlosystems.com/lps/my-apps/video/assets/travel.swf
+            </textlistitem>
+        </combobox>
+        <button>
+            Load
+            <method event="onclick">
+                targetParent[ parent.targparent.targ.value ].load( 
+                                                        parent.src.value );
+                parent.targparent.targ.selectNext();
+                //parent.src.selectNext();
+            </method>
+        </button>
+        <view y='-8' name="targparent">
+            <text x="18">Target:</text>
+            <radiogroup name="targ" x="18" y="18" layout="axis: 'x' ">
+                <radiobutton>A</radiobutton>
+                <radiobutton>B</radiobutton>
+                <radiobutton>C</radiobutton>
+                <radiobutton>D</radiobutton>
+            </radiogroup>
+        </view>
+    </view>
+
+    <view name="targetParent">
+        <simplelayout axis="x"/>
+        <loadtarget name="A"/>
+        <loadtarget name="B"/>
+        <loadtarget name="C"/>
+        <loadtarget name="D"/>
+    </view>
+</canvas>

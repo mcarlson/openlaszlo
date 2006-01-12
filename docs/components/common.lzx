@@ -1,0 +1,90 @@
+<library>
+
+    <attribute name="urlprefix" value="../reference/index.html" type="string" />
+    <attribute name="lfccolor" value="0xDFD498" type="number" />
+    <attribute name="basecolor" value="0xD1DCF1" type="number" />
+    <attribute name="lcicolor" value="0xD5E6D2" type="number" />
+    <attribute name="lcdcolor" value="0xD8D2E6" type="number" />
+
+    <class name="keyview" layout="spacing: 10" width="${parent.width - 40}">
+        <attribute name="boxsize" value="15" type="number" />
+
+        <text><i>KEY</i></text>
+
+        <view layout="axis: x; spacing: 5" >
+            <view width="${classroot.boxsize}" height="${classroot.boxsize}"
+                  bgcolor="${ canvas.lfccolor }"/>
+            <text><b>Laszlo Foundation Classes</b></text>
+        </view>
+        <view layout="axis: x; spacing: 5" >
+            <view width="${classroot.boxsize}" height="${classroot.boxsize}"
+                  bgcolor="${ canvas.basecolor }"/>
+            <view name="desc" layout="axis: y; spacing: 2" >
+                <text><b>Base Classes</b></text>
+                <text multiline="true" width="${classroot.width}">
+                    These have no visual appearance, typically these define a
+                    behavior to be used by a subclass. If you want to create
+                    components with a unique look, you would extend these
+                    subclasses.
+                </text>
+            </view>
+        </view>
+        <view layout="axis: x; spacing: 5" >
+            <view width="${classroot.boxsize}" height="${classroot.boxsize}"
+                  bgcolor="${ canvas.lcicolor }"/>
+            <view name="desc" layout="axis: y; spacing: 2">
+                <text><b>Laszlo Component Classes</b></text>
+                <text multiline="true" width="${classroot.width}">
+                    These are intermediary classes which define a look and feel
+                    used by one or more subclasses.
+                </text>
+            </view>
+        </view>
+        <view layout="axis: x; spacing: 5" >
+            <view width="${classroot.boxsize}" height="${classroot.boxsize}"
+                  bgcolor="${ canvas.lcdcolor }"/>
+            <view name="desc" layout="axis: y; spacing: 2" >
+                <text><b>Laszlo Component Classes</b></text>
+                <text multiline="true" width="${classroot.width}">
+                    These can be used directly to create a
+                    graphical user experience. These components share a unified look
+                    and are designed to be used together.
+                </text>
+            </view>
+        </view>
+
+        <text width="${classroot.width}" multiline="true">
+            <i>Click on a class name to view its documentation.</i>
+        </text>
+    </class>
+    
+    <class name="textlink" extends="text" align="center"
+          onmouseover="setAttribute('fgcolor', this.texthilitecolor)"
+          onmouseout="setAttribute('fgcolor', this.textcolor)"
+          onmousedown="setAttribute('fgcolor', this.textselectedcolor)">
+        <attribute name="file" value="" type="string" />
+        <attribute name="texthilitecolor" value="0x325693" type="number" />
+        <attribute name="textcolor" value="0x000000" type="number" />
+        <attribute name="textselectedcolor" value="0xFFFFFF" type="number" />
+        <method event="onclick">
+            var file = (this.file != '' ? this.file : this.text + '.html');
+            var url = canvas.urlprefix + '?' + file;
+            LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","laszlo-reference","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
+        </method>
+        <method event="onmouseup">
+            setAttribute('fgcolor', this.texthilitecolor)
+        </method>
+    </class>
+
+    <class name="border" defaultplacement="content" bgcolor="0x404040">
+        <!-- The bgcolor for the content. -->
+        <attribute name="cbgcolor" value="$once{parent.bgcolor}" type="number" />
+        <view name="content" x="1" y="1" width="${parent.width-2}" height="${parent.height-2}" 
+              bgcolor="${ parent.cbgcolor }" />
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

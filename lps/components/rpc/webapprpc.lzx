@@ -1,0 +1,86 @@
+<library>
+    
+    <include href="rpc/rpc.lzx" />
+    <include href="rpc/library/javarpc.js" />
+
+    <security>
+        <allow>
+            <pattern>^org\.openlaszlo\.remote\.LZWebAppRemote$</pattern>
+        </allow>
+    </security>
+
+    <!--- A class to get an http web application object and invoke its methods.
+          Remote method signatures are:
+
+          getAttribute(name) - returns object, array, or primitive type.
+          getAttributeNames() - returns array of attribute names.
+          getMajorVersion() - returns the major version number of the Java
+            Servlet API that the remote servlet supports.
+          getMinorVersion() - returns the minor version number of the Java
+            Servlet API that the remote servlet supports.
+          getMimeType(filename) - returns the MIME type of the specified
+            filename, or null if the MIME type is not known.
+          getServerInfo() - returns the name and version of the servlet container
+            on which the servlet is running.
+          getServletContextName() - returns the name of this web application
+            correponding to this ServletContext as specified in the deployment
+            descriptor for this web application by the display-name element.
+          log(msg) - writes the specified message to a servlet log file, usually
+            an event log; returns void.
+          removeAttribute(name) - remove attribute named name; returns void.
+          setAttribute(name,value) - set attribute named name with value; returns
+            void.
+
+          See javax.servlet.ServletContext in the Java Servlet API documentation
+          for more information. -->
+    <class name="webapprpc" extends="rpc">
+
+        <!--- @keywords private -->
+        <attribute name="_attributename" value="none" type="string" />
+        <!--- @keywords private -->
+        <attribute name="_scope" value="none" type="string" />
+        <!--- @keywords private -->
+        <attribute name="_classname" type="string"
+                   value="org.openlaszlo.remote.LZWebAppRemote" />
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- Load web application object. -->
+        <method name="load">
+            var opts = {
+                loadoption: 'loadonly',
+                classname: this._classname,
+                oname: this._attributename,
+                scope: this._scope
+            }
+            LzJavaRPCService.loadObject(this._loadDel, opts, this.secure, 
+                this.secureport);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setup" args="o">
+            var ok = super._setup(o);
+
+            for (var k in this.proxy) {
+                var tpka = this.proxy[k]['args'];
+                if (tpka == null) {
+                    tpka = this.proxy[k].args = {};
+                }
+                tpka.secure = this.secure;
+                tpka.secureport = this.secureport;
+                tpka.scope = this._scope;
+                tpka.attributename = this._attributename;
+            }
+
+            return ok;
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,19 @@
+<!--  build.xml                                                             -->
+<!--                                                                        -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<project name="jdbcwebapp" default="compile" basedir=".">
+
+  <target name="init">
+    <tstamp/>
+  </target>
+
+  <target name="compile" depends="init">
+    <mkdir dir="WEB-INF/classes" />
+    <javac classpath="servlet-2.2.jar:WEB-INF/lib/jdbcpool-0.99.jar:WEB-INF/lib/jdom.jar:WEB-INF/lib/log4j-1.2.6.jar:WEB-INF/lib/mysql-connector-java-3.0.6-stable-bin.jar"
+           srcdir="." destdir="WEB-INF/classes" />
+  </target>              
+
+</project>

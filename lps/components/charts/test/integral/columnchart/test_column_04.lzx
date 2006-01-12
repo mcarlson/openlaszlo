@@ -1,0 +1,69 @@
+<canvas width="1000" height="900" debug="false">    
+    <include href="chartstyle.lzx"/>    
+    
+    <dataset name="baseball" src="../../data/simple-redsox-data.xml"/> 
+
+    <simplelayout axis="y"/>   
+        
+     <!-- Chart Title -->      
+      <view name="title"  y="10">
+        <text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF"> Column Chart and Column fill and ChartBackground with image.</text>      
+     </view>
+
+    <!-- Column Chart -->     
+    <columnchart id="chart1" width="500" height="500" datatipEnabled="true" datatipColumn="tooltip" 
+    style="defaultchartstyle04" datalabelEnabled="false" datalabelColumn="label">
+
+        <dataseries datapath="baseball:/records" >
+            <datacolumn name="x"  columndatapath="record/@year" datatype="number"/>
+            <datacolumn name="label" columndatapath="record/@attendance"/>
+            <dataseries label="wins">                
+                <datacolumn  name="y" columndatapath="record/@wins" datatype="number"/>
+                <datacolumn name="tooltip" columndatapath="record">
+                    <method name="processData" args="v">
+                        return  "year: " + v.attributes.year + "  wins: " + v.attributes.wins;
+                    </method>
+                </datacolumn>
+            </dataseries>
+            
+            <dataseries label="losses">                
+                    <datacolumn name="y" columndatapath="record/@losses" datatype="number"/>
+                    <datacolumn name="tooltip" columndatapath="record">
+                        <method name="processData" args="v">
+                            return  "year: " + v.attributes.year + "  losses: " + v.attributes.losses;
+                        </method>
+                    </datacolumn>
+            </dataseries>         
+          
+        </dataseries> 
+        
+        <columnchartplotarea name="plotarea" clip="true"/>
+        
+        <horizontalaxis name="haxis" title="Years" type="categorical" columnName="x" minimum="1" maximum="5"  titleLocation="low">
+        </horizontalaxis>
+        
+        <verticalaxis name="vaxis" title="Values" type="linear"  columnName="y"  minimum="0" maximum="120" titleLocation="low" minorTickEnabled="true">
+        </verticalaxis>        
+            
+    </columnchart>
+    
+    <legend name="legendbox" legendFontsize="16" legendborder="true" borderWidth="2" chart="${chart1}" x="${chart1.x + chart1.width}" 
+     y="${(chart1.y + chart1.height)/2}" options="ignorelayout" fillColor="0xFFFFCC" legendFontcolor="0x0000FF" direction="vertical">
+          <method event="onitemmouseclick" args="item">
+              var topseries = this.chart.getDataSeries();
+
+              topseries.getDataSeries(item.identifier).enabled = item.linevisible;
+              this.chart.renderPlotArea();
+              item.linevisible = !item.linevisible;
+          </method> 
+    </legend>
+</canvas>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

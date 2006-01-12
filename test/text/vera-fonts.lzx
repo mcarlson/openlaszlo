@@ -1,0 +1,79 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- vera-fonts.lzx                                                        -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas> 
+    <splash/>
+
+    <font name="vera">
+        <face src="bitstream-vera-1.10/vera.ttf"   style="plain" />
+        <face src="bitstream-vera-1.10/verait.ttf" style="italic" />
+        <face src="bitstream-vera-1.10/verabi.ttf" style="bold italic" />
+        <face src="bitstream-vera-1.10/verabd.ttf" style="bold" />
+    </font>
+
+    <font name="vera-mono" >
+        <face src="bitstream-vera-1.10/veramono.ttf" style="plain" />
+        <face src="bitstream-vera-1.10/veramobi.ttf" style="bold italic" />
+        <face src="bitstream-vera-1.10/veramoit.ttf" style="italic" />
+        <face src="bitstream-vera-1.10/veramobd.ttf" style="bold" />
+    </font>
+
+    <font name="vera-serif" >
+        <face src="bitstream-vera-1.10/verase.ttf" style="plain" />
+        <face src="bitstream-vera-1.10/verasebd.ttf" style="bold" />
+    </font>
+    
+    <class name="fonttester" oninit="doit()" >
+        <simplelayout axis="y" spacing="10" />
+        <text name="fn" width="100"> </text>
+        <text><b>Bold</b></text>
+        <text><i>Italic</i></text>
+        <text><b><i>Bold Italic</i></b></text>
+        <text >
+            abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"
+        </text>
+        <text >
+            ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"
+        </text>
+        <text >
+            <b>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|"</b>
+        </text>
+        <text >
+            <b>ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890!@#$%^*()-=+|"</b>
+        </text>
+        <text fgcolor="#00FF00"><font color="#00FF00">
+            Green
+        </font></text>
+        <edittext >Edittext input text</edittext>
+        <inputtext >Base input text</inputtext>
+        <method name="doit" >
+            this.fn.setText(this.fontname);
+        </method>
+    </class>
+
+    <window title="Fonts are fun!" width="400" height="400" resizable="true" >
+        <view width="500">
+        <simplelayout axis="y" spacing="10" />
+        <fonttester font="vera" />
+        <fonttester font="vera-mono" />
+        <!-- Dunno, there's no italic vera-serif anymore
+             fonttester font="vera-serif" /-->
+        </view>
+        <scrollbar />
+    </window>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

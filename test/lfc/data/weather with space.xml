@@ -1,0 +1,27 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<weather sourceurl="http://www.srh.noaa.gov/zipcity.php?inputstring=94110">
+   <forecast>
+       <day label="TONIGHT" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/nbknfg.jpg" desc="Patchy/dense Fog" temp="Lo 50&#176; F"/>
+       <day label="TUESDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/sctfg.jpg" desc="Patchy/dense Fog" temp="Hi 67&#176; F"/>
+       <day label="TUESDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/nra.jpg" desc="Chance Showers" temp="Lo 50&#176; F"/>
+       <day label="WEDNESDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/sct.jpg" desc="Partly Cloudy" temp="Hi 65&#176; F"/>
+       <day label="WEDNESDAY" imageurl="http://www.srh.noaa.gov/weather/images/fcicons/nbknfg.jpg" desc="Late-night Fog" temp="Lo 45&#176; F"/>
+   </forecast>
+   <current>
+       <where>San Francisco, CA</where>
+       <station>San Francisco Intl Airport</station>
+       <when>Nov 11, 1:56 pm PST</when>
+       <desc>Partly Cloudy</desc>
+       <temp>63&#176;F (17&#176;C)</temp>
+       <humidity>70 %</humidity>
+       <windspeed>N 6 MPH</windspeed>
+       <barometer>30.21" (1022.8 mb)</barometer>
+       <dewpoint>53&#176;F (12&#176;C)</dewpoint>
+       <heatindex>None</heatindex>
+   </current>
+   <radar src="http://www.srh.noaa.gov/data/radar/small/kmux.jpg"/>
+   <satellite src="http://www.srh.noaa.gov/data/satellite/thumbs/WCI8.JPG"/>
+</weather>

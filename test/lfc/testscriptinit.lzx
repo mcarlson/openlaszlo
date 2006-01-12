@@ -1,0 +1,29 @@
+<canvas debug="true">
+<view oninit="
+debug.sety(20);
+debug.setx(100);
+debug.setheight(300);
+"/>
+    <class name="slowinit" 
+           oninit="for( var i=1000; i >0 ;i--){};Debug.write('this:' + this)"
+           width="50" height="50" bgcolor="red">
+        <view oninit="for( var i=1000; i >0 ;i--){};" width="10" height="10"
+              bgcolor="blue" />
+    </class>
+
+    <simplelayout spacing="5" />
+    <text> Debugger hould display names of new views in order -- a, b , c , d, e
+    </text>
+    <button text="make em">
+        <method event="onclick">
+            names =[ "a" , "b" , "c" , "d" , "e" ];
+            for ( var i =0; i &lt; names.length; i++ ){
+                new slowinit( canvas , { name : names[ i ] } );
+            }
+        </method>
+    </button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

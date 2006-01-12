@@ -1,0 +1,104 @@
+
+<canvas width="800">
+  <debug y="300"/>
+  
+  <class name="scrollinputtext" clip="true">
+    <!-- created by Max Carlson (max@laszlosystems.com) and Sarah
+         Allen sallen@laszlosystems.com -->
+    <attribute name="text" type="html" value=""/>
+    <method name="getText">
+      return inp.getText();
+    </method>
+    <method name="setText" args="t">
+      inp.setText(t);
+    </method>
+    <inputtext fontsize="18" name="inp" height="${parent.height}"
+               width="${parent.width - 20}" multiline="true" text="${parent.text}">
+      <attribute name="lineheight"
+                 value="${this.getTextHeight()/this.maxscroll}"/>   <!-- fix this -->
+      <attribute name="maxheight" value="${this.height +
+                 this.lineheight * (this.maxscroll - 1)}"/>
+      <attribute name="onpos" value="null"/>
+      <attribute name="pos" value="0" setter="setPos(pos);"/>
+      
+      <method name="setPos" args="p">
+        if (this.isinited) {
+        this.setScroll(1 - (p / this.lineheight));
+        this.pos = p;
+        if (this.onpos) this.onpos.sendEvent(p);
+        }
+      </method>
+      <method event="onscroll">
+        this.setPos(-this.lineheight * (this.scroll - 1), true);
+      </method>
+    </inputtext>
+    <scrollbar axis="y" scrollattr="pos"
+               stepsize="${parent.inp.lineheight}"
+               scrollmax="${parent.inp.maxheight}"/>
+  </class>
+  
+  <class name="scrolltext" clip="true">
+    <attribute name="text" type="html" value=""/>
+    <method name="getText">
+      return field.getText();
+    </method>
+    <method name="setText" args="t">
+      field.setText(t);
+    </method>
+    <text fontsize="18" name="field" height="${parent.height}"
+          width="${parent.width - 20}"
+          multiline="true" text="${parent.text}" selectable="true">
+      <attribute name="lineheight"
+                 value="${maxscroll * 0 + this.getTextHeight()/this.getMaxScroll()}"/>   <!-- fix this -->
+      <attribute name="maxheight" value="${this.height +
+                 this.lineheight * (this.getMaxScroll() - 1)}"/>
+      <attribute name="onpos" value="null"/>
+      <attribute name="pos" value="0" setter="setPos(pos);"/>
+      
+      <method name="setPos" args="p">
+        if (this.isinited) {
+           this.setScroll(1 - (p / this.lineheight));
+           this.pos = p;
+           if (this.onpos) this.onpos.sendEvent(p);
+        }
+      </method>
+      <method event="onscroll">
+        this.setPos(-this.lineheight * (this.scroll - 1), true);
+      </method>
+    </text>
+    <scrollbar axis="y" scrollattr="pos"
+               stepsize="${parent.field.lineheight}"
+               scrollmax="${parent.field.maxheight}"/>
+  </class>
+  
+  <simplelayout spacing="20"/>
+  <scrollinputtext height="100" width="200" name="scin">1 Edit edit
+  eedit<br/>
+  2 wcit edit<br/>
+  3 wcit edit eedit<br/>
+  4 wcit edit eedit<br/>
+  5 Edit edit eedit<br/>
+  6 Edit edit eedit<br/>
+  7 Edit edit eedit<br/>
+  8 Edit edit eedit<br/>
+  9 Edit edit eedit<br/>
+  10 Edit edit eedit<br/>
+  11 Edit edit eedit<br/>
+  12 this line is longer and wraps
+  </scrollinputtext>
+  
+  <scrolltext height="100" width="200" name="stxt">1 Edit edit eedit<br/>
+  2 wcit edit<br/>
+  3 wcit edit eedit<br/>
+  4 wcit edit eedit<br/>
+  5 Edit edit eedit<br/>
+  6 Edit edit eedit<br/>
+  7 Edit edit eedit<br/>
+  8 Edit edit eedit<br/>
+  9 Edit edit eedit<br/>
+  10 Edit edit eedit<br/>
+  11 Edit edit eedit<br/>
+  12 this line is longer and wraps
+  </scrolltext>
+  
+</canvas>

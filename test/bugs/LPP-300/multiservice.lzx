@@ -1,0 +1,39 @@
+<canvas debug="true" height="600" width="1000">
+
+    <debug x="280" width="470" height="370" />
+
+    <soap name="lpsfoo" wsdl="file:multiservice.wsdl" 
+          service="LPSTestService" port="FOOTest">
+        <method event="onload">
+            Debug.write('fooverse (lps/foo):', this.proxy.fooverse);
+        </method>
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+    </soap>
+
+    <soap name="lpslps" wsdl="file:multiservice.wsdl" 
+          service="LPSTestService" port="LPSTest">
+        <method event="onload">
+            Debug.write('reverse (lps/lps):', this.proxy.reverse);
+        </method>
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+    </soap>
+
+    <soap name="anotherlps" wsdl="file:multiservice.wsdl" 
+          service="AnotherTestService" port="LPSTest">
+        <method event="onload">
+            Debug.write('reverse (another/lps):', this.proxy.reverse);
+        </method>
+        <method event="onerror" args="error">
+            Debug.write('error:', error);
+        </method>
+    </soap>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

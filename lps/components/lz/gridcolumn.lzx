@@ -1,0 +1,117 @@
+<library>
+    <include href="button.lzx" />
+    <include href="base/basegridcolumn.lzx" />   
+
+    <resource name="lzgridcursor_rsrc" src="resources/grid/grid_cursor.swf"/>
+    <resource name="lzgridsortarrow_rsrc">
+        <frame src="resources/grid/sort_arrow_up.swf"/>
+        <frame src="resources/grid/sort_arrow_dn.swf"/>
+    </resource>
+
+    <class name="gridcolumn" extends="basegridcolumn">
+        <!--- If set to false, the column cannot be resized. -->
+        <attribute name="resizable" value="true" type="boolean"/>
+
+        <!--- If true, the column header is clickable and will initiate a 
+              sort -->
+        <attribute name="sortable" type="boolean" value="true"/>
+        <!--- If set to false, then no header will be shown for this column.-->
+        <attribute name="showheader" value="true" type="boolean"/>
+        <!--- The width of the resizer between columns.-->
+        <attribute name="resizemargin" value="3" type="number"/>
+        <!--- @keywords private -->
+        <attribute name="colwidth" value="${this.width - 
+                                    (this.resizable ? 4 : 2) }"/>
+
+        <!--- @keywords private -->
+        <method name="init">
+            if ( ! this.hassetwidth ){
+                if ( this.showheader ){
+                    this.setWidth( mybutton.measureWidth()  );
+                } else {
+                    this.setWidth( this.minwidth );
+                }
+            }
+            if ( this.showheader ){
+                mybutton.widthConstraint.apply();
+            }
+            super.init();
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if ( showheader ){
+                setTint(mybutton.sortarrow, s.textcolor);
+                if ( resizable ){
+                    setTint(resizer, s.basecolor);
+                }
+            }
+            super._applystyle( s );
+        </method>
+
+        <!--- @keywords private -->
+        <state apply="${classroot.showheader}" placement="header">
+            <button name="mybutton" 
+                    clip="true"
+                    placement="header"
+                    text="${classroot.text}"  
+                    text_padding_x="20"
+                    focusable="$once{classroot.sortable}"
+                    doesenter="false"
+                    onclick="parent.doSort()"
+                    clickable="$once{classroot.sortable}">
+
+                <method name="setClickable" args="cl">
+                    <![CDATA[ super.setClickable( cl && classroot.sortable );]]>
+                </method>
+                    
+                <view resource="lzgridsortarrow_rsrc"  name="sortarrow"
+                      x="${ parent._title.x + parent._title.width + 2}"
+                      y="${ parent.titleshift + parent.height/2 - height/2}"
+                      frame="${ classroot.ascendsort ? 1 : 2 }"
+                      visible="${ classroot.hasSort }"/>
+
+                <state name="widthConstraint" placement="header">
+                    <attribute name="width" 
+                               value="${ classroot.width - 
+                                         ( parent.resizable ? 
+                                           parent.resizer.width : 0 ) }"/>
+                </state>
+            </button>
+
+            <state placement="header" apply="${parent.resizable}">
+                <view height="${parent.height-1}"
+                    x="${parent.mybutton.width - 1}"
+                    placement="header"
+                    name="resizer"
+                    clickable="$once{parent.resizable}"
+                    onmouseover="LzCursor.setCursorGlobal ( 'lzgridcursor_rsrc' )"
+                    onmouseout="LzCursor.restoreCursor()"
+                    onmousedown="LzCursor.lock();parent.rs.apply()"
+                    onmouseup="LzCursor.unlock();parent.rs.remove()" >
+                    <view resource="resources/grid/column_resize_top.swf"/>
+                    <view resource="resources/grid/column_resize_mid.swf"
+                        stretches="height"/>
+                    <view resource="resources/grid/column_resize_bot.swf"/>
+                    <stableborderlayout axis="y"/>
+                </view>
+            </state>
+
+            <state name="rs" placement="header">
+                <attribute name="xroffset"
+                           value="$once{ this.x - this.width + 
+                                         this.getMouse( 'x' ) }"/>
+                    
+                <attribute name="width" 
+                     value="${Math.max( minwidth, this.immediateparent.getMouse( 'x' )- xroffset)}"/>
+            </state>
+        </state>
+
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

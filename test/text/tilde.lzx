@@ -1,0 +1,35 @@
+<canvas> 
+    <splash/>
+
+    <!-- Import some fonts.  -->
+    <font name="Arioso" src="ariosor.ttf">
+        <face src="ariosob.ttf" style="bold" />
+    </font>
+
+    <font name="Chevara" src="chevarar.ttf">
+		<face src="chevaraor.ttf" style="bold" />
+    </font>
+	<view>
+<simplelayout axis="y" spacing="10" />
+    <view width="400" font="Chevara" fontsize="14">
+<simplelayout axis="y" spacing="10" />
+<text>~a~b~c~d~e~f~g~h~i~j~k~l~m~n~o~p~q~r~s~t~u~v~w~x~y~z~</text>
+<text>~Q~W~E~R~T~Y~U~I~O~P~A~S~D~F~G~H~J~K~L~Z~X~C~V~B~N~M~</text>
+</view>
+    <view width="400" font="Arioso" fontsize="14"> 
+<simplelayout axis="y" spacing="10" />
+
+<text>~a~b~c~d~e~f~g~h~i~j~k~l~m~n~o~p~q~r~s~t~u~v~w~x~y~z~</text>
+<text>~Q~W~E~R~T~Y~U~I~O~P~A~S~D~F~G~H~J~K~L~Z~X~C~V~B~N~M~</text>
+</view>
+    <view width="400">
+<simplelayout axis="y" spacing="10" />
+<text>~a~b~c~d~e~f~g~h~i~j~k~l~m~n~o~p~q~r~s~t~u~v~w~x~y~z~</text>
+<text>~Q~W~E~R~T~Y~U~I~O~P~A~S~D~F~G~H~J~K~L~Z~X~C~V~B~N~M~</text>
+</view>
+</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

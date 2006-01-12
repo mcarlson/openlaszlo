@@ -1,0 +1,29 @@
+<canvas debug="true">
+
+    <dataset name="ds">
+        <item attr1="a1" attr2="a2">
+           <text>ctv one</text>
+           <value>1111</value>
+        </item>
+        <item>
+           <text>ctv two</text>
+           <value>2222</value>
+        </item>
+        <item>
+           <text>ctv three</text>
+           <value>3333</value>
+        </item>
+    </dataset>
+
+
+	<view>
+		<combobox name="cb" datapath="ds:/item[1]/text/text()">
+			<textlistitem datapath="ds:/item" 
+				text="$path{'text/text()'}" value="$path{'value/text()'}"/>
+		</combobox>
+	</view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

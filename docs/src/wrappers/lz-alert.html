@@ -1,0 +1,45 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Alert">
+    <lztier>LZ Components</lztier>
+    <lzcategory>View</lzcategory>
+    <lzshortdesc>
+        A simple alert.
+    </lzshortdesc>
+    <lztag>lz/alert.xml</lztag>
+</lzelement>
+
+
+<p>A simple subclass of <classname>modaldialog</classname>,
+<classname>alert</classname> provides a modal alert box that displays
+its text attribute (or content) and an OK button.  (If you need to
+display more than text in an alert, use
+<classname>modaldialog</classname> itself).
+</p>
+
+<example>
+&lt;canvas height="140"&gt;
+  &lt;alert name="myalert"&gt;
+    Danger! Danger, Will Robinson!
+  &lt;/alert&gt;
+  
+  &lt;button onclick="canvas.myalert.open()"&gt;Show Alert&lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes>modaldialog alert</classes>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

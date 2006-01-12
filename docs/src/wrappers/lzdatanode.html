@@ -1,0 +1,66 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="../lps/includes/styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzDataNode">
+    <lztier>LFC</lztier>
+    <lzcategory>Data</lzcategory>
+    <lzshortdesc>
+        The base class for a node of hierarchical data.
+    </lzshortdesc>
+    <lzapi>api-lzdatanode.xml</lzapi>
+</lzelement>
+
+<p><classname>LzDataNode</classname> is the base class for the classes
+that represent Laszlo's hierarchical data format.</p>
+
+<example>
+&lt;canvas width="300" height="300"&gt;
+  &lt;simplelayout axis="y"/&gt;
+  &lt;text width="300" height="250" bgcolor="silver" 
+        multiline="true" name="display"/&gt;
+  &lt;button&gt;Make some data
+    &lt;attribute name="currentstep" value="0"/&gt;
+
+    &lt;method event="onclick"&gt;
+      &lt;![CDATA[ 
+      switch(currentstep ++){
+        case 0:
+          this.n = <em>new LzDataElement('numbers');</em>
+          setAttribute('text', 'Add some children');
+          break;
+        case 1:
+          for (var i = 1; i &lt; 11 ; i++){
+            <em>this.n.appendChild(new LzDataElement('number' , 
+                                                     {value : i}));</em>
+          }
+          setAttribute('text', 'Add linebreaks');
+          break;
+        case 2:
+          var dp = new LzDatapointer();
+          dp.setPointer(this.n.getFirstChild());
+          do {
+            <em>dp.p.parentNode.insertBefore(new LzDataText('\n'), 
+                                             dp.p);</em>
+          } while (dp.selectNext())
+          dp.p.parentNode.appendChild(new LzDataText('\n')); 
+          setAttribute('visible', false);
+          break;
+      }
+      display.setText(display.escapeText(n.serialize()));
+      ]]&gt;
+    &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

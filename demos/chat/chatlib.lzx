@@ -1,0 +1,274 @@
+<!--=======================================================================-->
+<!-- chatlib.lzx                                                           -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <include href="lz" />
+
+    <script>
+        canvas.connected = false;
+    </script>
+
+    <alert name="dialog" title="connection error" width="${canvas.width}"/>
+
+    <connectiondatasource name="myconnection">
+
+        <method name="print" args="str">
+            canvas.viewChat.chatPtr.addNode("message", null, { text: str, multiline: true } );
+        </method>
+
+        <method event="onconnect">
+            this.print("...connected...");
+            canvas.connected = true;
+            this.sendMessage("*", "", "userconnect");
+            canvas.viewPicker.setVisible(false);
+            canvas.viewChat.setVisible(true);
+        </method>
+
+        <method event="onerror" args="error">
+            if (canvas.connected) {
+                this.print("...connection error...");
+            } else {
+                canvas.dialog.setAttribute('text', error);
+                canvas.dialog.open();
+            }
+            canvas.connected = false;
+        </method>
+
+        <method event="ontimeout">
+            if (canvas.connected) {
+                this.print("...connection timed out...");
+            } else {
+                canvas.dialog.setAttribute('text', "connection timed out");
+                canvas.dialog.open();
+            }
+            canvas.connected = false;
+        </method>
+
+        <method event="ondisconnect">
+            canvas.connected = false;
+            this.print("...disconnected...");
+            canvas.connection.logout();
+        </method>
+
+        <method event="onuserdisconnect" args="user">
+            this.getList('*');
+            this.print("user " + user + " disconnected");
+        </method>
+
+        <dataset name="message" />
+        <dataset name="userconnect" />
+    </connectiondatasource>
+
+    <dataset name="chatDset" />
+    <dataset name="dsetHost" type="http" src="host.jsp" request="true" />
+    <dataset name="userlist">
+        <user name="max"/>
+        <user name="eric"/>
+        <user name="pablo"/>
+        <user name="david"/>
+        <user name="guest"/>
+    </dataset>
+
+
+    <view name="viewChat" width="450" height="400" x="0" y="0" bgcolor="#EAEAEA" visible="false"> 
+
+        <datapointer name="chatPtr" xpath="chatDset:/" />
+
+        <datapointer xpath="connection:logoutDset:/*" >
+            <method event="ondata">
+                canvas.myconnection.print("...logged out...");
+                canvas.viewPicker.setVisible(true);
+                canvas.viewChat.setVisible(false);
+            </method>
+            <method event="onerror">
+                canvas.viewPicker.setVisible(true);
+                canvas.viewChat.setVisible(false);
+            </method>
+        </datapointer>
+
+        <datapointer xpath="myconnection:userconnect:/*">
+            <method event="ondata">
+                var from = this.xpathQuery('/from[0]/@name');
+                this.parent.chatPtr.addNode("message", null,
+                    { text: "User " + from + " connected!" }
+                );
+                canvas.myconnection.getList('*');
+            </method>
+        </datapointer>
+
+        <datapointer xpath="myconnection:message:/*">
+            <method event="ondata">
+                var from = this.xpathQuery('/from[0]/@name');
+                var mesg = this.xpathQuery('/text()');
+                this.parent.chatPtr.addNode("message", null,
+                    { text: from + ": " + mesg}
+                );
+            </method>
+        </datapointer>
+
+        <datapointer xpath="myconnection:sendMessageDset:/*[1]">
+            <method event="onerror">
+                this.parent.chatPtr.addNode("message", null, 
+                    { text:  this.dataset.getErrorString() }
+                );
+            </method>
+        </datapointer>
+
+        <view width="387" height="287" x="29" y="39" bgcolor="#000000" />
+        <view name="chatView" width="385" height="285" x="30" y="40" bgcolor="#ffffff" clip="true">
+            <view name="svpar">
+                <method name="adjustScroll">
+                <![CDATA[
+                    if (this.parent.height < 0) return;
+                        var cvDif=this.parent.height-this.height;
+                        if ((cvDif) < 0){
+                            this.setY(cvDif);
+                            this.parent.scrollbar.updateThumbPos();
+                        }
+                    ]]>
+                </method>
+                <view name="sview" oninit="this.parent.adjustScroll();">
+                    <datapath pooling="true" xpath="chatDset:/message" />
+                    <text width="${parent.parent.parent.width}" multiline="true" 
+                          selectable="true" datapath="@text" />
+                </view>
+                <simplelayout axis="y" spacing="2"/>
+            </view>
+            <scrollbar name="scrollbar" axis="y"/>
+        </view>
+
+        <view name="sendView" x="0" y="335">
+            <text>msg:</text>
+            <edittext name="msg" width="200" />
+            <button id="bSend" name="send" width="50" height="24" onclick="this.handler();">
+                Send
+                <method name="handler">
+                    var message = this.parent.msg.getText();
+                    if (message!=null &amp;&amp; message!="") {
+                        canvas.myconnection.sendMessage("*", message, "message");
+                        this.parent.msg.setText("");
+                    }
+                </method>
+            </button>
+            <simplelayout axis="x" spacing="5"/>
+        </view>
+
+        <view y="35">
+            <view name="users" x="500">
+                <view width="72" height="102" bgcolor="#000000" />
+                <view name="chatView" width="70" height="100" x="1" y="1" bgcolor="#ffffff" clip="true">
+                    <view name="svpar">
+                        <view name="sview" height="12" 
+                            datapath="myconnection:getListDset:/list[1]/user">
+                            <text width="515" datapath="@name" />
+                        </view>
+                        <simplelayout axis="y" spacing="2"/>
+                    </view>
+                    <scrollbar axis="y"/>
+                </view>
+            </view>
+
+            <button name="logout" x="${parent.users.x}" width="${parent.users.width}" 
+                    height="50" onclick="logout();">Logout
+                <method name="logout">
+                    canvas.connection.disconnect();
+                </method>
+            </button>
+
+            <simplelayout axis="y" spacing="20" />
+
+        </view>
+
+    </view> <!-- viewChat -->
+
+
+    <view name="viewPicker" x="20" y="20">
+
+        <datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]">
+            <method event="ondata">
+
+                var rt = this.getNodeAttribute('type');
+                var usr = this.getNodeAttribute('usr');
+                var status = this.xpathQuery('status[1]/@code');
+
+                if (status==0) {
+                    canvas.connection.connect();
+                } else {
+                    canvas.dialog.setAttribute('text', "bad login status: " + status);
+                    canvas.dialog.open();
+                }
+            </method>
+
+            <method event="onerror">
+                canvas.dialog.setAttribute('text', "problems contacting authentication server");
+                canvas.dialog.open();
+            </method>
+
+            <method event="ontimeout">
+                canvas.dialog.setAttribute('text', "authentication server time out");
+                canvas.dialog.open();
+            </method>
+
+        </datapointer>
+
+        <text><b>Chat name</b></text>
+
+        <view name="line" bgcolor="#000000" x="${parent.list.x-1}" y="${parent.list.y-1}" 
+            width="${parent.list.width+2}" height="${parent.list.height+2}" />
+
+        <view name="list" width="70" height="100" x="1" y="21" bgcolor="#ffffff" clip="true">
+
+            <view name="svpar">
+                <view name="sview" height="12" datapath="userlist:/user" 
+                      onmousedown="doSession()">
+                    <method name="doSession">
+                        var usr = this.datapath.getNodeAttribute('name');
+                        canvas.connection.login( usr, usr );
+                    </method>
+
+                    <text width="515" datapath="@name" />
+                </view>
+                <simplelayout axis="y" spacing="2"/>
+            </view> <!-- svpar -->
+
+            <scrollbar axis="y"/>
+
+        </view> <!-- list -->
+
+        <view name="help" x="${ parent.list.x + parent.list.width + 10 }" 
+            y="${ (parent.list.y + parent.list.height)/2 - 20 }" pixellock="true" >
+            <text width="400" height="200" selectable="true" 
+                multiline="true" >
+                <datapointer xpath="dsetHost:/info[1]/host[1]">
+                    <method event="ondata">
+                        var surl = LzBrowser.getLoadURL();
+                        var url = new LzURL(surl);
+                        url.host = this.getNodeAttribute('name');
+                        url.query = null;
+                        parent.setText("Chat with other users by having them browse to:\n\n  "
+                                       + url.toString() );
+                    </method>
+                </datapointer>
+            </text>
+            <simplelayout axis="y" spacing="3" />
+        </view>
+
+    </view> <!-- name=viewPicker -->
+
+    <method event="onkeyup" reference="LzKeys" args="k">
+        if ( k == 13 ) {
+            bSend.handler();
+        }
+    </method>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

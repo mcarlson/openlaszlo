@@ -1,0 +1,1227 @@
+<!--
+ $Id$
+-->
+
+<library>
+
+<!--
+  TODO: [2003-03-25 ptw] IWBNI there were a way to indicate that
+  the following should go in the wrapper documentation for the main
+  class of the file
+-->
+<!--
+  This is the LZUnit library.  LZUnit is an implementation of the
+  xUnit testing framework for LZX programs (cf.,
+  http://junit.sourceforge.net/doc/cookstour/cookstour.htm).
+
+  Each of the xUnit components is implemented as an LZX tag with the
+  corresponding name.  Tests can be written by defining a subclass of
+  TestCase and defining test... methods.  A test suite can be created
+  by enclosing any number of TestCases in a TestSuite.
+
+  The usual helper methods, assertTrue, assertEquals, assertWithin,
+  assertSame, etc. are available for implementing the tests.  (See the
+  documentation of Test for a full list.)
+
+  An LZX program that consists of a TestSuite will, when loaded,
+  automatically run all of its child TestCases and report the number
+  of test cases run, the number of failures, and the number of
+  errors.  If any error occurs, an obvious error message is presented.
+
+  [Future:
+    o allow inspection of error details.
+    o hook into debugger errors
+  ]
+
+  Below is a simple example of the use of LZUnit:
+
+  <canvas debug="true">
+    <include href="lzunit"/>
+
+    <class name="Tautologies" extends="TestCase">
+      <method name="testSuccess">
+        assertTrue(true);
+        assertFalse(false);
+        assertEquals(null, undefined);
+        assertWithin(0, .001, .01);
+        assertSame(null, null);
+        assertNotSame(null, undefined);
+        assertNull(null);
+        assertNotNull(undefined);
+        assertUndefined(undefined);
+        assertNotUndefined(null);
+      </method>
+    </class>
+
+    <class name="IntentionalBugs" extends="TestCase">
+      <method name="testFailure">
+        fail("This is an intentional failure");
+      </method>
+
+      <method name="testError">
+        error("This is an intentional error");
+      </method>
+    </class>
+
+    <TestSuite>
+      <Tautologies />
+      <IntentionalBugs />
+    </TestSuite>
+  </canvas>
+-->
+
+<!-- Fonts -->
+<font src="helmetr.ttf" name="Helvetica"/>
+<debug y="500"/>
+
+<script>
+<![CDATA[
+
+// Features that can be disabled
+var catchErrors = true;
+var asynchronousTests = true;
+canvas.runTests = 0;
+
+// TODO: [2002-11-09 ptw] (ActionScript condition incompatible JavaScript)
+// ActionScript does not obey Javascript semantics for testing whether
+// an expression is true in a conditional
+function jsTrue(condition) {
+  var t = typeof(condition);
+  if (t == "string") {
+    return condition.length > 0;
+  } else if (t == "object") {
+    return true;
+  // Safe test for undefined
+  } else if (t == "undefined") {
+    return false;
+  } else {
+    return !!condition;
+  }
+}
+
+//---
+// The TestFailure class is used to record a failed test and the
+// reason for its failure.
+//
+// @keywords private
+//
+// @param failedTest: the test that failed
+// @param String reasonForFailure: the reason the test failed
+//---
+function TestFailure(failedTest, reasonForFailure) {
+    this.test = failedTest;
+    this.reason = reasonForFailure;
+}
+
+TestFailure.prototype.toString = function toString() {
+    return "TestFailure: " + this.test +
+        " failed: " + this.reason;
+}
+/* /class TestFailure */
+
+//---
+// The TestError class is used to record a test that casued a runtime 
+// error and the reason for the error. This is different from 
+// TestFailure in that sometimes we want to differentiate the two
+//
+// @keywords private
+//
+// @param erroredTest: the test that failed
+// @param String reasonForError: the reason the test failed
+//---
+function TestError(erroredTest, reasonForError) {
+    this.test = erroredTest;
+    this.reason = reasonForError;
+}
+
+TestError.prototype.toString = function toString() {
+    return "TestError: " + this.test +
+        " failed: " + this.reason;
+}
+/* /class TestError */
+
+
+]]>
+</script>
+
+<!---
+  DebugObject is a base class for all the other classes in LZUnit that
+  supports the debugging of LZUnit itself.
+
+  Each subclass overrides the debugFields and _dbg_typename methods.
+  debugFields should return an array of the fields of the class that
+  should be printed when debugging.  _dbg_typename should return a
+  string that is the descriptive name of the class for debugging.
+
+  @keywords private
+
+  @param Boolean debugWrite: Whether or not to emit debugging statements.
+-->
+<class name="DebugObject">
+    <!--- whether or not to emit debugging statements -->
+    <attribute name="debugWrite" />
+
+    <!--- @keywords required -->
+    <method name="debugFields">
+        return [];
+    </method>
+
+    <!--- @keywords required -->
+    <method name="_dbg_typename">
+        return "DebugObject";
+    </method>
+
+    <!---
+      @keywords constructor
+    -->
+    <method name="construct" args="parent, args">
+        this.debugWrite = jsTrue(args["debugWrite"]);
+        super.construct(parent, args);
+
+        dw("DebugObject.construct(", args, ")");
+    </method>
+
+    <!---
+      @return String: a string describing the object in detail.
+    -->
+    <method name="_dbg_name">
+        <![CDATA[
+            var f = this.debugFields();
+            var s = this["toString"]();
+            if (f.length > 0 || s == "[object Object]") {
+                s = "";
+                for (var e in f) {
+                    var i = f[e];
+                    var v = this[i];
+                    // Ignore "empty" properties
+                    if (v && ("" + v) != "") {
+                        s += "" + i + ": " + v + ", ";
+                    }
+                }
+                if (s != "")
+                    s = "{" + s.substring(0, s.length - 2) + "}";
+            }
+            return s;
+        ]]>
+    </method>
+
+    <!---
+      Takes any number of arguments and outputs them using
+      Debug.write.  Strings are output literally, any other objects
+      are described in more detail using Debug.__String (which uses
+      _dbg_typename and _dbg_name of objects that support it).
+
+      @keywords private
+    -->
+    <method name="dw">
+        <![CDATA[
+        if (debugWrite) {
+            var s = "";
+            for (var i = 0; i < arguments.length; i++) {
+                var e = arguments[i];
+                if (typeof(e) == "string") {
+                    s += e;
+                }
+                else {
+                    s += Debug.__String(e);
+                }
+            }
+            Debug.write(s);
+        }
+        ]]>
+    </method>
+
+</class>
+
+<!---
+  Test is the abstract interface class for all LZUnit tests.
+
+  It accumulates the results of the test and defines the various
+  assert methods that can be used to implement each test.
+
+  <a href="testcase.html">TestCase</a> and <a
+  href="testresult.html">TestResult</a> extend this class to provide
+  functionality.
+
+  @param semantics: one of "javascript" or "actionscript", defaults to
+  "actionscript".  Sets the semantics of condition (assertTrue,
+  assertFalse) and identity (assertSame, assertNotSame) assertions.
+-->
+<class name="Test" extends="DebugObject">
+    <method name="_dbg_typename">
+        return "Test";
+    </method>
+
+    <!-- attributes -->
+    <!---
+      Used to accumulate test results in the absence of exceptions
+      @keywords private
+    -->
+    <attribute name="result" />
+    <!---
+      one of 'actionscript' or 'javascript'
+      @keywords private
+    -->
+    <attribute name="semantics" value="'actionscript'"/>
+
+    <!---
+      whether to emit debugging statements about the execution of
+      tests
+      @keywords private
+    -->
+    <attribute name="debugLZUnit" value="false" />
+
+    <method name="_dbg_name">
+        return this.classname;
+    </method>
+
+    <method name="debugFields">
+        var f = super.debugFields();
+        return f.concat([ "result", "semantics" ]);
+    </method>
+
+    <!---
+        @keywords constructor
+    -->
+    <method name="construct" args="parent, args">
+        <!-- TODO: [2002-11-14 ptw] (uninitialized attributes) remove
+        when uninitialized attributes are initialized to null by
+        default -->
+        this.result = null;
+        <!-- args.semantics handled by default initialization -->
+        super.construct(parent, args);
+
+        dw("Test.construct(", args, ")");
+    </method>
+
+    <!---
+      Set the result accumulator, creating one if none supplied.
+
+      @keywords private
+
+      @param TestResult theTestResult: (optional) result accumulator.
+     -->
+    <method name="setResult" args="theTestResult">
+        if (typeof(theTestResult) == "undefined") {
+            theTestResult = new TestResult();
+        } else {
+          this.result = theTestResult;
+        }
+    </method>
+
+    <!---
+      Implements !! according to the settings of semantics.
+
+      @keywords private
+
+      @param condition: The condition value to test.
+      @return Boolean: whether the condition is true or not.
+    -->
+    <method name="semanticsTrue" args="condition">
+    <![CDATA[
+             // Safe test for undefined
+             if (typeof(condition) == "undefined") {
+               return false;
+             } else if (semantics == "javascript") {
+               return jsTrue(condition);
+             } else if (semantics == "actionscript") {
+               return (!! condition);
+             } else {
+               error("Unknown semantics: " + semantics);
+             }
+    ]]>
+    </method>
+
+
+    <!-- These methods will all be apparent to individual tests and
+     accumulate their results into the result attibute -->
+
+    <!---
+      Record a failure.
+
+      @param message: the reason for the failure
+     -->
+    <method name="fail" args="message">
+        var suite = this.parent;
+        suite.ontestfail.sendEvent(message);
+        if (this.result) {
+          this.result.addFailure(message);
+        } else {
+          Debug.write('result is null on fail call: "' + message + '"');
+        }
+    </method>
+
+    <!---
+      Record an error.
+
+      @param message: the reason for the error
+    -->
+    <method name="error" args="message">
+        var suite = this.parent;
+        suite.ontestfail.sendEvent(message);
+        if (this.result) {
+          this.result.addError(message);
+        } else {
+          Debug.write('result is null on error call: "' + message + '"');
+        }
+    </method>
+    
+    <!---
+      Format a failure message from a message, expected and actual
+      values.
+
+      @keywords private
+
+      @param message: the failure message
+      @param expected: the expected value
+      @param actual: the actual value
+      @return String: the formatted failure message
+    -->
+    <method name="format" args="message, expected, actual">
+        var msg = Debug.formatToString(
+            '%s expected %#w got %#w',
+            (jsTrue(message) ? message + ": " : ""), expected, actual);
+        if (Debug) {
+          Debug.freshLine();
+          // create an error, which will include a backtrace, if applicable
+          Debug.__write(new LzError(null, null, msg));
+        }
+        return String(msg);
+    </method>
+
+    <!---
+      Assert that a condition is true.
+
+      Note that this tests that condition, if supplied as the argument
+      to an if statement, would cause the then clause to be chosen.
+      This does not test that condition == true, or that condition
+      === true, use assertEquals or assertSame to make such tests.
+
+      @param condition: the condition to be tested
+      @param assertion: (optional) the assertion the condition represents
+    -->
+    <method name="assertTrue" args="condition, assertion">
+        if (! semanticsTrue(condition)) {
+            this.fail(format(jsTrue(assertion) ? assertion : "True", true, condition));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)
+    </method>
+
+
+    <!---
+      Assert that a condition is false.
+
+      Note that this tests that condition, if supplied as the argument
+      to an if statement, would cause the else clause to be chosen.
+      This does not test that condition == false, or that condition
+      === false, use assertEquals or assertSame to make such tests.
+
+      @param condition: the condition to be tested
+      @param assertion: (optional) the assertion the condition represents
+    -->
+    <method name="assertFalse" args="condition, assertion">
+        if (!! semanticsTrue(condition)) {
+            this.fail(format(jsTrue(assertion) ? assertion :  "False", false, condition));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that an actual value equals (==) an expected value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param message: (optional) the failure message
+    -->
+    <method name="assertEquals" args="expected, actual, message">
+        <!-- note NaN compares are always false -->
+        if (! (expected == actual)) {
+            this.fail(format(jsTrue(message) ? message :  "Equals", expected, actual));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)
+    </method>
+
+    <!---
+      Assert that an actual value is within delta of an expected value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param delta: the tolerance
+      @param message: (optional) the failure message
+    -->
+    <method name="assertWithin" args="expected, actual, delta,
+            message">
+        <![CDATA[
+            // handle infinite expected
+            if (expected == actual) return;
+
+            var error = (actual <= expected) ? (expected - actual) : (actual - expected);
+            // note NaN compares are always false
+            if (! (error <= delta)) {
+                this.fail(format(jsTrue(message) ? message : "Within", "" + expected + "\u00B1" +
+                     delta , actual));
+            }
+            canvas.setAttribute('runTests', canvas.runTests + 1)            
+        ]]>
+    </method>
+
+    <!---
+      Assert that a value is (===) null.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNull" args="object, message">
+        if (object !== null) {
+           this.fail(format(jsTrue(message) ? message : "Null",
+                       null, object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that a value is not (!==) null.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNotNull" args="object, message">
+        if (object === null) {
+           this.fail(format(jsTrue(message) ? message : "NotNull",
+                       "non-null value", object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that a value is undefined.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertUndefined" args="object, message">
+        if (typeof(object) != "undefined") {
+           this.fail(format(jsTrue(message) ? message : "Undefined",
+                       "undefined value", object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that a value is not undefined.
+
+      @param object: the value to be tested
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNotUndefined" args="object, message">
+        if (typeof(object) == "undefined") {
+           this.fail(format(jsTrue(message) ? message : "NotUndefined",
+                       "defined value", object));
+        }
+        canvas.setAttribute('runTests', canvas.runTests + 1)        
+    </method>
+
+    <!---
+      Assert that an actual value is the same as (===) an expected
+      value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param message: (optional) the failure message
+    -->
+    <method name="assertSame" args="expected, actual, message">
+    <![CDATA[
+             // Use typeof to compare undefined without warnings
+             if (typeof(expected) == "undefined" &&
+                 typeof(actual) == "undefined") {
+                   return;
+             }
+             if (expected !== actual) {
+               this.fail(format(jsTrue(message) ? message : "Same",
+                           expected, actual));
+             }
+            canvas.setAttribute('runTests', canvas.runTests + 1)             
+    ]]>
+    </method>
+
+    <!---
+      Assert that an actual value is not the same as (!==) an expected
+      value.
+
+      @param expected: the expected value
+      @param actual: the actual value
+      @param message: (optional) the failure message
+    -->
+    <method name="assertNotSame" args="expected, actual, message">
+            if (expected === actual) {
+                // In-line Test.format so we can invert the sense
+                var msg = Debug.formatToString(
+                    '%s expected anything but %#w got %#w',
+                    (jsTrue(message) ? message + ": " : "NotSame: "), expected, actual);
+                if (Debug) {
+                  Debug.freshLine();
+                  // create an error, which will include a backtrace, if applicable
+                  Debug.__write(new LzError(null, null, msg));
+                }
+                this.fail(msg);
+            }
+            canvas.setAttribute('runTests', canvas.runTests + 1)                            
+    </method>
+</class>
+
+<!---
+  TestCase implements an individual test case.
+
+  See the documentation for <a href="testsuite.html">TestSuite</a>
+  for an example of this tag.
+
+  @param testName: the name of the test
+-->
+<class name="TestCase" extends="Test">
+    <method name="_dbg_typename">
+        return "TestCase";
+    </method>
+
+    <!--- The name of the TestCase -->
+    <attribute name="name" />
+
+    <method name="debugFields">
+        var f = super.debugFields();
+        return f.concat([ "name" ]);
+    </method>
+
+    <!---
+      @keywords constructor
+     -->
+    <method name="construct" args="parent, args">
+        this.name = jsTrue(args["testName"]) ? args.testName : this.class;
+
+        super.construct(parent, args);
+
+        dw("TestCase.construct(", args, ")");
+    </method>
+
+    <!---
+      Run the setUp, execute the named test case, run tearDown
+
+      @param theTestName: (optional) the test to run, if not supplied
+      the test with the name of the TestCase is run
+    -->
+    <method name="run" args="theTestResult, theTestName">
+        dw("TestCase.run(", theTestName, ")");
+        setResult(theTestResult);
+        
+        var prefix = (this._dbg_name() != this._dbg_typename()) ? this._dbg_name() + ' >>> ' : ''
+        this.result.startTest(prefix + theTestName);
+        setUp();
+        <!-- capture source warnings as errors around test -->
+        <!-- TODO: [2002-11-16 ptw] try/finally -->
+        var wrapper = function (fn, ln, msg) {
+            with(arguments.callee.env) {
+                if (! inrsw) {
+                    // TODO: [2002-11-16 ptw] fluid-bind
+                    inrsw = true;
+                    rsw(fn, ln, msg);
+                    testcase.error(msg);
+                    inrsw = false;
+                }
+            }
+        }
+        <!-- hand-crafted closure -->
+        wrapper.env = {inrsw: false, rsw: $reportSourceWarning, testcase: this};
+        var savedrsw = $reportSourceWarning;
+        if (catchErrors) {
+            $reportSourceWarning = wrapper;
+        }
+        runTest(theTestName);
+        if (catchErrors) {
+            $reportSourceWarning = savedrsw;
+        }
+        <!-- end capture source warnings -->
+        tearDown();
+        return this.result;
+    </method>
+
+    <!---
+      Set up any framework needed to execute the test case.
+
+      Override this method in individual TestCases to provide a
+      framework.
+    -->
+    <method name="setUp">
+    </method>
+
+    <!---
+      Run the named test case.
+
+      @keywords private
+
+      @param theTestName: (optional) the test to run, if not supplied
+      the test with the name of the TestCase is run
+    -->
+    <method name="runTest" args="theTestName">
+        if (typeof(theTestName) == "undefined") theTestName = name;
+        dw("TestCase.runTest(", theTestName, ")");
+        // Invoke the test method
+        var m = this[theTestName];
+        if (typeof(m) != "function") {
+            error("method '" + theTestName + "' not found", false);
+        }
+        else {
+            <!-- TODO: [2002-11-10 ptw] (apply) m.apply(this) -->
+            this[theTestName]();
+        }
+    </method>
+
+    <!---
+      Tear down any framework after the execution of the test case.
+
+      Override this method in individual TestCases to dismantle the
+      framework.
+    -->
+    <method name="tearDown">
+    </method>
+
+</class>
+
+
+<class name="SyncTester" extends="TestCase">
+    
+    <!--- 
+     Refers to object to be tested; this is dependent on specific test run
+     @keywords required 
+     -->    
+    <attribute name="tested_object" type="expression"/>
+    
+    <!---
+     Helps keep track of currently executed method
+     @keywords readonly
+    -->
+    <attribute name="current_method" value="${cur_meth.xpathQuery('@name')}"/>
+    
+    <!---
+     Override this method with your specific test logic 
+
+     @param res: this is the result of execution of the last called method, 
+     typically its return value.
+    -->
+    <method name="inspect" args="res"/>
+    
+    <!---
+     Pointer to method name in dataset
+    -->
+    <datapointer name="cur_meth" xpath="$once{parent.name + '_methods:/*/call[1]'}"/>
+
+    <!--- 
+     Call the next test in sequence
+        
+     @keywords private
+    -->
+    <method name="callNext">
+        var p = cur_meth.xpathQuery('@args')
+        var e = cur_meth.xpathQuery('@event')
+        
+        if (!this['del'])
+        {
+            this.del = (typeof(e) != "undefined" ? new LzDelegate(this, '_handler', 
+            tested_object, e) : new LzDelegate(this, '_handler'))
+        }
+        else if (typeof(e) != "undefined")
+            this.del.register(tested_object, e);
+            
+        if (typeof(p) != "undefined") 
+            tested_object[current_method](p, del)
+        else 
+            tested_object[current_method](del)
+    </method>
+
+    <!---
+     Kick off the entire sequence
+     
+     @keywords private
+    -->
+    <method name="testBegin">
+        callNext()
+    </method>
+
+    <!--- 
+    
+     Method callback 
+     
+     @keywords private
+    -->
+    <method name="_handler" args="res">
+        var o = cur_meth.xpathQuery('@tester')
+        if (typeof(o) != "undefined")
+            this[o](res);
+        else 
+            inspect(res);
+        if (cur_meth.selectNext())
+            callNext()
+    </method>
+</class>
+
+<!---
+  A TestResult accumulates the results of a test run: the total number
+  of tests run, the number of failures, and the number of errors.  A
+  TestResult is automatically created by a TestSuite and included as
+  its first child view so the results of the test suite will be
+  displayed.
+
+  See the documentation for <a href="testsuite.html">testsuite</a>
+  for an example of this tag.
+-->
+<class name="TestResult" extends="DebugObject">
+    <method name="_dbg_typename">
+        return "TestResult";
+    </method>
+
+    <!--- @keywords private -->
+    <attribute name="totalTests" value="${canvas.runTests}"/>
+    <!--- @keywords private -->
+    <attribute name="failedTests" />
+    <!--- @keywords private -->
+    <attribute name="erroredTests" />
+    <!--- @keywords private -->
+    <attribute name="currentTest" />
+    <!--- @keywords private -->
+    <attribute name="failures" />
+    <!--- @keywords private -->
+    <attribute name="errors" />
+
+    <!---
+      @keywords constructor
+     -->
+    <method name="construct" args="parent, args">
+        this.failedTests = 0;
+        this.erroredTests = 0;
+        this.currentTest = null;
+        this.failures = [];
+        this.errors = [];
+        super.construct(parent, args);
+
+        dw("TestResult.construct(", args, ");");
+    </method>
+
+    <!---
+      Note the start of a test.
+
+      @keywords private
+
+      @param test: the name of the test being started
+    -->
+    <method name="startTest" args="test">
+        this.currentTest = test;
+        update();
+    </method>
+
+    <!---
+        @keywords private
+    -->
+    <method event="ontotalTests">
+        update()
+    </method>
+
+    <!---
+      Record a failure.
+
+      Because we are not signalling failures, it is possible for a
+      test to have more than one failure in a run.
+
+      @keywords private
+
+      @param reason: a description of the reason for the failure
+    -->
+    <method name="addFailure" args="reason">
+        var f = new TestFailure(currentTest, reason);
+        dw("TestResult.AddFailure(", f, ");");
+        this.failedTests++;
+        this.failures.push(f);
+        this.update();
+    </method>
+
+    <!---
+      Record an error
+
+      An error counts as a test failure, but is recorded separately.
+
+      @keywords private
+
+      @param reason: a description of the reason for the error
+    -->
+    <method name="addError" args="reason">
+        var f = new TestError(currentTest, reason);
+        dw("TestResult.AddError(", f, ");");
+        this.erroredTests++;
+        errors.push(f);
+        update();
+    </method>
+
+    <method name="myToString">
+        var s = "Tests: " + this.totalTests +
+                 " Failures: " + failedTests +
+                 " Errors: " + erroredTests;
+        for (var f in failures)
+            s += "\n" + failures[f];
+        for (var e in errors)
+            s += "\n" + errors[e];
+        return s;
+    </method>
+
+    <!---
+      Number of failures or errors
+
+      @keywords private
+    -->
+    <method name="numFailures">
+        <![CDATA[
+            var totalBad = erroredTests + failedTests;
+            return totalBad;
+            ]]>
+    </method>
+
+    <!---
+      Update the display.
+
+      @keywords private
+    -->
+    <method name="update">
+        <![CDATA[
+            var totalBad = erroredTests + failedTests;
+            if (totalTests > 0) {
+                with (display.progress) {
+                    var bw = background.width;
+                    errorbar.setAttribute("width", bw * erroredTests / totalTests);
+                    failbar.setAttribute("width", bw * totalBad / totalTests);
+                    donebar.setAttribute("width", bw * totalTests / totalTests);
+                }
+            }
+            if (totalBad > 0) {
+                redalert.setAttribute("errors", true);
+            }
+            // TODO: [2002-11-10 ptw] setAttribute("text", ...) does not work?
+            readout.setText(LzBrowser.xmlEscape(this.toString()));
+        ]]>
+    </method>
+
+    <!---
+      The display.
+
+      Displays a progress bar of the tests as they run.  Failed tests
+      are noted in red, tests with errors in yellow, successful tests
+      in greeen.
+
+      Below the progress bar a textual presentation of the test status
+      and any failures is given.
+    -->
+    <view name="display" width="500" height="300" oninit="bringToFront()">
+        <resizelayout axis="y" spacing="10" />
+        <text>Test Progress</text>
+        <view name="progress" bgcolor="black" width="${parent.width}" height="10">
+            <view name="background" bgcolor="white" width="${parent.width-2}" height="8" x="1" y="1" />
+            <view name="donebar" bgcolor="green" width="0" height="8" x="1" y="1" />
+            <view name="failbar" bgcolor="red" width="0" height="8" x="1" y="1" />
+            <view name="errorbar" bgcolor="yellow" width="0" height="8" x="1" y="1" />
+        </view>
+        <view options="releasetolayout" clip="true">
+            <text id="readout" selectable="true" width="$once{parent.parent.width - parent.s_bar.width}" multiline="true">
+                Test Results
+            </text>
+            <scrollbar name="s_bar" visible="${scrollable}"/>
+            <simplelayout axis="x"/>
+        </view>
+    </view>
+
+    <!--
+      Failsafe
+
+      If any failures or errors occur, this causes an unmistakable
+      error display.
+    -->
+    <view name="redalert" bgcolor="red"
+          oninit="setAttributeRelative('x', global.canvas); setAttributeRelative('y', global.canvas); sendToBack()"
+          height="${global.canvas.height}"
+          width="${global.canvas.width}"
+          options="ignorelayout" opacity="${this.errors ? .9 : 0}">
+        <attribute name="errors" type="boolean" value="false"/>
+        <view align="center" valign="middle">
+            <text align="center" fontsize="28"
+                 font="Helvetica">
+                 Danger, Will Robinson!
+            </text>
+            <text align="center" fontsize="14"
+                font="Helvetica">
+                One or more tests did not pass.
+            </text>
+            <simplelayout axis="y" />
+        </view>
+    </view>
+
+</class>
+
+
+<script>
+  // TODO [2004-08-10 ptw] Workaround for SWF6 toString default bug
+  TestResult.prototype.toString = TestResult.prototype.myToString;
+</script>
+
+<!---
+  A TestSuite is a view with any number of children.  The children
+  that are TestCases will have all their test... methods run when the
+  TestSuite is displayed.
+
+  The TestSuite creates a TestResult as its first child, uses it to
+  accumulate the results of running the TestCases, and finally to
+  display the results of the tests.
+-->
+<class name="TestSuite" extends="Test">
+    <method name="_dbg_typename">
+        return "TestSuite";
+    </method>
+
+    <!--- @keywords private
+         String logfile: logfile to log to, goes in LPS log directory -->
+    <attribute name="logfile" type="string" value="lzunit.log" />
+    <!--- @keywords private
+         [Flash] XML xmlresult: an XML object to add results to -->
+    <attribute name="xmlresult" />
+
+    <!--- @keywords private -->
+    <attribute name="tests" />
+    <!--- @keywords private -->
+    <attribute name="nextCase" />
+    <!--- @keywords private -->
+    <attribute name="nextTest" />
+
+    <method event="onsuitestart"/>
+    <method event="ontestfinish"/>
+
+    <method name="debugFields">
+        var f = super.debugFields();
+        return f.concat([ "tests", "total", "inError", "defaultSourceWarning" ]);
+    </method>
+
+    <!---
+      @keywords constructor
+     -->
+    <method name="construct" args="parent, args">
+        <![CDATA[
+            // TODO: [2002-11-10 ptw] (uninitialized attribute) should
+            // not have to set value
+            this.tests = null;
+            this.nextCase = 0;
+            this.nextTest = 0;
+            super.construct(parent, args);
+
+            dw("TestSuite.construct(", args, ")");
+        ]]>
+    </method>
+
+    <!--- @keywords private  
+        event handler for test suite end  -->
+    <method event="onsuitefinish">
+      //Debug.write("onsuitefinish");
+      this.suite.attributes.failures = this.result.numFailures();
+      this.suite.attributes.time = getTimer() - this.starttime;
+      this.sendLogData(this.logfile, this.xmlresult);
+    </method>
+
+    <!--- @keywords private  
+         event handler for test start  -->
+    <method event="onteststart" args="tc">
+      this.testStartTime = getTimer();
+      var testcase = this.xmlresult.createElement("testcase");
+      testcase.attributes.name = tc;
+      testcase.attributes.time = getTimer() - this.testStartTime;
+      this.currentTestcase = testcase;
+      this.suite.appendChild(testcase);
+    </method>
+
+
+    <!--- @keywords private  
+         event handler for tets fail  -->
+    <method event="ontestfail" args="obj">
+      var failure = this.xmlresult.createElement("failure"); 
+      failure.attributes.message = obj;
+      this.currentTestcase.appendChild(failure);
+    </method>
+
+    <!--- @keywords private -->
+    <method name="init">
+        <![CDATA[
+            super.init();
+            this.tests = [];
+            initSuite()
+
+            this.starttime = getTimer();
+            this.xmlresult = new XML();
+            // <testsuite errors="0" failures="0"
+            // name="org.openlaszlo.compiler.ViewSchema_Test" tests="3" time="0.431">
+            // <testcase name="testParseColors" time="0.09"></testcase>
+            // <testcase name="testHTMLContent" time="0.0"></testcase>
+            // <testcase name="testSetAttributes" time="0.16"></testcase>
+            // </testsuite>
+
+            this.suite = xmlresult.createElement("testsuite"); 
+            this.suite.attributes.name = LzBrowser.getBaseURL();
+            this.suite.attributes.tests = this.tests.length;
+            xmlresult.appendChild(this.suite);
+        ]]>
+    </method>
+
+   <!--- @keywords private -->
+   <method name="initSuite">
+        if (this.nextCase == subviews.length)
+        {
+            this.nextCase = 0
+            dw("TestSuite.initSuite(", this, ")");
+            run()
+        }
+        else
+        {
+            var sv = subviews[this.nextCase];
+            dw("TestSuite.initSuite: subviews[", this.nextCase, "] = ", sv);
+            if (sv instanceof TestCase)
+            {
+                for (var n in sv) {
+                    var t = sv[n];
+                    if (typeof(t) == "function") {
+                        //--- /^test/.test(n)
+                        if (n.indexOf("test") == 0) {
+                            if (typeof(tests[this.nextCase]) == "undefined")
+                                tests[this.nextCase] = [];
+                            dw("tests[", this.nextCase, "].push(", n, ");");
+                            tests[this.nextCase].push(n);
+                         }
+                    }
+                }
+            }
+            this.nextCase++
+            var del = new LzDelegate(this, "initSuite")
+            LzIdle.callOnIdle(del)
+        }
+
+    </method>
+
+    <!---
+      Run all the tests of all the child TestCases.
+
+      Invoked automatically when the TestSuite is displayed
+
+      @keywords private
+    -->
+    <method name="run">
+        dw("TestSuite.run()");
+        <!-- bleah -->
+        this.setResult(controlPanel.theTestResult);
+        dw("TestSuite.result = ", this.result);
+        dw("tests.length = ", tests.length);
+        this.nextCase = 0;
+        this.nextTest = 0;
+
+        if (asynchronousTests) {
+            runNextTest();
+        } else {
+            for (var v in this.tests) {
+                var tc = this.tests[v];
+                if (typeof(tc) != "undefined") {
+                    dw("tc.length = ", tc.length);
+                    for (var i in tc) {
+                        dw("subviews[", v, "].run(", this.result, ", ", tc[i], ");");
+                        subviews[v].run(this.result, tc[i]);
+                    }
+                }
+            }
+        }
+        dw("TestSuite.result = ", this.result);
+        return this.result;
+    </method>
+
+    <!---
+      Run the next test.
+
+      Queues any subsequent tests to be run in the idle loop so the
+      display can update.
+
+      @keywords private
+    -->
+    <method name="runNextTest">
+      <![CDATA[
+        dw("In run next test, nextCase: ", this.nextCase, " nextTest: ", this.nextTest);
+        var v = this.nextCase;
+        if (v > this.tests.length) {
+            this.onsuitefinish.sendEvent(this.result.numFailures() > 0 ? 'fail' : 'pass');
+            return false;
+        }
+        var tc = this.tests[v];
+        var i = this.nextTest++;
+        if (typeof(tc) == "undefined" || (i >= tc.length)) {
+            this.nextCase++;
+            this.nextTest = 0;
+        } else {
+            dw("subviews[", v, "].run(", this.result, ", ", tc[i], ");");
+            this.onteststart.sendEvent(tc[i]);
+            subviews[v].run(this.result, tc[i]);
+            this.ontestfinish.sendEvent([tc[i],this.result.numFailures() > 0 ? 'fail' : 'pass']);
+        }
+        var c = new LzDelegate( this , "runNextTest" )
+        LzIdle.callOnIdle(c);
+        return true;
+      ]]>
+    </method>
+
+    <!---
+      Manually add a TestCase to the TestSuite.
+
+      @param theTest: the test to add
+    -->
+    <method name="addTest" args="theTest">
+        tests.append(theTest);
+    </method>
+
+    <!-- default layout for children -->
+
+    <!---
+      direct fetch of a URL, for control of server logging
+
+      @param reqobj hash table {cmd: , logfile:, testname:, status:, msg: }
+      @keywords private
+      -->
+
+    <method name="sendLogData" args="logfile,xmlobj">
+      <![CDATA[
+      // compute the base directory of the current app
+        var url = LzBrowser.getLoadURL();
+        var p1 = url.indexOf("/", 8);
+        var p2 = url.indexOf("/", p1+1);
+        var base = url.substring(0,p2);
+
+        var query = "logfile="+escape(logfile);
+        var reqstr =  LzBrowser.toAbsoluteURL( base+"/test/lzunit/Logger.jsp?"+query, false );
+        //Debug.write("sendServerLogCommand", reqobj, reqstr);
+        this.xmlreply = new XML();
+        xmlobj.sendAndLoad(reqstr, this.xmlreply );
+      ]]>
+    </method>
+
+
+    <simplelayout axis="y" spacing="10" />
+
+    <!-- default view of the TestResult -->
+    <view name="controlPanel">
+        <simplelayout axis="y" spacing="10" />
+        <!-- for testing -->
+<!--          <button onclick="parent.parent.run()">Run</button> -->
+        <TestResult name="theTestResult"
+          width="500" height="500"
+         />
+    </view>
+
+</class>
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

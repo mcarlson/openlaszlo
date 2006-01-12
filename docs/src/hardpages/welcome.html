@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>LZX Reference Manual</title>
+  </head>
+  
+  <body>
+    <h1>LZX Reference Manual</h1>
+<p>The LZX Reference defines the behavior of all XML tags and JavaScript APIs in the LZX language.  See the bottom of this page for links to other documentation and 
+sources of information about building and deploying Laszlo applications.</p>
+<p>By default, most of the examples in this reference are "live" and editable.  The best way to learn to use these classes is to play with them. Simply click on the "edit" button to see how this works.  </p>
+
+<div  id="turn-off-live-examples">
+<p>The live examples do make the documentation slower to load.  If you would like to use the documentation without the running examples, use the 
+"file" rather than "http" protocol to view the documentation (html) files.  In a typical LPS installation, for example, the path might be:</p>
+<span class="code"> file:///$WEBAPP/WEB-INF/lps/docs/lzx-reference/animator.html</span>
+<p>where $WEBBAPP corresponds to your web application sever.</p>
+
+<p>You can also turn the live examples off by clicking <a href="#" onclick="lzSetShowInlineExamples(false)">here</a>.</p></div>
+
+<p id="turn-on-live-examples">The live examples are currently off.  You can turn them on by clicking <a href="#" onclick="lzSetShowInlineExamples(true)">here</a>.</p>
+
+<script>
+if (lzShowInlineExamples())
+  document.getElementById('turn-on-live-examples').style.display = 'none';
+else
+  document.getElementById('turn-off-live-examples').style.display = 'none';
+</script>
+
+<a name="Structure"></a>
+<p>Here is a brief summary of the categories of classes as they appear on the navigation panel on the left.</p>
+<h3>Structure</h3>
+<p>These elements structure the code within an application, allowing the developer to break it into multiple files or to define custom elements.</p>
+
+<a name="View Basics"></a>
+<h3>View Basics</h3>
+<p>Elements that place a view on the canvas.  A view controls the presentation of media and data, and responds to user events.</p>
+
+<a name="Components"></a>
+<h3>Components</h3>
+<p>User-interface components in the Laszlo components library.  These tags can be used
+to build to web applications. See the <a href="../components/components.lzx?lzt=html" >Components Hierarchy</a> for an interactive guide to these classes.</p>
+
+<p>An application can include the entire set of Laszlo components by
+including the line <span class="code">&lt;include
+href="lz"/&gt;</span>.  An application can include individual Laszlo
+components by including just the files that define those components.
+</p>
+
+<a name="Layouts"></a>
+<h3>Layouts</h3>
+<p>Elements determine the position of views within a parent view.</p>
+
+<a name="Animation"></a>
+<h3>Animation</h3>
+<p>Elements that change the values of another element's attributes over time.</p>
+<a name="Events"></a>
+<h3>Events</h3>
+<p>Classes that JavaScript code can use to control the processing of user events, and to post application events.</p>
+
+<a name="HTML_Markup"></a>
+<h3>HTML Markup</h3>
+
+<p>Tags that mark up HTML text.  These tags may be used within a
+<tagname link="true">text</tagname> element, tags that extend this
+tag, and tags whose definition includes a definition for
+<code>&lt;attribute name="text" type="html"/&gt;</code>.  (See the
+documentation on <a href="${dguide}introductory-classes.html#introductory-classes.text-classes">Text Classes</a>
+for more information about this last category.)</p>
+
+<a name="Media"></a>
+<h3>Media</h3>
+<p>Elements that import media objects into an application, and control their use.</p>
+
+<a name="Data"></a>
+<h3>Data</h3>
+<p>Elements and classes for requesting data from a server, and binding it to views.</p>
+
+<a name="Scripting"></a>
+<h3>Scripting</h3>
+<p>JavaScript APIs.</p>
+
+<a name="States"></a>
+<h3>States</h3>
+<p>Visual states and behaviors that can be attached to and removed from an object over the course of an execution.</p>
+
+<a name="Base Classes"></a>
+<h3>Base Classes</h3>
+<p>Classes that are designed to be extended.  The classes in the Components section extend these.</p>
+
+<a name="Menus_and_Commands"></a>
+<h3>Menus and Commands</h3>
+<p>Elements for creating menus and menu bars, and processing commands.</p>
+
+<a name="Persistent_Connection"></a>
+<h3>Persistent Connection</h3>
+<p>A source for datasets that are shared across multiple clients.</p>
+
+<a name="Development"></a>
+<h3>Development</h3>
+<p>Elements and APIs that are used during development, for debugging
+and testing.</p>
+ <h1>Other Sources of Information</h1>
+    <ul>
+      <li><a href="../guide/tutorials.html" target="_blank">Tutorials</a></li>
+      <li><a href="../guide/index.html" target="_blank">Developers
+      Guide</a></li>
+      <li><a href="../../lps/utils/welcome.html"
+      target="_blank">Examples</a></li>
+      <li><a href="http://www.laszlosystems.com/developers"
+      target="_blank">Developer Zone</a></li>
+      <li><a
+      href="http://www.laszlosystems.com/developers/community/forums"
+      target="_blank">Developer Forums</a></li>
+      <li><a href="html-index.html"
+      target="_blank">HTML Reference Index</a></li>
+    </ul>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

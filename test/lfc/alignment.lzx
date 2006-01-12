@@ -1,0 +1,56 @@
+<!-- TODO: this suite doesn't test the maintenance of alignment constraints, when the dimensions of the parent or the aligned view change after the alignment is set. -->
+<canvas>
+  <include href="lzunit"/>
+  
+  <TestSuite>
+    <TestCase id="mytests">
+      <!-- The width and height are all different in order to detect
+      bugs where x, y, width, or height are transposed. -->
+      <view width="200" height="125" bgcolor="yellow">
+        <view id="v1" width="50" height="25" bgcolor="blue"/>
+      </view>
+      
+      <!-- Each test sets the alignment to something else first, in
+      order to (1) uncover bugs where changing the alignment doesn't
+      change the position *back*, and (2) avoid depending on the
+      unspecified behavior of setting the alignment to the same
+      value that it already had. -->
+      
+      <method name="testAlignLeft">
+        v1.setAttribute('align', 'right');
+        v1.setAttribute('align', 'left');
+        assertEquals(0, v1.x);
+      </method>
+      
+      <method name="testAlignCenter">
+        v1.setAttribute('align', 'left');
+        v1.setAttribute('align', 'center');
+        assertEquals(75, v1.x);
+      </method>
+      
+      <method name="testAlignRight">
+        v1.setAttribute('align', 'left');
+        v1.setAttribute('align', 'right');
+        assertEquals(150, v1.x);
+      </method>
+      
+      <method name="testAlignTop">
+        v1.setAttribute('valign', 'bottom');
+        v1.setAttribute('valign', 'top');
+        assertEquals(0, v1.y);
+      </method>
+      
+      <method name="testAlignMiddle">
+        v1.setAttribute('valign', 'top');
+        v1.setAttribute('valign', 'middle');
+        assertEquals(50, v1.y);
+      </method>
+      
+      <method name="testAlignBottom">
+        v1.setAttribute('valign', 'top');
+        v1.setAttribute('valign', 'bottom');
+        assertEquals(100, v1.y);
+      </method>
+    </TestCase>
+  </TestSuite>
+</canvas>

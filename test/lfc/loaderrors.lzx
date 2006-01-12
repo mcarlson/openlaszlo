@@ -1,0 +1,32 @@
+<canvas debug="true" >
+    <button onclick="target.setResource( 'http:logo.gif' )">
+        Good
+    </button>
+    <button onclick="target.setResource( 'http://nothere.com/foo' )">
+        Bad
+    </button>
+    <text>Stop the server and then click this button.</text>
+    <button>
+        Indifferent
+        <method event="onclick">
+            //uses private fields to muck this up
+            target.setResource( 'http://broke' );
+        </method>
+    </button>
+    <simplelayout/>
+    <view name="target">
+        <method event="onerror" args="e">
+            Debug.write( 'error: ' + e );
+        </method>
+        <method event="ontimeout" >
+            Debug.write( 'timeout! ' );
+        </method>
+        <method event="onload" >
+            Debug.write( 'load: ' + this.resource );
+        </method>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

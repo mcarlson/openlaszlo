@@ -1,0 +1,75 @@
+<target name="build-opt" unless="done.build-opt">
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+    <property environment="env"/>
+
+    <!-- make sure we have a working LPS_HOME -->
+    <if><isset property="env.LPS_HOME" /><then>
+        <property name="LPS_HOME" value="${env.LPS_HOME}" />
+    </then></if>
+    <if><not><isset property="LPS_HOME" /></not><then>
+        <fail message="LPS_HOME not set" />
+    </then></if>
+    <basename property="lps.branch" file="${LPS_HOME}"/>
+
+    <property name="build.tools" value="" />
+    <property name="build.qa" value="" />
+    <if><not><equals arg1="${user.name}" arg2="builder" /></not><then>
+        <property name="build.id" value="INTERNAL" />
+    </then></if>
+
+    <!-- Determine value of platform -->
+    <condition property="build.platform" value="windows" >
+        <os family="windows" />
+    </condition>
+    <condition property="build.platform" value="macosx" >
+         <os name="Mac OS X" />
+    </condition>
+    <condition property="build.platform" value="unix" >
+        <os family="unix" />
+    </condition>
+
+    <!-- Determine value of filesystem casesensitivity -->
+    <condition property="filesystem.casesensitive" value="false" >
+        <os family="windows" />
+    </condition>
+    <condition property="filesystem.casesensitive" value="false" >
+         <os name="Mac OS X" />
+    </condition>
+    <condition property="filesystem.casesensitive" value="true" >
+        <os family="unix" />
+    </condition>
+
+    <!-- Set script extension for platform -->
+    <condition property="sh" value="bat" >
+         <os family="windows" />
+    </condition>
+    <condition property="sh" value="sh" >
+         <os name="Mac OS X" />
+    </condition>
+    <condition property="sh" value="sh" >
+         <os family="unix" />
+    </condition>
+
+    <!-- at some point, the executables for macosx and linux should have the
+        .exe suffix removed and the code below changed to reflect this
+        these have to be platform dependant paths ideally (though build.tools
+        isn't, which is odd, but seems to work)
+        this will have to happen in ALL branches at once -->
+
+    <if><equals arg1="${build.platform}" arg2="windows" /><then>
+        <property name="build.compiler.path" value="${LPS_HOME}${file.separator}..${build.tools}${file.separator}tools${file.separator}jikes${file.separator}${build.platform}-jikes-1.18.exe" />
+    </then></if>
+    <if><equals arg1="${build.platform}" arg2="macosx" /><then>
+        <property name="build.compiler.path" value="${LPS_HOME}${file.separator}..${build.tools}${file.separator}tools${file.separator}jikes${file.separator}${build.platform}-jikes-1.18.exe" />
+    </then></if>
+    <if><equals arg1="${build.platform}" arg2="unix" /><then>
+        <property name="build.compiler.path" value="${LPS_HOME}${file.separator}..${build.tools}${file.separator}tools${file.separator}jikes${file.separator}${build.platform}-jikes-1.18.exe" />
+    </then></if>
+
+    <property name="done.build-opt" value="true" />
+</target>

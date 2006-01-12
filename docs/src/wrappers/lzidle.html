@@ -1,0 +1,39 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzIdle">
+    <lztier>Service</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        Idle service.
+    </lzshortdesc>
+    <lzapi>api-lzidle.xml</lzapi>
+</lzelement>
+
+<p>The LFC will generate idle events at some fixed, unspecified
+frequency.  Here is a simple example that shows how to receive the
+<event>onidle</event> event:</p>
+
+<example>
+&lt;canvas height="140" debug="true"&gt;
+  &lt;attribute name="counter" value="0"/&gt;
+  &lt;method name="onidle" event="onidle" reference="LzIdle"&gt;
+    while (counter &amp;lt; 4) {
+      counter++;
+      Debug.write("idling  " + counter);
+    }
+  &lt;/method&gt;
+&lt;/canvas&gt;
+
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

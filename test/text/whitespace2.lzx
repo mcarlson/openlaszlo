@@ -1,0 +1,41 @@
+<canvas width="1000" height="1000"> 
+
+
+    <font name="Times Roman">
+	<face src="timmonsr.ttf" />
+	<face src="timmonsb.ttf"  style="bold" />
+	<face src="timmonsi.ttf"  style="italic" />
+	<face src="timmonsbi.ttf" style="bold italic" />
+    </font>
+
+    <splash/>
+<view font="Times Roman" fontsize="16">
+<simplelayout axis="y"/>
+
+<text><b>A single whitespace should appear between 'foo' and 'bar' below:</b></text>
+<text>0 <i>foo </i><b> bar</b></text>
+<text>1 foo <i>bar</i></text>
+<text>2 foo <i> bar</i></text>
+<text>3 <i>foo</i> bar</text>
+<text>4 <i>foo </i>bar</text>
+<text>5 <i>foo </i> bar</text>
+<text>6 <i>foo</i> <b>bar</b></text>
+<text>7 <i>foo</i> <b> bar</b></text>
+<text>8 <i>foo </i> <b> bar</b></text>
+<text>9 <i>foo </i><b> bar</b>.</text>
+<text>10 <i> foo </i> <b> bar </b></text>
+<text>11 <i> foo </i><b> bar </b></text>
+<text>12 <i> foo</i><b> bar </b></text>
+<text><font color="#FF0000">C</font><font color="#FFFF00">O</font><font color="#00FFCC">L</font><font color="#CC00CC">O</font><font color="#AABB00">R</font><font color="#DDA00A">S</font> </text>
+<text>1 <font color="#ff0000">foo <i>bar</i></font></text>
+<text>2 <font color="#ff0000">foo</font><font color="#00ffff"> <i> bar</i></font></text>
+<text>3 <font size="20" color="#00ff00"><i>foo</i></font><font color="#ff00aa"> bar</font></text>
+<text><b>HTML metachars</b></text>
+<text>&lt;b&gt;this text shouldn't be bold&lt;/b&gt;</text> 
+<text><![CDATA[<b>this text shouldn't be bold</b>]]></text> 
+</view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

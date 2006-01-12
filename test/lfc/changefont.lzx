@@ -1,0 +1,21 @@
+<canvas debug="true" bgcolor="#CCCCCC" width="1024">
+    <font name="ofont">
+        <face src="timmonsr.ttf"/>
+        <face style="bold" src="timmonsb.ttf"/>
+        <face style="bold italic" src="timmonsbi.ttf"/>
+        <face style="italic" src="timmonsi.ttf"/>
+    </font>
+
+    <simplelayout/>
+    <text resize="true" id="changeme"> This is my <b>text string</b> okay?</text>
+    <button onclick="changeme.setAttribute( 'font' , 'ofont' );">
+        Font</button>
+    <button onclick="changeme.setAttribute( 'fontsize' , 22 );">
+        Font Size</button>
+    <button onclick="changeme.setAttribute( 'fontstyle' , 'italic' );">
+        Font Style</button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

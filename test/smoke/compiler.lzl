@@ -1,0 +1,49 @@
+<!--
+  Compiler Tests
+-->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+     * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+     * Use is subject to license terms.                                            *
+     * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<library>
+  <class name="TestCompiler" extends="TestCase">
+    <method name="setUp">
+    </method>
+
+    <method name="tearDown">
+    </method>
+
+
+    <method name="testConditionalCompilation">
+      <![CDATA[
+             // Verify compile-time conditionals are consistent
+             if ($swf6) {
+               assertEquals('swf6', $runtime, "Compile-time constant");
+             }
+             if ($swf7) {
+               assertEquals('swf7', $runtime, "Compile-time constant");
+             }
+             if ($swf8) {
+               assertEquals('swf8', $runtime, "Compile-time constant");
+             }
+             // Verify runtime matches requested
+             var url = LzBrowser.getLoadURLAsLzURL();
+             if (url.query != null) {
+               // TODO: [2005-11-22 ptw] This should be a class method
+               var query = LzParam.prototype.parseQueryString(url.query);
+             }
+             if (query.hasOwnProperty('lzr')) {
+                 assertEquals($runtime, query.lzr, "$runtime matches query arg");
+             }
+             // Verify runtime copies of compile-time conditionals are consistent.
+             for (var runtime = 5; runtime < 10; runtime++) {
+                 runtime = 'swf' + runtime;
+                 if (global.hasOwnProperty('$' + runtime)) {
+                     assertEquals(global['$' + runtime], $runtime == runtime, "Runtime copies of compile-time constants");
+                 }
+             }
+      ]]>
+    </method>
+  </class>
+</library>

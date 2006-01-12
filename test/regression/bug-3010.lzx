@@ -1,0 +1,13 @@
+<canvas>
+    <window title="default button test" width="300" height="200">
+        <checkbox id="c">switch</checkbox>
+        <view layout="axis:x; spacing:20" align="right" valign="bottom">
+            <button isdefault="${c.value}">Cancel</button>
+            <button isdefault="${!c.value}">OK</button>
+        </view>
+    </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

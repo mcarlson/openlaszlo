@@ -1,0 +1,36 @@
+<library>
+    <font name="vera">
+      <face src="bitstream-vera-1.10/verabd.ttf" style="bold" />
+    </font>
+    <resource name="sitelink">
+          <frame src="images/sitelink.png" />
+          <frame src="images/sitelink_slct.png" />
+    </resource>
+    <resource name="header" src="images/header_bg.jpg"/> <!-- 705x72 -->
+
+    <class name="pageheader" bgcolor="0x394660" oninit="zipin.doStart();" >
+      <attribute name="title" value="" type="string"/>
+      <attribute name="tag" value="" type="string"/>
+      <animator name="zipin" to="0" from="$once{-parent.width}" attribute="x" duration="300" start="false"/>
+      <view name="hdr" resource="header" oninit="debug.write(this.height)">
+        <basebutton resource="sitelink" x="470" y="26">
+          <method event="onclick" >
+            LzBrowser.loadURL('javascript:window.open("http://www.openlaszlo.org","laszlo","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); void(0);');
+          </method>
+        </basebutton>
+        <view y="$once{(parent.height / 2 ) - ( this.height / 2 ) - 7}" x="15" name="title">
+          <text y="2" x="2" width="$once{canvas.width}" fontstyle="bold" font="vera" fontsize="14" fgcolor="black"  text="${classroot.title}"/>
+          <text             width="$once{canvas.width}" fontstyle="bold" font="vera" fontsize="14" fgcolor="white"  text="${classroot.title}"/>
+        </view>
+      </view>
+
+      <view y="$once{parent.hdr.height - 11 }" name="tagline" x="15">
+        <text y="2" x="7" width="630" font="vera" fontstyle="bold" fontsize="12" fgcolor="black"   text="${classroot.tag}"/>
+        <text x="5"       width="630" font="vera" fontstyle="bold" fontsize="12" fgcolor="#d3dae6" text="${classroot.tag}"/>
+      </view>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

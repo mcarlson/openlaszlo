@@ -1,0 +1,20 @@
+<resultset >
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<result id="154" firstname="li" middlename="Yo" lastname="wenzhi" displayname="lwz7512"  />
+<result id="146" firstname="Laszlo" lastname="Serious" title="Mr." displayname="Laszlo Serious"  />
+<result id="149" firstname="Antun" lastname="Karlovac" displayname="Antun Karlovac" />
+<result id="16" firstname="Bret" lastname="Simister" displayname="Bret Simister"  />
+<result id="140" firstname="Emily" middlename="Elizabeth" lastname="Dickinson" title="Ms" displayname="Emily Dickinson" />
+<result id="18" firstname="Caprice" lastname="Briggs" displayname="Caprice Briggs"  />
+<result id="19" firstname="Charles" lastname="Ember" displayname="Charles Emory"  />
+<result id="20" firstname="Cheryl" lastname="Erickson" displayname="Cheryl Erickson" />
+<result id="21" firstname="Chris" lastname="Kimm" displayname="Kimm Chris" />
+<result id="22" firstname="Christopher" lastname="Stewart" displayname="Stewart Christopher" />
+<result id="124" firstname="Voicemail" lastname="Home" displayname="Voicemail Home"  />
+</resultset>
+
+
+

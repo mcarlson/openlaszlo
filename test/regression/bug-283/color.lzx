@@ -1,0 +1,40 @@
+<canvas height="1000" width="1500" >
+    <resource name="ball"   src="alpha-ball.png" />
+    <resource name="edge"   src="alpha-edge.png" />
+    <resource name="bw"     src="black-white.png" />
+    <resource name="square" src="color-square.png" />
+
+    <view>
+    <simplelayout />
+    <view bgcolor="red" resource="ball" />
+    <view bgcolor="gray" resource="ball" />
+    <view bgcolor="white" resource="ball" />
+    </view>
+
+    <view>
+    <simplelayout />
+    <view bgcolor="red" resource="edge" />
+    <view bgcolor="gray" resource="edge" />
+    <view bgcolor="white" resource="edge" />
+    </view>
+
+    <view>
+    <simplelayout />
+    <view bgcolor="red" resource="square" />
+    <view bgcolor="gray" resource="square" />
+    <view bgcolor="white" resource="square" />
+    </view>
+
+    <view>
+    <simplelayout />
+    <view bgcolor="red" resource="bw" />
+    <view bgcolor="gray" resource="bw" />
+    <view bgcolor="white" resource="bw" />
+    </view>
+
+    <simplelayout axis="x" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

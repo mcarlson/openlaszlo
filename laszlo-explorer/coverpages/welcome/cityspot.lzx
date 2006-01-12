@@ -1,0 +1,124 @@
+<!--=======================================================================-->
+<!-- clocks.lzx                                                            -->
+<!--                                                                       -->
+<!-- library classes for the 'cityspot' class used in world clocks map     -->
+<!--                                                                       -->
+<!-- Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--                                                                       -->
+<!--=======================================================================-->
+<library>
+    <class name="cityspot">
+
+        <!-- the display name of the city -->
+        <attribute name="label"    value="San Francisco" type="string" />
+
+        <!-- position: 1-label appears above the dot centered    -->
+        <!--           2-label appears to the right of the dot   -->
+        <!--           3-label appears below the dot centered    -->
+        <!--           4-label appears to the left of the dot    -->
+        <attribute name="position" value="2" type="number"/>
+
+        <view name="dothilite" resource="images/dothilite.png"
+              stretches="both" visible="false"  x="-6" y="-6" />
+
+        <view name="dot" resource="images/dot.png" stretches="both" x="-4" y="-4"
+              onmouseover="this.parent.dothilite.setVisible(true)"
+              onmouseout="this.parent.dothilite.setVisible(false)"
+              onclick="this.parent.activateclock( myclock )" />
+
+        <text name="titlesdhw" x="${parent.title.x + 1}" y="${parent.title.y + 1}"
+              font="Kgr" fontsize="8"  fgcolor="0xFFFFFF"  datapath="name/text()" opacity=".5" />
+
+        <text name="title" x="${-this.getTextWidth() -3}" y="-3"
+              font="Kgr" fontsize="8" datapath="name/text()" >
+            <method name="setLabelPosition" >
+                if ( this.parent.position == 1) {
+                    this.setX(-this.getTextWidth() - 7);
+                    this.setY(-9);
+                } else if ( this.parent.position == 2) {
+                    this.setX(Math.round(-this.getTextWidth()/2 ));
+                    this.setY(-19);
+                } else if ( this.parent.position == 3) {
+                    this.setX(4);
+                    this.setY(-8);
+                } else {
+                    this.setX(Math.round(-this.getTextWidth()/2 - 2 ));
+                    this.setY(0);
+                }
+           </method>
+        </text>
+
+        <!-- Create a date in the current year -->
+        <method name="makeDate" args="dateparts">
+            var currentYear = new Date();
+            currentYear = 1900 + currentYear.getYear();
+
+            // dateparts is month,day,hours,mins
+            var datepartsarray = dateparts.split( ',' );
+
+            return new Date( currentYear,
+                             datepartsarray[0],
+                             datepartsarray[1],
+                             datepartsarray[2],
+                             datepartsarray[3] );
+        </method>
+
+        <!-- Data has been received so process it -->
+        <method  event="ondata">
+            <![CDATA[
+
+            // First, position the dot for the city
+            this.setX(1*this.datapath.xpathQuery('@x'));
+            this.setY(1*this.datapath.xpathQuery('@y'));
+            this.position = (1*this.datapath.xpathQuery('@labelposition'));
+            // Now set the timezone for the city
+            this.timezoneoffset = (1*this.datapath.xpathQuery('@timezoneoffset'));
+            this.dst_start = this.datapath.xpathQuery('@dst_start');
+            this.dst_end = this.datapath.xpathQuery('@dst_end');
+            var cd = new Date();
+            var currentGMTDate = cd.getTime() + ( 1000 * 60 * cd.getTimezoneOffset() );
+
+            // Adjust time for city's offset from GMT.
+            var localDate = currentGMTDate + ( this.timezoneoffset * 60 * 60 * 1000 );
+
+            // Are we in Daylight Savings Time (DST)?
+            this.isDST = false;
+            var dstStart = this.makeDate( this.dst_start );
+            var dstEnd = this.makeDate( this.dst_end );
+            if ( (localDate > dstStart.getTime()) && (localDate < dstEnd.getTime()) ) {
+                this.isDST = true;
+            }
+            // Southern hemisphere - invert DST
+            if ( dstStart.getMonth() > dstEnd.getMonth() ) {
+                this.isDST = !true;
+            }
+
+            this.title.setLabelPosition()
+            ]]>
+        </method>
+
+        <!-- sync clock to a specific timezone of a city -->
+        <method name="syncclock" args="clockObj">
+            var myOffset = this.timezoneoffset;
+            if ( this.isDST ) { // in daylight savings time
+                myOffset += 1;
+            }
+            clockObj.setTimeZone( myOffset );
+        </method>
+
+        <!-- set sync and set clock name to a specific city -->
+        <method  name="activateclock" args="clockObj">
+            this.syncclock(clockObj);
+            myclocktext.setText( this.title.getText() );
+        </method>
+
+    </class> <!-- end cityspot -->
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

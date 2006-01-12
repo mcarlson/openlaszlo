@@ -1,0 +1,71 @@
+<canvas bgcolor="#EAEAEA" width="800" height="510">
+   <view x="20" y="20"> 
+    <simplelayout />
+    <text>autosized</text>
+    <tabs x="5">
+    
+        <tabpane inset_left="0" inset_top="0" inset_bottom="0" inset_right="0">insets 0
+            <button>do nothing</button>
+        </tabpane>
+        
+        <tabpane selected="true">default
+            <simplelayout spacing="5"/>
+            <button>faster</button>
+            <radiogroup>
+                <radiobutton>Curt</radiobutton>
+                <radiobutton>Prefer fairly wordy</radiobutton>
+                <radiobutton>I really prefer lots of extra words and fluff in my selections</radiobutton>
+            </radiogroup>
+        </tabpane>
+        
+        <tabpane text="insets 10" inset_left="10" inset_top="10" inset_bottom="10" inset_right="10">
+            <button>don't press</button>
+        </tabpane>
+        
+    </tabs>
+    
+    <view height="10"/>
+    <text>set height and width</text>
+    <tabs x="5"  height="150" width="300">
+    
+        <tabpane>stuff
+            <simplelayout spacing="5"/>
+            <button>stuff</button>
+            <radiogroup>
+                <radiobutton>test</radiobutton>
+                <radiobutton>other</radiobutton>
+            </radiogroup>
+        </tabpane>
+        
+        <tabpane>more
+            <button>more</button>
+        </tabpane>
+        
+    </tabs>
+    
+    <view height="10"/>
+    <text>bgcolor</text>
+    <tabs x="5" height="100">
+        <tabpane>normal
+            <button>ok</button>
+        </tabpane>
+        <tabpane bgcolor="0xffff99">yellow
+            <button>warning!</button>
+        </tabpane>
+        
+        <tabpane bgcolor="0x99ff99">green
+            <button>envy</button>
+        </tabpane>
+        <tabpane bgcolor="0x9999ff">blue
+            <button>true</button>
+        </tabpane>
+        
+        
+    </tabs>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

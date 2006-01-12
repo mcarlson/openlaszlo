@@ -1,0 +1,57 @@
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+a:visited:hover  { color: #FF6600; 
+                   text-decoration: none; 
+                   font-weight: none; }
+h1	{ font-family: geneva, helvetica, arial, sans-serif;    
+      font-size: 18px;	
+      font-weight: bold;	}
+h2 {
+	font-family : geneva, helvetica, sans-serif;
+	font-size : 16px;
+	font-weight : bold;
+}
+
+h3 {
+	font-family : geneva, helvetica, sans-serif;
+	font-size : 14px;
+	font-weight : bold;
+}
+
+ul	{ font-family: geneva, helvetica, arial, sans-serif;	
+      font-size: 12px;	}
+li	{ font-family: geneva, helvetica, arial, sans-serif;	
+      font-size: 12px;	}
+UL	{ font-family: geneva, helvetica, arial, sans-serif;	
+      font-size: 12px;	}
+LI	{ font-family: geneva, helvetica, arial, sans-serif;	
+      font-size: 12px;	}
+.bodytitle	{	font-family: geneva, helvetica, arial, sans-serif;	
+                font-size: 14px; 
+                font-weight: bold;	
+                color: #333333; 
+                line-height:18px}
+.bodytitlelarge	{	font-family: geneva, helvetica, arial, sans-serif;	
+                    font-size: 16px; 
+                    font-weight: bold;	
+                    color: #000000; 
+                    line-height:20px}
+.bodytext	{	font-family: geneva, helvetica, arial, sans-serif;	
+                font-size: 12px; 
+                margin-left:40px; }
+.bodybold	{	font-family: geneva, helvetica, arial, sans-serif;	
+                font-size: 14px; 
+                font-weight: bold; 
+                margin-left:40px; }
+.sourcecode {   font-family: courier, "Courier New", Veranda, sans-serif; 
+                font-size: 12px; 
+                color: #000000; }
+.pagetitle  {	font-family: geneva, helvetica, arial, sans-serif;	
+                font-size: 18px; 
+                font-weight: bold;	color: #330099; 
+                line-height: 22pt}
+.portallink { font-family: geneva, helvetica, arial, sans-serif;	
+              font-size: 10px;}
+

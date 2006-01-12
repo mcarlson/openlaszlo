@@ -1,0 +1,139 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>LFC Internal Documentation</title>
+  </head>
+  <body>
+    
+    <h1>LFC Internal Documentation</h1>
+    
+    <h2>Building the LFC</h2>
+    <p>There are versions of the LFC for swf5 and swf6, +/-debug,
+    +/-krank, and +/-profile.  Only the -debug -krank versions can be
+    profiled; the other options cross-multiply.</p>
+    
+    <p><code>ant build</code> in the <code>lfc</code> directory builds
+    the LFC versions.  By default, it builds all versions.  The
+    <code>skip-LFC5</code> and <code>skip-LFC6</code> ant properties
+    can be used to omit specific sets.</p>
+
+    <p>The scripts <code>buildlfc</code>, <code>buildlfcdebug</code>,
+    <code>buildlfckrank</code>, <code>buildlfckrankdebug</code>, and
+    <code>buildlfcprofile</code> can be used to build specific
+    versions of the LFC.  Each of these builds the swf5 versions by
+    default; the <code>--runtime=swf6</code> command-line argument
+    causes them to build swf6 instead.  The scripts run in incremental
+    mode, by default: once they have built the LFC, they remain
+    running, waiting for a return key to build the same version of the
+    LFC again.  The incremental build is much faster (order of a
+    second) than the initial build (order of 30s), so this is useful
+    for making incremental changes to the LFC and then testing them in
+    the server.  The server will rebuild an application when the LFC
+    changes, so it's sufficient to press Return in the console that is
+    running <code>buildlfc</code>, and then press the browser Refresh
+    button, to try out a change.</p>
+    
+    <p><code>ant build</code> and <code>buildlfc</code> cache per-file
+    compilation results in <code>lfc/build</code>, so both will be
+    faster (even not in incremental mode) if only a few files have
+    changed.  <code>ant build</code> cleans the cache when the script
+    compiler sources have changed.  <code>buildlfc</code> does not.
+    <code>ant clean</code> can be used to force the cache to
+    clear.</p>
+    
+    <h2>Compiler Switches</h2>
+    <p>The LFC is compiled with these <a
+    href="../server/sc/docs/spec.html#code-generation-options">code
+    generation options</a>:</p>
+
+    <table>
+      <tr><th>Option</th><th>Value</th><th>Where set</th></tr>
+      <tr><td>conditionalCompilation</td><td>true</td><td>lzsc.main</td></tr>
+      <tr><td>flashCompilerCompatability</td><td>true</td><td>lzsc.compile</td></tr>
+      <tr><td>activationObject</td><td>false</td><td>Compiler.__init__</td></tr>
+      <tr><td>allowRoot</td><td>true</td><td>Compiler.__init__</td></tr>
+      <tr><td>obfuscate</td><td>true unless krank</td><td>Compiler.__init__</td></tr>
+      <tr><td>debug</td><td>depends on which buildlfc script</td><td>buildlfc script</td></tr>
+      <tr><td>krank</td><td>depends on which buildlfc script</td><td>buildlfc script</td></tr>
+      <tr><td>runtime</td><td>depends on --runtime argument</td><td>buildlfc script</td></tr>
+      <tr><td>warnUndefinedReferences</td><td>value of debug option</td><td>Compiler.defaultProperties</td></tr>
+      <tr><td>nameFunctions</td><td>value of debug option or krank</td><td>Compiler.defaultProperties</td></tr>
+    </table>
+
+    <p>The <a
+    href="../server/sc/docs/conditional-compilation.html">conditional
+    compilation</a> constants are <code>$debug</code>,
+    <code>$krank</code>, <code>$profile</code>, <code>$runtime</code>
+    (<code>swf5</code> or <code>swf6</code>), and <code>$swf5</code>.
+    <a href="../server/sc/lzsc.py"><code>lzsc.py</code></a> sets
+    these.</p>
+    
+    <p><a href="../server/sc/docs/inline-assembly.html">Inline assembly</a> is available within <code>if ($flasm)</code> blocks.</p>
+
+    <h2>Initialization</h2>
+    <p>The compiler creates calls to LzInstantiate.  The tag name is
+    looked up in ConstructorMap, in LaszloInitiator.as</p>
+    
+    <h2>Data Replication</h2>
+    <p>A source element that contains a datapath that matches multiple
+    nodes is represented in the object hierarchy as an
+    LzReplicationManager with a datapath attribute.  The replicated
+    nodes are in clones.</p>
+    
+    <p>This is the the logic/call sequence by which an item with a
+    datapath is replaced by a replication manager when its datapath
+    matches more than one item:</p>
+    
+    <ul>
+      <li>datapointer eventually does runXPath</li>
+      <li>when the result is multiple nodes, it calls __LZHandleMultiNodes</li>
+      <li>datapath overrides this to new a replication manager with
+      itself as the first arg to the constructor and its stored
+      _instanceAttrs as the second arg</li>
+    </ul>
+
+    <p>replication manager constructor:</p>
+    <ul>
+      <li>sets var view to the original datapath's immediate parent</li>
+      <li>sets constructor args.name = view._instanceAttrs.name</li>
+      <li>sets constructor args.id = view._instanceAttrs.id</li>
+      <li>super.construct() is called; later, when applyArgs happens, the
+      replication manager will take over the name and id of the
+      original view by virtue of having those attrs set</li>
+      <li>then there's some fairly funny business with the original view
+      where it essentially makes a class out of the view instance
+      by mucking with its _instanceAttrs and _instanceChildren</li>
+    </ul>
+    
+    <hr/>
+    <h2>Other Documents</h2>
+    <ul>
+      <li><a href="debugger.html">Internal debugger documentation</a></li>
+    </ul>
+    
+    <h3>Compiler documentation</h3>
+    <ul>
+      <li><a href="../server/sc/docs/index.html">Compiler documentation index</a></li>
+      <li><a href="../server/sc/docs/conditional-compilation.html">Conditional compilation</a></li>
+      <li><a href="../server/sc/docs/inline-assembly.html">Inline assembly</a></li>
+    </ul>
+    
+    <h3>Package Documentation</h3>
+    <ul>
+      <li><a href="../controllers/package.html">controllers</a></li>
+      <li><a href="../events/package.html">events</a></li>
+      <li><a href="../transformers/package.html">transformers</a></li>
+      <li><a href="../core/package.html">core</a></li>
+      <li><a href="../glue/package.html">glue</a></li>
+      <li><a href="../views/package.html">views</a></li>
+      <li><a href="../data/package.html">data</a></li>
+      <li><a href="../helpers/package.html">helpers</a></li>
+      <li><a href="../services/package.html">services</a></li>
+    </ul>
+
+  </body>
+</html>

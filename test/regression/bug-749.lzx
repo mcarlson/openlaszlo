@@ -1,0 +1,17 @@
+<!-- inclusion of splash seems to move top level views
+     down about 600 pixels vertically, leaving whitespace.
+
+     Wrapping a VIEW element around the layout and text fixes the problem.
+
+
+--> 
+ <canvas width="800" height="800"> 
+    <splash />
+    <!-- basic font propagation --> 
+    <simplelayout /> 
+    <text>This is some text</text>     
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

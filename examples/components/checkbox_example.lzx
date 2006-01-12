@@ -1,0 +1,40 @@
+<canvas width="800" bgcolor="0xeaeaea">
+    <bluestyle name="bluecolors" canvascolor="null"/>
+    <greenstyle name="greencolors" canvascolor="null"/>
+
+    <view x="40" y="40">
+        <view>
+            <checkbox id="b" name="cb1"  value="true" text="checked by default"/>
+            <checkbox id="c" name="cb2"  enabled="false" text="disabled"/>
+            <checkbox id="a" name="cb3" style="bluecolors" text="a blue style checkbox"/>
+            <checkbox id="d" name="green" style="greencolors" text="I would like to see a green square"/>
+            <view width="40" height="40" bgcolor="green" visible="${d.value}"/>
+            <simplelayout spacing="16"/>
+        </view>
+        <view height="108" width="250" bgcolor="silver">
+            <view height="1" width="${parent.width}" bgcolor="0x7D7D7D"/>
+            <checkbox x="12" id="checkMe" text="Check me" value="true"/>
+            <view height="1" width="${parent.width}" bgcolor="0x7D7D7D"/>
+            <view x="20">
+                <button height="20" text="Toggle" onclick= "checkMe.setAttribute('value', !checkMe.value);"/>
+                <text  text="${'value:' + checkMe.value}"/>
+                <simplelayout axis="x" spacing="6"/>
+            </view>
+            <view x="20">
+                <button height="20" text="Disable" onclick= "checkMe.setAttribute('enabled', false);"/>
+                <button height="20" text="Enable" onclick= "checkMe.setAttribute('enabled', true)"/>
+                <text resize="true" text="${'enabled:' + checkMe.enabled}"/>
+                <simplelayout axis="x" spacing="6"/>
+            </view>
+            <simplelayout axis="y" spacing="10"/>
+        </view>
+        <simplelayout axis="x" spacing="60"/>
+    </view>
+
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

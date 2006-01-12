@@ -1,0 +1,28 @@
+<!-- replication of inlined class -->
+
+<canvas layout="axis: y">
+  <dataset name="ds">
+    <row value="1"/>
+    <row value="2"/>
+  </dataset>
+  
+  <?lzc class="c1" inline-only="true"?>
+  
+  <class name="c1" extends="text" datapath="@value">
+    <view width="5" height="5" bgcolor="red"/>
+  </class>
+  
+  <c1 datapath="ds:/row/@value">
+    <view width="2" height="5" y="5" bgcolor="green"/>
+  </c1>
+  
+  <view datapath="ds:/row" layout="axis: y">
+    <c1>
+      <view width="2" height="5" y="5" bgcolor="green"/>
+    </c1>
+  </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

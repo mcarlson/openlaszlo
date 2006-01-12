@@ -1,0 +1,20 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+
+  <script>
+    canvas.redcolor = 0xff0000;
+    canvas.greencolor = 0x00ff00;
+  </script>
+
+  <simplelayout/>
+  <text>You should see a red and green square below</text>
+
+  <import name="lib" href="script-library.lzx" stage="late" onload="foo()"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+

@@ -1,0 +1,8 @@
+<library>
+  <include href="charts/common/library.lzx" />
+  <include href="charts/addon/library.lzx" />
+  <include href="charts/barchart/barchart.lzx" />
+  <include href="charts/columnchart/columnchart.lzx" />
+  <include href="charts/linechart/linechart.lzx" />
+  <include href="charts/piechart/piechart.lzx" />
+</library>

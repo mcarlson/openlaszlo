@@ -1,0 +1,49 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- staticpointer.lzx                                                     -->
+<!--                                                                       -->
+<!-- This is a test to replace datapointer.lzx for winrunner regression    -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="800" height="600" debug="true">
+    <dataset name="data" request="true"
+	     src="data.asp"/>
+    
+    <view name="dataTest">
+        <datapointer name="data" datasource="http" dataset="data" 
+            ondata="this.processData();">
+            <!-- When data is received from the datasource, do this -->
+        <method name="processData">
+            // Go to the root, get second 'day' node, get 'test' node's text
+            Debug.write("Temp: " + this.runXPath('/weather[1]/forecast[1]/day[2]@temp'));
+
+            // Relative to the last position, back out twice (to 'forecast'), get 
+            // third 'day' node's 'temp' attribute
+            Debug.write("Day 3 Temperature: " + this.runXPath('../day[3]@temp'));
+
+            // Relative to the last position, back out twice (to root), get
+            // (first) radar node's 'src' attribute
+            Debug.write("Radar src: " + this.runXPath('../../radar[1]@src'));
+
+            // Relative to the last position, back out once (to root), get
+            // all attributes as object
+            var x = this.runXPath('../forecast[1]/day[1]@*');
+            // Look up 'temp' attribute
+            Debug.write("Day 1 Temperature: " + x["temp"]);
+
+            Debug.write("Root src: " + this.runXPath("/weather[1]@sourceurl"));
+        </method>
+    </datapointer>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

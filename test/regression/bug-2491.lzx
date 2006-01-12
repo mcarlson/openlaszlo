@@ -1,0 +1,32 @@
+<canvas width="640" height="480" bgcolor="0xdddddd"> 
+	<debug y="300"/>
+	<view id="foo" width="50" height="50" bgcolor="blue">
+		<animator motion="linear" name="animX" relative="false" start="false" attribute="x" 
+			onstop="foo.resetX()" duration="2000"/>
+		<animator motion="linear" name="animY" relative="false" start="false" attribute="y" 
+			onstop="foo.resetY()" duration="500"/>
+		<method name="resetX">
+			animX.setTo(500 - this.x)
+			animX.doStart()
+		</method>
+		<method name="resetY">
+			animY.setTo(200 - this.y)
+			animY.doStart()
+		</method>
+		
+		<method name="start">
+			resetX()
+			resetY()
+		</method>
+	</view>
+
+	<view y="250">
+		<button text="Start" onclick="foo.start()"/>
+		<simplelayout axis="x" spacing="10"/>
+	</view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

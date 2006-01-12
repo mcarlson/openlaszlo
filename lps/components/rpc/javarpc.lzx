@@ -1,0 +1,191 @@
+<library>
+    
+    <include href="rpc/rpc.lzx" />
+    <include href="rpc/library/javarpc.js" />
+
+    <!--- A class to get and use a remote object to invoke remote methods. -->
+    <class name="javarpc" extends="rpc">
+
+        <!--- One of 'session', 'webapp', or 'none' to set the scope of the
+              remote object. This attribute must be set before creating or
+              loading the object. If scope is 'session' or 'webapp', name or
+              attributename must be set. -->
+        <attribute name="scope" type="string" />
+
+        <!--- Attribute name of server remote object. Name or attributename must
+              be set when scope is 'session' and 'webapp'. Default is the name
+              of this object. -->
+        <attribute name="attributename" value="$once{this.name}" type="string" />
+
+        <!--- The remote class name associated with the remote object. This must
+              be set if creating the remote object. If loading the object, the
+              classname will be set during onload. -->
+       <attribute name="classname" type="string" />
+
+        <!--- One of 'loadcreate', 'loadonly', or 'create'. 'Loadcreate' tries
+              to load javarpc object if it exists in the server, else it creates
+              it before loading. 'Loadonly' will only load object if it exists,
+              else an error is returned. 'Create' will always create the object
+              in the server. Default is 'loadcreate'. -->
+        <attribute name="loadoption" value="loadcreate" type="string" />
+
+        <!--- Used if loadoption='loadcreate' or loadoption='create'. Arguments
+              to construct remote object with. The value passed in must be an
+              array, e.g., [1, 'mystring', 1.45]. Default is null. -->
+        <attribute name="createargs" value="null" type="expression" />
+
+        <!--- Used to determine what server-side object member values are
+              returned to the client. One of 'pojo' (returns public member
+              values) or 'javabean' (returns members that have associated
+              getters). Default is 'pojo' (plain old java object). -->
+        <attribute name="objectreturntype" value="pojo" type="string" />
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- Load the object. If successful, this.proxy is set to an object
+              with remote APIs. -->
+        <method name="load">
+        <![CDATA[
+            if (! _isScopeOk(this.scope)) {
+                var errmsg = this.scope + ": bad scope";
+                if (this.onerror) {
+                    this.onerror.sendEvent(errmsg);
+                }
+                Debug.write("javarpc ERROR:" + errmsg);
+                return;
+            }
+
+            if (! _isLoadOptionOk(this.loadoption)) {
+                if (this.onerror) {
+                    this.onerror.sendEvent("bad loadoption (" + this.loadoption + ")");
+                }
+                Debug.write("javarpc: bad loadoption (" + this.loadoption + ")");
+                return;
+            }
+
+            if (null == this.name && null == this.attributename &&
+                ('session' == this.scope || 'webapp' == this.scope)) {
+                if (this.onerror) {
+                    this.onerror.sendEvent("name or attributename have not been set");
+                }
+                Debug.write("javarpc: name or attributename have not been set");
+                return;
+            }
+
+            if (arguments.length == 0) {
+                arguments = this.createargs;
+            }
+
+            var opts = {
+                loadoption: this.loadoption,
+                params: arguments,
+                classname: this.classname,
+                oname: this.attributename,
+                scope: this.scope
+            }
+
+            LzJavaRPCService.loadObject(this._loadDel, opts, this.secure, this.secureport);
+        ]]>
+        </method>
+
+
+        <!--- Unload the remote object. On, this.proxy is set to null. -->
+        <method name="unload">
+            if (! _isScopeOk(this.scope)) {
+                var errmsg = this.scope + ": bad scope";
+                if (this.onerror) {
+                    this.onerror.sendEvent(errmsg);
+                }
+                Debug.write("javarpc ERROR:" + errmsg);
+                return;
+            }
+
+            if (this.scope == 'none') {
+                var errmsg = "cannot remove object with scope " + this.scope;
+                if (this.onerror) {
+                    this.oneprror.sendEvent(errmsg);
+                }
+                Debug.write("javarpc:" + errmsg);
+                return;
+            }
+
+            LzJavaRPCService.unloadObject(this._unloadDel, 
+                {
+                  classname: this.classname, 
+                  oname: this.attributename, 
+                  scope: this.scope
+                }, 
+                this.secure, this.secureport);
+        </method>
+
+
+        <!--=================================================================-->
+        <!-- private methods                                                 -->
+        <!--=================================================================-->
+
+        <!--- @keywords private -->
+        <method name="_isScopeOk" args="scope">
+            return (scope == 'session' || scope == 'webapp' || scope == 'none');
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_isLoadOptionOk" args="lo">
+            return (lo == 'loadcreate' || lo == 'loadonly' || lo == 'create');
+        </method>
+
+        <!--- @keywords private -->
+        <method name="init">
+        <![CDATA[
+            if (null == this.name && null == this.attributename && 
+                ('session' == this.scope || 'webapp' == this.scope)) {
+                Debug.write("ERROR: name or attributename not set for " +
+                            this.scope + " scoped javarpc.")
+                return;
+            }
+            this._removeDel = new LzDelegate(this , "_remove");
+            super.init();
+        ]]>
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setup" args="o">
+            var ok = super._setup(o);
+
+            for (var k in this.proxy) {
+                var tpka = this.proxy[k]['args'];
+                if (tpka == null) {
+                    tpka = this.proxy[k].args = {};
+                }
+                tpka.secure = this.secure;
+                tpka.secureport = this.secureport;
+                tpka.scope = this.scope;
+                tpka.attributename = this.attributename;
+                tpka.objectreturntype = this.objectreturntype;
+            }
+
+            return ok;
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_remove" args="o">
+        <![CDATA[
+            if (o.status == "error" && this['onerror']) {
+                this.onerror.sendEvent(o.message);
+                return;
+            }
+
+            this.setAttribute("proxy", null);
+            if (this.onremove) this.onremove.sendEvent();
+        ]]>
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

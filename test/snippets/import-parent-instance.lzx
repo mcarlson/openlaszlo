@@ -1,0 +1,16 @@
+<canvas>
+
+  <class name="myclass" bgcolor="#ffccff" 
+     width="${this.textview.width}"
+     height="${this.textview.height}" fontsize="20">
+    <attribute name="text" type="text"/>
+    <text name="textview"  resize="true" text="${parent.text}"/>
+  </class>
+  <simplelayout spacing="2" />
+  <import name="lib" href="parent-instance-library.lzx" stage="late" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

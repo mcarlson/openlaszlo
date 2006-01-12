@@ -1,0 +1,26 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<p><i>No debugger warnings should be shown at any time.</i></p>
+<p><i>Safari should fail with the following message:</i></p>
+<pre>forbidden user-agent: Mozilla/5.0 (Macintosh; U; PPC Mac OS X; en) AppleWebKit/125.4 (KHTML, like Gecko) Safari/125.9</pre>
+<p><i>Fail the test, this is a known defect, no need to write new bug.</i></p>
+<ol>
+<li>On startup verify that:
+<ul><li>your internal hostname is displayed 
+<li>chat name window has a number of users listed
+<li>clicking on guest brings you to main chat page
+</ul></li>
+<li>on the chat page verify that:
+<ul><li>...connected... is displayed in the chat scroll window the 
+<li>the message User username connected! is displayed in the chat scroll window
+<li>the name listed corresponds to the user name selected on the main screen
+<li>the user selected is displayed in the small user scroll window
+<li>typing text in the msg: edittext field works as expected
+<li>clicking send clears the edittext field and echos the messahe to the main message scroll window
+<li>adding text to the edittext field is cleared and echoed after pressing return
+<li>pressing the tab key cycles through the 3 usable controls (msg:, send button, logout button)
+<li>clicking on logout returns you to the main screen
+</ul></li>
+</ol>

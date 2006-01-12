@@ -1,0 +1,18 @@
+<canvas width="1024">
+  <import name="lib" href="class-library.lzx" 
+          stage="defer"
+          onload="canvas.doLoaded()"/>
+  <method name="doLoaded">
+    new myclass(canvas, {fontsize: 8, text: '[1] loaded myclass'});
+    new myclass(canvas, {fontsize: 10, text: '[2] loaded myclass'});
+    new myclass(canvas, {text: '[3] loaded myclass'});
+
+  </method>
+  <simplelayout spacing="2" />
+
+<myclass fontsize="22" text="[4] loaded myclass (tag)"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

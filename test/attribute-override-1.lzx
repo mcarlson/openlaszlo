@@ -1,0 +1,28 @@
+<!-- 
+
+The class 'basewindow' defines two attributes. One of them overrides
+the bgcolor attribute of view. 
+
+* There should be no compilation errors or warnings. 
+
+* A view that says "basewindow text" should have a background color of yellow.
+
+
+-->
+
+<canvas width="800" height="800">
+
+   <class name="basewindow" >
+      <attribute name="bgcolor" value="#FF00FF" type="color" />
+      <attribute name="fluffy" type="string"/>
+      <text name="txt" >Basewindow Text</text>
+   </class>
+
+   <basewindow id="bw" width="200" height="100" bgcolor="#FFFF00" fluffy="parrot food">
+   </basewindow>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

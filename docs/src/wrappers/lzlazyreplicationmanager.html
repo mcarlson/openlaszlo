@@ -1,0 +1,38 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzLazyReplicationManager">
+    <lztier>LFC</lztier>
+    <lzcategory>Data</lzcategory>
+    <lzshortdesc>
+        An optimization for displaying large sets of data.
+    </lzshortdesc>
+    <lzapi>api-lzlazyreplicationmanager.xml</lzapi>
+</lzelement>
+
+<p>If a datapath's <attribute>replication</attribute> attribute is set
+to <code>lazy</code>, then a match to multiple nodes will create an
+<classname>LzLazyReplicationManager</classname> instead of an
+<classname>LzReplicationManager</classname>. The lazy replication
+manager creates only enough replicated views in order to display the
+data, so there is not a view for each data node. This enables the
+display of very large datasets.</p>
+
+<p>See <a href="${dguide}databinding.html#databinding.lazy-replication">Lazy
+Replication</a> in the Guide for examples of how to use lazy
+replication, and restrictions on its use.</p>
+
+<p>Also see the <a href="${examples}paging.lzx">paging.lzx example</a>
+for an example of lazy replication.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

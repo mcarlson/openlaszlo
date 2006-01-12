@@ -1,0 +1,89 @@
+<canvas debug="true" width="800" height="600" oninit="debug.setX(200);">
+
+    <dataset name="items">
+        <item value="item1" >item 1</item>
+        <item value="item2" >item 2</item>
+        <item value="item3" >item 3</item>
+        <item value="item4" >item 4</item>
+        <item value="item5" >item 5</item>
+        <item value="item6" >item 6</item>
+        <item value="item7" >item 7</item>
+        <item value="item8" >item 8</item>
+        <item value="item9" >item 9</item>
+        <item value="item10" >item 10</item>
+        <item value="item11" >item 11</item>
+    </dataset>
+
+    <combobox id="cbox" x="5" y="300" width="130" spacing="5">
+        <textlistitem name="foo" datapath="items:/item" 
+            text="$path{'text()'}" value="$path{'@value'}"/>
+    </combobox>
+
+    <window x="200" y="200" >
+        <simplelayout axis="x" spacing="5"/>
+        <view>
+            <simplelayout spacing="2" />
+            <button text="add">    
+                <method event="onclick">
+                    cbox.addItem('item', 'value');
+                </method>
+            </button>
+            <button text="remove">    
+                <method event="onclick">
+                    cbox.removeItem('value');
+                </method>
+            </button>
+        </view>
+        <view>        
+            <simplelayout spacing="2"/>
+            <button text="move left">    
+                <method event="onclick">
+                    cbox.setX(cbox.x-cbox.width);
+                </method>
+            </button>
+            <button text="move right">    
+                <method event="onclick">
+                    cbox.setX(cbox.x+cbox.width);
+                </method>
+            </button>
+            <button text="move up">    
+                <method event="onclick">
+                    cbox.setY(cbox.y-cbox.height);
+                </method>
+            </button>
+            <button text="move down">    
+                <method event="onclick">
+                    cbox.setY(cbox.y+cbox.height);
+                </method>
+            </button>
+        </view>
+        <view>
+            <simplelayout spacing="2"/>
+            <button text="attach left">    
+                <method event="onclick">
+                    cbox.cblist.setAttribute("attach", "left");
+                </method>
+            </button>
+            <button text="attach right">    
+                <method event="onclick">
+                    cbox.cblist.setAttribute("attach", "right");
+                </method>
+            </button>
+            <button text="attach top">    
+                <method event="onclick">
+                    cbox.cblist.setAttribute("attach", "top");
+                </method>
+            </button>
+            <button text="attach bottom">    
+                <method event="onclick">
+                    cbox.cblist.setAttribute("attach", "bottom");
+                </method>
+            </button>
+        </view>
+    </window>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

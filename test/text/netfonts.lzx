@@ -1,0 +1,97 @@
+<canvas width="1024" height="1280">
+  <font name="b5hollow.ttf" src="../resources/ttf/b5hollow.ttf"/>
+  <font name="babind.ttf" src="../resources/ttf/babind.ttf"/>
+  <font name="fanboyhcb.ttf" src="../resources/ttf/fanboyhcb.ttf"/>
+  <font name="fanboyhci.ttf" src="../resources/ttf/fanboyhci.ttf"/>
+  <font name="fanboyhc.ttf" src="../resources/ttf/fanboyhc.ttf"/>
+  <font name="maxis.ttf" src="../resources/ttf/maxis.ttf"/>
+  <font name="morpheus.ttf" src="../resources/ttf/morpheus.ttf"/>
+  <font name="mo.ttf" src="../resources/ttf/mo.ttf"/>
+  <font name="neurochr.ttf" src="../resources/ttf/neurochr.ttf"/>
+  <font name="ninjas.ttf" src="../resources/ttf/ninjas.ttf"/>
+  <font name="pantspat.ttf" src="../resources/ttf/pantspat.ttf"/>
+  <font name="parryhotter.ttf" src="../resources/ttf/parryhotter.ttf"/>
+  <font name="pixel.ttf" src="../resources/ttf/pixel.ttf"/>
+  <font name="symbnerv.ttf" src="../resources/ttf/symbnerv.ttf"/>
+  <font name="xcrypt.ttf" src="../resources/ttf/xcrypt.ttf"/>
+  <font name="xeroxmal.ttf" src="../resources/ttf/xeroxmal.ttf"/>
+  <view><simplelayout/>
+    <view fontsize="24" font="b5hollow.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="babind.ttf"><simplelayout/>
+      <!-- does not have lowercase letters or ~ -->
+      <text>1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\`</text>
+    </view>
+    <view fontsize="24" font="fanboyhcb.ttf"><simplelayout/>
+      <!-- missing ^|[]{}\~ `-->
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%*()-=+</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"</text>
+    </view>
+    <view fontsize="24" font="fanboyhci.ttf"><simplelayout/>
+      <!-- missing ^|[]{}\~ `-->
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%*()-=+</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"</text>
+    </view>
+    <view fontsize="24" font="fanboyhc.ttf"><simplelayout/>
+      <!-- missing ^|[]{}\~ `-->
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%*()-=+</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"</text>
+    </view>
+    <view fontsize="24" font="maxis.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="morpheus.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="mo.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="neurochr.ttf"><simplelayout/>
+      <!-- missing @#^*|~` -->
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!$%()-=+</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\</text>
+    </view>
+    <view fontsize="24" font="ninjas.ttf"><simplelayout/>
+      <!-- Missing @=~ -->
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!#$%^*()-+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\`</text>
+    </view>
+    <view fontsize="24" font="pantspat.ttf"><simplelayout/>
+      <!-- Missing # -->
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+<!--
+    <view fontsize="24" font="parryhotter.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="pixel.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="symbnerv.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="xcrypt.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+    <view fontsize="24" font="xeroxmal.ttf"><simplelayout/>
+      <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+      <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+    </view>
+-->
+  </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

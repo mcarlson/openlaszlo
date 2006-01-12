@@ -1,0 +1,23 @@
+<!-- Verify that recursive class inlining doesn't override the expanded
+     child class with the parent's classroot.  Clicking the view should
+     write 'f' to the debugger, without an undefined method error. -->
+
+<canvas debug="true">
+  <?lzc classes="c1 c2" inline-only="true"?>
+
+  <class name="c1">
+    <view width="10" height="10" bgcolor="red"
+          onclick="classroot.f()"/>
+    <method name="f">Debug.write('f')</method>
+  </class>
+
+  <class name="c2">
+    <c1/>
+  </class>
+
+  <c2/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

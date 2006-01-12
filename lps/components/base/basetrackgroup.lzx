@@ -1,0 +1,172 @@
+<library>
+    <class name="basetrackgroup" >
+
+        <!--- The view that will be used to define the bounding rect for tracking
+              the mouse -->
+        <attribute name="boundsref" value="${this}"
+                   setter="this.setBoundsRef( boundsref )"/>
+
+        <!--- @keywords private -->
+        <attribute name="onboundsref" value="null" />
+
+        <!--- The periodic rate in milliseconds to track the mouse-->
+        <attribute name="trackingrate"  value="150" />
+
+        <!--- indicates if this trackgroup is currently tracking or not.
+              It can bet set to turn tracking on or off, or use the methods
+              activatetrackgroup and deactivatetrackgroup -->
+        <attribute name="tracking"      value="true"
+                   setter="setTracking( tracking )" />
+
+        <!--- @keywords private -->
+        <attribute name="ontracking"    value="null" />
+
+        <!--- @keywords private -->
+        <attribute name="_trackgroup" />
+
+        <!--- @keywords private -->
+        <attribute name="_boundstrackgroup" />
+
+        <!--- an array of events which will activate tracking.  By default:
+           ['onmousedown'].  To override, you must declare as once.  For
+           example:
+           <br/> <attribute name="activateevents"   value="['onmouseover']" when="once"/>
+        -->
+        <attribute name="activateevents"   value="['onmousedown']" />
+
+        <!--- an array of events which will deactivate tracking.  By default:
+           ['onmouseup'].  To override, you must declare as once.  For
+           example:
+           <br/> <attribute name="deactivateevents"   value="['onmouseover']" when="once"/>
+        -->
+        <attribute name="deactivateevents" value="['onmouseup']" />
+
+        <!--- @keywords private -->
+        <attribute name="onmousetrackoutbottom"   value="null" />
+
+        <!--- @keywords private -->
+        <attribute name="onmousetrackouttop"      value="null" />
+
+        <!--- @keywords private -->
+        <attribute name="onmousetrackoutright"    value="null" />
+
+        <!--- @keywords private -->
+        <attribute name="onmousetrackoutleft"     value="null" />
+
+        <!--- @keywords private -->
+        <method event="onconstruct">
+            this._activateDL    = new LzDelegate(this,'activateTrackgroup');
+            this._deactivateDL  = new LzDelegate(this,'deactivateTrackgroup');
+            this._repeattrackDL = new LzDelegate(this,'trackingout');
+            this._destroyDL = new LzDelegate(this,'destroyitem');
+            this._trackgroup = "tg" + this.getUID();
+            this._boundstrackgroup = "btg" + this.getUID();
+        </method>
+
+        <!--- sets the view that will act as the bounds for this trackgroup -->
+        <method name="setBoundsRef" args="ref" >
+            this.boundsref = ref;
+            if ( onboundsref ) this.onboundsref.sendEvent();
+        </method>
+
+
+        <!--- @keywords private -->
+        <method name="setTracking" args="istracking" >
+            this.tracking = istracking;
+            if ( this.isinited ) {
+                if ( istracking ) {
+                    // have global LzTrack service activate this group
+                    LzTrack.activate(this._trackgroup)
+                    LzTrack.activate(this._boundstrackgroup)
+                }else {
+                    // have global LzTrack service deactivate this group
+                    LzTrack.deactivate(this._trackgroup)
+                    LzTrack.deactivate(this._boundstrackgroup)
+                }
+            }
+            if ( ontracking ) this.ontracking.sendEvent( istracking );
+        </method>
+
+        <!--- activates the trackgroup for this view.
+              It is called automatically when any subview gets an event
+              from the actiavteevents set of events -->
+        <method name="activateTrackgroup" args="v">
+            this.setTracking(true);
+            this._destroyDL.register( v, "ondestroy" );
+        </method>
+
+        <!--- deactivates the trackgroup for this view.
+              It is called automatically when any subview gets an event
+              from the deactiavteevents set of events -->
+        <method name="deactivateTrackgroup">
+            this.setTracking(false);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="destroyitem">
+            this.setTracking(false);
+        </method>
+
+        <!--- @keywords private -->
+        <method event="onaddsubview" args="v">
+            LzTrack.register( v, this._trackgroup );
+            for ( var i in activateevents ){
+                this._activateDL.register( v, activateevents[i] );
+            }
+            for ( var j in deactivateevents ){
+                this._deactivateDL.register( v, deactivateevents[j] );
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method event="onremovesubview" args="v"> <![CDATA[
+            LzTrack.unregister( v, this._trackgroup );
+            for ( var i in activateevents ){
+                this._activateDL.unregisterFrom(v[activateevents[i]] );
+            }
+            for ( var i in deactivateevents ){
+                this._deactivateDL.unregisterFrom(v[deactivateevents[i]] );
+            }
+        ]]>
+        </method>
+
+        <!--- @keywords private -->
+        <method event="oninit" >
+            LzTrack.register( this.boundsref, this._boundstrackgroup );
+        </method>
+
+        <!--- Called when the mouse is down and tracked
+              outside the bounding rect defined by boundsref. this method
+              generates the onmousetrackoutleft, onmousetrackoutright,
+              onmousetrackouttop, onmousetrackoutbottom events -->
+        <method name="trackingout" event="onmousetrackout"
+                reference="this.boundsref" > <![CDATA[
+            // the mouse has just exiting the bounding rect defined by
+            // the bounds ref. Report these events to the bounds ref.
+            if ( tracking ) {
+                LzTimer.addTimer( this._repeattrackDL,this.trackingrate );
+            }
+            var mx = this.boundsref.getMouse('x');
+            var my = this.boundsref.getMouse('y');
+
+            if  ( mx <= 0 ) {
+                if ( this.boundsref.onmousetrackoutleft ) this.boundsref.onmousetrackoutleft.sendEvent( mx )
+            } else if ( mx >= this.boundsref.width) {
+                if ( this.boundsref.onmousetrackoutright ) this.boundsref.onmousetrackoutright.sendEvent( mx )
+            }
+
+            if  ( my <= 0 ) {
+                if ( this.boundsref.onmousetrackouttop ) this.boundsref.onmousetrackouttop.sendEvent( my )
+            } else if ( my >= this.boundsref.height ) {
+                if ( this.boundsref.onmousetrackoutbottom ) this.boundsref.onmousetrackoutbottom.sendEvent( my - this.boundsref.height )
+            }
+        ]]></method>
+
+
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

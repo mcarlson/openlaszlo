@@ -1,0 +1,372 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>
+      Doc Source Markup
+    </title>
+  </head>
+  <body>
+    <h1>Doc Source Markup</h1>
+    
+    <p>There's a lot here about how to mark up a doc source document.
+    The first rule is, don't let the markup get in the way of
+    expressing yourself.  John and Oliver can always clean up the
+    markup if you've got the content there (but not always vice
+    versa).  The point of this document is to let you know how the
+    markup works if you're curiously, and so that if you <em>do</em>
+    want to go to the trouble of using markup, you can use something
+    that the tools can process and display.  If neither of these
+    describes you, stick with a minimal subset of HTML and remember to
+    close your tags and everything should work just fine.</p>
+    
+    <h2>Overview</h2>
+    
+    <p>All doc sources accept a subset of XHTML, extended with some
+    custom tags, listed below.</p>
+    
+    <h3>Quick Introduction to XHTML</h3>
+    
+    <p>Tag names are lowercase (<code>&lt;p&gt;</code>, not
+    <code>&lt;P&gt;</code>), and you need explicit close tags on
+    <code>&lt;br /&gt;</code>, each <code>&lt;p&gt;</code> needs a
+    matching <code>&lt;/p&gt;</code>, etc.</p>
+    
+    <p>XHTML (and HTML) distinguish between <dfn>block tags</dfn> and
+    <dfn>inline tags</dfn>.  Tags that surround (generally multiline)
+    blocks of text, such as <code>&lt;p&gt;</code> and
+    <code>&lt;ul&gt;</code>, are block tags.  Tags that mark up spans
+    of characters, such as <code>&lt;i&gt;</code> and
+    <code>&lt;code&gt;</code>, are inline tags.  In general, a block
+    tag can't go inside another block tag (so you can't put
+    <code>&lt;ul&gt;</code> elements inside <code>&lt;p&gt;</code>
+    blocks, for instance).  An inline tag can nest inside either a
+    block tag or an inline tag.  Documents that violate this
+    distinction are not valid XHTML.  Web browsers are forgiving about
+    this, but our tools are less so (because it's hard to parse and
+    style).</p>
+    
+    <p>Most of the source files don't use a DTD (because they're kind
+    of troublesome).  Use unicode code points to get special
+    characters such as "<code>&#x2014;</code>
+    (<code>"&amp;#x2014;"</code>) and "<code>&#x2026;</code>"
+    ("<code>&amp;#x2026;</code>").  Emacs nxml-mode has <tt>C-c
+    C-u</tt> for entering these; I don't know what other XML editors
+    do.</p>
+    
+    <h2>Common Tags</h2>
+
+    <p>This section describes markup that is the same for all doc
+    sources.  Some markup is specific to the dguide and tutorials; it
+    is defined in the <a href="#book">following
+    section</a>.</p>
+    
+    <h3>HTML Tags</h3>
+    
+    <p>Use the <code>&lt;code&gt;</code> tag to format code inline:
+    <code>&lt;code&gt;canvas.x&lt;/code&gt;</code>.  Use
+    <code>&lt;em&gt;</code> to mark text inside of a
+    <code>&lt;code&gt;</code> or <code>&lt;pre&gt;</code> block
+    (below) that should be emphasized.  Use <code>&lt;i&gt;</code> to
+    mark text substitutable text:
+    <code>&lt;code&gt;http://localhost:8080/lps-@VERSIONID@/&lt;i&gt;your-path&lt;/i&gt;</code>.</p>
+    
+    <p><code>@VERSIONID@</code> is replaced by the LPS version.</p>
+    
+    <p>Use <code>&lt;pre&gt;</code>, outside of a paragraph, to
+    include multi-line text verbatim (but also consider whether to use
+    the <code>example</code> tag, <a
+    href="#inline-examples">below</a>.)</p>
+    
+    <p>Use the <code>&lt;em&gt;</code> tag, <em>not</em>
+    <code>&lt;i&gt;</code> or <code>&lt;b&gt;</code>, for emphasis.
+    This is particularly important inside of formatted code blocks,
+    where the visual design may use a different indication than
+    italics or bold for emphasis.</p>
+    
+    <h3>Non-HTML Tags</h3>
+    
+    <p>The stylesheets add these tags:</p>
+    <dl>
+      <dt><code>api</code></dt>
+      <dd>An API name such as <code>LzService</code>.</dd>
+      <dt><code>attribute</code></dt>
+      <dd>An XML attribute, such as the <code>width</code> attribute
+      of a <code>canvas</code> tag.</dd>
+      <dt><code>classname</code></dt>
+      <dd>The name of a JavaScript or LFC class such as
+      <code>LzView</code>.</dd>
+      <dt><code>event</code></dt>
+      <dd>The name of an event such as <code>onclick</code>.</dd>
+      <dt><code>method</code></dt>
+      <dd>The name of a JavaScript method such as
+      <code>setAttribute</code>.  Use this without parentheses
+      (e.g. <code>&lt;method&gt;setAttribute&lt;/method&lt;method&gt;</code>,
+      not
+      <code>&lt;method&gt;setAttribute()&lt;/method&lt;method&gt;</code>
+      or
+      <code>&lt;method&gt;setAttribute&lt;/method&lt;method&gt;()</code>;
+      the doc tools will add the parens if that's part of the visual
+      design for this page type.</dd>
+      <dt><code>tagname</code></dt>
+      <dd>The name of an XML tag such as <code>canvas</code> or
+      <code>resource</code>.</dd>
+      <dt><code>varname</code></dt>
+      <dd>Used to refer to a variable name.</dd>
+      <dt><code>param</code></dt>
+      <dd>Used to refer to the name of a parameter.</dd>
+    </dl>
+    
+    <p>The tags above take these attributes:</p>
+    <dl>
+      <dt><a name="tag-links"/><code>link="true"</code></dt>
+      <dd>Generate a link to the LZX reference page.  This is only
+      implemented for some tags, and to varying degrees in the
+      reference on one hand, versus the dguide and tutorials on the
+      others.  If you find that linking isn't turned on for a tag type
+      where you would like it, tell me (Oliver) and I will escalate
+      it.</dd>
+      
+      <dt><code>api</code>, <code>classname</code>, or <code>tagname</code></dt>
+      <dd>These can be used (interchangeably) with the
+      <code>&lt;method/&gt;</code>, <code>&lt;event/&gt;</code>, and
+      <code>&lt;attribute/&gt;</code> tags, to determine the reference
+      page to link to.</dd>
+      
+      <dt><code>library="<i>library-name</i>"</code></dt>
+      <dd><code>The name of the LZX library (for example,
+      <code>base</code> or <code>lz</code>) in which the tag is
+      defined.  This is sometimes necessary to determine the reference
+      page that defines a tag, class, or method name.</code></dd>
+    </dl>
+    
+    <h3>Links</h3>
+    
+    <p>If the <code>href</code> attribute to the
+    <code>&lt;a&gt;</code> reference begins with "<code>${</code>", it
+    defines an internal link to another portion of the LPS
+    documentation and example set.  These values are defined:
+    <code>${dguide}</code>, <code>${examples}</code>,
+    <code>${reference}</code>, <code>${demos}</code>,
+    <code>${tutorials}</code>.</p>
+    
+    <p>Also see <a href="#tag-links">tag links</a> and <a
+    href="#xref">book cross-references</a>.</p>
+    
+    <h3>Admonitions</h3>
+    
+    <p>Use the <code>&lt;note&gt;</code> and
+    <code>&lt;warning&gt;</code> tags to call out notes and warnings.
+    These are block-level tags, similar to <code>&lt;p&gt;</code>.  A
+    third admonition type, <code>&lt;caution&gt;</code>, is available
+    in <a href="#book">book docs</a>; let Oliver know if you need to
+    use this in the reference too.</p>
+    
+    <p>Enclose material that shouldn't ship in final releases within
+    <code>&lt;todo&gt;</code> or <code>&lt;fixme&gt;</code>.  These
+    are displayed in yellow in internal builds, and stripped out of
+    external builds.  (<code>&lt;todo&gt;</code> items were
+    intentionally shipped with the beta documentation build and may be
+    shipped with other betas.  <code>&lt;fixme&gt;</code> items are
+    stripped entirely.)</p>
+    
+    <h3><a name="inline-examples"/>Example Code</h3>
+    
+    <p>Use the <code>&lt;example&gt;</code> tag to enclose examples
+    (live or otherwise).  This is a block-level tag, and occurs
+    outside of a paragraph.</p>
+    
+    <p>By default, the code inside an <code>&lt;example&gt;</code>
+    block is extracted into a <code><i>*</i>.lzx</code> file, and the
+    applet that this compiles to is embedded in the output page.  This
+    feature can be turned off with the <code>executable="false"</code>
+    attribute.</p>
+    
+    <p>The <code>&lt;example&gt;</code> tag takes these optional
+    attributes:</p>
+    
+    <dl>
+      <dt><code>title</code></dt>
+      <dd>The title for this example.</dd>
+      
+      <dt><code>executable</code>, <code>extract</code></dt>
+      <dd>If true (the default), the code is extracted into an LZX
+      file, and displayed in the browser.  (You probably don't need to
+      care about the difference between <code>executable</code> and
+      <code>extract</code>.)</dd>
+      
+      <dt><code>filename</code></dt>
+      <dd>The name of the file that the code is extracted into.  This
+      defaults to the
+      <code><i>{document-id}</i>-<i>{example-id}</i>.lzx</code>, where
+      <code><i>{document-id}</i></code> is the <code>id</code>
+      attribute of the <code>html</code> root element, and
+      <code><i>{example-id}</i></code> is the <code>id</code>
+      attribute of the <code>example</code> element, or the string
+      <code>$<i>n</i></code> where this example is the
+      <i>n</i><sup>th</sup> <code>&lt;example&gt;</code> in the
+      current document.
+        
+      <p>This attribute is mainly useful for an example of a library
+      file, to control the name that the example is extracted into when
+      <code>executable="false"</code> and
+      <code>extract="true"</code>.</p></dd>
+      
+      <dt><code>id</code></dt>
+      <dd>A unique (within the document) id for this example, used in
+      filename generation and cross-references.</dd>
+      
+      <dt><code>query-parameters</code></dt>
+      <dd>The query parameters used in the embedded request for this
+      example.</dd>
+    </dl>
+    
+    <h3>Illustrations, Table and Title Summaries</h3>
+    <p>TBD</p>
+    
+    <h3>Common Mistakes</h3>
+    <p>Document-level text should be enclosed in a
+    <code>&lt;p&gt;</code>.  Don't do this:</p>
+    <pre>&lt;html &#x2026;&gt;
+    &#x2026;
+  &lt;body&gt;
+    &lt;p&gt;This text is all right.&lt;/p&gt;
+    
+    <span style="color: red">This text isn't enclosed in anything &#x2014; it won't format correctly!</span>
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+
+    <p>If you see header titles listed multiple times in the output
+    document, it's because you've got a mismatch in your
+    <code>&lt;h<i>n</i>&gt;</code> levels &#x2014;
+    <code>&lt;h2&gt;</code> followed by
+    <code>&lt;h<em>4</em>&gt;</code> (instead of
+    <code>&lt;h3&gt;</code>), or something like that.</p>
+    
+    <h3>Best practices</h3>
+    <p>The point of the source markup is to describe the structure of
+    the page, not its appearance.  Don't go wild on style attributes
+    and using tables or <code>&lt;br/&gt;</code> for formatting.  Let
+    the doc tools and the style sheets determine the appearance, and
+    talk to Oliver, John, or Peter if you need additional formatting.
+    (This is the easiest way to make sure the doc tools have something
+    they can add links and navigation to, and also helps to make sure
+    that the visual design is applied consistently.)</p>
+    
+    <p>Add <code>title</code> attributes to your
+    <code>&lt;example&gt;</code> and <code>&lt;img&gt;</code> tags,
+    and <code>summary</code> attributes to your
+    <code>&lt;table&gt;</code> tags.  These are used as captions, and
+    also cause your examples, illustrations, and tables to show up in
+    the the dguide and tutorial front matter (which is usually
+    desirable).</p>
+    
+    <p>Use <code>&lt;dl&gt;</code> for definition lists.</p>
+    
+    <h2><a name="book"/>DGuide and Tutorial Tags</h2>
+    
+    <p>The dguide and tutorials go through an additional level of
+    tooling (to add ToC and other navigation elements), which has the
+    side effect of making these additional features available:</p>
+    
+    <h3><a name="xref"/>Cross-References</h3>
+    
+    <p>Use the <code>&lt;xref linkend="<i>id</i>"/&gt;</code> tag to
+    create a cross-reference to another portion of the same book.
+    (The dguide is one book; the tutorial set is another.)
+    <code>&lt;xref&gt;</code> generates its own text, such as "Chapter
+    5, Views", but you can use separate start and end tags that
+    enclose other text if you find this helpful for reading the doc
+    source.</p>
+    
+    <p>The <code><i>id</i></code> is the <code>&lt;html id&gt;</code>
+    of a chapter, or
+    <code><i>{html-id}</i>.<i>{section-id}</i></code>, where
+    <code><i>{html-id}</i></code> is the <code>&lt;html id&gt;</code>
+    and <code><i>{section-id}</i></code> is the <code>&lt;a
+    name&gt;</code> attribute of a <code>&lt;a&gt;</code> element
+    within (<em>not</em> immediately preceding) an
+    <code>&lt;h<i>n</i>&gt;</code> element.</p>
+    
+    <p>Links to a section of another chapter only generate the text of
+    the section name, not the chapter name, so use something like
+    "<code>See &lt;xref
+    linkend="language-preliminaries.objects-and-attributes"/&gt; of
+    &lt;xref linkend="language-preliminaries"/&gt;</code>" to generate
+    the text (and links) for "<code>See Section 2, "Objects and
+    Attributes", of Chapter 4, "Language Preliminaries"</code>".  (I
+    will fix the redundancy in the sources if I ever fix the
+    tool not to need this.)</p>
+    
+    <h3>Titles and Filename</h3>
+    
+    <p>The filename of a book chapter is the value of its
+    <code>&lt;html id&gt;</code> attribute, followed by the string
+    "<code>.html</code>".  Its title is the text of its
+    <code>&lt;h1&gt;</code> element.  The <code>&lt;title&gt;</code>
+    in the <code>&lt;head&gt;</code> element is ignored.</p>
+      
+    <h3>Index Terms</h3>
+    
+    <p><code>&lt;tagname&gt;</code>, <code>&lt;method&gt;</code>, and
+    some other tags generate index entries.  (The set of these may be
+    tuned, and we may switch to only generating index entries if
+    there's an explicit <code>index="true"</code> attribute &#x2014;
+    which doesn't yet exist.)  You can also use
+    <code>&lt;indexterm&gt;</code> to explicitly index a term.</p>
+    
+    <p>The <code>&lt;dfn&gt;</code> tag generates a <dfn>primary index
+    term</dfn>, which may be highlighted in the (eventual) print copy
+    of the documentation.</p>
+    
+    <h3>Glossary Terms</h3>
+      
+    <p><code>&lt;glossitem&gt;</code> marks up a term which should be
+    shown in a special font, to note that it has a special meaning.
+    Eventually these may link to glossary entries.</p>
+    
+    <p><code>&lt;dfn&gt;</code> automatically marks a term as a
+    glossary term, in addition to generating an index entry.</p>
+      
+    <h3>Callouts</h3>
+    
+    <p>Inside an <code>&lt;example&gt;</code>, place text inside
+    within <code>&lt;co&gt;</code> to display it beneath the program
+    listing, and display a graphic within the program listing that
+    links to it.  This also prevents the enclosed text from being
+    extracted into the LZX file.</p>
+    
+    <h3>Docbook escape hatch</h3>
+    
+    <p>You can use any docbook term you want by using a namespace
+    prefix (typically <code>d:</code>) in the docbook namespace
+    (<code>xmlns:d="docbook"</code>).  The existing docs use this a
+    few places for footnotes and sidebars.</p>
+    
+    <h2>Schemas</h2>
+      
+    <p><code>docs/src/schemas</code> contains the following RELAXNG
+    schemas.  If you use a schema-aware editor (GNU Emacs with
+    nxml-mode is the only one I've succeeded in setting up in any
+    non-fragile way), this will provide syntax highlighting to tell
+    you whether the source file is valid.  You can also read the set
+    of doc source tags and attributes off of these.</p>
+    
+    <dl>
+      <dt><code>schemas/docs.rnc</code></dt>
+      <dd>Schema for non-book source in <code>hardpages</code></dd>
+      <dt><code>schemas/docs.rnc</code></dt>
+      <dd>Schema for book source in <code>dguide</code> and 
+      <code>dguide</code></dd>
+      <dt><code>schemas/wrappers.rnc</code></dt>
+      <dd>Schema for reference wrappers in <code>wrappers</code></dd>
+      <dt><code>schemas/doc-tags.rnc</code></dt>
+      <dd>Tags that are shared among the above</dd>
+    </dl>
+    
+  </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

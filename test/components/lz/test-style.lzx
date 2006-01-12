@@ -1,0 +1,75 @@
+<canvas bgcolor="silver" width="800">
+    <debug x="250" height="300"/>
+    <bluestyle name="bluecolors"/>
+    <greenstyle name="greencolors"/>
+    <style name="yellowstyle" isdefault="true"
+        basecolor="${0xffff88}" textcolor="iceblue1"/>
+
+    <simplelayout axis="x" spacing="20" inset="20"/>
+    <view>
+        <simplelayout inset="20" spacing="10"/>
+        <button>Yellow Basecolor</button>
+        <button style="${canvas.bluecolors}">Blue Style</button>
+        <button onclick="setAttribute('style', canvas.greencolors)">
+            Change to Green Style</button>
+
+        <basecomponent id="group" datapath=""
+            style="canvas.greencolors" layout="spacing:4">
+            <method name="applyStyle"/>
+            <combobox id="c" editable="false">
+                <textlistitem text="Poppy" selected="true"/>
+                <textlistitem text="Snap Dragon"/>
+                <textlistitem text="Tulip"/>
+            </combobox>
+            <radiogroup>
+                <radiobutton>Mint</radiobutton>
+                <radiobutton>Thyme</radiobutton>
+                <radiobutton>Sage</radiobutton>
+                <radiobutton enabled="false">Disabled</radiobutton>
+            </radiogroup>
+            <checkbox>Absolutely</checkbox>
+            <checkbox enabled="false">Disabled</checkbox>
+
+            <button id="redtext" style="{textcolor:0xff0000}">Red Text</button>
+
+            <button style="${canvas.greencolors}"
+                onclick="canvas.greencolors.setAttribute('basecolor', 0x9999ff)">
+                Change greencolors Basecolor to Blue</button>
+
+            <button id="test" style="${canvas.greencolors}"
+                onclick="canvas.greencolors.setAttribute('textcolor', 0xffff00)">
+                Change greencolors Textcolor to Yellow</button>
+
+        </basecomponent>
+    </view>
+    <view layout="spacing:10; inset:20">
+        <checkbox enabled="false">disabled default style</checkbox>
+
+        <tabs>
+            <tabpane>Default Yellow Style
+                <simplelayout spacing="10"/>
+                <button height="22">Remove</button>
+                <radiogroup>
+                    <radiobutton>Yes, I want to know more</radiobutton>
+                    <radiobutton>No, I prefer to remain blissfully unaware</radiobutton>
+                    <radiobutton>Please tell my neighbor, who may tell me</radiobutton>
+                </radiogroup>
+            </tabpane>
+            <tabpane selected="true">Parcheesi
+                <text >On my honor I will do my best </text>
+                <button height="22">Testify</button>
+                <simplelayout spacing="10"/>
+            </tabpane>
+            <tabpane text="Subliminal">
+                <button height="22" >Submit</button>
+            </tabpane>
+        </tabs>
+
+   </view>
+<!--        <button id="custom" style="new style(this, {basecolor:0xbbbbff})" text="foo" width="100"/>-->
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

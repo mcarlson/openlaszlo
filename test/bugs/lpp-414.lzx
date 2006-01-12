@@ -1,0 +1,22 @@
+<canvas>
+<dataset name="ds">
+    <data>
+    </data>
+</dataset>
+
+    <simplelayout/>
+        <list id="list1" datapath="ds:/data" height="100" dataoption="lazy">
+            <textlistitem datapath="item" text="$path{'@text'}"/>
+        </list>
+
+        <button text="add">
+            <method event= "onclick">
+                var node = new LzDataElement("item", {text: "new item"});
+                list1.datapath.p.appendChild(node);
+                var view = list1._selector.getItemByData(node);
+                list1.select(view);
+
+                
+            </method>
+        </button>
+</canvas>

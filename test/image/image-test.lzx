@@ -1,0 +1,28 @@
+<canvas debug="true">
+    <dataset name="imagedata">
+        <image url="beavis_butthead_bush_cheney.jpg"/>
+    </dataset>
+
+    <wrappinglayout/>
+    <image prefix="img/" datapath="imagedata:/image/@url"/>
+    <image prefix="img/" imageurl="beavis_butthead_bush_cheney.jpg"/>
+    <image imageurl="beavis_butthead_bush_cheney.jpg"/>
+    <image>
+        <text>Click me</text>
+        <method event="onclick">
+            this.setAttribute('imageurl', 'beavis_butthead_bush_cheney.jpg');
+        </method>
+    </image>
+    <image forcereload="true">
+        <text>Click me to reload</text>
+        <method event="onclick">
+            this.setAttribute('imageurl', 'beavis_butthead_bush_cheney.jpg');
+        </method>
+    </image>
+
+    <!-- these shouldn't load -->
+    <image prefix="img/" datapath="imagedata:/image/@bogus"/>
+    <image datapath="imagedata:/image/@bogus"/>
+    <image prefix="img/"/>
+    <image/>
+</canvas>

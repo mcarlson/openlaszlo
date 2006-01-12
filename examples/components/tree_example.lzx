@@ -1,0 +1,155 @@
+<canvas title="Tree Example" bgcolor="#eaeaea" width="830" height="550">
+
+    <include href="lz/tree.lzx" />
+    <include href="lz/slider.lzx" />
+
+    <greenstyle name="greencolors" canvascolor="null"/>
+    <goldstyle name="goldcolors" canvascolor="null"/>
+
+    <class name="mytree" extends="tree" expander="lztree_plusminus_rsc" open="true" />
+
+    <dataset name="mydata">
+        <basket name="basket" isopen="true">
+            <product name="fruits" isopen="true">
+                <apples name="apples" isopen="true">
+                    <type name="red delicious apple" isleaf="true" 
+                          url="http://www.nyapplecountry.com/reddelicious.htm" />
+                    <type name="fuji apple" isleaf="true" 
+                          url="http://www.nyapplecountry.com/fuji.htm" />
+                    <type name="braeburn apple" isleaf="true" 
+                          url="http://www.nyapplecountry.com/braeburn.htm" />
+                    <type name="honey crisp" isleaf="true" 
+                          url="http://www.nyapplecountry.com/honey.htm" isopen="true" />
+                </apples>
+                <oranges name="oranges">
+                    <type name="valencia orange" isleaf="true" />
+                    <type name="blood orange" isleaf="true" />
+                    <type name="navel orange" isleaf="true" />
+                </oranges>
+            </product>
+            <product name="dairy">
+                <dairy name="eggs">
+                    <type name="organic eggs" isleaf="true" />
+                    <type name="free-range eggs" isleaf="true" />
+                </dairy>
+                <dairy name="milk">
+                    <type name="skim milk" isleaf="true" />
+                    <type name="1% milk" isleaf="true" />
+                    <type name="whole milk" isleaf="true" />
+                </dairy>
+                <dairy name="yogurt" />
+            </product>
+        </basket>
+    </dataset>
+
+    <view x="20" y="20">
+        <simplelayout axis="x" spacing="10" />
+
+
+        <view width="250" layout="spacing: 10">
+
+            <view width="210" height="40" bgcolor="black">
+                <view bgcolor="#EAEAEA" layout="spacing: 2" x="2" y="2"
+                      width="${parent.width - 4}" height="${parent.height - 4}">
+                    <text>Double-click files for information</text>
+                    <text>on fruits and dairy products.</text>
+                </view>
+            </view>
+
+            <!-- Root node is opened and subtree is recursed with * datapath.
+                 Multiple trees can be selected. Use the lztree_folder_rsc that
+                 comes shipped in lz/tree.lzx. -->
+            <tree style="goldcolors" datapath="mydata:/basket" open="$path{'@isopen'}" 
+                  text="$path{'@name'}" multiselect="true">
+                <tree id="xxx" style="goldcolors" datapath="*" text="$path{'@name'}" isleaf="$path{'@isleaf'}" >
+                    <method event="onactivate">
+                        if (this.isleaf) {
+                            var url = this.datapath.xpathQuery('@url');
+                            if (url != null) {
+                                this.viewInWindow(url);
+                            } else {
+                                this.viewInWindow('http://www.google.com/search?q=' + this.text);
+                            }
+                        }
+                    </method>
+                    <method name="viewInWindow" args="url">
+                        LzBrowser.loadURL('javascript: var wptr = window.open("' + url + '","test","resizable=1,width=1000,height=700,left=0,top=0,screenX=0,screenY=0,menubar,location,status,scrollbars,toolbar,address"); wptr.focus(); void(0);');
+                    </method>
+                </tree>
+            </tree>
+        </view>
+
+
+        <view width="320" layout="spacing: 10">
+            <view width="210" height="80" bgcolor="black">
+                <view bgcolor="#EAEAEA" layout="spacing: 2" x="2" y="2"
+                    width="${parent.width - 4}" height="${parent.height - 4}">
+                    <text align="center">Hominid evolution</text>
+                    <text multiline="true">in millions of years before present</text>
+                    <text>following Johanson &amp; Edgar (1996)</text>
+                    <text align="center"><i>From Lucy to Language</i></text>
+                </view>
+            </view>
+            <mytree>Ardipithecus ramidus
+                <mytree>Australopithecus anamensis
+                    <mytree>A. afarensis
+                        <mytree>A. africanus
+                            <mytree>H. sp.?
+                                <mytree>H. rudolfensis
+                                    <mytree>H. ergaster
+                                        <mytree>H. heidelbergensis
+                                            <mytree>Homo sapiens</mytree>
+                                            <mytree>H. neanderthalensis</mytree>
+                                        </mytree>
+                                        <mytree>H. erectus</mytree>
+                                    </mytree>
+                                </mytree>
+                                <mytree>H. habilis</mytree>
+                            </mytree>
+                        </mytree>
+                        <mytree>A. aethiopicus
+                            <mytree>A. bosei
+                                <mytree>A. robustus</mytree>
+                            </mytree>
+                        </mytree>
+                    </mytree>
+                </mytree>
+                <mytree isleaf="true">?
+                </mytree>
+            </mytree>
+        </view>
+
+        <view width="150" layout="spacing: 10">
+            <view width="140" height="20" bgcolor="black">
+                <view bgcolor="#EAEAEA" layout="spacing: 2" x="2" y="2"
+                      width="${parent.width - 4}" height="${parent.height - 4}">
+                    <text>Tree containing tabs.</text>
+                </view>
+            </view>
+            <!-- Root node item is not visible. Two tree nodes are displayed:
+                 myapples, myoranges. The datapath for those trees will not
+                 recurse because they contain a child. The text for the children
+                 use @name datapath. Use the lztree_folder_rsc that comes
+                 shipped in lz/tree.lzx. -->
+            <tree style="greencolors" datapath="mydata:/basket" text="$path{'@name'}" showroot="false" >
+                <tree style="greencolors" datapath="*" text="$path{'@name'}" isleaf="$path{'@isleaf'}"
+                      yindent="22" >
+                    <tabs width="130" height="100" >
+                        <tabpane>slider
+                            <slider x="5" y="5" showvalue="false" showfill="true" showrange="true"
+                                    width="80" value="50"/>
+                        </tabpane>
+                        <tabpane>button
+                            <button>clickme</button>
+                        </tabpane>
+                    </tabs>
+                </tree>
+            </tree>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,52 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Datepicker">
+    <lztier>LZ Components</lztier>
+    <lzcategory>view</lzcategory>
+    <lzshortdesc>
+       A simple date picker
+    </lzshortdesc>
+    <lztag>lz/datepicker.xml</lztag>
+</lzelement>
+
+<p>
+Datepicker is a simple component that makes it easy for users to select dates.  
+</p>
+<example class="program" id="datepicker-1"> 
+&lt;canvas height="200"&gt; 
+     &lt;datepicker showingdate="new Date(2004,3,1)"
+                 earliestdate="new Date( 2003, 9, 5)" 
+                 latestdate="new Date( 2005, 1, 5)"
+                 selecteddate="new Date( 2004, 3, 20)"&gt;
+        &lt;method event="onselecteddate"&gt;
+            if( this.selecteddate != null ) {
+                display.year.setText( this.selecteddate.getFullYear() );
+                display.month.datapath.setXPath(
+                        "datepicker_strings_en:/months/month[@index='" + 
+                        this.selecteddate.getMonth() + "']/@full" ); 
+                display.date.setText( this.selecteddate.getDate() );
+            } 
+        &lt;/method&gt;
+     &lt;/datepicker&gt; 
+
+     &lt;view id="display"&gt;
+        &lt;text name="month" resize="true" datapath="."/&gt;
+        &lt;text name="date" resize="true"/&gt;
+        &lt;text name="year" resize="true"/&gt; 
+        &lt;simplelayout axis="x" spacing="2"/&gt;
+     &lt;/view&gt;
+     &lt;simplelayout axis="y" spacing="10"/&gt;
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

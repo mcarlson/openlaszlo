@@ -1,0 +1,153 @@
+<canvas bgcolor="red" width="900" >
+	<view x="2">
+		<text >
+			TEST 1)
+		</text>
+		<text >
+			TEST 2)
+		</text>
+		<text>
+			TEST 3)
+		</text>
+		<text >
+			TEST 4)
+		</text>
+		<text >
+			TEST 5)
+		</text>
+		<text >
+			TEST 6)
+		</text>
+		<text >
+			TEST 7)
+		</text>
+		<text >
+			TEST 8)
+		</text>
+		<text >
+			TEST 9)
+		</text>
+		<text >
+			TEST 10)
+		</text>
+		<text >
+			TEST 11)
+		</text>
+		<text >
+			TEST 12)
+		</text>
+		<simplelayout axis="y" spacing="3"/>
+	 </view>
+	<view x="52">
+		<text >
+			OK
+		</text>
+		<text >
+			OK
+		</text>
+		<text>
+			ERROR
+		</text>
+		<text >
+			ERROR
+		</text>
+		<text >
+			ERROR
+		</text>
+		<text >
+			ERROR
+		</text>
+		<text >
+			ERROR
+		</text>
+		<text >
+			ERROR
+		</text>
+		<text >
+			ERROR
+		</text>
+		<text >
+			-----
+		</text>
+		<text >
+			ERROR 
+		</text>
+		<text >
+			ERROR
+		</text>
+		<simplelayout axis="y" spacing="3"/>
+	 </view>
+	<view x="105">
+		<text >
+			PNG #1 - no alpha channel
+		</text>
+		<text >
+			PNG #2 - image #1 with alpha channel
+		</text>
+		<text>
+			PNG - image #2 ... 1 pixel wide stretched to 200
+		</text>
+		<text >
+			PNG - image #2 ... 2 pixels wide stretched to 200
+		</text>
+		<text >
+			PNG - image #2 ... 10 pixels wide stretched to 200
+		</text>
+		<text >
+			PNG - image #2 ... 10 pixels wide stretched to 200
+			                    with 1 pixel alpha on top
+		</text>
+		<text >
+			PNG - image #2 ... 100 pixels wide stretched to 200
+		</text>
+		<text >
+			PNG - image #2 ... 100 pixels wide stretched to 250
+		</text>
+		<text >
+			PNG - image #2 ... 100 pixels wide stretched to 300
+		</text>
+		<text >
+			PNG #3 - no opacity (what the image should look like)
+		</text>
+		<text >
+			PNG - IMAGE #3 WITH ALPHA CHANNEL
+		</text>
+		<text >
+			PNG - IMAGE #3 WITH FIRST COLUMN OF ALPHA CHANNEL REMOVED
+		</text>
+		<simplelayout axis="y" spacing="3"/>
+	 </view>
+	 <view>
+	 </view>
+	 	<view x="480" y="1" >
+		<view resource="resources/png/test1.png"/>
+		<view resource="resources/png/test2.png"/>
+ 		<view resource="resources/png/test3.png"/>
+		<view resource="resources/png/test4.png"/>
+		<view resource="resources/png/test5.png"/>
+		<view resource="resources/png/test6.png"/>
+		<view resource="resources/png/test7.png"/>
+		<view resource="resources/png/test7.png"/>
+		<view resource="resources/png/test7.png"/>
+		<view resource="resources/png/test10.png"/>
+		<view resource="resources/png/test11.png"/>
+		<view resource="resources/png/test12.png"/>
+		<simplelayout axis="y" spacing="7"/>
+	 </view>   
+	 <view x="600" y="1" >
+		<view resource="resources/png/test1.png" visible="false"/>
+		<view resource="resources/png/test2.png" visible="false"/>
+ 		<view width="200" stretches="width" resource="resources/png/test3.png"/>
+		<view width="200" stretches="width" resource="resources/png/test4.png"/>
+		<view width="200" stretches="width" resource="resources/png/test5.png"/>
+		<view width="200" stretches="width" resource="resources/png/test6.png"/>
+		<view width="200" stretches="width" resource="resources/png/test7.png"/>
+		<view width="250" stretches="width" resource="resources/png/test7.png"/>
+		<view width="300" stretches="width" resource="resources/png/test7.png"/>
+		<simplelayout axis="y" spacing="7"/>
+	 </view>   
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

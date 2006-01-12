@@ -1,0 +1,14 @@
+# Name Identification Module
+# * P_LZ_COPYRIGHT_BEGIN ******************************************************
+# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Use is subject to license terms.                                          *
+# * P_LZ_COPYRIGHT_END ********************************************************
+
+a.attlist &= name.attlist
+applet.attlist &= name.attlist
+form.attlist &= name.attlist
+frame.attrib &= name.attlist
+iframe.attlist &= name.attlist
+img.attlist &= name.attlist
+map.attlist &= name.attlist
+name.attlist = attribute name { text }?

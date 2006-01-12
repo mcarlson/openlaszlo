@@ -1,0 +1,193 @@
+<library>
+
+    <class name="xdrag" extends="state">
+        <attribute name="maxX" when="once" />
+        <attribute name="xdoffset" value="$once{this.getMouse( 'x' )}" />
+        <attribute name="x" 
+                value="${Math.min( Math.max( 0 , this.immediateparent.getMouse( 'x' ) - this.xdoffset) , this.maxX )}" />
+    </class>
+
+    <class name="mediaplayer" height="74" >
+        <attribute name="label" type="string"/>
+        <attribute name="media" when="once"/>
+
+        <text name="info"  y="5" font="vera" fontsize="10"  
+              width="200" resize="true" align="center" 
+             text="${classroot.label}">
+        </text>
+
+        <!-- START OF CONTROLLER-->
+        <view name="controller" x="5" y="25">
+            <basebutton name="back" resource="prevbutton" 
+                        onclick="classroot.media.stop(1)"/>
+            <view name="loadbar" width="${parent.parent.width-132}">
+                  
+                <view resource="loadbar" width="${parent.width}" clip="true" 
+                      onclick="parent.scrubber.updateFrame(
+                                                        this.getMouse('x'))"/>
+
+                <view name="loadbarprog" resource="loadbarprog" 
+                      stretches="width" 
+                      width="${classroot.media.loadperc * this.parent.width}" 
+                      valign="middle"/>
+
+                <!-- PLAY/PAUSE button onthe controller -->
+                <multistatebutton name="scrubber" 
+                                  resource="playpausebutton" 
+                                  maxstate="1"
+                                  valign="middle" >
+
+                    <attribute name="maxWidth" 
+                               value="${immediateparent.width - this.width}"/>
+                    <attribute name="tframes" 
+                               value="$once{ classroot.media.totalframes}"/>
+                    
+                    <attribute name="x" 
+                            value="${((classroot.media.frame/classroot.media.totalframes) * 
+                                    this.maxWidth)}"/>
+
+                    <method name="playMedia">
+                        classroot.media.play();
+                    </method>
+
+                    <method event="onplay" reference="classroot.media">
+                        this.setAttribute( "statenum" , 0 );
+                    </method>
+
+                    <method event="onstop" reference="classroot.media">
+                        this.setAttribute( "statenum" , 1 );
+                    </method>
+
+                    <method event="onmousedown">
+                        this.xoff = this.getMouse( 'x' );
+                        this.startFrame = classroot.media.frame;
+                        this.wasPlaying = classroot.media.playing;
+                        scrub.apply();
+                    </method>
+                    
+                    <method event="onmouseup"><![CDATA[
+                        scrub.remove();
+
+                        if ( !this.wasPlaying && 
+                             Math.abs( this.startFrame - classroot.media.frame ) < 5 ) {
+                            //it's moved enough -- start playing
+                            this.playMedia();
+                        }
+                        ]]>
+                    </method>
+
+                    <state name="scrub">
+                        <attribute name="newFrame" 
+                                   value="${this.immediateparent.getMouse('x')-
+                                          this.xoff}"/>
+                    </state>
+
+                    <method name="updateFrame" 
+                            event="onnewFrame" args="nx"><![CDATA[
+
+                        var fnum = nx / this.maxWidth  * classroot.media.totalframes;
+                        classroot.media.stop( fnum < 1 ? 1 : ( fnum > classroot.media.totalframes ?
+                                                            classroot.media.totalframes :
+                                                            Math.floor(fnum)));
+                    ]]>
+                    </method>
+                </multistatebutton>
+            </view>
+
+            <basebutton resource="nextbutton" 
+                        onclick="classroot.media.stop(classroot.media.totalframes)" />
+
+            <simplelayout axis="x"/>
+        </view>
+        <!-- END OF CONTROLLER -->
+
+
+        <!--Time readout-->
+        <view resource="media_readout" x="${parent.width-87}" y="27"/>
+
+        <text id="videotime" x="${parent.width-85}" y="26" 
+              font="vera" fontsize="10"
+              width="120" text="00:00">
+              
+            <attribute name="lastsecs" type="number" value="-1" />
+            <method reference="classroot.media" event="onframe"><![CDATA[
+
+                var secs = Math.floor( classroot.media.frame/canvas.framerate );
+
+                if ( secs == this.lastsecs ){
+                    //don't reset text if we don't need to!
+                    return;
+                }
+
+                this.lastsecs = secs;
+
+                var s;
+
+                if ( secs > 60 ) {
+                    var min = Math.floor ( secs / 60 );
+                    s = min < 10 ? "0" : "";
+                    s += min +":";
+                    secs = secs - min*60;
+                } else {
+                    s = "00:";
+                }
+
+                if ( secs < 10 ) {
+                    s += "0" + secs;
+                } else{
+                    s += secs;
+                }
+
+                this.setText( s );
+                ]]>
+            </method>
+        </text>
+
+        <!-- Info and (s) buttons -->
+        <view resource="media_ISbuttons" x="${parent.width-42}" y="25"/>
+
+
+        <!-- Volume control -->
+        <view name="volume" x="5" y="${parent.height-23}">
+            <view resource="volumesoft" 
+                  onclick="parent.volumebar.volumebutton.setAttribute('x', 
+                                 parent.volumebar.volumebutton.x - 5)"/>
+            <view name="volumebar" resource="volumebar" y="4" x="10">
+                <view name="volumebutton" resource="volumebutton" y="-3.5" 
+                        onmousedown="this.drag.apply()"
+                        onmouseup="this.drag.remove()"
+                        x="$once{parent.resourcewidth - this.width}">
+                    <xdrag name="drag" 
+                           maxX="parent.resourcewidth -this.width"/>
+
+                    <method event="onload" reference="classroot.media">
+                        classroot.media.setVolume(this.x * 2);
+                    </method>
+
+                    <method event="onx">
+                        classroot.media.setVolume(this.x * 2);
+                    </method>
+                </view>
+            </view>
+            <view resource="volumeloud" x="64" 
+                  onclick="parent.volumebar.volumebutton.setAttribute('x', 
+                                this.parent.volumebar.volumebutton.x + 5)"/>
+        </view>
+
+        <view resource="media_tab_l" width="${parent.width}" stretches="width" 
+              valign="bottom"/>
+        <view name="middleTab" resource="media_tab_m" x="80" 
+              valign="bottom"/>
+        <view resource="media_tab_r" x="112" width="${parent.width-112}" 
+              stretches="width" valign="bottom"/>
+
+        <view resource="media_TABbuttons" x="${parent.width-97}" 
+              y="${parent.height-22}"/>
+    
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,0 +1,32 @@
+<canvas height="400" debug="true">
+<dataset name="contacts" src="contactsdata.xml"/>
+
+<edittext id="numbutton" width="70" text="lastname"/>
+<button x="80">Add New Attribute Column
+<method event="onclick">
+
+//demogrid.clearSelection();
+var tmpObj;
+tmpObj = new gridtext(demogrid,{name:'mycol',text: numbutton.text,width : 100, datapath : '@' + numbutton.text, editable:false});
+
+//demogrid.setDatapath("contacts:/resultset");
+// Remember call init() method to refresh grid structure
+demogrid.init();
+
+</method>
+</button>
+<button x="300" text="delete the column">
+<method event="onclick">
+demogrid.mycol.destroy();
+</method>
+</button>
+<grid y="40" id="demogrid" >
+<datapath xpath="contacts:/resultset" pooling="true"/>
+<!-- to refresh grid structure when datasource changed
+<method event="ondata">
+init();
+</method>-->
+<gridtext datapath="position()" width="50" text="id" editable="false"/>
+<gridtext width="200" datapath="@displayname" text="Name" editable="false"/>
+</grid>
+</canvas>

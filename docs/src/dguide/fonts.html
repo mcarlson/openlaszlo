@@ -1,0 +1,667 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="fonts">
+<head>
+    <title>Fonts</title>
+</head>
+
+<body>
+
+<h1>Fonts</h1>
+ 
+<p>This chapter describes how to use fonts in LZX applications.</p>
+
+<h2>What is a font?</h2>
+
+   <p> A font is a set of glyphs (images) representing the
+       characters from some particular character set in a
+       particular size, style, and typeface.  
+       There are several different computer representations for fonts.  
+       The most widely known are Adobe Systems, Inc.'s
+       PostScript font definitions and Apple's <a href="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">TrueType.</a>
+   </p>
+   <a name="pixel-fonts"/>
+   <h3>Bitmap fonts and outline fonts</h3> 
+   <p> The image of each character in a font
+       may be encoded either as </p>
+<ul>
+<li> a bitmap (a <i>bitmap font</i>, sometimes called a <i>pixel font</i>) </li>
+<li> a higher-level description in terms of lines and areas (an <i>outline font</i>). </li> 
+</ul>
+<p>In general, bitmap fonts are intended to be
+       displayed at a specific size and outline fonts can be displayed at a variety of sizes.  
+         </p>
+   
+<h3>Embedded Fonts and Client Fonts</h3>
+
+<p>
+OpenLaszlo applications can access fonts in either of two ways: by building them into the application itself, or by using the fonts that 
+are resident on the client machine.</p>
+ <p>
+       With embedded fonts, there is a reasonable guarantee that the text in that application will look the same, no 
+       matter where it is run. However, fonts are large, and including fonts in your application makes the application 
+(download) larger, and the startup time slower. With client fonts, (also called native
+       fonts), applications are smaller and start faster, but there is no guarantee that the rendering of that font, or the font definitions themselves,
+       will be the same from computer to computer.  Embedded fonts provide higher fidelity. In addition, because of limitations of
+the flash player, there are certain things you cannot do with client fonts.  For example, client fonts cannot be rotated, nor can
+you vary their opacity. Here is a summary of the differences:
+    </p>
+<p>
+<b>Client fonts</b>
+</p>
+<ul>
+	<li>Smaller downloads and faster initialization</li>
+	<li>Some limitations (no rotation, etc)</li>
+	<li>No guarantee that application will look the same on all platforms</li>
+</ul>
+<p>
+<b>Embedded fonts</b>
+</p>
+<ul>
+	<li>Larger downloads; slower startup</li>
+	<li>All text manipulations available</li>
+	<li>Designer control over application appearance</li>
+</ul>
+
+<h3>Default Fonts</h3>
+<p>
+By default, OpenLaszlo applications use the device fonts.
+</p>
+<example title="using device fonts">
+&lt;canvas&gt; 
+  &lt;window title="Fonts are fun!" width="400" height="400" resizable="true"&gt;
+  &lt;view width="500"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view width="400" font="Arial" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arial&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./ ;?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Arial&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arial&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    
+    &lt;view width="400" font="Arial Narrow" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Arial Narrow&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Arial Narrow&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Arial Narrow&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Arial Narrow&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Arial Narrow&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold &lt;/b&gt;&lt;i&gt;Italic&lt;/i&gt;
+        &lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;&lt;/text&gt;
+    &lt;/view&gt;
+    &lt;view width="400" font="Times New Roman" fontsize="14"&gt;
+      &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;text&gt;Times New Roman&lt;/text&gt;
+      &lt;text&gt;abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|&lt;/text&gt;
+      &lt;text&gt;ABCDEFGHIJKLMNOPQRSTUVWXYZ ,./?;':"[]{}\~`&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;Times New Roman&lt;/b&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;u&gt;Times New Roman&lt;/u&gt;&lt;/text&gt;
+      &lt;text&gt;&lt;b&gt;&lt;i&gt;Times New Roman&lt;/i&gt;&lt;/b&gt;&lt;/text&gt;
+      &lt;inputtext&gt;inputtext here&lt;/inputtext&gt;
+      &lt;inputtext multiline="true" height="100" width="100"&gt;hello there&lt;/inputtext&gt;
+      &lt;inputtext&gt;Times New Roman&lt;/inputtext&gt;
+      &lt;text&gt;
+        &lt;b&gt;&lt;i&gt;BoldItalic&lt;/i&gt; Bold&lt;/b&gt;
+        &lt;i&gt;Italic&lt;/i &gt;&lt;u&gt;Underline &lt;b&gt;Bold Underline&lt;/b&gt;&lt;/u&gt;
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;/view&gt;
+    &lt;scrollbar axis="y"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+<p>  You can override the default font by redefining the default font on the <tagname>canvas</tagname>.
+Note that you need to do this within the <tagname link="true">canvas</tagname> itself&#8212;you cannot do it using an attribute tag.  
+</p>
+<example title="setting default tag on the canvas">
+&lt;canvas width="500" height="100" bgcolor="gray" font="default" fontsize="8"&gt;
+     &lt;font name="default" src="verity/verityplus11.ttf"/&gt;
+     &lt;text &gt;default Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
+     &lt;text font="default" fontsize='8'&gt;Verity Foobar the quick brown frotz jumped over the bad music&lt;/text&gt; 
+     &lt;text font="Verdana"&gt;Verdana Foobar the quick brown frotz jumped over the bad music&lt;/text&gt;
+     &lt;simplelayout /&gt;
+&lt;/canvas&gt;
+</example>
+
+<h2>OpenLaszlo "pseudo-pixel" fonts</h2>
+
+
+    <p>Because the underlying Flash runtime can only display outline fonts, 
+    OpenLaszlo applications today can only support outline fonts.  This would seem to implies that
+    fonts in a OpenLaszlo application can be displayed at any size and strictly speaking this is true.
+    However, the OpenLaszlo Runtime Library includes a number of "pseudo-pixel" fonts.  These font files contain outlines that describe precise 
+    bitmaps that, when rendered and antialiased by Flash at a specific size, appear pixel-accurate for another size.  
+    Again, even though you specify the font size in LZX as one value, the characters, as they are rendered,
+    will appear pixel accurate for another font size that is typically indicated by the font file name.  
+    </p>
+    <p>
+    The following font files in <code>$LPS_HOME/lps/fonts</code> are designed to be displayed at font size 8 only.  
+ </p>
+       <ul>
+           <li><code>lztahoe<i>*</i></code></li>
+           <li><code>lzsans<i>*</i></code></li>
+           <li><code>verity</code>/<code>verity<i>*</i></code></li>
+           <li>Any font file whose name is of the form: <code><i>face</i>-<i>size</i>-<i>style</i>-<i>width</i>.ttf</code> </li>
+       </ul>
+
+     <note>Embarrassing historical tidbit: the lzsans fonts have an &apos;8&apos; in their name but actually appear as
+     size 9.</note>
+
+    <h2>Syntax</h2>
+
+<p>
+The value of the <attribute>font</attribute> attribute is the name of a embedded font, that is declared with the
+ <tagname link="true">font</tagname> tag.
+</p>
+
+<p>
+The behavior of <attribute>font</attribute> in LZX closely parallels HTML/CSS, but is not equivalent in all cases. In particular:
+</p> 
+
+<ul>
+	<li>The value of the 'font' attribute is a comma-separated list of font names. These font names are used in priority order. The first font in the list that is available is used to render the text of the view.</li>
+	<li>Font names can include the names of fonts on the client runtime, such as (typically) "Helvetica" and "Times".</li>
+	<li>There are three "generic family names", which can be used as font names. These generic family names are "serif", "sans-serif", and "monospace".</li>
+	<li>The default font is "sans-serif". No font is embedded in the application by default.</li>
+	<li>There are no warnings for fonts that are named as the literal values of 'font' attributes but don't have embedded <attribute>font</attribute> definitions.</li>
+</ul>
+
+<p>Laszlo does not implement generic font family definitions, but it does not preclude them nor is it incompatible with them 
+(as described below).
+</p>
+<example title="Default font">
+&lt;canvas height="40"&gt;
+     &lt;text&gt;Hello World&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+ This renders Hello World in a client font.
+</p>
+<example title="Default font with non-default font size">
+&lt;canvas height="100"&gt;
+   &lt;text fontsize="24"&gt;Hello World&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+This renders Hello World in a larger client font, with no jaggies.
+</p>
+<example title="Equivalence of generic and defite names">
+&lt;canvas height="100"&gt;
+   &lt;simplelayout axis="y"/&gt;
+   &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
+   &lt;text font="Helvetica"&gt;Some text&lt;/text&gt;
+   &lt;text font="Times"&gt;Some text&lt;/text&gt;
+   &lt;text font="serif"&gt;Some text&lt;/text&gt;
+   &lt;text font="Courier"&gt;Some text&lt;/text&gt;
+   &lt;text font="monospace"&gt;Some text&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+ This displays three pairs of items. The items in each pair may be rendered in the same font, depending on the default fonts on the client.
+</p>
+<example title="&quot;nofont&quot; attribute">
+ &lt;canvas height="100"&gt;
+     &lt;simplelayout axis="y"/&gt;
+     &lt;text font="nofont, nofont, sans-serif"&gt;Some text&lt;/text&gt;
+     &lt;text font="nofont, sans-serif"&gt;Some text&lt;/text&gt;
+     &lt;text font="sans-serif"&gt;Some text&lt;/text&gt;
+ &lt;/canvas&gt;
+</example>
+<p>
+ This displays three lines in the same font.
+</p>
+<h3>Comparison to CSS</h3>
+<p>
+ The OpenLaszlo <attribute>font</attribute> attribute is similar to the CSS 'font' and 'font-family' properties: http://www.w3.org/TR/2004/CR-CSS21-20040225/fonts.html#font-family-prop. 
+The remaining differences are:
+</p>
+<ul>
+	<li>LZX specifies the font as an XML attribute.    HTML+CSS specifies it is a CSS property.</li>
+	<li>An OpenLaszlo 'font' can only be a list of font names. This makes it more similar to the CSS 'font-family' than to the CSS 'font', which is a shorthand property that can also accept font size, style, variant, weight, and line-height values.</li>
+	<li>CSS defines the additional generic font families 'cursive' and 'fantasy' , as well as "system font" names 'caption', 'icon', 'menu', 'message-box', 'small-caption', and 'status-bar'. (Generic family name definitions, below, let the application or library developer define these system names.)</li>
+	<li>CSS allows multiword font names to be quoted, e.g. "Times New Roman" (where the quotes are part of the value). LZX does not allow this.</li>
+</ul>
+
+
+    <h3>Importing fonts</h3>
+    <p>In order to use any font other than the default font in an OpenLaszlo application, you must first declare it.  
+    The default font is described below.
+    </p>
+    <p>
+   OpenLaszlo documentation uses the verbs, <i>importing</i>, <i>defining</i>, and <i>declaring</i>,
+    somewhat interchangeably when it comes to fonts.  Each of these words implies that you are letting LZX know
+    about a font you are going to use in your application.
+    In LZX, fonts are referred to by name and there is an application-global
+    namespace for fonts.  Fonts can be defined directly under the <tagname link="true">canvas</tagname>
+    or <tagname link="true">library</tagname> tags like:
+    </p>
+
+<example title="Declaring a font" extract="false">
+&lt;font name="myfont" src="myfont.ttf"/&gt;
+</example>
+
+    <p>
+    Each font that is imported has a <attribute>name</attribute>, an optional
+    <attribute>style</attribute>, and a <attribute>src</attribute> file that contains the TTF.  (The name
+    is interpreted as the font face when the LZX application renders HTML text.  See <xref linkend="text"/>.)
+    </p>
+
+    <p>
+    The style must be one of <code>plain</code>, <code>bold</code>, <code>italic</code>, or
+    <code>bold italic</code> and the default style is <code>plain</code>. You must declare each style of
+    a font that you intend to use.
+    The style of a font is interpreted when LZX applications render HTML text.
+    See <xref linkend="text"/> for more information.
+    </p>
+    <p>
+    The OpenLaszlo compiler will auto-include the plain, bold, italic, and bold italic styles of
+    the default font, if it can detect that they will be needed.  In general, it is safest to declare
+    the bold, italic, and bold italic styles explicitly if you know you will need them.  For fonts other than the default, you 
+    must explicitly import a file for each of the styles.  For more details, see the section on 
+    the default font.
+    </p>
+ 
+    <p>
+    Each font must be imported from an external file and the value of the <attribute>src</attribute> attribute must be a
+    pathname to that file  (URLs are not currently supported).
+    Relative pathnames are resolved relative to the including file.
+    The OpenLaszlo Server also looks in <code>$LPS_HOME/lps/fonts</code> directory.
+    </p> 
+
+    <h3>Syntax for importing fonts</h3>
+    <p>
+    There are two syntaxes for importing a font.  The example below imports the plain and bold style of 
+    a font named <code>myfont</code>.
+    </p>
+
+<example title="Declaring fonts" extract="false">
+&lt;font name="myfont" src="myfont.ttf"      style="plain"/&gt;
+&lt;font name="myfont" src="myfont-bold.ttf" style="bold" /&gt;
+</example>
+
+    <p>
+    Alternatively, you can declare several styles at once like:
+    </p>
+
+<example title="Declaring multiple font styles (faces) at once" extract="false">
+&lt;font name="myfont"&gt;
+  &lt;face src="myfont.ttf"      style="plain"      /&gt;
+  &lt;face src="myfont-bold.ttf" style="bold"       /&gt;
+  &lt;face src="myfont-ital.ttf" style="italic"     /&gt;
+  &lt;face src="myfont-bita.ttf" style="bold italic"/&gt;
+&lt;/font&gt;
+</example>
+
+    <p>Notes:</p>
+    <ul>
+    <li> Redefining a font name is unsupported and application behavior is undefined if you do this.</li>
+    <li> There are no <i>font aliases</i> today.  A single font can have only one name.  If you need the same
+    font to have two names, you must declare it twice (and it will be embedded twice).</li>
+    </ul>
+
+<h2>Using fonts</h2>
+    <h3>Font attributes</h3>
+
+        <p>The base LZX visual object, <tagname link="true">view</tagname>, has three font attributes, 
+        <attribute>font</attribute>, <attribute>fontstyle</attribute>, and <attribute>fontsize</attribute>.   
+        The <attribute>font</attribute> attribute with value <code>myfont</code>
+        indicates that this view should look for and use a font named <code>myfont</code> to render text.
+        The <attribute>fontsize</attribute> attribute indicates the point size at which the font should be rendered and the 
+        <attribute>fontstyle</attribute> indicates the style of the font that should be used.  
+        </p>
+        
+        <table summary="Default values for font attributes">
+          <tr>
+            <th>Attribute name</th>
+            <th>Default value</th>
+          </tr>
+          <tr>
+            <td><attribute>font</attribute></td>
+            <td><code>&quot;default&quot;</code></td>
+          </tr>
+          <tr>
+            <td><attribute>fontsize</attribute></td>
+            <td><code>8</code></td>
+          </tr>
+          <tr>
+            <td><attribute>fontstyle</attribute></td>
+            <td><code>plain</code></td>
+          </tr>
+        </table>
+        
+        <p>
+        As you will see below, these are actually the default values of the font attributes for the canvas.
+        Because of the way that font attributes cascade, the values of these attributes on the canvas
+        are essentially the defaults for the entire application.  Below are some examples of using
+        font attributes. </p>
+        
+<example title="Using a font">
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text font="helmet" fontsize="20"&gt;Hello Helmet&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+        <p>
+        As you can see below, The HTML text rendering tags, <tagname link="true">b</tagname> (for bold) and
+        <tagname link="true">i</tagname> (for italic) instruct the OpenLaszlo application to look for and use
+        the bold, italic, or bold italic version of the current font.</p>
+
+<example title="Using font styles and HTML text">
+&lt;canvas height="70"&gt;
+  &lt;font name="myfont"&gt;
+    &lt;face src="helmetr.ttf" style="plain"        /&gt;
+    &lt;face src="helmetb.ttf" style="bold"         /&gt;
+    &lt;face src="helmeti.ttf" style="italic"       /&gt;
+    &lt;face src="helmetbi.ttf" style="bold italic" /&gt;
+  &lt;/font&gt;
+  &lt;text font="myfont" fontsize="20"&gt;
+    plain 
+    &lt;b&gt;bold&lt;/b&gt;
+    &lt;i&gt;italic&lt;/i&gt;
+    &lt;b&gt;&lt;i&gt;bold italic&lt;/i&gt;&lt;/b&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+    <p> In the example below, we use the HTML text <tagname link="true" >font</tagname> tag to
+    change fonts inside a single piece of text.</p>
+
+<example title="Using mulitple fonts in HTML text">
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;font name="arioso" src="ariosor.ttf"/&gt;
+  &lt;text fontsize="20"&gt;
+    &lt;font face="helmet"&gt;helmet&lt;/font&gt; 
+    &lt;font face="arioso"&gt;arioso&lt;/font&gt;
+  &lt;/text&gt;
+  &lt;/canvas&gt;
+</example>
+
+    <p>In the example below, you can see that setting the <attribute>fontsize</attribute>
+    can get you very big text.</p>
+
+<example title="Using the fontsize attribute">
+&lt;canvas height="100"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text resize="true" fontsize="100" font="helmet"&gt;BIG&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+        <p>Many of the fonts look too small at the default fontsize of 8.</p>
+
+<example title="Omitting the fontsize attribute.">
+&lt;canvas height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;text font="helmet"&gt;Helmet at default size(8) is very hard to read!&lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+    <p>You can specify the font for inputtext, too.</p>
+<example title="Specifying the font for inputtext.">
+&lt;canvas fontsize="20" height="70"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;inputtext bgcolor="red" font="helmet"&gt;Type your text here&lt;/inputtext&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Note that HTML text does <b><i>not</i></b> work in <tagname link="true">inputtext</tagname>.</p>
+<h3>How a view chooses its font attributes</h3>
+<p>
+There are two basic rules that a view uses to choose a font attributes.</p>
+ 
+<ul>
+	<li>font attributes cascade</li>
+	<li>class definition font attribute definitions bind tightly</li>
+</ul>
+<p>
+These are described in turn below.
+</p>
+<h4>Font attribute cascading</h4>
+        <p>  Cascading occurs when a view
+        does not specify one of its font attributes.  In this case, it will receives its parents 
+        value for that font attribute.  If the parent doesn't specify a font attribute, it keeps
+        going up the view hierarchy to find a view that specifies a value for that font attribute,
+        going all the way to the canvas, if no ancestors specify a value for the given font attribute.
+        Each of the three font attributes cascade separately.
+        </p>
+
+<example title="Using cascaded font attributes">
+&lt;canvas height="250"&gt;
+  &lt;font name="conga" src="congar.ttf"/&gt;
+  &lt;font name="conga" src="congab.ttf" style="bold"/&gt;
+  &lt;view layout="axis: y; spacing: 2" font="conga"&gt;
+    &lt;text resize="true" fontsize="12" text="I will be in conga 12"/&gt;
+    &lt;text resize="true" fontsize="22" text="I will be in conga 22"/&gt;
+    &lt;text resize="true" fontsize="32" text="I will be in conga 32"/&gt;
+    &lt;view layout="axis: y; spacing: 2" fontsize="32" fontstyle="bold"&gt;
+      &lt;text resize="true" text="I will be bold"/&gt;
+      &lt;text resize="true" text="Me, too"/&gt;
+      &lt;text resize="true" fontsize="8" font="default" 
+            text="I will be in the default font"/&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+        <p>You can even specify font attributes on the canvas</p>
+
+<example title="Specifying a canvas font">
+&lt;canvas font="tahoe" height="70" width="200"&gt;
+  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
+  &lt;text text="hello"/&gt;
+&lt;/canvas&gt;
+</example>
+
+        <h4>Font attributes and classes</h4>
+        <p>Specifying a font attribute on a class definition:</p>
+<ol>
+	<li>causes instances of that class to use the class definition of that font attribute and </li>
+	<li>the class definition font attribute cascades down to instance children in the class definition itself. </li>
+</ol>
+
+<p> Class font attributes bind more tightly than 
+        cascaded font attributes.
+        </p>
+        <h4>Font attribute summary</h4>
+        <p>The following is a set of rules that a view uses to choose its font: </p>
+        <ul>
+            <li>Use the font attribute set on the instance.  If not set, then</li>
+            <li>Use the font attribute set on this instance's baseclass (or any of its subclasses, going up the chain).  If not set,</li>
+            <li>Use the cascaded font attribute.</li> 
+        </ul>
+
+        <p>You may want to use a font attribute on a class definition if you are going to closely tie
+        the implementation (design, layout, positioning) of that class to that specific font.  In general,
+        you should only do this when absolutely necessary.</p>
+
+<example title="Using font attributes in a class definition">
+&lt;canvas height="100"&gt;
+  &lt;font name="helmet" src="helmetr.ttf"/&gt;
+  &lt;font name="tahoe" src="lztahoe8.ttf"/&gt;
+  &lt;class name="myclass" fontsize="20" font="helmet"&gt;
+    &lt;attribute name="defaultplacement" value="'content'"/&gt;
+    &lt;text bgcolor="red" text="Uses the class font"/&gt;
+    &lt;view name="content"/&gt;
+  &lt;/class&gt;
+  
+  &lt;view layout="axis:y; spacing: 2" font="tahoe"&gt;
+    &lt;myclass/&gt;
+    &lt;text text="use cascaded font"/&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<fixme>Note: sometime in these examples we set the text to be resizable.  Ask Adam or Sarah why</fixme>
+     
+    <h3>The default font</h3>
+        <p>All Laszlo applications come bundled with a default font.  The name of this
+        font is 'default'.  This font is actually the <code>verity11</code> pseudo-pixel font and is designed 
+        to look well when antialiased.  </p>
+<?ignore It gets included as if you had the following line
+        in your application:
+        </p>
+
+<example title="The automatically included default font" extract="false">
+&lt;font name="default" src="verity/verity11.ttf"/&gt;
+</example>
+
+        <p>
+        The verity fonts are intended to mimic the outline vera fonts that are provided in 
+        <code>$LPS_HOME/fonts/bitstream-vera-1.10/vera*.ttf</code>.
+        If you'd like to display the default font at different sizes, you can use the <code>verity9*</code>
+        files provided for 9 point text or you can use the <code>vera*</code> for arbitrary sizes.
+        </p>
+?>
+<example title="Verity and vera fonts" extract="true" >
+&lt;canvas height="120"&gt;
+  &lt;font name="vera" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;font name="verity9" src="verity/verity9.ttf"/&gt;
+  &lt;font name="verity11" src="verity/verity11.ttf"/&gt;
+  &lt;simplelayout axis="y" spacing="2"/&gt;
+  
+  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
+    &lt;text pixellock="true" fontsize="9" font="vera" text="vera 9 abcdefghi"/&gt;
+    &lt;text pixellock="true" fontsize="8" font="verity9" text="verity 9 abcdefghi"/&gt;
+  &lt;/view&gt;
+  &lt;text fontsize="10" font="vera" text="vera 10 abcdefghi"/&gt;
+  &lt;view layout="axis: x; spacing: 2" pixellock="true"&gt;
+    &lt;text pixellock="true" fontsize="11" font="vera" text="vera 11 abcdefghi"/&gt;
+    &lt;text pixellock="true" fontsize="8" font="verity11" text="verity 11 abcdefghi"/&gt;
+  &lt;/view&gt;
+  
+  &lt;text pixellock="true" fontsize="12" font="vera" text="vera 12 abcdefghi"/&gt;
+  &lt;text pixellock="true" fontsize="14" font="vera" text="vera 14 abcdefghi"/&gt;
+  &lt;text pixellock="true" fontsize="20" font="vera" text="vera 20 abcdefghi"/&gt;
+&lt;/canvas&gt;
+</example>
+
+        <p>
+        The OpenLaszlo compiler also knows to automatically include the bold, italic, or bold italic
+        version of this font if it can detect that they are needed.
+        </p>
+
+        <p>
+        You may redefine the default font if you'd like.</p>
+<example title="Redefining the default font">
+&lt;canvas height="70"&gt;
+  &lt;font name="default" src="bitstream-vera-1.10/vera.ttf"/&gt;
+  &lt;simplelayout axis="y" spacing="2"/&gt;
+  &lt;text text="vera"/&gt;
+  &lt;button text="vera button"/&gt;
+&lt;/canvas&gt;
+</example>
+
+        <p>Note that when you redefine the default font, the compiler no longer can automatically
+        include the bold, italic, or bold italic styles for you.</p>
+        
+    <h3>Fonts and components</h3>
+
+        <p>Because components are classes in LZX, there can be an interaction between any component
+        that has a font attribute declared in its class definition.  In particular, the
+        <tagname link="true">basecomponent</tagname> class is defined to use the font named 'default'.  
+        </p>
+
+        <p>
+        Also, the OpenLaszlo components are defined and built to use a specific font (verity11).
+        They should/may work with other fonts.  But today, you are only guaranteed that they work with the 
+        font they were designed with.</p>
+
+        <p>There is no mechanism for developers to easily
+        change the fonts used by the components.  (Note: some components may not work correctly
+        with anything except the default font.)
+        It can be done on component instances easily, or you can declare new classes like
+        </p>
+
+<example title="Changing the fonts for Laszlo components" extract="false">
+&lt;class name="mybutton" extends="button" font="myfont"/&gt;
+&lt;class name="mycheckbox"  extends="checkbox" font="myfont"/&gt;
+&#x22EE;
+</example>
+
+        <p>Another way to get components to use a font other than 'default' is to
+        actually redefine the default font.</p>
+
+<example title="Redefining the default font for Laszlo components" >
+&lt;canvas height="80"&gt;
+  &lt;font name="default" src="helmetr.ttf"/&gt;
+  &lt;button text="hello"/&gt;
+&lt;/canvas&gt;
+</example>
+
+
+    <h3>Fonts provided with the LPS</h3>
+    <p>The LPS provides a number of fonts for your use in <code>$LPS_HOME/lps/fonts</code>.
+    The pseudo-pixel fonts that come with the LPS are described <a href="#pixel-fonts">above</a>.  The LPS
+    default (pseudo-pixel) font, <code>verity11</code> is there as is an outline version of the same
+    glyphs in <code>bitstream-1.10-vera</code>.
+    </p>
+<h2>Font Metrics</h2>
+<p>The LPS provides some basic APIs for measuring text.  You can use the <api link="true">LzFontManager</api>
+to look up information about a given font name and style, including character advances (widths) and line ascents
+and descents.  The font metrics provided by the OpenLaszlo Runtime Library are all for the version of the default size
+of the given font (which is 8).  In order to adjust the font metrics for a given font, you must
+multiply the font metric by a factor that adjusts for the change in font size, <code>fontsize/8</code>.
+(Note: These APIs are likely to be deprecated in the future in lieu of APIs that 
+simply measure text for you). 
+</p>
+<p>
+If you want to know the size of a piece of text, the simplest technique is to create a
+<tagname>text</tagname> view using the font attributes that are appropriate and the call 
+the <api link="true">LzText.getTextWidth()</api> method.
+</p>
+<h2>Runtime Font APIs</h2>
+<p>
+Font attributes are cascaded down the view hierarchy but only instances 
+of <tagname link="true">text</tagname> have access to their font attributes at runtime.  Text views will have the
+<attribute>font</attribute>, <attribute>fontsize</attribute>,  and <attribute>fontstyle</attribute> attributes.
+You can look up the actual <api link="true">LzFont</api> that is represented by a given 
+<attribute>font</attribute> and  <attribute>fontstyle</attribute> via the <api link="true">LzFontManager</api>.
+If you need to know the font attribute associated with a view that is not a text instance, the simplest thing to
+do is to create an invisible text view sibling (or use one that exists) to get the font attributes.
+</p>
+<h2>Performance considerations</h2>
+
+<p>When deciding what fonts to use, you may need to take into account how
+fonts affect the size, hence download time, of your application. Here are some heuristics to help you
+with file size/download calculus. - </p>
+    <ul>
+        <li>The <i>larger</i> the font, the larger the application.  The size
+        of the font can be estimated by looking at the file size of the <code>.ttf</code> file. </li>
+        <li>Fonts with more complicated shape outlines will be larger.</li>
+        <li>Fonts with more character codes in them will be larger.  One size optimization technique
+        is to use a version of the font file that has only the characters in it that your application 
+        uses.</li>
+        <!--fixme><li>I18n/ localization - nothing to say yet</li></fixme-->
+    </ul>
+<fixme>
+Some outdated cruft, some of which may be still true.
+    <ul>
+       <li>LPS 2.0 supports embedding <a href="http://developer.apple.com/fonts/TTRefMan/RM06/Chap6.html">Apple's TrueType</a> (TTF) fonts.
+       TTF Details: <ul>
+           <li>LZX only supports TTF thats are encoded as outline fonts).</li>
+           <li>LZX does not import kerning information from TTFs.</li>
+       </ul>
+       </li>
+       <li>LZX does not use kerning information. </li>
+    </ul>
+</fixme>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

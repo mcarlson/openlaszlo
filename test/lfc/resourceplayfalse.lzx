@@ -1,0 +1,13 @@
+<canvas width="640" height="480"> 
+    <resource name="max" src="../resources/swf/logo.swf" />
+
+    <simplelayout axis="y" spacing="5"/>
+    <view x="4" play="false" resource="max" />
+    <text>This resource should start out stopped (not animating)</text>
+    <view x="4" play="true" resource="max" />
+    <text>This resource should start out playing (animating)</text>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

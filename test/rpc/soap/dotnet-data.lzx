@@ -1,0 +1,67 @@
+<canvas width="1000">
+
+    <text><b>Test .NET QuickStart DataService using LZX Web Services</b></text>
+    <text resize="true" text="${'WSDL ' + canvas.wsdl}" />
+
+    <simplelayout spacing="10" />
+
+    <dataset name="authors" />
+
+    <attribute name="wsdl" type="string"
+value="http://www.dotnetjunkies.com/quickstart/aspplus/samples/services/DataService/CS/DataService.asmx?WSDL" />
+
+    <soap name="dataservice" wsdl="$once{canvas.wsdl}" >
+
+        <attribute name="loaded" type="boolean" value="false" />
+
+        <method event="onload">
+            Debug.write(this.name + ' loaded');
+            this.loaded = true;
+        </method>
+
+        <method event="onerror" args="error">
+            status.setText('error: ', error);
+        </method>
+
+        <method event="ontimeout" args="error">
+            status.setText('timeout');
+        </method>
+
+        <remotecall funcname="GetTitleAuthors" dataobject="authors" >
+            <param value="'&lt;GetTitleAuthors/&gt;'" />
+
+            <method event="ondata" args="value">
+                status.setText('');
+            </method>
+        </remotecall>
+    </soap>
+
+    <button name="op" >GetAuthors
+
+        <method event="onclick"><![CDATA[
+            if (!canvas.dataservice.loaded) return;
+            var del = new LzDelegate(this, 'handler');
+            canvas.dataservice.GetTitleAuthors.invoke();
+            status.setText('Invoking...');
+        ]]></method>
+
+    </button>
+    <text id="status"/>
+
+    <grid id="table" datapath="authors:/item/GetTitleAuthorsResponse/GetTitleAuthorsResult/diffgram/NewDataSet" contentdatapath="Authors">
+        <gridtext width="100" datapath="au_id/text()" >ID</gridtext>
+        <gridtext datapath="au_fname/text()">First Name</gridtext>
+        <gridtext datapath="au_lname/text()">Last Name</gridtext>
+        <gridtext width="90" datapath="phone/text()">Phone</gridtext>
+        <gridtext width="200" datapath="address/text()">Address</gridtext>
+        <gridtext datapath="city/text()">City</gridtext>
+        <gridtext datapath="state/text()">State</gridtext>
+        <gridtext datapath="zip/text()">Zip</gridtext>
+        <gridtext datapath="contract/text()">Contract</gridtext>
+    </grid>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

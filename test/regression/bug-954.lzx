@@ -1,0 +1,13 @@
+<canvas>
+    <include href="redmond/library.lzx"/>
+    <view id="vw1" bgcolor="red" width="10" height="20" x="50" y="100" onclick="this.animate('x',100,300,true)" />
+    <view id="vw2" bgcolor="blue" width="10" height="10" />
+    <script>
+        var cnstrt = new LzViewPropConstraint(vw2,{prop:'x', refview:vw1});
+        cnstrt.addModifier( new LzLimitModifier(cnstrt,{low:20, high:150}) );
+    </script>        
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

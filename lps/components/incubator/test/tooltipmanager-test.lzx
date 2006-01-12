@@ -1,0 +1,37 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+<canvas width="550" height="100%">
+  
+  <include href="../tooltipManager.lzx"/>        
+  
+  
+  <view bgcolor="#ABCDEF">
+    <tooltipManager id="myManager"/>
+    
+    <button onmouseover="Debug.write('mouseover')" 
+            onmouseout="Debug.write('mouseout')"
+            x="100"
+            y="100"
+            > Change Tooltip to Testies
+    <tooltip name="tt" manager="$once{myManager}">This is my tooltip</tooltip>
+    <method event="onclick">
+      tt.setAttribute("text","testies...");
+    </method>
+    </button>
+    
+    <button onmouseover="Debug.write('mouseover')" 
+            onmouseout="Debug.write('mouseout')"
+            x="500"
+            y="600"
+            > Button 2
+    <method event="oninit">
+      myManager.register(this);
+    </method>        
+    </button>
+    
+  </view>
+  
+</canvas>

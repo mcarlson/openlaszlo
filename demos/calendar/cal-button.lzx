@@ -1,0 +1,296 @@
+<library>
+
+
+
+    <class name="calButton" clickable="true" >
+        <attribute name="label"              value=""      type="string"/>
+        <attribute name="icon"               value=""      type="string"/>
+        <attribute name="divider"            value="3"     type="number"/>
+        <attribute name="leftcap"            value="oval"  type="string"/>
+        <attribute name="rightcap"           value="oval"  type="string"/>
+        <attribute name="leftinset"          value="0" />
+        <attribute name="rightinset"         value="0" />
+        <attribute name="yadjust"            value="2"     type="number"/>
+        <attribute name="normalRsrcNumber"   value="1"     type="number"/>
+        <attribute name="overRsrcNumber"     value="2"     type="number"/>
+        <attribute name="downRsrcNumber"     value="3"     type="number"/>
+        <attribute name="deselectRsrcNumber" value="4"     type="number"/>
+        <attribute name="width"              setter="this.widthSetter(width);"/>
+        <attribute name="keepinitialwidth"   value="false"/>
+        <attribute name="enabled"            value="true" />
+        <attribute name="mouseisdown"        value="false"/>
+
+        <method name="widthSetter" args="w">
+            this.setWidth(w)
+            this.keepinitialwidth = true;
+        </method>
+
+        <method name="setEnabled" args="b">
+            this.enabled = b;
+            if (this.enabled) {
+                this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+            } else {
+                this.bkgnd.lft.setResourceNumber( this.deselectRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.deselectRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.deselectRsrcNumber );
+            }
+        </method>
+
+        <!-- VIEWS -->
+        <view name="bkgnd" width="100%">
+            <view name="lft">
+                <state name="oval">
+                    <attribute name="apply" value="classroot.leftcap == 'oval'" when="always"/>
+                    <attribute name="resource"   value="leftcap_oval" />
+                    <attribute name="leftinset"  value="classroot.leftinset == 0?  8:classroot.leftinset" when="always" />
+               </state>
+
+                <state name="roundrect">
+                    <attribute name="apply" value="classroot.leftcap == 'roundrect'" when="always"/>
+                    <attribute name="resource" value="leftcap_roundrect" />
+                    <attribute name="leftinset"  value="classroot.leftinset == 0?  5:classroot.leftinset" when="always" />
+                </state>
+
+                <state name="rect">
+                    <attribute name="apply" value="classroot.leftcap == 'rect'" when="always"/>
+                    <attribute name="resource" value="leftcap_rect" />
+                    <attribute name="leftinset"  value="classroot.leftinset == 0?  6:classroot.leftinset" when="always" />
+                </state>
+
+                 <state name="shear">
+                    <attribute name="apply" value="classroot.leftcap == 'shear'" when="always"/>
+                    <attribute name="resource" value="leftcap_shear" />
+                    <attribute name="leftinset"  value="classroot.leftinset == 0?  3:classroot.leftinset" when="always" />
+                </state>
+           </view>
+
+            <view name="mid" resource="button_middle" stretches="width" options="releasetolayout"/>
+
+            <view name="rgt">
+                <state name="oval">
+                    <attribute name="apply" value="classroot.rightcap == 'oval'" when="always"/>
+                    <attribute name="resource"    value="rightcap_oval" />
+                    <attribute name="rightinset"  value="classroot.rightinset == 0?  12:classroot.rightinset" when="always" />
+                </state>
+
+                <state name="rect">
+                    <attribute name="apply" value="classroot.rightcap == 'rect'" when="always"/>
+                    <attribute name="resource" value="rightcap_rect" />
+                    <attribute name="rightinset"  value="classroot.rightinset == 0?  9:classroot.rightinset" when="always" />
+               </state>
+
+                <state name="roundrect">
+                    <attribute name="apply" value="classroot.rightcap == 'roundrect'" when="always"/>
+                    <attribute name="resource" value="rightcap_roundrect" />
+                    <attribute name="rightinset"  value="classroot.rightinset == 0?  9:classroot.rightinset" when="always" />
+              </state>
+
+                <state name="shear">
+                    <attribute name="apply" value="classroot.rightcap == 'shear'" when="always"/>
+                    <attribute name="resource" value="rightcap_shear" />
+                    <attribute name="rightinset"  value="classroot.rightinset == 0?  5:classroot.rightinset" when="always" />
+                </state>
+            </view>
+            <resizelayout name="lyt" axis="x"/>
+        </view>
+
+        <!-- EXTRA STATES FOR SUPPORTING VIEWS AND METHODS FOR UPDATING -->
+        <state name="measuretextwidth" >
+            <attribute name="apply"   value="classroot.label != ''" when="always"/>
+            <!-- if apply is TRUE, then button has a label so add text view support -->
+
+            <text name="title_hilite" opacity=".4" width="200" fgcolor="#143B45"
+                  font="vera" fontsize="10" pixellock="false" >
+                <attribute name="y"    value="parent.yadjust - 1" when="once"/>
+                <attribute name="x"    value="parent.bkgnd.lft.leftinset - 0.7" when="always" />
+                <attribute name="text" value="parent.label" when="always" />
+            </text>
+            <text name="title" y="2" fgcolor="white" font="vera"
+                  fontsize="10" pixellock="true" width="200" >
+                <attribute name="y"    value="parent.yadjust" when="once"/>
+                <attribute name="x"    value="parent.bkgnd.lft.leftinset" when="always" />
+                <attribute name="text" value="parent.label" when="always" />
+            </text>
+
+            <method event="ontext" reference="this.title">
+                this.update();
+            </method>
+
+            <method name="update" >
+                if (this.keepinitialwidth) {
+                    this.title.setX( Math.floor((this.width - this.title.getTextWidth())/2.0));
+                    this.title_hilite.setX(this.title.x + 0.5);
+                } else {
+                    this.setWidth(Math.round(this.title.getTextWidth()) + this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
+                }
+            </method>
+            
+            <method name="domouseup" >
+                this.title_hilite.setY(this.yadjust + 0.7);
+                this.title.setY(this.yadjust);
+            </method>
+
+            <method name="domousedown" >
+                this.title_hilite.setY(this.yadjust + 1.7);
+                this.title.setY(this.yadjust + 1);
+            </method>
+
+
+        </state>
+
+        <state name="measureiconwidth" >
+            <attribute name="apply" value="classroot.icon != ''" when="always"/>
+            <!-- if apply is TRUE, then button has an icon so add icon support -->
+
+            <view name="iconv" x="${parent.leftinset}" oninit="this.placeicon()" >
+                <attribute name="resource" value="parent.icon" when="always"/>
+                <method name="placeicon">
+                    this.defaultY = Math.floor((this.parent.height - this.height)/2.0);
+                    this.setY(defaultY);
+                </method>
+            </view>
+            
+            <method name="update" >
+                this.iconv.setX( this.bkgnd.lft.leftinset);
+                if (!this.keepinitialwidth) this.setWidth(this.iconv.width + this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
+            </method>
+
+            <method name="domouseup" >
+                this.iconv.setY(this.iconv.defaultY);
+            </method>
+
+
+            <method name="domousedown" >
+                this.iconv.setY(this.iconv.defaultY + 1);
+            </method>
+
+        </state>
+
+        <state name="measureboth">
+            <attribute name="apply" value="(classroot.icon != '') &amp;&amp; (classroot.label != '')" when="always"/>
+            <!-- if apply is TRUE, then button has an icon and text so add support for both-->
+
+            <method name="update" >
+                this.iconv.setX( this.bkgnd.lft.leftinset);
+                this.title_hilite.setX(this.iconv.x + this.iconv.width + 
+                                       this.divider );
+                this.title.setX( this.iconv.x + this.iconv.width + 
+                                  this.divider );
+                if (!this.keepinitialwidth) this.setWidth( this.iconv.width + 
+                  this.divider + Math.round(this.title.getTextWidth()) + 
+                  this.bkgnd.lft.leftinset + this.bkgnd.rgt.rightinset);
+            </method>
+
+            <method name="domousedown" > 
+                this.iconv.setY(this.iconv.defaultY + 1);
+                this.title_hilite.setY(this.yadjust + 1.7);
+                this.title.setY(this.yadjust + 1);
+            </method>
+
+            <method name="domouseup" >
+                this.iconv.setY(this.iconv.defaultY);
+                this.title_hilite.setY(this.yadjust + 0.7);
+                this.title.setY(this.yadjust);
+            </method>
+        </state>
+      
+      
+    <method event="oninit" >
+        this.setEnabled(this.enabled);
+        this.update();
+        
+        // A Delegate to perform an action on the event 'onsafeclick'
+        // In genernal, when a user clicks on this button a onmouseup event is 
+        // sent, then an onclick. Unfortunately, the scripts for both events are 
+        // performed within a flash frame and therefore the mouseup 'image' 
+        // refresh occurs after the onclick script is executed.
+        // If this script is long, the image on the button does not switch and 
+        // appears like a bug.
+        
+        this.ocd = new LzDelegate(this,"safeclick");
+   </method>
+
+    <!-- OTHER METHODS -->
+    <method name="safeclick" >
+        this.ocd.unregisterAll()
+        this['onsafeclick']['sendEvent']();
+    </method>
+
+    <method name="domouseover" >
+        this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
+        this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
+        this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+    </method>
+
+    <!-- MOUSE EVENTS -->
+    <method event="onmousedown" >
+        if ( this.enabled) {
+            this.mouseisdown = true;
+            this.domousedown();
+            this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
+            this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
+            this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+        }
+    </method>
+
+    <method event="onmouseup" >
+        this.mouseisdown = false;
+        if (this.enabled) {
+            this.domouseup();
+            if (this.mouseisover) {
+                this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+            } else {
+                this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+            }
+        }
+    </method>
+
+    <method event="onmouseover" ><![CDATA[
+        if ( this.enabled) {
+            this.mouseisover = true;
+            if (this.mouseisdown) {
+                this.domousedown();
+                this.bkgnd.lft.setResourceNumber( this.downRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.downRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.downRsrcNumber );
+            } else {
+                this.domouseup();
+                this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.mid.setResourceNumber( this.overRsrcNumber );
+                this.bkgnd.rgt.setResourceNumber( this.overRsrcNumber );
+            }
+        }
+     ]]> </method>
+
+    <method event="onmouseout" > <![CDATA[
+        this.mouseisover = false;
+        this.domouseup();
+        this.bkgnd.lft.setResourceNumber( this.normalRsrcNumber );
+        this.bkgnd.mid.setResourceNumber( this.normalRsrcNumber );
+        this.bkgnd.rgt.setResourceNumber( this.normalRsrcNumber );
+    ]]> </method>
+
+    <method event="onclick" >
+        this.ocd.register(LzIdle,"onidle");
+    </method>
+
+
+
+
+    
+   </class>
+
+
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

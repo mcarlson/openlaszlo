@@ -1,0 +1,23 @@
+<canvas width="300" layout="spacing: 10">
+  
+  <text multiline="true" width="300">The following view uses the
+  <i>dragging</i> library.</text>
+  
+  <view resource="../images/laszlo_explorer_logo.png"
+        onmousedown="dragging.apply()"
+        onmouseup="dragging.remove(); stop()">
+    <dragstate name="dragging"/>
+  </view>
+  
+  <text multiline="true" width="100%">Implement custom dragging
+  behaviors by subclassing <i>dragstate</i>, or with states and
+  constraints.</text>
+  
+  <view resource="../images/laszlo_explorer_logo.png"
+        onmousedown="dragging.apply()"
+        onmouseup="dragging.remove()">
+    <state name="dragging">
+      <attribute name="x" value="${parent.getMouse('x')}"/>
+    </state>
+  </view>
+</canvas>

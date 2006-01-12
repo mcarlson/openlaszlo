@@ -1,0 +1,27 @@
+
+<canvas width="1280" height="1024" debug="true">
+   <debug width="400" height="400" y="300" />
+   <dataset name="myData">
+            <people>Antun</people>
+   </dataset>
+
+
+    <class name="repdp" extends="datapointer" 
+           ondata="Debug.write( this.name + ' ptr to ' +this.getNodeName())"/>
+
+    <repdp name="notrailer" xpath="myData:/people"/>
+    <repdp name="trslash" xpath="myData:/people/"/>
+
+    <view datapath="myData:/people">
+        <text datapath="text()"/>
+        <view datapath="/">
+            <text datapath="name()"/>
+        </view>
+        <simplelayout/>
+    </view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,64 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- mediastream.lzx                                                       -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas height="600" debug="true">
+    <splash/>
+    <debug y="400" />
+    <view name="animController" oninit="this.currentanim=this.first;">
+        <view name="first" play="true" x="10" y="10" 
+                     resource="http:resources/swf/anim.swf"
+                     oninit="new LzDelegate( this.parent , 
+                                             'animFinished' ,
+                                             this , 'onlastframe');" />
+ 
+        <view name="second" play="false" 
+                     resource="http:resources/swf/square.swf"
+                     x="10" y="10" visible="false"
+                     oninit="new LzDelegate( this.parent , 
+                                             'animFinished' ,
+                                             this , 'onlastframe');" />
+        
+
+        <method name="animFinished" args="who">
+            Debug.write( "anim finished for " + who );
+            this.currentanim =( who == this.first ? this.second : this.first );
+            this.currentanim.play( 1 );
+            this.currentanim.setVisible(true);
+            who.stop()
+            who.setVisible(false);
+        </method>        
+
+    </view>
+
+    <button text="pause" onclick="this.doClick()">
+        <method name="doClick" >
+            var canim = this.parent.animController.currentanim;
+            if ( canim.playing ){
+                canim.stop();
+ 
+                Debug.write( "Stopped: ", canim,
+                             " at ", canim.frame,
+                             " of ", canim.totalframes );
+           
+            } else {
+                canim.play(  );
+            }
+        </method>
+    </button>
+</canvas>
+
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

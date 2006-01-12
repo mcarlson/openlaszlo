@@ -1,0 +1,50 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Resource">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Media</lzcategory>
+    <lzshortdesc>
+        A tag that defines a media object that can be associated with a view.
+    </lzshortdesc>
+    <lztag>tag-resource.xml</lztag>
+</lzelement>
+
+<p>This tag defines a media object, that can be presented within a
+view.  A media object is an image, movie, animation, or sound clip.
+This tag imports the object into the application, and binds it to a
+string which can be used within a view.  For example:</p>
+
+<example class="program" id="resource-1">
+&lt;canvas height="70"&gt;
+  &lt;resource name="logo" src="images/logo.png"/&gt;
+  &lt;view resource="logo"/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>The src attribute refers to the filename of any valid resource type, including an optional directory path relative to the directory of the declaration.   Valid resource types for images and animations include: .SWF, .PNG, .JPG, and .GIF; valid audio types include: .MP3.</p>
+
+<p>Audio resources must be MP3 files at one of the following 
+sample rates: 11.025 khz, 22.5 khz, and 44.1 khz, and encoded at no 
+more than 160kbps.</p>
+
+<p>The <a href="${examples}image-loading/dataimage.lzx">dataimage</a> example
+further demonstrates the use of the <a class="code">resource</a> tag.</p>
+
+<p>
+For details on multi-frame resources, see <a href="frame.html">frame</a>.
+</p>
+
+</body>
+<!-- TBD: Multi-frame resources. -->
+<!-- TBD: Play, and audio resources. -->
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

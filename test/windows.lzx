@@ -1,0 +1,60 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- windows.lzx                                                           -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="600" height="800"> 
+	<include href="redmond"/>
+    <splash/>
+    <window title="Window 1" x="10" y="10" width="200" height="200" >
+        <view resource="resources/swf/includeme.swf"/>
+    </window>
+
+    <window title="Window 2" width="350" height="350" x="50" y="50"
+            resizable="true" >
+        <view width="200" height="500" >
+        <simplelayout axis="y" spacing="2" />
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <button x="20" label="widebutt" height="30" width="400"/>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <checkbox x="20" label="checkbox" width="200"/>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <view x="20">
+            <simplelayout axis="y" spacing="2" />
+            <radio    label="radio 1" width="40"/>
+            <radio    label="radio 2" width="40"/>
+            <radio    label="radio 3" width="40"/>
+        </view>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        <text width="200">here is some text</text>
+        </view>
+        <scrollbar axis="y" />
+    </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

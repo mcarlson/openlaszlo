@@ -1,0 +1,43 @@
+        <root name="Projets" isopen="true">
+            <project name="AXA" isopen="true">
+                <version name="testAXAV1" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://cwfr-d149:8370/carscode/SyntheseSelect.do"/>
+                    </ssp>
+                </version>
+                <version name="BaseLine d'Instanciation" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://www.nyapplecountry.com/reddelicious.htm"/>
+                    </ssp>
+                </version>
+            </project>
+            <project name="LUTECE" isopen="true">
+                <version name="testLUTECE1" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://www.nyapplecountry.com/reddelicious.htm"/>
+                    </ssp>
+                </version>
+                <version name="BaseLine d'Instanciation" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://www.nyapplecountry.com/reddelicious.htm"/>
+                    </ssp>
+                </version>
+            </project>
+            <project name="MIGRATION" isopen="true">
+                <version name="MIGRATIONAUDIT2" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://www.nyapplecountry.com/reddelicious.htm"/>
+                    </ssp>
+                </version>
+                <version name="MIGRATIONAUDIT1" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://www.nyapplecountry.com/reddelicious.htm"/>
+                    </ssp>
+                </version>
+                <version name="BaseLine d'Instanciation" isopen="true">
+                    <ssp name="SSP" isopen="true">
+                        <ea name="EA" isleaf="true" url="http://www.nyapplecountry.com/reddelicious.htm"/>
+                    </ssp>
+                </version>
+            </project>
+        </root>

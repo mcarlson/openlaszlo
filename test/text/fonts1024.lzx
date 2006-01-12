@@ -1,0 +1,235 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- fonts.lzx                                                             -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="1024" height="768" bgcolor="yellow"> 
+  <include href="redmond" />
+  <splash/>
+  
+  <!-- Import some fonts.  -->
+  <font name="Arioso" src="ariosor.ttf">
+    <face src="ariosob.ttf" style="bold" />
+  </font>
+  
+  <font name="Chevara" src="chevarar.ttf">
+    <face src="chevaraor.ttf" style="bold" />
+  </font>
+  
+  <font name="Conga" src="congar.ttf">
+    <face src="congab.ttf" style="bold" />
+  </font>
+  
+  <font name="Helvetica-Condensed">
+    <face src="helmetcb.ttf"  style="bold" />
+    <face src="helmetcbi.ttf" style="bold italic" />
+    <face src="helmetci.ttf"  style="italic" />
+    <face src="helmetcr.ttf" />
+  </font>
+  
+  <font name="Helvetica">
+    <face src="helmetr.ttf"/>
+    <face src="helmetb.ttf"  style="bold" />
+    <face src="helmeti.ttf"  style="italic" />
+    <face src="helmetbi.ttf" style="bold italic" />
+  </font>
+  
+  <font name="Times Roman">
+    <face src="timmonsr.ttf" />
+    <face src="timmonsb.ttf"  style="bold" />
+    <face src="timmonsi.ttf"  style="italic" />
+    <face src="timmonsbi.ttf" style="bold italic" />
+  </font>
+  
+  <!-- Fonts from the examples directory -->
+  <font src="../resources/ttf/clawless.ttf" name="Clawless" />
+  <font src="../resources/ttf/kitchen.ttf"  name="Kitchen" />
+  
+  <!-- Laszlo Pixel Font (8) -->
+  <font src="lzsans8.ttf"  name="Sans Serif 8">
+    <face src="lzsans8b.ttf" style="bold" />
+  </font>
+  
+  <view width="1024" height="768">
+    <simplelayout axis="x" spacing="1"/>
+    <view>
+      <simplelayout axis="y" spacing="1"/>
+      <!-- This is the default font -->
+      <view width="256" clip="true" font="default" bgcolor="white"> <simplelayout axis="y"  />
+        <text>default</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>default</b></text>
+        <!-- <text><i>Arial</i></text> -->
+        <!-- <text><b><i>Arial</i></b></text> -->
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>default</windowtext>
+        <!-- <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text> -->
+        <text><b>Bold </b><u>Underline <b>Bold Underline</b></u></text> 
+        <!-- XXX The following things are broken -->
+        <!--
+      <text><a href="http://www.laszlosystems.com">www.laszlosystems.com</a></text> 
+      <text><font size="20">20 points</font><font size="10">10 points</font><font color="#ff0000">red</font></text> 
+        -->
+      </view>
+      
+      <view width="256" clip="true" font="lztahoe8" bgcolor="white"> <simplelayout axis="y"  />
+        <text>lztahoe8</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>lztahoe8</b></text>
+        <!-- <text><i>Arial</i></text> -->
+        <!-- <text><b><i>Arial</i></b></text> -->
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>lztahoe8</windowtext>
+        <!-- <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text> -->
+        <text><b>Bold </b><u>Underline <b>Bold Underline</b></u></text> 
+        <!-- XXX The following things are broken -->
+        <!--
+      <text><a href="http://www.laszlosystems.com">www.laszlosystems.com</a></text> 
+      <text><font size="20">20 points</font><font size="10">10 points</font><font color="#ff0000">red</font></text> 
+        -->
+      </view>
+      
+      <view width="256" clip="true" font="Sans Serif 8" bgcolor="white"> <simplelayout axis="y"  />
+        <text>Sans Serif 8</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Sans Serif 8</b></text>
+        <!-- <text><i>Arial</i></text> -->
+        <!-- <text><b><i>Arial</i></b></text> -->
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Sans Serif 8</windowtext>
+        <!-- <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text> -->
+        <text><b>Bold </b><u>Underline <b>Bold Underline</b></u></text> 
+      </view>
+    </view>
+    <view>
+      <simplelayout axis="y" spacing="1"/>
+      
+      <view width="256" clip="true" font="Helvetica" fontsize="14"  bgcolor="white"> <simplelayout axis="y"  />
+        <text>Helvetica</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Helvetica</b></text>
+        <text><i>Helvetica</i></text>
+        <text><b><i>Helvetica</i></b></text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Helvetica</windowtext>
+        <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text>
+      </view>
+      
+      <view width="256" clip="true" font="Helvetica-Condensed" fontsize="14"  bgcolor="white"> <simplelayout axis="y"  />
+        <text>Helvetica-Condensed</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Helvetica-Condensed</b></text>
+        <text><i>Helvetica-Condensed</i></text>
+        <text><u>Helvetica-Condensed</u></text>
+        <text><b><i>Helvetica-Condensed</i></b></text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Helvetica-Condensed</windowtext>
+        <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text>
+      </view>
+    </view>
+    <view>
+      <simplelayout axis="y" spacing="1"/>
+      
+      <view width="256" clip="true" font="Times Roman" fontsize="14" bgcolor="white" > <simplelayout axis="y" />
+        <text>Times Roman</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Times Roman</b></text>
+        <text><i>Times Roman</i></text>
+        <text><u>Times Roman</u></text>
+        <text><b><i>Times Roman</i></b></text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Times Roman</windowtext>
+        <text><b><i>BoldItalic </i>Bold </b><i>Italic </i><u>Underline <b>Bold Underline</b></u></text>
+      </view>
+      
+      <view width="256" clip="true" font="Clawless" fontsize="24"  bgcolor="white"> <simplelayout axis="y"  />
+        <text>Clawless</text>
+        <!-- Note this font is missing the @,*,(,),= characters -->
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!#$%^-</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Clawless</windowtext>
+        <text><u>Underline</u></text>
+      </view>
+    </view>
+    <view>
+      <simplelayout axis="y" spacing="1"/>
+      
+      <view width="256" clip="true" font="Kitchen" fontsize="24" bgcolor="white" > <simplelayout axis="y"  />
+        <text>Kitchen</text>
+        <!-- Note this font is missing the @,*,(,),= characters -->
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!#$%^-</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Kitchen</windowtext>
+        <text><u>Underline</u></text>
+      </view>
+      
+      <!-- These fonts do not have italic and bold italic -->
+      <view width="256" clip="true" font="Arioso" fontsize="20"  bgcolor="white"> 
+        <simplelayout axis="y"  />
+        <text>Arioso</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Bold</b></text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Arioso</windowtext>
+        <text><u>Underline</u></text>
+      </view>
+    </view>
+    <view>
+      <simplelayout axis="y" spacing="1"/>
+      
+      <view width="256" clip="true" font="Conga" fontsize="14" bgcolor="white" > 
+        <simplelayout axis="y"  />
+        <text>Conga</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Bold</b></text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Conga</windowtext>
+        <text><u>Underline</u></text>
+      </view>
+      
+      <view width="256" clip="true" font="Chevara" fontsize="14"  bgcolor="white"> 
+        <simplelayout axis="y"  />
+        <text>Chevara</text>
+        <text>abcdefghijklmnopqrstuvwxyz1234567890!@#$%^*()-=+|</text>
+        <text>ABCDEFGHIJKLMNOPQRSTUVWXYZ&amp;,./&lt;&gt;?;':"[]{}\~`</text>
+        <text><b>Bold</b></text>
+        <inputtext>inputtext here</inputtext>
+        <windowtext multiline="true" height="100" width="100" >hello there</windowtext>
+        <windowtext>Chevara</windowtext>
+        <text><u>Underline</u></text>
+      </view>
+    </view>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

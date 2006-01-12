@@ -1,0 +1,87 @@
+<canvas>
+    <debug y="160"/>
+    <include href="slider/slider.lzx"/>
+
+    <class name="box" height="10" width="10" extends="basecomponent"/>
+    <class name="swatch" height="10" width="10" extends="swatchview"/>
+
+    <class name="offsetslider" height="45">
+        <attribute name="value" value="${Math.round(this.s.value)}" type="number"/>
+        <text x="30" y="15" text="${parent.value}"/>
+        <text x="${50-this.width}" resize="true" text="${parent.name + ':'}"/>
+	    <simpleslider name="s" y="5" x="54" width="200" oninit="setValue(40)"
+            minlimit="-255" maxlimit="255"
+            majordivision="20" minordivision="0"/>
+
+    </class>
+    <class name="colorslider" height="45">
+        <attribute name="value" value="${Math.round(this.s.value)}" type="number"/>
+        <text x="30" y="15" text="${parent.value}"/>
+        <text x="${50-this.width}" resize="true" text="${parent.name + ':'}"/>
+	    <simpleslider name="s" y="5" x="54" width="200"
+            minlimit="0" maxlimit="100" oninit="setValue(100)"
+            majordivision="20" minordivision="0"/>
+    </class>
+
+    <class name="div">
+        <attribute name="text" type="text"/>
+        <text resize="true" name="n" text="${parent.text}"/>
+        <view x="${parent.n.width+10}" y="7" bgcolor="blue" width="200" height="1"/>
+    </class>
+
+    <view x="290" y='40'>
+        <simplelayout axis="y" spacing="5"/>
+        <view>
+            <simplelayout axis="x" spacing="10"/>
+            <swatch id="s1"/>
+            <swatch id="s2" bgcolor="0xc0c0c0"/>
+            <swatch id="s3" bgcolor="0x333333"/>
+            <swatch id="s4" bgcolor="0x000000"/>
+        </view>
+        <button id="btn">Test Color</button>
+        <box id="b"/>
+        <view height="100" width="40" clip="true">
+            <view height="500" width="40"/>
+            <scrollbar id="sb"/>
+        </view>
+    </view>
+
+    <class name="colorcontrol">
+        <method name="docolortransform"> <![CDATA[
+            var mycolor = Number(this.blue.value/100*255);
+           mycolor = mycolor + (Number(this.red.value/100*255) << 16);
+           mycolor = mycolor + (Number(this.green.value/100*255) << 8);
+            b.setbgcolor(mycolor);
+
+            btn.setTint(btn, mycolor, offset.value);
+            sb.setTint(sb, mycolor, offset.value);
+            sb.setTint(s1, mycolor, offset.value);
+            sb.setTint(s2, mycolor, offset.value);
+            sb.setTint(s3, mycolor, offset.value);
+            sb.setTint(s4, mycolor, offset.value);
+            ]]>
+        </method>
+        <method event="oninit">
+            var del = new LzDelegate(this, "docolortransform");
+            del.register(this.red, 'onvalue');
+            del.register(this.green, 'onvalue');
+            del.register(this.blue, 'onvalue');
+            del.register(this.offset, 'onvalue');
+            docolortransform();
+        </method>
+        <simplelayout inset="10"/>
+        <div>percentage</div>
+        <colorslider name="red" />
+        <colorslider name="green" />
+        <colorslider name="blue" />
+        <div>offset</div>
+        <offsetslider name="offset"/>
+<!--        <offsetslider name="greenoffset" />-->
+<!--        <offsetslider name="blueoffset" />-->
+    </class>
+    <colorcontrol/>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

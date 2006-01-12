@@ -1,0 +1,13 @@
+<canvas>
+<include href="redmond"/>
+  <command id="cmd_apples" onselect="location.href='/statsapp/index.cfm';return false;"/>
+  <menubar width="${immediateparent.width}" height="25" clickable="true">
+    <menu label="Homepage" hasbutton="true" width="175"/>
+    <menu label="Enter Stats" hasbutton="true" width="175"/>
+    <menu label="View Stats" hasbutton="true" width="175"/>
+  </menubar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

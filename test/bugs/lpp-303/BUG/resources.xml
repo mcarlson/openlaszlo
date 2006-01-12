@@ -1,0 +1,13 @@
+<resources>
+    <logos>
+        <adminLogo>mylogo.jpg</adminLogo>
+        <employeeLogo0>logo.png</employeeLogo0>
+        <employeeLogo1>sylantro_logo.png</employeeLogo1>
+    </logos>
+
+    <customFont>corporateFont.ttf</customFont>
+
+    <banners>
+        <banner url="banner.png" seconds="30"/>
+    </banners>
+</resources>

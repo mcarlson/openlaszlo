@@ -1,0 +1,59 @@
+<canvas>
+    <class name="leaktest">
+        <attribute name="start" value="0"/>
+        <attribute name="numtimes" value="0"/>
+        <attribute name="itemlist" value="null"/>
+        <attribute name="numitems" value="0"/>
+        <attribute name="limit" value="60"/>
+        <attribute name="itemclassname" value="" type="string"/>
+        <method event="oninit">
+            this.itemlist = [];
+        </method>
+        <method name="dotest" args="whichclass">
+            this.start = 1;
+            this.numtimes = 0;
+            this.itemclassname = whichclass;
+        </method>
+        <method event="onidle" reference="LzIdle">  <![CDATA[
+            if (start && (this.numtimes < this.limit || this.numitems>0)) {
+                if (this.numitems == 0) {
+                    for (var i=0; i < 10; i ++) {
+                        //itemlist[i] = new button(canvas, {text:'title', y:i*24, x:200});
+                        this.itemlist[i] = new global[this.itemclassname](canvas, {bgcolor:0x006600,
+                            width:100, height:22, y:i*24, x:300});
+                        this.numitems ++;
+                    }
+                    this.setAttribute('numtimes', numtimes+1);
+                } else {
+                    for (var i=0; i < this.numitems; i++) {
+                        this.itemlist[i].destroy();
+                        delete this.itemlist[i];
+                    }
+                    this.numitems = 0;
+                }
+            }
+        ]]> </method>
+    </class>
+
+    <leaktest id="test"/>
+    <view layout="spacing:10">
+        <combobox id="sel">
+            <textlistitem >basecomponent</textlistitem>
+            <textlistitem>basevaluecomponent</textlistitem>
+            <textlistitem selected="true">button</textlistitem>
+        </combobox>
+        <text width="250" multiline="true">to use this test you need to use an external tool (like the
+            Windows Task Manager) to look at how much memory this
+            process is using.  When you click the "start" button.  The
+            test will repeatedly create and destroy instances of the class
+            named in the combobox. Expect memory to increase at first, but then
+            level off at some point. (run in non-debug to get quicker results)</text>
+    </view>
+    <button x="120" onclick="test.dotest(sel.getText())">Start</button>
+    <text x="200" width="150" text="${test.numtimes +'/'+test.limit}"/>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

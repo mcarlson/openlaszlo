@@ -1,0 +1,81 @@
+<library>
+    
+    <include href="rpc/rpc.lzx" />
+    <include href="rpc/library/javarpc.js" />
+
+    <security>
+        <allow>
+            <pattern>^org\.openlaszlo\.remote\.LZHttpSessionRemote$</pattern>
+        </allow>
+    </security>
+
+    <!--- A class to get an http session object and invoke its methods. Remote
+          method signatures are:
+
+          getAttribute(name) - returns object, array, or primitive type.
+          getAttributeNames() - returns array of attribute names.
+          getId() - returns remote session id
+          getMaxInactiveInterval() - returns max inactive interval for session.
+          invalidate() - invalidate remote session
+          isNew() - returns true if the client does not yet know about the
+            session or if the client chooses not to join the session.
+          removeAttribute(name) - remove attribute named name; returns void.
+          setAttribute(name,value) - set attribute named name with value; returns
+            void.
+          setMaxInactiveInterval(interval) - set max inactive interval for
+            session.
+
+          See javax.servlet.http.HttpSession in the Java Servlet API
+          documentation for more information. -->
+    <class name="sessionrpc" extends="rpc">
+
+        <!--- @keywords private -->
+        <attribute name="_attributename" value="none" type="string" />
+        <!--- @keywords private -->
+        <attribute name="_scope" value="none" type="string" />
+        <!--- @keywords private -->
+        <attribute name="_classname" type="string"
+                   value="org.openlaszlo.remote.LZHttpSessionRemote" />
+
+        <!--=================================================================-->
+        <!-- public methods                                                  -->
+        <!--=================================================================-->
+
+        <!--- Loads session object. -->
+        <method name="load">
+            var opts = {
+                loadoption: 'loadonly',
+                classname: this._classname,
+                oname: this._attributename,
+                scope: this._scope
+            }
+            LzJavaRPCService.loadObject(this._loadDel, opts, this.secure, 
+                this.secureport);
+        </method>
+
+        <!--- @keywords private -->
+        <method name="_setup" args="o">
+            var ok = super._setup(o);
+
+            for (var k in this.proxy) {
+                var tpka = this.proxy[k]['args'];
+                if (tpka == null) {
+                    tpka = this.proxy[k].args = {};
+                }
+                tpka.secure = this.secure;
+                tpka.secureport = this.secureport;
+                tpka.scope = this._scope;
+                tpka.attributename = this._attributename;
+            }
+
+            return ok;
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

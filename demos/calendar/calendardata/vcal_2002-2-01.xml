@@ -1,0 +1,208 @@
+<vcalendar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year2002>
+        <month2>
+            <day15>
+                <event>
+                       <summary value="Lunch with Bob"/>
+                       <comment value="Lunch with Bob"/>
+                       <start year="2002" month="2" day="15" hour="14" minute="1"/>
+                       <end year="2002" month="2" day="15" hour="16" minute="1"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Meeting"/>
+                       <comment value="Meeting"/>
+                       <start year="2002" month="2" day="15" hour="16" minute="30"/>
+                       <end year="2002" month="2" day="15" hour="17" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up kids"/>
+                       <comment value="Pick up kids"/>
+                       <start year="2002" month="2" day="15" hour="17" minute="0"/>
+                       <end year="2002" month="2" day="15" hour="18" minute="0"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Send letter"/>
+                       <comment value="Send letter"/>
+                       <start year="2002" month="2" day="15" hour="13" minute="2"/>
+                       <end year="2002" month="2" day="15" hour="14" minute="2"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Call Irene"/>
+                       <comment value="Call Irene"/>
+                       <start year="2002" month="2" day="15" hour="9" minute="12"/>
+                       <end year="2002" month="2" day="15" hour="10" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day15>
+            <day2>
+                <event>
+                       <summary value="A test event"/>
+                       <comment value="A test event"/>
+                       <start year="2002" month="2" day="2" hour="8" minute="30"/>
+                       <end year="2002" month="2" day="2" hour="10" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="A longer event to show wrapping"/>
+                       <comment value="A longer event to show wrapping"/>
+                       <start year="2002" month="2" day="2" hour="14" minute="12"/>
+                       <end year="2002" month="2" day="2" hour="15" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Go to new office"/>
+                       <comment value="Go to new office"/>
+                       <start year="2002" month="2" day="2" hour="7" minute="12"/>
+                       <end year="2002" month="2" day="2" hour="8" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day2>
+            <day6>
+                <event>
+                       <summary value="Another meeting"/>
+                       <comment value="Another meeting"/>
+                       <start year="2002" month="2" day="6" hour="3" minute="30"/>
+                       <end year="2002" month="2" day="6" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Lunch with kids"/>
+                       <comment value="Lunch with kids"/>
+                       <start year="2002" month="2" day="6" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="6" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up car"/>
+                       <comment value="Pick up car"/>
+                       <start year="2002" month="2" day="6" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="6" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day6>
+            <day12>
+                <event>
+                       <summary value="Another meeting"/>
+                       <comment value="Another meeting"/>
+                       <start year="2002" month="2" day="12" hour="3" minute="30"/>
+                       <end year="2002" month="2" day="12" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Lunch with kids"/>
+                       <comment value="Lunch with kids"/>
+                       <start year="2002" month="2" day="12" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="12" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up car"/>
+                       <comment value="Pick up car"/>
+                       <start year="2002" month="2" day="12" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="12" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day12>
+            <day21>
+                <event>
+                       <summary value="Another meeting"/>
+                       <comment value="Another meeting"/>
+                       <start year="2002" month="2" day="21" hour="3" minute="30"/>
+                       <end year="2002" month="2" day="21" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Lunch with kids"/>
+                       <comment value="Lunch with kids"/>
+                       <start year="2002" month="2" day="21" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="21" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up car"/>
+                       <comment value="Pick up car"/>
+                       <start year="2002" month="2" day="21" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="21" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day21>
+            <day30>
+                <event>
+                       <summary value="Happy birthday bob!"/>
+                       <comment value="Happy birthday bob!"/>
+                       <start year="2002" month="2" day="30" hour="3" minute="30"/>
+                       <end year="2002" month="2" day="30" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Good evening"/>
+                       <comment value="Good evening"/>
+                       <start year="2002" month="2" day="30" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="30" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Another example event"/>
+                       <comment value="Another example event"/>
+                       <start year="2002" month="2" day="30" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="30" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day30>
+            <day18>
+                <event>
+                       <summary value="How we do it back home"/>
+                       <comment value="How we do it back home"/>
+                       <start year="2002" month="2" day="18" hour="3" minute="30"/>
+                       <end year="2002" month="2" day="18" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Text wrapping for dummies class"/>
+                       <comment value="Text wrapping for dummies class"/>
+                       <start year="2002" month="2" day="18" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="18" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Conference"/>
+                       <comment value="Conference"/>
+                       <start year="2002" month="2" day="18" hour="12" minute="12"/>
+                       <end year="2002" month="2" day="18" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day18>
+        </month2>
+    </year2002>
+</vcalendar>

@@ -1,0 +1,826 @@
+<!--
+ * debugger.lzx
+ **************************************************************************-->
+
+<library>
+
+
+<!--
+ N.B. this (singleton) class actually extends the core debugger object defined in
+ lfc/core/LzDebug.as by some tricky surgery in construct, q.v.
+-->
+
+<include href="base/basebutton.lzx"/>
+<include href="utils/layouts" />
+<include href="utils/states/resizestate.lzx" />
+<include href="utils/states/dragstate.lzx" />
+<include href="newcontent.lzx" />
+
+ <!-- IMAGE RESOURCES -->
+
+ <!-- Buttons --> 
+
+ <resource src="images/buttons/closebtn.swf" name="closeBtn_rsc" />
+ <resource src="images/buttons/evalbtn.swf" name="evalBtn_rsc" />
+ <resource src="images/buttons/minbtn.swf" name="minBtn_rsc" />
+ <resource src="images/buttons/expbtn.swf" name="expBtn_rsc" />
+ <resource src="images/buttons/prefsbtn.swf" name="prefsBtn_rsc" />
+ <resource src="images/buttons/tfdownbtn.swf" name="tfdownBtn_rsc" />
+ <resource src="images/buttons/tfupbtn.swf" name="tfupBtn_rsc" />
+ <resource src="images/buttons/clear1.swf" name="clear1_rsc" />
+
+ <resource src="images/shadowbottom.swf" name="shadowBottom_rsc" />
+ <resource src="images/shadowcorner.swf" name="shadowCorner_rsc" />
+ <resource src="images/shadowleft.swf" name="shadowLeft_rsc" />
+ <resource src="images/shadowright.swf" name="shadowRight_rsc" />
+ <resource src="images/shadowtop.swf" name="shadowTop_rsc" />
+
+ <resource src="images/bottomleftbtm.swf" name="bottomLeftBtm_rsc" />
+ <resource src="images/bottomleftmid.swf" name="bottomLeftMid_rsc" />
+ <resource src="images/bottomlefttop.swf" name="bottomLeftTop_rsc" />
+ <resource src="images/bottomrghtbtm.swf" name="bottomRghtBtm_rsc" />
+ <resource src="images/bottomrghtmid.swf" name="bottomRghtMid_rsc" />
+ <resource src="images/bottomrghttop.swf" name="bottomRghtTop_rsc" />
+ <resource src="images/bottom.swf" name="bottom_rsc" />
+
+
+ <resource name="grabber_rsc">
+   <frame src="images/grabber.swf" />
+   <frame src="images/grabberover.swf" />
+ </resource>
+
+ <resource src="images/handleover.swf" name="handleOver_rsc" />
+ <resource src="images/handle.swf" name="handle_rsc" />
+ <resource src="images/leftright.swf" name="leftRight_rsc" />
+
+ <resource name="resizer_rsc">
+   <frame src="images/resizer.swf"/>
+   <frame src="images/resizerover.swf"/>
+ </resource>
+
+ <resource src="images/title.swf" name="title_rsc" />
+ <resource src="images/topleft.swf" name="topLeft_rsc" />
+ <resource src="images/topright.swf" name="topRight_rsc" />
+ <resource src="images/top.swf" name="top_rsc" />
+
+
+
+<!--- 
+    Drop shadow for the bottom of the debugger window
+
+    @keywords private
+-->
+<class name="debugger_shadow_bottom"> 
+     <resizelayout axis="x" /> 
+     <view resource="shadowLeft_rsc" /> 
+     <view resource="shadowBottom_rsc" stretches="width" 
+           options="releasetolayout" /> 
+</class> 
+
+
+<!--- 
+    Drop shadow for the right side of the debugger window 
+
+    @keywords private
+-->
+<class name="debugger_shadow_right"> 
+    <stableborderlayout axis="y" /> 
+    <view resource="shadowTop_rsc" /> 
+    <view resource="shadowRight_rsc" stretches="height" /> 
+    <view resource="shadowCorner_rsc" /> 
+</class> 
+
+
+<!--- 
+    The Laszlo debugger window. An instance will be automatically
+    instantiated when the application is compiled in debug mode
+    (requested by either using the
+    <code>canvas</code> <code>debug</code> attribute or by loading the
+    application using the <code>?debug=true</code> option).  
+
+    @keywords private_constructor
+-->
+<class name="LzDebugWindow" 
+       font="monospace" fontsize="11" fontstyle="plain"
+       y="50%" x="5%" height="45%" width="90%"
+       oninit="initEvalView()" pixellock="true">
+
+    <!-- ATTRIBUTES -->
+    <attribute name="title" value="" type="string" />
+    <attribute name="closeable" value="true"/> 
+    <attribute name="resizable" value="true"/>
+
+    <attribute name="smallInputAreaHeight" value="29" />
+    <attribute name="savedInputAreaHeight" value="53" />
+    <attribute name="debuggerBorderWidth" value="5" />
+
+    <attribute name="savedXPos" value="10" />
+    <attribute name="savedYPos" value="10" />
+    <attribute name="savedWidth" value="340" />
+    <attribute name="savedHeight" value="125" />
+
+    <attribute name="remoteDebug"   value="false"/>
+    <attribute name="consoleRemote" value="false"/> 
+
+    <attribute name="minimized" value="false" />
+    <attribute name="autoscroll" value="true" />
+
+    <attribute name="initstage" value="immediate" />
+
+    <attribute name="commandhistory" value="[]" />
+    <attribute name="commandhistory_ptr" value="0" />
+
+    <attribute name="focustrap" value="true" />
+    <attribute name="lineheight" value="13" />
+    <attribute name="options" value="ignorelayout" />
+
+    <attribute name="solo_mode" value="false" />
+
+    <!-- METHODS -->
+    <method name="construct" args="parent, args">
+      super.construct(parent, args);
+      // Now inherit from core debugger
+      var lzd = __LzDebug;
+      var warn = lzd.warn;
+      // Remove methods that will be superceded
+      for (var i in lzd) {
+        if (typeof(this[i]) != 'undefined') {
+//           warn.call(lzd, 'Removing %w.%s: %w', lzd, i, lzd[i]);
+          delete lzd[i];
+        }
+      }
+      // insert the core debugger in the proto chain
+      global.__LzDebug.__proto__ = this.__proto__;
+      this.__proto__ = global.__LzDebug;
+      this.id = 'Debug';
+      // redefine the core debugger here so as not to get a warning
+      // about redefining it from setName
+      global.Debug = this;
+      global.__LzDebug = this;
+    </method>
+
+    <method name="setWidth" args="w" > 
+        super.setWidth( Math.max( 170 , Math.min( w , canvas.width) ) ); 
+    </method> 
+
+    <method name="setHeight" args="h" > 
+        super.setHeight( Math.max( 112 , Math.min( h , canvas.height) ) ); 
+        if (!__LzDebug.isLoading) {
+           this.middle.content.updateDisplay();
+       }
+    </method> 
+
+    <method name="setX" args="x" > 
+        super.setX( Math.max( 0-(this.width-10), Math.min( x , canvas.width - 4) ) ); 
+    </method> 
+
+    <method name="setY" args="y" > 
+        super.setY( Math.max( 0 , Math.min( y , canvas.height - 4) ) ); 
+    </method> 
+
+    <method name="initEvalView">
+      <![CDATA[
+       global._ = null;
+       this.evalloader = new LzLoader(this, { attachname: 'debugloader' });
+       this.loaded();
+       var text = this.bottom.center.input;
+       this.lineheight = text.getTextHeight()+4;
+       this.setAttribute("smallInputAreaHeight", this.lineheight + 16);
+       this.inspectDel = new LzDelegate(this, "inspectObject");
+       this.inspectDel.register(LzGlobalMouse, "onmousedown");
+       this.moveCaretDel = new LzDelegate(this, 'sendCaretToEOL');
+      ]]>
+    </method>
+
+    <method name="handleFocus">
+      this.bringToFront();
+      if (this.bottom.center.input.height > this.smallInputAreaHeight) {
+        _dbg_cmd_eval.active = false;
+        _dbg_cmd_hist_prev.active = false;
+        _dbg_cmd_hist_next.active = false;
+      } else {
+        _dbg_cmd_eval.active = true;
+        _dbg_cmd_hist_prev.active = true;
+        _dbg_cmd_hist_next.active = true;
+      }
+    </method>
+
+    <method name="handleBlur">
+       _dbg_cmd_eval.active = false;
+       _dbg_cmd_hist_prev.active = false;
+       _dbg_cmd_hist_next.active = false;
+    </method>
+
+
+    <!-- *** Commands *** -->
+    <command id="_dbg_cmd_eval" onselect="parent.doEval()"  key="['Enter']" active="false"/>
+    <command id="_dbg_cmd_hist_prev" onselect="parent.doCommandHistory(-1)"  key="['uparrow']" active="false"/>
+    <command id="_dbg_cmd_hist_next" onselect="parent.doCommandHistory(1)"  key="['downarrow']" active="false"/>        
+
+    <!--- Substitute entity character escapes for HTML meta-characters  -->
+    <method name="escapeText" args="ts" >
+      <![CDATA[
+          var i;
+          if (typeof(ts) == "string") {
+              var outstr = "";
+              var tlen = ts.length;
+              for ( i = 0; i < tlen; i++) {
+                  var c = ts.charAt(i);
+                  if (c == '<') {
+                      outstr += "&lt;";
+                  } else if (c == '>') {
+                      outstr += "&gt;";
+                  } else if (c == '&') {
+                      outstr += "&amp;";
+                  } else {
+                      outstr += c;
+                  }
+              }
+              return outstr;
+          } else {
+              return ts;
+          }
+       ]]>
+    </method>
+
+    <!-- prompt state -->
+    <attribute name="atPrompt" value="false" />
+
+    <!-- emit a prompt if you need one -->
+    <method name="freshPrompt">
+      <![CDATA[
+        if (! this.atPrompt) {
+            this.freshLine();
+            this.addHTMLText('<font color="#00CC00">lzx&gt; </font>');
+            this.atPrompt = true;
+        }
+      ]]>
+    </method>
+
+
+    <method name="checkServerResponse">
+      <![CDATA[
+        var loadobj = new LoadVars();
+        loadobj.onData = this.checkServerResponseHandler;
+        var reqstr =  LzBrowser.toAbsoluteURL( "__dbgprobe.lzx?lzt=stat", false );
+        loadobj.sendAndLoad(reqstr , loadobj, "POST" );
+      ]]>
+    </method>
+
+
+    <method name="checkServerResponseHandler" args="src">
+      <![CDATA[
+      // NB: This is a callback handler, and 'this' will be bound to some LoadVars object, not to Debug
+      if (src == undefined) {
+        Debug.freshLine();  
+        Debug.addHTMLText('<font color="#FF8800">Debugger cannot contact LPS server, switching to SOLO mode.</font>\n');
+        Debug.setAttribute('solo_mode', true);
+      }
+      ]]>
+    </method>
+
+    <!-- send the input text field to server for compile/eval -->
+    <method name="doEval">
+      <![CDATA[
+       var expr = this.bottom.center.input.getText();
+       this.commandhistory[this.commandhistory.length] = expr;
+       this.commandhistory_ptr = this.commandhistory.length;
+       // Echo input to output
+       this.freshPrompt();
+       this.addHTMLText('<font color="#00CC00">'+String(expr).toHTML()+"</font>\n");
+       // Will try to compile as 'Debug.displayResult(expr);' and if
+       // that fails, will try to compile as a series of statements
+       // (with no display).  Finally, will compile
+       // 'Debug.__write(<error message>)' if both of those fail.
+       if (this.solo_mode) {
+           this.displayResult(eval(expr));
+       } else {
+           this.evalloader.request( { lz_load : false,
+                                          lzt : "eval",
+                                          proxied: true,
+                                          url: "__debugger.lzx",
+                                          lz_script : "#file interactive-eval-"+
+                                          this.commandhistory.length + 
+                                          "\n#line 0\n" + expr } );
+       }
+       // Clear the input text field
+       if (!this.bottom.center.input.multiline) {
+           this.bottom.center.input.clearText();
+       }
+       ]]>
+    </method>
+
+    <!--- Used to display the results of doEval (if any)
+      @keywords private -->
+    <method name="displayResult" args="result">
+      <![CDATA[
+       if (typeof(result) != 'undefined') {
+         // Advance saved results if you have a new one
+         if (result !== global._) {
+           if (typeof(global.__) != 'undefined') { 
+             global.___ = global.__;
+           }
+           if (typeof(global._) != 'undefined') {
+             global.__ = global._;
+           }
+           global._ = result;
+         }
+       }
+
+       if (this.consoleRemote) {
+         __LzDebug.cdSendMsg(this.__String(result));
+         return;
+       }
+
+       if (this.remoteDebug) { return; } 
+
+       this.freshLine();
+       // Output any result from the evalloader
+       if (typeof(result) != 'undefined') {
+           // Turn off pretty for results
+           this.format("%#w", result)
+       }
+      this.freshPrompt();
+      ]]>
+    </method>
+
+    <method name="evalString" args="expr">
+      this.evalloader.request( { lz_load : false,
+                                 lzt : "eval",
+                                 lz_script : "#file evalString\n#line 0\n" + expr } )
+    </method>
+
+    <!--- Write a message to the debug window console.
+         @param [Object] objects: List of objects to write.
+    -->
+    <method name="write" args="objects">
+      <![CDATA[
+      if (this.remoteDebug) {
+          var n = arguments.length
+          // Pass each value to __write individually so they can be
+          // 'presented' as objects if applicable
+          for (var i = 0; i < n; i++) {
+              var v = arguments[i];
+              var s = ((i == (n-1)) ? '\n' : ' ');
+              this.sockWriteLog(v);
+          }
+      } else {
+          if (!this.consoleRemote && !this['visible']) {
+              this.setVisible(true);
+              this.bringToFront();
+          }
+          // Call the primitive method
+          this.writeInternal.apply(this, arguments);
+      }
+      ]]>
+    </method>
+
+    <!--- Clear the output from the debug window -->
+    <method name="clearWindow">
+      this.middle.content.clear();
+    </method>
+
+    <method name="stuffInput" args="str">
+        var infield = this.bottom.center.input;
+        LzFocus.setFocus(infield);
+        infield.setText(str);
+        LzTimer.addTimer(this.moveCaretDel, 1);
+    </method>
+
+    <method name="sendCaretToEOL">
+        var infield = this.bottom.center.input;
+        LzFocus.setFocus(infield);
+        var content = infield.getText();
+        infield.setSelection(content.length, content.length);
+    </method>
+
+    <method name="doCommandHistory" args="offset">
+        var ptr = this.commandhistory_ptr;
+        ptr += offset;
+        ptr = Math.max(0, Math.min(this.commandhistory.length-1, ptr));
+        this.stuffInput(this.commandhistory[ptr]);
+        this.commandhistory_ptr = ptr;
+    </method>
+
+
+    <method name="stuffObjectId" args="id">
+        this.bottom.center.input.setText(this.ObjectForID(id));
+    </method>
+
+    <method name="displayObj" args="id">
+      <![CDATA[
+        var obj = this.ObjectForID(id);
+        // Make it look like you executed a command, even though
+        // you don't need to compile to do this
+        this.freshPrompt();
+        this.addHTMLText('<font color="#00CC00">' +
+                         this.formatToString("Debug.inspect(%0.48w)", obj).toHTML() +
+                         '</font>\n');
+        this.displayResult(this.inspect(obj));
+      ]]>
+    </method>
+
+   <method name="inspectObject" args="obj">
+    if (LzKeys.isKeyDown('capslock')) {
+      // force and ID, so the object can be inspected
+      var id = this.IDForObject(obj, true);
+      this.displayResult(obj);
+    }
+   </method>
+
+    <method name="setTitle" args="t" >
+        this.top.title.setText( t )
+    </method>
+
+
+    <!--- Toggle the debug window from minimized to maximized size -->
+    <method name="toggleMinimizeWindow">
+        var _dbgw = this.width;
+        var _dbgh = this.height;
+        var _dbgx = this.x;
+        var _dbgy = this.y;
+        this.animate("x", this.savedXPos, 333, false);
+        this.animate("y", this.savedYPos, 333, false);
+        this.animate("width", this.savedWidth, 333, false);
+        this.animate("height", this.savedHeight, 333, false);
+        this.savedXPos = _dbgx;
+        this.savedYPos = _dbgy;
+        this.savedWidth = _dbgw;
+        this.savedHeight = _dbgh;
+        this.minimized = !this.minimized;
+        // If debug window height is being minimized, set to single line input area
+        if (this.minimized) {
+            this.bottom.left.doSingleLine();
+        }
+        this.adjustMultiline();
+        this.top.controls.min.setVisible(!this.minimized);
+        this.top.controls.exp.setVisible(this.minimized);
+    </method>
+
+    <dragstate name="drag" />
+    <resizestate name="resize" />
+
+    <!-- Start Views -->
+    <resizelayout axis="y" />
+
+    <!-- START TOP (dragger area + title + minimize + controls) -->
+    <view name="top" width="${parent.width}" height="24" pixellock="true" clip="true"
+          oninit="this.controls.bringToFront()"> 
+        <view name="background" width="${parent.width}"  clip="true"
+            onmouseover="grabber.setResourceNumber(2)"
+            onmouseout="grabber.setResourceNumber(1)"
+            onmousedown="classroot.bringToFront(); parent.parent.drag.apply()"
+            onmouseup="parent.parent.drag.remove()"
+        oninit="this.right.bringToFront()">
+            <stableborderlayout axis="x" />
+            <view name="left"  resource="topLeft_rsc" />
+            <view name="center" stretches="width" resource="top_rsc"/>
+            <view name="right" resource="topRight_rsc"/>
+            <view name="grabber" resource="grabber_rsc" pixellock="true"
+                  options="ignorelayout" 
+                  x="${(parent.parent.logo.width + parent.parent.logo.x) + (((parent.width - parent.parent.logo.width) - this.width) / 2)}"
+                  y="11" />
+       </view>
+
+       <view name="controls" width="${parent.width}" y="7">
+         <basebutton name="close"  pixellock="true"
+                  x="${parent.width - this.width - 7}"
+                  resource="closeBtn_rsc"
+                  onclick="classroot.setVisible(false)" />
+          <basebutton name="min" pixellock="true"
+                  x="${parent.close.x - this.width}"
+                  resource="minBtn_rsc"
+                  onclick="classroot.toggleMinimizeWindow()" />
+          <basebutton name="exp" visible="false" pixellock="true"
+                  x="${parent.close.x - this.width}"
+                  resource="expBtn_rsc"
+                  onclick="classroot.toggleMinimizeWindow()" />
+          <!--  clear debug history -->
+          <basebutton name="clear" pixellock="true"
+                  x="${parent.min.x - this.width}"
+                  onclick="classroot.clear()"
+                  resource="clear1_rsc" />
+       </view>
+
+       <view name="logo" resource="title_rsc" x="9" y="8"/>
+ 
+       <method name="appname">
+         <![CDATA[
+         var url = LzBrowser.getBaseURL();
+         var i = url.lastIndexOf("/");
+         url = url.substring(i+1);
+         return url;
+         ]]>
+       </method>
+
+       <text name="title"  width="${parent.width-140}"
+            x="140" y="6" />
+
+    </view>
+
+    <!-- START MIDDLE (output area + scroll bar) -->
+
+    <view name="middle" options="releasetolayout" width="${parent.width}" pixellock="true">
+        <stableborderlayout axis="x" />
+        <view name="left" 
+              resource="leftRight_rsc"
+              stretches="height" 
+              height="${parent.height}"/>
+        <_dbg_lztextscroller name="content"  
+              bgcolor="#FFFFFF"
+              options="releasetolayout" 
+          height="${parent.height}"
+              />
+        <view name="right"
+              resource="leftRight_rsc"
+              stretches="height"
+              height="${parent.height}" />
+   </view> 
+   <!-- END MIDDLE -->
+
+   <method name="showprefs">
+   </method>
+
+   <method name="adjustMultiline">
+     <![CDATA[
+         // when the user drags the splitter to enlarge the input area height,
+         // we check if the height is more than a single line, and if so
+         // set the view multiline=true
+
+      if (this.bottom.center.input.height > this.smallInputAreaHeight) {
+        this.bottom.center.input.setMultiline(true);
+      } else {
+        this.bottom.center.input.setMultiline(false);
+      }
+      this.middle.content.computeVisibleRegion();
+      ]]>
+   </method>
+
+
+    <!-- START BOTTOM -->
+    <view name="bottom"  width="${parent.width}" height="${parent.smallInputAreaHeight}" 
+          onmousedown="parent.bringToFront()"
+        pixellock="true">
+
+       <method name="setHeight" args="h" > 
+        // keep a minimum of two lines of text displayed
+          var minheight = (classroot.lineheight + 16);
+          super.setHeight( Math.max( parent.smallInputAreaHeight , Math.min( h , parent.height - (parent.top.height + minheight)) ) ); 
+          if (!__LzDebug.isLoading) {
+             parent.middle.content.updateDisplay();
+         }
+       </method> 
+
+       <state name="splitter">
+          <attribute name="height" 
+                value="${classroot.height - classroot.getMouse('y') }"/>
+       </state>
+
+       <stableborderlayout axis="x" />
+        <!-- START BOTTOM-LEFT -->
+         <view name="left" height="${parent.height}" >
+
+           <method name="doSingleLine">
+             this.upButton.setVisible(true); 
+             this.downButton.setVisible(false)
+             this.parent.center.input.setMultiline(false);
+             classroot.savedInputAreaHeight = Math.max(53, this.parent.height);
+             this.parent.animate("height",classroot.smallInputAreaHeight,333,false);
+           </method>
+
+           <method name="doMultiLine">
+             this.downButton.setVisible(true); 
+             this.upButton.setVisible(false)
+             // Check if we have room to grow the input area
+             var delta = classroot.savedInputAreaHeight - parent.height;
+             delta = Math.min(classroot.middle.height - (classroot.lineheight * 2) , delta);
+             if (delta > 0) {
+                 this.parent.center.input.setMultiline(true);
+                 // Squish the center content area up
+                 this.parent.animate("height",classroot.savedInputAreaHeight,333,false);
+             }
+           </method>
+
+           <stableborderlayout axis="y"/>
+           <view name="leftTop" 
+                 resource="bottomLeftTop_rsc" />
+           <view name="leftMiddle" stretches="height"
+                 resource="bottomLeftMid_rsc" />
+           <view name="leftBottom" 
+                 resource="bottomLeftBtm_rsc" />
+
+           <basebutton name="upButton"  x="5" y="6" visible="true" pixellock="true"
+                          onclick="this.parent.doMultiLine()"
+                          resource="tfupBtn_rsc" />
+           <basebutton name="downButton"  x="5" y="6" visible="false" pixellock="true"
+                          onclick="parent.doSingleLine()"
+                          resource="tfdownBtn_rsc" />
+          </view>
+        <!-- END BOTTOM-LEFT -->
+
+
+         <!-- START BOTTOM-CENTER  -->
+         <view name="center" bgcolor="#FFFFFF" height="${parent.height}" >
+              <stableborderlayout axis="y" />
+
+              <view name="top" 
+                    stretches="width" width="${parent.width}" options="releasetolayout"
+                    resource="bottom_rsc" y="0" />
+
+               <inputtext name="input"
+                     width="${parent.width}" multiline="false"
+                     options="releasetolayout" />
+
+               <method event="onfocus" reference="this.input">
+                   classroot.handleFocus();
+               </method>
+
+               <method event="onblur" reference="this.input">
+                   classroot.handleBlur();
+               </method>
+
+              <view name="bottom" 
+                    stretches="width" width="${parent.width}" options="releasetolayout"
+                    resource="bottom_rsc" />
+
+             
+              <view name="handle" x="${(parent.width / 2)}" resource="handleOver_rsc" 
+                    onmousedown="parent.parent.splitter.apply()"
+                    onmouseup="parent.parent.splitter.remove(); classroot.adjustMultiline()" />
+
+        </view>
+        <!-- END BOTTOM-CENTER -->
+
+
+         <!-- START BOTTOM-RIGHT -->
+        <view name="bottomright"  height="${parent.height}" >
+             <stableborderlayout axis="y" />
+             <view name="rightTop" 
+                   resource="bottomRghtTop_rsc" />
+             <view name="rightMiddle" stretches="height" 
+                   resource="bottomRghtMid_rsc" />
+             <view name="rightBottom" 
+                   resource="bottomRghtBtm_rsc" />
+
+             <basebutton name="evalbutton" resource="evalBtn_rsc" 
+                       pixellock="true"
+                       onclick="parent.parent.parent.doEval()"
+                       x="${parent.width - 42}"
+                       y="${(parent.height / 2) - 8}" />
+
+             <view resource="resizer_rsc" name="resizer"  pixellock="true" 
+                     y="${parent.height - 11}"
+                     x="${parent.width - 11}"
+                     onmouseover="this.setResourceNumber(2);"
+                     onmouseout="this.setResourceNumber(1);"
+                     onmousedown="this.setResourceNumber(2); classroot.bringToFront(); classroot.resize.apply()"
+                     onmouseup="this.setResourceNumber(1); classroot.resize.remove()"
+                 />
+
+         </view> <!-- END BOTTOM-RIGHT -->
+    </view> <!-- END BOTTOM -->
+
+     <debugger_shadow_bottom width="${parent.width}" opacity="0.75" pixellock="true"
+             options="ignorelayout" y="${parent.height}"  />
+     <debugger_shadow_right height="${parent.height+4}" x="${parent.width}"  pixellock="true"
+                            opacity="0.75" options="ignorelayout" />
+
+
+
+    <method name="clear" >
+      //------------------------------------------------------------------------------
+      // Clears the console
+      //------------------------------------------------------------------------------
+      // Data to display.
+      this.clearWindow();
+    </method>
+
+  <!--- Scroll the debugger output window to display the specified  output history line number at the top of the window
+         @param Number l: line number
+    -->
+    <method name="setLine" args="l" >
+        this.middle.content.setLine(l);
+    </method>
+
+  <method name="addText"  args="msg">
+     <![CDATA[
+       if (global.$krank) {
+           global.LzSerializer.comment('Debug.write', String(msg));
+       } else if (__LzDebug.isLoading) {
+           __LzDebug.saved_msgs.push(msg);
+       } else if (this.consoleRemote) {
+           __LzDebug.cdSendMsg(msg);
+       } else {
+           var str;
+           if (msg instanceof LzWarning || msg instanceof LzMessage) {
+               str = msg.toHTML();
+           } else {
+               str = String(msg).toHTML();
+           }
+           this.addHTMLText(str);
+       }
+     ]]>
+  </method>
+
+  <!---
+    Only called internally, when you know you already have valid HTML
+    @keywords private
+    -->
+  <method name="addHTMLText" args="str">
+     <![CDATA[
+       // Funky thing that Henry discovered you have to do to make newlines
+       // why wouldn't <br/> work?
+       this.middle.content.addText(str.split('\n').join('&#32;\n'));
+       this.atFreshLine = (str.charAt(str.length-1) == '\n');
+       if (str.length) { this.atPrompt = false; }
+       if (this.autoscroll) {
+           this.middle.content.scrollToEnd();
+       }
+     ]]>
+  </method>
+
+  <!--- Scroll the debugger output window to display the last line of text  -->
+  <method name="scrollToEnd">
+     this.middle.content.scrollToEnd();
+  </method>
+
+  <method name="loaded" >
+     <![CDATA[
+        //------------------------------------------------------------------------------
+        // This is called when the application is loaded.
+        //------------------------------------------------------------------------------
+        __LzDebug.isLoading = false;
+
+        if (typeof(global.lzconsoledebug) != 'undefined') {
+           this.consoleRemote = true;
+           this.setVisible(false);
+            // Open the remote debugger socket 
+            __LzDebug.startupConsoleRemote();
+        } else if (typeof(global.remotedebug) != 'undefined') {
+           // This case mismatch here is intentional: "remotedebug" is the query arg, 
+           // "Debug.remoteDebug" is the attribute on the Debugger window.
+            this.remoteDebug = true;
+            this.setVisible( false );
+            // Open the remote debugger socket 
+            this.startupRemote();
+
+            this.write = function (objects) {
+                var n = arguments.length
+                // Pass each value individually so they can be
+                // 'presented' as objects if applicable
+                for (var i = 0; i < n; i++) {
+                    var v = arguments[i];
+                    var s = ((i == (n-1)) ? '\n' : ' ');
+                    this.sockWriteLog(v);
+                }
+            }
+            // Write out any queued messages from app startup.
+            for (var i = 0; i < this.saved_msgs.length; i++) {
+                var msg = this.saved_msgs[i];
+                if (msg instanceof LzWarning) {
+                    this.sockWriteWarning(msg.file, msg.line, msg.message.toString());
+                } else {
+                    this.sockWriteLog(String(msg));
+                }
+            }
+        } else {
+            this.remoteDebug = false;
+
+            // print saved messages and warnings
+            for (var i = 0; i < this.saved_msgs.length; i++) {
+                this.freshLine();
+                this.addText(this.saved_msgs[i]);
+            }
+            this.setVisible( true );
+            this.bringToFront();
+        }
+
+        this.scrollToEnd();
+
+        // Let's keep these saved msgs around for the remote debugger 
+        // to look at if it wants.
+        // this.saved_msgs = [];
+
+        // See if the LPS server is present; if not fall back to simpler eval()
+        this.checkServerResponse();
+
+
+      ]]>
+  </method>
+
+  <method event="oninit" reference="canvas">
+    this.bringToFront();
+  </method>
+
+  <method name="setWrapLines" args="val">
+    this.middle.content.setWrapLines(val);
+  </method>
+
+</class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

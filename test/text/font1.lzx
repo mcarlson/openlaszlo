@@ -1,0 +1,46 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- font1.lzx                                                             -->
+<!--                                                                       -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<!--  
+
+The text below should appear as described; bold text, then underlined, then
+both bold and underlined.
+
+The text should not be clipped at the right edge. It displays first with
+the width computed by the compiler.
+
+When you click the button, the viewsystem sets the text view's width
+to the computed runtime width, and the text display should remain
+unchanged.
+
+A bug [#493] in the viewsystem runtime currently causes a single pixel
+on the right to be clipped when the button is pressed.
+
+-->
+
+<canvas> 
+    <splash/>
+
+    <window title="Fonts are fun!" width="400" height="400" resizable="true">
+    <button text="updateit" onclick="bu.measureDirty=true;bu.setWidth( bu.getTextWidth() );" />
+    <simplelayout axis="y" spacing="10" />
+
+    <text id="bu"><b> Bold </b><u> Underline <b> Bold Underline</b></u></text> 
+<!--    <text id="bu2"><b>Bold</b> <u>Underline <b>Bold Underline</b></u></text>  -->
+
+    </window>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

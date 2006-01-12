@@ -1,0 +1,48 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzTimer">
+    <lztier>Service</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        Handles calling of a delegate after a specified number of milliseconds.
+    </lzshortdesc>
+    <lzapi>api-lztimer.xml</lzapi>
+</lzelement>
+<p>
+LzTimer is used to invoke functionality after a specific amount of time. By using a <a href="delegate.html">delegate</a> to refer to a particular method, and then by adding a timer to that delegate, the developer can control the timing of the method's start.  Use LzTimer to tweak sequence and timing of visual animations, delay the effects of user events, or implement user experiences with expiration features.
+</p>
+<p>It should be noted that the time passed to the LzTimer service describes the time <i>before</i> which the delegate may not run -- it is not guaranteed that the delegate will run at that time.  Depending on application needs and client performance, the specified delegate may be invoked at any time <i>after</i> the amount of time specified.
+</p>
+<p>The following example displays some text when a button is clicked, and uses LzTimer to fade the text away after three seconds.</p>
+
+<example class="program" title="Using LzTimer to invoke method" id="lztimer-1">
+&lt;canvas height="50" &gt;
+
+    &lt;button text="Show then Fade" onclick="canvas.showText()" /&gt;
+    &lt;text name="myText" opacity="0.0" bgcolor="#CCCCCC"&gt;The Invisible Man&lt;/text&gt;
+    &lt;simplelayout axis="y" spacing="10" /&gt;
+
+    &lt;method name="showText"&gt;
+        this.myText.setAttribute( "opacity", 1.0 );
+        this.fadeDelegate = new LzDelegate( this, "fadeText" );
+        LzTimer.addTimer( this.fadeDelegate, 3000 );
+    &lt;/method&gt;
+
+    &lt;method name="fadeText"&gt;
+        this.myText.animate( "opacity", 0.0, 1000 );
+    &lt;/method&gt;
+
+&lt;/canvas&gt;
+</example>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,30 @@
+<canvas debug='true'>
+    <include href="lzunit"/>
+    <TestSuite>
+        <TestCase>
+            <method name="test">
+                <![CDATA[ 
+                assertTrue( true );
+                //good string
+                var lzdom = LzDataNode.stringToLzData( 
+                                    "<foo><bar blah='cr'/></foo>" );
+                assertTrue( lzdom instanceof LzDataNode );
+                assertEquals( "foo", lzdom.nodeName );
+                assertEquals( 1, lzdom.childNodes.length );
+                assertEquals( 'cr' , lzdom.getFirstChild().attributes.blah );
+                //error; no root node
+                var lznot = LzDataNode.stringToLzData( 
+                                    "<foo/><bar/>" );
+                assertNull( lznot );
+                //error; no plain 'ol string
+                var lznota = LzDataNode.stringToLzData( "some text" );
+                assertNull( lznota );
+                //annoying, but Flash XML parser tries to make sense of badly
+                //formatted XML
+                //var lznotb = LzDataNode.stringToLzData( "<foo><bar/><bar><v>" );
+                //assertNull( lznotb );
+                ]]>
+            </method>
+        </TestCase>
+    </TestSuite>
+</canvas>

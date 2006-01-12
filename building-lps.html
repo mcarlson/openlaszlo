@@ -1,0 +1,211 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+  <title>Building LPS</title>
+  <link rel="SHORTCUT ICON" 
+        href="http://www.laszlosystems.com/images/laszlo.ico">
+  <style>
+body {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 12px;
+    line-height : 18px;
+    color: #333333;
+}
+
+td {
+font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+font-size : 12px;
+line-height : 18px;
+color: #333333;
+}
+th {
+font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+font-size : 18px;
+line-height : 22px;
+font-weight : bold;
+color: #333333;
+}
+
+p {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 12px;
+    line-height : 18px;
+    color: #333333;
+}
+
+h1 {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 18px;
+    font-weight : bold;
+    color: #333333;
+}
+
+h2 {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 16px;
+    font-weight : bold;
+    color: #333333;
+}
+
+h3 {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 14px;
+    font-weight : bold;
+    color: #333333;
+}
+
+h4 {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 12px;
+    font-weight : bold;
+    color: #333333;
+}
+
+ul {
+    font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;
+    font-size : 12px;
+    line-height : 18px;
+    color: #333333;
+}
+  </style>
+</head>
+<body style="background-color: rgb(250, 251, 255);">
+<h1>Building the Laszlo Presentation Server (LPS)</h1>
+
+<p><b>Prefatory remarks: </b>These are the instructions we use
+at <a href="http://www.laszlosystems.com">Laszlo</a> for setting up 
+a new build environment for LPS.  Setting up an LPS build is reasonably complicated 
+and there are number of places that things can go awry because of the large number of 
+external dependencies.  Sometime soon (with your input!), this document will improve and 
+sometime after that, the build process for LPS will also likely improve.  
+In the meantime, the details below are intended for the intrepid folks who 
+are determined to build their own copy of LPS from the source distribution.  
+If you having trouble, it's best to try the Laszlo developer forums.
+</p>
+<hr/>
+
+<p>(These instructions use the $ENV_VAR syntax for refering to environment variables).</p>
+<ol>
+<li>Get the source and build tools
+    <p>In this document, we refer to the top-most directory that contains the
+    LPS and LPS-related source bits and build tools as <code><var>ROOT</var></code>.
+    <p>If you are working from a source distribution, <code><var>ROOT</var></code> is the top level directory of the unpacked
+    source distribution and will contain subdirectories named
+    <ul>
+    <li><code>3rdparty</code> - 3rd Party code that has been modified by Laszlo for use in LPS
+    <li><code>lps-{version}</code> -  the source tree for LPS
+    <li><code>tools</code> - various tools (some modified, others not) for building LPS
+    <li><code>3rdPartyCredits</code> - credits for all libraries and tools used in LPS
+    <li><code>building-lps.html</code>  - this document</li>
+    </ul>
+</li>
+<li><p>Modify your environment to use ant</p>
+    <p>We are currently using a slightly-modified version of Jakarta Ant 1.5.1 for LPS builds.
+    This version of ant is at <code><var>ROOT</var>/tools/jakarta-ant-1.5.1</code>.
+    <ul>
+      <li>Set your ANT_HOME environment variable to point to
+      <code><var>ROOT</var>/tools/jakarta-ant-1.5.1</code></li>
+      <li>Add <code>$ANT_HOME/bin</code> to your PATH environment variable to
+      make sure you pick up the right version of ant.</li>
+    </ul>
+</li>
+<li><p>Set your LPS_HOME environment variable to point to the top of your LPS tree</p>
+    <p>For most this will be something like:
+    <table border>
+    <tr><td>Windows</td>
+    <td><code>set LPS_HOME=C:\lps-<var>{version}</var>-src\lps-<var>{branch}</var></code></td></tr>
+    <tr><td>Windows with Cygwin csh/tcsh</td>
+    <td><code>setenv LPS_HOME C:\\lps-<var>{version}</var>-src\\lps-<var>{branch}</var></code></td></tr>
+    <tr><td>UNIX/OS X csh/tcsh</td>
+    <td><code>setenv LPS_HOME /home/username/lps-<var>{version}</var>-src/lps-<var>{branch}</var></code></td></tr>
+    <tr><td>UNIX/OS X bash/sh</td>
+    <td><code>export LPS_HOME=/home/username/lps-<var>{version}</var>-src/lps-<var>{branch}</var></code></td></tr>
+    </table>
+    <p>Note: <code><var>{branch}</var></code> depends on the development branch (or released source
+    version) in which you are working.</p>
+    <p>Note: it's recommended that you use the <i>Windows-style</i> path
+    rather than a cygwin one for LPS_HOME.</p>
+</li>
+<li>For Windows and Linux systems, install 
+    <a href="http://java.sun.com/downloads/">Sun's J2SE SDK 1.4.2</a>
+    as well.
+    <p>Set your <code>JAVA_HOME</code> environment variable to point to the J2SDK 1.4 directory (e.g.,
+    on Windows, <code>C:\j2sdk1.4.2_3</code>). Also, make sure that <code>$JAVA_HOME/bin</code>
+    is in your <code>$PATH</code> and occurs before any system java binary locations. 
+    <p>Mac OS X (Panther - 10.3) comes with Java 1.4.2 so there is no need to install it.  On MacOS, set <code>JAVA_HOME</code> to <code>/Library/Java/Home</code></p>
+</li>
+<li><p>We are using JavaCC, Jython, and Python (with PyXML package installed)</p>
+    <ul>
+      <li>Install <code><var>ROOT</var>/tools/JavaCC2_1.class</code><!--Get and install
+        <a href="https://javacc.dev.java.net/"><code>JavaCC 2.1.class</code></a> -->
+        <p>Typical command is <code>java -cp . JavaCC2_1</code>
+        <p>Set your $JAVACC_HOME environment variable to the location where you
+        installed JavaCC. You may need to make the cache directory writing
+        enabled on a linux and Mac OS X machine.
+        <p><b>IMPORTANT</b> Check to see if <code>$LPS_HOME/3rd-party/jars/dev/JavaCC.zip</code> exists.
+        If it doesn't, copy $JAVACC_HOME/bin/lib/JavaCC.zip to $LPS_HOME/3rd-party/jard/dev/JavaCC.zip</p>
+      </li>
+      <li>Install <code><var>ROOT</var>/tools/jython-21.class</code><!--<li>Get and install <a href="http://www.jython.org/">Jython 2.1</a> -->
+      <p>Typical command is <code>java -cp . jython-21</code>
+        <p><b>Mac OS X Note:</b> If the GUI installer fails to install Jython, try the command line
+        installation, where $JYTHON_INSTALL_DIR is where you want Jython installed.
+        <p><code>java -cp . jython-21 -o $JYTHON_INSTALL_DIR</code>
+        <p>Set your $JYTHON_HOME environment variable to the location where
+        you installed jython. Copy the jythonc (jythonc.bat on Windows) script
+        to a directory that is in your $PATH.
+        <p><b>Mac OS X and Linux note:</b> there are certain directories in the jython installed directory
+        that need to be writable - if you install this in /usr/local as root, make sure the
+        installed tree is world writable.
+      </li>
+      <li><p>Get and install Python 2.2 or 2.3 - the windows python 2.2 installer is included in <code><var>ROOT</var>/toold/Python-2.2.2.exe</code>
+        <p>After you install it, make sure the directory where you installed python is in your $PATH.
+        <p><b>Windows CYGWIN users note:</b> make sure that this directory comes
+        before /usr/bin so that you pick up Windows Python2 instead of CYGWIN python.
+        <p>Mac OS X and most modern Linux distros come with Python 2.2 or 2.3 already loaded.
+        <p><b>Note for linux:</b> python-devel must be installed, this is often not the default and will require your install CDs.</p>
+      </li>
+      <li>Install PyXML (on Linux and Mac OS X need to do this as root - using sudo or the like).
+        <p>Version 0.8.3 is needed and included for Mac OS X Panther/10.3 and up.
+        <p>For Linux and Mac OS X unpack the distribution and use the commands
+        <code>python setup.py build</code> and <code>python setup.py install</code> to install
+        PyXML correctly.
+        <p>Windows installer is included in this release
+      </li>
+    </ul>
+</li>
+<li>Install the modified Tomcat 5.0.24 found in <code><var>ROOT</var>/3rdparty</code>
+    <p><b>Important Notes for Windows</b>: You will have an easier time typing pathnames
+    if you install it at C:\tomcat5 instead of the default location.  Also, when asked,
+    create an administrative user named 'admin' with password 'laszlo'.  And finally,
+    At the end of installing tomcat 5.0.24, do <b>NOT</b> start the server (the default
+    is to start it).  Let the build system do that for you.  (If the installer leaves the
+    service running, the LPS build system can't be used to stop/start it).   (For those who care to 
+    know details, the LPS build system installs the Tomcat5 NT service under the name 'LPS' so 
+    you can use net stop LPS, net start LPS to start/stop the service)
+    <p><b>Important Notes for Linux and Mac OS X</b>: If you install this as root in
+    /usr/local - make sure the whole installed tree is world writable.
+    <p>Set the $TOMCAT_HOME environment variable to point to where you installed it.
+    <p>For example <code>C:\Program Files\Apache Group\Tomcat 5.0.24</code>&nbsp;.&nbsp;(For
+    windows users, it should be a windows PATH and not a cygwin one).
+</li>
+<li>Windows users should install <a href="http://sources.redhat.com/cygwin/">Cygwin</a>
+    <p>Add the Cygwin bin directory to your $PATH.
+</li>
+<li><p>Add <code>$LPS_HOME/WEB-INF/lps/server/bin</code> to your $PATH to make
+   <code>lzc</code>, <code>lzmc</code>, and other LPS development utilities generally available
+   from the shell.</p>
+</li>
+<li><p>From the top of your source tree, try '<tt>cd $LPS_HOME ; ant
+build ; ant start ; ant install</tt>'. Then browse to <a
+    href="http://localhost:8080/lps">http://localhost:8080/lps-<var>{version}</var></a>.</p>
+</li>
+</li>
+<li>
+For other details, see <tt>ant -projecthelp</tt> from the top level lps-<var>{version}</var>  directory
+</li>
+</ol>
+
+
+</body>
+</html>
+

@@ -1,0 +1,201 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- xmldata.lzx                                                           -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<canvas width="1000" height="1000" bgcolor="#eaeaea" debug="true">
+
+    <font src="helmetr.ttf" name="helvet" />
+
+    <include href="lz" />
+
+    <debug x="200" height="400" width="500" fontsize="14" font="helvet" />
+
+    <dataset name="ds1" type="file" src="file:swatch.xml" 
+             ondata="canvas.show(this)" 
+             ontimeout="Debug.write(this.getSrc() + ': timed out')" 
+             onerror="Debug.write(this.getSrc() + ': error')" />
+    <dataset name="ds2" type="file" queuerequests="true" src="file:swatch.xml" 
+             ondata="canvas.show(this)" 
+             ontimeout="Debug.write(this.getSrc() + ': timed out')" 
+             onerror="Debug.write(this.getSrc() + ': error')" />
+    <dataset name="ds3" type="http" src="http:echo.jsp" 
+             ondata="canvas.show(this)" 
+             ontimeout="Debug.write(this.getSrc() + ': timed out')" 
+             onerror="Debug.write(this.getSrc() + ': error')" />
+    <dataset name="ds4" type="http" secure="true" ondata="canvas.show(this)"
+             ontimeout="Debug.write(this.getSrc() + ': timed out')" 
+             onerror="Debug.write(this.getSrc() + ': error')" />
+
+    <dataset name="ds5" type="http" src="swatch.xml" 
+             ondata="canvas.show(this)" 
+             ontimeout="Debug.write(this.getSrc() + ': timed out')" 
+             onerror="Debug.write(this.getSrc() + ': error')" />
+    <dataset name="ds6" type="http" queuerequests="true" src="swatch.xml" 
+             ondata="canvas.show(this)" 
+             ontimeout="Debug.write(this.getSrc() + ': timed out')" 
+             onerror="Debug.write(this.getSrc() + ': error')" />
+
+    <method name="show" args="ds">
+    <![CDATA[
+        Debug.write('---- ' + ds.getSrc() + ' ----');
+        var rh = ds.getAllResponseHeaders();
+        var names = rh.getNames();
+        if (0 < names.length) {
+            Debug.write('[response headers]');
+        }
+        for (var i=0; i < names.length; i++) {
+            var n = names[i];
+            Debug.write(n + ': ' + rh.getValue(n));
+        }
+        Debug.write('[server response]');
+        Debug.write(ds.serialize() + '\n');
+    ]]>
+    </method>
+
+
+    <view id="control" x="10" y="10" width="1000" height="1000" >
+        <attribute name="curDataset" value="1" />
+
+        <simplelayout axis="x" spacing="10"/>
+        <view width="150">
+            <simplelayout axis="y" spacing="2" />
+            <view>
+                <simplelayout axis="x" spacing="5" />
+                <button text="load" onclick="control.loadData()" />
+                <button bgcolor="red" text="abort" onclick="control.abort()" />
+            </view>
+            <radiogroup id="rg">
+                <method name="select" args="v">
+                    super.select(v);
+                    control.curDataset = v.value;
+                    if (v.value == 1 || v.value == 2) {
+                        query.setVisible(false);
+                        delay.setVisible(false);
+                        secure.setVisible(false);
+                    } else if (v.value == 3) {
+                        query.setVisible(true);
+                        delay.setVisible(true);
+                        secure.setVisible(false);
+                    } else if (v.value == 4) {
+                        query.setVisible(true);
+                        delay.setVisible(true);
+                        secure.setVisible(true);
+                    }
+                </method>
+                <radiobutton name="rb1" text="file:swatch.xml" value="1" />
+                <radiobutton name="rb2" text="file:swatch.xml (queuing on)" value="2" />
+                <radiobutton name="rb3" text="http:echo.jsp"   value="3" />
+                <radiobutton name="rb4" text="https:echo.jsp"  value="4" />
+                <radiobutton name="rb5" text="http:swatch.xml"   value="5" />
+                <radiobutton name="rb6" text="https:swatch.xml"  value="6" />
+            </radiogroup>
+            <checkbox text="multiple requests" id="mult" />
+            
+            <checkbox text="cache in client"  id="ccache" />
+            <checkbox text="cache in server"  id="scache">
+                <method event="onvalue">
+                    if (this.value) {
+                        if (typeof(resphead) != "undefined") {
+                            resphead.setAttribute('value', false);
+                        }
+                    }
+                </method>
+            </checkbox>
+            <checkbox text="resp headers"     id="resphead">
+                <method event="onvalue">
+                    if (this.value) {
+                        if (typeof(scache) != "undefined") {
+                            scache.setAttribute('value', false);
+                        }
+                    }
+                </method>
+            </checkbox>
+            <checkbox text="accept encodings" id="accenc" />
+            <checkbox text="POST"             id="post" />
+            <checkbox text="set query string" id="query" />
+            <view id="delay">
+                <simplelayout axis="x" spacing="2" />
+                <text>delay (msecs): </text>
+                <edittext name="sleep" width="50">0</edittext>
+            </view>
+            <view id="secure">
+                <simplelayout axis="y" spacing="2" />
+                <view name="p">
+                    <simplelayout axis="x" spacing="2" />
+                    <text>secure port: </text>
+                    <edittext name="port" width="50">8443</edittext>
+                </view>
+                <text name="explain" multiline="true" width="190">
+                    Make sure your servlet container is SSL enabled or secure
+                    requests will timeout.
+                </text>
+            </view>
+        </view>
+
+
+        <method name="abort">
+            var ds = canvas['ds' + this.curDataset];
+            ds.abort();
+            Debug.write(ds.getSrc() + ': aborted request');
+        </method>
+
+        <method name="loadData">
+        <![CDATA[
+            var ds = canvas['ds' + this.curDataset];
+
+            ds.cacheable          = scache.value;
+            ds.clientcacheable    = ccache.value;
+            ds.getresponseheaders = resphead.value; // not server cacheable
+            ds.acceptencodings    = accenc.value; // for gzip
+
+            ds.setQueryType((post.value ? 'POST' : 'GET'));
+
+            // http params
+            if (ds == canvas.ds3 || ds == canvas.ds4) {
+                if (query.value) {
+                    ds.setQueryParams( { name1: 'value1', name2: 'value2', name3: 'value3' } );
+                } else {
+                    ds.setQueryParams( null );
+                }
+
+                var sleep = delay.sleep.getText();
+                if (0 < sleep) {
+                    ds.setQueryParam('sleep', sleep);                
+                } 
+            }
+
+            if (ds == canvas.ds4) {
+                ds.secure = true;
+                ds.secureport = secure.p.port.getText();
+
+                var url = new LzURL(LzBrowser.getLoadURL());
+                url.file = 'echo.jsp';
+                url.query = null;
+                url.protocol = 'https';
+                url.port = secure.p.port.getText();
+
+                ds.setSrc(url.toString());
+            }
+
+            var requests = 1;
+            if (mult.value) requests = 4;
+                
+            for (var i = 0; i < requests; i++) {
+                Debug.write("loading set " + ds.getSrc());
+                ds.doRequest();
+            }
+        ]]>
+        </method>
+
+    </view>
+
+</canvas>    
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

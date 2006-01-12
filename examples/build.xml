@@ -1,0 +1,78 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<project name="examples" default="test" basedir=".">
+
+  <description>
+  This is the build file for the LPS examples subproject.
+  </description>
+
+  <!-- Ignore the system classpath -->
+  <property name="build.sysclasspath" value="ignore" />
+
+  <property environment="env"/>
+
+  <property name="LPS_HOME" value="${env.LPS_HOME}"/>
+  <property file="${LPS_HOME}/build.properties"/>
+
+  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
+
+  <!--================  Target [init] ==============-->
+  <target name="init" >
+
+      <if> 
+          <not> <isset property="env.LPS_HOME"/> </not>
+          <then> <fail message="LPS_HOME not set" /> </then>
+      </if>
+
+  </target>
+
+  <!--================  Target [build] ==============-->
+  <target name="build"  />
+
+  <!--================  Target [test] ==============-->
+  <target name="test" 
+      description="Make sure all examples compile"
+      depends="init" >
+
+      <apply executable="bash" parallel="true">
+          <arg line="${LPS_HOME}/WEB-INF/lps/server/bin/lzc -dir build" />
+          <fileset dir="." >
+              <include name="**/*.lzx"/>
+              <contains text="&lt;canvas" casesensitive="no"/>
+          </fileset>
+      </apply>
+  </target>
+
+  <!--================  Target [clean] ==============-->
+  <target name="clean"  >
+      <delete>
+          <fileset dir="." defaultexcludes="no" >
+              <include name="**/*~"/>
+              <include name="build/**" />
+          </fileset>
+      </delete>
+  </target>
+
+  <!--================  Target [doc] ==============-->
+  <target name="doc"  />
+
+  <!--================  Target [all]  ===================-->
+  <target name="all" 
+      description="Clean, build, doc, test"
+      depends="clean, build, doc, test">
+  </target>
+
+  <target name="t" depends="init" >
+     <copy file="hello.lzx" tofile="hello.lzx.z" >
+          <filterset>
+              <filter token="LZX_COPYRIGHT" value="${LZ_LZX_COPYRIGHT}"/>
+          </filterset>
+     </copy>
+     <fixcrlf srcdir="." >
+         <include name="hello.lzx.z" />
+     </fixcrlf>
+  </target>
+
+</project>

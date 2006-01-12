@@ -1,0 +1,21 @@
+<canvas debug="true">
+    <include href="lzunit"/>
+    
+    <TestSuite>
+        <TestCase>
+            <method name="testSplit">
+                var str = "Over the Hills and Far Away"
+                var tok = str.split("and")
+                
+                assertEquals(2, tok.length)
+                assertEquals(str, tok.join("and"))
+                
+                assertEquals(2, str.split('H').length)
+            </method>
+        </TestCase>
+    </TestSuite>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

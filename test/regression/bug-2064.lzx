@@ -1,0 +1,57 @@
+<canvas>
+
+    <class name="myframe"
+        bgcolor="yellow"
+        width="${content.width+2*this.border}"
+        height="${content.height+2*this.border}"
+        defaultplacement="'content'">
+        <attribute name="border" value="2"/>
+        <view name="content" bgcolor="white"
+            x="${parent.border}"
+            y="${parent.border}">
+            <!-- default placement -->
+        </view>
+    </class>
+
+    <class name="myframe2"
+        bgcolor="yellow"
+        defaultplacement="'content'">
+        <attribute name="border" value="2"/>
+        <attribute name="height" value="content.height+2*this.border" when="always"/>
+        <attribute name="width" value="content.width+2*this.border" when="always"/>
+        <view name="content" bgcolor="white"
+            x="${parent.border}"
+            y="${parent.border}">
+            <!-- default placement -->
+        </view>
+    </class>
+
+    <myframe width="50" height="50">
+        <text>fixed size frame is 50 x 50 text should extend through it</text>
+    </myframe>
+
+    <!-- this workaround does work -->
+    <myframe name="a" width="${50}" height="${50}">
+        <text>fixed size frame is 50 x 50 text should extend through it</text>
+    </myframe>
+
+    <button onclick="a.setWidth(100)">set width</button>
+
+    <myframe2 width="50" height="50">
+        <text>fixed size frame is 50 x 50 text should extend through it</text>
+    </myframe2>
+
+
+    <myframe name="b">
+        <text name="t" resize="true">frame should be sized by this text inside it</text>
+    </myframe>
+    <button onclick="b.setWidth(20)">set width</button>
+    <button onclick="b.t.setText('here is some other text')">set text</button>
+
+
+    <simplelayout spacing="20"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,55 @@
+<!-- creates objects into arrays and manipulates them in
+the array. Shows som issues with animator contention and 
+the fact that one setprop does not wait until the previous
+one is completed before starting the next.
+-->
+<canvas width="1280">
+  <script>
+    views = new Array();
+    for (var i=0;i!=16;i++){
+      views.push(new LzView(canvas,{width:10,height:10,x:i,y:i,bgcolor:i*16}));
+      views[i].animateProps(1000);
+      views[i].setBGColor(0);
+      views[i].setWidth(0);
+      views[i].setHeight(0);
+      views[i].setx(0);
+
+      views[i].setAttribute("BGColor",i*16);
+      views[i].setAttribute("Width",16);
+      views[i].setAttribute("Height",16);
+      views[i].setAttribute("x",i*16);
+    }
+    for (var i=0;i!=16;i++){
+      views.push(new LzView());
+
+      views[i+16].animateProps(2000)
+      views[i+16].setBGColor(0);
+      views[i+16].setWidth(0);
+      views[i+16].setHeight(0);
+      views[i+16].setx(0);
+      views[i+16].sety(0);
+
+      views[i+16].setAttribute("BGColor",255+(i*16));
+      views[i+16].setAttribute("Width",16);
+      views[i+16].setAttribute("Height",16);
+      views[i+16].setAttribute("x",i*16);
+      views[i+16].setAttribute("y",16);
+    }
+
+    Debug.write(views.length);
+
+    for (var i=0;i!=32;i++){
+      views[i].setAttribute("BGColor",i*8);
+      views[i].setAttribute("Width",32);
+      views[i].setAttribute("Height",32);
+      views[i].setAttribute("x",i*8);
+      views[i].setAttribute("y",i*8);
+    }
+
+
+  </script>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

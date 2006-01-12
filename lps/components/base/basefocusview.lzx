@@ -1,0 +1,307 @@
+<library>
+
+    <!-- resources -->
+    <resource name="lzfocusbracket_topleft_rsrc"          
+               src="lz/resources/focus/focus_top_lft.png" />
+    <resource name="lzfocusbracket_topleft_shdw_rsrc"     
+               src="lz/resources/focus/focus_top_lft_shdw.png" />
+    <resource name="lzfocusbracket_topright_rsrc"         
+               src="lz/resources/focus/focus_top_rt.png" />
+    <resource name="lzfocusbracket_topright_shdw_rsrc"    
+               src="lz/resources/focus/focus_top_rt_shdw.png" />
+    <resource name="lzfocusbracket_bottomleft_rsrc"       
+               src="lz/resources/focus/focus_bot_lft.png" />
+    <resource name="lzfocusbracket_bottomleft_shdw_rsrc"  
+               src="lz/resources/focus/focus_bot_lft_shdw.png" />
+    <resource name="lzfocusbracket_bottomright_rsrc"      
+               src="lz/resources/focus/focus_bot_rt.png" />
+    <resource name="lzfocusbracket_bottomright_shdw"      
+               src="lz/resources/focus/focus_bot_rt_shdw.png" />
+
+    <class name="basefocusview"
+           options="ignorelayout"
+           visible="false" initstage="late">
+
+        <!--- true during keyboard navigation, when this view is visible 
+              @keywords readonly -->
+        <attribute name="active"    value="false" setter="setActive(active)"/>
+        <!--- a reference to the view that is currently focused -->
+        <attribute name="target"    value="null"  setter="setTarget(target)"/>
+        <!--- the duration of the animation from one focused view to the next -->
+        <attribute name="duration"  value="400"  />
+
+        <!--- @keywords private -->
+        <attribute name="_animatorcounter"   value="0"/>
+        <!--- @keywords private -->
+        <attribute name="ontarget"           value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_nexttarget"        value="null"/>
+        <!--- @keywords private -->
+        <attribute name="onactive"           value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_xydelegate"        value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_widthdel"          value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_heightdel"         value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_delayfadeoutDL"    value="null"/>
+        <!--- @keywords private -->
+        <attribute name="_dofadeout"         value="false"/>
+        <!--- @keywords private -->
+        <attribute name="_onstopdel"         value="null"/>
+    
+        <!--- This method called when no view is focused. -->
+        <method name="reset">
+            this.setX(0);
+            this.setY(0);
+            this.setWidth( canvas.width );
+            this.setHeight( canvas.height );
+            setTarget( null );
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="setActive" args="isactive"> <![CDATA[
+            this.active = isactive;
+            if (this.onactive) this.onactive.sendEvent(isactive);
+        ]]> </method>
+        
+
+        <!--- This method is called when the focus is about to change to a new view 
+              @param LzView v: The view that has received the focus 
+        -->                                
+        <method name="doFocus" args="v"> <![CDATA[
+
+            // if the focus was about to fade,then Don't
+            this._dofadeout = false;
+
+            // bring the focus brackets to the front
+            this.bringToFront();
+
+            // clear out constraints from last target
+            if ( this.target ) this.setTarget( null )
+
+            // Make sure this focusview is visible if it is active
+               this.setVisible( this.active );
+
+            // store the target that the focusview will be constrained to when
+            // it stops animating.
+            this._nexttarget = v;
+
+               if ( visible ) {
+                   // increment a counter each time the focus is called
+                   // and decrement it on the onstop of the animations
+                   // this will be used to determine if the user has stopped
+                   /// tabbing long enough to fade out the focusoverlay
+                   this._animatorcounter += 1;
+
+                   // animate the focusoverlay to the new target and
+                   var rct = null;
+                   var nx; var ny; var nw; var nh;
+                   if ( v['getFocusRect'] ) rct = v.getFocusRect();
+                   if ( rct ) {
+                       nx = rct[0]; ny = rct[1]; nw = rct[2]; nh = rct[3];
+                   } else {
+                    nx = v.getAttributeRelative('x', canvas);
+                    ny = v.getAttributeRelative('y', canvas);
+                    nw = v.getAttributeRelative( 'width', canvas );
+                    nh = v.getAttributeRelative( 'height', canvas );
+                }
+                
+                var anm = this.animate('x', nx, duration);
+                this.animate( 'y', ny, duration);
+                this.animate( 'width', nw, duration);
+                this.animate( 'height',nh , duration);
+                
+                // fade in the brackets to balance out the fade out
+                this.animate('opacity', 1, 500);
+
+                // register a delegate for the end of these animations
+                if ( !this._onstopdel )  this._onstopdel = new LzDelegate( this, 'stopanim' )
+                this._onstopdel.register( anm, 'onstop' );
+            }
+
+            if ( this._animatorcounter < 1) {
+                this.setTarget(this._nexttarget);
+                
+                var rct = null;
+                   var nx; var ny; var nw; var nh;
+                   if ( v['getFocusRect'] ) rct = v.getFocusRect();
+                   if ( rct ) {
+                       nx = rct[0]; ny = rct[1]; nw = rct[2]; nh = rct[3];
+                   } else {
+                    nx = v.getAttributeRelative('x', canvas);
+                    ny = v.getAttributeRelative('y', canvas);
+                    nw = v.getAttributeRelative( 'width', canvas );
+                    nh = v.getAttributeRelative( 'height', canvas );
+                }
+ 
+                this.setX( nx );
+                   this.setY( ny );
+                   this.setWidth( nw );
+                   this.setHeight( nh );    
+               }
+
+        ]]> </method>
+   
+        <!--- @keywords private -->
+        <method event="onstop" name="stopanim" >  <![CDATA[
+            this._animatorcounter -= 1;
+            if ( this._animatorcounter < 1 ) {
+                // user has stopped tabbing for a bit,
+                // so wait one second and fade out the focusoverlay
+                // make sur the dofadeout flag is set. If the user
+                // tabs before the timer executes then the focusoveraly
+                // will not fade out.
+                this._dofadeout = true;
+                if ( !this._delayfadeoutDL )
+                    this._delayfadeoutDL = new LzDelegate(this,'fadeout');
+                LzTimer.addTimer( this._delayfadeoutDL, 1000 );
+                this.setTarget( _nexttarget );
+                this._onstopdel.unregisterAll();
+            }
+        ]]> </method>
+
+        <!--- automatically called to fade out the focusview after one second of focus inactivity -->
+        <method name="fadeout" >
+            if ( _dofadeout ) this.animate( 'opacity' ,0 , 500);
+            this._delayfadeoutDL.unregisterAll();
+        </method>     
+        
+        <!--- @keywords private -->
+        <method name="setTarget" args="newtarget"> <![CDATA[
+            this.target = newtarget;
+            if ( !this._xydelegate ) {
+                this._xydelegate = new LzDelegate(this, "followXY");
+            } else {
+                this._xydelegate.unregisterAll();
+            }
+            if ( this.target == null ) return;
+
+            // make sure that this focusoverlay  is aware
+            // when the target or any of its parents move.
+            var p = newtarget;
+            var i = 0;
+            while ( p != canvas ) {
+                this._xydelegate.register(p, 'onx');
+                this._xydelegate.register(p, 'ony');
+                p = p.immediateparent;
+                i++;
+            }
+
+             if ( !this._widthdel )  this._widthdel  = new LzDelegate(this, "followWidth");
+             if ( !this._heightdel ) this._heightdel = new LzDelegate(this, "followHeight");
+
+             this._widthdel.register(p,'onwidth');
+             this._heightdel.register(p,'onheight');
+             followXY();
+             followWidth();
+             followHeight();
+        ]]> </method>
+
+        <!--- keeps the position of the focusview in sync with its target-->
+        <method name="followXY">
+            var rct = null;
+               if ( target['getFocusRect'] ) rct = target.getFocusRect();
+               if ( rct ) {
+                this.setX( rct[0] );
+                this.setY( rct[1] );
+            } else {
+                this.setX( this.target.getAttributeRelative('x', canvas) );
+                this.setY( this.target.getAttributeRelative('y', canvas) );
+            }
+        </method>
+
+        <!--- keeps the width of the focusview in sync with its target-->
+        <method name="followWidth">
+            var rct = null;
+               if ( target['getFocusRect'] ) rct = target.getFocusRect();
+               if ( rct ) {
+                this.setWidth( rct[2] );
+            } else {
+                this.setWidth( this.target.width );
+            }
+        </method>
+
+        <!--- keeps the height of the focusview in sync with its target-->
+        <method name="followHeight">
+            var rct = null;
+               if ( target['getFocusRect'] ) rct = target.getFocusRect();
+               if ( rct ) {
+                this.setHeight( rct[3] );
+            } else {
+                this.setHeight( this.target.height );
+            }
+        </method>
+
+        <!--- @keywords private -->
+        <method args="v" event="onfocus" reference="LzFocus">
+            this.setActive( LzFocus.focuswithkey );
+            if ( v ) {
+                this.doFocus( v );
+            } else {
+                this.reset();
+                if (this.active) {
+                     this.setActive(false);
+                }
+            }
+        </method>
+
+    </class>
+
+    <class name="focusoverlay" extends="basefocusview" >
+        <!--- the offset is used by the brackets to 'offset' themselves from the
+              bounding rect of the focusoverlay. The bounce effect is achieved
+              by animating this parameter -->
+        <attribute name="offset" value="5" />
+
+        <view name="topleft" 
+              x="${-classroot.offset}" 
+              y="${-classroot.offset}" >
+            <view resource="lzfocusbracket_topleft_shdw_rsrc" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_topleft_rsrc"/>
+        </view>
+        
+        <view name="topright" 
+              x="${parent.width - width + classroot.offset }" 
+              y="${-classroot.offset}"  >
+            <view resource="lzfocusbracket_topright_shdw_rsrc" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_topright_rsrc"/>
+        </view>
+        
+        <view name="bottomleft" 
+              x="${-classroot.offset}"
+              y="${parent.height - height + classroot.offset }"  >
+            <view resource="lzfocusbracket_bottomleft_shdw_rsrc" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_bottomleft_rsrc"/>
+        </view>
+        
+        <view name="bottomright" 
+              x="${ parent.width - width + classroot.offset  }" 
+              y="${ parent.height - height + classroot.offset }" >
+            <view resource="lzfocusbracket_bottomright_shdw" x="1" y="1" opacity=".25"/>
+            <view resource="lzfocusbracket_bottomright_rsrc"/>
+        </view>
+        
+        <!--- overrides base method to add a bounce effect as the brackets move from view to view
+              @param LzView v: The view that will receive the focus -->
+        <method name="doFocus" args="v">
+            // add a bounce to the default focus animation for the brackets.
+            super.doFocus( v );
+            if ( visible ) this.bounce();
+        </method>
+        
+        <!--- the expand and contract effect of the focus brackets with each new focus -  called by doFocus -->
+        <method name="bounce" >
+            this.animate('offset',12, duration/2.0);
+            this.animate('offset',5, duration);
+        </method>
+
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

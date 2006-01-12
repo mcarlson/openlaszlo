@@ -1,0 +1,77 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="../lps/includes/styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="LzGlobalMouse">
+    <lztier>Service</lztier>
+    <lzcategory>Event</lzcategory>
+    <lzshortdesc>
+        Application-wide control of and information about the mouse.
+    </lzshortdesc>
+    <lzapi>api-lzglobalmouse.xml</lzapi>
+    <seealso>mode example</seealso>
+</lzelement>
+<p>
+The LzGlobalMouse service sends events any time the mouse button state changes, even if mouse events are locked using the <classname>LzModeManager</classname> API. The LzGlobalMouse is also useful for detecting when the mouse button goes up or down on a non-clickable view.
+</p>
+
+<example>
+&lt;canvas height="100"&gt;
+  &lt;simplelayout inset="10" spacing="10"/&gt;
+
+  &lt;checkbox&gt;Lock mouse events
+    &lt;method event="onvalue"&gt;
+      if (this.value){
+        <em>LzModeManager.globalLockMouseEvents();</em>
+      } 
+    &lt;/method&gt;
+    &lt;method event="onclick" reference="LzGlobalMouse" args="who"&gt;
+      &lt;![CDATA[ 
+      //need to use LzGlobalMouse, since we don't get clicks if we're
+      //checked. NB that LzGlobalMouse sends its events before the view
+      //receives the events, so we can just unlock it here, and the
+      //checkbox can do its normal onclick handling.
+      if (this.value &amp;&amp; who == this){
+        <em>LzModeManager.globalUnlockMouseEvents();</em>
+      }
+      ]]&gt;
+    &lt;/method&gt;
+  &lt;/checkbox&gt;
+
+  &lt;button&gt;click me!&lt;/button&gt;
+
+  &lt;text resize="true"&gt;
+    &lt;method name="showEvent" args="what, who"&gt;
+      this.setText(what +": " + who);
+    &lt;/method&gt;
+    &lt;method event="onmouseover" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+      this.showEvent("mouseover" , who);
+    &lt;/method&gt;
+    &lt;method event="onmouseout" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+      this.showEvent("mouseout" , who);
+    &lt;/method&gt;
+    &lt;method event="onmousedown" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+      this.showEvent("mousedown" , who);
+    &lt;/method&gt;
+    &lt;method event="onmouseup" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+      this.showEvent("mouseup" , who);
+    &lt;/method&gt;
+    &lt;method event="onclick" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+      this.showEvent("mouseclick" , who);
+    &lt;/method&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>Use the LzGlobalMouse service in conjunction with <classname>LzModeManager</classname>'s event lock.</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

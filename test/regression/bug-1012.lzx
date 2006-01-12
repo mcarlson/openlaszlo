@@ -1,0 +1,19 @@
+<canvas width="180" height="180">
+  <view oninit="goo();">
+    <method name="goo">
+      this.parent.c1.animate("rotation", 360, 10000);
+    </method>
+  </view>
+  <view name="c1" x="90" y="90" width="1" height="30" bgcolor="red">
+    <view name="c2" y="30" width="1" height="30" bgcolor="green">
+      <attribute name="rotation" value="parent.rotation" when="always"/>
+      <view name="c3" y="30" width="1" height="30" bgcolor="blue">
+	<attribute name="rotation" value="parent.rotation" when="always"/>
+      </view>
+    </view>
+  </view>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

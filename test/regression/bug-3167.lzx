@@ -1,0 +1,39 @@
+<canvas width="1000" height="1000" debug="true">
+
+    <debug x="400" height="300" />
+
+    <attribute name="defaultstyle" value="${greenstyle}"/>
+
+    <view x="5">
+        <simplelayout spacing="10"/>
+        <text>long tabs text w/no tab width</text>
+        <tabs id="one" >
+            <tabpane name="one">1 real long text real long text real long text
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">2 real long text real long text real long text
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">3 real long text real long text real long text
+                <text text="three" />
+            </tabpane>
+        </tabs>
+
+        <text>long tabs text w/width=600</text>
+        <tabs id="two" width="600" >
+            <tabpane name="one">1 real long text real long text real long text
+                <text text="one" />
+            </tabpane>
+            <tabpane name="two">2 real long text real long text real long text
+                <text text="two" />
+            </tabpane>
+            <tabpane name="three">3 real long text real long text real long text
+                <text text="three" />
+            </tabpane>
+        </tabs>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

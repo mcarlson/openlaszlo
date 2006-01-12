@@ -1,0 +1,18 @@
+<canvas bgcolor="white" debug="true">
+    <dataset name="test">
+        <node> This is some text
+            <nodeb> More text ok? </nodeb>
+        </node>
+    </dataset>
+
+    <view datapath="test:/node/nodeb">
+        <text resize="true" datapath="text()"/>
+        <text resize="true" datapath="../nodeb/./text()"/>
+        <text resize="true" datapath="../text()"/>
+        <simplelayout/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

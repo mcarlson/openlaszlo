@@ -1,0 +1,45 @@
+<canvas debug="true">
+<view oninit="debug.sety(80)"/>
+    <resource src="dragbar_gray.png" name="drag" />
+    <button text="changeit" onclick="this.nextState(); this.doMeth();" >
+        <attribute name="statelist" value="[ 'd' , 'c' , 'b' , 'a' ] " />
+        <method name="nextState">
+        	if (this.statelist.length > 0)
+        	    this[ this.statelist.pop() ].apply();
+        </method>
+
+        <state name="a">
+            <method name="doMeth" >
+                testr.setColorTransform( { gb: 125 } );
+            </method>
+        </state>
+
+        <state name="b">
+            <method name="doMeth" >
+                testr.setColorTransform( { ba: 125 , ra : -22 , gb: 0} );
+            </method>
+        </state>
+
+        <state name="c">
+            <method name="doMeth" >
+                var o = testr.getColorTransform();
+                for ( var k in o ){
+                    Debug.write( k +": " + o[ k ] );
+                }
+            </method>
+        </state>
+
+        <state name="d">
+            <method name="doMeth" >
+                testr.setColor( 0x550022 );
+            </method>
+        </state>
+
+    </button>
+            
+    <view y="60" resource="drag" name="testr" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

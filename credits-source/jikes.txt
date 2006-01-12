@@ -1,0 +1,4 @@
+Jikes is used to compile the Laszlo Presentation Server.
+
+Copyright (C) 1996, 1999 International Business Machines Corporation and others.
+All Rights Reservered.

@@ -1,0 +1,314 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="drawview-intro">
+<head>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>Introduction to drawing</title>
+</head>
+
+<body>
+
+<!-- Put Chapter title in h1 -->
+<h1>Introduction to Drawing</h1>
+<p>
+OpenLaszlo provides capability to do two-dimensional graphics. You use procedural code in a &lt;drawview&gt; element 
+to draw lines and fill in shapes. In this tutorial we'll look at some of the key parts of the API and show some interesting effects that you can get with a few
+lines of code. 
+</p>
+<h2>Background of the programming model</h2>
+<p>
+The <a href="http://www.whatwg.org/">Web Hypertext Application Technology Working Group</a> ("WHATWG") is "a loose unofficial collaboration of Web browser manufacturers and interested parties 
+who wish to develop new technologies designed to allow authors to write and deploy Applications over the World Wide Web." This group recently published
+a specification for drawing (which can be found  <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics">here).</a>
+</p>
+<p>
+
+OpenLaszlo implements a subset of the <code>whatwg</code> drawing APIs. For a discussion of where OpenLaszlo differs from the full <code>whatwg</code> specification, 
+please see the <a href="http://www.laszlosystems.com/lps-3.0/docs/reference?drawview.html">LZX Reference Manual</a>.
+ </p>
+<h2>The drawview </h2>
+<p>
+The &lt;drawview&gt; class extends the &lt;view&gt; class. Thus, it inherits all the &lt;view&gt; properties; a &lt;drawview&gt; tag creates a rectangular view. At first
+glance a view seems like just another view:</p>
+<example title="view and drawview">
+    &lt;canvas height="75" proxied="false"&gt;
+      &lt;simplelayout spacing="5" axis="x"/&gt;
+      &lt;view height="50" width="50" bgcolor="red"/&gt;
+      &lt;drawview height="50" width="50" bgcolor="blue"/&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+There are no additional tag attributes in the <code>drawview</code> class beyond those of <code>view</code>.  However, <code>drawview</code> has four attributes in addition to those it inherits:
+</p>
+<ul>
+	<li>fillStyle</li>
+	<li>globalAlpha</li>
+	<li>lineWidth</li>
+	<li>strokeStyle</li>
+</ul>
+<p>
+These attributes can be accessed and manipulated by procedural (script) code inside <code>&lt;method&gt;</code> tags inside a <code>&lt;drawview&gt;</code> element. The
+drawview class has ten methods associated with it. We'll take a look at them below, after explaining some more concepts.
+</p>
+<h3>Lines, shapes, fills</h3>
+<p>
+To draw a line shape (or "path"), you position a logical pen at a starting point and then move it sequentially to x and y coordinates connecting points either by
+straight or quadratic lines.  This line remains invisible until you "stroke" it. When you stroke a path you apply to it the defined line width and style, thereby
+making it visible.
+</p>
+<p>
+For example, this code produces nothing visible:</p>
+<example extract="false" title="invisble drawing">
+    &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100)
+         this.lineTo(200,100)
+         this.quadraticCurveTo(120, 200, 300, 100)
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>    
+But by adding the line <code>this.stroke()</code> we produce the following:
+</p>
+<example title="stroking the line">
+    &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100)
+         this.lineTo(200,100)
+         this.quadraticCurveTo(120, 200, 300, 100)
+         <em>this.stroke()</em>
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+The <method>closePath()</method> method draws a line back to the beginning of the current path:
+</p>
+<example title="Closing the path">
+  &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.closePath()
+         this.stroke()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+Now that we have a closed shape, we can fill it.  First we define a <code>fillStyle</code>, and then we fill the shape. 
+</p>
+<example title="fillstyle">
+  &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         //fillSytles are hex numbers representing color. 
+         this.fillStyle = 0xff00ff
+         this.fill()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+Note that if you don't close a path but call the <code>fill()</code> method, the path will be closed implicitly.  Please consult the reference page for particulars.
+</p>
+<h3>Opacity and Gradients</h3>
+<p>
+The <code>globalAlpha</code> attribute is used to set the opacity of lines and fills. It takes a value between zero (transparent) and one (opaque).
+</p>
+<example title="Using globalAlpha"> 
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         this.fillStyle = 0xff00ff
+         this.globalAlpha= .3
+         this.fill()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+Remember that the code here is procedural, so alpha values apply to
+<code>fillStyles</code> and <code>lineStyles</code> that are in effect at the time that a <code>stroke()</code> or <code>fill()</code> method is called. 
+In the above example, the <code>globalAlpha</code> value is 1 (the default) when the line is stroked and .3 when the color is filled in.
+</p>
+<p>
+A <code>fillStyle</code> can be a color gradient, that is, a pattern that blends colors over its area. To use a gradient, first create it using the appropriate (linear or radial) constructor function, then set the <code>fillStyle</code> to be the gradient.  A gradient is an object of the type <classname>LzCanvasGradient</classname>; you define
+the parameters of the gradient by using methods such as <method>addColorStop()</method> on it. <method>addColorStop()</method> takes two arguments: the number of the stop,
+and the color.  
+</p>
+<example title="adding a gradient">    
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         //the gradient starts at the x and y where the curved line starts
+         var g = this.createLinearGradient(200,100, 150, 300)
+         //opacity is 0 -- the fill is invisible
+         this.globalAlpha = 0;
+         //starting color is black
+         g.addColorStop(0, 0x000000);
+         //now the opacity is set to opaque
+         this.globalAlpha = 1;
+         //the gradient goes from black to purple
+         g.addColorStop(1, 0xff00ff);
+         this.fillStyle = g;
+         this.fill();
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+To get a sense of what gradients look like, try varying the parameters of the ending x and y.
+</p>
+<p>
+Also, remember that <code>drawview</code>s have background colors.  You can use them in conjunction with gradients and alpha values:
+</p>
+ <example title="backgrounds and gradients">  
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview height="150" width="300"  bgcolor="blue"&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         var g = this.createLinearGradient(200,100, 150, 300)
+         this.globalAlpha = 0;
+         g.addColorStop(0, 0xffffff);
+         this.globalAlpha = 1;
+         g.addColorStop(.3, 0xff00ff);
+         this.fillStyle = g;
+         this.fill();
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+The gradient can be linear or radial (for details, see the Reference).
+</p>
+<h3>Starting Over</h3>
+<p>
+We've said that drawing a line is like moving a pen. So, how do you pick up the pen in order to move it to another spot on the canvas? Use the <method>beginPath()</method>
+method.
+</p>
+<example title="beginPath">  
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.closePath()
+         this.stroke()
+         this.beginPath()
+         this.moveTo(200,000);
+         this.lineTo(100,200);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.closePath()
+         this.stroke()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<p>
+The <code>clear</code> method wipes the slate clean, so to speak.
+</p>
+<example title="Clearing the veiw">    
+&lt;canvas height="200" proxied="false"&gt;
+        &lt;drawview&gt;
+            &lt;method event="oninit"&gt;
+            this.moveTo(40,40)
+            this.lineTo(80,40)
+            this.lineTo(80, 80)
+            this.lineTo(40,90)
+            this.closePath()
+            this.stroke()
+    
+            this.fillStyle = 0xff00ff;
+            this.fill()
+            &lt;/method&gt;
+            &lt;button onclick="parent.clear()" text="clear"/&gt;
+       &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</example>
+<h2>Integrating drawviews into OpenLaszlo applications</h2>
+<p>
+Although the <tagname>drawview</tagname> API is procedural, it's simple to blend the procedural drawing API with the declarative LZX style. The
+following little program illustrates this. The <code>r</code> attribute is modulated in by an <tagname link="true">animator</tagname> element; when <code>r </code>changes, the <method>redraw()</method>
+method is evoked.
+</p>
+<example title="Draview with animator">
+&lt;canvas width="300" height="300" debug="false" &gt;
+    &lt;class name="circle" extends="drawview" &gt;
+        &lt;attribute name="circlecolor" value="white"/&gt;
+        &lt;attribute name="r" value="100"/&gt;
+        &lt;method event="oninit"&gt;
+          this.redraw();
+        &lt;/method&gt;
+        &lt;method event="onr"&gt;
+          this.redraw();
+        &lt;/method&gt;
+        &lt;method name="redraw" &gt;&lt;![CDATA[
+            this.clear();
+            this.beginPath();
+            this.moveTo(x+r, y);
+            var a = Math.tan(22.5 * Math.PI/180);
+            for (var angle = 45; angle&lt;=360; angle += 45) {
+                // endpoint:
+                var endx = r*Math.cos(angle*Math.PI/180);
+                var endy = r*Math.sin(angle*Math.PI/180);
+                // control:
+                // (angle-90 is used to give the correct sign)
+                var cx =endx + r*a*Math.cos((angle-90)*Math.PI/180);
+                var cy =endy + r*a*Math.sin((angle-90)*Math.PI/180);
+                this.quadraticCurveTo(cx+x, cy+y, endx+x, endy+y);
+            }
+          
+            var g = this.createLinearGradient(0, 0, 8, x+r, y+r, 0)
+            this.globalAlpha = 1;
+            g.addColorStop(0, 0xffffff);
+            this.globalAlpha = 0;
+            g.addColorStop(1, this.circlecolor);
+            this.fillStyle = g;
+            this.fill()
+            this.globalAlpha = 1;
+            this.linewidth= 5;
+            this.stroke();
+        ]]&gt;
+        &lt;/method&gt;
+    &lt;/class&gt;
+
+    &lt;circle r="50" x="50" y="50" circlecolor="blue"/&gt;
+    &lt;circle   x="50" y="50" circlecolor="teal"&gt;
+       &lt;animatorgroup process="sequential" repeat="Infinity"&gt;
+        &lt;animator attribute="r" from="20" to="0" duration="3000"/&gt;
+        &lt;animator attribute="r" from="0" to="20" duration="3000"/&gt;
+      &lt;/animatorgroup&gt;
+    &lt;/circle&gt;
+     
+&lt;/canvas&gt;
+</example>
+<p>
+OpenLaszlo developers have already used the drawview API to create a color chooser and a paint program.  See what you can do. Have fun!
+</p>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

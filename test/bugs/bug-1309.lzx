@@ -1,0 +1,22 @@
+<canvas  debug="true" oninit="debug.sety(70)">
+
+  <class name="foo">
+      <text name="b" resize="true">f.b: resize=true</text>
+      <view bgcolor="green" width="20" height="parent.height"/>
+      <inputtext bgcolor="yellow" name="c">f.c</inputtext>
+      <view bgcolor="green" width="20" height="parent.height"/>
+      <simplelayout axis="x"/>
+  </class>
+  <foo name="f"/>
+
+  <view>
+      <inputtext bgcolor="yellow" name="c">f.c</inputtext>
+      <view bgcolor="green" width="20" height="parent.height"/>
+      <simplelayout axis="x"/>
+  </view>
+  <simplelayout axis="y" spacing="20"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

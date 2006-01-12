@@ -1,0 +1,18 @@
+<!--
+bug 460 - If 4 lines of text show up, the bug is fixed.
+-->
+
+<canvas>
+       <simplelayout axis="y" />
+	   <font src="standard-7-plain-regular.ttf" name="foo"/>	
+	   <font src="standard-7-plain-regular.ttf" name="bar"/>	
+       <text font="foo">Foo abcdefghijklmnopqrstuvwxyz"</text>
+       <text font="bar">Bar abcdefghijklmnopqrstuvwxyz"</text>
+       <text font="foo">Foo abcdefghijklmnopqrstuvwxyz"</text>
+       <text font="bar">Bar abcdefghijklmnopqrstuvwxyz"</text>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

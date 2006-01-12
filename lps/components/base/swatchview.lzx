@@ -1,0 +1,81 @@
+<library>
+
+<!--- swatchview is a simple view that is filled with a single color.
+    Either 'fgcolor' and 'bgcolor' may be used to set the color of the view.
+    By default it fills the space of the parent with white -->
+<class name="swatchview" extends="view" >
+    <!--- @keywords private -->
+    <attribute name="ctransform" value="null"/>
+
+    <!--- this is the color that was set (by setting 'bgcolor' or 'fgcolor' ),
+        bgcolor may be different if setColorTransform has been called
+        @keywords readonly -->
+    <attribute name="color" value="0xffffff"/>
+
+    <!--- setting the fgcolor attribute is equivalent to setting bgcolor -->
+    <attribute name="fgcolor" setter="this.setColor( fgcolor )" />
+
+    <!--- @keywords private -->
+    <method name="construct" args="parent, args">  <![CDATA[
+        super.construct( parent, args );
+        if ( args['width'] == null ){
+            args['width'] = this.immediateparent.getAttribute( 'width' );
+        }
+        if ( args['height'] == null ){
+            args['height'] = this.immediateparent.getAttribute( 'height' );
+        }
+        if ( args['fgcolor'] == null && args['bgcolor'] == null){
+            args['fgcolor'] = 0xFFFFFF;
+        }
+        ]]>
+    </method>
+
+
+    <!--- @keywords private -->
+    <method name="setColor" args="c">
+        this.setBGColor( c );
+    </method>
+
+    <!--- sets the bgcolor with the color transform applied
+    @param Number c: new bgcolor (e.g. 0xffffff for white)
+    -->
+    <method name="setBGColor" args="c"> <![CDATA[
+        this.color = c;
+        if (this.ctransform != null) {
+             var red= (c >> 16) & 0xFF;
+             var green= (c >> 8) & 0xFF;
+             var blue= c & 0xFF;
+             red = red * ctransform['ra']/100 + ctransform['rb'];
+             red = Math.min(red, 255);
+
+             green = green * ctransform['ga']/100 + ctransform['gb'];
+             green = Math.min(green, 255);
+
+             blue = blue * ctransform['ba']/100 + ctransform['bb'];
+             blue = Math.min(blue, 255);
+
+             c = blue + (green << 8) + (red << 16);
+
+        }
+        super.setBGColor(c);
+        ]]>
+    </method>
+
+    <!--- affects the bgcolor, unlike in regular views where only the
+        resource and subviews are affected by the color transform
+        @param Object o: color transform object (see view.setColorTransform for details)
+    -->
+    <method name="setColorTransform" args="o">
+        delete this.ctransform;
+        this.ctransform = o;
+        this.setBGColor(this.color);
+    </method>
+
+</class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

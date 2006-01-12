@@ -1,0 +1,197 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="WebappRPC">
+    <lztier>RPC Components</lztier>
+    <lzcategory>RPC</lzcategory>
+    <lzshortdesc>
+        WebappRPC object.
+    </lzshortdesc>
+    <lztag>rpc/webapprpc.xml</lztag>
+</lzelement>
+
+<p>A class to get an http web application object and invoke its methods. Remote
+method signatures are:</p>
+
+<ul>
+<li><dfn>getAttribute(name)</dfn>: returns object, array, or primitive
+         type.</li>
+<li><dfn>getAttributeNames()</dfn>: returns array of attribute names.</li>
+<li><dfn>getMajorVersion()</dfn>: returns the major version number of the Java
+         Servlet API that the remote servlet supports.</li>
+<li><dfn>getMinorVersion()</dfn>: returns the minor version number of the Java
+         Servlet API that the remote servlet supports.</li>
+<li><dfn>getMimeType(filename)</dfn>: returns the MIME type of the specified
+         filename, or null if the MIME type is not known.</li>
+<li><dfn>getServerInfo()</dfn>: returns the name and version of the servlet
+         container on which the servlet is running.</li>
+<li><dfn>getServletContextName()</dfn>: returns the name of this web application
+         correponding to this ServletContext as specified in the deployment
+         descriptor for this web application by the display-name element.</li>
+<li><dfn>log(msg)</dfn>: writes the specified message to a servlet log file,
+         usually an event log; returns void.</li>
+<li><dfn>removeAttribute(name)</dfn>: remove attribute named name; returns
+         void.</li>
+<li><dfn>setAttribute(name,value)</dfn>: set attribute named name with value;
+         returns void.</li>
+</ul>
+
+<p>See <a
+href="http://java.sun.com/products/servlet/2.3/javadoc/javax/servlet/ServletContext.html">
+javax.servlet.ServletContext</a> in the <a
+href="http://java.sun.com/products/servlet/2.3/javadoc/">Java Servlet API</a>
+documentation for details.</p>
+
+<example>
+&lt;canvas width="800" height="500" debug="true"&gt;
+
+    &lt;debug x="300" y="20" width="500" height="400" /&gt;
+
+    &lt;webapprpc id="webapp" autoload="false"&gt;
+
+        &lt;method event="oninit"&gt;
+            Debug.write('loading webapp object...');
+            this.load();
+        &lt;/method&gt;        
+
+        &lt;method event="onload"&gt;
+            Debug.write('webapp object loaded');
+            canvas.buttons.setAttribute('visible', true);
+        &lt;/method&gt;        
+
+        &lt;method event="ondata" args="data"&gt;
+            if (data == LzRPC.t_void) {
+                Debug.write("default ondata: void");
+            } else {
+                Debug.write("default ondata:", data);
+            }
+        &lt;/method&gt;
+
+        &lt;method event="onerror" args="error"&gt;
+            Debug.write("default onerror:", error);
+        &lt;/method&gt;
+
+        &lt;remotecall funcname="getMajorVersion" /&gt;
+
+        &lt;remotecall funcname="getMinorVersion" /&gt;
+
+        &lt;remotecall name="htmlGetMimeType" funcname="getMimeType"&gt;
+            &lt;param value="'foo.html'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="swfGetMimeType" funcname="getMimeType"&gt;
+            &lt;param value="'foo.swf'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall funcname="getServerInfo" /&gt;
+
+        &lt;remotecall funcname="getServletContextName" /&gt;
+
+        &lt;!-- look in your servlet container's log for this message--&gt;
+        &lt;remotecall funcname="log"&gt;
+            &lt;param value="'a message'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="getmyattr" funcname="getAttribute"&gt;
+            &lt;param value="'myattr'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="getmyother" funcname="getAttribute"&gt;
+            &lt;param value="${'myother'}" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall funcname="getAttributeNames" /&gt;
+
+        &lt;remotecall name="removemyattr" funcname="removeAttribute"&gt;
+            &lt;param value="'myattr'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="removemyother" funcname="removeAttribute"&gt;
+            &lt;param value="'myother'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="setmyattr" funcname="setAttribute"&gt;
+            &lt;param value="'myattr'" /&gt;
+            &lt;param value="'MY ATTRIBUTE'" /&gt;
+        &lt;/remotecall&gt;
+
+        &lt;remotecall name="setmyother" funcname="setAttribute"&gt;
+            &lt;param value="'myother'" /&gt;
+            &lt;param value="'MY OTHER'" /&gt;
+        &lt;/remotecall&gt;
+
+    &lt;/webapprpc&gt;
+
+
+    &lt;view name="buttons" x="10" y="10" layout="spacing: 5" visible="false"&gt;
+
+        &lt;button text="getMajorVersion" onclick="webapp.getMajorVersion.invoke()" /&gt;
+        &lt;button text="getMinorVersion" onclick="webapp.getMinorVersion.invoke()" /&gt;
+
+        &lt;button text="htmlGetMimeType" onclick="webapp.htmlGetMimeType.invoke()" /&gt;
+        &lt;button text="swfGetMimeType" onclick="webapp.swfGetMimeType.invoke()" /&gt;
+        &lt;button text="getServerInfo" onclick="webapp.getServerInfo.invoke()" /&gt;
+        &lt;button text="getServletContextName" onclick="webapp.getServletContextName.invoke()" /&gt;
+
+        &lt;!-- look in your servlet container's log for this message--&gt;
+        &lt;button text="log" onclick="webapp.log.invoke()" /&gt;
+
+        &lt;view x="20" layout="spacing: 5"&gt;
+
+            &lt;attribute name="myDel" value="null" type="expression" /&gt;
+
+            &lt;method event="oninit"&gt;
+                this.myDel = new LzDelegate(this, 'myhandler');
+            &lt;/method&gt;
+
+            &lt;method name="myhandler" args="data"&gt;
+                Debug.write('myhandler:', data);
+            &lt;/method&gt;
+
+            &lt;button text="setmyattr" onclick="webapp.setmyattr.invoke()" /&gt;
+
+            &lt;button text="setmyother" onclick="webapp.setmyother.invoke()" /&gt;
+
+            &lt;button text="getmyattr" onclick="webapp.getmyattr.invoke()" /&gt;
+
+            &lt;button text="getmyother" onclick="webapp.getmyother.invoke()" /&gt;
+
+            &lt;button text="getAttributeNames" onclick="webapp.getAttributeNames.invoke()" /&gt;
+
+            &lt;button text="getmyattr (w/params)" onclick="webapp.getmyattr.invoke(['myattr'])" /&gt;
+
+            &lt;button text="getmyattr (w/params and delegate)"&gt;
+                &lt;method event="onclick"&gt;
+                    webapp.getmyattr.invoke(['myattr'], parent.mydel);
+                &lt;/method&gt;
+            &lt;/button&gt;
+
+            &lt;button text="removemyattr" onclick="webapp.removemyattr.invoke()" /&gt;
+
+            &lt;button text="removemyother" onclick="webapp.removemyother.invoke()" /&gt;
+
+        &lt;/view&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<seealso>
+<classes><a href="${reference}rpc.html">rpc</a></classes>
+<classes><a href="${reference}javarpc.html">javarpc</a></classes>
+<classes><a href="${reference}sessionrpc.html">sessionrpc</a></classes>
+<classes><a href="${reference}remotecall.html">remotecall</a></classes>
+<a href="${dguide}rpc.html">Developer's Guide: RPC chapter</a>
+<a href="${dguide}rpc-javarpc.html">Developer's Guide: JavaRPC chapter</a>
+</seealso>
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

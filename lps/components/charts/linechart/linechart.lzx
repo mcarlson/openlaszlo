@@ -1,0 +1,80 @@
+<library>
+    <include href="../styles/chartstyle.lzx"/>
+    <include href="../common/dataseries.lzx"/>
+    <include href="../common/datapoints.lzx"/>
+    <include href="../common/viewspoolmanager.lzx"/>
+    <include href="../common/virtualdrawview.lzx"/>
+    <include href="../common/rectangularchart.lzx"/>
+    <include href="../common/legend.lzx"/>
+    <include href="../common/axis.lzx"/>
+    <include href="../common/datalabel.lzx"/>
+    <include href="../common/valueline.lzx"/>
+    <include href="../common/valuepoints.lzx"/>
+    <include href="../common/valueregion.lzx"/>
+    
+    <include href="linechartplotarea.lzx"/>
+    
+    <!--- chart class that draw a lines -->
+    <class name="linechart" extends="rectangularchart">
+        <!--- @keyword private -->
+        <method name="init">
+            // this.render() needs the reference to plotarea, so let's get it here
+            plotarea = this.getNodeOfClass("linechartplotarea");
+            _datalabelpool = this.createLabelViewspool();
+            super.init();            
+        </method>    
+
+        <!--- @keyword private 
+            render the plotarea of the chart -->
+        <method name="renderPlotArea">
+        <![CDATA[
+            super.renderPlotArea();
+            _datalabelpool.reclaimAll();
+
+            plotarea.clear();
+            plotarea.setDataBound(this.minx, this.miny, this.maxx, this.maxy);
+            
+            var topseries = this.getDataSeries();
+            
+            var numSeries = topseries.getNumDataSeries();
+
+            for(var i = 0; i < numSeries; i++)
+            {
+                var leafseries = topseries.getDataSeries(i); 
+                var aDataSeriesValues = plotarea.loadDataSeriesValues( leafseries );
+
+                if (leafseries.enabled ){
+                    var ldatastyle = this.style.getDataStyle(i);
+                    var tooltipseries = null;
+                    var labelseries = null;
+
+                    var xseries = leafseries.getDataColumn(haxis.columnName).values;
+                    var yseries = leafseries.getDataColumn(vaxis.columnName).values;
+                    
+                    plotarea.renderSeries( xseries, yseries, ldatastyle );
+                    
+                    if(this.dataPointsEnabled){                                      
+                        tooltipseries = leafseries.getDataColumn(this.datatipColumn).values; 
+                        plotarea.renderDataPoints(xseries, yseries, tooltipseries, ldatastyle, i);                    
+                    }
+                    if ( this.datalabelEnabled ){
+                        labelseries = leafseries.getDataColumn(this.datalabelColumn).values;
+                        plotarea.renderDataLabels(xseries, yseries, labelseries, ldatastyle, i);
+                    }
+                }
+            }
+        ]]>
+        </method>
+        
+        <linechartplotarea name="plotarea" x="50" y="20" width="500" height="300"/>
+    </class>
+    
+</library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->

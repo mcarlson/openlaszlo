@@ -1,0 +1,185 @@
+<canvas debug="true" width="700" height="500">
+    <debug y="300" height="200"/>
+
+    <include href="lz/grid.lzx"/>
+    <dataset name="contactsLoad" queuerequests="true"
+           src="http://localhost:8080/lps/examples/contactlist/contactsdata.xml"
+             ondata="contactsData.appendChild( this.getFirstChild() );"
+             type="http" request="true"/>
+
+    <dataset name="contactsData" />
+    
+	<script>
+		function numCompare(one, two)
+		{
+			a = parseInt(one)
+			b = parseInt(two)
+
+			if (a &gt; b) return -1
+			if (a == b) return 0
+			return 1
+		}
+	</script>
+    
+    <silverstyle name="silvercolors"/>
+    <greenstyle name="greencolors"/>
+    <bluestyle name="bluecolors"/>
+    <goldstyle name="goldcolors"/>
+    <whitestyle name="whitecolors"/>
+    <purplestyle name="purplecolors"/>
+    
+    <class name="eval_item" extends="menuitem" initstage="late">
+    	<attribute name="obj"/>
+    	<method event="onselect">
+    		debug.write(obj[this.text]())
+    	</method>
+    </class>
+    
+    <class name="stylechooser" extends="menuitem">
+    	<method event="onselect">
+    		tgrid.setStyle(canvas[this.text + 'colors'])
+    	</method>
+    </class>
+
+    <window title="dgTester" width="600" height="300" name="dgwin"
+            resizable="true">
+        <menubar width="${immediateparent.width}" placement="menubar" style="bluecolors">
+        	<menu text="Navigate" width="100">
+        		<eval_item text="selectNext" obj="${tgrid}"/>
+        		<eval_item text="selectPrev" obj="${tgrid}"/>
+        		
+        		<menuseparator/>
+        		<eval_item text="clearSelection" obj="${tgrid}"/>
+        		
+        	</menu>
+        	<menu text="Inspect" width="100">
+        		<eval_item text="getSelection" obj="${tgrid}"/>
+        		<eval_item text="getNumItems" obj="${tgrid}"/>
+        		<menuitem text="Get row height" onselect="debug.write(tgrid.rowheight)"/>
+        	</menu>
+        	<menu text="Modify">
+        	
+        		<menuitem text="Delete selected" onselect="tgrid.deleteSel()"/>
+        		<menuseparator/>
+        		<menuitem text="Style">
+        			<menu>
+        				<stylechooser text="silver"/>
+        				<stylechooser text="green"/>
+        				<stylechooser text="blue"/>
+        				<stylechooser text="gold"/>
+        				<stylechooser text="white"/>
+        				<stylechooser text="purple"/>
+        			</menu>
+        		</menuitem>
+        		
+        		<menuseparator/>
+				<menuitem onselect="doit()" text_x="15" text="Show vertical lines" initstage="late">
+					<checkbox name="check" value="$once{false}" 
+						width="${immediateparent.width}" valign="middle"/>
+
+					<method name="doit">
+						check.setValue(!check.value)
+						tgrid.setAttribute('showvlines', !tgrid.showvlines)
+					</method>
+				</menuitem>
+        		
+        	</menu>
+        </menubar>
+        
+        <grid width="${immediateparent.width}"  id="tgrid" styleable="true"
+              contentdatapath="contactsData:/resultset/result" showhlines="true"
+              height="${immediateparent.height}" rowheight="35">
+              
+
+            <gridcolumn showheader="false" width="50">
+                <text datapath="position()"/>
+            </gridcolumn>
+
+            <gridcolumn>ID
+                <attribute name="ascendComparator" value="$once{global.numCompare}"/>
+                <text datapath="@id"/>
+            </gridcolumn>
+
+            <gridcolumn>
+                First
+                <text datapath="@firstname"/>
+            </gridcolumn>
+
+            <gridcolumn>Last
+                <text datapath="@lastname" resize="true"/>
+            </gridcolumn>
+
+            <gridtext datapath="@displayname">
+                Fullname
+            </gridtext>
+
+            <gridcolumn resizable="false" sortable="false" width="130"> 
+                Default contact
+                <radiogroup xoffset="-10" text="$path{ '@title'}" 
+                            defaultSelection="0"
+                            layout="axis:'x'">
+                    <attribute name="workdef" value="$path{ '@work_default' }"/>
+                    <attribute name="homedef" value="$path{ '@home_default' }"/>
+                    <attribute name="datasel" 
+                               value="${ workdef == '1' ? 2 : 1 }"/>
+
+                    <method event="ondatasel" name="checkDataSel">
+                        if ( !this._initcomplete ) return;
+                        this.selectItem(  datasel );
+                    </method>
+
+                    <method event="oninit">
+                        this.checkDataSel();
+                    </method>
+
+                    <method event="onselect">
+                        if ( this.value == 1 ){
+                            this.workdef = 0;
+                            this.homedef = 1;
+                        } else if ( this.value == 2 ){
+                            this.workdef = 1;
+                            this.homedef = 0;
+                        }
+                        this.datapath.updateData();
+                    </method>
+
+                    <radiobutton value="1">home</radiobutton>
+                    <radiobutton value="2">work</radiobutton>
+                </radiogroup>
+            </gridcolumn>
+            
+            <gridtext datapath="@email" text="Email"/>
+            
+		<method event="oninit">
+			del = new LzDelegate(this, "deleteSel" );
+			LzKeys.callOnKeyCombo(del, ["delete"]);
+		</method> 
+		
+		<method name="deleteSel">
+		   var sel = getSelection()
+		   for (var i = 0; i &lt; sel.length; ++i)
+			   sel [ i ].deleteNode();
+		</method>
+
+        </grid>
+    </window>
+
+    <window title="poke" layout="axis:'y'; spacing: 10" x="450" y="${dgwin.height+10}" resizable="true" minwidth="150">
+        <button text="loadMoreData">
+            <method event="onclick">
+                contactsLoad.doRequest();
+            </method>
+        </button>
+
+		<view layout="axis: x">
+			<button text="Delete item at: " onclick="tgrid.removeItemAt(parent.del.getText())"/>
+			<edittext name="del" width="35"/>
+		</view>
+
+    </window>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

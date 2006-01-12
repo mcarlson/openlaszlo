@@ -1,0 +1,94 @@
+<canvas  layout="axis: y">
+    <class name="turtle">
+        <attribute name="xpos" value="0" type="number"/>
+        <attribute name="ypos" value="0" type="number"/>
+        <attribute name="heading" value="0" type="number"/>
+        <attribute name="length" value="1" type="number"/>
+        <attribute name="angle" value="1" type="number"/>
+         <method name="init" args="x, y, a, l">
+            this.xpos = x;
+            this.ypos = y;
+            this.angle = a;
+            this.length = l;
+        </method>
+    </class>
+    <class name="lsystem" extends="drawview">
+        <attribute name="axiom" value="" type="string"/>
+        <attribute name="rulemap" value="null"/>
+        <attribute name="depth" value="10" type="number"/>
+        <attribute name="angle" value="90" type="number"/>
+        <attribute name="length" value="10" type="number"/>
+        <attribute name="y_offset" value="$once{this.height/2-30}" type="number"/>
+        <attribute name="x_offset" value="$once{this.width/2+30}" type="number"/>
+        <attribute name="str" value="" type="string"/>
+        <turtle name="trtl"/>
+        <button x="10">Draw
+            <method event="onclick">
+                parent.axiom = "FX";
+                parent.rulemap = new Array();
+                parent.rulemap["X"] = "X+YF+";
+                parent.rulemap["Y"] = "-FX-Y";       
+                parent.trtl.init(parent.x_offset, parent.y_offset, parent.angle,3);
+                parent.go();
+            </method>
+        </button>
+        <method name="go">
+                this.clear();
+                this.str = this.rewrite(this.depth);
+                this.moveTo(this.x_offset, this.y_offset);
+                this.interpret(this.str);
+        </method>
+        <method name="rewrite" args="dpth"><![CDATA[
+            var token; var rule_rh; var curstr = axiom; var buffer = "";
+            for (var d = 0; d < dpth; d++ ) {
+                buffer = "";
+                for (var i = 0; i < curstr.length; i++)  {
+                   token = curstr.substr(i,1);
+                   if (token == '+' || token == '-'|| token == '('|| token == ')' )
+                        buffer += token
+                   else {
+                        rule_rh = this.rulemap[token] + "";
+                        if( rule_rh != "undefined")
+                            buffer +=  rule_rh;
+                   }
+                }
+                curstr = buffer;     
+            }
+            return curstr;
+            ]]>
+        </method>
+        <method name="interpret" args="str"><![CDATA[
+            var strlen = str.length; var token;
+            for (var i = 0; i < strlen; i++) {
+                token = str.substr(i,1);
+                switch (token) {
+                    case (token='F') :
+                        var endx = Math.round(trtl.xpos + ((trtl.length) * Math.cos((trtl.heading) * Math.PI / 180)));
+                        var endy = Math.round(trtl.ypos + ((trtl.length) * Math.sin((trtl.heading) * Math.PI / 180))); 
+                        this.lineTo(endx, endy);
+                        trtl.xpos = endx;
+                        trtl.ypos = endy;
+                        break;
+                    case (token='-') :         
+           	          this.trtl.heading = this.trtl.heading + (-1 * this.trtl.angle);
+                        break;
+                    case (token='+') :
+                          this.trtl.heading = this.trtl.heading + ( this.trtl.angle);
+                        break;
+                    default:
+                        break;               
+                }
+            }
+            this.strokeStyle = 0;
+            this.lineWidth = 1;
+            this.stroke();           
+            ]]>
+        </method>
+    </class>
+    <text>Axiom: FX</text>
+    <text>X -> X+YF+</text>
+    <text>Y -> -FX-Y</text>  
+    <text>Iterations: 10</text>  
+    <text> <font color="#0000FF">(<a target="_blank" href="http://www.student.cs.uwaterloo.ca/~rnsolank/fproject.html">Click here for more info</a>)</font></text> 
+    <lsystem id="l" length="3" depth="14" angle="90" width="300" height="520"/>
+</canvas>

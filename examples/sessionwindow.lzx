@@ -1,0 +1,58 @@
+<canvas width="600" height="500" debug="true">
+
+    <debug x="300" y="20" width="500" height="400" />
+
+    <sessionrpc name="session" />
+
+    <class name="sessionwindow" extends="window" visible="false" >
+        <method event="onload" reference="canvas.session">
+            this.getAttrRPC.invoke();
+        </method>
+        <method event="onmouseup">
+            this.setAttrRPC.invoke();
+        </method>
+
+        <method event="onerror" args="mesg">
+            this.setAttribute('visible', true);
+            Debug.write('error:', mesg);
+        </method>
+
+        <remotecall name="getAttrRPC" funcname="getAttribute"
+                    remotecontext="$once{canvas.session}">
+            <param><method name="getValue">
+                return classroot.name + '-pos';
+            </method></param>
+            <method event="ondata" args="pos">
+                classroot.setAttribute('x', pos[0]);
+                classroot.setAttribute('y', pos[1]);
+                classroot.setAttribute('visible', true);
+            </method>
+        </remotecall>
+
+        <remotecall name="setAttrRPC" funcname="setAttribute" 
+                    remotecontext="$once{canvas.session}">
+            <param><method name="getValue">
+                return classroot.name + '-pos';
+            </method></param>
+            <param><method name="getValue">
+                return [ classroot.x, classroot.y ];
+            </method></param>
+        </remotecall>
+
+        <text text="${parent.name}" />
+
+    </class>
+
+    <text>Move these windows around and reload the page.</text>
+
+    <sessionwindow name="win1" x="90"  y="30"  bgcolor="blue"   width="200" height="100" />
+    <sessionwindow name="win2" x="300" y="30"  bgcolor="yellow" width="100" height="200" />
+    <sessionwindow name="win3" x="150" y="250" bgcolor="red"    width="150" height="75" />
+    <sessionwindow name="win4" x="10"  y="150" bgcolor="teal"   width="100" height="100" opacity=".3" />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

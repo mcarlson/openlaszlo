@@ -1,0 +1,87 @@
+<canvas debug="true" width="800" height="600" oninit="debug.setX(200);">
+    <include href="lz/floatinglist.lzx" />
+
+    <view x="15" y="15">
+        <simplelayout axis="x" spacing="10" />
+
+        <view id="one" width="130" height="40" bgcolor="red">
+            <floatinglist name="flist"
+                          width="${owner.width}"
+                          bordersize="1"
+                          spacing="1"
+                          visible="true"
+                          shownitems="-1"
+                          attach="bottom"
+                          attachoffset="-1"
+                          multiselect="false"
+                          height="200" 
+                          initstage="late">
+                  <textlistitem name="one" text="floatinglist late" value="1" />
+                  <textlistitem name="two" text="two" value="2" />
+                  <textlistitem name="three" text="three" value="3" />
+                  <textlistitem name="four" text="four" value="4" />
+              </floatinglist>
+        </view>
+
+        <view id="two" width="130" height="40" bgcolor="red">
+            <floatinglist name="flist"
+                          width="${owner.width}"
+                          bordersize="1"
+                          spacing="1"
+                          visible="true"
+                          shownitems="-1"
+                          attach="bottom"
+                          attachoffset="-1"
+                          multiselect="false"
+                          height="200">
+                  <textlistitem name="one" initstage="late" text="textlistitems late" value="1" />
+                  <textlistitem name="two" initstage="late" text="two" value="2" />
+                  <textlistitem name="three" initstage="late" text="three" value="3" />
+                  <textlistitem name="four" initstage="late" text="four" value="4" />
+              </floatinglist>
+        </view>
+
+        <view id="three" width="130" height="40" bgcolor="red">
+            <floatinglist name="flist"
+                          width="${owner.width}"
+                          bordersize="1"
+                          spacing="1"
+                          visible="true"
+                          shownitems="-1"
+                          attach="bottom"
+                          attachoffset="-1"
+                          multiselect="false"
+                          height="200" 
+                          initstage="late">
+                  <textlistitem name="one" initstage="late" text="all late" value="1" />
+                  <textlistitem name="two" initstage="late" text="two" value="2" />
+                  <textlistitem name="three" initstage="late" text="three" value="3" />
+                  <textlistitem name="four" initstage="late" text="four" value="4" />
+              </floatinglist>
+        </view>
+
+        <view id="four" width="130" height="40" bgcolor="red">
+            <floatinglist name="flist"
+                          width="${owner.width}"
+                          bordersize="1"
+                          spacing="1"
+                          visible="true"
+                          shownitems="-1"
+                          attach="bottom"
+                          attachoffset="-1"
+                          multiselect="false"
+                          height="200" 
+                          initstage="late">
+                  <textlistitem name="one" text="2 and 4 late" value="1" />
+                  <textlistitem name="two" initstage="late" text="two" value="2" />
+                  <textlistitem name="three" text="three" value="3" />
+                  <textlistitem name="four" initstage="late" text="four" value="4" />
+              </floatinglist>
+        </view>
+    </view>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

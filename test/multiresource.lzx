@@ -1,0 +1,55 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- resource.lzx                                                          -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="1024" height="768"> 
+    <debug y="300" />
+    <include href="redmond" />
+
+    <resource name="max">
+        <frame src="resources/swf/logo.swf" />
+        <frame src="resources/swf/includeme.swf" />
+        <frame src="resources/gif/logo.gif" />
+        <frame src="resources/jpg/logo.jpg" />
+        <frame src="resources/png/logo.png" />
+    </resource>
+
+    <view id="multisrc" x="4" y="4" play="true"
+        resource="max"
+        oninit="new LzDelegate( this, 'lastoff', this, 'onlastoffset');
+                new LzDelegate( this, 'stopped', this, 'onstopped');">
+
+        <method name="lastoff">
+            Debug.write("Got last");
+        </method>
+        <method name="stopped">
+            Debug.write("Got stopped");
+        </method>
+    </view>
+
+    <view y="200">
+        <simplelayout axis="y" spacing="4"/>
+        <view>
+            <simplelayout axis="x" spacing="4"/>
+            <button label="rewind" onclick="multisrc.play(1);"/>
+            <button label="stop" onclick="multisrc.stop()"/>
+            <button label="play" onclick="multisrc.play()"/>
+        </view>
+        <view name="background" bgcolor="black" width="202" height="22">
+            <view name="playbar" y="1" bgcolor="yellow" x="${1 + multisrc.frame/multisrc.totalframes * 180}" width="20" height="20" />
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

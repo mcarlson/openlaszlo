@@ -1,0 +1,27 @@
+<canvas>
+    <dataset name="testdata">
+        <Monday temp="Hi 48"> 
+        Partly Cloudly </Monday>
+        <Tuesday temp="Hi 60"> 
+        Showers Likely </Tuesday>
+        <Wednesday temp="Hi 63"> 
+        Chance Showers </Wednesday>
+        <Thursday temp="Hi 58"> 
+        Mostly Sunny </Thursday>
+        <Friday temp="Hi 50"> 
+        Clear and Cold </Friday>
+    </dataset>
+    <simplelayout spacing="5" />
+    <view datapath="testdata:/*">
+        <view>
+            <simplelayout axis="x"/>
+            <text datapath="name()"/>
+            <text datapath="text()" multiline="true"/>
+            <text datapath="@temp"/>
+        </view>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

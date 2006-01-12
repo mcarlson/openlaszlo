@@ -1,0 +1,60 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- resource.lzx                                                          -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- Copyright Laszlo Systems, Inc. 2002                                   -->
+<!-- All Rights Reserved.                                                  -->
+<!--                                                                       -->
+<!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
+<!-- Use is subject to license terms.                                      -->
+<!--=======================================================================-->
+
+<canvas width="600" height="800"> 
+    <include href="redmond" />
+    <splash/>
+
+    <font name="Helvetica" src="helmetr.ttf" />
+    <font name="Helvetica" src="helmetb.ttf" style="bold" />
+
+    <window title="SWF" width="200" height="200" resizable="true">
+        <view width="200" height="200" bgcolor="#FCFBFF">
+	    <simplelayout axis="y" spacing="2" />
+	    <text>SWF</text> 
+	    <view resource="resources/swf/includeme.swf" />
+        </view>
+    </window>
+    <window title="GIF" width="200" height="200" x="50" y="50" >
+        <view width="200" height="200" bgcolor="#FCFBFF">
+	    <simplelayout axis="y" spacing="2" />
+	    <text>GIF</text>
+	    <view resource="resources/gif/logo.gif" />
+        </view>
+    </window>
+    <window title="JPG" width="200" height="200" x="100" y="100" >
+        <view width="200" height="200" bgcolor="#FCFBFF">
+	    <simplelayout axis="y" spacing="2" />
+	    <text><b>JPEG</b></text>
+	    <view resource="resources/jpg/logo.jpg" />
+        </view>
+    </window>
+    <window title="PNG" width="200" height="200" x="150" y="150" >
+        <view width="200" height="200" bgcolor="#FCFBFF">
+	    <simplelayout axis="y" spacing="2" />
+	    <text fontsize="14" font="Helvetica">PNG</text>
+	    <view resource="resources/png/logo.png" />
+        </view>
+    </window>
+    <window title="SWF" width="200" height="200" x="250" y="250" >
+        <view width="200" height="200" bgcolor="#FCFBFF">
+	    <simplelayout axis="y" spacing="2" />
+	    <text font="lztahoe8"><b>SWF</b></text>
+	    <view resource="resources/swf/logo.swf" />
+        </view>
+    </window>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

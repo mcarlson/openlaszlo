@@ -1,0 +1,16 @@
+<library>
+  <class name="bouncer" bgcolor="red"
+         width="${size}" height="${size}"
+         onmouseover="animate('size', 25, 500, true)"
+         onmouseout="animate('size', -25, 500, true)"
+         onmousedown="animate('width', 150, 1000, true)"
+         onmouseup="animate('width', -150, 1000, true)">
+    <attribute name="size" value="50"/>
+    <attribute name="border" value="2"/>
+    <view x="${parent.border}"
+          y="${parent.border}"
+          width="${parent.width-2*parent.border}"
+          height="${parent.height-2*parent.border}"
+          bgcolor="yellow"/>
+  </class>
+</library>

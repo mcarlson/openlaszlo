@@ -1,0 +1,8 @@
+<canvas>
+  <import name="layoutTest" href="layout-library.lzx" stage="late" />
+  <import name="cssTest" href="css-library.lzx" stage="late" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

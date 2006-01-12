@@ -1,0 +1,229 @@
+<!-- vacation-survey.lzx -->
+
+<canvas width="600" height="206" bgcolor="0xeaeaea" title="Vacation Survey" >
+
+    <splash/>
+
+    <include   href="utils/layouts/reverselayout.lzx" />
+
+    <font name="hel" src="helmetr.ttf" />
+    <debug x="250"/>
+
+    <dataset name="surveydataset" type="http" src="http:survey.jsp"/>
+
+    <node id="resultdata">
+        <attribute name="hawaii" 
+            value="$path{'surveydataset:/response/summary/option[1]/text()'}"/>
+        <attribute name="paris" 
+            value="$path{'surveydataset:/response/summary/option[2]/text()'}"/>
+        <attribute name="jamaica" 
+            value="$path{'surveydataset:/response/summary/option[3]/text()'}"/>
+        <attribute name="total" 
+            value="$path{'surveydataset:/response/summary/@total'}"/>
+        <attribute name="vote" 
+            value="$path{'surveydataset:/response/vote/text()'}"/>
+    </node>
+
+    <!-- Auto-resizing text -->
+    <class name="rtext" extends="text" resize="true" />
+
+    <!-- Color for the vote -->
+    <class name="votepatch" extends="view" bgcolor="#EBC84F"/>
+
+    <!-- Class that puts a border around it's first child -->
+    <!-- You must offset the child by the border -->
+    <class name="box" extends="view" 
+        width="${this.subviews[0].width+this.border*2}"
+        height="${this.subviews[0].height+this.border*2}" >
+        <attribute name="border" value="1" />
+    </class>
+
+    <!-- The form -->
+    <box border="2" bgcolor="#787878" id="survey" >
+        <view x="2" y="2" >
+            <simplelayout axis="y" />
+
+            <view height="20" 
+                  bgcolor="#878787" 
+                  width="${this.parent.width}" >
+                <text valign="middle" x="5"><font color="#FFFFFF">Vacation Survey</font></text>
+            </view>
+
+            <view height="1" width="${this.parent.width}" bgcolor="#787878" />
+
+            <form name="form" bgcolor="#c0c0c0" spacing="33">
+
+                <submit id="surveysubmit" data="${surveydataset}" />
+ 
+                <view height="20" >
+                    <text>What is your favorite vacation spot?</text>
+                </view> 
+                <radiogroup x="20" 
+                            layout="class: simplelayout; axis: y; spacing:6" 
+                            name="vote">
+                    <radiobutton value="'hawaii'" 
+                                 selected="true" >Hawaii</radiobutton>
+                    <radiobutton value="'paris'"  >Paris</radiobutton>
+                    <radiobutton value="'jamaica'">Jamaica</radiobutton>
+                    <radiobutton value="'trenton'">Trenton</radiobutton>
+                </radiogroup>
+                <button isdefault="true">Vote
+                    <method event="onclick" >
+                        surveysubmit.submit();
+                    </method>
+                </button>
+            </form>
+        </view>
+    </box>
+
+    <!-- A class that displays a city -->
+    <class name="city" extends="view" >
+
+        <attribute name="cname"  type="string" />
+        <attribute name="color" type="number" />
+        <attribute name="votes" type="number" />
+        <attribute name="vote" type="string" />
+        <attribute name="total" type="number" />
+        <attribute name="myvote" type="expression" />
+        <attribute name="lcname" value="${this.cname.toLowerCase()}" />
+        <attribute name="img"   value="${'http:' + this.lcname + '.gif' }" />
+        <attribute name="p"     value="${votes/total}" />
+        <attribute name="h"     value="100" />
+
+        <simplelayout axis="y" />
+        <view bgcolor="#BFBFBF" 
+            width="${this.parent.pic.width}"
+            height="${this.classroot.h}" >
+            <view x="1" y="1" 
+                bgcolor="#DEDEDE"
+                width="${this.parent.width-2}" 
+                height="${this.parent.height-1}" >
+                <reverselayout axis="y" />
+                <view x="-1" name="cswatch" bgcolor="black" 
+                      width="${this.classroot.pic.width}"
+                      height="${this.classroot.h * this.classroot.p}" >
+                      <view x="1" y="1" 
+                          bgcolor="${this.classroot.color}" 
+                          width="${this.parent.width-2}" 
+                          height="${this.parent.height-1}" />
+                </view>
+                <view x="-1" name="voteswatch" bgcolor="black"
+                      visible="${this.classroot.vote == this.classroot.lcname}"
+                      width="${this.classroot.pic.width}"
+                      height="${this.subviews[0].height + 1}" >
+                    <votepatch x="1" y="1" height="2" 
+                                           width="${this.parent.width-2}" />
+                </view>
+                <rtext align="center" text="${this.classroot.votes}" /> 
+            </view>
+        </view>
+        <view name="pic" resource="${this.parent.img}" />
+        <view height="5" width="1" />
+        <rtext width="1" align="center" text="${this.classroot.cname}" /> 
+        <view height="5" width="1" />
+    </class>
+
+    <!-- The results -->
+
+    <box id="results" x="0" bgcolor="#787878" border="2" visible="false" >
+        <attribute name="status" 
+                   value="$path{'surveydataset:/response/@status'}" />
+        <method event="oninit">
+            survey.bringToFront();
+        </method>
+        <method event="onstatus">
+            if (this.status == null) {
+                return;
+            }
+            if (this.status == 'ok') {
+                if (this.getAttribute('visible') == false) {
+                    this.setAttribute('x', 0);
+                    this.setAttribute('visible', true);
+                }
+                this.animate('x', survey.width - 2, 1500, false);
+            } else {
+                this.animate('x', -survey.width - 2, 1500, false);
+            }
+        </method>
+
+        <view x="2" y="2" >
+            <simplelayout axis="y" />
+
+            <view height="20" bgcolor="#B7B7B7" >
+                <text x="5" valign="middle" >Survey Results:</text>
+                <box valign="middle" name="box" x="120" bgcolor="black">
+                    <votepatch x="1" y="1" height="8" width="8" />
+                </box>
+                <text name="t" valign="middle" x="${this.parent.box.x+16}">
+                     your vote</text>
+                <view width="26"  height="1" 
+                      x="${this.parent.t.x+this.parent.t.width}" />
+            </view>
+
+            <view height="1" width="${this.parent.width}" bgcolor="#787878" />
+
+            <view bgcolor="#D4D4D4" >
+                <simplelayout axis="x" spacing="14" inset="14" />
+                <view y="12" id="summary" >
+                    <simplelayout axis="x" inset="14" spacing="14" />
+
+                    <city cname="Hawaii" color="12820934" 
+                          votes="${resultdata.hawaii}" 
+                          total="${resultdata.total}" 
+                          vote="${resultdata.vote}" />
+                    <city cname="Paris" color="13944964" 
+                          votes="${resultdata.paris}" 
+                          total="${resultdata.total}" 
+                          vote="${resultdata.vote}" />
+                    <city cname="Jamaica" color="9621175" 
+                          votes="${resultdata.jamaica}" 
+                          total="${resultdata.total}" 
+                          vote="${resultdata.vote}" />
+                </view>
+                <view bgcolor="#D4D4D4" width="14" />
+            </view>
+        </view>
+    </box>
+    
+    <!-- An alert centered nicely -->
+    <class extends="alert" name="myalert"  
+           x="${Math.max(survey.width - this.width, 0)/2}"
+           y="${Math.max(survey.height - this.height, 0)/3}" >
+    </class>
+
+    <!-- An alert that fires when the JSP signals its status was not 'ok' -->
+    <myalert title="Error" 
+             id="errors"
+             text="$path{ '/response/@status' }"
+             datapath="surveydataset:/">
+        <method event="ontext">
+            <![CDATA[ 
+            if ( this.text != null && this.text != 'ok' ){
+                this.open();
+            }
+            ]]>
+        </method>
+    </myalert>
+
+    <!-- An alert that fires when the app has problems getting   -->
+    <!-- to the JSP                                              -->
+    <!--                                                         -->
+    <!-- The form will place '/@status' and '/@error' attributes -->
+    <!-- on your dataset's root element                          -->
+    <!--                                                         -->
+    <myalert title="Problem connecting to server"
+             id="problems">
+        <attribute name="status" value="${surveysubmit.status}" />
+        <method event="ontext"><![CDATA[ 
+            if ( this.text != null && this.text != "" &&  
+                 this.text != 'ok' && this.text != 'requesting' ){
+                this.open();
+            }
+        ]]></method>
+    </myalert>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

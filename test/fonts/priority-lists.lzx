@@ -1,0 +1,17 @@
+<canvas fontsize="24" layout="axis: x">
+  <view layout="axis: y">
+    <text font="monospace">Font: monospace</text>
+    <text font="unknown,monospace">Font: monospace</text>
+    <text font="unknown, monospace">Font: monospace</text>
+  </view>
+
+  <view layout="axis: y">
+    <text font="Arial">Font: Arial</text>
+    <text font="Arial,monospace">Font: Arial</text>
+    <text font="Arial, monospace">Font: Arial</text>
+  </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

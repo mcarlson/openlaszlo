@@ -1,0 +1,146 @@
+<canvas height="420" width="620">
+  <include href="timing-support.lzx" />
+
+  <script>
+  <![CDATA[
+    // String indexes for testing
+    var nIndices = 100;
+    var textIndices={};
+    for (var i = 0; i < nIndices; i++) {
+      textIndices[i] = i.toString();
+    }
+
+    // Some iteration parameters
+    var inner = 5;
+
+    // Empty baseline loop
+    function emptyTest () {
+      for (var k = 0; k < inner; k++) {
+        var testArray = [];
+        for (var j in textIndices ) {
+          var jay = textIndices[j];
+          // body
+          ;
+        }
+      }
+    }
+
+    // Pushing elements into an array
+    function pushTest () {
+      for (var k = 0; k < inner; k++) {
+        var testArray = [];
+        for (var j in textIndices ) {
+          var jay = textIndices[j];
+          // body
+          testArray.push(j);
+        }
+      }
+    }
+
+    // Pushing using length
+    function setAtLength() {
+      for (var k = 0; k < inner; k++) {
+        var testArray = [];
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testArray[testArray.length] = j;
+        }
+      }
+    }
+
+    // Setting and explicit index
+    function setAtIndex() {
+      for (var k = 0; k < inner; k++) {
+        var testArray = [];
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testArray[j] = j;
+        }
+      }
+    }
+
+    // Ditto, with array pre-allocated
+    function setAtIndexPreallocated () {
+      for (var k = 0; k < inner; k++) {
+        // preallocate the array slots
+        var testArray = new Array(nIndices);
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testArray[j] = j;
+        }
+      }
+    }
+
+    // Using a string as an index
+    function setAtStringIndex() {
+      for (var k = 0; k < inner; k++) {
+        var testArray = [];
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testArray[jay] = j;
+        }
+      }
+    }
+
+    // The unshift operation
+    function unshiftTest () {
+      for (var k = 0; k < inner; k++) {
+        var testArray = [];
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testArray.unshift(j);
+        }
+      }
+    }
+
+    // Using an object rather than an array
+    function objectAtNumericIndex () {
+      for (var k = 0; k < inner; k++) {
+        // use object rather than array
+        var testObject = {};
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testObject[j] = j;
+        }
+      }
+    }
+
+    // ditto with a string key
+    function objectAtStringIndex() {
+      for (var k = 0; k < inner; k++) {
+        // use object rather than array
+        var testObject = {};
+        for (var j in textIndices) {
+          var jay = textIndices[j];
+          // body
+          testObject[jay] = j;
+        }
+      }
+    }
+
+    addTest("emptyTest");
+    addTest("pushTest");
+    addTest("setAtLength");
+    addTest("setAtIndex");
+    addTest("setAtIndexPreallocated");
+    addTest("setAtStringIndex");
+    addTest("unshiftTest");
+    addTest("objectAtNumericIndex");
+    addTest("objectAtStringIndex");
+    
+    runTests( 'Array/Object Timings' , 25 );
+
+  ]]>
+  </script>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

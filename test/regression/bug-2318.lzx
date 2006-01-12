@@ -1,0 +1,30 @@
+<canvas width="1000" height="1000" debug="true">
+
+    <debug x="400" height="300" />
+
+    <attribute name="defaultstyle" value="${greenstyle}"/>
+    <simplelayout spacing="10"/>
+
+    <text>one - one initstage late</text>
+    <tabs id="one" x="5" >
+        <tabpane name="one" oninit="debug.write('tabpane one inited')">one
+            <text oninit="debug.write('text 1 inited')" text="one" />
+        </tabpane>
+        <tabpane name="two" oninit="debug.write('tabpane two inited')">two
+            <text oninit="debug.write('text 2 inited')" text="two" />
+        </tabpane>
+    </tabs>
+
+    <button x="5" text="complete inst one">
+        <method event="onclick">
+            var tc = one.one.inset_content;
+            debug.write("------------------------------bt tc.isinited: " + tc.isinited);
+            tc.completeInstantiation();
+            debug.write("------------------------------bt tc.isinited: " + tc.isinited);
+        </method>
+    </button> 
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

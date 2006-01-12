@@ -1,0 +1,224 @@
+<!--=======================================================================-->
+<!-- chatlib.lzx                                                           -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+
+    <include href="redmond" />
+
+    <connectiondatasource name="myconnection">
+
+        <method name="print" args="str">
+            canvas.chatwindow.chatPtr.addNode("message", null, { text: str } );
+        </method>
+
+        <method event="onconnect">
+            this.print("...connected...");
+            this.sendMessage("*", "", "userconnect");
+            canvas.enterfocus = bSend;
+            canvas.namepicker.setVisible(false);
+            canvas.chatwindow.setVisible(true);
+        </method>
+
+        <method event="onerror">
+            this.print("...connection error...");
+        </method>
+
+        <method event="ontimeout">
+            this.print("...connection timed out...");
+        </method>
+
+        <method event="ondisconnect">
+            this.print("...disconnected...");
+        </method>
+
+        <method event="onuserdisconnect" args="user">
+            this.getList('*');
+            this.print("user " + user + " disconnected");
+        </method>
+
+        <dataset name="message" />
+        <dataset name="userconnect" />
+        <dataset name="history" />
+    </connectiondatasource>
+
+    <dataset name="chatDset" />
+
+    <view name="chatwindow" width="450" height="400" x="0" y="0" bgcolor="#EAEAEA" visible="false"> 
+
+        <datapointer name="chatPtr" xpath="chatDset:/" />
+
+        <datapointer xpath="myconnection:userconnect:/*">
+            <method event="ondata">
+                var from = this.xpathQuery('/from[0]/@name');
+                this.parent.chatPtr.addNode("message", null,
+                    { text: "User " + from + " connected!" }
+                );
+                canvas.myconnection.getList('*');
+            </method>
+        </datapointer>
+
+        <datapointer xpath="myconnection:message:/*">
+            <method event="ondata">
+                var from = this.xpathQuery('/from[0]/@name');
+                var mesg = this.xpathQuery('/text()');
+                this.parent.chatPtr.addNode("message", null,
+                    { text: from + ": " + mesg}
+                );
+            </method>
+        </datapointer>
+
+        <datapointer id="foo" xpath="myconnection:history:/*[1]">
+            <method event="ondata">
+            <![CDATA[
+                if (this.getNodeCount() == 0) {
+                    this.parent.chatPtr.addNode("message", null,
+                        { text: ">>No history&lt;&lt;" }
+                    );
+                } else {
+                    var dptrArr = this.xpathQuery('/message');
+                    for (var i=dptrArr.length-1; i >= 0; i-- ) {
+                        this.parent.chatPtr.addNode("message", null,
+                            { text: (i+1) + "> " + dptrArr[i].getFirstChild().data}
+                        );
+                    }
+                }
+            ]]>
+            </method>
+        </datapointer>
+
+        <datapointer xpath="myconnection:sendMessageDset:/*">
+            <method event="onerror">
+                var message = this.parent.sendView.msg.getText();
+                this.parent.chatPtr.addNode("message", null, 
+                    { text:  "error: " + this.dataset.getErrorString() }
+                );
+            </method>
+        </datapointer>
+
+        <view width="387" height="287" x="29" y="39" bgcolor="#000000" />
+        <view name="chatView" width="385" height="285" x="30" y="40" bgcolor="#ffffff" clip="true">
+            <view name="svpar">
+                <method name="adjustScroll">
+                <![CDATA[
+                    if (this.parent.height < 0) return;
+                        var cvDif=this.parent.height-this.height;
+                        if ((cvDif) < 0){
+                            this.setY(cvDif);
+                            parent.scroller.updateThumbPos(); 
+                        }
+                    ]]>
+                </method>
+
+                <view name="sview" height="12" datapath="chatDset:/message" oninit="this.parent.adjustScroll();">
+                    <text width="515" datapath="@text" />
+                </view>
+                <simplelayout axis="y" spacing="2"/>
+            </view>
+            <scrollbar name="scroller" axis="y"/>
+        </view>
+
+        <view name="sendView" x="0" y="335">
+            <text>msg:</text>
+            <windowtext name="msg" width="200" />
+            <button id="bSend" name="send" width="50" height="24" onclick="this.send();">
+                Send
+                <method name="send">
+                    var message = this.parent.msg.getText();
+                    if (message!=null &amp;&amp; message!="") {
+                        canvas.myconnection.sendMessage("*", message, "message");
+                        this.parent.msg.setText("");
+                    }
+                </method>
+            </button>
+            <button width="50" height="24">
+                History
+                <method event="onclick">
+                <![CDATA[
+                    canvas.myconnection.sendAgentXML("*", "<history />");
+                ]]>
+                </method>
+            </button>
+            <simplelayout axis="x" spacing="5"/>
+        </view>
+
+        <view y="35">
+            <view name="users" x="500">
+                <view width="72" height="102" bgcolor="#000000" />
+                <view name="chatView" width="70" height="100" x="1" y="1" bgcolor="#ffffff" clip="true">
+                    <view name="svpar">
+                        <view name="sview" height="12" 
+                            datapath="myconnection:getListDset:/list[1]/user">
+                            <text width="515" datapath="@name" />
+                        </view>
+                        <simplelayout axis="y" spacing="2"/>
+                    </view>
+                    <scrollbar axis="y"/>
+                </view>
+            </view>
+
+            <button name="logout" x="${parent.users.x}" width="${parent.users.width}" height="50"
+                    onclick="logout();">Logout
+                <method name="logout">
+                    canvas.enterfocus = gochat;
+                    canvas.namepicker.setVisible(true);
+                    canvas.chatwindow.setVisible(false);
+                    canvas.connection.disconnect();
+                </method>
+            </button>
+
+            <simplelayout axis="y" spacing="20" />
+
+        </view>
+
+    </view> <!-- chatwindow -->
+
+
+    <view name="namepicker" x="20" y="20">
+
+        <simplelayout axis="y" spacing="15"/>
+
+        <view>
+            <simplelayout axis="x" spacing="5"/>
+            <text><b>username:</b></text>
+
+            <windowtext id="usertext" width="200" />
+
+            <button id="gochat" onclick="send()">go chat
+                <method name="send">
+                    canvas.connection.setAuthParam('usr=' + usertext.getText());
+                    canvas.connection.connect();
+                </method>
+            </button>
+        </view>
+
+        <text multiline="true" selectable="true">
+        <b>To run test case</b><br/><br/>
+        <b>A.</b> Install history webapp by:<br/>
+        1. cd //depot/qa/test/connection/server-api/WEB-INF<br/>
+        2. ant build install<br/>
+        3. You'll be able to access the history webapp at <b>http://localhost:8080/server-api/History</b><br/>
+        <b>B.</b> Run history.lzx: <b>http://localhost:8080/lps-xxx/qa/test/connections/history/history.lzx</b><br/>
+        <b>D.</b> Type in username.<br/>
+        </text>
+
+    </view>
+
+    <method event="onkeyup" reference="LzKeys" args="k">
+        if ( k == 13 ) {
+            canvas.enterfocus.send();
+        }
+    </method>
+
+    <script>
+        canvas.enterfocus = gochat;
+    </script>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

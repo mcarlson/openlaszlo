@@ -1,0 +1,76 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Dragstate">
+    <lztier>Utility Component</lztier>
+    <lzcategory>State</lzcategory>
+    <lzshortdesc>
+        A standard dragging behavior.
+    </lzshortdesc>
+    <lztag>utils/states/dragstate.xml</lztag>
+</lzelement>
+<p>
+The dragstate is a class which can be used to make any view draggable.
+When the dragstate is applied, the view with the dragstate will follow the mouse.
+</p>
+<example class="program" id="dragstate-1" title="Simple use of a dragstate">
+&lt;canvas width="200" height="100"&gt;
+    &lt;view bgcolor="blue" width="20" height="20"
+          onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+        &lt;dragstate name="dragger"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<example class="program" id="dragstate-2" title="Horizontal drag">
+&lt;canvas width="200" height="100"&gt;
+    &lt;view bgcolor="red" width="20" height="20"
+          onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+        &lt;dragstate name="dragger" drag_axis="x"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<example class="program" id="dragstate-3" 
+    title="Horizontal drag with simple bounds checking">
+&lt;canvas width="200" height="100"&gt;
+    &lt;view bgcolor="red" width="20" height="20"
+          onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+        &lt;dragstate name="dragger" drag_axis="x"
+                drag_min_x="0"  drag_max_x="100"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+
+<example class="program" id="dragstate-4"
+    title="Drag within bounds of parent view">
+&lt;canvas width="500" height="350"&gt;
+    &lt;view bgcolor="blue" x="100" y="40" width="300" height="200"&gt;
+        &lt;view bgcolor="red" width="20" height="20"
+              onmousedown="dragger.apply()" onmouseup="dragger.remove()"&gt;
+            &lt;dragstate name="dragger" drag_axis="both"
+                drag_min_x="0"
+                drag_max_x="$once{parent.width - this.width}"
+                drag_min_y="0"
+                drag_max_y="$once{parent.height - this.height}"/&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
+<p>The above example allows the user to drag the red square within the
+bounds of the larger blue rectangle.  Note that as with all states the
+dragstate's attributes are evaluated in the context of its parent.  So
+to refer to the blue view's width, the example uses parent.width, and to
+refer to the red square's width, the example uses this.width.
+</p>
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

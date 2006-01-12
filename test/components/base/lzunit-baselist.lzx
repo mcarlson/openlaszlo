@@ -1,0 +1,53 @@
+<canvas debug="true" >
+  <include href="lzunit"/>
+  <include href="lz/list.lzx"/>
+
+  <TestSuite>
+
+    <TestCase name="selectedExplicit">
+      
+      <list name="list1">
+        <textlistitem text="soln1" selected="false"/>
+        <textlistitem text="soln2" selected="true"/>
+        <textlistitem text="soln3" selected="false"/>
+      </list>
+
+      <method name="testSelectedFromPath">
+        assertEquals(list1.getItemAt(1), list1.getSelection());
+      </method>
+
+    </TestCase>
+
+    <TestCase name="selectedFromPath"> <!-- originated in LPP-114 -->
+      
+      <list name="list2">
+        <dataset name="recs"> 
+          <records>
+            <record name="soln1" selected="false"/>
+            <record name="soln2" selected="true"/>
+            <record name="soln3" selected="false"/>
+          </records>
+        </dataset>
+
+        <textlistitem datapath="local:parent.recs:/records/record" 
+                      text="$path{'@name'}"
+                      selected="${datapath.xpathQuery('@selected') == 'true'}"/>
+                      <!-- select="$path{'@selected'}" won't work because that 
+                           returns a string, and "false" coerces to true. -->
+      </list>
+
+      <method name="testSelectedFromPath">
+        assertEquals(list2.getItemAt(1), list2.getSelection());
+      </method>
+
+    </TestCase>
+
+  </TestSuite>
+  
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

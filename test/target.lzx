@@ -1,0 +1,23 @@
+<canvas>
+<text multiline="true">
+<p><u><a href="http://www.laszlosystems.com" target="_blank">_blank</a></u>: This should open a new window each time it's clicked.</p>
+
+<p><u><a href="http://www.laszlosystems.com" target="_parent">_parent</a></u>: This should replace the current window.</p>
+
+<p><u><a href="http://www.laszlosystems.com" target="_self">_self</a></u>: This should replace the current frame.</p>
+
+<p><u><a href="http://www.laszlosystems.com" target="_top">_top</a></u>: The should replace the FRAMESET parent of the current frame.</p>
+
+<p><u><a href="http://www.laszlosystems.com" target="name1">This</a></u> and 
+<u><a href="http://www.laszlosystems.com/demos" target="name1">this</a></u> should appear in the same window.</p>
+
+<p><u><a href="http://www.laszlosystems.com" target="name2">This</a></u> and
+<u><a href="http://www.laszlosystems.com/demos" target="name2">this</a></u> should appear in the the same window (a different window from the target of the preceding paragraph.</p>
+
+<p>Verify no compiler warning <u><a href="http://www.laszlosystems.com" target="a0:9_z.">here</a></u>.</p>
+</text>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

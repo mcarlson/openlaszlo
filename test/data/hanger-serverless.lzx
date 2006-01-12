@@ -1,0 +1,56 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- hanger.lzx                                                         -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+
+<canvas width="1000" height="1000" debug="true">
+
+    <font src="helmetr.ttf" name="helvet" />
+
+    <debug x="100" height="400" width="400" fontsize="14" font="helvet" />
+
+    <dataset name="ds1" type="http" src="http:sleep.jsp" 
+             ondata="Debug.write('DS1: ' + this.getPointer().serialize())" proxied="false" />
+
+    <view id="control" width="1000" height="1000" >
+
+        <view x="10" y="10" >
+            <simplelayout axis="y" />
+            <button text="make request" onclick="control.loadData(true)" />
+            <checkbox text="cache in client" id="ccache" />
+            <checkbox text="cache in server" id="scache" />
+            <checkbox text="accept encodings" id="accenc" />
+            <checkbox text="resp headers"     id="resphead" />
+            <inputtext width="20" id="secs">30</inputtext>
+         </view>
+
+        <method name="init" >
+            Debug.setX(300);
+            Debug.write("initializing");
+            super.init();
+        </method>
+
+        <method name="loadData" args="switchSet" ><![CDATA[
+
+            var ds = canvas.ds1;
+
+            ds.cacheable          = scache.value;
+            ds.clientcacheable    = ccache.value;
+            ds.acceptencodings    = accenc.value;
+            ds.getresponseheaders = resphead.value;
+            ds.setQueryString("s=" + secs.getText());
+
+            ds.doRequest();
+
+        ]]></method>
+    </view>
+
+</canvas>    
+

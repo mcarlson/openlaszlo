@@ -1,0 +1,15 @@
+<canvas>
+    <view name="redbox" width="10" height="10" bgcolor="red" >
+        <animatorgroup name="fadeOut" process="sequential" start="false">
+            <animator attribute="opacity" from="1" to=".5" duration="1000"/>
+            <animator attribute="visible" to="false" />
+        </animatorgroup>
+    </view>
+
+    <button text="go away" onclick="canvas.redbox.fadeOut.doStart()" />
+    <simplelayout axis="y" spacing="10" />
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+</canvas>

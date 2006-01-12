@@ -1,0 +1,58 @@
+<canvas>
+    <view width="200" height="100">
+        <resizestate name="resizer" />
+        <view bgcolor="0xe5e5e5" width="${parent.width - 10}"
+              height="${parent.height - 10}">
+            <text width="${parent.width}" height="${parent.height}" multiline="true">
+                <p>Lorem ipsum dolor sit amet, consectetuer adipiscing elit. 
+Donec leo neque, dictum adipiscing, dignissim vitae, adipiscing eget, leo. 
+Suspendisse vestibulum lectus quis leo. Nullam rutrum ipsum faucibus justo. 
+Nulla sit amet magna. Vestibulum pulvinar erat ac odio. Fusce vitae dui. Class 
+aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos 
+hymenaeos. Nam imperdiet, tortor id lobortis accumsan, sem libero scelerisque 
+ipsum, at tempor justo leo pulvinar pede. Vestibulum ipsum purus, eleifend id, 
+luctus sit amet, tempus nec, sapien. Aliquam erat volutpat. Nullam velit erat, 
+blandit ut, luctus eu, nonummy quis, tellus. Mauris vitae eros ut justo auctor 
+nonummy. Proin viverra, risus ac vulputate ullamcorper, libero odio faucibus 
+tortor, at accumsan orci ipsum a quam. Maecenas mattis ipsum eget erat. Donec 
+pellentesque nisl et urna.</p>
+
+                <p>Fusce sem orci, tincidunt sed, hendrerit vehicula, interdum 
+quis, augue. Fusce mauris lacus, condimentum vitae, rutrum sit amet, facilisis 
+iaculis, magna. Sed libero quam, vestibulum at, rutrum ut, dapibus sed, leo. 
+Sed viverra, magna eget molestie varius, libero libero varius nisl, sed 
+euismod risus arcu non eros. Duis sollicitudin fringilla quam. Nullam turpis 
+orci, sollicitudin sit amet, pellentesque ut, tristique quis, enim. Etiam 
+bibendum ultrices ligula. Donec semper ultricies dolor. Mauris ac mi quis diam 
+tristique iaculis. Pellentesque habitant morbi tristique senectus et netus et 
+malesuada fames ac turpis egestas. Suspendisse iaculis. Sed vehicula. Aliquam 
+at eros et nunc volutpat commodo. Donec faucibus. Praesent mi. Nulla erat 
+turpis, porta sit amet, luctus sit amet, fringilla a, dolor.</p>
+
+                <p>Sed wisi ligula, tristique vel, imperdiet et, fringilla 
+vel, erat. Cras auctor. Vestibulum laoreet leo eget dolor. Donec id diam a 
+eros laoreet gravida. Duis ac erat vel nisl semper molestie. Morbi blandit. 
+Maecenas et ante. Curabitur ultricies diam at diam. Praesent tempus diam et 
+justo. In consectetuer auctor pede. Cras lacus sapien, imperdiet at, vulputate 
+ut, consequat id, nibh. Proin ante. Donec in tellus ut lacus congue dictum. 
+Cras nec tellus. Sed vel leo sit amet sapien viverra pharetra. Aliquam 
+tincidunt interdum libero. Nullam sagittis magna sed eros.</p>
+                <method event="onheight">
+                    Debug.write( "height: " + this.height );
+                </method>
+            </text> 
+        </view>
+        <view valign="bottom" bgcolor="blue" align="right" clickable="true"
+              width="10" height="10"
+              onmousedown="parent.resizer.apply()" 
+              onmouseup="parent.resizer.remove()" />
+        <method event="onheight">
+            Debug.write( "outside height: " + this.height );
+        </method>
+    </view>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
