@@ -41,7 +41,7 @@ The <a href="http://www.w3.org/DOM/">Document Object Model</a> is, according to 
 </p>
 <p><classname>LzDataNode</classname> is the base class for the classes that represent LZX's hierarchical data format. An LzDataNode
 comprises <classname>LzDataElement</classname>s.
-An LzDataElement represents a node a in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or 
+An LzDataElement represents a node in a hierarchical dataset. An LzDataElement can contain other LzDataElements, or 
 <classname>LzDataText</classname>, which represents a text node.
  More 
 advanced data manipulation in OpenLaszlo applications employ the various methods on the LzDataElement class, such as 
@@ -353,7 +353,7 @@ The table below highlights ways of categorizing datasets according to where the 
 
 <h3>Dataset Scope</h3>
 <p>
-If specified on the canvas datasets are visible too and accesible by the entire application. Datasets can also be local to a class.
+If specified on the canvas, datasets are visible to and accesible by the entire application. Datasets can also be local to a class.
 </p>
 <ul>
 <li>Datasets will automatically name themselves <code>localdata</code> if a name is not specified </li>
@@ -483,7 +483,7 @@ Here is a simple program that illustrates use of local datasets (the file tests/
 &lt;/canvas&gt;
 </example>
 
-<h3><event>ondata</event>, <event>onerror</event>, and <event>ontimeout</event> event</h3>
+<h3><event>ondata</event>, <event>onerror</event> and <event>ontimeout</event> event</h3>
 
 <p>When the application's <classname>LzDataset</classname> receives the data, the
 <event>ondata</event> event is sent.  In the case that an error occured
@@ -1394,8 +1394,8 @@ which point its replication occurs, and its clones are displayed.</p>
 matched data nodes in the <attribute>nodes</attribute> property. It is
 an array of <classname>LzDataElement</classname> objects that are
 mapped to the replicated views, and is available before any clones are
-created. And like with the <event>onclones</event> event, a handler
-for <event>onnodes</event> may be declared, to respond to data
+created. And as with the <event>onclones</event> event, a handler
+for <event>onnodes</event> may be declared to respond to data
 replication in a custom way. The code below qualifies the value of
 <attribute>name</attribute> attribute of each replicated data node
 with the value of the text field, if any.</p>
