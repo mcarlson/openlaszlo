@@ -64,7 +64,7 @@
         <attribute name="mousewheelactive" value="false" type="boolean"/>
 
         <!--- @keywords private -->
-        <attribute name="onscrollable" value="null"/>
+        <event name="onscrollable"/>
 
         <!--- @keywords private -->
         <attribute name="_enabled"
@@ -357,9 +357,9 @@
            onmouseup="this[classroot.axis+'thumbdrag'].remove();
                       classroot.targetPosDel.enable();">
         <!--- @keywords private -->
-       <method event="oninit">
+       <handler name="oninit">
            classroot.thumb = this;
-       </method>
+       </handler>
 
         <state name="ythumbdrag">
             <attribute name="doffset" value="this.getMouse( 'y' )" when="once" />
@@ -410,13 +410,13 @@
                   back. Default: 1. -->
             <attribute name="direction" value="1"/>
             <!--- @keywords private -->
-            <method event="onmousedown">
+            <handler name="onmousedown">
                 classroot.step(this.direction);
-            </method>
+            </handler>
             <!--- @keywords private -->
-            <method event="onmousestilldown">
+            <handler name="onmousestilldown">
                 classroot.step(this.direction);
-            </method>
+            </handler>
     </class>
 
     <!--- Provides non-visual aspects of a scrollbar track. -->
@@ -425,18 +425,18 @@
              1 for forward, default: 1. -->
         <attribute name="direction" value="1"/>
         <!--- @keywords private -->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             //setAttribute('bgcolor', 0x000000);
             classroot.page(this.direction);
-        </method>
+        </handler>
         <!--- @keywords private -->
-        <method event="onmousestilldown">
+        <handler name="onmousestilldown">
             classroot.page(this.direction);
-        </method>
+        </handler>
         <!--- @keywords private -->
-        <method event="onmouseup">
+        <handler name="onmouseup">
             //setAttribute('bgcolor', 0xdedede);
-        </method>
+        </handler>
     </class>
 
 </library>

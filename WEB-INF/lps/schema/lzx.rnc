@@ -1057,23 +1057,14 @@ class =
 
 handler =
   element handler {
-   ( nameAttribute |
-   ( nameAttribute? &
-     ## The name of the method that this handler will call
-     attribute method {string} &
-     ## If this attribute is present, it is a JavaScript expression
-     ## that evaluates to an object.  The code in this method executes
-     ## when this object sends the event named by the @a{event}
-     ## attribute.  This attribute may be present only if
-     ## the @a{event} attribute is present too.
-     [a:defaultValue="this"]
-     attribute reference {reference}?)) &
-    ## The parameter names of this method.  The value of this attribute
-    ## is a comma-separated list of JavaScript identifiers.
-    [a:defaultValue=""
-     lza:modifiers="final"]
-    attribute args {string}? &
-    text
+     nameAttribute
+   & [a:defaultValue="this"]
+     attribute reference {reference}?
+   & (([a:defaultValue=""
+        lza:modifiers="final"]
+       attribute args {string}? &
+       text) |
+      (attribute method {string}))
   }
 
 event =

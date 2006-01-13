@@ -9,9 +9,9 @@
         <attribute name="formdata"/>
         <!--- Formdata object is made early for child components.
               @keywords private -->
-        <method event="onconstruct">
+        <handler name="onconstruct">
             this.formdata = {};
-        </method>
+        </handler>
 
         <method name="addFormItem" args="item">
             var base = item.name;

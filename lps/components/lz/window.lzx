@@ -168,7 +168,7 @@
 
         <!--- This event is sent when a button is pressed. Use this to check the
               result value. -->
-        <attribute name="onresult" value="null"/>
+        <event name="onresult"/>
 
         <!--- The max length of a line of text before it wraps. Default: 1/3 of
               the parent's width - width of window dressing and margin. -->

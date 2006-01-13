@@ -79,7 +79,7 @@
     <attribute name="isdefault" value="false" setter="_setdefault(isdefault)"/>
 
     <!--- @keywords private  -->
-    <attribute name="onisdefault" value="null"/>
+    <event name="onisdefault"/>
 
     <!--- set a specific style attribute
           @keywords private -->
@@ -95,7 +95,7 @@
     ]]> </method>
 
     <!--- @keywords private  -->
-    <attribute name="onstylechanged" value="null"/>
+    <event name="onstylechanged"/>
 
     <!--- set a specific style attribute
           @keywords private -->

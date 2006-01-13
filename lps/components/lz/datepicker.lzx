@@ -75,18 +75,18 @@
             this.setAttribute('frame', 1);
             this.buttonpush();
         </method>
-        <method event="onclick">
+        <handler name="onclick">
             this.buttonpush();
-        </method>
+        </handler>
 
 
-        <method event="onenabled">
+        <handler name="onenabled">
             if( this.enabled ) {
                 this.icon.setOpacity( 1 );
             } else { 
                 this.icon.setOpacity( .5 );
             }
-        </method>
+        </handler>
    </class>
 
 
@@ -99,7 +99,7 @@
            width="19" 
            height="16"> 
 
-        <method event="onselected"> 
+        <handler name="onselected"> 
             if( this.selected ) { 
                 this.buttonview.setVisible( true );  
                 this.buttonview.setAttribute('frame', 3 );
@@ -107,19 +107,19 @@
                 this.buttonview.setAttribute('frame', 1 ); 
                 this.buttonview.setVisible( false );
             }
-        </method>
+        </handler>
 
-        <method event="onmouseover"> 
+        <handler name="onmouseover"> 
         <![CDATA[
             if( !this.disabled && this.selectable ) { 
                 this.gotFocus();
             }
         ]]>
-        </method>
+        </handler>
 
-        <method event="onmouseout"> 
+        <handler name="onmouseout"> 
             this.removeFocus();
-        </method> 
+        </handler> 
 
         <method name="buttonpush"> 
         <![CDATA[
@@ -217,13 +217,13 @@
         </method> 
 
 
-        <method event="onselecteddate">
+        <handler name="onselecteddate">
         <![CDATA[   
             if( this._basedatepicker_inited && this.startAsIcon ) {
                 this.shrinkToIcon();   
             }
         ]]>
-        </method> 
+        </handler> 
 
 
 
@@ -274,9 +274,9 @@
               resource="resources/datepicker/datepicker_icon.swf"
               visible="$once{classroot.startAsIcon}" 
               >
-            <method event="onclick">
+            <handler name="onclick">
                 parent.expandFromIcon();
-            </method>
+            </handler>
         </view>
 
         <windowpanel name="main" 
@@ -388,15 +388,15 @@
                           width="45"     
                           editable="false"> 
 
-                    <method event="oninit" reference="this.cblist">
+                    <handler name="oninit" reference="this.cblist">
                         this.selectItemAt( classroot.showingmonth ); 
-                    </method> 
+                    </handler> 
 
 
                     <attribute name="oldvalue"
                                value="null"/> 
             
-                    <method event="onvalue"> 
+                    <handler name="onvalue"> 
                     <![CDATA[
                         if( this.oldvalue != null && this.oldvalue != this.value ) { 
                             classroot.setMonthToShow( this.value,
@@ -406,7 +406,7 @@
                         parent.nextmonth.checkButtonStatus();
                         parent.previousmonth.checkButtonStatus();
                     ]]>
-                    </method>
+                    </handler>
 
                     <datepickerlistitem datapath="datepicker_strings_en:/months/month"
                                   text="$path{'@abr'}"
@@ -418,7 +418,7 @@
                     <attribute name="oldvalue"
                                value="null"/> 
 
-                    <method event="onvalue"> 
+                    <handler name="onvalue"> 
                     <![CDATA[
                         if(this.oldvalue != null && this.oldvalue != this.value) {
                             //handle case where user selects new year that would
@@ -446,11 +446,11 @@
 
                         this.oldvalue = this.value;
                     ]]>
-                    </method> 
+                    </handler> 
 
-                    <method event="oninit" reference="this.cblist"> 
+                    <handler name="oninit" reference="this.cblist"> 
                         this.selectItem( classroot.showingyear ); 
-                    </method>
+                    </handler>
 
                     <method name="addYears" args="start,end">
                     <![CDATA[
@@ -477,9 +477,9 @@
                         LzFocus.next();  
                     </method>
 
-                    <method event="onclick">
+                    <handler name="onclick">
                         this.buttonpush();
-                    </method>
+                    </handler>
                     <method name="buttonpush">
                         classroot.main.close();     
                         classroot.content.setVisible( false ); 

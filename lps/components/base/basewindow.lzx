@@ -20,7 +20,7 @@
             setter="_setwindowfocus(haswindowfocus)"/>
 
         <!--- @keywords private -->
-        <attribute name="onhaswindowfocus" value="null"/>
+        <event name="onhaswindowfocus"/>
 
         <!--- The state of the window: 1=selected (frontmost) window,
               2=not-selected window, 3=dragging, 4=disabled, 5=resizing.

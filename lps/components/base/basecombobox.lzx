@@ -31,7 +31,7 @@
         <attribute name="defaultselection"  value="null" type="number"  setter="this.setDefaultSelection( defaultselection )"/>
 
         <!--- This event is sent when the default selection is set.  -->
-        <attribute name="ondefaultselection"  value="null" />
+        <event name="ondefaultselection" />
 
         <!--- Make the text field of this combobox editable. -->
         <attribute name="editable"     value="true" setter="this.setEditable(editable)" />
@@ -59,7 +59,7 @@
         <!--- This event is triggered whenever the user makes a selection. It
               may be used as a script in the combobox tag or as an event method.
               -->
-        <attribute name="onselect" value="null"/>
+        <event name="onselect"/>
 
         <!--- One of "lazy", "resize", "pooling", "none". -->
         <attribute name="dataoption" value="none" type="string"/>
@@ -144,7 +144,7 @@
                     <attribute name="text" type="string" />
 
                     <!-- arrow down and up both popup floatinglist, and pass the key event to it -->
-                    <method event="onkeydown" args="key">
+                    <handler name="onkeydown" args="key">
                         <![CDATA[
                         // 38 is up-arrow
                         // 40 is down-arrow
@@ -163,25 +163,25 @@
                             classroot.cblist.clearSelection();
                         }
                         ]]>
-                    </method>
+                    </handler>
 
                     <!-- pass up to component level so focus rect will be visible, and subclassers can catch -->
-                    <method event="onfocus" args="v">
+                    <handler name="onfocus" args="v">
                          if ( classroot['onfocus'] ) classroot.onfocus.sendEvent(v);
-                    </method>
+                    </handler>
                     <!-- pass up to component level so subclassers can catch -->
-                    <method event="onblur" args="v">
+                    <handler name="onblur" args="v">
                          classroot.setText( this.getText() );
                          if ( classroot['onblur'] ) classroot.onblur.sendEvent(v);
-                    </method>
+                    </handler>
                     <!-- pass up to component level so subclassers can catch -->
-                    <method event="onkeyup" args="kc">
+                    <handler name="onkeyup" args="kc">
                          if ( classroot['onkeyup'] ) classroot.onkeyup.sendEvent(kc);
-                    </method>
+                    </handler>
                     <!-- pass up to component level so subclassers can catch -->
-                    <method event="onkeydown" args="kc">
+                    <handler name="onkeydown" args="kc">
                          if ( classroot['onkeydown'] ) classroot.onkeydown.sendEvent(kc);
-                    </method>
+                    </handler>
 
                     <method name="getFocusRect"  >
                        return classroot.getFocusRect();
@@ -196,7 +196,7 @@
                     <attribute name="text" type="string" />
 
                     <!-- arrow down and up, and spacebar all popup floatinglist, and pass the key event to it -->
-                    <method event="onkeydown" args="key">
+                    <handler name="onkeydown" args="key">
                         <![CDATA[
                         // 38 is up-arrow
                         // 40 is down-arrow
@@ -212,28 +212,28 @@
                             }
                         }
                         ]]>
-                    </method>
+                    </handler>
 
-                    <method event="onmouseup">
+                    <handler name="onmouseup">
                         classroot.toggle();
-                    </method>
+                    </handler>
 
                     <!-- pass up to component level so focus rect will be visible, and subclassers can catch -->
-                    <method event="onfocus" args="v">
+                    <handler name="onfocus" args="v">
                          if ( classroot['onfocus'] ) classroot.onfocus.sendEvent(v);
-                    </method>
+                    </handler>
                     <!-- pass up to component level so subclassers can catch -->
-                    <method event="onblur" args="v">
+                    <handler name="onblur" args="v">
                          if ( classroot['onblur'] ) classroot.onblur.sendEvent(v);
-                    </method>
+                    </handler>
                     <!-- pass up to component level so subclassers can catch -->
-                    <method event="onkeyup" args="kc">
+                    <handler name="onkeyup" args="kc">
                          if ( classroot['onkeyup'] ) classroot.onkeyup.sendEvent(kc);
-                    </method>
+                    </handler>
                     <!-- pass up to component level so subclassers can catch -->
-                    <method event="onkeydown" args="kc">
+                    <handler name="onkeydown" args="kc">
                          if ( classroot['onkeydown'] ) classroot.onkeydown.sendEvent(kc);
-                    </method>
+                    </handler>
 
                     <method name="getPrevSelection">
                         return LzFocus.getPrev(parent);
@@ -266,9 +266,9 @@
                    <attribute name="datacontrolsvisibility" value="false" />
                </datapath>
 
-            <method event="onconstruct">
+            <handler name="onconstruct">
                 this.dataoption = owner.dataoption;
-            </method>
+            </handler>
 
             <method name="_dokeyup" args="kc"
                     event="onkeyup">
@@ -293,14 +293,14 @@
         </method>
 
         <!--- @keywords private -->
-        <method event="ondata" args="d">
+        <handler name="ondata" args="d">
             if ( d instanceof  LzDataNode ){
                 this.cblist.datapath.setPointer( d );
             }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <attribute name="onitemclassname" value="null"/>
+        <event name="onitemclassname"/>
 
         <!--- Sets the type of list items which will be created in floatinglist
               when necessary.
@@ -322,7 +322,7 @@
 
 
         <!--- @keywords private -->
-        <attribute name="oneditable" value="null"/>
+        <event name="oneditable"/>
 
         <!--- @keywords private -->
         <method name="setEditable" args="isEditable" >
@@ -342,7 +342,7 @@
         </method>
 
         <!--- @keywords private -->
-        <attribute name="ontext" value="null"/>
+        <event name="ontext"/>
 
         <!--- @keywords private -->
         <method name="determinePlacement" args="newsub, placement, iargs" >
@@ -367,10 +367,10 @@
          </method>
 
         <!--- @keywords private -->
-        <method event="onblur" >
+        <handler name="onblur" >
            if ( LzFocus.getFocus() != this.interior.cbtext )
                 this.setOpen(false);
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="getFocusRect"  >
@@ -398,7 +398,7 @@
               and then resends the onselect event to itself so that developers can easily
               reference that without knowing the internals of combobox
               @keywords private -->
-        <method event="onselect" reference="this.cblist"  args="v" > <![CDATA[
+        <handler name="onselect" reference="this.cblist"  args="v" > <![CDATA[
             this.setOpen(false);
 
             // anItem has been selected so update the input text field
@@ -416,7 +416,7 @@
             // this class.
             if ( this.onselect ) this.onselect.sendEvent(v);
             ]]>
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="passModeEvent" args="eventStr,view" > <![CDATA[

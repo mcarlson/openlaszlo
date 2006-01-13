@@ -34,13 +34,13 @@
         
         <!-- events -->
         <!--- Sent at the start of the open animation. -->
-        <attribute name="onopenstart"      value="null" />
+        <event name="onopenstart" />
         <!--- Sent at the end of the open animation. -->
-        <attribute name="onopenstop"       value="null" />
+        <event name="onopenstop" />
         <!--- Sent at the start of the close animation. -->
-        <attribute name="onclosestart"     value="null" />
+        <event name="onclosestart" />
         <!--- Sent at the start of the close animation. -->
-        <attribute name="onclosestop"      value="null" />
+        <event name="onclosestop" />
         <!--- Deprecated: now use onclosestop.
               @keywords private -->
         <attribute name="setvisiblestate"  value="null" />
@@ -56,11 +56,11 @@
         <!-- METHODS -->
 
         <!--- @keywords private -->
-        <method event="onconstruct">
+        <handler name="onconstruct">
             this._originalheight = height;
             if ( headerheight ) this.height = headerheight
             else this.height = minheight;
-        </method>
+        </handler>
 
         <!--- Called to open this tabelement by a certain height.
               @param Number h: height

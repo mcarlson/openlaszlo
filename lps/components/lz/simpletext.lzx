@@ -33,12 +33,12 @@
                 super.handleOnBlur();
                 this.parent.handleOnBlur();
             </method>
-            <method event="onkeyup" args="kc">
+            <handler name="onkeyup" args="kc">
                   if (parent['onkeyup']) parent.onkeyup.sendEvent(kc);
-            </method>
-            <method event="onkeydown" args="kc">
+            </handler>
+            <handler name="onkeydown" args="kc">
                   if (parent['onkeydown']) parent.onkeydown.sendEvent(kc);
-            </method>
+            </handler>
         </inputtext>
         
         <!--- @keywords private -->
@@ -64,10 +64,10 @@
         </method>
         
         <!--- @keywords private -->
-        <method event="onfocus" >
+        <handler name="onfocus" >
             //this.input.onfocus.sendEvent();
             LzFocus.setFocus(this.input);
-        </method>
+        </handler>
         
         <!--- @keywords private -->
         <method name="handleOnFocus" >

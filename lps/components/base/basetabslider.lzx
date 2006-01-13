@@ -145,7 +145,8 @@
 
         <!--- Called when an item is added to the tabslider.
               @param LzView v: view to be added. -->
-        <method event="onaddsubview" name="doAddSubview" args="v" >
+        <handler name="onaddsubview" method="doAddSubview"/>
+        <method name="doAddSubview" args="v" >
             if ( this.itemclassname == "" ){
                 this.itemclassname = v.classname;
             }

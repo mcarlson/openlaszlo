@@ -44,10 +44,10 @@
         <attribute name="icon" value="lztree_folder_rsc" type="string" />
 
         <!--- Double-clicking on the icon or text triggers this event. -->
-        <attribute name="onactivate" value="null" type="expression" />
+        <event name="onactivate" />
 
         <!--- Clicking on the icon or text triggers this event. -->
-        <attribute name="onclick" value="null" />
+        <event name="onclick" />
 
         <!--- @keywords private -->
         <method name="_applystyle" args="s">
@@ -84,28 +84,28 @@
             <!-- Do this to get around resource and frame (constrained) onclick 
                  view problem. (b 3466) -->
             <view name="expander">
-                <method event="onclick">
+                <handler name="onclick">
                     if (! classroot.isleaf) {
                         classroot.setAttribute("open", ! classroot.open);
                     }
-                </method>
+                </handler>
                 <view name="expander"
                       resource="$once{classroot.expander}"  
                       frame="${classroot.isleaf ? 3
                              :(classroot.open ? 2 : 1)}" />
             </view>
             <view name="icon">
-                <method event="onclick">
+                <handler name="onclick">
                     classroot.toggleOpenAndFocus()
                     if (classroot.onclick) classroot.onclick.sendEvent();
-                </method>
-                <method event="ondblclick">
+                </handler>
+                <handler name="ondblclick">
                 <![CDATA[
                     if (classroot.onactivate) {
                         classroot.onactivate.sendEvent();
                     }
                 ]]>
-                </method>
+                </handler>
                 <view name="icon" 
                       resource="$once{classroot.icon}"
                       frame="${classroot.isleaf ? 3
@@ -117,17 +117,17 @@
                            : (classroot.focused  
                               ? classroot.style['hilitecolor']
                               : classroot.parent.bgcolor ) }">
-                <method event="onclick">
+                <handler name="onclick">
                     classroot.toggleOpenAndFocus()
                     if (classroot.onclick) classroot.onclick.sendEvent();
-                </method>
-                <method event="ondblclick">
+                </handler>
+                <handler name="ondblclick">
                 <![CDATA[
                     if (classroot.onactivate) {
                         classroot.onactivate.sendEvent();
                     }
                 ]]>
-                </method>
+                </handler>
             </text>
         </view>
 

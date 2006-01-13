@@ -22,7 +22,7 @@
         <!--- @keywords private -->
         <attribute name="value" setter="setValue(value)" value="false"/>
         <!--- @keywords private -->
-        <attribute name="onvalue" value="null"/>
+        <event name="onvalue" />
 
         <!-- views -->
         <multistatebutton name="cb" resource="lzcheckbox_rsrc" text=""
@@ -41,10 +41,10 @@
             ]]>
         </method>
 
-        <method event="onclick">
+        <handler name="onclick">
             if (this._enabled)
                 this.setAttribute('value', !this.value);
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="_applystyle" args="s">

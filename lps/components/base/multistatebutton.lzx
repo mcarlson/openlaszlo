@@ -13,9 +13,9 @@
         <!--- @keywords private -->
         <attribute name="frame" value="${this.lastres + (this.statenum * this.statelength)}"/>
         <!--- @keywords private -->
-        <attribute name="onstatenum" value="null"/>
+        <event name="onstatenum"/>
         <!--- @keywords private -->
-        <attribute name="onstatelength" value="null"/>
+        <event name="onstatelength"/>
         <!--- @keywords private -->
         <method name="showDown" args="sd">
             this.setAttribute('lastres', this.downResourceNumber);

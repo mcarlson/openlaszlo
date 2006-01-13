@@ -539,37 +539,37 @@
             return returnValue;
         </method> 
 
-        <method event="onshowingmonth"> 
+        <handler name="onshowingmonth"> 
             this.showingdate.setMonth( this.showingmonth ); 
-        </method>
+        </handler>
 
-        <method event="onshowingyear"> 
+        <handler name="onshowingyear"> 
             this.showingdate.setYear( this.showingyear );
-        </method> 
+        </handler> 
  
-        <method event="onkeydown" reference="LzKeys" args="k">
+        <handler name="onkeydown" reference="LzKeys" args="k">
             if ( content.hasfocus ) {
                 this.handleKeyDown(k);
             }
-        </method>
+        </handler>
 
-        <method event="onkeyup" reference="LzKeys" args="k">
+        <handler name="onkeyup" reference="LzKeys" args="k">
             if ( content.hasfocus ) {
                 this.handleKeyUp(k);
             }
-        </method> 
+        </handler> 
 
-        <method event="onblur" reference="this.content">
+        <handler name="onblur" reference="this.content">
             this.removeFocusFromDay( this._focusDay[0], this._focusDay[1] );
-        </method> 
+        </handler> 
 
-        <method event="onfocus" reference="this.content"> 
+        <handler name="onfocus" reference="this.content"> 
             if( this._focusDay == null ) {
                 this.focusOnFirstDayInMonth();
             } else {
                 this.focusOnDay( this._focusDay[0], this._focusDay[1] );
             }
-        </method> 
+        </handler> 
 
         <!-- This is the view which renders the date picker days -->
         <view name="content"
@@ -578,13 +578,13 @@
               focusable="true">
             <attribute name="hasfocus" type="boolean" value="false"/> 
 
-            <method event="onfocus"> 
+            <handler name="onfocus"> 
                 this.hasfocus = true;
-            </method>
+            </handler>
 
-            <method event="onblur"> 
+            <handler name="onblur"> 
                 this.hasfocus = false;
-            </method>
+            </handler>
            
         </view> 
     </class> 

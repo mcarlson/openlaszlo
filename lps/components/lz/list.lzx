@@ -42,7 +42,7 @@
         <attribute name="shownitems" value="-1" setter="this._setShownItems(shownitems)" />
 
         <!--- @keywords private -->
-        <attribute name="onshownitems" value="null" />
+        <event name="onshownitems" />
 
         <!--- @keywords readonly -->
         <attribute name="scrollable" value="false" />
@@ -72,9 +72,9 @@
                   @keywords private -->
             <attribute name="_sbar" value="null" />
             <!--- event not used - declared to remove debugger warnings -->
-            <attribute name="onmousetrackoutleft" value="null" />
+            <event name="onmousetrackoutleft" />
             <!--- event not used - declared to remove debugger warnings -->
-            <attribute name="onmousetrackoutright" value="null" />
+            <event name="onmousetrackoutright" />
             <!-- height for content is determined by subviews and should not be set,
                  so that scrolling will turn on and off when needed -->
             <basetrackgroup name="content" width="100%"
@@ -85,7 +85,7 @@
                     <attribute name="spacing" value="${classroot.spacing}"/>
                </simplelayout>
 
-               <method event="onaddsubview" args="v"> <![CDATA[
+               <handler name="onaddsubview" args="v"> <![CDATA[
                     if ( classroot.itemclassname == "" ){
                         classroot.itemclassname = v.classname;
                     }
@@ -95,36 +95,36 @@
                         classroot._itemheight = v.height;
                     }
                    classroot.adjustmyheight();
-                ]]></method>
+                ]]></handler>
 
-               <method event="onheight"> <![CDATA[
+               <handler name="onheight"> <![CDATA[
                    classroot.adjustmyheight();
-                ]]></method>
+                ]]></handler>
 
             </basetrackgroup> <!-- end content -->
 
             <state name="scrollbarstate">
                 <vscrollbar name="_sbar" stepsize="20" />
 
-                <method event="onapply" >
+                <handler name="onapply" >
                     // if scrollbar is present shrink the width of the content
                     // this maybe too slow, so analyse
                     classroot.setAttribute('rightinset',9);
-                </method>
+                </handler>
 
-                <method event="onremove" >
+                <handler name="onremove" >
                     classroot.setAttribute('rightinset',0);
-                </method>
+                </handler>
 
             </state>
 
-            <method event="onmousetrackoutbottom" args="y" >
+            <handler name="onmousetrackoutbottom" args="y" >
                 if ( this._sbar ) _sbar.step(1);
-            </method>
+            </handler>
 
-            <method event="onmousetrackouttop" args="y" >
+            <handler name="onmousetrackouttop" args="y" >
                 if ( this._sbar ) _sbar.step(-1);
-            </method>
+            </handler>
 
         </view> <!-- end interior -->
 

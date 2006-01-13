@@ -25,23 +25,23 @@
         Note: don't need to unhilite listitem, parent view
               will do this when another listitem is hilited
               @keywords private -->
-        <method event="onmousetrackover" >
+        <handler name="onmousetrackover" >
             _ipclassroot.setHilite( this );
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <method event="onmouseover" >
+        <handler name="onmouseover" >
             if ( !immediateparent.tracking ) {
                 _ipclassroot.setHilite( this );
                }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <method event="onmouseout" >
+        <handler name="onmouseout" >
             if ( !immediateparent.tracking ) {
                 _ipclassroot.setHilite( null );
                }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="setSelected" args="isSelected" >
@@ -58,10 +58,10 @@
         </method>
 
         <!--- @keywords private -->
-        <method event="ontrackgroup" reference="immediateparent.classroot" args="tg"  >
+        <handler name="ontrackgroup" reference="immediateparent.classroot" args="tg"  >
             // TODO: check to see if this is working?
             LzTrack.register(this,tg);
-        </method>
+        </handler>
 
          <!--- @keywords private -->
         <method name="_applystyle" args="s">

@@ -15,7 +15,7 @@
         <attribute name="timedel"
                    value="${new LzDelegate ( this , 'advance' )}"/>
 
-        <method event="onvisible">
+        <handler name="onvisible">
             if ( !this.isinited ) return;
             if ( this.visible ){
                 this.running = 1;
@@ -29,7 +29,7 @@
                 this.stop();
                 this.audio.stop();
             }
-        </method>
+        </handler>
 
         <view name="audio" play="false" 
           resource="http://www.laszlosystems.com/images/mredfirstseason.mp3" />

@@ -27,12 +27,12 @@
         </method>
 
         <!--- Loads the image on init.  @keywords private -->
-        <method event="oninit">
+        <handler name="oninit">
         <![CDATA[  
             if (this.src != '' && this.src != null) 
                 this.loadNow(this.src);
         ]]>
-        </method>
+        </handler>
     </class>
 </library>
 <!-- @LZX_COPYRIGHT@ -->

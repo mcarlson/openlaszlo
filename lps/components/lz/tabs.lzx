@@ -86,15 +86,15 @@
             setAttribute('tabstate', this._enabled ? 2 : 1);
         </method>
         <!--- @keywords private -->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             setAttribute('tabstate', 3);
-        </method>
+        </handler>
         <!--- @keywords private -->
-        <method event="onmouseout">
+        <handler name="onmouseout">
             if (!this["selected"]) {
                 setAttribute('tabstate',2);
             }
-        </method>
+        </handler>
         <!--- @keywords private -->
         <method name="setSelected" args="s">
             <![CDATA[

@@ -40,11 +40,11 @@
         <attribute name="shadowsize" value="5" />
         
         <attribute name="bottomvisible" value="true" setter="this.setBottomVisible( bottomvisible )" />
-        <attribute name="onbottomvisible" value="null" />
+        <event name="onbottomvisible" />
                         
         <attribute name="cornerresourcenumber" 
                    value="0" setter="this.setCornerResourceNumber(cornerresourcenumber)" />
-        <attribute name="oncornerresourcenumber" value="null" />
+        <event name="oncornerresourcenumber" />
             
         <view name="right" y="${classroot.offsety}" 
               x="${parent.width - classroot.inset}" 
@@ -419,10 +419,10 @@
 
         <!-- onmousedown event is sent by listitem
              @keywords private -->
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.owner.onmousedown.sendEvent();
             this.bringToFront();
-        </method>
+        </handler>
         
         <!--- @keywords private -->
         <method name="setVisible" args="v">
@@ -454,13 +454,13 @@
         </method>
         
         <!--- @keywords private -->
-        <method event="onblur" >
+        <handler name="onblur" >
         <![CDATA[
             if ( this.owner != "undefined" && this.owner['onblur']) {
                 this.owner.onblur.sendEvent();
             }
         ]]>
-        </method>
+        </handler>
         
     </class>
       

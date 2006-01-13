@@ -85,25 +85,25 @@
                             super.applyData(d);
                         }
                     </method>
-                    <method event="onfocus">
+                    <handler name="onfocus">
                         this.globalMouseDel.register( LzGlobalMouse, 
                                                       "onmousedown" );
-                    </method>
-                    <method event="onblur">
+                    </handler>
+                    <handler name="onblur">
                         parent.setAttribute( 'editing' , false );
-                    </method>
+                    </handler>
                     <method name="checkMouse" args="who">
                         if ( !this.containsPt( this.getMouse( 'x' ) , 
                                               this.getMouse( 'y' ) ) ){
                             parent.setAttribute( 'editing' ,false );
                         }
                     </method>
-                    <method event="onkeyup" args="k">
+                    <handler name="onkeyup" args="k">
                         if ( k == 13 ){
                             parent.setAttribute( "editing" , false );
                             LzFocus.setFocus(parent.immediateparent.ownerGrid);
                         }
-                    </method>
+                    </handler>
                 </edittext>
             </state>
         </view>

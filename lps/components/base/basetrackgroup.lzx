@@ -7,7 +7,7 @@
                    setter="this.setBoundsRef( boundsref )"/>
 
         <!--- @keywords private -->
-        <attribute name="onboundsref" value="null" />
+        <event name="onboundsref" />
 
         <!--- The periodic rate in milliseconds to track the mouse-->
         <attribute name="trackingrate"  value="150" />
@@ -19,7 +19,7 @@
                    setter="setTracking( tracking )" />
 
         <!--- @keywords private -->
-        <attribute name="ontracking"    value="null" />
+        <event name="ontracking" />
 
         <!--- @keywords private -->
         <attribute name="_trackgroup" />
@@ -42,26 +42,26 @@
         <attribute name="deactivateevents" value="['onmouseup']" />
 
         <!--- @keywords private -->
-        <attribute name="onmousetrackoutbottom"   value="null" />
+        <event name="onmousetrackoutbottom" />
 
         <!--- @keywords private -->
-        <attribute name="onmousetrackouttop"      value="null" />
+        <event name="onmousetrackouttop"  />
 
         <!--- @keywords private -->
-        <attribute name="onmousetrackoutright"    value="null" />
+        <event name="onmousetrackoutright"/>
 
         <!--- @keywords private -->
-        <attribute name="onmousetrackoutleft"     value="null" />
+        <event name="onmousetrackoutleft" />
 
         <!--- @keywords private -->
-        <method event="onconstruct">
+        <handler name="onconstruct">
             this._activateDL    = new LzDelegate(this,'activateTrackgroup');
             this._deactivateDL  = new LzDelegate(this,'deactivateTrackgroup');
             this._repeattrackDL = new LzDelegate(this,'trackingout');
             this._destroyDL = new LzDelegate(this,'destroyitem');
             this._trackgroup = "tg" + this.getUID();
             this._boundstrackgroup = "btg" + this.getUID();
-        </method>
+        </handler>
 
         <!--- sets the view that will act as the bounds for this trackgroup -->
         <method name="setBoundsRef" args="ref" >
@@ -108,7 +108,7 @@
         </method>
 
         <!--- @keywords private -->
-        <method event="onaddsubview" args="v">
+        <handler name="onaddsubview" args="v">
             LzTrack.register( v, this._trackgroup );
             for ( var i in activateevents ){
                 this._activateDL.register( v, activateevents[i] );
@@ -116,10 +116,10 @@
             for ( var j in deactivateevents ){
                 this._deactivateDL.register( v, deactivateevents[j] );
             }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <method event="onremovesubview" args="v"> <![CDATA[
+        <handler name="onremovesubview" args="v"> <![CDATA[
             LzTrack.unregister( v, this._trackgroup );
             for ( var i in activateevents ){
                 this._activateDL.unregisterFrom(v[activateevents[i]] );
@@ -128,12 +128,12 @@
                 this._deactivateDL.unregisterFrom(v[deactivateevents[i]] );
             }
         ]]>
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <method event="oninit" >
+        <handler name="oninit" >
             LzTrack.register( this.boundsref, this._boundstrackgroup );
-        </method>
+        </handler>
 
         <!--- Called when the mouse is down and tracked
               outside the bounding rect defined by boundsref. this method

@@ -33,11 +33,11 @@
         <!--- @keywords private -->
         <attribute name="_animatorcounter"   value="0"/>
         <!--- @keywords private -->
-        <attribute name="ontarget"           value="null"/>
+        <event name="ontarget"/>
         <!--- @keywords private -->
         <attribute name="_nexttarget"        value="null"/>
         <!--- @keywords private -->
-        <attribute name="onactive"           value="null"/>
+        <event name="onactive"/>
         <!--- @keywords private -->
         <attribute name="_xydelegate"        value="null"/>
         <!--- @keywords private -->
@@ -145,7 +145,8 @@
         ]]> </method>
    
         <!--- @keywords private -->
-        <method event="onstop" name="stopanim" >  <![CDATA[
+        <handler name="onstop" method="stopanim"/>
+        <method name="stopanim" >  <![CDATA[
             this._animatorcounter -= 1;
             if ( this._animatorcounter < 1 ) {
                 // user has stopped tabbing for a bit,

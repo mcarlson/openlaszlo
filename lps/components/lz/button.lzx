@@ -141,13 +141,13 @@
         setAttribute('buttonstate', 1);
     </method>
 
-    <method event="onhasdefault">
+    <handler name="onhasdefault">
         <![CDATA[
         if ( this._initcomplete ){
             if ( this.buttonstate == 1 ) showUp();
         }
         ]]>
-    </method>
+    </handler>
 
     <!--- @keywords private -->
     <method name="_applystyle" args="s">

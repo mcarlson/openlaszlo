@@ -133,6 +133,7 @@ class Attribute:
         self.type = 'CDATA' # DTD type
         self.xtype = None # schema type
         self.required = True
+        self.event = False
         self.default = None
         self.doc = None
     
@@ -161,6 +162,7 @@ class Attribute:
 def mergeAttributes(a, b, doc=True):
     """ Attribute, Attribute -> Attribute """
     assert a.name == b.name
+    assert a.event == b.event
     #if a.type == b.type:
     #    return a
     c = a.clone()
@@ -637,6 +639,14 @@ def parseUserClass(schema, element, libraryName, depth=0):
                     default = None
             if default:
                 attr.default = default
+            el.attrs.append(attr)
+        elif child.tagName == 'event':
+            attr = Attribute(child.getAttribute('name'))
+            attr.doc = getComment(child)
+            attr.required = child.getAttribute('required') == 'true'
+            attr.type = 'CDATA'
+            attr.xtype = (None, "expression")
+            attr.event = True
             el.attrs.append(attr)
         elif child.tagName == 'method':
             m = Method()

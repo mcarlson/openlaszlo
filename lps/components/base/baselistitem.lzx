@@ -9,10 +9,10 @@
         <attribute name="selected" value="false" setter="this._setSelected(selected)"/>
 
         <!--- Event sent when this item is selected. -->
-        <attribute name="onselected" value="null" />
+        <event name="onselected" />
 
         <!--- Event sent when the user makes a selection. -->
-        <attribute name="onselect" value="null" />
+        <event name="onselect" />
 
         <!--- This is the event that sets this item as selected with its
               parent( an extension of baselist ).

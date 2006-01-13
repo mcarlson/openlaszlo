@@ -28,7 +28,7 @@
         <!--- @keywords private -->
         <attribute name="value" setter="_setvalue(value)" value="null"/>
         <!--- @keywords private -->
-        <attribute name="onvalue" value="null"/>
+        <event name="onvalue"/>
 
         <!--- @keywords private -->
         <method name="applyData" args="d">
@@ -99,11 +99,11 @@
         </method>
         
         <!--- @keywords private -->
-        <method event="onclick">
+        <handler name="onclick">
             if (!this.selected) {
                 parent.select(this);
             }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="setHilite" args="dohilite">

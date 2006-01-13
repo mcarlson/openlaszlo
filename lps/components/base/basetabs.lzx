@@ -23,10 +23,10 @@
         <attribute name="text" value="${this.tabpane.text}" type="text"/>
 
         <!--- @keywords private -->
-        <method event="onconstruct">
+        <handler name="onconstruct">
             this.tpDestroyDel = new LzDelegate(this, 'destroy' , 
                                                this.tabpane, 'ondestroy' );
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="init">
@@ -427,7 +427,7 @@
         <attribute name="_maxTabpaneContentWidth" value="0" type="number" />
 
         <!--- @keywords private -->
-        <method event="onconstruct">
+        <handler name="onconstruct">
             // Create tabsbar
             if (this.barclass != "") {
                 if (typeof(global[this.barclass]) != "undefined") {
@@ -454,7 +454,7 @@
                 this.content = new basetabscontent(this, {}, null, true);
                 Debug.write('Using basetabscontent for tabs content area');
             }
-        </method>
+        </handler>
 
 
         <!--- @keywords private -->

@@ -116,13 +116,13 @@
         ]]> </method>
 
         <!--- @keywords private -->
-        <method event="onmousedown" >
+        <handler name="onmousedown" >
             // a menu button only exists within a menubar so
             // toggle menubar's clickcounter between 0 and 1
             this.parent._clickcounter += 1; // this.parent is a menubar
             if ( this.parent._clickcounter > 1 ) this.parent._clickcounter = 0;
             this.showDown();
-        </method>
+        </handler>
 
         <!--- override the button's showDown method to also display the associated menu
               @keywords private -->
@@ -133,7 +133,7 @@
         </method>
         
         <!--- @keywords private -->
-        <method event="onmousetrackup" >
+        <handler name="onmousetrackup" >
             // on first click keep the button down
             // on second click treat it like a onmouseupinside for the button
             if ( this.parent._clickcounter == 0) {
@@ -142,11 +142,11 @@
                 if ( this._menuref ) 
                     parent.openMenu( this._menuref, false );
             }
-        </method>
+        </handler>
 
         <!--- the showOver method is blocked because it responds to onclick. 
              this method effectively replaces that method  @keywords private-->
-        <method event="onmouseover">
+        <handler name="onmouseover">
             // if the clickcounter == 1 then a rollover action is like a
             // mousedown, otherwise do a normal rollover.
             if ( this.parent._clickcounter ) {
@@ -154,10 +154,11 @@
             } else {
                 this.showOver();
             }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-        <method event="onmouseout" name="showout" >
+        <handler name="onmouseout" method="showout"/>
+        <method name="showout" >
             if ( !this.parent._clickcounter ) {
                 this.showUp();
             }
@@ -165,14 +166,14 @@
 
 
         <!--- @keywords private -->
-        <method event="onmousetrackover" >
+        <handler name="onmousetrackover" >
             this.showDown();
-        </method>
+        </handler>
 
         <!--- @keywords private -->
-       <method event="onmousetrackout" >
+       <handler name="onmousetrackout" >
             //this.myshowup();
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="toString"  >
@@ -215,7 +216,7 @@
                    setter="this.setCommand( command )"   when="once" />
                            
         <!--- this event is sent to the menuitem when it is seleted -->
-        <attribute name="onselect"         value="null" />
+        <event name="onselect" />
 
         <!---  @keywords private -->
         <attribute name="_doshowsubmenu"   value="false" />
@@ -244,31 +245,31 @@
         </method>
         
          <!---  @keywords private -->
-        <method event="onmouseover" >
+        <handler name="onmouseover" >
             // listitem ( that menuitem extends) is resposible for the visual
             // changes when a menuitem is hilited.
             // If a menuitem also has a submenu then that is displayed by calling...
             if ( _submenu ) this._opensubmenu( true );
-        </method>
+        </handler>
         
          <!---  @keywords private -->
-        <method event="onmousetrackover" >
+        <handler name="onmousetrackover" >
             // listitem ( that menuitem extends) is resposible for the visual
             // changes when a menuitem is hilited.
             // If a menuitem also has a submenu then that is displayed by calling...
             if ( _submenu ) this._opensubmenu( true );
-        </method>
+        </handler>
 
          <!---  @keywords private -->
-         <method event="onmousetrackout" >
+         <handler name="onmousetrackout" >
             // don't need to unhilite listitem, parent view
             // will do this when another listitem is hilited
             // this is needed for menus
             //_ipclassroot.setHilite( null );
-        </method>
+        </handler>
                 
          <!---  @keywords private -->
-         <method event="onmousetrackup">
+         <handler name="onmousetrackup">
         <![CDATA[
             if ( !_submenu && this.enabled ) {
                 // no submenu so execute the menu command
@@ -280,7 +281,7 @@
             // else do nothing because hiliting this menuitem
             // has already opened the submenu if there is one       
         ]]>
-        </method>
+        </handler>
         
          <!---  Called automatically by the menu. The default action uses the colors
                 defined in a styles object to change the colors of the background and text. 
@@ -426,15 +427,15 @@
         </method>
 
         <!--- @keywords private -->
-        <method event="onmousetrackout" reference="this.interior" >
+        <handler name="onmousetrackout" reference="this.interior" >
             this.setHilite(null);
-        </method>
+        </handler>
         
         <!--- @keywords private -->
-        <method event="ontracking" >
+        <handler name="ontracking" >
             // TODO: this is causing problems?
             // Debug.write('ontracking');
-        </method>               
+        </handler>               
     </class>
    
 
@@ -447,7 +448,7 @@
         <attribute name="opened"   value="false" setter="this.setOpen( opened )" />
         
           <!--- @keywords private -->
-          <attribute name="onopened" value="null" />
+          <event name="onopened" />
           
           <!--- @keywords private - need to deprecate-->        
         <attribute name="menu_ref" value="false" />
@@ -459,13 +460,13 @@
               the menubutton or menuitem. Possible values are: 'top', 'bottom', 'left', and 'right' -->
         <attribute name="attach"   value="bottom" type="string" />
 
-        <method event="onattach">
+        <handler name="onattach">
             if (this.flist != null)
                 this.flist.setAttribute("attach", this.attach);
-        </method>
+        </handler>
         
         <!--- @keywords private -->
-         <method event="onconstruct" >
+         <handler name="onconstruct" >
             // create a floating list. Though the parent for this floating
             // list is this menu, the floating list will be created on the
             // canvas and its owner attribute will point to this menu.
@@ -527,7 +528,7 @@
                 // have the menuitem keep a reference to its submenu
                 this.parent._submenu = this;
             } 
-        </method>
+        </handler>
         
         <!--- @keywords private -->
          <method name="init" >

@@ -41,7 +41,7 @@
 
         <!--- This event is triggered whenever the user makes a selection it may
               used as a script in the tag or as an event method. -->
-        <attribute name="onselect" value="null"/>
+        <event name="onselect"/>
 
         <!--- @keywords private -->
         <method name="doEnterDown">

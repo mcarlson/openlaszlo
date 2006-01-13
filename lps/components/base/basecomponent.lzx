@@ -25,7 +25,7 @@
         <attribute name="_focusable" value="true" type="boolean" />
 
         <!--- @keywords private -->
-        <attribute name="onfocusable" value="null" />
+        <event name="onfocusable"/>
 
         <!--- the label or title of the component: instead of using this 
               attribute text may instead be placed withing the tag, for
@@ -68,7 +68,7 @@
 
         <!--- event: when isdefault changes
               @keywords private -->
-        <attribute name="onisdefault" value="null" />
+        <event name="onisdefault"/>
 
         <!--- set to true when this component will receive enter key events -->
         <attribute name="hasdefault" value="false" />
@@ -204,7 +204,7 @@
         <!--- @keywords private -->
         <attribute name="_style" value="null"/>
         <!--- @keywords private -->
-        <attribute name="onstyle" value="null"/>
+        <event name="onstyle"/>
 
         <!--- @keywords private -->
         <attribute name="_styledel" value="null"/>
@@ -320,7 +320,7 @@
         </method>
 
         <!--- @keywords private -->
-        <attribute name="on_enabled" value="null"/>
+        <event name="on_enabled"/>
 
         <!--- the value of _enabled is set via a constraint that is dependent
               on the component's 'enabled' property and whether the parent

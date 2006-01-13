@@ -16,7 +16,7 @@
             with the form.  By default, submit is true when enabled.  -->
         <attribute name="submit" value="${enabled}" type="boolean"/>
 
-        <method event="oninit">
+        <handler name="oninit">
             <![CDATA[
                 if (this.submitname == "") this.submitname = this.name;
                 if (this.submitname == "") {
@@ -35,7 +35,7 @@
                      p = p.immediateparent;
                 }
             ]]>
-        </method>
+        </handler>
 
 
     </class>

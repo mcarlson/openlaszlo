@@ -34,7 +34,7 @@
                 use get/setDefaultStyle instead of accessing attr directly-->
         <attribute name="defaultstyle" value="null" />
         <!--- @keywords private  -->
-        <attribute name="ondefaultstyle" value="null"/>
+        <event name="ondefaultstyle"/>
 
 
         <!--- @keywords private  -->
@@ -163,8 +163,8 @@
             ]]>
         </method>
 
-        <method event="onfocus" args="who" reference="LzFocus"
-                name="checkDefault">
+        <handler name="onfocus" method="checkDefault" reference="LzFocus"/>
+        <method name="checkDefault" args="who">
             <![CDATA[ 
 
             if ( ! ( who instanceof basecomponent ) ||
@@ -192,7 +192,7 @@
             ]]>
         </method>
 
-        <method event="onmode" args="who" reference="LzModeManager">
+        <handler name="onmode" args="who" reference="LzModeManager">
             //if the mode changes, and the focussed view is in the mode
             //it'll clear it (and change the focus) 
             //however, if the focussed view was already null, the LzFocus
@@ -200,7 +200,7 @@
             if ( LzFocus.getFocus() == null ){
                 this.checkDefault( null );
             }
-        </method>
+        </handler>
 
         <method name="setDefaultStyle" args="def">
             this.defaultstyle = def;

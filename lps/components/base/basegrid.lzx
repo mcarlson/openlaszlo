@@ -26,7 +26,7 @@
         <attribute name="multiselect" value="true"/>
 
         <!--- Event sent when the grid selection changes.-->
-        <attribute name="onselect" value="null"/>
+        <event name="onselect"/>
 
         <!--- An array holding the basegridcolumns used by this grid -->
         <attribute name="columns" value="null"/>
@@ -78,7 +78,7 @@
         <attribute name="shownitems"   value="-1" 
                    setter="_setShownItems( shownitems )"/>
         <!--- @keywords private -->
-        <attribute name="onshownitems" value="null"/>
+        <event name="onshownitems"/>
 
         <!--- @keywords private -->
         <attribute name="_sortcol" value="null"/>
@@ -94,9 +94,9 @@
             <view name="rowparent" width="${parent.width}">
                 <datalistselector name="_selector"
                                   multiselect="$once{classroot.multiselect}">
-                    <method event="onconstruct">
+                    <handler name="onconstruct">
                         classroot._selector = this;
-                    </method>
+                    </handler>
                 </datalistselector>
             </view>
         </view>

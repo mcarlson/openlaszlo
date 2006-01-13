@@ -34,9 +34,9 @@
             width="${parent.width - 2*parent.bordersize}"
             height="${parent.height - 2*parent.bordersize}"  >
 
-            <method event="onaddsubview" args="v" >
+            <handler name="onaddsubview" args="v" >
                classroot.doAddSubview(v);
-            </method>
+            </handler>
         </view>
 
         <!--- Setter for border size.

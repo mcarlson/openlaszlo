@@ -7,7 +7,7 @@
         <attribute name="selectable" type="boolean"/>
         <attribute name="clickable" value="$once{selectable}"/>
         <attribute name="selected" value="false"/>
-        <attribute name="onselected" value="null"/>
+        <event name="onselected"/>
         <attribute name="x" value="${ownerGrid.header.hcontent.x}"/>
         <attribute name="focusable" value="true"/>
         <attribute name="focustrap" value="true"/>
@@ -52,7 +52,7 @@
             }
         </method>
 
-        <method event="ondata">
+        <handler name="ondata">
             if ( this.needsSetRegularColor ) this.setRegularColor();
             if ( highlighted ){
                 this.setAttribute( "highlighted" ,  false );
@@ -60,9 +60,9 @@
             if ( ownerGrid.rowheight == null ){
                 ownerGrid._setRowHeight( this.height );
             }
-        </method>
+        </handler>
 
-        <method event="onfocus">
+        <handler name="onfocus">
             <![CDATA[ 
             var n = parent.classroot.getIndexForItem( this );
             //this forces the next row to be in view, if possible
@@ -81,7 +81,7 @@
             }
             LzFocus.setFocus( nextsel );
             ]]>
-        </method>
+        </handler>
 
         <method name="getPrevSelection">
             <![CDATA[
@@ -131,10 +131,10 @@
             immediateparent.classroot.select( this );
         </method>
 
-        <method event="onclick">
+        <handler name="onclick">
             LzFocus.setFocus( ownerGrid );
             this.select();
-        </method>
+        </handler>
 
         <method name="domouseover" event="onmouseover">
             if ( !selectable ) return;
@@ -169,13 +169,13 @@
         </state>
         <!--- @keywords private Register the dependency of each row cell with
               its column owner.-->
-        <method event="onaddsubview" args="sv">
+        <handler name="onaddsubview" args="sv">
             if ( !sv [ "ownerColumn"] ) return;
             sv._updateIt = this._updateIt;
             var d = new LzDelegate( sv , "_updateIt", sv.ownerColumn,"onx");
             d.register( sv.ownerColumn,"oncolwidth" );
             sv._updateIt();
-        </method>
+        </handler>
         <attribute name="_updateIt" 
                    value="function(){this.setX( this.ownerColumn.x );
                                 this.setWidth( this.ownerColumn.colwidth)}"/>

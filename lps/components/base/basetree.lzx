@@ -95,24 +95,24 @@
 
         <!--- This event gets triggered whenever this tree is open. The open
               value of this tree is also sent. -->
-        <attribute name="onopen" value="null" />
+        <event name="onopen" />
         <!--- This event gets triggered whenever this tree is selected. The
               value of the selection (true or false) is sent with this
               event.
               Note the args of this has changed from the previous release. -->
-        <attribute name="onselected" value="null" />
+        <event name="onselected" />
         <!--- This event gets triggered whenever this tree is selected. This
               tree is sent with the event. The tree root also receives this
               event. -->
-        <attribute name="onselect" value="null" />
+        <event name="onselect" />
 
         <!--- This event gets triggered whenever this tree is focused. The value
               of the focus (true or false) is sent with this event. -->
-        <attribute name="onfocused" value="null" />
+        <event name="onfocused" />
         <!--- This event gets triggered whenever the tree's focus is
               changed. This tree is sent with the event. The tree root also
               receives this event.-->
-        <attribute name="onfocus" value="null" />
+        <event name="onfocus" />
 
         <!--- @keywords private : reference to the defaultplacement view
               by default this is 'children' but it could be modified by
@@ -606,9 +606,9 @@
              component of the tree goes. -->
         <view name="item">
             <!--- @keywords private -->
-            <method event="onkeydown" args="kc">
+            <handler name="onkeydown" args="kc">
                 classroot.keyboardNavigate(kc);
-            </method>
+            </handler>
         </view>
 
         <method name="openChildren" args="o"> <![CDATA[
@@ -624,14 +624,14 @@
                 super.init();
                 ]]>
             </method>
-            <method event="onaddsubview">
+            <handler name="onaddsubview">
             <![CDATA[
                 // If this is the first one added, send event.
                 if (this.subviews.length == 1 && classroot.open) {
                     setAttribute("visible", true);
                 }
             ]]>
-            </method>
+            </handler>
 
         </view>
 

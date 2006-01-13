@@ -146,23 +146,23 @@
             width="${parent.width - 4}"
             height="${parent.height - y - 2}" > <!-- -2 to account for border of edittext -->
             
-            <method event="onfocus" args="s">
+            <handler name="onfocus" args="s">
                  if (parent['onfocus']) parent.onfocus.sendEvent(s);
-            </method>
-            <method event="onblur" args="s">
+            </handler>
+            <handler name="onblur" args="s">
                  parent.updateText();
                  if (parent['onblur']) parent.onblur.sendEvent(s);
-            </method>
-            <method event="onkeyup" args="kc"> <![CDATA[
+            </handler>
+            <handler name="onkeyup" args="kc"> <![CDATA[
                   if (parent['onkeyup']) parent.onkeyup.sendEvent(kc);
                   if (kc == 13 && parent.doesenter) parent.doEnterUp();
                   ]]>
-            </method>
-            <method event="onkeydown" args="kc"> <![CDATA[
+            </handler>
+            <handler name="onkeydown" args="kc"> <![CDATA[
                   if (parent['onkeydown']) parent.onkeydown.sendEvent(kc);
                   if (kc == 13 && parent.doesenter) parent.doEnterDown();
                   ]]>
-            </method>
+            </handler>
 
             <method name="getFocusRect" >
                 return parent.getFocusRect();

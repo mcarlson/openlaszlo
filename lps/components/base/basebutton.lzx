@@ -52,10 +52,10 @@
         <attribute name="reference" value="this" when="once" setter="setreference(reference)"/>
 
         <!--- This event is sent when the resourceviewcount changes. -->
-        <attribute name="onresourceviewcount" value="null" />
+        <event name="onresourceviewcount" />
 
         <!--- This event is sent when button the clicked. -->
-        <attribute name="onclick" value="null" />
+        <event name="onclick" />
 
         <!---  @keywords private -->
         <attribute name="_msdown" value="false" />
@@ -129,12 +129,12 @@
         </method>
 
         <!--- @keywords private -->
-        <method event="ontotalframes">
+        <handler name="ontotalframes">
             if ( this.isinited ) {
                 this.maxframes = this.totalframes;
                 this._callShow();
             }
-        </method>
+        </handler>
 
         <!--- @keywords private -->
         <method name="init">
@@ -144,25 +144,25 @@
             this._callShow();
         </method>
         
-        <method event="onmouseover">
+        <handler name="onmouseover">
             this.setAttribute( '_msin' , true );
             this._callShow();
-        </method>
+        </handler>
 
-        <method event="onmouseout">
+        <handler name="onmouseout">
             this.setAttribute( '_msin' , false );
             this._callShow();
-        </method>
+        </handler>
 
-        <method event="onmousedown">
+        <handler name="onmousedown">
             this.setAttribute( '_msdown' , true );
             this._callShow();
-        </method>
+        </handler>
 
-        <method event="onmouseup">
+        <handler name="onmouseup">
             this.setAttribute( '_msdown' , false );
             this._callShow();
-        </method>
+        </handler>
 
         <!--- Sets clickable to true and shows appropriate resource.
               @keywords private -->

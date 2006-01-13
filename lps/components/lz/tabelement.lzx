@@ -70,19 +70,19 @@
                 x="${classroot.headerpadding}"
                 width="${parent.width - 2*classroot.headerpadding}" 
                 height="100%" stretches="both" >
-                <method event="onmousedown">
+                <handler name="onmousedown">
                     classroot.container.shdw.setVisible(false);
 
                     parent.header.setY(classroot._mdoffset);
-                </method>
-                <method event="onmouseup">
+                </handler>
+                <handler name="onmouseup">
                     classroot.container.shdw.setVisible(classroot.shadowvisible);
                     parent.header.setY(0);
-               </method>
-               <method event="onclick">
+               </handler>
+               <handler name="onclick">
                    classroot.parent.openTab(classroot,true);
                    LzFocus.setFocus( this.classroot , false );
-               </method>
+               </handler>
             </basebutton>
             <view name="header" width="100%" height="100%" >
                 <text name="txt"
