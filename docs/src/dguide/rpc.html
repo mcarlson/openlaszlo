@@ -285,7 +285,9 @@ parameters and a delegate. The order of parameters in the array should
 match the parameters the backend operation expects. The delegate is required
 because RPC calls are asynchronous, that is, there is no way to know when the
 function call will return from the backend. When the response is received, the delegate calls the appropriate method.</p>
+<p>
 <a name="delegate-as-attribute"/>
+</p>
 <example extract="false">
 &lt;!-- Assume mySOAP.proxy contains a function stub called someFunction() --&gt;
 &lt;soap name="mySOAP" wsdl="..."&gt;

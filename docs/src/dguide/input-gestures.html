@@ -12,7 +12,7 @@
 <!--=========================================================================-->
 <h2>Overview</h2>
 <p>
-	This chapter explains how to incorporate mouse and keyboard input into an OpenLaszlo application. This capter will cover the basic concepts
+	This chapter explains how to incorporate mouse and keyboard input into an OpenLaszlo application. This chapter will cover the basic concepts
 	as well as more advanced topics such as tracking the mouse across multiple views while the mouse is down. 
 </p>
 
@@ -28,7 +28,7 @@
 <p> <b>Mouse events</b>: onmouseover, onmouseout, onmousedown, onmouseup, onclick </p>
 <p>
 	Though onmouseup and onclick are similar, onmouseup is sent whenever the user lets up on the mouse, while 
-	onclick is only sent when the user lets up on the mouse and the cursor is still contianed within the boundary of the view.
+	onclick is only sent when the user lets up on the mouse and the cursor is still contained within the boundary of the view.
 </p>
 
 <example title="The basic mouse events" >
@@ -50,8 +50,8 @@
 <p>
 	A view will only respond to mouse events when its attribute clickable="true". Views, by default, are not clickable. 
 	If, however,  any of the mouse events are included in a view's tag ( like above ) then clickable will be set to true automatically.
-    In the example below, there are no mouse events decalred within the tag itself, only in its methods. In this case it becomes
-    necessary to explicity define clickable="true" for the view.
+    In the example below, there are no mouse events declared within the tag itself, only in its methods. In this case it becomes
+    necessary to explicitly define clickable="true" for the view.
 </p>
 
 <example title="Making views clickable" >
@@ -123,8 +123,7 @@ through windows, without the hand cursor appearing.</p>
 &lt;/canvas&gt;
 </example>
 <h3>Custom buttons</h3>
-<p>Creating a custom button that changes its images with onmouseup, onmouseover, and onmousedown is
-is a common practice.  Here is an example using the <tagname link="true">basebutton</tagname> tag 
+<p>Creating a custom button that changes its images with onmouseup, onmouseover, and onmousedown is a common practice.  Here is an example using the <tagname link="true">basebutton</tagname> tag 
 
 </p>
 
@@ -147,7 +146,7 @@ is a common practice.  Here is an example using the <tagname link="true">basebut
 
 <h3>Dragging Views</h3>
 <p>Dragging a view can be accomplished with the use of a dragstate. When a dragstate is applied, views
-can be dragged freely or constrained to a boudnary as well as an axis.
+can be dragged freely or constrained to a boundary as well as an axis.
 The example below shows the use of a dragstate with its max, min, and axis attributes.</p>
 
 <example title="dragging a view" >
@@ -190,7 +189,7 @@ The example below shows the use of a dragstate with its max, min, and axis attri
 <h2>Tracking the Mouse</h2>
 <h3>Tracking the mouse within a single view</h3>
 <p>
-This simple program shows how to do basic mousetracking in a view:
+This simple program shows how to do basic mouse tracking in a view:
 </p>
 <example height="500" width="500" title="Simple mouse tracking">
 &lt;canvas height="500" width="500" debug="true"&gt;
@@ -218,15 +217,15 @@ This generates a lot of points, but you can decide how much data to filter or no
 <h3>Tracking the Mouse in overlapping views</h3>
 <p>
 	Once the mouse is down in relation to a specific view, onmouseover and onmouseout events
-	are only sent to that view. This makes it diffcult to track the mouse over other views.
-	This section explains how to accomplish this, first by using a base component called basetrackgroup, and then with the low level APIs
+	are only sent to that view. This makes it difficult to track the mouse over other views.
+	This section explains how to accomplish this, first by using a base component called <tagname link="true">basetrackgroup</tagname>, and then with the low level APIs
 	that basetrackgroup is built upon.
 </p>
 
 <p>
 	In the example below, notice that the onmouseover and onmouseout events change the size of the view
 	while the onmousetrackover and onmousetrackout events change the color of the view. As you drag the mouse, the first view
-	will continue to change it size and color while the other views will only change their color. Again, 
+	will continue to change its size and color while the other views will only change their color. Again, 
 	this is because the basic onmouseover and onmouseout events are only being sent to the first view that was clicked. 
 	However, onmousetrackover and onmousetrackout are sent all views while the mouse is down.
 </p>
@@ -266,7 +265,7 @@ This generates a lot of points, but you can decide how much data to filter or no
 <h2>"View Source" right click menu item </h2>
 <p>
  The default canvas context (right click) menu has a "view source" 
- item, available in Flashplayer Version 7 and later.
+ item, available in Flash player Version 7 and later.
 </p>
 <p>
 For an application <tt>framitz.lzx</tt> that is deployed proxied (using the OpenLaszlo Server), this will fetch 
@@ -317,7 +316,7 @@ of a view that has a true <attribute>focustrap</attribute>, such as
 a window, will tab to another child of the same view, but won't tab to
 a view within another window.</p>
 
-<p>The <a href="${demos}contacts">Contacts demo</a> demonstrates the
+<p>The <a href="${demos}contacts/contacts.lzx">Contacts demo</a> demonstrates the
 use of keyboard focus.  Double-click on a name to open the details
 window.  Click in a text, and then press tab and shift-tab to move to
 other text fields within the same focus group.</p>

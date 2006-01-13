@@ -9,7 +9,7 @@
  
 <p>This chapter explains the use of delegates, which are a part of the mechanism that different parts of an OpenLaszlo application use to communicate with each other when values of attributes change. </p>
 <p>
-You generally only need to be arware of delegates for objects that you create in script (that is, not with tags). For objects that you create with tags, for example &lt;view&gt;, you can manage communication using event handlers in either 'onfoo' or '&lt;method event=...&gt;' syntax, as described in <xref linkend="methods-events-attributes"/>. This syntax is takes care of delegates for you.  Delegates are still there, behind the scenes, but the system manages them invisibly. However, it's helpful to understand the relationship between tag and script-based event syntax.</p>
+You generally only need to be aware of delegates for objects that you create in script (that is, not with tags). For objects that you create with tags, for example &lt;view&gt;, you can manage communication using event handlers in either 'onfoo' or '&lt;method event=...&gt;' syntax, as described in <xref linkend="methods-events-attributes"/>. This syntax is takes care of delegates for you.  Delegates are still there, behind the scenes, but the system manages them invisibly. However, it's helpful to understand the relationship between tag and script-based event syntax.</p>
 <p>The last section of this chapter explains how delegates compare to similar things in other programming languages.</p>
 
 
@@ -145,8 +145,8 @@ clicking the 'start over' button.
 
 <p>
 Notice that for each button, when the <code>onclick</code> event is fired, the <method>regbutton</method>
-method in invoked on the canvas.  The <method>regbutton</method> method creates a delegate for
-the <method>buttonclickedagain</method> method if no such delegate already exist, and then registers
+method is invoked on the canvas.  The <method>regbutton</method> method creates a delegate for
+the <method>buttonclickedagain</method> method if no such delegate already exists, and then registers
 the 'onclick' event of the button that has just been clicked. 
 </p>
 <h4>Flow of control</h4>
@@ -267,11 +267,11 @@ by the delegate, instead of creating a new timer (which would be inefficient) , 
 <p>
 In the following example, when the last <tagname>text</tagname> object has been
 replicated and initialized, we set the text in the green <tagname>text</tagname> to 'The last
-view has been replicated'.  Do accomplish this task, we first explicitly declare 
+view has been replicated'.  To accomplish this task, we first explicitly declare 
 a datapath on the <tagname>text</tagname> to be replicated.  Next, we handle
 the onclones event, which indicates that the new <tagname>text</tagname> nodes
 has been cloned, but not initialized.  Inside the onclones event, we determine the
-last replicated clone, and register the oninit event using LzDelegate.  When the
+last replicated clone, and register the oninit event using <classname>LzDelegate</classname>.  When the
 last <tagname>text</tagname> node has been initialized, the delegate calls the
 "replicationComplete" method, where the text of the green <tagname>text</tagname> node is updated. 
 </p>
@@ -335,7 +335,7 @@ A delegate is an object, and as such it can be an attribute of another object. F
 <p>
 The above code creates the delegate <code>mydel</code> when the button is instantiated. This technique of declaring a delegate has the advantage of being easy to read, and it ensures that only one delegate is created.
 </p>
-<p>For an example that uses this technique, see <a href="${dguide}rpc.html#delegate-as-attribute">this</a> example in the chapter on XML-rpc.</p>
+<p>For an example that uses this technique, see the "Using delegates as attributes"example in the <a href="${dguide}rpc.html#delegate-as-attribute">chapter on XML-rpc</a>.</p>
 <h2>Delegates in relation to other languages</h2>
 <p>
 Here is a brief discussion of delegates in relation to other programming languages with which you may be familiar.  You don't need to follow this discussion in order to use delegates in LZX.
