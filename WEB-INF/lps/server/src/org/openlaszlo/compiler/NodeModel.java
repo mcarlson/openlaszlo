@@ -832,8 +832,10 @@ solution =
             addMethodElement(element);
         } else if (tagName.equals("handler")) {
             addHandlerElement(element);
-        } else if ((tagName.equals("event")) || 
-                   (tagName.equals("attribute"))) {
+        } else if (tagName.equals("event")) {
+            element.setAttribute("value", "null");
+            addAttributeElement(element);
+        } else if (tagName.equals("attribute")) {
             addAttributeElement(element);
         }
     }
