@@ -349,7 +349,7 @@ The &lt;import&gt; tag has these attributes:
     <td><code>href</code></td>
     <td>URI</td>
     <td>required</td>
-    <td> The URI of a file that defines the library. In the case where stage is compile (the default), this has the same meaning as it does 
+    <td> The URI of a file that defines the library. In the case where stage is "late", this has the same meaning as it does 
 in an &lt;include&gt; tag. If stage="deferred", the URI is resolved relative to the location of the location of the file that contains 
 the &lt;import&gt; element,
  and a request for this URI is sent to the server to request a library file that is downloaded into the running application.
@@ -359,9 +359,7 @@ the &lt;import&gt; element,
     <td><code>stage</code></td>
     <td>  "late" | "defer"</td>
     <td>compile</td>
-    <td> If stage is "normal", the contents of the library are linked into the application at compile time. If it is "defer", the statement 
-defines an object whose name is the value of the name attribute, and that can be used to load the library during the execution of 
-the application via the API specified in Dynamic Libraries.</td>
+    <td> If stage is "late", the library is imported once the main application file has finished loading. If it is "defer", the library is imported during the execution of the application by an API call, as described below.</td>
   </tr>
   <tr>
     <td><code>name</code></td>
@@ -380,25 +378,35 @@ are accessible outside the library as prefix myclass.</td>
  If this is not empty, it must be an XML namespace prefix that is in scope on the &lt;import&gt; element. In this case, 
 class definitions in the target library are bound to XML tags in the specified namespace.</td>
   </tr>
+ <tr>
+    <td><code>onerror</code></td>
+    <td>script</td>
+    <td>""</td>
+    <td> Code to be executed if the import call generates an error. For example, it is an error for a program to contain an XML reference to a class that is defined in a late or defer library.</td>
+  </tr>
+  <tr>
+    <td><code>onload</code></td>
+    <td>script</td>
+    <td>""</td>
+    <td> Code to be executed after the library has successfully completed loading.</td>
+  </tr>
+ <tr>
+    <td><code>ontimeout</code></td>
+    <td>script</td>
+    <td>""</td>
+    <td>Code to be executed if the operation times out.
+ </td>
+  </tr>
 </table>
 <p></p>
 <p>
-The stage attribute may have the value "late" or "defer". A "late" library is imported once the main application file 
-has finished loading. A "defer" library is loaded programmatically via a JavaScript method on the object bound to the variable named
- by the value of its "name" attribute; in this example, "mylib".
+A "defer" library is loaded programmatically via a JavaScript method on the object bound to the variable named by the value of its "name" attribute;
+in this example, "mylib".
 </p>
 <pre>
  &lt;import name="mylib" href="lib/foo.lzx" stage="defer" onload="doSomething()"/&gt;
 </pre>
-<p>
-Other view attributes <code>onload, onerror, </code>and <code>ontimeout</code> are also supported:
-</p>
 
-<ul>
-	<li>The code supplied to 'onload' will be executed once the library has loaded successfully.</li>
-	<li>It is an error for a program to contain an XML reference to a class that is defined in a late or defer library. </li>
-
-</ul>
 <h3>Positioning of imported library views </h3>                                               
 <p>
 Say you had a view, call it "blueview" in a library to be imported.  If you merely used the <method>load</method>to import the code for "blueview", you would see the view show up at the bottom of the application, not at the place where the method was invoked. This is because the <method>load</method> method only tells <tagname>import</tagname> what to load, not where to load it.
@@ -434,16 +442,14 @@ application be compiled in debug mode by setting the canvas's
 </example>
 
 <p>This has the same effect as pressing the Debug button in the
-developer console.</p>
+developer console. It is also possible to invoke the debugger by loading the
+application using the <code>?debug=true</code> query parameter.</p>
 
 <p>See <xref linkend="debugging"/> 
 for more information on using the
 debugger.</p>
 
-<note>It is also possible to invoke the debugger by loading the
-application using the <code>?debug=true</code> query parameter.  See
-<xref linkend="debugging"/>  for more information on using the
-debugger.</note>
+  
 
 <h2>Resources, Fonts, and Datasources</h2>
 <p>In addition to including classes and instances, a library file can use the <tagname link="true">font</tagname>,

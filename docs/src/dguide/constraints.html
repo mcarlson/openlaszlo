@@ -89,7 +89,7 @@ The above constraint expression could also be written in script as:
 </p>
 
 <example executable="false">
-&lt;method event="oninint"&gt;
+&lt;method event="oninit"&gt;
   var width_del = new LzDelegate(this, "updateMyWidth");
   width_del.register(parent, "onwidth");
 &lt;/method&gt;
@@ -187,7 +187,7 @@ simple attribute expression in <xref linkend="ex.constraints.1"/>.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>The constraint expression may be any Javascript expression.  For
+<p>The constraint expression may be almost any Javascript expression.  For
 example, you could change the y value in example <xref
 linkend="ex.constraints.1"/> to
 <code>y="${immediateparent.getMouse('y')+10}"</code> and cause the
@@ -197,7 +197,9 @@ at the mouse position by setting the y value with
 &#x2014; if the width of the blue square changes, the y value with be
 updated to position the blue square relative to the new width and the
 mouse position.</p>
-
+<p>
+See <a href="#functions">Constraints and Functions</a>, below, for limitations on the types of expression you can use in constraints.
+</p>
 <h2>Events and Dependencies</h2> 
 
 <p>Every constraint has one or more dependencies.  For example, the constraint expression:</p>
@@ -412,7 +414,7 @@ is $immediately;
 </fixme>
 ?>
 
-
+<a name="functions"/>
 <h2>Constraints and Functions</h2>
 <p>
 Take care when using JavaScript functions inside of constraints.

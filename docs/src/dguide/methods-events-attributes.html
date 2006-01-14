@@ -630,8 +630,8 @@ In many cases, specific code operations need to take place when an attribute is
 set.  For example, when the <attribute>width</attribute> attribute of a <tagname>view</tagname> is set,
 the view needs to update the width of the parent view if clipping is set to
 false.  Though it is very convenient to simply handle the <event>onwidth</event> event to execute the required code, the is no 
-guarantee as to order events will be called. This task is instead accomplished best in the <method>setWidth</method>
-method of <tagname>view</tagname>, which is designated as the setter for <attribute>width</attribute>.
+guarantee as to order events will be called. This task is instead accomplished best using the <method>setAttribute</method>
+method of <tagname>view</tagname>, to set the width attribute.
 </p>
 
 <p>
@@ -643,7 +643,7 @@ in milliseconds is stored in the time attribute.  The custom setter, <method>set
 <p>
 Normally, when an attribute is set by invoking <method>setAttribute</method>, <method>setAttribute</method> handles the tasks of setting the value of 
 the attribute, and sending the onattribute event.  When defining a custom setter for an attribute, you are responsible for
- setting the value and sending the onattribute event, as shown in the example below.  If the <code>on<var>attribute</var></code> event isn't sent in the
+ setting the value and sending the <attribute>onattribute</attribute> event, as shown in the example below.  If the <code>on<var>attribute</var></code> event isn't sent in the
  custom defined settter, registered <code>on<var>attribute</var></code> events wont fire, and constraints 
 tied to the attribute will not be updated when the value of the attribute is changed.
 </p>
@@ -793,7 +793,7 @@ constraints on the target attribute. </li>
 
 <h4> Explicit attribute setter methods </h4>
 
-<p> Some attributes of LFC classes have explicit getter and setter methods defined for them.  
+<p> Some attributes of OpenLaszlo Runtime Library classes have explicit getter and setter methods defined for them.  
 The <classname>LzView</classname> class has several of these such as <method>setX</method>, <method>setWidth</method>, etc.
 Performance wise and functionally, the use of these methods is essentially the same as making
 calls to <method>setAttribute</method> or <method>getAttribute</method>.  For consistency, use of these methods is discouraged: Use
@@ -821,7 +821,7 @@ onattribute event.  </p>
 <p> It is also possible to get and set attributes directly without invoking any method at all,
 however, this practice is generally discouraged as it may result in unexpected behavior.  
 Since no method call is made, the associated onattribute events will not be fired.  Any
-constraints tied to the attribute also will not be updated.  When setting attributes on LFC
+constraints tied to the attribute also will not be updated.  When setting attributes on ORL
 objects, it is definitely a bad idea to set attributes  directly as their explicit setter
 methods, which contain important processing code, won't be called. 
 </p>

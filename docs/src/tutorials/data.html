@@ -244,13 +244,13 @@
 
 
 <h3><a name="http"/>HTTP Data</h3>
-<p>Remote data goes over HTTP, which means it can (but doesn't have to) be dynamic. If it is static, then the only difference between it and included or embedded data is that it is downloaded <i>after</i> the application loads. The <code>type="http"</code> attribute tells the LPS that this is an HTTP request. The requests can be either GET or POST. </p>
+<p>Remote data goes over HTTP, which means it can (but doesn't have to) be dynamic. If it is static, then the only difference between it and included or embedded data is that it is downloaded <i>after</i> the application loads. The <code>type="http"</code> attribute indicates that this is an HTTP request. The requests can be either GET or POST. </p>
 
 <p>There are several points at which the client requests for the data:</p>
 
 <ul>
 	<li>The client will request the data as soon as the app loads if the dataset's  <attribute>request</attribute> attribute is true. </li>
-	<li>The client will also request the data every time the querystring or base URL of the dataset changes (using the <method>setQueryString</method> or <method>setURL</method> respectively) methods of the <!-- TODO: add link to LZX ref -->LzHTTPDataset object.</li>
+	<li>If the <attribute>request</attribute> attribute is set to "true", the client will also request the data every time the querystring or base URL of the dataset changes (using the <method>setQueryString</method> or <method>setSrc</method> respectively) methods of the <!-- TODO: add link to LZX ref -->LzHTTPDataset object.</li>
 	<li>When the dataset's <method>doRequest</method> method gets called.</li>
 </ul>
 
@@ -262,10 +262,6 @@
 </example>
 
 <p>The <code>type="http"</code> attribute gets implied when the <attribute>src</attribute> attribute contains "<code>http://</code>".</p>
-
-<note>You do not have to worry about speed of the Flash Player's XML parser when using the LPS.</note>
-
-
 
 
 <h2><a name="datapointers"/>Datapointers</h2>
