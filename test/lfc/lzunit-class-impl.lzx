@@ -1,0 +1,77 @@
+<canvas title="lzunit-node" debug="true" >
+  <include href="lzunit" />
+
+  <TestSuite>
+
+    <TestCase>
+
+        <method name="testSub">
+            var LzSub = Class( "LzSub", null, 
+                               function (){ this.testAttr = true; } );
+            assertEquals("LzSub", LzSub.classname);
+
+            var subInst = new LzSub();
+            assertTrue( subInst instanceof LzSub );
+            
+            assertEquals( true, subInst.testAttr );
+        </method>
+        
+        <method name="testClassNodeSub">
+            var LzNodeSub = Class( "LzNodeSub", LzNode );
+            assertEquals("LzNodeSub", LzNodeSub.classname);
+
+            var nodeSubInst = new LzNodeSub();
+            assertTrue( nodeSubInst instanceof LzNodeSub );
+        </method>
+        
+        <method name="testUserClass">
+            new LzUserClass(canvas, 
+                            {parent: "node", 
+                             initobj: {attrs: {"extends": "node",
+                                               foocalls: 0,
+                                               foo: function () { 
+                                                 #pragma "methodName=foo"
+                                                 this.foocalls++; 
+                                                    }}, 
+                                       name: "suba"}}, 
+                            [], false);
+                            
+            var suba = _root["suba"];
+            
+            var insta = new suba(canvas, { name: "insta" }, [], false);
+            assertTrue( insta instanceof suba );
+            
+            assertEquals(0, insta.foocalls);
+            insta.foo();
+            assertEquals(1, insta.foocalls);
+
+            new LzUserClass(canvas, 
+                            {parent: "suba", 
+                             initobj: {attrs: {"extends": "suba",
+                                               foooverrides: 0,
+                                               foo: function() { 
+                                                 #pragma "methodName=foo"
+                                                 super.foo(); 
+                                                 this.foooverrides++; 
+                                                    }}, 
+                                       name: "subb"}}, 
+                            [], false);
+
+            var subb = _root["subb"];
+
+            var instb = new subb(canvas, { name: "instb" }, [], false);
+            assertTrue( instb instanceof subb );
+            assertTrue( instb instanceof suba );
+            
+            assertEquals(0, instb.foocalls);
+            assertEquals(0, instb.foooverrides);
+            instb.foo();
+            assertEquals(1, instb.foocalls);
+            assertEquals(1, instb.foooverrides);
+        </method>
+        
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>

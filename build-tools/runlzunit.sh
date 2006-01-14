@@ -36,7 +36,11 @@ hostname=`hostname`
 hosttype=`uname`
 
 case "$hosttype" in
-Darwin|Linux)
+Darwin)
+    build_os=osx
+    browser=firefox
+    ;;
+Linux)
     build_os=unix
     browser=firefox
     ;;
@@ -66,7 +70,11 @@ paths=`cat ${LPS_HOME}/${tests}`
 for path in $paths; do
     testurl=http://localhost:8080/${lps_dir}/${path}?lzt=swf
     echo "loading ${testurl}"
-    `"${browser}" "${testurl}"`
+    if [ "${build_os}" = "osx" ]; then
+      `open -a "${browser}" "${testurl}"`
+    else
+      `"${browser}" "${testurl}"` &
+    fi
     # grep the log file until we see the "finishtest" for this path, or until timeout
     let timeout=${RETRIES}
     while [[ $timeout -gt 0 ]]; do

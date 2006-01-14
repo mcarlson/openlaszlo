@@ -1,0 +1,126 @@
+<canvas debug="true">
+  <include href="lzunit" />
+
+  <TestSuite>
+    
+    <TestCase name="XPathText">
+      <dataset name="ds">
+        <a name="a1">This is some text</a>
+      </dataset>
+    
+      <method name="testPath">
+        var de = ds.getPointer().xpathQuery("a/");
+        assertEquals("object", typeof de);
+        assertEquals("a1", de.getAttr('name'));
+      </method>
+      
+      <method name="testText">
+        var de = ds.getPointer().xpathQuery("a/text()");
+        assertEquals("string", typeof de);
+        assertEquals("This is some text", de);
+      </method>
+      
+      <method name="testAttr">
+        var de = ds.getPointer().xpathQuery("a/@name");
+        assertEquals("string", typeof de);
+        assertEquals("a1", de);
+      </method>
+      
+    </TestCase>
+    
+    <TestCase name="XPathMulti">
+      <dataset name="ds">
+        <a name="a1"/>
+        <a name="a2" show="true"/>
+        <a name="a3" show="false"/>
+      </dataset>
+      
+      <method name="testMulti">
+        var de = ds.getPointer().xpathQuery("a/");
+        assertEquals("object", typeof de);
+        assertEquals(3, de.length);
+        assertEquals("a1", de[0].getAttr('name'));
+        assertEquals("a2", de[1].getAttr('name'));
+        assertEquals("a3", de[2].getAttr('name'));
+      </method>
+      
+      <method name="testIndexSelect">
+        var de = ds.getPointer().xpathQuery("a[2]/");
+        assertEquals("object", typeof de);
+        assertEquals("a2", de.getAttr('name'));
+      </method>
+      
+      <method name="testRangeSelect">
+        var de = ds.getPointer().xpathQuery("a[2-3]/");
+        assertEquals("object", typeof de);
+        assertEquals(2, de.length);
+        assertEquals("a2", de[0].getAttr('name'));
+        assertEquals("a3", de[1].getAttr('name'));
+      </method>
+      
+      <method name="testRangeSelectOpenEnd">
+        var de = ds.getPointer().xpathQuery("a[2-]/");
+        assertEquals("object", typeof de);
+        assertEquals(2, de.length);
+        assertEquals("a2", de[0].getAttr('name'));
+        assertEquals("a3", de[1].getAttr('name'));
+      </method>
+      
+      <method name="testRangeSelectOpenStart">
+        var de = ds.getPointer().xpathQuery("a[-2]/");
+        assertEquals("object", typeof de);
+        assertEquals(2, de.length);
+        assertEquals("a1", de[0].getAttr('name'));
+        assertEquals("a2", de[1].getAttr('name'));
+      </method>
+      
+      <method name="testAttrSelect">
+        var de = ds.getPointer().xpathQuery("a[@show]/");
+        assertEquals("object", typeof de);
+        assertEquals(2, de.length);
+        assertEquals("a2", de[0].getAttr('name'));
+        assertEquals("a3", de[1].getAttr('name'));
+      </method>
+      
+      <method name="testAttrValueSelect">
+        var de = ds.getPointer().xpathQuery("a[@name='a2']/");
+        assertEquals("object", typeof de);
+        assertEquals("a2", de.getAttr('name'));
+      </method>
+      
+    </TestCase>
+    
+    <TestCase>
+      <dataset name="ds">
+        <a name="a1">
+          <c name="c1">
+            <d name="d1"/>
+          </c>
+        </a>
+        <b name="b1">
+          <c name="c2"/>
+        </b>
+        <a name="a2">
+          <b name="b2">
+            <c name="c3"/>
+          </b>
+        </a>
+      </dataset>
+      
+      <method name="testWildcardSelect">
+        var de = ds.getPointer().xpathQuery("a/*/c/");
+        assertEquals("object", typeof de);
+        assertEquals("c3", de.getAttr('name'));
+      </method>
+      
+      <method name="testLastAttr">
+        var de = ds.getPointer().xpathQuery("a/last()");
+        assertEquals("number", typeof de);
+        assertEquals(2, de);
+      </method>
+      
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>

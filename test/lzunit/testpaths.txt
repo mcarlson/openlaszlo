@@ -6,7 +6,9 @@ test/lfc/lzunit-node.lzx
 test/lfc/lzunit-node-initsequence.lzx
 test/lfc/lzunit-node-placement.lzx
 test/lfc/lzunit-node-replication.lzx
-test/components/base/lzunit-baseslider.lzx
+test/lfc/lzunit-class-impl.lzx
+test/lfc/lzunit-dataset.lzx
+test/lfc/lzunit-node-xpath.lzx
 test/components/base/lzunit-baselist.lzx
 test/components/base/lzunit-basetabs.lzx
 test/components/lz/lzunit-components.lzx

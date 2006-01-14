@@ -1,0 +1,15 @@
+<canvas debug="true">
+  <include href="lzunit" />
+
+  <dataset name="ds1" initstage="normal" oninit="Debug.write(false);" />
+
+  <TestSuite>
+    <TestCase>
+      <node name="n1">
+        <dataset name="ds2" initstage="normal" oninit="Debug.write(false);" />
+      </node>
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>
