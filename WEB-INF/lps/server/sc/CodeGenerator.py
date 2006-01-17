@@ -768,7 +768,7 @@ class CodeGenerator(java.lang.Object):
             fname = self.options['resolver'].resolve(fname)
         f = open(fname)
         try:
-            source = ('#file "%s"\n#line 1\n' % userfname) + f.read()
+            source = ('#file %s\n#line 1\n' % userfname) + f.read()
         finally:
             f.close()
         try:
@@ -1334,8 +1334,7 @@ class CodeGenerator(java.lang.Object):
                     self.emit(LABEL(nextLabel))
                     nextLabel = None
                 self.visitStatement(stmt)
-                if self.collector[len(self.collector)-1] not in \
-                       (BRANCH, RETURN):
+                if not self.collector[len(self.collector)-1].getIsUnconditionalRedirect():
                     nextLabel = self.newLabel(node)
                     self.emit(BRANCH(nextLabel))
             # Handle fall-though in last clause
@@ -1945,9 +1944,9 @@ class CodeGenerator(java.lang.Object):
         i = analyzer.variables.iterator()
         while i.hasNext():
             variables.append(i.next())
-        fundefs = {}
+        fundefs = []
         for key in analyzer.fundefs.keySet():
-            fundefs[key] = analyzer.fundefs.get(key)
+            fundefs.append((key, analyzer.fundefs.get(key)))
         closed = [v for v in analyzer.closed]
         free = [v for v in analyzer.free]
         # Note usage due to activation object and withThis
@@ -2147,12 +2146,12 @@ class CodeGenerator(java.lang.Object):
             # create functions in global scope
             # Note: variable has already been declared so SetVariable
             # does the right thing
-            for name, fun in fundefs.items():
+            for name, fun in fundefs:
                 self.push(name)
                 self.translateFunction(fun, False, *fun.children)
                 self.emit(SetVariable)
         else:
-            for name, fun in fundefs.items():
+            for name, fun in fundefs:
                 if used.containsKey(name):
                     if not registerMap.containsKey(name):
                         self.push(name)

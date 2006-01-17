@@ -202,6 +202,10 @@ public class Instructions {
       return this instanceof BranchIfFalseInstruction;
     }
 
+    public boolean getIsUnconditionalRedirect() {
+      return false;
+    }
+
     public Instruction __findattr__(String name) {
       if (NameInstruction.containsKey(name)) {
         return (Instruction)NameInstruction.get(name);
@@ -240,6 +244,10 @@ public class Instructions {
         return this;
     }
     
+    public boolean getIsUnconditionalRedirect() {
+      return op == Actions.RETURN || op == Actions.BRANCH;
+    }
+
     public Instruction __call__() {
       assert (! this.op.args);
       return this;
