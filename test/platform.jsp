@@ -57,7 +57,7 @@ function detectBrowser(){
       default:
         browser='';
       }
-      frames['navApp'].location.href="platform.lzx?lzt=html&lzr=swf6&filepath=<%= path %>&dbrowser="+browser+"&dos="+os;
+      frames['navApp'].location.href="platform.lzx?lzt=html&lzr=swf7&filepath=<%= path %>&dbrowser="+browser+"&dos="+os;
       
 }
 var start=new Date();
@@ -114,7 +114,7 @@ write("<b>Platform:</b> "+navigator.platform+"<br>")
       <address><a href="mailto:mdavis@laszlosystems.com">Mark Davis</a></address>
       <!-- Created: Mon Jul 21 12:45:52 PDT 2003 -->
       <!-- hhmts start -->
-Last modified: Thu Jan 20 14:38:27 PST 2005
+Last modified: Tue Jan 17 15:39:12 PST 2006
 <!-- hhmts end -->
 
     </body>

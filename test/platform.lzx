@@ -95,6 +95,7 @@
 	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 5"  value="'fp5'"/>
 	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 6"  value="'fp6'"/>
 	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 7" value="'fp7'"/>
+	  <radiobutton selected="${this.value == gvars.fpver ? true : false}" text="Flash 8" value="'fp8'"/>
 	</radiogroup>
     </tabpane>
     <tabpane text="admin" style="bcolors" tabclass="btab">
@@ -106,6 +107,7 @@
 	  <radiobutton selected="false" text="Flash 5"  value="'swf5'"/>
 	  <radiobutton selected="false" text="Flash 6"  value="'swf6'"/>
 	  <radiobutton selected="true" text="Flash 7"  value="'swf7'"/>
+	  <radiobutton selected="false" text="Flash 8"  value="'swf8'"/>
 	</radiogroup>
       <view>
       <simplelayout axis="x"/>
