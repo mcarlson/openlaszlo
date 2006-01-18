@@ -780,7 +780,7 @@
   <!--================  Target [dist-one] ==============-->
   <target name="dist-one" 
       description="Build distributions for a single platform"
-      depends="init,build-source-distro,build,doc,build-core,dist-dev,dist-core" >
+      depends="init,build-source-distro,build,doc,build-core,dist-dev,dist-core,runlzunit" >
   </target>
 
   <!--================  Target [dist-dev] ==============-->
@@ -1249,7 +1249,7 @@
       <antcall target="${tom.stop}" />
   </target>
 
-  <target name="all" depends="init,clean,build-source-distro,make,doc,test,runlzunit"
+  <target name="all" depends="init,clean,build-source-distro,make,doc,test"
       description="build source distro, clean, build, install webapp, doc, and test." >
   </target>
 
