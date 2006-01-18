@@ -29,8 +29,7 @@ LzDrawView.prototype.__mc = null;
 // @field globalAlpha: Gives an alpha value that is applied to shapes and images before they are composited onto the canvas. The valid range of values is from 0.0 (fully transparent) to 1.0 (no additional transparency). If the attribute is set to values outside this range, they are ignored. When the context is created, the globalAlpha attribute initially has the value 1.0.
 // @field lineWidth: Gives the default width of lines, in coordinate space units. Negative values are ignored.  0 draws hairlines - lines that are always 1 pixel wide even when scaled.
 // @field strokeStyle: Represents the colour to use for the lines around shapes.  Specified as a hexadecimal number in the format 0xffffff.
-// @field fillStyle: Represents the colour or style to use for the fill inside the shapes.   can be either a hexadecimal number (0xffffff) or an LzCanvasGradient.
-//============================================================================
+// @field fillStyle: Represents the colour or style to use for the fill inside the shapes. Can be either a hexadecimal number (0xffffff) or an LzCanvasGradient.
 LzDrawView.prototype.globalAlpha = 1;
 LzDrawView.prototype.lineWidth = 1;
 LzDrawView.prototype.strokeStyle = 0x000000;
@@ -261,13 +260,15 @@ LzDrawView.prototype.createRadialGradient = function(x0, y0, r0, x1, y1, r1) {
 
 
 //-----------------------------------------------------------------------------
-// adds an arc to the current path. The arc is given by the circle that has its origin at (x, y) and that has radius radius. The points at startAngle and endAngle along the circle, measured in radians clockwise from the positive x-axis, are the start and end points. The arc is the path along the circumference of the circle from the start point to the end point going anti-clockwise if the anticlockwise argument is true, and clockwise otherwise.
+// Adds an arc to the current path. The arc is a segment of a circle that has radius as given. 
+// The circle segment is determined by the two angles startAngle and endAngle and begins at the given coordinate (x,y).
+// If clockwise is true, the arc is drawn clockwise from startAngle to endAngle, otherwise it is drawn counter-clockwise (anti-clockwise).
 //
 // @param Number x: Starting x position
 // @param Number y: Starting y position
 // @param Number radius: Radius
-// @param Number startAngle: Angle to start in radians
-// @param Number endAngle: Angle to end in radians
+// @param Number startAngle: Angle to start in degrees
+// @param Number endAngle: Angle to end in degrees
 // @param Number clockwise: anticlockwise if true, clockwise otherwise 
 //-----------------------------------------------------------------------------
 LzDrawView.prototype.arc = function(x, y, radius, startAngle, endAngle, clockwise) {
@@ -277,7 +278,7 @@ LzDrawView.prototype.arc = function(x, y, radius, startAngle, endAngle, clockwis
 }
 
 //-----------------------------------------------------------------------------
-// rect creates a new subpath containing just the rectangle with top left coordinate (x, y), width w and height h.
+// Rect creates a new subpath containing just the rectangle with top left coordinate (x, y), width w and height h.
 // based on mc.drawRect() - by Ric Ewing (ric@formequalsfunction.com)
 //
 // @param Number x: starting x position
