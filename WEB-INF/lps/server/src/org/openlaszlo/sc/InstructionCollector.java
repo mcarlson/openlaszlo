@@ -69,7 +69,7 @@ public class InstructionCollector extends ArrayList {
   }
 
   public void push(Object value) {
-    emit(Instructions.PUSH.__call__(value));
+    emit(Instructions.PUSH.make(value));
   }
 
   public void push(int value) {
@@ -88,7 +88,7 @@ public class InstructionCollector extends ArrayList {
     // for simplicity for now, but someday eliminate that
     if (pool != null  && (! pool.isEmpty())) {
       // TODO: [2003-03-06 ptw] Make CONSTANTS its own class?
-      super.add(0, Instructions.CONSTANTS.__call__(pool.getConstants()));
+      super.add(0, Instructions.CONSTANTS.make(pool.getConstants()));
       constantsGenerated = true;
     }
   }
@@ -109,7 +109,7 @@ public class InstructionCollector extends ArrayList {
           newLabel = newLabel();
           labels.put(label, newLabel);
         }
-        instr = Instructions.LABEL.__call__(newLabel);
+        instr = Instructions.LABEL.make(newLabel);
       } else if (instr instanceof TargetInstruction) {
         TargetInstruction target = (TargetInstruction)instr;
         Object label = target.getTarget();

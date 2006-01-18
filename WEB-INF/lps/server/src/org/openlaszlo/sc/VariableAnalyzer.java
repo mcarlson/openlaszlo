@@ -19,10 +19,10 @@ public class VariableAnalyzer {
   }
 
   // _Must_ be in order
-  public Set parameters;
+  public LinkedHashSet parameters;
   // Kept in order for deterministic code generation
-  public Set variables;
-  public Map fundefs;
+  public LinkedHashSet variables;
+  public LinkedHashMap fundefs;
   // Order unimportant for the rest
   public Map used;
   public Set closed;

@@ -33,14 +33,17 @@ def usage(errcode, msg=''):
     import sys
     sys.exit(errcode)
 
+import java.lang.Object
+class Resolver(java.lang.Object):
+    def __init__(self, base):
+        self.base = base
+    def resolve(self, pathname):
+        "@sig public String resolve(String pathname)"
+        import os
+        return os.path.join(os.path.split(self.base)[0], pathname)
+
 def compile(outf, scriptfile, **options):
     import org.openlaszlo.sc.Compiler as Compiler
-    class Resolver:
-        def __init__(self, base):
-            self.base = base
-        def resolve(self, pathname):
-            import os
-            return os.path.join(os.path.split(self.base)[0], pathname)
     options['flashCompilerCompatability'] = True
     options['processIncludes'] = True
     options['resolver'] = Resolver(scriptfile)

@@ -28,30 +28,26 @@ public class Instructions {
   public static String getRuntime() {
     return runtime;
   }
-  // Reverse lookup, for disassembly and compiling assembler
 
-  public static Map ActionNames;
+  // Reverse lookup, for disassembly and compiling assembler
+  public static Map ActionNames = new HashMap();
+  static {
+    for (Iterator i = Actions.actions.values().iterator(); i.hasNext(); ) {
+      Action value = (Action)i.next();
+      String name = value.name;
+      // convert to flasm casification
+      if (name.equals(name.toUpperCase())) {
+        name = name.toLowerCase();
+      } else {
+        name = name.substring(0, 1).toLowerCase() + name.substring(1);
+      }
+      ActionNames.put(value, name);
+    }
+  }
 
   // Action -> String
   public static String actionName(Action op) {
-    if (ActionNames == null) {
-      HashMap names = new HashMap();
-      // TODO [2004-03-01 ptw] Surely there is a better way to iterate
-      // over the entries of a hash table?
-      for (Iterator i = Actions.items().iterator(); i.hasNext(); ) {
-        Action value = (Action)((Map.Entry)i.next()).getValue();
-        String name = value.name;
-        if (name.equals(name.toUpperCase())) {
-          name = name.toLowerCase();
-        } else {
-          name = name.substring(0, 1).toLowerCase() + name.substring(1);
-        }
-        names.put(value, name);
-      }
-      ActionNames = names;
-    }
-    String name = (String)ActionNames.get(op);
-    return name;
+    return (String)ActionNames.get(op);
   }
 
   /*
@@ -62,18 +58,7 @@ public class Instructions {
    * instruction knows how to print itself, and how to add its bytes to a
    * byte array.
    */
-
   public static Map NameInstruction = new HashMap();
-
-  // TODO [2004-03-01 ptw] Surely there is a better way
-  public static List items() {
-    List l = new ArrayList();
-    for (Iterator i = NameInstruction.entrySet().iterator(); i.hasNext(); ) {
-        Instruction value = (Instruction)((Map.Entry)i.next()).getValue();
-        l.add(value);
-    }
-    return l;
-  }
 
   /***
    * Registers
@@ -92,11 +77,16 @@ public class Instructions {
       AUTO_REG.add("_global");
     }
 
-    public Register(String name) {
+    protected Register(String name) {
       this.name = name;
       this.regno = (byte)-1;
     }
 
+    // Convenience
+    static public Register make(int name) {
+      return make(Integer.toString(name));
+    }
+    
     static public Register make(String name) {
       if (AUTO_REG.contains(name)) {
         return new AutoRegister(name);
@@ -143,7 +133,7 @@ public class Instructions {
     // registered but still used (e.g., closed over).
     public static short DEFAULT_FLAGS = (short)(0x2 | 0x8 | 0x20);
 
-    public AutoRegister(String name) {
+    protected AutoRegister(String name) {
       super(name);
       flag = ((Integer)FLAGS.get(name)).shortValue();
       notFlag = ((Integer)NOT_FLAGS.get(name)).shortValue();
@@ -183,6 +173,10 @@ public class Instructions {
       return inst;
     }
 
+    public boolean isUnconditionalRedirect() {
+      return false;
+    }
+
     public abstract void writeBytes(ByteBuffer bytes, Map constants);
 
     // Python interface(s)
@@ -202,22 +196,16 @@ public class Instructions {
       return this instanceof BranchIfFalseInstruction;
     }
 
-    public boolean getIsUnconditionalRedirect() {
-      return false;
+    public abstract Instruction make();
+
+    // Convenience
+    public Instruction make(int arg) {
+      return make(new Integer(arg));
     }
 
-    public Instruction __findattr__(String name) {
-      if (NameInstruction.containsKey(name)) {
-        return (Instruction)NameInstruction.get(name);
-      }
-      return null;
-    }
+    public abstract Instruction make(Object arg);
 
-    public abstract Instruction __call__();
-
-    public abstract Instruction __call__(Object arg);
-
-    public abstract Instruction __call__(Object[] args);
+    public abstract Instruction make(Object[] args);
   }
 
   /***
@@ -238,27 +226,27 @@ public class Instructions {
       if (args != null) this.args = new ArrayList(args);
     }
 
+    public boolean isUnconditionalRedirect() {
+      return op == Actions.RETURN || op == Actions.BRANCH;
+    }
+
     public Object readResolve() {
         if (curriedInstructions[Actions.opcodeIndex(op.opcode)] && this.args == null)
             return (Instruction) NameInstruction.get(actionName(op));
         return this;
     }
     
-    public boolean getIsUnconditionalRedirect() {
-      return op == Actions.RETURN || op == Actions.BRANCH;
-    }
-
-    public Instruction __call__() {
+    public Instruction make() {
       assert (! this.op.args);
       return this;
     }
 
-    public Instruction __call__(Object arg) {
+    public Instruction make(Object arg) {
       assert this.op.args;
       return new ConcreteInstruction(this.op, Collections.singletonList(arg));
     }
 
-    public Instruction __call__(Object[] args) {
+    public Instruction make(Object[] args) {
       assert this.op.args;
       return new ConcreteInstruction(this.op, Arrays.asList(args));
     }
@@ -474,11 +462,11 @@ public class Instructions {
       this.targetOffset = targetOffset;
     }
 
-    public Instruction __call__(Object arg) {
+    public Instruction make(Object arg) {
       return makeTargetInstruction(Collections.singletonList(arg));
     }
 
-    public Instruction __call__(Object[] args) {
+    public Instruction make(Object[] args) {
       return makeTargetInstruction(Arrays.asList(args));
     }
 
@@ -811,11 +799,16 @@ public class Instructions {
     }
 
     // Python interfaces
-    public Instruction __call__(Object arg) {
+    public Instruction make(Object arg) {
+      assert arg instanceof Number || arg instanceof Value || arg instanceof String;
       return new PUSHInstruction(Collections.singletonList(arg));
     }
 
-    public Instruction __call__(Object[] args) {
+    public Instruction make(Object[] args) {
+      for (Iterator i = this.args.iterator(); i.hasNext(); ) {
+        Object arg = i.next();
+        assert arg instanceof Number || arg instanceof Value || arg instanceof String;
+      }
       return new PUSHInstruction(Arrays.asList(args));
     }
 
@@ -945,6 +938,8 @@ public class Instructions {
               bytes.put(s.getBytes("UTF-8"));
               bytes.put((byte)0);
             }
+          } else {
+            throw new CompilerException("Unknown type for PUSH: " + o);
           }
         }
 
@@ -1020,17 +1015,17 @@ public class Instructions {
       return 0;
     }
 
-    public Instruction __call__() {
+    public Instruction make() {
       assert false;
       return null;
     }
 
-    public Instruction __call__(Object arg) {
+    public Instruction make(Object arg) {
       assert false;
       return null;
     }
 
-    public Instruction __call__(Object[] args) {
+    public Instruction make(Object[] args) {
       assert false;
       return null;
     }
@@ -1047,11 +1042,11 @@ public class Instructions {
       super(target);
     }
 
-    public Instruction __call__(Object target) {
+    public Instruction make(Object target) {
       return new BranchIfFalseInstruction(target);
     }
 
-    public Instruction __call__(int target) {
+    public Instruction make(int target) {
       return new BranchIfFalseInstruction(new Integer(target));
     }
 
@@ -1077,11 +1072,11 @@ public class Instructions {
       super(name);
     }
 
-    public Instruction __call__(Object name) {
+    public Instruction make(Object name) {
       return new LABELInstruction(name);
     }
 
-    public Instruction __call__(int target) {
+    public Instruction make(int target) {
       return new LABELInstruction(new Integer(target));
     }
 
@@ -1096,7 +1091,7 @@ public class Instructions {
       super(comment);
     }
 
-    public Instruction __call__(Object comment) {
+    public Instruction make(Object comment) {
       return new COMMENTInstruction((String)comment);
     }
 
@@ -1116,7 +1111,7 @@ public class Instructions {
       super(message);
     }
 
-    public Instruction __call__(Object message) {
+    public Instruction make(Object message) {
       return new CHECKPOINTInstruction((String)message);
     }
 
@@ -1134,7 +1129,7 @@ public class Instructions {
       this.blob = blob;
     }
 
-    public Instruction __call__(String repr, byte[] blob) {
+    public Instruction make(String repr, byte[] blob) {
       return new BLOBInstruction(repr, blob);
     }
 

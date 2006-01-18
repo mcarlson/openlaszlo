@@ -16,16 +16,16 @@ import org.openlaszlo.sc.parser.SimpleNode;
 import org.openlaszlo.sc.Translator;
 
 public abstract class Reference {
-  public CodeGenerator translator;
+  public Translator translator;
   public SimpleNode node;
   public int referenceCount;
   protected Compiler.OptionMap options;
   protected InstructionCollector collector;
 
-  public Reference (CodeGenerator translator, SimpleNode node, int referenceCount) {
+  public Reference (Translator translator, SimpleNode node, int referenceCount) {
     this.translator = translator;
-    this.options = (Compiler.OptionMap)translator.getOptions();
-    this.collector = (InstructionCollector)translator.getCollector();
+    this.options = translator.getOptions();
+    this.collector = translator.getCollector();
     this.node = node;
     this.referenceCount = referenceCount;
   }
@@ -74,5 +74,16 @@ public abstract class Reference {
     return set(null);
   }
 
+  public Reference set(boolean warnGlobal) {
+    return set(Boolean.valueOf(warnGlobal));
+  }
+
+  public Reference declare() {
+    throw new CompilerError("unsupported reference operation: declare");
+  }
+
+  public Reference init() {
+    throw new CompilerError("unsupported reference operation: init");
+  }
 }
 

@@ -62,16 +62,17 @@ public class VariableReference extends Reference {
       collector.push("undefined");
       collector.emit(Instructions.EQUALS);
       collector.emit(Instructions.NOT);
-      collector.emit(Instructions.BranchIfTrue.__call__(label));
+
+      collector.emit(Instructions.BranchIfTrue.make(label));
       report("$reportUndefinedVariable", variableName);
-      collector.emit(Instructions.LABEL.__call__(label));
+      collector.emit(Instructions.LABEL.make(label));
     }
   }
 
   public Reference get(boolean checkUndefined) {
     _pop();
     if (register != null) {
-      collector.emit(Instructions.PUSH.__call__(Values.Register(register.regno)));
+      collector.emit(Instructions.PUSH.make(Values.Register(register.regno)));
     } else {
       collector.push(name);
       collector.emit(Instructions.GetVariable);
@@ -107,7 +108,7 @@ public class VariableReference extends Reference {
                          " (" + node.beginLine + ")");
     }
     if (register != null) {
-      collector.emit(Instructions.SetRegister.__call__(new Integer(register.regno)));
+      collector.emit(Instructions.SetRegister.make(new Integer(register.regno)));
       // TODO: [2004-03-24 ptw] Optimize this away if the value is used
       collector.emit(Instructions.POP);
     } else {

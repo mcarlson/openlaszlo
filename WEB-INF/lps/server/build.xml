@@ -238,7 +238,7 @@
     <mkdir dir="${sc.build.java}"/>
     <if>
         <not> 
-            <uptodate targetfile="${sc.build.java}/CodeGenerator.java">
+            <uptodate targetfile="${sc.build.java}/LFCCompiler.java">
                <srcfiles dir="${sc.src.py}" includes="*.py" 
                          excludes="test*.py,jsdoc2xml.py,xmldocutils.py"/>
             </uptodate>
@@ -250,7 +250,6 @@
               <arg line="--workdir ../${build.java}"/>
               <arg value="--deep"/>
               <arg line="--compiler NONE"/>
-              <arg value="CodeGenerator"/>
               <arg value="parseinstructions"/>
               <arg value="LFCCompiler"/>
               <arg value="Regenerator"/>
@@ -502,7 +501,7 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
         <doctitle><![CDATA[<h1>Laszlo Presentation Server API</h1>]]></doctitle>
         <bottom><![CDATA[
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright © 2002-2004 <a target="_top"
+<p class="copyright">Copyright Â© 2002-2004 <a target="_top"
 href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
 All Rights Reserved. Unauthorized use, duplication or
 distribution is strictly prohibited. This is the proprietary

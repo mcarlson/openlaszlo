@@ -14,6 +14,64 @@ from xmldocutils import *
 
 # Old scaffolding from Compiler.py
 false, true = 0, 1
+import org.openlaszlo.sc.Compiler as Compiler
+import org.openlaszlo.sc.CompilerError as CompilerError
+import org.openlaszlo.sc.parser.ParseException as ParseException
+# jythonc has special support for 'import...as'.  It's necessary to use
+# it for importing classes from the same JAR that this file is compiled
+# into.
+import org.openlaszlo.sc.parser.ASTAndExpressionSequence as AndExpressionSequence
+import org.openlaszlo.sc.parser.ASTArrayLiteral as ArrayLiteral
+import org.openlaszlo.sc.parser.ASTAssignmentExpression as AssignmentExpression
+import org.openlaszlo.sc.parser.ASTBinaryExpressionSequence as BinaryExpressionSequence
+import org.openlaszlo.sc.parser.ASTBreakStatement as BreakStatement
+import org.openlaszlo.sc.parser.ASTCallExpression as CallExpression
+import org.openlaszlo.sc.parser.ASTCaseClause as CaseClause
+import org.openlaszlo.sc.parser.ASTClassDefinition as ClassDefinition
+import org.openlaszlo.sc.parser.ASTConditionalExpression as ConditionalExpression
+import org.openlaszlo.sc.parser.ASTContinueStatement as ContinueStatement
+import org.openlaszlo.sc.parser.ASTDefaultClause as DefaultClause
+import org.openlaszlo.sc.parser.ASTDirectiveBlock as DirectiveBlock
+import org.openlaszlo.sc.parser.ASTDoWhileStatement as DoWhileStatement
+import org.openlaszlo.sc.parser.ASTEmptyExpression as EmptyExpression
+import org.openlaszlo.sc.parser.ASTExpressionList as ExpressionList
+import org.openlaszlo.sc.parser.ASTExtends as Extends
+import org.openlaszlo.sc.parser.ASTForInStatement as ForInStatement
+import org.openlaszlo.sc.parser.ASTForStatement as ForStatement
+import org.openlaszlo.sc.parser.ASTForVarInStatement as ForVarInStatement
+import org.openlaszlo.sc.parser.ASTForVarStatement as ForVarStatement
+import org.openlaszlo.sc.parser.ASTFormalParameterList as FormalParameterList
+import org.openlaszlo.sc.parser.ASTFunctionCallParameters as FunctionCallParameters
+import org.openlaszlo.sc.parser.ASTFunctionDeclaration as FunctionDeclaration
+import org.openlaszlo.sc.parser.ASTFunctionExpression as FunctionExpression
+import org.openlaszlo.sc.parser.ASTIdentifier as Identifier
+import org.openlaszlo.sc.parser.ASTIfDirective as IfDirective
+import org.openlaszlo.sc.parser.ASTIfStatement as IfStatement
+import org.openlaszlo.sc.parser.ASTIncludeDirective as IncludeDirective
+import org.openlaszlo.sc.parser.ASTLabeledStatement as LabeledStatement
+import org.openlaszlo.sc.parser.ASTLiteral as Literal
+import org.openlaszlo.sc.parser.ASTNewExpression as NewExpression
+import org.openlaszlo.sc.parser.ASTObjectLiteral as ObjectLiteral
+import org.openlaszlo.sc.parser.ASTOperator as Operator
+import org.openlaszlo.sc.parser.ASTOrExpressionSequence as OrExpressionSequence
+import org.openlaszlo.sc.parser.ASTPostfixExpression as PostfixExpression
+import org.openlaszlo.sc.parser.ASTPragmaDirective as PragmaDirective
+import org.openlaszlo.sc.parser.ASTProgram as Program
+import org.openlaszlo.sc.parser.ASTPropertyIdentifierReference as PropertyIdentifierReference
+import org.openlaszlo.sc.parser.ASTPropertyValueReference as PropertyValueReference
+import org.openlaszlo.sc.parser.ASTReturnStatement as ReturnStatement
+import org.openlaszlo.sc.parser.ASTStatement as Statement
+import org.openlaszlo.sc.parser.ASTStatementList as StatementList
+import org.openlaszlo.sc.parser.ASTSuperCallExpression as SuperCallExpression
+import org.openlaszlo.sc.parser.ASTSwitchStatement as SwitchStatement
+import org.openlaszlo.sc.parser.ASTThisReference as ThisReference
+import org.openlaszlo.sc.parser.ASTThrowStatement as ThrowStatement
+import org.openlaszlo.sc.parser.ASTTryStatement as TryStatement
+import org.openlaszlo.sc.parser.ASTUnaryExpression as UnaryExpression
+import org.openlaszlo.sc.parser.ASTVariableDeclaration as VariableDeclaration
+import org.openlaszlo.sc.parser.ASTVariableStatement as VariableStatement
+import org.openlaszlo.sc.parser.ASTWhileStatement as WhileStatement
+import org.openlaszlo.sc.parser.ASTWithStatement as WithStatement
 
 class Visitor:
     def getVisitor(self, node):
@@ -25,7 +83,6 @@ class Visitor:
             name = name[name.rfind('.')+4:]
         return getattr(self, 'visit' + name, None)
 
-from CodeGenerator import *
 # end scaffolding
 
 COMPILER_CONSTANTS = {'$debug': true,

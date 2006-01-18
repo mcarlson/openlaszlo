@@ -19,7 +19,7 @@ import java.text.SimpleDateFormat;
 import java.text.DecimalFormat;
 
 import org.openlaszlo.server.LPS;
-import org.openlaszlo.sc.parser.ParseException;
+import org.openlaszlo.sc.parser.*;
 import org.openlaszlo.sc.parser.SimpleNode;
 import org.openlaszlo.sc.Translator;
 
@@ -30,60 +30,6 @@ import org.openlaszlo.sc.Values;
 import org.openlaszlo.sc.Instructions;
 import org.openlaszlo.sc.Instructions.Instruction;
 import org.openlaszlo.sc.InstructionPrinter;
-
-// Parse-tree node types
-import org.openlaszlo.sc.parser.ASTAndExpressionSequence;
-import org.openlaszlo.sc.parser.ASTArrayLiteral;
-import org.openlaszlo.sc.parser.ASTAssignmentExpression;
-import org.openlaszlo.sc.parser.ASTBinaryExpressionSequence;
-import org.openlaszlo.sc.parser.ASTBreakStatement;
-import org.openlaszlo.sc.parser.ASTCallExpression;
-import org.openlaszlo.sc.parser.ASTCaseClause;
-import org.openlaszlo.sc.parser.ASTClassDefinition;
-import org.openlaszlo.sc.parser.ASTConditionalExpression;
-import org.openlaszlo.sc.parser.ASTContinueStatement;
-import org.openlaszlo.sc.parser.ASTDefaultClause;
-import org.openlaszlo.sc.parser.ASTDirectiveBlock;
-import org.openlaszlo.sc.parser.ASTDoWhileStatement;
-import org.openlaszlo.sc.parser.ASTEmptyExpression;
-import org.openlaszlo.sc.parser.ASTExpressionList;
-import org.openlaszlo.sc.parser.ASTExtends;
-import org.openlaszlo.sc.parser.ASTForInStatement;
-import org.openlaszlo.sc.parser.ASTForStatement;
-import org.openlaszlo.sc.parser.ASTForVarInStatement;
-import org.openlaszlo.sc.parser.ASTForVarStatement;
-import org.openlaszlo.sc.parser.ASTFormalParameterList;
-import org.openlaszlo.sc.parser.ASTFunctionCallParameters;
-import org.openlaszlo.sc.parser.ASTFunctionDeclaration;
-import org.openlaszlo.sc.parser.ASTFunctionExpression;
-import org.openlaszlo.sc.parser.ASTIdentifier;
-import org.openlaszlo.sc.parser.ASTIfDirective;
-import org.openlaszlo.sc.parser.ASTIfStatement;
-import org.openlaszlo.sc.parser.ASTIncludeDirective;
-import org.openlaszlo.sc.parser.ASTLabeledStatement;
-import org.openlaszlo.sc.parser.ASTLiteral;
-import org.openlaszlo.sc.parser.ASTNewExpression;
-import org.openlaszlo.sc.parser.ASTObjectLiteral;
-import org.openlaszlo.sc.parser.ASTOperator;
-import org.openlaszlo.sc.parser.ASTOrExpressionSequence;
-import org.openlaszlo.sc.parser.ASTPostfixExpression;
-import org.openlaszlo.sc.parser.ASTPragmaDirective;
-import org.openlaszlo.sc.parser.ASTProgram;
-import org.openlaszlo.sc.parser.ASTPropertyIdentifierReference;
-import org.openlaszlo.sc.parser.ASTPropertyValueReference;
-import org.openlaszlo.sc.parser.ASTReturnStatement;
-import org.openlaszlo.sc.parser.ASTStatement;
-import org.openlaszlo.sc.parser.ASTStatementList;
-import org.openlaszlo.sc.parser.ASTSuperCallExpression;
-import org.openlaszlo.sc.parser.ASTSwitchStatement;
-import org.openlaszlo.sc.parser.ASTThisReference;
-import org.openlaszlo.sc.parser.ASTThrowStatement;
-import org.openlaszlo.sc.parser.ASTTryStatement;
-import org.openlaszlo.sc.parser.ASTUnaryExpression;
-import org.openlaszlo.sc.parser.ASTVariableDeclaration;
-import org.openlaszlo.sc.parser.ASTVariableStatement;
-import org.openlaszlo.sc.parser.ASTWhileStatement;
-import org.openlaszlo.sc.parser.ASTWithStatement;
 
 public class Compiler {
   // The parse tree is stored with the key (fname) and the
@@ -197,7 +143,7 @@ public class Compiler {
     }
 
     public void putBoolean(Object key, String value) {
-      put(key, Boolean.valueOf("true".equalsIgnoreCase(value)));
+      put(key, Boolean.valueOf(value));
     }
   }
 
@@ -472,27 +418,6 @@ public class Compiler {
   public static String WARN_UNUSED_LOCALS = "warnUnusedLocals";
   public static String WARN_UNUSED_PARAMETERS = "warnUnusedParameters";
   public static String WITH_THIS = "withThis";
-
-  public static Set NonCodeGenerationOptions = new LinkedHashSet();
-
-  // Options that don't affect code generation.  This is used to
-  // decide what it's okay to cache across LFC build versions.  It's
-  // okay if it's too small.
-  static {
-    NonCodeGenerationOptions.add(CACHE_COMPILES);
-    NonCodeGenerationOptions.add(PROFILE_COMPILER);
-    NonCodeGenerationOptions.add(INSTR_STATS);
-    NonCodeGenerationOptions.add(PROFILE_COMPILER);
-    NonCodeGenerationOptions.add(PROGRESS);
-    NonCodeGenerationOptions.add(PRINT_COMPILER_OPTIONS);
-    NonCodeGenerationOptions.add(PRINT_CONSTRAINTS);
-    NonCodeGenerationOptions.add(PROGRESS);
-    NonCodeGenerationOptions.add(RESOLVER);
-    // These affect the default settings for the options above, but
-    // do not themselves make a difference.
-    NonCodeGenerationOptions.add(DEBUG);
-    NonCodeGenerationOptions.add(KRANK);
-  }
 
   //
   // Parser

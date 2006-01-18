@@ -32,9 +32,9 @@ public abstract class MemberReference extends Reference {
       collector.push("undefined");
       collector.emit(Instructions.EQUALS);
       collector.emit(Instructions.NOT);
-      collector.emit(Instructions.BranchIfTrue.__call__(label));
+      collector.emit(Instructions.BranchIfTrue.make(label));
       report("$reportUndefinedObjectProperty", propertyName);
-      collector.emit(Instructions.LABEL.__call__(label));
+      collector.emit(Instructions.LABEL.make(label));
     }
   }
 
@@ -50,9 +50,9 @@ public abstract class MemberReference extends Reference {
       collector.push(Values.Undefined); // s s UNDEF
       collector.emit(Instructions.EQUALS); // s s==UNDEF
       collector.emit(Instructions.NOT); // s s!=UNDEF
-      collector.emit(Instructions.BranchIfTrue.__call__(label));
+      collector.emit(Instructions.BranchIfTrue.make(label));
       report("$reportUndefinedProperty", propertyName);
-      collector.emit(Instructions.LABEL.__call__(label));
+      collector.emit(Instructions.LABEL.make(label));
     }
   }
 
@@ -67,9 +67,9 @@ public abstract class MemberReference extends Reference {
       collector.push("undefined");
       collector.emit(Instructions.EQUALS);
       collector.emit(Instructions.NOT);
-      collector.emit(Instructions.BranchIfTrue.__call__(label));
+      collector.emit(Instructions.BranchIfTrue.make(label));
       report("$reportUndefinedProperty", propertyName);
-      collector.emit(Instructions.LABEL.__call__(label));
+      collector.emit(Instructions.LABEL.make(label));
     }
   }
 

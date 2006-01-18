@@ -14,28 +14,23 @@ import org.openlaszlo.sc.Instructions;
 import org.openlaszlo.sc.parser.SimpleNode;
 import java.util.*;
 
-public abstract class Translator {
+public interface Translator {
 
-  public abstract TranslationContext getContext();
+  public TranslationContext getContext();
 
-  public abstract Compiler.OptionMap getOptions();
+  public Compiler.OptionMap getOptions();
 
-  public abstract void setOptions(Map options);
+  public void setOptions(Compiler.OptionMap options);
 
-  public abstract void translate(Object program);
+  public void translate(SimpleNode program);
 
-  public abstract Object getCollector();
+  public InstructionCollector getCollector();
 
-  public abstract void generateConstants();
+  public String newLabel(SimpleNode node);
 
-  public abstract void appendInstructions(Instructions.Instruction[] instrs);
+  public void unwindEnumeration(SimpleNode node);
 
-  public abstract List getInstructions(boolean generateConstants);
-
-  public abstract String newLabel(SimpleNode node);
-
-  public abstract void unwindEnumeration(SimpleNode node);
-
+  public boolean visitExpression(SimpleNode node);
 }
 
 
