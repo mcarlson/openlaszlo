@@ -898,9 +898,30 @@
 
   <!--================  Target [runlzunit] ==============-->
   <target name="runlzunit" depends="init" description="Run lzunit test apps" unless="skip.runlzunit" >   
+      <if><not><equals arg1="build.id" arg2="INTERNAL" /></not><then>
+          <if><equals arg1="${build.platform}" arg2="macosx"/><then>
+              <property name="use.tomcat" value="../../../jakarta-tomcat-5.0.24" />
+          </then><else><if><equals arg1="${build.platform}" arg2="windows"/><then>
+              <property name="use.tomcat" value="c:\Tomcat5" />
+          </then></if></else></if>
+      </then></if>
+      <if><not><equals arg1="use.tomcat" arg2="" /></not><then>
+          <trycatch><try>
+              <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
+          </try><catch></catch></trycatch>
+          <trycatch><try>
+              <antcall target="start"><param name="server.home" value="${use.tomcat}" /></antcall>
+          </try><catch></catch></trycatch>
+          <antcall target="reload"><param name="server.home" value="${use.tomcat}" /></antcall>
+      </then></if>
       <exec executable="bash" failonerror="true">
         <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt' " />
       </exec>
+      <if><not><equals arg1="{use.tomcat}" arg2=""/></not><then>
+          <trycatch><try>
+              <antcall target="stop"><param name="TOMCAT_HOME" value="${tomcat}" /></antcall>
+          </try><catch></catch></trycatch>
+      </then></if>
   </target>
 
   <!--================  Target [prefetch] ==============-->
