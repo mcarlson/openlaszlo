@@ -1080,7 +1080,13 @@ LzDatapointer.prototype.__LZprocessOperator = function ( p , pp , depends ){
         return p[ pp.operator ] ( pp.operatorArgs );
     }
 
-    return eval ( "p." + pp.operator );
+    var parts = pp.operator.split(".");
+    var val = p;
+    for (var i = 0; i < parts.length; i++) {
+        var pathElt = parts[i];
+        val = val[pathElt];
+    }
+    return val;
 }
 
 ////////////////////////////////////////////////////////////////

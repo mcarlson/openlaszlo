@@ -210,9 +210,10 @@ LzLoader.prototype.returnData = function ( loadobj , data ){
     if (loadobj instanceof MovieClip) {
         // Nothing to do
     } else if (loadobj instanceof XMLNode) {
+
         // Do a fixup to add one extra level of data node to the data,
         // to be compatible with what the DataCompiler produces.
-        var ndata = new LzDataElement('body');
+        var ndata = new LzDataElement('resultset');
 
         // The raw XML response string was stashed here by LzLoadQueue.serverlessOnDataHandler
         // TODO [2005-08-11 ptw] Is there not an issue that there
@@ -222,8 +223,15 @@ LzLoader.prototype.returnData = function ( loadobj , data ){
         }
 
         if (typeof(data) != 'undefined') {
-            ndata.setChildNodes([data]);
+            if (loadobj.proxied) {
+                // proxied req gets back <resultset><body>XML</body><headers/></resultset>
+                ndata.setChildNodes([data.childNodes[0].childNodes[0]]);
+            } else {
+                // SOLO, we get back raw XML only
+                ndata.setChildNodes([data]);
+            }
         }
+
         data = ndata;
     } else {
         if ($debug) {

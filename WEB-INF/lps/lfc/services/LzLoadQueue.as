@@ -320,7 +320,11 @@ LzLoadQueue.makeRequest = function( loadobj ){
     } else if (typeof(loadobj) == "movieclip") {
         this.loadMovieProxiedOrDirect(loadobj);
     } else {
-        this.loadXMLDirect(loadobj);
+        if (loadobj.proxied) {
+            this.loadXMLProxied(loadobj);
+        } else {
+            this.loadXMLDirect(loadobj);
+        }
     }
     //openConx: The number of currently open connections.
     this.openConx++;
@@ -399,7 +403,7 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
     //loadobj.attachMovie( "empty" , "lmc" + loadobj.lmcnum , 9 );
     loadobj.createEmptyMovieClip( "lmc" + loadobj.lmcnum , 9 );
     loadobj.lmc = loadobj[ 'lmc' + loadobj.lmcnum ];
-	}
+    }
 
     if ( dopost ){
         for ( var k in loadobj.reqobj ){
@@ -410,6 +414,129 @@ LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
         loadobj.lmc.loadMovie( reqstr );
     }
 }
+
+
+
+
+// client -> LPS proxy control args
+LzLoadQueue.qargs = [ 'nsprefix',
+                      'trimwhitespace',
+                      'sendheaders',
+                      'reqtype',
+                      'timeout',
+                      'fpv',
+                      'ccache'];
+
+
+//==============================================================================
+// @keywords private
+//==============================================================================
+LzLoadQueue.loadXMLProxied = function (loadobj) {
+    var reqstr;
+    // accumulate query args here from various sources (.url, .querystring, .qparams)
+    var qvars = {};
+
+    reqstr = _root.LzBrowser.getBaseURL( loadobj.secure,
+                                         loadobj.secureport ).toString();
+
+    // When using LoadVars and friends, the Flash implementation does
+    // not do the right thing when you have both a query string in the
+    // URL and you have properties on the LoadVars; For example if you
+    // have a URL like "http://foo.com/bar.jsp?foo=10" and the
+    // LoadVars has bar = 12 when you call sendAndLoad(), you will get
+    // two '?' chars in the URL, like this "http://foo.com/bar.jsp?foo=10?bar=12"
+    //
+    // So we have to strip out the query args from the URL, add them to the
+    // query params, and create a single set of properties. 
+
+    // Look for optional CGI query args string
+    var query = loadobj.querystring;
+    // An instance of LzParam, or null.
+    var qparams = loadobj.qparams;
+    // We are going to send the data up using LoadVars.sendAndLoad().
+    // We fill in this LoadVars object with any query args. 
+    var lvar = new LoadVars();
+
+    var url = loadobj.url;
+
+    //Fix up URL:
+    // [A] strip query args
+    var marker = url.indexOf('?');
+    var uquery = "";
+    if (marker != -1) {
+        uquery = url.substring(marker+1, url.length);
+        url = url.substring(0,marker);
+
+        var uitems = LzParam.prototype.parseQueryString(uquery);
+        for ( var key in uitems) {
+            qvars[key] = uitems[key];
+        }
+    }
+
+    url = _root.LzBrowser.toAbsoluteURL( url, loadobj.secure );
+
+    // Add in the parsed args from the query string
+    if (query.length > 0) {
+        var items = LzParam.prototype.parseQueryString(query);
+        for ( var key in items) {
+            qvars[key] = items[key];
+        }
+    }
+
+    // Defeat browser request cache
+    if ( loadobj.cache != true ) {
+        var d = new Date();
+        lvar["__lzbc__"] = d.getTime();
+    }
+
+    // Get params if any from LzParam
+    var names = qparams.getNames();
+    for ( var i in names ){
+        var name = names[i];
+        qvars[name] = qparams.getValue(name);
+    }
+
+    // append consolidated query args to url
+    var allvars = "";
+    var sep = "?";
+    for (key in qvars) {
+        url  += sep + key + "=" + escape( qvars[key] );
+        if ( sep == "?" ){
+            sep = "&";
+        }
+    }
+
+    lvar['url'] = url;
+
+    // TODO [hqm 2005-1-27] need to put in case to handle 'raw' post
+    // case (query.lzpostbody != null).  That will probably be done by using
+    // XML.sendAndLoad() instead of LoadVars.sendAndLoad();
+
+    // Set the onData handler to intercept returning data
+    loadobj.onData = LzLoadQueue.serverlessOnDataHandler;
+
+    // Set the client->LPS proxy control args
+    lvar.lzt = "xmldata"
+
+    // Set the control args used for client-LPS proxy protocol
+    var qargs = LzLoadQueue.qargs;
+    for ( var keys in qargs ) {
+        var key = qargs[keys];
+        if (typeof (loadobj[key] != "undefined")) {
+            lvar[key] = loadobj[key];
+        }
+    }
+
+    var dopost = (loadobj.reqtype == 'POST');
+    if (dopost) {
+        //_root.Debug.write("POST", reqstr);
+        lvar.sendAndLoad(reqstr , loadobj, "POST" );
+    } else {
+        //_root.Debug.write("GET", reqstr);
+        lvar.sendAndLoad(reqstr , loadobj, "GET" );
+    }
+}
+
 
 //==============================================================================
 // @keywords private

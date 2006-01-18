@@ -72,8 +72,14 @@
             Debug.write("dp", dp);
             Debug.write("dpns", dpns);
 
-            assertEquals(  'jonny' , dp.xpathQuery( 'person[1]/@name' ) );
-            assertEquals(  'Jeff' , dp.xpathQuery( 'person[4]/firstName/text()' ));
+// We don't support the option to strip namespace prefixes anymore:
+//            assertEquals(  'jonny' , dp.xpathQuery( 'person[1]/@name' ) );
+//            assertEquals(  'Jeff' , dp.xpathQuery( 'person[4]/firstName/text()' ));
+
+// test namespace prefixes on attribute names
+            assertEquals(  'bret' , dpns.xpathQuery( 'foo:person[1]/@secret:name' ) );
+            assertEquals(  'blue' , dpns.xpathQuery( 'foo:person[2]/@secret:color' ) );
+            assertEquals(  'red' , dpns.xpathQuery( 'foo:person[2]/@foo:color' ) );
 
             assertEquals(  'jonny' , dpns.xpathQuery( 'foo:person[1]/@name' ) );
             assertEquals(  'Jeff' , dpns.xpathQuery( 'person[2]/firstName/text()' ));
@@ -96,13 +102,14 @@
 
 
 
+/*
             // with namespace prefixes stripped, you will get three matches
             assertEquals( 4 , dp.xpathQuery( "person/firstName/text()" ).length ) ;
             // with prefixes enabled, you'll get only two matches
             assertEquals( 2 , dpns.xpathQuery( "person/firstName/text()" ).length ) ;
             // with prefixes will also match one foo:person
             assertEquals( 2 , dpns.xpathQuery( "foo:person/firstName/text()" ).length ) ;
-
+*/
 
             ]]>
             

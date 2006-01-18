@@ -136,7 +136,7 @@ LzDatasource.prototype.getLoadTimeForDataset = function ( forset ){
 // @return Object
 //==============================================================================
 LzDatasource.prototype.getBasicLoadParams = function ( req , forset ){
-    var o = { lzt: "data" ,
+    var o = { lzt: "xmldata" ,
               url : req }
 
     if ( forset.acceptencodings ){

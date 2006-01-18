@@ -52,19 +52,6 @@ LzHTTPDatasource.prototype.isProxied = function ( forset ) {
 // @keywords private
 //==============================================================================
 LzHTTPDatasource.prototype.doRequest = function ( forset ) {
-    if (this.isProxied(forset)) {
-        //_root.Debug.write("[4] doRequestProxied");
-        this._doRequestProxied(forset);
-    } else {
-        //_root.Debug.write("[4] doRequestDirect");
-        this._doRequestDirect(forset);
-    }
-}
-
-//==============================================================================
-// @keywords private
-//==============================================================================
-LzHTTPDatasource.prototype._doRequestDirect = function ( forset ) {
     //build request
     var tloader = this.getLoaderForDataset( forset, false );
     var req = this.src;
@@ -79,6 +66,7 @@ LzHTTPDatasource.prototype._doRequestDirect = function ( forset ) {
 
     var querystring = forset.getQueryString();
     var qparams = forset.getParams( );
+
     forset.errorstring = null;
 
     // Create a Flash XML object, and stuff it in the LzXMLLoader.
@@ -104,71 +92,30 @@ LzHTTPDatasource.prototype._doRequestDirect = function ( forset ) {
     // create a pointer back to the dataset, so we can update it when data arrives
     myxml.dataset = forset;
     myxml.reqtype = this.reqtype;
-    tloader.requestDirectXML( myxml );
-}
-
-
-//==============================================================================
-// Makes a request for the given dataset
-// @keywords private
-//
-// @param forset: the dataset to make the request for
-//==============================================================================
-LzHTTPDatasource.prototype._doRequestProxied = function ( forset ) {
-    //build request
-    var tloader = this.getLoaderForDataset( forset, true);
-    var req = this.src;
-    var query = ""; 
-
-    query += forset.getQueryString();
-
-    var queryparams = forset.getParams( ).serialize( '=' , '&' , true );
-
-    if ( queryparams.length ) {
-        if ( query.length ) query += '&' + queryparams;
-        else query = queryparams;
-    }
-
-    var sep = (req.indexOf('?') == -1) ? '?' : '&';
-
-    if ( query.length ) req += sep + query;
-
-    var o = this.getBasicLoadParams( req , forset );
+    myxml.proxied = this.isProxied(forset);
 
     var headers = "";
     //build headers
-    
     if (typeof(this.headers) != "undefined") {
         headers = "" + this.headers.serialize( ": " , "\n" );
     }
-    
     if ( headers.length ) {
         headers += "\n";
     }
-
     var dsetheaders = forset.getRequestHeaderParams().serialize(": " , "\n" );
     forset.clearRequestHeaderParams();
-
     if ( dsetheaders.length ){
         headers += dsetheaders +"\n";
     }
-
     if ( headers.length ){
-        o.headers = headers;
+        myxml.headers = headers;
     }
 
-    if ( this.reqtype != null ){
-        o.reqtype = this.reqtype;
-    }
+    myxml.sendheaders = forset.getresponseheaders ==true;
+    myxml.nsprefix = forset.nsprefix == true;
 
-    o.sendheaders = forset.getresponseheaders ==true;
-    o.trimwhitespace = forset.trimwhitespace == true;
-    o.nsprefix = forset.nsprefix == true;
-
-    forset.errorstring = null;
-    tloader.request( o );
+    tloader.requestDirectXML( myxml );
 }
-
 
 //==============================================================================
 // Sets the query type of the datasource to "GET" or "POST".  Note that this 

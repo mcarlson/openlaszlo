@@ -2,7 +2,8 @@
 <persons xmlns:foo="foo.bar" xmlns:secret="secret.names">
 
     
-        <foo:person id ="1" name="jonny" secret:name="freddy">
+        <foo:person id ="1" name="jonny" secret:name="bret" 
+                    secret:color="you blew it" foo:color="you blew it foo">
             <firstName>Dan</firstName>
             <lastName>McGowan</lastName>
             <modifyDate>3/25/05</modifyDate>
@@ -15,7 +16,8 @@
             
         </foo:person>
 
-        <foo:person id ="4" name="bret" secret:name="bart">
+        <foo:person id ="4" name="bret" secret:name="bart"
+                    foo:color="red" secret:color="blue">
             <firstName>Bret</firstName>
             <lastName>Simister</lastName>
             <modifyDate>3/25/05</modifyDate>
