@@ -1249,7 +1249,7 @@
       <antcall target="${tom.stop}" />
   </target>
 
-  <target name="all" depends="init,clean,build-source-distro,make,doc,test"
+  <target name="all" depends="init,clean,build-source-distro,make,doc,test,runlzunit"
       description="build source distro, clean, build, install webapp, doc, and test." >
   </target>
 
