@@ -35,7 +35,7 @@ public class Compiler {
   // The parse tree is stored with the key (fname) and the
   // value (ASTProgram, hasIncludes).
   // It doesn't save any time to persist this cache to disk.
-  public static Object CachedParses;
+  public static ScriptCompilerCache CachedParses;
   // The instructions are stored with the keys (fname, cpass) where
   // cpass is one of the compiler passes (1 or 2).  The checksum in
   // both cases is the file content string.
@@ -44,7 +44,7 @@ public class Compiler {
   // Instantiate this lazily, so that we don't construct it in server
   // mode (since the call to os.getenv in the cache constructor won't
   // work there).
-  public static Object CachedInstructions;
+  public static ScriptCompilerCache CachedInstructions;
 
   public OptionMap options;
 

@@ -81,47 +81,6 @@ import org.openlaszlo.cache.PersistentMap;
 //     return instrsOut;
 // }
 
-// TODO: [2006-01-17 ptw] Remove some day
-// Each entry has three parts:
-// - a key, used to store and retrieve it
-// - a checksum, which tells whether the value is current
-// - a value
-// public class ScriptCompilerCache {
-//     public void __init__(useDisk=false) {
-//         this.cache = {};
-//         this.useDisk = useDisk;
-//         if (useDisk) {
-//             from java.util import Properties;
-//             from java.io import File;
-//             import os;
-//             cacheFileName = os.path.join(os.getenv('LPS_HOME'), 'WEB-INF/lps/lfc/build/cache', useDisk);
-//             this.cache = PersistentMap(
-//                 "buildlfc" + useDisk, File(cacheFileName), Properties());
-//         }
-//     }
-
-//     public void getItem(key, checksum) {
-//         entry = cache.get(key);
-//         if (entry && entry[0] == checksum) {
-//             return entry[1];
-//         }
-//         //if entry && entry[0] != checksum:
-//         //    print 'checksum failed', entry[0], checksum
-//     }
-
-//     public void setItem(key, checksum, value) {
-//         if (not useDisk) {
-//             cache[key] = (checksum, value);
-//             return;
-//         }
-//         from java.util import Vector;
-//         v = Vector();
-//         v.add(checksum);
-//         v.add(value);
-//         cache.put(key, v);
-//     }
-// }
-
 public class CodeGenerator implements Translator {
   Compiler.OptionMap options;
   InstructionCollector collector;
@@ -647,45 +606,58 @@ public class CodeGenerator implements Translator {
     return mapToString(options);
   }
 
-  SimpleNode parseFile(String fname, String userfname, String source) {
-// TODO: [2006-01-06 ptw] Make caching work if it speeds things up
-//       if ((! Compiler.CachedParses)) {
-//         Compiler.CachedParses = ScriptCompilerCache();
-//       }
-//       String sourceKey = fname;
-//       String sourceChecksum = source;
-//       entry = Compiler.CachedParses.getItem(sourceKey, sourceChecksum);
-//       if ((entry == null) || options.getBoolean(VALIDATE_CACHES)) {
-//         if (options.getBoolean(PROGRESS)) {
-//           // Even though code generation is re-run
-//           // for every file, just print this for
-//           // files that are re-parsed, to indicate
-//           // what's being changed.
-//           System.out.println "Compiling " + userfname + "...";
-//         }
-//         boolean hasIncludes = false;
-//         for (line in source.split("\n")) {
-//           if (re.match(r"\s*#\s*include\s*\"", line)) {
-//             hasIncludes = true;
-//             break;
-//           }
-//         }
-//         program = Compiler.Parser().parse(source);
-//         // Always cache the parse tree, since this
-//         // helps even when the compilation is only one
-//         // once.  This is because each pass processes
-//         // the #include again.
-//         realentry = program, hasIncludes;
-//         Compiler.CachedParses.setItem(sourceKey, sourceChecksum, realentry);
-//         if (options.getBoolean(VALIDATE_CACHES)) {
-//           if (entry && (["%r" % item for item in entry] != ["%r" % item for item in realentry])) {
-//             print "Bad parse cache for %s: %r != %r" % (sourceKey, entry, realentry);
-//           }
-//         }
-//         entry = realentry;
-//       }
-//       return entry;
-    return (new Compiler.Parser()).parse(source);
+  static class ParseResult {
+    SimpleNode parse;
+    boolean hasIncludes;
+
+    ParseResult(SimpleNode parse, boolean hasIncludes) {
+      this.parse = parse;
+      this.hasIncludes = hasIncludes;
+    }
+
+    public boolean equals(Object o) {
+      if (o != null && o instanceof ParseResult) {
+        ParseResult pr = (ParseResult)o;
+        return parse.equals(pr.parse) && hasIncludes == pr.hasIncludes;
+      }
+      return false;
+    }
+  }
+
+  static java.util.regex.Pattern includePattern = java.util.regex.Pattern.compile("\\s*#\\s*include\\s*\"");
+
+  ParseResult parseFile(String fname, String userfname, String source) {
+    // TODO: [2006-01-06 ptw] Make caching work if it speeds things up
+    if (Compiler.CachedParses == null) {
+      Compiler.CachedParses = new ScriptCompilerCache();
+    }
+    String sourceKey = fname;
+    String sourceChecksum = source;
+    ParseResult entry = (ParseResult)Compiler.CachedParses.get(sourceKey, sourceChecksum);
+    if ((entry == null) || options.getBoolean(VALIDATE_CACHES)) {
+      if (options.getBoolean(PROGRESS)) {
+        // Even though code generation is re-run
+        // for every file, just print this for
+        // files that are re-parsed, to indicate
+        // what's being changed.
+        System.err.println("Compiling " + userfname + "...");
+      }
+      boolean hasIncludes = includePattern.matcher(source).matches();
+      SimpleNode program = (new Compiler.Parser()).parse(source);
+      // Always cache the parse tree, since this
+      // helps even when the compilation is only one
+      // once.  This is because each pass processes
+      // the #include again.
+      ParseResult realentry = new ParseResult(program, hasIncludes);
+      Compiler.CachedParses.put(sourceKey, sourceChecksum, realentry);
+      if ((entry != null) && options.getBoolean(VALIDATE_CACHES)) {
+        if (! realentry.equals(entry)) {
+          System.err.println("Bad parse cache for " + sourceKey + ": " + entry + " != " + realentry);
+        }
+      }
+      entry = realentry;
+    }
+    return entry;
   }
 
   void compileInclude(String userfname, String cpass) {
@@ -766,8 +738,8 @@ public class CodeGenerator implements Translator {
 //             }
 //           }
 //         }
-      SimpleNode program = parseFile(file, userfname, source);
-      translateInternal(program, cpass, false);
+      ParseResult result = parseFile(file, userfname, source);
+      translateInternal(result.parse, cpass, false);
     }
     catch (ParseException e) {
       System.err.println("while compiling " + file);
@@ -2694,7 +2666,7 @@ public class CodeGenerator implements Translator {
     if (options.getBoolean(CONSTRAINT_FUNCTION)) {
       assert (functionName != null);
       if (ReferenceCollector.DebugConstraints) {
-        System.out.println("stmts: " + stmts);
+        System.err.println("stmts: " + stmts);
       }
       // Find dependencies.
       //
