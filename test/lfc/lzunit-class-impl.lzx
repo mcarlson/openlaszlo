@@ -7,13 +7,44 @@
 
         <method name="testSub">
             var LzSub = Class( "LzSub", null, 
-                               function (){ this.testAttr = true; } );
+                               function (){ this.testAttr = true; this.accum = ""; } );
+            LzSub.prototype.testAttr2 = "foo";
+            LzSub.prototype.testMethod = function (a) { accum = accum + a; }
+            
             assertEquals("LzSub", LzSub.classname);
 
             var subInst = new LzSub();
             assertTrue( subInst instanceof LzSub );
-            
             assertEquals( true, subInst.testAttr );
+            assertEquals( "foo", subInst.testAttr2 );
+            assertEquals( "", subInst.accum );
+            subInst.testMethod("bar");
+            assertEquals( "bar", subInst.accum );
+            subInst.testMethod("baz");
+            assertEquals( "barbaz", subInst.accum );
+            
+            var LzSubSub = Class( "LzSubSub", LzSub, 
+                                    function () { 
+                                        #pragma "methodName=constructor"
+                                        super(); 
+                                    } );
+            LzSubSub.prototype.testMethod = function (a) { 
+                #pragma "methodName=testMethod"
+                super.testMethod(a); }
+
+            assertEquals("LzSubSub", LzSubSub.classname);
+            
+            var sub2Inst = new LzSubSub();
+            assertTrue( sub2Inst instanceof LzSub);
+            assertTrue( sub2Inst instanceof LzSubSub);
+            assertEquals( true, sub2Inst.testAttr );
+            assertEquals( "foo", sub2Inst.testAttr2 );
+            assertEquals( "", sub2Inst.accum );
+            sub2Inst.testMethod("bar");
+            assertEquals( "bar", sub2Inst.accum );
+            sub2Inst.testMethod("baz");
+            assertEquals( "barbaz", sub2Inst.accum );
+           
         </method>
         
         <method name="testClassNodeSub">
