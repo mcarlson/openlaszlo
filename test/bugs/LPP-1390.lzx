@@ -1,0 +1,18 @@
+<canvas>
+<simplelayout axis="x"/>
+<view>
+<simplelayout/>
+<view width="75" height="75" bgcolor="red" clip="true" resource="../resources/swf/grad_up.swf" stretches="both"/>
+<view width="75" height="75" bgcolor="red" clip="true" resource="../resources/png/smiley.png" stretches="both"/>
+</view>
+<view>
+<simplelayout/>
+<view width="75" height="75" bgcolor="red" resource="../resources/swf/grad_up.swf" stretches="both"/>
+<view width="75" height="75" bgcolor="red" resource="../resources/png/smiley.png" stretches="both"/>
+</view>
+<view>
+<simplelayout/>
+<view width="75" height="75" clip="true" bgcolor="red" resource="../resources/swf/grad_up.swf"/>
+<view width="75" height="75" clip="true" bgcolor="red" resource="../resources/png/smiley.png" />
+</view>
+</canvas>
