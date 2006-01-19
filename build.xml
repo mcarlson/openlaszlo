@@ -905,7 +905,8 @@
               <property name="use.tomcat" value="c:\Tomcat5" />
           </then></if></else></if>
       </then></if>
-      <if><not><equals arg1="${use.tomcat}" arg2="" /></not><then>
+      <property name="use.tomcat" value="NONE" /> <!-- unless previously set -->
+      <if><not><equals arg1="${use.tomcat}" arg2="NONE" /></not><then>
           <trycatch><try>
               <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
           </try><catch></catch></trycatch>
@@ -919,9 +920,9 @@
       <exec executable="bash" failonerror="true">
         <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt' " />
       </exec>
-      <if><not><equals arg1="{use.tomcat}" arg2=""/></not><then>
+      <if><not><equals arg1="${use.tomcat}" arg2="NONE"/></not><then>
           <trycatch><try>
-              <antcall target="stop"><param name="TOMCAT_HOME" value="${tomcat}" /></antcall>
+              <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
           </try><catch></catch></trycatch>
       </then></if>
   </target>
