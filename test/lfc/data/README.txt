@@ -22,6 +22,6 @@ Hand:
             Delete some records -- make sure sort is still right
             
 * T_LZ_COPYRIGHT_BEGIN ******************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 * Use is subject to license terms.                                          *
 * T_LZ_COPYRIGHT_END ********************************************************

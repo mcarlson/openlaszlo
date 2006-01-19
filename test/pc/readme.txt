@@ -14,6 +14,6 @@ userlist.lzx : verify userlist functionality working
 Need to get more detail in here and get it in line with what pablo has written
 
 * T_LZ_COPYRIGHT_BEGIN ******************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 * Use is subject to license terms.                                          *
 * T_LZ_COPYRIGHT_END ********************************************************
