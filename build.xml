@@ -1211,7 +1211,7 @@
       description="Install and start Windows LPS service (tomcat5)" >
       <exec dir="build-tools" executable="bash">
           <arg line="service.sh install &quot;${tomcat.java.opts}&quot;" />
-          <arg line="-c 'installer/macosx/mkpkg.sh ${version.id} ${version.id.upper} Server/${tomcat}'" />
+          <env name="TOMCAT_HOME" value="${server.home}" />
       </exec>
       <exec executable="net"> <arg line="start LPS" /> </exec>
   </target>
@@ -1221,10 +1221,12 @@
       <exec executable="net"> <arg line="stop LPS" /> </exec>
   </target>
 
+  <!-- this isn't used, or doesn't appear to be anyway!
   <target name="tom.winsvc.edit"  depends="init"
       description="Edit windows LPS service (tomcat5)" >
       <exec executable="${TOMCAT_HOME}/bin/tomcat5w.exe"> <arg line="//ES//LPS" /> </exec>
   </target>
+  -->
 
   <!-- This hangs under Windows :-( -->
   <target name="tom.start"  depends="tom.setup"
