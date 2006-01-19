@@ -917,7 +917,7 @@
           </try><catch></catch></trycatch>
           <antcall target="install"><param name="server.home" value="${use.tomcat}" /></antcall>
       </then></if>
-      <if><or><equals arg1="${build.id}" arg2="INTERNAL" /><not><equals arg1="${use.tomcat}" arg2="" /></not></or><then>
+      <if><or><equals arg1="${build.id}" arg2="INTERNAL" /><not><equals arg1="${use.tomcat}" arg2="NONE" /></not></or><then>
           <exec executable="bash" failonerror="true">
             <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt' " />
           </exec>
