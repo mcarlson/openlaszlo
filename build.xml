@@ -909,10 +909,11 @@
           <trycatch><try>
               <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
           </try><catch></catch></trycatch>
+          <antcall target="start"><param name="server.home" value="${use.tomcat}" /></antcall>
           <trycatch><try>
-              <antcall target="start"><param name="server.home" value="${use.tomcat}" /></antcall>
+              <antcall target="uninstall"><param name="server.home" value="${use.tomcat}" /></antcall>
           </try><catch></catch></trycatch>
-          <antcall target="reload"><param name="server.home" value="${use.tomcat}" /></antcall>
+          <antcall target="install"><param name="server.home" value="${use.tomcat}" /></antcall>
       </then></if>
       <exec executable="bash" failonerror="true">
         <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt' " />
