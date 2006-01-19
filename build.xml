@@ -1213,7 +1213,7 @@
       description="Install and start Windows LPS service (tomcat5)" >
       <exec dir="build-tools" executable="bash">
           <arg line="service.sh install &quot;${tomcat.java.opts}&quot;" />
-          <env name="TOMCAT_HOME" value="${server.home}" />
+          <env key="TOMCAT_HOME" value="${server.home}" />
       </exec>
       <exec executable="net"> <arg line="start LPS" /> </exec>
   </target>
