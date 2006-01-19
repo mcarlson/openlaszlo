@@ -5,6 +5,7 @@
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
+if [ $1 = "-k" ]; then shift; kill=yes; fi
 lps_dir=$1
 shift
 logfile=$1
@@ -38,6 +39,7 @@ hosttype=`uname`
 case "$hosttype" in
 Darwin)
     build_os=osx
+    [ -n "${kill}" ] && killall firefox-bin
     browser=firefox
     ;;
 Linux)
@@ -47,6 +49,7 @@ Linux)
 CYGWIN*)
     build_os=windows
     browser="/cygdrive/c/Program Files/Mozilla Firefox/firefox.exe"
+    [ -n "${kill}" ] && kill -9 `ps -Ws | grep -i firefox | awk '{print $1}'`
     echo "browser = ${browser}"
     ;;
 *)
@@ -99,5 +102,13 @@ for path in $paths; do
     fi
 done
 
+[ -n "${kill}" ] && case "$hosttype" in
+Darwin)
+    killall firefox-bin
+    ;;
+CYGWIN*)
+    kill -9 `ps -Ws|grep -i firefox|awk '{print $1}'`
+    ;;
+esac
 
 exit $rc1

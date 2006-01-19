@@ -904,29 +904,26 @@
           </then><else><if><equals arg1="${build.platform}" arg2="windows"/><then>
               <property name="use.tomcat" value="c:\Tomcat5" />
           </then></if></else></if>
-      </then></if>
-      <property name="use.tomcat" value="NONE" /> <!-- unless previously set -->
-      <if><not><equals arg1="${use.tomcat}" arg2="NONE" /></not><then>
-          <trycatch><try>
+          <if><isset property="use.tomcat" /><then>
+              <trycatch><try>
+                  <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
+              </try><catch></catch></trycatch>
+              <antcall target="start"><param name="server.home" value="${use.tomcat}" /></antcall>
+              <sleep seconds="30" />
+              <trycatch><try>
+                  <antcall target="uninstall"><param name="server.home" value="${use.tomcat}" /></antcall>
+              </try><catch></catch></trycatch>
+              <antcall target="install"><param name="server.home" value="${use.tomcat}" /></antcall>
+              <exec executable="bash" failonerror="false"> <!-- change to true once we verify they all pass! -->
+                <arg line="-c 'build-tools/runlzunit.sh -k ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt' " />
+              </exec>
               <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
-          </try><catch></catch></trycatch>
-          <antcall target="start"><param name="server.home" value="${use.tomcat}" /></antcall>
-          <sleep seconds="30" />
-          <trycatch><try>
-              <antcall target="uninstall"><param name="server.home" value="${use.tomcat}" /></antcall>
-          </try><catch></catch></trycatch>
-          <antcall target="install"><param name="server.home" value="${use.tomcat}" /></antcall>
-      </then></if>
-      <if><or><equals arg1="${build.id}" arg2="INTERNAL" /><not><equals arg1="${use.tomcat}" arg2="NONE" /></not></or><then>
+          </then></if>
+      </then><else>
           <exec executable="bash" failonerror="true">
             <arg line="-c 'build-tools/runlzunit.sh ${build.branch} WEB-INF/lps/work/logs/lzunit.log test/lzunit/testpaths.txt' " />
           </exec>
-      </then></if>
-      <if><not><equals arg1="${use.tomcat}" arg2="NONE"/></not><then>
-          <trycatch><try>
-              <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
-          </try><catch></catch></trycatch>
-      </then></if>
+      </else></if>
   </target>
 
   <!--================  Target [prefetch] ==============-->
