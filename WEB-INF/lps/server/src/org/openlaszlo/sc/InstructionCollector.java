@@ -93,10 +93,11 @@ public class InstructionCollector extends ArrayList {
     }
   }
 
-  public void appendInstructions(Instruction[] instrs) {
+  public void appendInstructions(List instrsList) {
     // TODO [2003-03-06 ptw] Why not relabel all instructions? (I.e.,
     // move this to emit)
     Map labels = new HashMap();
+    Instruction[] instrs = (Instruction[])instrsList.toArray(new Instruction[0]);
     for (int i = 0; i < instrs.length; i++) {
       Instruction instr = instrs[i];
       if (instr instanceof LABELInstruction) {

@@ -97,13 +97,15 @@ public class CodeGenerator implements Translator {
 
   public void setOptions(Compiler.OptionMap options) {
     this.options = options;
-    this.collector = new InstructionCollector(this.options.getBoolean(DISABLE_CONSTANT_POOL), true);
     this.runtime = ((String)options.get(RUNTIME)).intern();
     assert "swf6".equals(runtime) || "swf7".equals(runtime) || "swf8".equals(runtime) : "unknown runtime " + runtime;
     Instructions.setRuntime(runtime);
   }
 
   public void translate(SimpleNode program) {
+    // Make a new collector each time, since the old one may be
+    // referenced by the instruction cache
+    this.collector = new InstructionCollector(this.options.getBoolean(DISABLE_CONSTANT_POOL), true);
     translateInternal(program, "b", true);
   }
 
@@ -583,29 +585,6 @@ public class CodeGenerator implements Translator {
     showStats(node);
   }
 
-  private String mapToString(Map map) {
-    StringBuffer result = new StringBuffer();
-    result.append("{");
-    TreeMap sorted = new TreeMap(map);
-    for (Iterator i = sorted.entrySet().iterator(); i.hasNext(); result.append(", ")) {
-      Map.Entry entry = (Map.Entry)i.next();
-      result.append(entry.getKey());
-      result.append(": ");
-      result.append(entry.getValue());
-    }
-    result.append("}");
-    return result.toString();
-  }
-
-  String getCodeGenerationOptionsKey(Set ignore) {
-    Map options = new HashMap(this.options);
-    options.keySet().removeAll(NonCodeGenerationOptions);
-    if (ignore != null) {
-      options.keySet().removeAll(ignore);
-    }
-    return mapToString(options);
-  }
-
   static class ParseResult {
     SimpleNode parse;
     boolean hasIncludes;
@@ -624,17 +603,18 @@ public class CodeGenerator implements Translator {
     }
   }
 
-  static java.util.regex.Pattern includePattern = java.util.regex.Pattern.compile("\\s*#\\s*include\\s*\"");
+  static java.util.regex.Pattern includePattern =
+  java.util.regex.Pattern.compile(".*#\\s*include\\s*\".*", java.util.regex.Pattern.DOTALL);
 
-  ParseResult parseFile(String fname, String userfname, String source) {
-    // TODO: [2006-01-06 ptw] Make caching work if it speeds things up
+  ParseResult parseFile(File file, String userfname, String source) {
     if (Compiler.CachedParses == null) {
       Compiler.CachedParses = new ScriptCompilerCache();
     }
-    String sourceKey = fname;
-    String sourceChecksum = source;
+    String sourceKey = file.getAbsolutePath();
+    String sourceChecksum = "" + file.lastModified(); // source;
     ParseResult entry = (ParseResult)Compiler.CachedParses.get(sourceKey, sourceChecksum);
     if ((entry == null) || options.getBoolean(VALIDATE_CACHES)) {
+      boolean hasIncludes = includePattern.matcher(source).matches();
       if (options.getBoolean(PROGRESS)) {
         // Even though code generation is re-run
         // for every file, just print this for
@@ -642,7 +622,6 @@ public class CodeGenerator implements Translator {
         // what's being changed.
         System.err.println("Compiling " + userfname + "...");
       }
-      boolean hasIncludes = includePattern.matcher(source).matches();
       SimpleNode program = (new Compiler.Parser()).parse(source);
       // Always cache the parse tree, since this
       // helps even when the compilation is only one
@@ -660,18 +639,44 @@ public class CodeGenerator implements Translator {
     return entry;
   }
 
+  private String mapToString(Map map) {
+    StringBuffer result = new StringBuffer();
+    result.append("{");
+    TreeMap sorted = new TreeMap(map);
+    for (Iterator i = sorted.keySet().iterator(); i.hasNext(); ) {
+      Object key = i.next();
+      result.append(key);
+      result.append(": ");
+      result.append(sorted.get(key));
+      if (i.hasNext()) {
+        result.append(", ");
+      }
+    }
+    result.append("}");
+    return result.toString();
+  }
+
+  String getCodeGenerationOptionsKey(List ignore) {
+    Map options = new HashMap(this.options);
+    options.keySet().removeAll(NonCodeGenerationOptions);
+    if (ignore != null) {
+      options.keySet().removeAll(ignore);
+    }
+    return mapToString(options);
+  }
+
   void compileInclude(String userfname, String cpass) {
-// TODO: [2006-01-06 ptw] Make caching work if it speeds things up
-//       if ((! Compiler.CachedInstructions)) {
-//         Compiler.CachedInstructions = ScriptCompilerCache();
-//       }
-    String file;
+    if (Compiler.CachedInstructions == null) {
+      Compiler.CachedInstructions = new ScriptCompilerCache();
+    }
+    String fname = userfname;
+    File file;
     String source;
     try {
-      file = userfname;
       if (options.containsKey("resolver")) {
-        file = ((lzsc.Resolver)options.get("resolver")).resolve(userfname);
+        fname = ((lzsc.Resolver)options.get("resolver")).resolve(userfname);
       }
+      file = new File(new File(fname).getCanonicalPath());
       FileInputStream stream = new FileInputStream(file);
       try {
         int n = stream.available();
@@ -693,56 +698,54 @@ public class CodeGenerator implements Translator {
       throw new CompilerError("error reading include: " + e);
     }
     try {
-// TODO: [2006-01-06 ptw] Make caching work if it speeds things up
-//         optionsKey = getCodeGenerationOptionsKey([
-//                                                    // The constant pool isn't cached, so it doesn't affect code
-//                                                    // generation so far as the cache is concerned.
-//                                                    DISABLE_CONSTANT_POOL]);
-//         // If these could be omitted from the key for files that didn't
-//         // reference them, then the cache could be shared between krank
-//         // and krank debug.  (The other builds differ either on OBFUSCATE,
-//         // RUNTIME, NAMEFUNCTIONS, or PROFILE, so there isn't any other
-//         // possible sharing.)
-//         instrsKey = file, optionsKey, c;
-//         //from java.security import MessageDigest
-//         //md = MessageDigest.getInstance("MD5")
-//         //md.update(source)
-//         //instrsChecksum = md.digest()
-//         instrsChecksum = source;
-//         instrs = options.getBoolean(CACHE_COMPILES) && \
-//           Compiler.CachedInstructions.getItem(instrsKey, instrsChecksum);
-//         if (instrs && instrs != null && (! options.getBoolean(VALIDATE_CACHES))) {
-//           collector.appendInstructions(instrs);
-//         } else {
-//           program, hasIncludes = parseFile(file, userfname, source);
-//           startpos = collector.size();
-//           translateInternal(program, cpass, false);
-//           if ((! hasIncludes)) { // && collector.size() != startpos:
-//             // && not :
-//             assert not collector.constantsGenerated;
-//             realinstrs = collector.subList(startpos, collector.size());
-//             realinstrs = list(realinstrs);
-//             if (options.getBoolean(VALIDATE_CACHES)) {
-//               if (instrs && (instrs != null) &&
-//                   (["%r" % item for item in instrs] != ["%r" % item for item in realinstrs])) {
-//                 print "Bad instr cache for %s (%r != %r)" % (file, instrs, realinstrs);
-//               }
-//             }
-//             // The following line only speeds up buildlfc when
-//             // noConstantPool=true, which produces vastly
-//             // larger binaries.
-//             //instrs = combineInstructions(instrs, true)
-//             if (options.getBoolean(CACHE_COMPILES)) {
-//               Compiler.CachedInstructions.setItem(
-//                 instrsKey, instrsChecksum, realinstrs);
-//             }
-//           }
-//         }
-      ParseResult result = parseFile(file, userfname, source);
-      translateInternal(result.parse, cpass, false);
+      String optionsKey = 
+        getCodeGenerationOptionsKey(Collections.singletonList(
+                                      // The constant pool isn't cached, so it doesn't affect code
+                                      // generation so far as the cache is concerned.
+                                      DISABLE_CONSTANT_POOL));
+      // If these could be omitted from the key for files that didn't
+      // reference them, then the cache could be shared between krank
+      // and krank debug.  (The other builds differ either on OBFUSCATE,
+      // RUNTIME, NAMEFUNCTIONS, or PROFILE, so there isn't any other
+      // possible sharing.)
+      String instrsKey = file.getAbsolutePath() + cpass;
+      // Only cache on file and pass, to keep cache size resonable,
+      // but check against optionsKey
+      String instrsChecksum = "" + file.lastModified() + optionsKey; // source;
+      List instrs = null;
+      if (options.getBoolean(CACHE_COMPILES)) {
+        instrs = (List)Compiler.CachedInstructions.get(instrsKey, instrsChecksum);
+      }
+      if ((instrs != null) && (! options.getBoolean(VALIDATE_CACHES))) {
+        collector.appendInstructions(instrs);
+      } else {
+        ParseResult result = parseFile(file, userfname, source);
+        int startpos = collector.size();
+        if (false && options.getBoolean(PROGRESS)) {
+          System.err.println("Translating " + userfname + " (pass " + cpass + ")...");
+        }
+        translateInternal(result.parse, cpass, false);
+        if ((! result.hasIncludes)) { // && collector.size() != startpos
+          assert (! collector.constantsGenerated);
+          // Copy for cache
+          List realinstrs = new ArrayList(collector.subList(startpos, collector.size()));
+          if ((instrs != null) && options.getBoolean(VALIDATE_CACHES)) {
+            if ((! realinstrs.equals(instrs))) {
+              System.err.println("Bad instr cache for " + instrsKey + ": " + instrs + " != " + realinstrs);
+            }
+          }
+          // The following line only speeds up buildlfc when
+          // noConstantPool=true, which produces vastly
+          // larger binaries.
+          //instrs = combineInstructions(instrs, true)
+          if (options.getBoolean(CACHE_COMPILES)) {
+            Compiler.CachedInstructions.put(instrsKey, instrsChecksum, realinstrs);
+          }
+        }
+      }
     }
     catch (ParseException e) {
-      System.err.println("while compiling " + file);
+      System.err.println("while compiling " + file.getAbsolutePath());
       throw e;
     }
   }
@@ -2211,11 +2214,15 @@ public class CodeGenerator implements Translator {
     String label = newLabel(node);
     // TODO: [2003-04-15 ptw] bind context slot macro
     SimpleNode dependencies = null;
+    // methodName and scriptElement
+    Compiler.OptionMap savedOptions = options;
     try {
+      options = options.copy();
       context = new TranslationContext(ASTFunctionExpression.class, context, label);
       dependencies = translateFunctionInternal(node, useName, children);
     }
     finally {
+      options = savedOptions;
       context = context.parent;
     }
     // Dependency function is not compiled in the function context
@@ -2698,16 +2705,6 @@ public class CodeGenerator implements Translator {
       return Values.Null;
     } else if (value instanceof Boolean) {
       return (((Boolean)value).booleanValue()) ? Values.True : Values.False; 
-    } else if (value instanceof Integer) {
-      System.err.println("Literal integer");
-      // N.B. javascript integers are represented by instances of Long, not Integer
-      int i = ((Integer)value).intValue();
-      if (i == 0) {
-        return Values.False;
-      } else if (i == 1) {
-        return Values.True;
-      }
-      assert false : "invalid literal " + node;
     }
     return value;
   }
