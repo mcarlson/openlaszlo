@@ -905,7 +905,7 @@
               <property name="use.tomcat" value="c:\Tomcat5" />
           </then></if></else></if>
       </then></if>
-      <if><not><equals arg1="use.tomcat" arg2="" /></not><then>
+      <if><not><equals arg1="${use.tomcat}" arg2="" /></not><then>
           <trycatch><try>
               <antcall target="stop"><param name="server.home" value="${use.tomcat}" /></antcall>
           </try><catch></catch></trycatch>
