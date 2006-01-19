@@ -8,19 +8,23 @@
 
 <h1>Text Views </h1>
 
-<p> This section describes the <classname>LzText</classname> and
-<classname>LzInputText</classname> classes and the <tagname link="true">richinputtext</tagname> component. It assumes you're familiar
+<p> This section describes the <tagname link="true">text</tagname> and <tagname link="true">inputtext</tagname> tags (<classname>LzText</classname> and
+<classname>LzInputText</classname> classes) and the <tagname link="true">richinputtext</tagname> component. It assumes you're familiar
 with basic LZX concepts such views (<xref linkend="views"/>), methods, and attributes.</p>
 <p>For a gentle introduction, see the <a href="${tutorials}text.html">Text and Font</a> tutorial.</p>
 <h2>Summary of properties</h2>
 <p>
-Unless an explicit width and height are specified as attributes, the
-text field will by default be sized to a width and height which
+To a first approximation, "text" refers to displayable data in UTF-8 encoding; "font" refers to the software that is used to draw, or render, the textual characters on the screen.  The topics are intertwined. In this chapter we'll be talking about mostly about text, but you should be sure that you understand key concepts about fonts in OpenLaszlo applications. In particular, you should understand the difference between client fonts and embedded fonts. Because they don't always behave the same way (for example client fonts can not be rotated or changed in opacity due to a limitation of the Flash Player), changing from one to the other can cause bewildering changes in behavior. Furthermore, it's possible to implicitly change from one kind of font to the other in your application without realizing you've done so.  Fonts are described in <xref linkend="fonts"/>.
+</p>
+<p>
+Generally speaking, unless an explicit width and height are specified as attributes, the text field will by default be sized to a width and height which
 encloses its compile-time text content.  The text field can
 be set to automatically resize itself when its value is modified at
-runtime, by setting the attribute <code>resize="true"</code> . 
+runtime, by setting the attribute <code>resize="true"</code>. 
 </p> 
-
+<p>
+The exception to this rule is when the <tagname>text</tagname> element contains an <tagname>img</tagname> tag, in which case you may in some cases have to explicitly set the height and width of the <tagname>text</tagname>, as explained below.
+</p>
 
 <code>
 &lt;text resize="true" bgcolor="#ffcccc" name="t1"&gt;Initial text from server.&lt;/text&gt; 
@@ -36,6 +40,9 @@ supported for the text content, supporting XHTML tags
 <tagname>br</tagname>, <tagname>b</tagname>, <tagname>i</tagname>,
 <tagname>u</tagname>, <tagname>font</tagname>, <tagname>pre</tagname>,
 and <tagname>a</tagname>.</p>
+<p>
+The <tagname>img</tagname> is also supported, but with some caveats. See below.
+</p>
 
 <p>Examples below show examples of using XHTML tags in text content:</p>
 
@@ -124,7 +131,7 @@ zero. When the text is scrolled horizontaly or vertically, an
 <p>
      A text view which is not given an explicit width will default to
      have a width which is the length of the longest line. (See below, however, about
-resizing text fields.)Given that
+resizing text fields, and also about the <tagname>img</tagname>.)Given that
      the initial text content is normalized according to HTML
      normalization rules, and if you do not specify an explicit width,
      the only way a linebreak will occur is if you have an explicit
@@ -137,24 +144,16 @@ resizing text fields.)Given that
      the lines of text.
         </p>
 
-
-<!--note> This only applied to flash5. In flash6 text, you can ask the text for its textheight.
-Laszlo will have a method for that in a future release. </note-->
 <p>
      If you want to know the total height of the text in a text field
      (if you want to know how large to draw a scrollbar, for example)
      there are a couple of ways to figure this out: For a
      <code>multiline=false</code> text field (i.e., one in which
-     wrapping is not being done automatically by the system), you must
-     manually count the number of linebreaks in the text, and then
-     multiply by the font height.
-       </p>
-
-<!--note> again, this is not needed in flash6, just use the textheight method</note-->
+     wrapping is not being done automatically by the system), you can use the <method>getTextHeight</method> method on <classname>LzText</classname>.</p>
 
 <p>
      For a <code>multiline=true</code> output text field, the system
-     will compute a property <attribute>text.scrollHeight</attribute>
+     computes a property <attribute>text.scrollHeight</attribute>
      which which you may examine. This field is not maintained for
      input text.
 </p>
@@ -317,7 +316,7 @@ fit its text content at runtime, whenever the <method>setText()</method> method 
 <h3><a name="selection">Text Selection</a></h3>
 
 <p>Text can be made user-selectable with the <attribute>selectable</attribute> attribute.
-This allows copy operations (and cut and paste, for inputtext) by the user. 
+This allows copy operations (and cut and paste, for <tagname>inputtext</tagname>) by the user. 
 </p>
 
 <example title="Selectable text">
@@ -380,12 +379,22 @@ entities may be used to format the text.</p>
 &lt;/canvas&gt;
 </example>
 
-
-<!--note>
-In flash6, the P tag can have an align=left|right|center option. 
-</note-->
-
-
+<h3>Including images in HTML content</h3>
+<p>
+The <tagname link="true">img</tagname> tag allows you to include certain kinds of images in HTML content within a <tagname>text</tagname> element. The image you include must be natively supported by the Flash Player (regardless whether your application is SOLO or proxied).</p>
+<note>
+<tagname>img</tagname> tag does not work inside <tagname>inputtext</tagname>, only <tagname>text</tagname>.
+</note>
+<p>
+Here's an example of the basic use of the <tagname>img</tagname> tag.
+</p>
+<example title="basic use of &lt;img&gt; tag">
+&lt;canvas&gt;
+  &lt;text multiline="true" width="300" height="300"&gt;
+    &lt;img src="horse-3.jpg"/&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
 
 <h2>The <tagname>inputtext</tagname> View</h2>
 
@@ -403,39 +412,6 @@ selects a region of text in the view.
 
 </p>
 
-
-<h3>Optimizing Input Text Performance</h3>
-<p>
-
-Due to some limitations of common older Flash Players, input text
-fields in applications that are compiled to run on Flash 5 clients will have
-slower performance if the text field does not have a fixed width and
-height which can be determined by the compiler at compile time.
-</p>
-<p> The red inputtext field will have better performance  than
-the blue one, which can be resized dynamically at runtime.
-</p>
-
-<example title="Optimizing inputt text performance ">
-&lt;canvas height="200" width="900"&gt;
-  &lt;window width="200" height="100" resizable="true"&gt;
-    &lt;inputtext id="t1" width="201" height="100" resizable="false" multiline="true"
-               bgcolor="#ffcccc"&gt;
-      I have resizable=false, and have width and height computable at compile time.
-      I will have optimized performance.&lt;/inputtext&gt;
-  &lt;/window&gt;
-  
-  &lt;window width="200" height="100" x="250" resizable="true"&gt;
-    &lt;inputtext id="t2" width="${parent.width}" height="${parent.height}"
-               resizable="true" multiline="true" bgcolor="#ccccff"&gt;
-      I am resizable, and my performance is not optimized&lt;/inputtext&gt;
-  &lt;/window&gt;
-&lt;/canvas&gt;
-</example>
-
-<p>
-See <xref linkend="browser-integration"><a href="${dguide}browser-integration.html">Browser Integration</a></xref> for a discussion of browser-specific and Flash-specific
-issues.</p>
 
 </body>
 </html>

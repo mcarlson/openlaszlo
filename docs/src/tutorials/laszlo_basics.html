@@ -1,11 +1,11 @@
 <html id="laszlo_basics" xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <title>Laszlo Basics</title>
+    <title>OpenLaszlo Basics</title>
 </head>
 
 <body>
 
-<h1>Laszlo Basics</h1>
+<h1>OpenLaszlo Basics</h1>
 
 <todo>
 explain how tutorials relate to laszlo in ten minutes
@@ -16,14 +16,14 @@ Rename this tutorial
 <todo>
 Mention components and how to build apps by accreting components.
 </todo>
-<h2>Building a simple Laszlo application</h2>
+<h2>Building a simple OpenLaszlo application</h2>
 
 
 <!--
  If not, please read the <a href="http://www.laszlosystems.com/developers/documentation/installation-v1/" target="_blank">installation instructions</a>.</p>
 -->
 
-<p>The source code to a Laszlo application is a set of XML files, and
+<p>The source code to an OpenLaszlo application is a set of XML files, and
 media asset files (such as image, sound, and font files).  Each
 application has a <dfn>canvas file</dfn>, which is an XML file that
 contains the <tagname>canvas</tagname> tag.</p>
@@ -35,7 +35,7 @@ Every LZX file is an XML file, so if your editor has an XML mode, set
 it to that for working with LZX files.</p>
 
 
-<p>The enclosing tag of every Laszlo application is the <tagname>canvas</tagname> tag.
+<p>The enclosing tag of every OpenLaszlo application is the <tagname>canvas</tagname> tag.
 The canvas is a view (like every other displayable object on the screen) but it
 has some special properties. For instance, resources can't be attached directly
 to the canvas. </p>
@@ -53,7 +53,7 @@ to the canvas. </p>
 
 
 <p>For this simple example we have set the background color to green, just to show that it's there.  If you don't set a background color for the
-canvas it will be rendered white.  (Throughout the rest of this tutorial no background color will be specified for the canvas.) Now let's
+canvas, it will be rendered white.  (Throughout the rest of this tutorial no background color will be specified for the canvas.) Now let's
 put a window on a white canvas. 
 </p>
 
@@ -91,7 +91,7 @@ positioned relative to the top-left corner of the browser.</p>
 </example>
 
 <p>Now we've got a window, which both has a title, and can be resized.</p>
-<p>Notice how we're breaking the code up across lines to keep it neat? </p>
+<p>Notice how we're breaking the code up across lines to keep it neat. </p>
 <p>Let's stick something in that window. </p>
 
 <example title="Window Text">
@@ -134,7 +134,7 @@ with the window:</p>
 <p>Notice how the text is now positioned <i>relative to its parent element</i>, the <tagname>window</tagname>.</p>
 <p>This worked great, and is extremely useful for positioning elements all over the place. 
 But it's not very elegant when you think about the way elements flow relative to each other.</p>
-<p>Laszlo provides a solution to this:</p>
+<p>OpenLaszlo provides a solution to this:</p>
 
 <example title="Simplelayout">
 &lt;canvas width="500" height="350"&gt;
@@ -148,7 +148,7 @@ But it's not very elegant when you think about the way elements flow relative to
 </example>
 
 <p>Now the first text field is positioned relative to the second. The <tagname>simplelayout</tagname>
-tag tells Laszlo that everything in that <i>view</i> (in this case the <tagname>window</tagname>) 
+tag tells OpenLaszlo that everything in that <i>view</i> (in this case the <tagname>window</tagname>) 
 will be positioned relative to its siblings. Here, the <code>axis</code> property makes
 everything align vertically, and the <code>spacing</code> specifies how far apart the
 elements should be.</p>

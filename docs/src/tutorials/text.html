@@ -11,7 +11,6 @@
 <xref linkend="text">Text Views</xref> and <xref linkend="fonts">fonts</xref>
 explain more advanced topics.</p>
 
-
 <h2><a name="basics"/>The &lt;text&gt; tag</h2>
 
 <p>Entering text is easy with the <tagname>text</tagname> tag:</p>
@@ -168,6 +167,9 @@ explain more advanced topics.</p>
 
 
 <h2><a name="fonts"></a>Fonts</h2>
+<p>
+OpenLaszlo supports both <i>embedded </i>fonts, which are downloaded with your application, and <i>client</i> fonts, which reside natively on the machines on which your application is used. By default, client fonts are used. Client fonts have certain limitations; for example they cannot be rotated or changed in opacity (due to a limitation of the Flash Player).  See <xref linkend="fonts"/>.
+</p>
 
 <p>OpenLaszlo supports TrueType fonts, and the simplest way to use one is as follows:</p>
 

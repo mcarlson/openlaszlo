@@ -7,18 +7,29 @@
 
 <h1>Intoduction to Media and Art Assets</h1>
 <p>This tutorial provides an informal overview of how to use media resources such
-as images, video and audio in Laszlo applications. These topics are covered in greater depth in
+as images, video and audio in OpenLaszlo applications. These topics are covered in greater depth in
 <xref linkend="media-resources"/>.</p>
-
+<p>
+There are two ways in which you can import an image into OpenLaszlo applications:</p>
+<ul>
+	<li>as a media resource attached to a view;</li>
+	<li>as an image inserted within HTML text</li>
+</ul>
+<p>
+In this tutorial we'll be talking about using resources attached to views, which is the more general mechanism. This technique allows you to import not only images, but audio, video "progressive" images and similar complex media, including various formats not natively supported by the Flash Player (when you run in proxied mode, in which the OpenLaszlo Server transcodes formats).
+</p>
+<p>
+ By contrast, when you insert an image into HTML text, you can only include images in the formats natively supported by the targeted version of the Flash Player. For a discussion of how to use the <tagname link="true">img</tagname> tag within HTML text, see <xref linkend="text"/>.
+</p>
 <p>Being able to bring in art assets is not just for pictures - you can create your own custom viewsystem too.</p>
 
 
 <h2><a name="basics"/>Resources</h2>
 <p>
 
-In Laszlo applications, <tagname>view</tagname>s are the fundamental visible entities, and resources
+In OpenLaszlo applications, <tagname>view</tagname>s are the fundamental visible entities, and resources
 are externally generated media to be incorporated in applications. Resources are made available by being
-attatched to views. Thus in Laszlo applications you don't"insert an image"; 
+attatched to views. Thus in OpenLaszlo applications you don't"insert an image" into a view; 
 instead you insert a view whose resource is an image. 
 </p>
 
@@ -31,7 +42,7 @@ In this case, a GIF image:</p>
 &lt;/canvas&gt;
 </example>
 
-<p>This tiny Laszlo application loads an image called <code>smiley.gif</code> 
+<p>This tiny OpenLaszlo application loads an image called <code>smiley.gif</code> 
 (which is located in <code>resources</code>, a subdirectory of the one that contains the application).</p>
 <p>To position an image, position the view that contains that image as a resource:</p>
 
@@ -106,7 +117,7 @@ need to change it once. (Reasons to use other ways of including resources are de
 &lt;/canvas&gt;
 </example>
 
-<p> Laszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to <code>both</code>, <code>width</code> or <code>height</code>.</p>
+<p> OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to <code>both</code>, <code>width</code> or <code>height</code>.</p>
 
 <h2><a name="multiframe"/>Multi-frame Resources</h2>
 
@@ -127,7 +138,7 @@ need to change it once. (Reasons to use other ways of including resources are de
 </example>
 
 <p>The resources nested within the resource tag are numbered starting with 1.</p>
-<p>As you can see, Laszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to either <code>both</code>, <code>width</code> or <code>height</code>.</p>
+<p>As you can see, OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to either <code>both</code>, <code>width</code> or <code>height</code>.</p>
 
 <h2><a name="swfs"/>Working with SWFs</h2>
 
