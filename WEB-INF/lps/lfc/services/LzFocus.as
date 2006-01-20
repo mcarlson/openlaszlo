@@ -110,6 +110,10 @@ LzFocus.setFocus = function  ( newsel ){
         return;
     }
 
+    if ( this.csel.shouldYieldFocus && !this.csel.shouldYieldFocus() ) {
+      return;
+    }
+
     this.__LZsfnextfocus = -1;
     this.__LZsfrunning = true;
 

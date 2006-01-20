@@ -2874,6 +2874,13 @@ LzView.prototype.setAASilent = function ( s, mc ){
     this.aasilent = s;
 }
 
+//-----------------------------------------------------------------------------
+// Determine whether a view should give up focus. Override this method to
+// specify your own policy.
+//-----------------------------------------------------------------------------
+LzView.prototype.shouldYieldFocus = function ( ){
+    return true;
+}
 
 //-----------------------------------------------------------------------------
 // Register for update when the button gets the focus.

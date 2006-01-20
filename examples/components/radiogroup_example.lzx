@@ -36,6 +36,19 @@
                 </radiogroup>
                 <simplelayout axis="y" spacing="4"/>
             </view>
+            <view>
+                 <text>trapping focus</text>
+                 <radiogroup>
+                     <method name="shouldYieldFocus">
+                        return ! parent.cb1.value;
+                     </method>
+                     <radiobutton value="1">one</radiobutton>
+                     <radiobutton value="2" selected="true">two</radiobutton >
+                     <radiobutton  value="3">three</radiobutton>
+                 </radiogroup>
+                 <checkbox name="cb1"  value="true" text="trap focus"/>
+                 <simplelayout axis="y" spacing="4"/>
+             </view>
             <simplelayout axis="y" spacing="20" inset="20"/>
         </view>
         <view>
