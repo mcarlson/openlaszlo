@@ -88,23 +88,9 @@ public class Main {
     {
         Logger logger = Logger.getRootLogger();
         List files = new Vector();
-        boolean millis = false;
-        
-
-        // Preprocess args
-        for (int i = 0; i < args.length; i++) {
-            if (args[i].equals("m")) {
-                millis = true;
-            }
-        }
         // Configure logging
         logger.setLevel(Level.ERROR);
-        PatternLayout layout;
-        if (millis) {
-            layout = new PatternLayout("%r %m%n");
-        } else {
-            layout = new PatternLayout("%r %m%n");
-        }
+        PatternLayout layout = new PatternLayout("%m%n");
         logger.removeAllAppenders();
         if (logFile == null) {
             logger.addAppender(new ConsoleAppender(layout));
