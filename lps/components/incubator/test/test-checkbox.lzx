@@ -1,0 +1,57 @@
+<canvas debug="true" width="1000" height="800">
+
+    <debug x="250" height="500" /> 
+
+    <include href="../newbaseform.lzx"/>
+    <include href="../checkbox.lzx"/>
+
+    <dataset name="mydset">
+        <value>true</value>
+        <value>false</value>
+    </dataset>
+
+    <newbaseform id="myform" x="20" y="20" layout="spacing:3">
+
+        <checkbox id="c1" value="true">
+            <method event="onvalue">
+                Debug.write('c1 value', this.value);
+            </method>
+            <method event="onchanged">
+                Debug.write('c1 changed', this.changed);
+            </method>
+        </checkbox>
+
+        <checkbox id="c2" value="false">
+            <method event="onvalue">
+                Debug.write('c2 value', this.value);
+            </method>
+            <method event="onchanged">
+                Debug.write('c2 changed', this.changed);
+            </method>
+        </checkbox>
+
+        <checkbox id="c3" datapath="mydset:/value[1]/text()">
+            <method event="onvalue">
+                Debug.write('c3 value', this.value);
+            </method>
+            <method event="onchanged">
+                Debug.write('c3 changed', this.changed);
+            </method>
+        </checkbox>
+
+        <checkbox id="c4" datapath="mydset:/value[2]/text()">
+            <method event="onvalue">
+                Debug.write('c4 value', this.value);
+            </method>
+            <method event="onchanged">
+                Debug.write('c4 changed', this.changed);
+            </method>
+        </checkbox>
+
+        <method event="onchanged" args="changed">
+            Debug.write('myform changed', this.changed, changed);
+        </method>
+
+    </newbaseform>
+
+</canvas>

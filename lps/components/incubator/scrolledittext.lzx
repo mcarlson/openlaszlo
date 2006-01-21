@@ -1,0 +1,49 @@
+<library>
+
+    <include href="incubator/baseedittext.lzx" />
+
+    <!--- Implements visual baseedittext with scrollbar. -->
+    <class name="scrolledittext" extends="baseedittext" 
+           multiline="true" clip="true" height="100">
+
+        <attribute name="border" value="0" />
+
+        <view name="_face" bgcolor="0xffffff" 
+              width="${parent.width-parent.border*2}" 
+              height="${parent.height-parent.border*2}" 
+              x="${parent.border}" y="${parent.border}"/>
+
+        <_newinternalinputtext name="inp" x="${parent.border}" 
+            y="${parent.border}" 
+            height="${parent.height-parent.border*2}"
+            width="${parent.vs.visible
+                     ? parent.width - parent.vs.width - parent.border*2 
+                     : parent.width - parent.border*2 }">
+            <attribute name="lineheight"
+                       value="${this.getTextHeight()/this.maxscroll}"/>
+            <attribute name="maxheight" 
+                       value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
+            <attribute name="onpos" value="null"/>
+            <attribute name="pos" value="0" setter="this.setPos(pos)"/>
+            
+            <method name="setPos" args="p">
+                if (this.isinited) {
+                    this.setScroll(1 - (p / this.lineheight));
+                    this.pos = p;
+                    if (this.onpos) this.onpos.sendEvent(p);
+                }
+            </method>
+            <method event="onscroll">
+                this.setPos(-this.lineheight * (this.scroll - 1), true);
+            </method>
+        </_newinternalinputtext>
+
+        <vscrollbar name="vs" axis="y" scrollattr="pos"
+            scrolltarget="parent.inp"
+            x="${parent.width - this.width - parent.border + 1}" 
+            stepsize="${parent.inp.lineheight}" 
+            scrollmax="${parent.inp.maxheight}" />
+
+    </class>
+
+</library>

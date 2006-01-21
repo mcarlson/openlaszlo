@@ -1,0 +1,39 @@
+<library>
+    <include href="basecheckbox.lzx"/>
+    <include href="base/multistatebutton.lzx"/>
+
+    <!--- Regular sized checkbox resource. --> 
+    <resource name="lzcheckbox_rsrc">
+        <frame src="resources/checkbox/checkbox_dslct.swf" />
+        <frame src="resources/checkbox/checkbox_dslct_mo.swf" />
+        <frame src="resources/checkbox/checkbox_slct.swf" />
+        <frame src="resources/checkbox/checkbox_dslct_dsbl.swf" />
+        <frame src="resources/checkbox/checkbox_slct.swf" />
+        <frame src="resources/checkbox/checkbox_slct_mo.swf" />
+        <frame src="resources/checkbox/checkbox_dslct.swf" />
+        <frame src="resources/checkbox/checkbox_slct_dsbl.swf" />
+    </resource>
+
+    <!--- The basecheckbox implementation representing a boolean, i.e., checked
+          if true, else false. -->
+    <class name="checkbox" extends="basecheckbox" pixellock="true">
+        <multistatebutton name="cb" resource="lzcheckbox_rsrc" text=""
+            statenum="${parent.value ? 1 : 0}" statelength="4" maxstate="1"
+            reference="parent">
+        </multistatebutton>
+        <text name="_title" x="12" y="-3" text="${parent.text}" resize="true"/>
+
+        <!--- @keywords private -->
+        <method name="_applystyle" args="s">
+            if (this.style != null) {
+                if (this._enabled) {
+                    this._title.setAttribute('fgcolor',s.textcolor);
+                } else {
+                    this._title.setAttribute('fgcolor',s.textdisabledcolor);
+                }
+                setTint(this.cb, s.basecolor);
+            }
+        </method>
+    </class>
+
+</library>

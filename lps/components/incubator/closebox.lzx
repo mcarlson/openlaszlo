@@ -1,0 +1,9 @@
+<library>
+   
+    <!--- the closebox class has its own resource -->
+    <!-- TODO [dchung, 06.09.05] doesn't seem to pick up the tint properly, 
+            tried setTint in _applystyle() and init() -->
+    <class name="closebox" extends="basebutton"
+        resource="closebox_rsc" style="$once{canvas.custombutton_style}" />
+ 
+</library>

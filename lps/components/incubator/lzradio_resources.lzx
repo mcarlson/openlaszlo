@@ -1,0 +1,14 @@
+<library>
+    <resource name="lzradio_rsrc">
+        <frame src="resources/radiobutton/radio_btn_dsclt.swf"/>
+        <frame src="resources/radiobutton/radio_btn_dslct_mo.swf"/>
+        <frame src="resources/radiobutton/radio_btn_slct.swf"/>
+        <frame src="resources/radiobutton/radio_btn_dslct_dsbl.swf"/>
+        <frame src="resources/radiobutton/radio_btn_slct.swf"/>
+        <frame src="resources/radiobutton/radio_btn_slct.swf"/>
+        <frame src="resources/radiobutton/radio_btn_slct.swf"/>
+        <frame src="resources/radiobutton/radio_btn_slct_dsbl.swf"/>
+    </resource>
+</library>
+<!-- @LZX_COPYRIGHT@                                                       -->
+<!-- @LZX_VERSION@                                                         -->

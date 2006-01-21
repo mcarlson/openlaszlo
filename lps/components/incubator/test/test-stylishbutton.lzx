@@ -1,0 +1,7 @@
+<canvas>
+<include href="../stylishbutton.lzx" />
+
+<stylishbutton x="10" y="10" width="85" text="stylish" />
+
+
+</canvas>

@@ -5,31 +5,35 @@ A dialog to let the user set a hyperlink on the currently selected text.
 -->
 <library>
 
+    
     <!-- dependencies  -->
-    <include href="../emerald-contrib/borderinput.lzx" /> 
+    <!-- include href="../borderinput.lzx" /--> 
         
-    <class name="linkdialog" width="${parent.width}" height="${parent.toolbar.height}" bgcolor="0xD4D7E6" visible="false">
+    <class name="linkdialog" width="${parent.toolbar.width}" height="${parent.toolbar.height}" bgcolor="0xD4D7E6" visible="false">
         
         <!--- Reference to the associated richtexteditor. (default: grte) --> 
         <attribute name="editor" value="${grte}"/>
         
-        <!--- Used to show dialog. -->
+        <attribute name="ystart" value="110"/>
+        
         <animator 
             name="_animShow" attribute="y" to="0" 
             from="${-parent.height}" 
             duration="500" start="false" onstart="parent.setVisible(true)" 
-          />
-    
+        />
+        
         <!--- Used to hide dialog.
-                  @keywords private -->
+            @keywords private -->
         <animator name="_animHide" attribute="y" from="0" 
             to="${-parent.height}" 
             duration="200" start="false" onstop="parent.setVisible(false)" 
-         />
-    
+        />
+        
         <!--- show
             slides in the dialog. -->
         <method name="show">
+            Debug.write("ystart",ystart);
+            Debug.write("ystart-parent.toolbar.height",ystart-parent.toolbar.height);
             this.urlfield.setText("http://");
             var ntextlength = this.urlfield.getText().length;
             this.urlfield.setSelection(ntextlength,ntextlength);
@@ -59,10 +63,10 @@ A dialog to let the user set a hyperlink on the currently selected text.
             fmt.url="";
             fmt.color = colbefore;
             fmt.underline = false; 
-            this.editor.inp.setDefaultFormat(fmt);
             var ncaratinsertpoint = this.editor.getAttribute("_esel");
-            this.editor.setSelection(ncaratinsertpoint,ncaratinsertpoint); 
+            this.editor.setSelection(ncaratinsertpoint,ncaratinsertpoint);
             this.editor.setCurrentFormat(fmtBeforeLink);
+            this.editor._formatAtInsertion(ncaratinsertpoint);
             this.hide();
         </method>
     
@@ -74,24 +78,29 @@ A dialog to let the user set a hyperlink on the currently selected text.
         <borderinput name="urlfield" width="${parent.width-150}" y="3"/>
     
         <view y="4" x="${parent.width-145}">
-            <custombutton 
+            <stylishbutton
                 onclick="classroot.makelink()" 
                 width="70" 
                 text="Link"             
             >
                 <tooltip>Make a link to this location</tooltip>
-            </custombutton>
+            </stylishbutton>
             
-            <custombutton 
+            <stylishbutton
                 onclick="classroot.hide()" 
                 x="80" width="60" 
                 text="Cancel" 
             >
                 <tooltip>Don't make a link</tooltip>
-            </custombutton>
+            </stylishbutton>
         </view>
     
     
     </class>
     
 </library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

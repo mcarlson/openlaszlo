@@ -5,8 +5,6 @@
      -->
      
      <!-- dependencies  -->
-     <include href="../emerald-contrib/lzcombobox.lzx"/>
-     <include href="../emerald-contrib/tooltip.lzx"/>
      <include href="colorsquare.lzx"/>
      
      <!-- Data: Font Color
@@ -29,12 +27,12 @@
          A class which is used as a combobox item
      -->    
      <class name="colorswatch" extends="lzcombobox_item">
-         <colorsquare swatchcolor="$path{'@value'}" drawsquare="true" x="10" y="3"/>
+         <colorsquare swatchcolor="$path{'@value'}" drawsquare="true" x="6" y="3"/>
      </class>
      
      <class name="formatfontcolor" extends="lzcombobox" width="48" shownitems="8" style="sidebarbutton_style"
          itemclassname="colorswatch" itemdatapath="fontcolors:/clr"
-         focusable="false">
+         focusable="false" listwidth="${this.bkgnd.mid.width}">
          
          <attribute name="editor" value="$once{this.parent.editor}" />
          <attribute name="toolbar" value="$once{this.parent}" />
@@ -100,4 +98,9 @@
      </class>
      
  </library>
- 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         --> 

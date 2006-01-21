@@ -4,9 +4,6 @@
          A class which wraps up the font face combobox and associated data
      -->
      
-     <!-- dependencies  -->
-     <include href="../emerald-contrib/lzcombobox.lzx"/>
-     <include href="../emerald-contrib/tooltip.lzx"/>
      
      <!-- Data: Font Name
               inside of a state because datasets get instantiated upon application init
@@ -22,7 +19,7 @@
      </state>
      
     <class name="formatfontface" extends="lzcombobox" width="130" shownitems="5" focusable="false" 
-            style="sidebarbutton_style" itemdatapath="fontnames:/fnt">
+        style="sidebarbutton_style" itemdatapath="fontnames:/fnt" listwidth="${this.bkgnd.mid.width}">
          
             <attribute name="editor" value="$once{this.parent.editor}" />
             <attribute name="toolbar" value="$once{this.parent}" />
@@ -76,4 +73,9 @@
          
      </class>
  </library>
- 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         --> 

@@ -1,0 +1,80 @@
+  <library>
+      
+     <include href="radioformatbtn.lzx"/>
+        
+        <!--- Alignment state selector, a radio group. MOve these all down by 2 pixels --> 
+        <class name="alignradiogroup" extends="baselist"
+            focusable="false" layout="axis:x;spacing:0" 
+            defaultselection="0"
+            >
+            <attribute name="changed" value="false" />
+            
+            <attribute name="editor" value="$once{this.parent.editor}" />
+            
+            <attribute name="toolbar" value="$once{this.parent}" />
+            
+            <radioformatbtn name="left"   iconname="lft_align" 
+                style="formatbtn_style" rightrsc="" width="22"  
+                icon_x="7" icon_y="5" 
+                >
+                <tooltip>Align left</tooltip>
+            </radioformatbtn>
+            
+            <radioformatbtn name="center"  iconname="center"   
+                style="formatbtn_style" leftrsc=""  rightrsc="" width="18" 
+                icon_x="3" icon_y="5" 
+                >
+                <tooltip>Align center</tooltip>
+            </radioformatbtn>
+            
+            <radioformatbtn name="right" iconname="rt_align" 
+                style="formatbtn_style" leftrsc=""  width="22"  
+                icon_x="4" icon_y="5" 
+                >
+                <tooltip>Align right</tooltip>
+            </radioformatbtn>
+            
+            <method name="init">
+                super.init();
+                toolbar.registerTool(this,"align");
+            </method>
+            
+            <!-- TODO [2005-08-18 pkang]: it would be easier to find out if
+                aligngroup changed if it was a changed-aware component instead
+                of adding a changed flag. -->
+            <method event="onselect" args="s"><![CDATA[
+                if (this.changed && this.toolbar._passthruchanges) {
+                    this.editor.setParagraphAttribute("align", s.name); 
+                    this.editor.delegateRestoreSelection();
+                }
+                ]]>
+            </method>
+            
+            <state name="mostate" apply="true">
+                <method event="onmouseover">
+                    this.changed = true;
+                    mostate.remove();
+                </method>
+            </state>
+            
+            <!-- Save the selection region before another widget gets focus. -->
+            <method event="onmouseover">
+                this.editor.saveSelectionRegion();
+            </method>
+            
+            <method name="reset">
+                selectItemAt(0);
+            </method>
+            
+            <method name="setState" args="state">
+                if ( state == "left" )      
+                this.selectItemAt( 0 ); 
+                else if ( state == "center" )
+                this.selectItemAt( 1 )
+                else 
+                this.selectItemAt( 2 );
+            </method>
+            
+            
+        </class>
+  </library> 

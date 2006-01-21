@@ -1,7 +1,7 @@
 <!-- inline tool composed of a custom button
     used to reset the all of the formatting of the current paragraph -->
-<custombutton name="unformatBtn" iconname="resetfmt"
-    width="26" focusable="false" style="formatbtn_style" y="${(parent.height-this.height)/2}">
+<stylishbutton name="unformatBtn" iconname="resetfmt"
+    width="26" focusable="false" style="formatbtn_style"  y="${Math.round((parent.height-this.height)/2)}">
     <attribute name="toolbar" value="$once{this.parent}" />
     <attribute name="editor" value="$once{this.parent.editor}" />                
     <tooltip>Remove formatting</tooltip>
@@ -24,4 +24,9 @@
         this.editor.saveSelectionRegion();            
     </method>
     
-</custombutton>
+</stylishbutton>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

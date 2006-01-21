@@ -1,0 +1,51 @@
+<!--
+    radioitem.lzx
+
+    Copyright 2004 Laszlo Systems, Inc.  All Rights Reserved.
+    Unauthorized use, duplication or distribution is strictly prohibited.
+    This software is the proprietary information of Laszlo Systems, Inc.
+    Use is subject to license terms.
+-->
+
+
+<library>
+    <!---  A selectable list item which works like a Radio Button
+            though uses an icon instead of radio button graphics.
+    -->
+    <class name="radioitem" extends="baselistitem">
+        <!---  @keywords private -->
+        <attribute name="_inside" value="false" type="boolean"/>
+        <!---  @keywords private -->
+        <method event="onmouseover">
+            this.setAttribute('frame', this.selected ? 3 : 2);
+        </method>
+        <!---  @keywords private -->
+        <method event="onmouseout">
+            this.setAttribute('frame', this.selected ? 3 : 1);
+        </method>
+        <!---  @keywords private -->
+        <method event="onmousin">
+            this._inside = true;
+        </method>
+        <!---  @keywords private -->
+        <method event="onmouseup">
+            this.setAttribute('frame', this.selected ? 3 : 1);
+        </method>
+        <!---  @keywords private -->
+       <method name="setSelected" args="s">
+            <![CDATA[
+                this.selected = s;
+                if (this.onselect) this.onselect.sendEvent(this);
+                if (this.onselected) this.onselected.sendEvent(this);
+                this.setAttribute('frame', s ? 3 : 1);
+
+            ]]>
+        </method>
+        <!---  @keywords private -->
+        <method event="onmousedown">
+            this.setAttribute('frame', 3);
+        </method>
+    </class>
+
+
+</library>

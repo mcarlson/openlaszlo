@@ -1,12 +1,12 @@
 <library>
     
     <!-- dependencies  -->
-    <include href="../emerald-contrib/custombutton.lzx" />
-    <include href="../emerald-contrib/tooltip.lzx"/>
+    <include href="../stylishbutton.lzx" />
+    <include href="../tooltip/tooltip.lzx" />
     
     <!--- formatbtn
         class for use richtexttoolbar buttons  -->
-    <class name="formatbtn" extends="custombutton" width="26" 
+    <class name="formatbtn" extends="stylishbutton" width="26" 
            focusable="false" style="formatbtn_style">
         <!--- the format type that the button will control -->
         <attribute name="format" type="string" />
@@ -16,6 +16,10 @@
         <attribute name="toolbar" value="$once{this.parent}" />
         <!--- a reference to toolbar's editor -->
         <attribute name="editor" value="$once{this.parent.editor}" />
+
+        <!--- the tint for when the button is active. 
+            when inactive, use "tint" attribute. --> 
+        <attribute name="activecolor" value="0xEAE4B7"/>
         
         <!--- Whether this button's formatting should be applied to an entire paragraph,
             or a character at a time. --> 
@@ -48,7 +52,7 @@
         <method name="setActive" args="isactive"> 
             this.isactive = isactive;
             if (this.isinited) {
-                var color = ( this.isactive ? this.style.flag1 : this.style.flag0 ); 
+                var color = ( this.isactive ? this.activecolor : this.tint ); 
                 if (this['left'])   this.setTint(this.left,   color); 
                 if (this['middle']) this.setTint(this.middle, color);
                 if (this['right'])  this.setTint(this.right,  color);
@@ -67,7 +71,7 @@
                 if (this.paragraphformat) {
                     this.editor.setParagraphAttribute(this.format, this.isactive);  
                 } else {
-                    this.editor.setFormatAttribute(this.format, this.isactive);  
+                    this.editor.setFormatAttribute(this.format, this.isactive);
                 }
             }            
             
@@ -99,3 +103,8 @@
 
 
 </library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

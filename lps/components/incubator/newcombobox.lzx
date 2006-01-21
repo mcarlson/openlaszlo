@@ -33,73 +33,10 @@
             // TODO [2005-4-01, dchung] could this be rendered as a line?
             this.setAttribute('enabled', (t != '-----'));
 
-            this.setWidth(target.listwidth);
+            this.setWidth(target.listwidth ? target.listwidth : target.width);
             ]]>
         </method>
     </class>
-
-    <!--- Corresponding text to a newcombobox' value. This is a statictext class
-          that should be used by newcombobox subclasses so mouse and keyboard
-          navigation events can be passed through to the newcombobox. -->
-    <class name="newcombobox_text" extends="statictext" focusable="true">
-
-        <!--- Reference to text's combobox. Default is parent. --> 
-        <attribute name="cbox" value="$once{parent}" />
-
-        <!--- Creates a cbox reference to this object on init.
-              @keywords private -->
-        <method name="init">
-            super.init();
-            this.cbox._cbtext = this;
-        </method>
-
-        <!--- Arrow down and up, and spacebar all popup floatinglist, and pass
-              the key event to it.
-              @keywords private -->
-        <method event="onkeydown" args="key"><![CDATA[
-            // 38: up-arrow, 40: down-arrow, 32: space, 13: return, 27: escape
-            if ( (key==38) || (key==40) || (key==32) ) {
-                if ( ! this.cbox.isopen ) this.cbox.setOpen(true);
-                // pass the key event on to the floatinglist
-                if (key!=32) this.cbox._cblist.onkeydown.sendEvent(key);
-            }
-            ]]>
-        </method>
-        <!--- Pass up to component level so focus rect will be visible, and
-              subclassers can catch. 
-              @keywords private -->
-        <method event="onfocus" args="v">
-             if ( this.cbox['onfocus'] ) this.cbox.onfocus.sendEvent(v);
-        </method>
-        <!--- Pass up to component level so subclassers can catch.
-              @keywords private -->
-        <method event="onblur" args="v">
-             if ( this.cbox['onblur'] ) this.cbox.onblur.sendEvent(v);
-        </method>
-        <!--- Pass up to component level so subclassers can catch.
-              @keywords private -->
-        <method event="onkeyup" args="kc">
-             if ( this.cbox['onkeyup'] ) this.cbox.onkeyup.sendEvent(kc);
-        </method>
-        <!--- Pass up to component level so subclassers can catch.
-              @keywords private -->
-        <method event="onkeydown" args="kc">
-             if ( this.cbox['onkeydown'] ) this.cbox.onkeydown.sendEvent(kc);
-        </method>
-        <!--- @keywords private -->
-        <method name="getPrevSelection">
-            return LzFocus.getPrev(this.cbox);
-        </method>
-        <!--- @keywords private -->
-        <method name="getFocusRect"  >
-           var fx = this.cbox.getAttributeRelative('x',canvas);
-           var fy = this.cbox.getAttributeRelative('y',canvas);
-           var fw = this.cbox.getAttributeRelative('width',canvas);
-           var fh = this.cbox.getAttributeRelative('height',canvas);
-           return [fx,fy,fw,fh];
-        </method>
-    </class>
-
 
     <!--- An abstract class to create dropdown lists of selectable items. Define
           the look in a subclass. Also, a newcombobox_text must be declared in
@@ -137,7 +74,7 @@
             where node is the dataelement of the list item. Don't forget 
             to reset the seleciton on the list, as well.
              -->
-    <class name="newcombobox" extends="newbaseformitem" focusable="false">
+    <class name="newcombobox" extends="newbaseformitem">
 
         <!--- Datapath to items in list. -->
         <attribute name="itemdatapath" value="null" type="string"/>
@@ -161,7 +98,7 @@
 
         <!--- Default text to display before a selection is made. No default
               item is selected if defaulttext is set. Defaulttext is replaced
-              with selected item's text. Also see statictext. -->
+              with selected item's text. -->
         <attribute name="defaulttext"  value="$once{null}" type="string" />
 
         <!--- The value of the selected item. -->
@@ -180,8 +117,8 @@
 
         <!--- Width of popup list, defaults to width of combobox view. During
               setup, the width of the floating list view might not yet be set,
-              so this returns the expected width. -->
-        <attribute name="listwidth" value="$once{this.width}" />
+              so this returns the expected width. If not set, -->
+        <attribute name="listwidth" value="null" />
 
         <!--- If true, the combobox will behave like a menu. "value" is
               ignored, and items will not remain selected. Selecting an
@@ -202,7 +139,7 @@
         <attribute name="onselect" value="null"/>
 
      
-        <!--- This value is set by a newcombobox_text during its init.
+        <!--- This value must be set by subclasses of newcombobox.
               @keywords private -->
         <attribute name="_cbtext" value="null" />
 
@@ -247,6 +184,20 @@
             ]]>
         </method>
 
+        <!--- Setter to set baseformitem to changed. Should be called by
+              subclasses whenever a value is set. The first time this is called,
+              the changed value is not set since it assumes subclasses are
+              setting their initial value. 
+              This also updates the selected value in the combobox to reflect
+              the new value (in case it was changed).
+              @param Boolean changed: true if changed, else false. -->
+        <method name="setChanged" args="isChanged">
+            super.setChanged( isChanged );
+            // Be sure to update the selection, because value might have been
+            // changed programmatically
+            this._updateSelectionByIndex( this.getItemIndex( this['value'] ), true, false );
+        </method>
+
         <!--- Updates the combobox text and 'selected' attribute. Called when an
               item is selected.
               @param Number index: index of data item.
@@ -264,6 +215,10 @@
             dp.setPointer(nodes[index]);
 
             var t = dp.xpathQuery(this.textdatapath);
+            // if t is null, use default text (if it exists)
+            if( ( t == null || t.length == 0 ) && this.defaulttext['length'] > 0 )
+               t = this.defaulttext;
+
             if ( this['_cbtext'] && this.statictext == null ) {
                 this._cbtext.setText(t);
             }
@@ -279,7 +234,9 @@
             if (this.ismenu) {
                 // Clear the selection
                 this._selectedIndex = -1;
-                this._cblist._selector.clearSelection();
+                if (this._cblist['_selector']) {
+                    this._cblist._selector.clearSelection();
+                }
             }
             else {
                 this.selected = dp;
@@ -298,27 +255,35 @@
             if (this.itemclassname == "") {
                 this.itemclassname = "newcombobox_item";
             }
-                
+
             var gcbl = global.__cblist;
             var icn = this.itemclassname;
             if ( ! gcbl[icn] ) {
 
                 gcbl[icn] = new floatinglist(canvas,
                     { visible:false, attach: this.listattach, attachoffset: -2, 
-                      multiselect: false });
-                                
+                      multiselect: false});
+                
                 // add in a white view to reduce the visual affect of the
                 // list items appearing as they are created
-                new global[icn](gcbl[icn], { name:'item' });
-
+                var tmp = new global[icn](gcbl[icn], { name:'item' });
+                new LzDatapath(tmp, { pooling: true });
             }
 
+    
             if (this._cblist['attachtarget'] != this) {
 
                 // Only attach _cblist target if it's different
                 this._cblist = gcbl[icn];
+
+                // Make sure we deselect if we're acting like a menu
+                if (this.ismenu) {
+                    this._cblist._selector.clearSelection();
+                }
+
                 var oldtarget = this._cblist.attachtarget;
-                this._cblist.setWidth(this.listwidth);
+                var w = ( this.listwidth != null ? this.listwidth : this.width );
+                this._cblist.setWidth(w);
                 this._cblist.setAttachTarget(this)
                 this._cblist.setAttribute('shownitems', this.shownitems);
                 this._cblist.item.setDatapath(this.itemdatapath);
@@ -337,16 +302,16 @@
                         if ( ! (nodes instanceof Array) ) nodes = [ nodes ];
                         for (var i=0; i < nodes.length; i++) {
                             if (dataChanged) nodes[i].handleData(); 
-                            else nodes[i].setWidth(this.listwidth-1);
+                            else nodes[i].setWidth(w-1);
                         }
                     } else {
 
                         if (dataChanged) this._cblist.item.handleData();
-                        else this._cblist.item.setWidth(this.listwidth-1);
+                        else this._cblist.item.setWidth(w-1);
                     }
 
                 }
-           }
+            }
 
             this._cblist.setAttribute('attach', this.listattach);
             if (this._selectdel == null) {
@@ -372,20 +337,22 @@
         <!--- Sets the open/close state of the popup list.
               @param Boolean open: true to open the list, else false to close.
               -->
-        <method name="setOpen" args="open" >
+        <method name="setOpen" args="open" ><![CDATA[
             if (!this._initcomplete) {
                 this.isopen = open;
                 return;
             }
             if (open) { // open combox
                 if (this.isopen) return; // tends to get called more than once
+
                 LzModeManager.makeModal( this );
 
                 this._setupcblist();
 
                 this._cblist.bringToFront();
                 this._cblist.setVisible(true);
-                LzFocus.setFocus(this._cblist);
+
+                LzFocus.setFocus( this._cblist, false );
 
                 this.isopen = true;
                 if (this['onisopen']) this.onisopen.sendEvent(true);
@@ -397,8 +364,13 @@
                 this._cblist.setVisible(false);
                 this.isopen = false;
                 if (this['onisopen']) this.onisopen.sendEvent(false);
-                if ( LzFocus.getFocus() == this._cblist ) LzFocus.setFocus(this._cbtext);
+                if ( LzFocus.getFocus() == this._cblist ) {
+                    if ( this.focusable ) {
+                        LzFocus.setFocus( this, false );
+                    } 
+                }
             }
+            ]]>
         </method>
 
         <!--- @keywords private -->
@@ -464,8 +436,6 @@
             }
 
             this.setOpen(false);
-
-            LzFocus.setFocus(this._cbtext);
             ]]>
         </method>
 
@@ -547,10 +517,50 @@
             ]]>
         </method>
 
-        
+        <!--- Override getValue because we don't want to return this.text
+              if this.value is null (this.text may be the defaulttext) -->
+        <method name="getValue">
+            return ( this.value == null ? '' : this.value );
+        </method>        
 
+        <!--- Arrow down and up, and spacebar all popup floatinglist.
+              @keywords private -->
+        <method event="onkeydown" args="key" name="_dokeydown"><![CDATA[
+            // 38: up-arrow, 40: down-arrow, 32: space, 13: return, 27: escape
+            if ( (key==38) || (key==40) || (key==32) ) {
+                if ( ! this.isopen ) this.setOpen(true);
+            }
+            ]]>
+        </method>
+
+
+        <!-- ============================================================ -->
+        <!-- focus kludge for combobox                                    -->
+        <!-- ============================================================ -->
+
+        <!--- The equivalent for onfocus for combobox. -->
+        <attribute name="oncombofocus" value="null" />
+        <!--- The equivalent for onblur for combobox. -->
+        <attribute name="oncomboblur"  value="null" />
+        <!--- @keywords private -->
+        <method event="onfocus">
+            if (this.oncombofocus) {
+                // LzFocus.lastfocus is the blurred view
+                if ( LzFocus.lastfocus != this._cblist || 
+                     this._cblist.attachtarget != this ) {
+                    this.oncombofocus.sendEvent(LzFocus.lastfocus);
+                }
+            }
+        </method>
+        <!--- @keywords private -->
+        <method event="onblur" args="focusview">
+            if (this.oncomboblur) {
+                if (focusview != this._cblist) {
+                    this.oncomboblur.sendEvent(focusview);
+                }
+            }
+        </method>
 
     </class>
 
 </library>
-

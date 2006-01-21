@@ -1,8 +1,11 @@
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
+<!--
+    floatinglist.lzx
+
+    Copyright 2004 Laszlo Systems, Inc.  All Rights Reserved.
+    Unauthorized use, duplication or distribution is strictly prohibited.
+    This software is the proprietary information of Laszlo Systems, Inc.
+    Use is subject to license terms.
+-->
 <library>
     <include href="lz/list.lzx" /> 
     
@@ -120,7 +123,7 @@
             // reset _parentcomponent
             var p = this.owner;
             while (p != canvas) {
-                if (p.instanceOf(basecomponent)) {
+                if (p instanceof basecomponent) {
                     this._parentcomponent = p;
                     break;
                 }
