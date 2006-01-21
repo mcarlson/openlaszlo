@@ -12,9 +12,12 @@
 <classname>LzInputText</classname> classes) and the <tagname link="true">richinputtext</tagname> component. It assumes you're familiar
 with basic LZX concepts such views (<xref linkend="views"/>), methods, and attributes.</p>
 <p>For a gentle introduction, see the <a href="${tutorials}text.html">Text and Font</a> tutorial.</p>
+<todo>
+Explain text as attribute vs text as tag. Explain text in XML documents, ontext events, and so forth.
+</todo>
 <h2>Summary of properties</h2>
 <p>
-To a first approximation, "text" refers to displayable data in UTF-8 encoding; "font" refers to the software that is used to draw, or render, the textual characters on the screen.  The topics are intertwined. In this chapter we'll be talking about mostly about text, but you should be sure that you understand key concepts about fonts in OpenLaszlo applications. In particular, you should understand the difference between client fonts and embedded fonts. Because they don't always behave the same way (for example client fonts can not be rotated or changed in opacity due to a limitation of the Flash Player), changing from one to the other can cause bewildering changes in behavior. Furthermore, it's possible to implicitly change from one kind of font to the other in your application without realizing you've done so.  Fonts are described in <xref linkend="fonts"/>.
+To a first approximation, "text" refers to displayable data in UTF-8 encoding; depending on context "text" can mean the data itself, or its display. The term "font" refers to the software that is used to draw, or render, the textual characters on the screen.  The topics are intertwined. In this chapter we'll be talking about mostly about text, but you should be sure that you understand key concepts about fonts in OpenLaszlo applications. In particular, you should understand the difference between client fonts and embedded fonts. Because they don't always behave the same way (for example client fonts can not be rotated or changed in opacity due to a limitation of the Flash Player), changing from one to the other can cause bewildering changes in behavior. Furthermore, it's possible to implicitly change from one kind of font to the other in your application without realizing you've done so.  Fonts are described in <xref linkend="fonts"/>.
 </p>
 <p>
 Generally speaking, unless an explicit width and height are specified as attributes, the text field will by default be sized to a width and height which
@@ -177,7 +180,7 @@ If you add <code>resize=true</code>, the field will expand to fit the text. In t
 the slider gets cut off. 
 </p>
 <example title="non-resizing text does not concatentate">
-&lt;canvas&gt;
+&lt;canvas height="50" &gt;
   &lt;simplelayout/&gt;
   &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
 keystep="1000"/&gt;
@@ -189,7 +192,7 @@ The following shows the use of <attribute>resize="true"</attribute> to get the d
 </p>
 <example title="Using the 'resize' attribute">
 
-&lt;canvas&gt;
+&lt;canvas height="50"&gt;
   &lt;simplelayout/&gt;
   &lt;slider name="down" width="100" value="5000" minvalue="1000" maxvalue="100000"
 keystep="1000"/&gt;
@@ -389,13 +392,38 @@ The <tagname link="true">img</tagname> tag allows you to include certain kinds o
 Here's an example of the basic use of the <tagname>img</tagname> tag.
 </p>
 <example title="basic use of &lt;img&gt; tag">
-&lt;canvas&gt;
+&lt;canvas height="610" debug="true"&gt;
+  &lt;debug y="150"/&gt;
   &lt;text multiline="true" width="300" height="300"&gt;
-    &lt;img src="horse-3.jpg"/&gt;
+    &lt;img src="./images/horse-3.jpg"/&gt;
   &lt;/text&gt;
 &lt;/canvas&gt;
 </example>
-
+<p>
+</p>
+<example title="">
+</example>
+<p>
+</p>
+<example title="">
+</example>
+<p>
+</p>
+<example title="">
+</example>
+<p>
+You can position the included image by setting the <attribute>align</attribute>
+</p>
+<example title="Scaled and left-aligned image">
+&lt;canvas height="350&gt;  
+  &lt;resource name="horse" src="../images/horse-3.jpg"/&gt;
+  &lt;text multiline="true" height="300"&gt;
+    Some text and
+    &lt;img src="../images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+    some more text
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
 <h2>The <tagname>inputtext</tagname> View</h2>
 
 <p>Editable text fields are created with the
