@@ -384,44 +384,112 @@ entities may be used to format the text.</p>
 
 <h3>Including images in HTML content</h3>
 <p>
-The <tagname link="true">img</tagname> tag allows you to include certain kinds of images in HTML content within a <tagname>text</tagname> element. The image you include must be natively supported by the Flash Player (regardless whether your application is SOLO or proxied).</p>
+The <tagname link="true">img</tagname> tag allows you to include certain kinds of images in HTML content within a <tagname>text</tagname> element,  or within an HTML element that a &lt;text&gt; element contains. The image you include must be natively supported by the Flash Player (regardless whether your application is SOLO or proxied).</p>
 <note>
 <tagname>img</tagname> tag does not work inside <tagname>inputtext</tagname>, only <tagname>text</tagname>.
 </note>
 <p>
+Due to implementation details of the Flash Player, the &lt;img&gt; tag is only rendered when the <attribute>@multiline</attribute> attribute of the &lt;text&gt; element is true. </p>
+<p>
+The &lt;img&gt; tag supports the following attributes. All of these attributes are optional except the @src attribute. All attributes must be specified as literals (not constraints) in the program source.</p>
+<ul>
+
+<li>@src: This attribute is either a URI, or a JavaScript identifier. If it is a URI, it specifies the location of the image resource, which must be a JPEG or (Flash deployment targets only) SWF file. If it is a JavaScript identifier, it must be the name of a resource defined via the &lt;resource&gt; tag. This attribute is required. </li>
+
+<li>@align = bottom | middle | top | left | right. The values have the same meaning as in HTML: </li>
+
+<li>bottom: means that the bottom of the object should be vertically aligned with the current baseline. This is the default value. </li>
+
+<li>middle: means that the center of the object should be vertically aligned with the current baseline. </li>
+
+<li>top: means that the top of the object should be vertically aligned with the top of the current text line. 
+<p>
+Two other values, left and right, cause the image to float to the current left or right margin</p>
+</li>
+<li> @alt: string. When specified, the content of this attribute is made available to screen readers. </li>
+
+<li>@width, @height: When specified, the width and height attributes scale the natural image size to these values. The value of @width and @height is a literal number of pixels. </li>
+
+<li>@hspace: This attribute specifies the amount of white space to be inserted to the left and right of an IMG. The default value is not specified, but is generally a small, non-zero length. (On the Flash deployment target, this value is 8 pixels.) </li>
+
+<li>@vspace: This attribute specifies the amount of white space to be inserted above and below an IMG. The default value is not specified, but is generally a small, non-zero length. (On the Flash deployment target, this value is 8 pixels.) </li>
+</ul>
+<p>
+The &lt;text&gt; view is not by default sized to the content of the &lt;img&gt; tag.</p>
+<p>
 Here's an example of the basic use of the <tagname>img</tagname> tag.
 </p>
-<example title="basic use of &lt;img&gt; tag">
-&lt;canvas height="610" debug="true"&gt;
-  &lt;debug y="150"/&gt;
+<example title="Basic use of &lt;img&gt; tag">
+&lt;canvas height="320" &gt;
   &lt;text multiline="true" width="300" height="300"&gt;
+    Hello dear friends on the Red Planet! How is the Garden today?
     &lt;img src="./images/horse-3.jpg"/&gt;
   &lt;/text&gt;
 &lt;/canvas&gt;
 </example>
 <p>
+Notice that you cannot have an image in a text tag without also having text.  Watch what happens when we comment out the text:
 </p>
-<example title="">
+<example title="You must include text with images">
+&lt;canvas height="220" &gt;
+  &lt;text multiline="true" width="200" height="200"&gt;
+    <em>&lt;!--Hello dear friends on the Red Planet! How is the Garden today?--&gt;</em>
+    &lt;img src="./images/horse-3.jpg"/&gt;
+  &lt;/text&gt;
+&lt;/canvas&gt;
 </example>
 <p>
+By giving values to the <attribute>height</attribute> and <attribute>width</attribute> attributes on the <tagname>img</tagname> tag, you can scale the image:
 </p>
-<example title="">
-</example>
-<p>
-</p>
-<example title="">
+<example title="Scaling an image included in text">
+&lt;canvas height="100"&gt;  
+  &lt;text multiline="true" height="80"&gt;
+    Some text and
+    &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+    some more text
+  &lt;/text&gt;
+&lt;/canvas&gt;
 </example>
 <p>
 You can position the included image by setting the <attribute>align</attribute>
 </p>
 <example title="Scaled and left-aligned image">
-&lt;canvas height="350&gt;  
-  &lt;resource name="horse" src="../images/horse-3.jpg"/&gt;
+&lt;canvas height="350"&gt;  
   &lt;text multiline="true" height="300"&gt;
     Some text and
-    &lt;img src="../images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+    &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
     some more text
   &lt;/text&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+You can include multiple <tagname>img</tagname> tags within the same <tagname>text</tagname> elements.  Take care with the positioning; it's possible to position the images on top of each other, so you may not get the effect you want.
+</p>
+<example title="Multiple images in text">
+&lt;canvas&gt;
+  &lt;text multiline="true" width="100%"&gt;
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. 
+    &lt;img src="./images/horse-3.jpg"/&gt;
+Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. 
+    &lt;img src="./images/horse-3.jpg"/&gt;
+Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. 
+    &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
+Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante. Suspendisse accumsan, mauris dapibus pretium laoreet, nibh purus imperdiet lectus, a euismod elit enim a mi. Morbi commodo lacus quis nisl. 
+    &lt;img src="./images/horse-3.jpg" align="left"/&gt;
+ Duis leo tortor, gravida eget, euismod non, ullamcorper quis, metus. Phasellus ornare facilisis metus. Aliquam at est.
+    &lt;img src="./images/horse-3.jpg" align="right"/&gt;
+Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Fusce ligula. Suspendisse pellentesque diam vel dolor. Nullam suscipit laoreet eros. Aliquam nulla massa, rutrum id, luctus vitae, consequat eu, ipsum. Donec hendrerit rhoncus erat. Phasellus eget massa sit amet lorem condimentum porta. Ut nec lorem. Pellentesque quam. Sed porttitor, elit vitae faucibus porta, enim nibh cursus augue, vitae iaculis enim lorem at eros. 
+    &lt;img src="./images/horse-3.jpg" width="20" height="20" hspace="50"/&gt;
+Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. 
+    &lt;img src="http:horse-3.jpg"/&gt;
+Nullam mollis orci id tellus. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Curabitur id mauris. Maecenas arcu. Donec nonummy mi a metus. Nulla facilisi. Aenean metus. Nullam vitae sem id risus accumsan luctus. Nam sit amet velit. Mauris ut est. Proin id sem ullamcorper pede luctus tristique. Pellentesque dapibus, neque et pellentesque tincidunt, sapien diam imperdiet ipsum, nec porttitor turpis lectus nec libero. Praesent ut elit.
+    &lt;img src="./images/horse-3.jpg" width="20" height="20" align="left"/&gt;
+Morbi dignissim scelerisque libero. Donec id sapien id velit tristique interdum. Quisque faucibus sapien. Quisque porttitor. Mauris venenatis nunc id nunc. Nulla iaculis metus at ante.  Etiam adipiscing urna quis tellus. Nam aliquam vehicula arcu.
+    &lt;img src="./images/horse-3.jpg" width="20" height="20" vspace="50"/&gt;
+Nunc malesuada. Curabitur tortor metus, malesuada et, suscipit ut, convallis ac, magna. Nam venenatis viverra ipsum. Phasellus dignissim sagittis urna. Phasellus cursus. Cras pede arcu, tempus a, consectetuer vel, faucibus fermentum, diam. Donec lacus. 
+&lt;img src="./images/horse-3.jpg"/&gt;Proin diam leo, vulputate id, ornare cursus, convallis eu, nisi. Vestibulum porttitor luctus dui. Nulla nisi arcu, pharetra at, molestie nec, porta a, leo. Sed congue ante molestie risus. Mauris blandit nulla a tortor. Quisque sed nulla. Nunc imperdiet, elit at faucibus lacinia, nibh augue tristique magna, a aliquam justo sapien eget enim. In suscipit congue dolor. 
+&lt;/text&gt;
+&lt;scrollbar/&gt;
 &lt;/canvas&gt;
 </example>
 <h2>The <tagname>inputtext</tagname> View</h2>

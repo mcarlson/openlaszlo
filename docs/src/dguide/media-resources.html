@@ -8,7 +8,7 @@
 <h1>Media Resources</h1>
  
 <p>This chapter describes how to include external media resources (images, audio, animation, and video)
-into Laszlo applications.</p>
+into OpenLaszlo applications.</p>
 
 <h2>Overview</h2>
 <p>LZX is designed to make it easy for you to integrate media resources into your application
@@ -46,7 +46,7 @@ LPS 3.1 and above support the following media types:</p>
 <h2>Views and resources</h2>
 <p>
 The <tagname link="true">view</tagname> is the most basic viewable 
-element in a Laszlo application and it is described in the chapter on <a href="views.html">views</a>.
+element in an OpenLaszlo application and it is described in the chapter on <a href="views.html">views</a>.
 A view may have a <i>resource</i> attached to it.  The 
 resource represents a piece of media (image, audio, video, or animation) that the 
 view controls.  For images, the view typically displays the image.  For 
@@ -330,7 +330,7 @@ Relative HTTP URLs are thus fetched using a localhost HTTP transfer.
 
 <h4>Caching</h4>
 <p>
-By default, media that is accessed at runtime is cached both in the
+By default, in proxied applications, media that is accessed at runtime is cached both in the
 server <em>and</em> in the client browser.  The OpenLaszlo Server uses the standard
 HTTP If-Modified-Since/Last-Modified caching mechanism specified in the <a
 href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">HTTP 1.1
@@ -407,6 +407,12 @@ you'd like to test:
   &lt;/view&gt;
 &lt;/canvas&gt;
 </example>
+<h2>Using the &lt;image&gt; tag</h2>
+<p>
+The <tagname link="true">image</tagname> tag has the effect of declaring a view and associating a 
+resource with it. This is a convenient shorthand that can make your programs easier to read and maintain.  Do not confuse the <tagname>image</tagname> with the <tagname link="true">img</tagname>. The latter is used to include images inside HTML text and behaves like the &lt;img&gt; tag in HTML.
+</p>
+
 
 </body>
 </html>
