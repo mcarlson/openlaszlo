@@ -464,6 +464,70 @@ in the order that they appear in the source file.  In particular, code
 in a <tagname link="true">script</tagname> element cannot refer to
 <tagname link="true">view</tagname> elements that follow it.</p>
 
+<h2>Accessibility</h2>
+<p>
+OpenLaszlo provides partial support for the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msaa/msaastart_9w2t.asp">Microsoft Active Accessibility</a> specification, which states, "[b]y using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities." Accessibility support is a common requirement for application development in order to conform to the U.S. Federal requirement for accessible information systems (also known as Section 508). This support requires installation of third party software on the client machine, and is only available in the OpenLaszlo targets that run the Flash Player under Internet Explorer. See below for a list of currently available third party software.
+</p>
+<h3>Overview of implementation</h3>
+<p>
+Accessibility is implemented using five attributes on <tagname link="true">view</tagname> and two methods on <classname link="true">LzBrowser</classname>. 
+</p>
+<p>
+In LZX, the most basic visible object is a view. Since almost every visible object inherits from view, almost all visible objects will inherit accessibility support including image, text, button, checkbox, and radio button. (The one exception, images embedded within editable text views, is covered at the end of this section.) The following methods and attributes will be added to view:
+</p>
+<p>
+These are the attributes on view. They are described briefly below. </p> 
+   
+<dl>
+  <dt>aaactive="boolean"</dt>
+  <dd>activate/deactivate children for accessibility</dd>
+  <dt>aaname="string"</dt>
+  <dd>accessibility name</dd>
+  <dt>aadescription="string"</dt>
+  <dd>accessibility description</dd>
+  <dt>aatabindex="number"</dt>
+  <dd>accessibility tab ordering </dd>
+  <dt>aasilent="boolean"</dt>
+  <dd>accessibility silencing/unsilencing</dd>
+</dl>
+
+<p>
+These are the methods on <classname>LzBrowser</classname>.
+</p>
+<dl>
+  <dt>LzBrowser.isAAActive()</dt>
+  <dd>returns true if a screen reader is active and the Flash player is focused.</dd>
+  <dt>LzBrowser.setClipboard(string)</dt>
+  <dd> sets system clipboard</dd>
+</dl>
+<p>
+By default, all text contained in an OpenLaszlo application will be read by supported screen readers. Therefore, the activation feature allows you to specify which views should be read by the screen reader. Activation applies to the current view and all of its children. Accessibility name and description provide the overview and detailed text for the screen reader. Accessibility tab ordering, specifies the reading order for accessible objects. Silencing/unsilencing specifies whether an individual item is accessible or not. Finally, LzBrowser provides the isAAActive() method to determine if a screen reader is active and the Flash player is currently focused.
+</p>
+<p>
+<attribute>aadescription</attribute> is treated separately from the contents. If it's specified, <attribute>aadescription</attribute> will be read in addition to the <attribute>aaname</attribute>. By default, <attribute>aaname</attribute> is equal to the contents of the text field. <attribute>aaname</attribute> can also be specified or overridden.
+</p>
+<p>
+For non-MSAA compliant screen readers such as R&amp;W Gold, OpenLaszlo supports the ability to place text on the clipboard from within an OpenLaszlo application using the <method>LzBrowser.setClipboard</method>.
+</p>
+<p>
+In this example, there are two views that provide accessibility information. When the first view is clicked, it uses the scripting API to unsilence the button.
+</p>
+<example extract="false" title="Specifiying accessibility parameters">
+&lt;view aaactive="true" aaname="Activation Button" aadescription="This button allows you to access more information by activating important views." aatabindex="1" onclick="important.setAASilent(false)"&gt;
+
+&lt;button id="important" aaactive="true" aaname="Important Information" aadescription="Here is some important information." aatabindex="2" aasilent="true"/&gt;
+</example>
+<h4>Compatibility Notes</h4>
+<p>
+The Flash Player has basic support for screen readers with Flash Player versions 6 and above. For best results, we recommend upgrading to Flash 8. OpenLaszlo's built-in version detection feature can facilitate automatic upgrades.
+</p>
+<p>
+Here are some notes from the <a href="http://www.macromedia.com/resources/accessibility/flash8/faq.html">Macromedia Flash 8 accessibility FAQ:</a></p>
+<p><i> 
+Microsoft Active Accessibility (MSAA) makes it easier for all assistive technologies to incorporate support for Macromedia Flash Player. Once the contents of a Macromedia Flash movie are placed under MSAA, it is up to the individual assistive technology to render that content for the user. Macromedia is committed to expanding the number of tools that take advantage of the new features of Macromedia Flash Player. Macromedia is working with leading vendors of assistive technology to ensure the broadest possible support for Macromedia Flash Player. To date, the following assistive technologies support the Flash player: Window Eyes from GW Micro, JAWS from Freedom Scientific, Home Page Reader from IBM and ZoomText from Ai Squared. 
+</i></p>
+
+
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
