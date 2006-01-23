@@ -1,0 +1,317 @@
+<canvas>
+
+    <include href="incubator/tooltip/tooltip.lzx"/>
+    <include href="incubator/tooltip/tooltipview.lzx"/>
+    <include href="incubator/rich-text/richtexttoolbar.lzx"/>
+    <include href="incubator/custombutton.lzx"/>
+    <include href="incubator/lzcombobox.lzx"/>
+
+    <debug x="10" y="480" width="400" height="290" />
+
+    <class name="colorsquare" extends="drawview">
+        <attribute name="swatchcolor" value="black"/>
+        <attribute name="drawsquare" value="false"/>
+        <method event="oninit">
+            this.redraw();
+        </method>
+        <method event="onswatchcolor" name="redraw">
+            this.clear();
+            if (this.drawsquare) {
+	        	this.linewidth=0; this.beginPath(); 
+                this.fillStyle = 0x333333; this.moveTo(1,1); 
+                this.lineTo(15,1); this.lineTo(15,11); this.lineTo(1,11); 
+                this.lineTo(1,1); this.fill();
+	
+	            this.beginPath(); this.fillStyle = 0xFFFFFF; this.moveTo(0,0); 
+                this.lineTo(14,0); this.lineTo(14,10); this.lineTo(0,10); 
+                this.lineTo(0,0); this.fill();
+	            
+	            this.beginPath(); this.fillStyle = swatchcolor; 
+                this.moveTo(1,1); this.lineTo(13,1); this.lineTo(13,9); 
+                this.lineTo(1,9); this.lineTo(1,1); this.fill();
+	       }
+        </method>
+    </class>
+
+    <class name="colorswatch" extends="lzcombobox_item">
+        <colorsquare swatchcolor="$path{'@value'}" drawsquare="true" x="10" y="3"/>
+    </class>
+
+    <dataset name="fontcolors">
+        <clr value="0x000000"/>
+        <clr value="0x555555"/>
+        <clr value="0x333399"/>
+        <clr value="0x339999"/>
+        <clr value="0x339966"/>
+        <clr value="0xcccc33"/>
+        <clr value="0xcc9933"/>
+        <clr value="0xcc3300"/>
+    </dataset>
+
+    <dataset name="dsSingle">
+        <item value="1">only one</item>
+    </dataset>
+
+    <!-- An url that reads submitted form data and echoes it back in a 
+         response. -->
+    <dataset name="echoer" src="http:../echo.jsp"/>
+
+    <dataset name="dsHours">
+        <item value="1">1</item>
+        <item value="2">2</item>
+        <item value="3">3</item>
+        <item value="4">4</item>
+        <item value="5">5</item>
+        <item value="6">6</item>
+        <item value="7">7</item>
+        <item value="8">8</item>
+        <item value="9">9</item>
+        <item value="10">10</item>
+        <item value="11">11</item>
+        <item value="12">12</item>
+    </dataset>
+
+    <dataset name="moredata">
+        <fruit val="1" foo="apple"/>
+        <fruit val="2" foo="orange"/>
+        <fruit val="3" foo="pear"/>
+        <fruit val="4" foo="cherry"/>
+        <fruit val="5" foo="strawberry"/>
+        <fruit val="6" foo="banana"/>
+    </dataset>
+
+    <dataset name="searchLang">
+        <lang name="All" value="alllang"/>
+        <lang name="Bulgarian" value="lang_bg"/>
+        <lang name="Catalan" value="lang_ca"/>
+        <lang name="Croatian" value="lang_hr"/>
+        <lang name="Czech" value="lang_cs"/>
+        <lang name="Danish" value="lang_da"/>
+        <lang name="Dutch" value="lang_nl"/>
+        <lang name="English" value="lang_en"/>
+        <lang name="Estonian" value="lang_et"/>
+        <lang name="Finnish" value="lang_fi"/>
+        <lang name="French" value="lang_fr"/>
+        <lang name="German" value="lang_de"/>
+        <lang name="Greek" value="lang_el"/>
+        <lang name="Hungarian" value="lang_hu"/>
+        <lang name="Icelandic" value="lang_is"/>
+        <lang name="Italian" value="lang_it"/>
+        <lang name="Latvian" value="lang_lv"/>
+        <lang name="Lithuanian" value="lang_lt"/>
+        <lang name="Norwegian" value="lang_no"/>
+        <lang name="Portuguese" value="lang_pt"/>
+        <lang name="Polish" value="lang_pl"/>
+        <lang name="Romanian" value="lang_ro"/>
+        <lang name="Serbian" value="lang_sr"/>
+        <lang name="Slovak" value="lang_sk"/>
+        <lang name="Slovenian" value="lang_sl"/>
+        <lang name="Spanish" value="lang_es"/>
+        <lang name="Swedish" value="lang_sv"/>
+        <lang name="Turkish" value="lang_tr"/>
+    </dataset>
+
+    <dataset name="dsFoo">
+        <data value="lang_sr" />
+    </dataset>
+
+    <dataset name="dsLater" src="ten-items-alpha.xml" type="http"/>
+
+    <text>Note: corresponding values are displayed next to each combobox</text>
+
+    <view id="main" x="10" y="45" layout="axis: x; spacing: 10">
+
+        <view id="col1" layout="spacing:10">
+
+            <text><b>cb0)</b> Value not explicitly set. First item will be selected
+            by default.</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb0" width="50" shownitems="3"
+                            itemdatapath="dsHours:/item" />
+                <text text="${cb0.value}" resize="true"/>
+                <button onclick="cb0.selectItem('5')" text="select 5" />
+            </view>
+
+
+            <text><b>cb1)</b> No initial value (i.e., selectfirst=false) and no
+            default text.</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb1" width="50" shownitems="3"
+                    itemdatapath="dsHours:/item" selectfirst="false" />
+                <text text="${cb1.value}" resize="true"/>
+            </view>
+
+
+            <text><b>cb2)</b> Initial value=2</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb2" width="50" shownitems="3"
+                    itemdatapath="dsHours:/item" value="2">
+                    <method event="onvalue" args="v">
+                        Debug.write(this.id + ') value:', this.value, v);
+                    </method>
+                </lzcombobox>
+                <text text="${cb2.value}" resize="true"/>
+            </view>
+
+
+            <text><b>cb3)</b> Initial value data bound to testval attribute, which is 3.</text>
+            <view layout="axis: x; spacing: 5">
+                <attribute name="testval" value="3" />
+                <lzcombobox id="cb3" width="100" shownitems="4"
+                    itemdatapath="moredata:/fruit" textdatapath="@foo" valuedatapath="@val"
+                    value="$once{ parent.testval }">
+                    <method event="onvalue" args="v">
+                        Debug.write(this.id + ') value:', this.value, v);
+                    </method>
+                </lzcombobox>
+                <text text="${cb3.value}" resize="true"/>
+            </view>
+
+
+            <text><b>cb4)</b> Initial value data bound to testval attribute, which
+            is 3, and with static text.</text>
+            <view layout="axis: x; spacing: 5">
+                <attribute name="testval" value="3" />
+                <!-- initial value bound to testval with statictext -->
+                <lzcombobox id="cb4" width="200" shownitems="4"
+                    itemdatapath="moredata:/fruit" textdatapath="@foo" valuedatapath="@val"
+                    statictext="fruit menu item" value="$once{ parent.testval }"/>
+                <text text="${cb4.value}" resize="true"/>
+            </view>
+
+
+            <text><b>cb5)</b> Defaulttext is set. No initial value exists. Similar
+            to setting selectfirst=false.</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb5" width="100" shownitems="4"
+                    itemdatapath="moredata:/fruit" textdatapath="@foo" valuedatapath="@val"
+                    defaulttext="default text" />
+                <text text="${cb5.value}" resize="true"/>
+            </view>
+
+            <text><b>cb6)</b> Initial value databound to "dsFoo:/data[1]/@value".</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb6" itemdatapath="searchLang:/*" textdatapath="@name" 
+                    value="$path{ 'dsFoo:/data[1]/@value' }" shownitems="10">
+
+                    <method event="onselect" args="dp">
+                        Debug.write(this.id + ') select:', dp)
+                    </method>
+
+                    <method event="oninit">
+                        // Don't understand why I have to do this when value is data
+                        // bound using datapath. Another way around this is to set 
+                        // datacontrolsvisibility in datapath node for combobox. -pk
+                        if (! this.visible) this.setVisible(true);
+                    </method>
+
+    <!--
+                    <method event="oninit">
+                        // shownitems = -1 should work but it doesn't
+                        this.shownitems = searchLang.childNodes.length;
+                    </method>
+    -->
+                </lzcombobox>
+                <text text="${cb6.value}" resize="true"/>
+            </view>
+
+            <text><b>cb7)</b> One item.</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb7" width="200" shownitems="4"
+                    itemdatapath="dsSingle:/item" />
+                <text text="${cb7.value}" resize="true"/>
+            </view> 
+
+            <text><b>cb8,cb9)</b> Combobox in form (id=myform).</text>
+            <view layout="axis: x; spacing: 5">
+                <form inset_left="0" inset_right="0" id="myform"
+                      inset_top="0" inset_bottom="0">
+                    <submit name="submitter" data="${echoer}"/>
+                    <lzcombobox id="cb8" name="fruit" width="200" shownitems="4"
+                        itemdatapath="moredata:/fruit" textdatapath="@foo" 
+                        valuedatapath="@val"/>
+                    <lzcombobox id="cb9" name="hours" width="200" shownitems="4"
+                        itemdatapath="dsHours:/item" />
+                    <button isdefault="true"
+                            onclick="parent.submitter.submit()">Submit</button>
+                </form>
+                <view datapath="echoer:/response[1]" layout="axis: y">
+                    <view datapath="formcomponent">
+                        <text datapath="@name" resize="true">
+                            <method name="setText" args="n">
+                                var val = this.datapath.xpathQuery('text()');
+                                super.setText(n + ': ' + val);
+                            </method>
+                        </text>
+                    </view>
+                </view>
+            </view>
+
+        </view> <!-- id='col1' -->
+
+        <view id="col2" layout="spacing:10">
+            <text><b>cb10)</b> data loaded late, datapath on combobox to allow initial value to be set</text>
+            <view layout="axis: x; spacing: 5">
+                <button onclick="dsLater.doRequest()">load data</button>
+                <lzcombobox id="cb10" width="200" shownitems="4"
+                    itemdatapath="dsLater:/list/item"
+                    datapath="dsLater:/list/"/>
+            </view> 
+
+            <text><b>cb11)</b> different itemclass type for combobox; should create
+                  different floating list</text>
+
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb11" width="48" shownitems="8" 
+                            style="sidebarbutton_style" itemclassname="colorswatch" 
+                            itemdatapath="fontcolors:/clr" />
+            </view> 
+
+
+            <text><b>cb12)</b> ismenu=true  combobox acts like a menu 
+                  different floating list</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb12" width="48" shownitems="8" 
+                            ismenu="true"
+                            itemdatapath="dsHours:/item" />
+            </view> 
+
+            <text><b>cb13)</b> Not focusable</text>
+            <view layout="axis: x; spacing: 5">
+                <lzcombobox id="cb13" width="48" shownitems="8" focusable="false"
+                            itemdatapath="dsHours:/item" />
+            </view> 
+
+            
+
+            <text><b>cb14)</b> width constraint to surrounding view</text>
+            <view width="100" layout="axis: x; spacing: 5">
+                <lzcombobox id="cb14" width="100%" shownitems="8"
+                            itemdatapath="dsHours:/item" />
+            </view>
+
+            <text><b>cb15)</b> oncombofocus and oncomboblur</text>
+            <view width="100" >
+                <lzcombobox id="cb15" width="100%" shownitems="8"
+                            itemdatapath="dsHours:/item">
+                    <method event="oncombofocus">
+                        Debug.write(this, ' got focus');
+                    </method>
+                    <method event="oncomboblur">
+                        Debug.write(this, ' got blur');
+                    </method>
+                </lzcombobox>
+            </view>
+
+            <text><b>cb16)</b> listattach="top"</text>
+            <view width="100" layout="axis: x; spacing: 5">
+                <lzcombobox id="cb16" width="100%" shownitems="3"
+                            itemdatapath="moredata:/fruit" textdatapath="@foo" 
+                            valuedatapath="@val" listattach="top" />
+            </view>
+
+        </view> <!-- id='col2' -->
+
+    </view> <!-- id='main' -->
+
+</canvas>
