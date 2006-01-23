@@ -67,6 +67,8 @@ shopt -s expand_aliases
 # two minute timeout := n * (3 second polling period)
 RETRIES=40
 
+rc1=0
+
 # run each test by launching a browser, and waiting for either a "finishtest"
 # entry for that path to appear in the log, or get tired of waiting and timeout.
 paths=`cat ${LPS_HOME}/${tests}`
@@ -96,7 +98,7 @@ for path in $paths; do
     if [[ $timeout -le 0 ]]; 
 	then
 	 # set non zero return code for error
-	let rc1++
+	rc1++
 	echo "TIMEOUT waiting for ${path}"
 	echo "<timeout file=\"${path}\" msg=\"TIMEOUT waiting for ${path}\" />" >> ${logfile}
     fi
