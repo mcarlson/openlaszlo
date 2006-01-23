@@ -1,5 +1,22 @@
-<canvas> 
-   <script> 
-     (true == true) () 
-   </script> 
-</canvas>
+<canvas width="1000" height="710" title="Menu Test" debug="true"> 
+<dataset name="menuDS"> 
+<def> 
+    <menu mname="Edit" width="100"> 
+        <item iname="Cut"/> 
+        <item iname="Copy"/> 
+        <item iname="Paste"/> 
+    </menu> 
+    <menu mname="Help" width="150"> 
+        <item iname="Help Topics"/> 
+        <item iname="---"/> 
+        <item iname="About..."/> 
+    </menu> 
+</def> 
+</dataset> 
+
+<menubar name="mBar" width="900"> 
+    <menu datapath="menuDS:/def/menu" text="$path{'@mname'}" width="$path{'@width'}"> 
+        <menuitem datapath="item" text="$path{'@iname'}"/>
+    </menu> 
+</menubar> 
+</canvas> 
