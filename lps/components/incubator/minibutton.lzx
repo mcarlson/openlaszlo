@@ -26,7 +26,6 @@
         rightresource="minibutton_right_rsc"
         texty="-1"
         fontsize="9"
-        font="futura"
         >
     </class>
 

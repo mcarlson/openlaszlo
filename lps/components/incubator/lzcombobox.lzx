@@ -1,6 +1,7 @@
 <library>
     <include href="styledtext.lzx" />
     <include href="newcombobox.lzx" />
+    <include href="tooltip/tooltip.lzx" />
 
     <!--- mouseover/selection for combobox list items -->
     <resource name="lzcomboitem_bg_rsc">
@@ -33,6 +34,20 @@
         <frame src="resources/combobox/combo_rt_sqtop_up.png" />
         <frame src="resources/combobox/combo_rt_sqtop_mo.png" />
         <frame src="resources/combobox/combo_rt_sqtop_dn.png" />
+    </resource>
+    
+    <resource name="button_small_middle_rsc" >
+        <frame src="resources/button/small/sm_btn_up_mid.swf" />
+        <frame src="resources/button/small/sm_btn_mo_mid.swf" />
+        <frame src="resources/button/small/sm_btn_dn_mid.swf" />
+        <frame src="resources/button/small/sm_btn_dsbl_mid.swf" />
+    </resource>
+    
+    <resource name="downarrow_icon_rsc">
+        <frame src="resources/combobox/combobox_arrow_up+dn.swf" />
+        <frame src="resources/combobox/combobox_arrow_mo.swf" />
+        <frame src="resources/combobox/combobox_arrow_up+dn.swf" />
+        <frame src="resources/combobox/combobox_arrow_dsbl.swf" />
     </resource>
     
     <!--- Subclass used to create an item in a lzcombobox's list.  For laszlo mail, need custom selection/highlight graphics.
@@ -79,7 +94,7 @@
 
     <!--- Subclass of newcombobox with laszlo mail look. See newcombobox for
           details. Usage:
-          @START_CODE
+          <code>
           <dataset name="dsHours">
               <item value="1">1</item>
               <item value="2">2</item>
@@ -101,7 +116,7 @@
                   Debug.write('datapointer:', dptr);
               </method>
           </lzcombobox>
-          @END_CODE
+          </code>
     -->
     <class name="lzcombobox" extends="newcombobox" width="100" style="combobox_style" >
         <!--- The name of the class for items in the floating list. -->
@@ -194,7 +209,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
+<!-- @LZX_VERSION@                                                          -->

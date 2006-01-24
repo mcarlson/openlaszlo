@@ -1,31 +1,41 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                          -->
 <canvas>
-  <include href="../newcombobox.lzx"/>
-  <class name="simplecombobox" extends="newcombobox" width="100">
-    <view width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
-      <method event="onclick">
-        LzFocus.setFocus(this,false); 
-        classroot.toggle()
+    <include href="../lzcombobox.lzx"/>
+    <include href="../lzeditcombobox.lzx"/>
+
+    <dataset name="dsHours">
+      <item value="1">1</item>
+      <item value="2">2</item>
+      <item value="3">3</item>
+      <item value="4">4</item>
+      <item value="5">5</item>
+      <item value="6">6</item>
+      <item value="7">7</item>
+      <item value="8">8</item>
+      <item value="9">9</item>
+      <item value="10">10</item>
+      <item value="11">11</item>
+      <item value="12">12</item>
+    </dataset>
+    
+    <lzcombobox width="80" shownitems="3" itemdatapath="dsHours:/item">
+      <method event="onselect" args="dptr">
+          Debug.write('value:', this.value);
+          Debug.write('datapointer:', dptr);
       </method>
-      <method event="onmouseout">
-        this.setBGColor(0xCCCCCC);
+    </lzcombobox>
+    
+    <lzeditcombobox width="80" shownitems="3" itemdatapath="dsHours:/item">
+      <method event="onselect" args="dptr">
+          Debug.write('value:', this.value);
+          Debug.write('datapointer:', dptr);
       </method>
-      <method event="onmouseup">
-        this.setBGColor(0xCCCCCC);
-      </method>
-      <method event="onmouseover">
-        this.setBGColor(0xEEEEEE);
-      </method>
-      <method event="onmousedown">
-        this.setBGColor(0xAAAAAA);
-      </method>
-    </view>
-    <newcombobox_text width="${ parent.width - 19 }" x="7" />
-  </class>
-  
-  <simplecombobox/>
+    </lzeditcombobox>
+    
+    <simplelayout axis="y" spacing="6"/>
+    
 </canvas>

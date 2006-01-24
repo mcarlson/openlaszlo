@@ -1,5 +1,4 @@
 <canvas>
-<font src="../../../lzmail/fonts/FuturNo2DBol_small.ttf" name="futura" />
-<include href="../minibutton.lzx"/>
+    <include href="../minibutton.lzx"/>
     <minibutton text="Details:"/>
 </canvas>
