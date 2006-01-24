@@ -237,19 +237,25 @@ public class ViewCompiler extends ElementCompiler {
     }
 
     static HashMap sUnsupportedServerlessFiletypes = new HashMap();
+    static HashMap sUnsupportedServerlessFiletypesSWF7 = new HashMap();
     {
-        sUnsupportedServerlessFiletypes.put("gif", "true");
         sUnsupportedServerlessFiletypes.put("bmp", "true");
-        sUnsupportedServerlessFiletypes.put("png", "true");
         sUnsupportedServerlessFiletypes.put("tiff", "true");
         sUnsupportedServerlessFiletypes.put("tif", "true");
         sUnsupportedServerlessFiletypes.put("wmf", "true");
         sUnsupportedServerlessFiletypes.put("wmv", "true");
+
+        sUnsupportedServerlessFiletypesSWF7.put("png", "true");
+        sUnsupportedServerlessFiletypesSWF7.put("gif", "true");
+
     }
     
     static void checkUnsupportedMediaTypes(CompilationEnvironment env, Element elt, String url) {
         String suffix = FileUtils.getExtension(url);
-        if (sUnsupportedServerlessFiletypes.containsKey(suffix.toLowerCase())) {
+        if ( (sUnsupportedServerlessFiletypes.containsKey(suffix.toLowerCase())) ||
+             (env.getSWFVersionInt() < 8 &&
+              sUnsupportedServerlessFiletypesSWF7.containsKey(suffix.toLowerCase())))
+             {
             env.warn(
 /* (non-Javadoc)
  * @i18n.test

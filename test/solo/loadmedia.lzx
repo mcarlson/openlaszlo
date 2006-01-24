@@ -32,11 +32,11 @@
                 url = "http://www.laszlosystems.com/hubble/2000-10-a-640_wallpaper.jpg";
                 break;
             case 2:
-                Debug.write("Loading GIF - should error");
+                Debug.write("Loading GIF - should error in swf7 or swf6");
                 url = "http://www.laszlosystems.com/hubble/1995-01-a-640_wallpaper.gif";
                 break;
             case 3:
-                Debug.write("Loading PNG - should error");
+                Debug.write("Loading PNG - should error in swf7 or swf6");
                 url = "http://www.laszlosystems.com/hubble/2002-05-a-640_wallpaper.png";
                 break;
             case 4:
@@ -46,7 +46,7 @@
                 url = "http://www.oddtodd.com/wordup.swf";
                 break;
             case 5:
-                Debug.write("Loading GIF - should error");
+                Debug.write("Loading GIF - should error in swf7 or swf6");
                 url = "http://www.laszlosystems.com/img/h_head_logo.gif"
                 break;
             case 6:

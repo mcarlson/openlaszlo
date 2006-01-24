@@ -121,14 +121,20 @@ LzMediaLoader.prototype.startingLoad = function ( loadmc ){
 // suffix from which it is not possible to deduce the file type, like
 // .jsp or .php.
 LzMediaLoader.unsupportedMediaTypes = {
-    "gif": true,
     "bmp": true,
-    "png": true,
     "tiff": true,
     "tif": true,
     "wmf": true,
     "wmv": true
+
+
 };
+
+LzMediaLoader.unsupportedMediaTypesSWF7 = {
+    "png": true,
+    "gif": true
+}
+
 
 
 //==============================================================================
@@ -163,7 +169,10 @@ LzMediaLoader.prototype.request = function( req , cache , headers ) {
             suffix = req.substring(si+1, si.length).toLowerCase();
         }
         if ($debug) {
-            if (suffix != null && LzMediaLoader.unsupportedMediaTypes[suffix] == true) {
+            if (suffix != null && ((LzMediaLoader.unsupportedMediaTypes[suffix] == true)
+                                   ||
+                                   ((canvas.runtime == "swf7" || canvas.runtime == "swf6")
+                                    && (LzMediaLoader.unsupportedMediaTypesSWF7[suffix] == true)))) {
                 _root.Debug.write("WARNING: serverless loading of resources with type '" 
                                 + suffix + "' is not supported by the Flash player. " +
                                 req);
