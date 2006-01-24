@@ -130,7 +130,7 @@ LzKeys.getDownKeys = function (){
 //-----------------------------------------------------------------------------
 // @return Boolean:  indicating whether the given key is down.
 // @param String k: The name of the key to check for downness or an array of
-// key names (e.g. ['Shift', 'Tab']
+// key names (e.g. ['shift', 'tab']
 //-----------------------------------------------------------------------------
 LzKeys.isKeyDown = function ( k ){
     if (typeof(k) == "string") {
