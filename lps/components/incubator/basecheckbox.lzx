@@ -1,8 +1,8 @@
 <library>
-    <include href="incubator/newbaseform.lzx"/>
+    <include href="base/baseformitem.lzx"/>
 
     <!--- A checkbox component representing a boolean. -->
-    <class name="basecheckbox" extends="newbaseformitem">
+    <class name="basecheckbox" extends="baseformitem">
 
         <!--- True if it's checked, else false. Default is false. -->
         <attribute name="value" value="false" setter="setValue(value)" />

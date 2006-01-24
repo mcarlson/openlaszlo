@@ -3,70 +3,18 @@
 
     <!--- A list class that handles a default value. 
           Input and output for the list is defined to be in this format:
-          @BEGIN_CODE
+          <code>
           <list name="fubar">
             <item text="foo" value="bar" default="true"/>
             <item text="goo" value="mar"/>
           </list>
-          @END_CODE
-
+          </code>
          
           Currently only works with dataoption="lazy" or "pooling"
     -->
     <class name="simpledefaultlist" extends="list">
 
-        <!-- copied from newbaseformitem -->
-
-        <!--- Boolean to determine whether the baseformitem was changed. Default
-              is false. -->
-        <attribute name="changed" value="false" 
-                   setter="this.setChanged(changed)" />
-
-        <!--- Event sent when baseformitem is changed. Only sent once when true
-              or once when false. -->
-        <attribute name="onchanged" value="null" />
-
-        <!-- Rollback value for the baseformitem. 
-             Stores the dataelement pointing to original dataset -->
-        <!--- @keywords private --> 
-        <attribute name="rollbackvalue" value="null" />
-
-        <!--- Setter to set baseformitem to changed. Should be called by
-              subclasses whenever a value is set. The first time this is called,
-              the changed value is not set since it assumes subclasses are
-              setting their initial value. 
-              @param Boolean changed: true if changed, else false. -->
-        <method name="setChanged" args="changed,skipform"><![CDATA[
-
-            // Rollbackvalue will be value if init is not completed.
-            if (! this._initcomplete) {
-                this.changed = false;
-                return;
-            }
-
-            var oldchanged = this.changed;
-            this.changed = changed;
-
-            // Only send changed event if it wasn't changed before.
-            if (this.changed != oldchanged) {
-                if (this.onchanged) this.onchanged.sendEvent(this.changed);
-            }
-
-            // Only set parent's changed property if parent hasn't changed
-            if (! skipform && this.changed) { 
-                // It's possible that baseformitem is not in a form.
-                if (this['_parentform'] && 
-                    this._parentform['changed'] != undefined && 
-                    ! this._parentform.changed) {
-                    this._parentform.setChanged(changed);
-                }
-            }
-            ]]>
-        </method>
-    
-        <!-- end copy from newbaseformitem  -->
-
-        <!-- methods overridded from newbaseformitem -->
+        <!-- methods overridded from baseformitem -->
         <method name="rollback">
 
             if (this.changed) {
@@ -79,7 +27,6 @@
             }
 
         </method>
-
         
         <!-- simpledefaultlist attributes -->
         <!--- LzDataElement of the default node 

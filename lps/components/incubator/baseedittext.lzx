@@ -1,6 +1,6 @@
 <library>
 
-    <include href="newbaseform.lzx"/>
+    <include href="base/baseformitem.lzx"/>
 
     <!--- A private inputtext class used by baseedittext that basically passes
           its events (onfocus, onblur, onkeyup, onkeydown, ontext) up. Instances
@@ -80,7 +80,7 @@
 
     <!--- This component provides the look and feel for user editable text, data
           binding, and focus events. -->
-    <class name="baseedittext" extends="newbaseformitem" focusable="false">
+    <class name="baseedittext" extends="baseformitem" focusable="false">
         <!--- The text that appears in the component. Text and value are the
               same. -->
         <attribute name="text" type="html" setter="this.setValue(text)"/>

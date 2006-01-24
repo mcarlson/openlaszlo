@@ -1,0 +1,80 @@
+<canvas debug="true" title="lzunit-baseform.lzx" >
+  <include href="lzunit" />
+  <include href="base/baseform.lzx"/>
+  <include href="lz/checkbox.lzx"/>
+
+  <TestSuite>
+
+    <TestCase>
+    
+        <baseform name="bf1">
+            <checkbox name="cb1" value="true" text="cb1"/>
+            <view name="v1">
+                <checkbox name="cb2" submitname="scb2" value="true" text="cb2"/>
+            </view>
+        </baseform>
+        
+        <method name="testFormParent">
+            var fp1 = bf1.cb1.findForm();
+            assertEquals(bf1, fp1);
+            var fp2 = bf1.v1.cb2.findForm();
+            assertEquals(bf1, fp2);
+        </method>
+        
+        <method name="testSubmitName">
+            assertEquals("cb1", bf1.cb1.submitname);
+            assertEquals("scb2", bf1.v1.cb2.submitname);
+            bf1.v1.cb2.setAttribute("submitname", "foo");
+            assertEquals("foo", bf1.v1.cb2.submitname);
+        </method>
+    </TestCase>
+    
+    <TestCase>
+    
+        <baseform name="bf2">
+            <checkbox name="cb1" value="true" text="cb1"/>
+        </baseform>
+        
+        <method name="testSetValue">
+            assertEquals(true, bf2.cb1.value);
+            assertEquals(false, bf2.cb1.changed);
+            assertEquals(false, bf2.changed);
+
+            bf2.cb1.setAttribute("value", true);
+            assertEquals(true, bf2.cb1.value);
+            assertEquals(false, bf2.cb1.changed);
+            assertEquals(false, bf2.changed);
+
+            bf2.cb1.setAttribute("value", false);
+            assertEquals(false, bf2.cb1.value);
+            assertEquals(true, bf2.cb1.changed);
+            assertEquals(true, bf2.cb1.rollbackvalue);
+            assertEquals(true, bf2.changed);
+
+            bf2.rollback();
+            assertEquals(true, bf2.cb1.value);
+            assertEquals(false, bf2.cb1.changed);
+            
+            bf2.cb1.setAttribute("value", false);
+            assertEquals(false, bf2.cb1.value);
+            assertEquals(true, bf2.cb1.changed);
+            assertEquals(true, bf2.cb1.rollbackvalue);
+            assertEquals(true, bf2.changed);
+
+            bf2.commit();            
+            assertEquals(false, bf2.cb1.value);
+            assertEquals(false, bf2.cb1.changed);
+            assertEquals(false, bf2.changed);
+        </method>
+        
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,42 +1,173 @@
 <library>
     <include href="base/basevaluecomponent.lzx" />
+    <include href="base/baseformitem.lzx" />
 
-    <!--- an abstract class for components which might submit data to a form -->
+    <!--- An abstract class for components which might submit data to a form.
+          Baseformitem supports listening for a changed value. A value
+          is changed if the current value was modified at any point.-->
     <class name="baseformitem" extends="basevaluecomponent">
 
-        <!--- protected: the form (if any) that contains this component -->
+        <!--- the form (if any) that contains this component
+              @keywords private -->
         <attribute name="_parentform" value="null"/>
 
-        <!--- the name used when submitting the data of the form item
-            if no submitname is given, the 'name' attribute is used
-            unlike the name attribute, submitname may be changed at runtime -->
+        <!--- The name used when submitting the data of the form item.
+              If no submitname is given before oninit, the 'name' attribute is used.
+              Unlike the name attribute, submitname may be changed at runtime. -->
         <attribute name="submitname" value="" type="string"/>
 
-        <!--- if submit is true, then the value of this element will be submitted
-            with the form.  By default, submit is true when enabled.  -->
+        <!--- If submit is true, then the value of this element will be submitted
+              with the form.  By default, submit is true when enabled.  -->
         <attribute name="submit" value="${enabled}" type="boolean"/>
+
+        <!--- Boolean to determine whether the baseformitem was changed. Default
+              is false. -->
+        <attribute name="changed" value="false" 
+                   setter="this.setChanged(changed)" />
+
+        <!--- The value of the baseformitem. Default is null. -->
+        <attribute name="value" value="null" 
+                   setter="this.setValue(value, false)" />
+
+        <!--- Event sent when baseformitem is changed. Only sent once when true
+              or once when false. -->
+        <event name="onchanged" />
+
+        <!--- Event sent whenever checkbox value changes. -->
+        <event name="onvalue" />
+
+        <!-- Rollback value for the baseformitem. -->
+        <attribute name="rollbackvalue" value="null" />
+
+        <!-- If true, the component will not inform its parent form
+             that it has changed. Useful in conjunction with submit=false -->
+        <attribute name="ignoreform" value="false" />
 
         <handler name="oninit">
             <![CDATA[
                 if (this.submitname == "") this.submitname = this.name;
                 if (this.submitname == "") {
-                    // Debug.write('name required for form submit', this);
+                    if ($debug) {
+                        Debug.write('name required for form submit', this);
+                    }
                     return;
                 }
 
-                var p = this.immediateparent;
-                while (p != canvas) {
-                     if (p[ 'formdata' ]) {
-                        // found a form parent
-                        p.addFormItem(this);
-                        this._parentform  =  p;
-                        break;
-                     }
-                     p = p.immediateparent;
+                var fp = this.findForm();
+                if (fp != null) {
+                    fp.addFormItem(this);
+                    this._parentform = fp;
                 }
             ]]>
         </handler>
 
+        <!--- Setter to set baseformitem to changed. Should be called by
+              subclasses whenever a value is set. The first time this is called,
+              the changed value is not set since it assumes subclasses are
+              setting their initial value. 
+              @param Boolean changed: true if changed, else false.
+              @param Boolean skipform: true to skip notifying parent form
+              @keywords protected -->
+        <method name="setChanged" args="changed,skipform"><![CDATA[
+
+            // Rollbackvalue will be value if init is not completed.
+            if (! this._initcomplete) {
+                this.changed = false;
+                return;
+            }
+
+            var oldchanged = this.changed;
+            this.changed = changed;
+
+            // Only send changed event if it wasn't changed before.
+            if (this.changed != oldchanged) {
+                if (this.onchanged) this.onchanged.sendEvent(this.changed);
+            }
+
+            // Only set parent's changed property if parent hasn't changed
+            if (! skipform && this.changed && ! ignoreform) { 
+                // It's possible that baseformitem is not in a form.
+                if (this['_parentform'] && 
+                    this._parentform['changed'] != undefined && 
+                    ! this._parentform.changed) {
+                    this._parentform.setChanged(changed);
+                }
+            }
+            ]]>
+        </method>
+
+        <!--- Rollback value and set changed to false. -->
+        <method name="rollback">
+            if (this.rollbackvalue != this['value']) {
+                this.setAttribute('value', this.rollbackvalue);
+            }
+            this.setAttribute('changed', false);
+        </method>
+
+        <!--- Commit value and set changed to false. -->
+        <method name="commit">
+            this.rollbackvalue = this.value;
+            this.setAttribute('changed', false);
+        </method>
+
+        <!--- Set the value for the baseformitem.
+              @param Any v: the value of the baseformitem. 
+              @param Boolean isinitvalue: if true, the rollbackvalue is set. -->
+        <method name="setValue" args="v,isinitvalue"><![CDATA[
+            var didchange = (this.value != v);
+            this.value = v;
+            if (isinitvalue || ! this._initcomplete) {
+                this.rollbackvalue = v;
+            }
+            this.setChanged(didchange && !isinitvalue);
+            if (this['onvalue']) this.onvalue.sendEvent(v);
+            ]]>
+        </method>
+
+        <!--- This implementation sets the applied data as an initalizater
+              value. This is run by a datapath to get the data from a data node.
+              @param Any d: the data value to set in this object. -->
+        <method name="applyData" args="d">
+            this.setValue(d,true);
+        </method>
+
+        <!--- This implementation returns the value. This is run by a datapath
+              to set the value to a data node. -->
+        <method name="updateData">
+            return this.value;
+        </method>
+
+        <!--- Finds a baseform ancestor
+              @return a form if found, else null. -->
+        <method name="findForm">
+            if (_parentform != null)
+                return _parentform;
+            else {
+                var p = this.immediateparent;
+                var fp = null;
+                while (p != canvas) {
+                     if (p['formdata']) {
+                        fp = p;
+                        break;
+                     }
+                     p = p.immediateparent;
+                }
+                return fp;
+            }
+        </method>
+
+        <!--- This returns the value of the component in XML format:
+                <code> submit_name="value"</code>
+                @param Boolean convert: if true, boolean values
+                will be converted to 1 and 0 -->
+        <method name="toXML" args="convert">
+            var val = this.value;
+            if (convert) {
+                // Force javascript to convert booleans to numbers
+                if (typeof(val) == 'boolean') val = val - 0;
+            }
+            return (attrName + "=\"" + LzBrowser.xmlEscape(val) + '"'); 
+        </method>
 
     </class>
 </library>

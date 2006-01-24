@@ -4,7 +4,9 @@
   <include href="tabelement.lzx"/>
   <include href="combobox.lzx"/>
   <include href="list.lzx"/>
+  <include href="basefloatinglist.lzx"/>
   <include href="floatinglist.lzx"/>
+  <include href="plainfloatinglist.lzx"/>
   <include href="menu.lzx"/>
 
   <include href="button.lzx"/>

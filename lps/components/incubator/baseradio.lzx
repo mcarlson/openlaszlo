@@ -1,6 +1,6 @@
 <library>
 
-    <include href="incubator/newbaseform.lzx" />
+    <include href="incubator/baseformitem.lzx" />
 
     <!--- A helper intermediary service used by baseradiobutton and
           baseradiogroup. Handles creation of baseradiogroups, and adds and
@@ -23,7 +23,7 @@
               @param baseradiobutton rb: radio button to create group with.
               @keywords private -->
         <method name="createGroup" args="groupname,rb"><![CDATA[
-            var groupPlacement = this.findFormAncestor(rb);
+            var groupPlacement = rb.findForm();
             if (groupPlacement == null) groupPlacement = this;
             var group = new baseradiogroup(groupPlacement, 
                            { name: groupname, 
@@ -31,22 +31,6 @@
                              submit: rb.submit, 
                              datapath: rb.groupdatapath } );
             return (this.groups[groupname] = group);
-            ]]>
-        </method>
-
-        <!--- Finds a newbaseform ancestor for a baseradiobutton.
-              @return a form if found, else null.
-              @keywords private -->
-        <method name="findFormAncestor" args="rb"><![CDATA[
-            // if form isn't defined, just return null. don't know if there's a
-            // better way to do this check.
-            if (typeof(form) != 'function') return null;
-
-            var p = rb.parent;
-            while (p != canvas && ! (p instanceof newbaseform)) {
-                p = p.parent;
-            }
-            return (p != canvas ? p : null);
             ]]>
         </method>
 
@@ -211,7 +195,7 @@
 
     <!--- Class baseradiogroup: a class representing the selected radiobutton,
           that can have many radiobuttons associated with it -->
-    <class name="baseradiogroup" extends="newbaseformitem">
+    <class name="baseradiogroup" extends="baseformitem">
         <!--- The value for the baseradiogroup. -->
         <attribute name="value" value="null" setter="this.setValue(value)"/>
 

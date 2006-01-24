@@ -2,15 +2,15 @@
 
     <debug x="250" height="500" /> 
 
-    <include href="../newbaseform.lzx"/>
-    <include href="../checkbox.lzx"/>
+    <include href="base/baseform.lzx"/>
+    <include href="incubator/checkbox.lzx"/>
 
     <dataset name="mydset">
         <value>true</value>
         <value>false</value>
     </dataset>
 
-    <newbaseform id="myform" x="20" y="20" layout="spacing:3">
+    <baseform id="myform" x="20" y="20" layout="spacing:3">
 
         <checkbox id="c1" value="true">
             <method event="onvalue">
@@ -52,6 +52,6 @@
             Debug.write('myform changed', this.changed, changed);
         </method>
 
-    </newbaseform>
+    </baseform>
 
 </canvas>

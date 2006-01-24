@@ -5,8 +5,8 @@
 <!-- @LZX_VERSION@                                                         -->
 <library>
 
-    <include href="newbaseform.lzx" />
-    <include href="floatinglist.lzx" />
+    <include href="base/baseformitem.lzx" />
+    <include href="lz/plainfloatinglist.lzx" />
     <include href="lz/textlistitem.lzx" />
 
     <!--- Class used to create an item in a newcombobox's list.
@@ -74,7 +74,7 @@
             where node is the dataelement of the list item. Don't forget 
             to reset the seleciton on the list, as well.
              -->
-    <class name="newcombobox" extends="newbaseformitem">
+    <class name="newcombobox" extends="baseformitem">
 
         <!--- Datapath to items in list. -->
         <attribute name="itemdatapath" value="null" type="string"/>
@@ -260,7 +260,7 @@
             var icn = this.itemclassname;
             if ( ! gcbl[icn] ) {
 
-                gcbl[icn] = new floatinglist(canvas,
+                gcbl[icn] = new plainfloatinglist(canvas,
                     { visible:false, attach: this.listattach, attachoffset: -2, 
                       multiselect: false});
                 

@@ -1,45 +1,7 @@
-<!--
-    floatinglist.lzx
-
-    Copyright 2004 Laszlo Systems, Inc.  All Rights Reserved.
-    Unauthorized use, duplication or distribution is strictly prohibited.
-    This software is the proprietary information of Laszlo Systems, Inc.
-    Use is subject to license terms.
--->
 <library>
     <include href="lz/list.lzx" /> 
-    
-    <resource name="shadow_right" src="resources/floatinglist/v_shdw.swf" />
-    <resource name="shadow_bottom" src="resources/floatinglist/h_shdw.swf" />
-    <resource name="shadow_corner" src="resources/floatinglist/corner_shdw.png" />        
 
-    <!--- The shadows width and height are set to the width and height of the view
-          it is trying to apply a shadow to.
-          @keywords private -->
-    <class name="_floatshadow" >
-        <!-- number of pixels pulled in from right and bottom sides -->
-        <attribute name="inset" value="10" />
-        <attribute name="offsety" value="10" />
-        <attribute name="shadowsize" value="1.5" />
-        
-        <view resource="shadow_right" stretches="height" 
-              x="${parent.width}" y="${parent.shadowsize}" 
-              height="${parent.height - parent.shadowsize}" />
-              
-        <view resource="shadow_bottom" stretches="width"
-              y="${parent.height}" x="${parent.shadowsize}" 
-              width="${parent.width - parent.shadowsize}" />
-              
-        <view resource="shadow_corner" stretches="width" 
-              x="${parent.width}"
-              y="${parent.height}" />
-    </class>
-    
-    <!--- A list which floats above other components on the canvas.  The
-          floatinglist may be attached to a view, in which case the
-          attachlocation attribute may be used to specify where the attachment
-          occurs. -->
-    <class name="floatinglist" extends="list"
+    <class name="basefloatinglist" extends="list"
            options="ignorelayout" >
         <!--- @keywords private -->
         <attribute name="owner" />
@@ -55,11 +17,9 @@
         <attribute name="_currentattachx" value="bottom" type="string"/>
 
         <!--- The size of the bottom border which defaults to bordersize. -->
-        <attribute name="border_bottom"  value="${this._currentattachy == 'bottom' ? 1:this.bordersize}" />
-        <attribute name="border_top"  value="${this._currentattachy == 'top' ? 1:this.bordersize}" />
+        <attribute name="border_bottom"  value="${this._currentattachy == 'bottom' ? 0:this.bordersize}" />
+        <attribute name="border_top"  value="${this._currentattachy == 'top' ? 0:this.bordersize}" />
         
-        <!--- @keywords private -->
-        <attribute name="shadowcrn"     value="0" />
         <!--- The view to which this floatinglist will attach. By default, this
               will be the lexical parent.  The style of the attachtarget will be
               inherited. -->
@@ -67,8 +27,6 @@
                            setter="this.setAttachTarget(attachtarget)" />
         <!--- The distance from the attachtarget. -->
         <attribute name="attachoffset"  value="0" />
-        <!--- The shadow offset in the y coordinate space. -->
-        <attribute name="shadowoffsety" value="${this._currentattachy == 'bottom' ? 3:-9}" />
         
         <!--- @keywords private -->
         <attribute name="_fx" value="null"/>
@@ -78,18 +36,6 @@
         <!--- Number of items originally requested to display.
               @keywords private -->
         <attribute name="_origshownitems" value="-2" type="number" />
-
-        <!-- initially this view will cover the contents of the list.
-             this is rectified oninit by sending this.sendToBack()
-             -->
-        <view name="bkgnd" placement="ignore" 
-              width="100%" height="100%"  >
-            <_floatshadow name="shdw" width="100%" height="100%" opacity=".6" />
-            <view name="borderview" 
-                  width="100%" 
-                  height="100%" 
-                  bgcolor="0x808080" />
-        </view>
 
         <!--- our style is contrained to the style of our attachtarget
               @keywords private -->
@@ -110,7 +56,7 @@
             this.owner = parent;
 
             if ( typeof( args.name ) != 'undefined'  )  {
-                nme = args.name; // save value of name arg
+                var nme = args.name; // save value of name arg
                 args.name = null;    // zero name field. doing 'delete args.name'
                                      // doesn't work in this case.
                 this.wouldbename = nme;
@@ -130,6 +76,31 @@
                 p = p.immediateparent;
             }
 
+            // Since we are constructed on the canvas, we need to
+            // listen for out parent being destroyed and clean up after
+            // ourselves.
+            new LzDelegate(this, 'destroy', parent, 'ondestroy');
+        </method>
+
+        <!--- @keywords private -->
+        <method name="destroy" args="recursiveCall">
+          // Have to remove ourselves from the canvas
+          var svs = canvas.subviews;
+          for (var i = svs.length -1; i >= 0; i--) {
+            if (svs[i] === this) {
+              svs.splice(i, 1);
+              break;
+            }
+          }
+          // Have to remove ourselves from the canvas
+          var sns = canvas.subnodes;
+          for (var i = sns.length -1; i >= 0; i--) {
+            if (sns[i] === this) {
+              sns.splice(i, 1);
+              break;
+            }
+          }
+          super.destroy(recursiveCall);
         </method>
 
         <!--- @keywords private -->
@@ -138,8 +109,11 @@
             if (this.attachtarget==null) {
                 this.setAttachTarget( owner );
             }
-            this.bkgnd.sendToBack();
-            this.bringToFront();
+        </method>
+        
+        <!--- @keywords private -->
+        <method name="getMenuCapHeight">
+          return 0;
         </method>
         
         <!--- @keywords private -->
@@ -150,10 +124,12 @@
             var svHeight = this.interior.content.subviews[0].height;
             var own_y = attachtarget.getAttributeRelative('y',canvas);
 
+            var menuCapHeight = getMenuCapHeight();
+            
             // check which position allows for more items to be displayed
             var maxHeightFromTop    = own_y;
             var maxHeightFromBottom = canvas.height - 
-                (own_y + attachtarget.height + attachoffset);
+                (own_y + attachtarget.height + attachoffset + menuCapHeight);
 
             var startY = 0;
             var myAttach = "top";
@@ -165,8 +141,8 @@
             }
 
             // calculate number of items and height of list to display
-            var items = Math.floor((maxHeight + spacing) / (svHeight + spacing));
-            var myHeight = items * (svHeight + spacing ) - spacing;
+            var items = Math.floor((maxHeight + spacing - menuCapHeight) / (svHeight + spacing));
+            var myHeight = items * (svHeight + spacing ) - spacing + menuCapHeight;
 
             // recalculate height if default attachment is left or right
             if (attach == "left" || attach == "right") {
@@ -181,7 +157,7 @@
 
             // calculate exact position to place list if we are to attach on top
             if (myAttach == "top") {
-                startY += maxHeightFromTop - myHeight;
+                startY += maxHeightFromTop - myHeight + menuCapHeight;
             }
 
             this.setAttribute('y', startY);
@@ -204,7 +180,7 @@
         <!--- Adjusts the location of the floatinglist relative to its
               attachtarget, taking into account the attach location and the
               canvas bounds. -->
-        <method name="updateAttachLocation" event="onheight"> <![CDATA[
+        <method name="updateAttachLocation" > <![CDATA[
             // Adjust x and y relative to the attachtarget as appropriate to adhere to the requested attach location.
             // In the event that the floatinglist intersects the canvas bounds, the attach location
             // will be temporarily changed in order to be fully visible.
@@ -258,7 +234,8 @@
             var validattach = attach;
 
             //NOTE: we are using calcMyHeight() here because height is returning the wrong value
-            var myHeight = this.calcMyHeight();
+            var menuCapHeight = getMenuCapHeight();
+            var myHeight = this.calcMyHeight() + menuCapHeight;
             var own_y = attachtarget.getAttributeRelative('y',canvas);
             while (true) {
                 if ( validattach=="left" || validattach=="right" ) {
@@ -287,7 +264,7 @@
                     // of the floatinglist is flush with the bottom of the attachtarget
                     if ( attach == 'right' || attach == 'left' )tmp_y += attachtarget.height;
                     if ( tmp_y > 0 ) {
-                        this.setAttribute( 'y' , tmp_y);
+                        this.setAttribute( 'y' , tmp_y + menuCapHeight);
                         this.setAttribute( '_currentattachy', 'top' );
                         break;
                     } else {
@@ -305,21 +282,12 @@
         ]]>
         </method>
         
-        
-        <!--- @keywords private -->
-        <method name="setBGColor" args="c" >
-            if ( !isinited ) return;
-            this.bkgnd.borderview.setBGColor(c);
-        </method>
-
         <!-- onmousedown event is sent by listitem
              @keywords private -->
-        <method event="onmousedown">
-            if (this.owner['onmousedown']) {
-                this.owner.onmousedown.sendEvent();
-            }
+        <handler name="onmousedown">
+            this.owner.onmousedown.sendEvent();
             this.bringToFront();
-        </method>
+        </handler>
         
         <!--- @keywords private -->
         <method name="setVisible" args="v">
@@ -351,14 +319,19 @@
         </method>
         
         <!--- @keywords private -->
-        <method event="onblur" >
+        <handler name="onblur" >
         <![CDATA[
             if ( this.owner != "undefined" && this.owner['onblur']) {
                 this.owner.onblur.sendEvent();
             }
         ]]>
-        </method>
+        </handler>
         
     </class>
-      
+
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -21,8 +21,6 @@
 
         <!--- @keywords private -->
         <attribute name="value" setter="setValue(value)" value="false"/>
-        <!--- @keywords private -->
-        <event name="onvalue" />
 
         <!-- views -->
         <multistatebutton name="cb" resource="lzcheckbox_rsrc" text=""
@@ -72,8 +70,7 @@
             if (val == "false") val = false;
             else if (val == "true") val = true;
             else val = !!val;
-            this.value = val;
-            if (this.onvalue) this.onvalue.sendEvent(val);
+            super.setValue(val);
         </method>
                 
     </class>
