@@ -12,7 +12,7 @@ web site or that there be a macromedia crossdomain.xml file where you
 get them from.
 </fixme>
 <fixme>
-Regarding the SOLO deploy wizard, it just zips everything in the apps
+Regarding the SOLO deploy wizard, it just zips everything in the applications
 directory, because the system doesn't know what resources etc might be
 needed by the app at runtime. So the expedient solution was to grab
 everything in the same directory.
@@ -39,7 +39,7 @@ file that can be placed within the HTML docs directory of a common HTTP Web
 Server (such as Apache or IIS). SOLO deployments are simple to manage, and
 supported by nearly any Web hosting service. </p>
 <p>
-Colloquially, SOLO deployment is sometimes called "severless," because the
+Colloquially, SOLO deployment is sometimes called "serverless," because the
  OpenLaszlo Server is not required for operation of the application.
 </p>
 <p>
@@ -49,33 +49,33 @@ OpenLaszlo Server deployment requires a Java Application Server or servlet
 container. It provides additional capabilities dependent on the server,
 including support for SOAP, XML-RPC, Java-RPC and persistent connections.
 The OpenLaszlo Server is also required for applications that use some media formats that are not
-natively supported by the Flash player. The OpenLaszlo sever transcodes these media files "on the fly"
+natively supported by the Flash player. The OpenLaszlo Server transcodes these media files "on the fly"
 into formats supported by the Flash player.
 </p>
 
 <p>
 OpenLaszlo Server deployment is also called "proxied" deployment, because the OpenLaszlo server
-is always running, and it mediates, or <i>proxies</i> communication between the Laszlo application
+is always running, and it mediates, or <i>proxies</i>, communication between the OpenLaszlo application
 running on the client machine and any back-end services or resources located elsewhere on the web.
 </p>
 <p>
-Deploying SOLO is generally more convenient than deploying with OpenLaszlo Sever, and often gives better performance. 
+Deploying SOLO is generally more convenient than deploying with OpenLaszlo Server, and often gives better performance. 
 </p>
 <note>
-Laszlo applications compiled with LPS 2.2 (or earlier) require access to a running copy of the 
+Applications compiled with LPS 2.2 (or earlier) require access to a running copy of the 
 OpenLaszlo Server (called LPS in earlier releases) in order to make data (XML over HTTP), media, SOAP, Java Direct, and XML-RPC requests.  
 OpenLaszlo 3.0 removes this requirement for applications that make only certain kinds of data and media requests. 
 The rest of this chapter pertains to OpenLaszlo 3.0 and later releases.
 </note>
 
 <p>
-Open Laszlo 3.0 compiles to the SWF Version 6 and/or 7 (Macromedia Flash) file format. See <xref linkend="browser-integration"/> for discussion
+OpenLaszlo 3.0 compiles to the SWF Version 6 and/or 7 (Macromedia Flash) file format. See <xref linkend="browser-integration"/> for discussion
 of issues related to differences in target format.
 </p>
 
 <h2>Proxied or SOLO? Your call</h2>
 <p>
-The decision about whether a Laszlo application will be deployed proxied or SOLO can sometimes be made by the system administrator responsible
+The decision about whether an OpenLaszlo application will be deployed proxied or SOLO can sometimes be made by the system administrator responsible
 for making the application available on the web.  When an application does not make use of any features that require the presence of the 
 OpenLaszlo Server,
 the same source file can be used to create either proxied or 
@@ -114,10 +114,10 @@ Note that the default behavior is proxied. See below.
 </note>
 <h3>Availability of J2EE Server or Servlet Container</h3>
 <p>
-As explained in the <a href="../delpoy">System Administrator's Guide to Deploying Laszlo Applications</a>, deploying proxied Laszlo applications
+As explained in the <a href="../delpoy">System Administrator's Guide to Deploying OpenLaszlo Applications</a>, deploying proxied OpenLaszlo applications
 requires that you install a J2EE application server or servlet container.  OpenLaszlo comes with the Tomcat servlet container included,
 but, depending on how you have access to the web, it may not be practical or even possible for you to use this to make your applications
-generally available. So, before you decide to start development of a Laszlo application for, say, a hobby website, you should find out
+generally available. So, before you decide to start development of an OpenLaszlo application for, say, a hobby website, you should find out
 whether your ISP provides the capability for you to install a servlet container. If this is not practical for you, you can still develop and deploy
 SOLO applications.
 </p>
@@ -148,7 +148,7 @@ If either deployment manner is available to you, the decision may come down to w
 method and see which gives the faster performance.</p>
 <p>
 The data transfer size and run-time performance may  be bigger or smaller, faster or slower.  
-If gzipped data is desired, for SOLO deployment, the XML services will need to gzip the data (since OpenLaszlo Sever will
+If gzipped data is desired, for SOLO deployment, the XML services will need to gzip the data (since the OpenLaszlo Server will
  no longer be in the picture).
  Note that it's not necessary to gzip the swf file, swf6 and swf7 files are internally gzip compressed by the compile process. 
 It would be redundant to have the web server compress them as well.</p>
@@ -222,7 +222,7 @@ to access any files that they reference. There are two ways to do this.</p>
 	<li>If the files do not originate from the same domain as the application, there must be a <code>crossdomain.xml</code> file at the top level of the domain from which they are served.</li>
 </ul>
 <p>
-For instance, say you have a Laszlo application that uses art assets from a remote source:</p>
+For instance, say you have an OpenLaszlo application that uses art assets from a remote source:</p>
 <pre>
 &lt;resource name="prettypicture" src="http://someURL/picture.gif"&gt;
 </pre>
@@ -232,7 +232,7 @@ level of that domain to give you permission to access the file.  For instruction
 </p>
 
 <p>
-Applications that are proxied do not need to do this, since the OpenLaszlo server proxies all requests, and there for from the point of view
+Applications that are proxied do not need to do this, since the OpenLaszlo server proxies all requests, and therefore from the point of view
 of the application on the client, all data is coming from the same place.
 </p>
 
@@ -295,10 +295,10 @@ You can specify deployment by using:
 </ol>
 <p>
 Requesting a SOLO application <code>/path/to/canvas.lzx</code> has the side effect of creating a file <code>/path/to/canvas.lzx.swf</code>.  This file, or the 
-directory that contains this file, can be copied to the <code>htdoc</code> directory of a server that doesn't include the Openlaszlo Sever.
+directory that contains this file, can be copied to the <code>htdoc</code> directory of a server that doesn't include the Openlaszlo Server.
 </p>
 <p>
-The file is called <code>canvas.lzx.swf</code> instead of <code>canvas.swf</code> to preserve Laszlo "branding"&#8212;just as the presence of .php or .jsp in
+The file is called <code>canvas.lzx.swf</code> instead of <code>canvas.swf</code> to preserve OpenLaszlo "branding"&#8212;just as the presence of .php or .jsp in
  a URL is good for the awareness of PHP and Java, even though <code>.htaccess </code>can be configured not to require this filename extensions in the URL.
   This also makes it less likely that compiling an application (for example, <code>logo.lzx</code>) will overwrite a file that it includes
  (if <code>logo.lzx</code> includes <code>
@@ -376,14 +376,14 @@ It is also consistent with the debug and runtime target compiler options.
 </p>
 <h4>Passing Parameters to SOLO applications</h4>
 <p>
-See <xref linkend="browser-integration"/> for a discussion of how to deploy Laszlo applications within HTML pages.  Here's a summary
+See <xref linkend="browser-integration"/> for a discussion of how to deploy OpenLaszlo applications within HTML pages.  Here's a summary
 of how this process needs to be modified for SOLO applications.</p>
 <p>
 If you are deploying a SOLO application using LzEmbed and wish to pass parameters down to the application from the base URL, you need to make some
 modifications to the stock html wrapper page that the server provides. 
 </p>
 <p>
-Here is an <code>lzEmbed</code> line that passes all of the query parameters down to the Laszlo app undamaged:</p>
+Here is an <code>lzEmbed</code> line that passes all of the query parameters down to the OpenLaszlo application undamaged:</p>
 <pre>
 lzEmbed({url: 'main.lzx.swf?'+window.location.search.substring(1), bgcolor: '#ffffff', width: '100%', height: '100%'});
 </pre>
@@ -561,7 +561,7 @@ These programs make media requests through the server:
   &lt;/canvas&gt;
 </example>
 <p>
-This program makes a direct (serverless) media requests:
+This program makes a direct (serverless) media request:
 </p>
 <example extract="false" title="Serverless (direct) media request">  
   &lt;canvas proxied="false"&gt;

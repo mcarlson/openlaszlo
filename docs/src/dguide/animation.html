@@ -9,7 +9,7 @@
 
 <h2>Introduction</h2>
 <p>
-Laszlo applications have a fluid, dynamic feel that allow you to guide the user's experience. This fluidity is achieved with <dfn>animators</dfn>,
+OpenLaszlo applications have a fluid, dynamic feel that allow you to guide the user's experience. This fluidity is achieved with <dfn>animators</dfn>,
 which change the value of an object's attribute over a specified time duration. In this tutorial we'll start by showing the code for some short applications that allow you to see
 the essential simplicity of coding with animators.  A little further down there are interactive examples that are a little more complicated but allow you to see animation in action.
 </p>
@@ -372,7 +372,7 @@ constant rate (linear).</p>
 
 <h2>Tags vs Script</h2>
 <p>
-In Laszlo applications you can achieve the same result by using XML tags or JavaScript APIs. The examples above have demonstrated how to use the <tagname>animator</tagname> tag.  Alternatively
+In OpenLaszlo applications you can achieve the same result by using XML tags or JavaScript APIs. The examples above have demonstrated how to use the <tagname>animator</tagname> tag.  Alternatively
 you can use the <method link="true">LzNode.animate</method> method in script statements. The following example contrasts tag and script approaches to animating views.
 </p>
 
@@ -562,9 +562,9 @@ below by specifying <code>process="sequential"</code>.</p>
 &lt;/canvas&gt;
 </example>
 
-<p> Animatorgroups can be contained within animatorgroups allowing for the encapsulation of more complex behavior.
-This next example illustrates that point, by having the view now return back to its original position which requires
-the object to be animated along both the x and y axis simultaneously after its initial movements on them separately.</p>
+<p> Animatorgroups can be contained within animatorgroups, allowing for the encapsulation of more complex behavior.
+This next example illustrates that point by having the view return back to its original position. The return animates
+the object along both the x and y axes simultaneously after its initial movements on them separately.</p>
 
 <example class="program" title="animatorgroup-2">
 &lt;canvas height="210"&gt;

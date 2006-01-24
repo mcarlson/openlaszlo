@@ -39,9 +39,9 @@ are resident on the client machine.</p>
        With embedded fonts, there is a reasonable guarantee that the text in that application will look the same, no 
        matter where it is run. However, fonts are large, and including fonts in your application makes the application 
 (download) larger, and the startup time slower. With client fonts, (also called native
-       fonts), applications are smaller and start faster, but there is no guarantee that the rendering of that font, or the font definitions themselves,
+       fonts or device fonts), applications are smaller and start faster, but there is no guarantee that the rendering of that font, or the font definitions themselves,
        will be the same from computer to computer.  Embedded fonts provide higher fidelity. In addition, because of limitations of
-the flash player, there are certain things you cannot do with client fonts.  For example, client fonts cannot be rotated, nor can
+the Flash Player, there are certain things you cannot do with client fonts.  For example, client fonts cannot be rotated, nor can
 you vary their opacity. Here is a summary of the differences:
     </p>
 <p>
@@ -141,8 +141,8 @@ Note that you need to do this within the <tagname link="true">canvas</tagname> i
 
 
     <p>Because the underlying Flash runtime can only display outline fonts, 
-    OpenLaszlo applications today can only support outline fonts.  This would seem to implies that
-    fonts in a OpenLaszlo application can be displayed at any size and strictly speaking this is true.
+    OpenLaszlo applications today can only support outline fonts.  This would seem to imply that
+    fonts in a OpenLaszlo application can be displayed at any size, and strictly speaking this is true.
     However, the OpenLaszlo Runtime Library includes a number of "pseudo-pixel" fonts.  These font files contain outlines that describe precise 
     bitmaps that, when rendered and antialiased by Flash at a specific size, appear pixel-accurate for another size.  
     Again, even though you specify the font size in LZX as one value, the characters, as they are rendered,
@@ -425,14 +425,14 @@ There are two basic rules that a view uses to choose a font attributes.</p>
  
 <ul>
 	<li>font attributes cascade</li>
-	<li>class definition font attribute definitions bind tightly</li>
+	<li>font attribute definitions in classes bind tightly (to children)</li>
 </ul>
 <p>
 These are described in turn below.
 </p>
 <h4>Font attribute cascading</h4>
         <p>  Cascading occurs when a view
-        does not specify one of its font attributes.  In this case, it will receives its parents 
+        does not specify one of its font attributes.  In this case, it will receive its parent's 
         value for that font attribute.  If the parent doesn't specify a font attribute, it keeps
         going up the view hierarchy to find a view that specifies a value for that font attribute,
         going all the way to the canvas, if no ancestors specify a value for the given font attribute.
@@ -480,7 +480,7 @@ These are described in turn below.
         <p>The following is a set of rules that a view uses to choose its font: </p>
         <ul>
             <li>Use the font attribute set on the instance.  If not set, then</li>
-            <li>Use the font attribute set on this instance's baseclass (or any of its subclasses, going up the chain).  If not set,</li>
+            <li>Use the font attribute set on this instance's baseclass (or any of its subclasses, going up the chain).  If it is not set,</li>
             <li>Use the cascaded font attribute.</li> 
         </ul>
 
@@ -576,7 +576,7 @@ These are described in turn below.
         </p>
 
         <p>
-        Also, the OpenLaszlo components are defined and built to use a specific font (verity11).
+        The OpenLaszlo components are defined and built to use a specific font (verity11).
         They should/may work with other fonts.  But today, you are only guaranteed that they work with the 
         font they were designed with.</p>
 
@@ -603,20 +603,20 @@ These are described in turn below.
 </example>
 
 
-    <h3>Fonts provided with the LPS</h3>
-    <p>The LPS provides a number of fonts for your use in <code>$LPS_HOME/lps/fonts</code>.
-    The pseudo-pixel fonts that come with the LPS are described <a href="#pixel-fonts">above</a>.  The LPS
+    <h3>Fonts provided with the OpenLaszlo Server</h3>
+    <p>The OpenLaszlo Server provides a number of fonts for your use in <code>$LPS_HOME/lps/fonts</code>.
+    The pseudo-pixel fonts that come with the OpenLaszlo Server are described <a href="#pixel-fonts">above</a>.  The OpenLaszlo
     default (pseudo-pixel) font, <code>verity11</code> is there as is an outline version of the same
     glyphs in <code>bitstream-1.10-vera</code>.
     </p>
 <h2>Font Metrics</h2>
-<p>The LPS provides some basic APIs for measuring text.  You can use the <api link="true">LzFontManager</api>
+<p>OpenLaszlo provides some basic APIs for measuring text.  You can use the <api link="true">LzFontManager</api>
 to look up information about a given font name and style, including character advances (widths) and line ascents
 and descents.  The font metrics provided by the OpenLaszlo Runtime Library are all for the version of the default size
 of the given font (which is 8).  In order to adjust the font metrics for a given font, you must
 multiply the font metric by a factor that adjusts for the change in font size, <code>fontsize/8</code>.
 (Note: These APIs are likely to be deprecated in the future in lieu of APIs that 
-simply measure text for you). 
+simply measure text). 
 </p>
 <p>
 If you want to know the size of a piece of text, the simplest technique is to create a
@@ -630,8 +630,7 @@ of <tagname link="true">text</tagname> have access to their font attributes at r
 <attribute>font</attribute>, <attribute>fontsize</attribute>,  and <attribute>fontstyle</attribute> attributes.
 You can look up the actual <api link="true">LzFont</api> that is represented by a given 
 <attribute>font</attribute> and  <attribute>fontstyle</attribute> via the <api link="true">LzFontManager</api>.
-If you need to know the font attribute associated with a view that is not a text instance, the simplest thing to
-do is to create an invisible text view sibling (or use one that exists) to get the font attributes.
+If you need to know the font attribute associated with a view that is not a text instance, the simplest way is to get the font attributes from a sibling view.  If no such view exists, you can create an invisible text view.
 </p>
 <h2>Performance considerations</h2>
 
