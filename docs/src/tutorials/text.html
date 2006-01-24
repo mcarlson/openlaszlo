@@ -23,7 +23,7 @@ explain more advanced topics.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>Text that is beween the <tagname>text</tagname> tags is normalized, meaning that preceding and trailing whitespace is ignored, as are multiple whitespace elements between words. i.e. if you put several spaces between words, it the output will still be a single space. If you put a line break in the text, it will be rendered as a single whitespace element (i.e. a space), and text fields will stretch to fit their contents.</p>
+<p>Text that is between the <tagname>text</tagname> tags is normalized, meaning that preceding and trailing whitespace is ignored, as are multiple whitespace elements between words. i.e. if you put several spaces between words, it the output will still be a single space. If you put a line break in the text, it will be rendered as a single whitespace element (i.e. a space), and text fields will stretch to fit their contents.</p>
 
 <p>The default OpenLaszlo font is used (LzTahoe), at its default size (10px).</p>
 
@@ -57,7 +57,7 @@ explain more advanced topics.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>The text stills follow the same normalization rules, so in this case the text wraps at 150px (because we explicitly set the width of the <tagname>text</tagname> tag to that), and stretches vertically as far as it needs to go.</p>
+<p>The text still follows the same normalization rules, so in this case the text wraps at 150px (because we explicitly set the width of the <tagname>text</tagname> tag to that), and stretches vertically as far as it needs to go.</p>
 
 <p>The line breaks are still being ignored, but we can fix that by entering them manually:</p>
 
@@ -73,7 +73,7 @@ explain more advanced topics.</p>
 
 <p>The <tagname>br</tagname> tag is used to denote a single line break. This may be familiar to you from HTML. Just be careful to note that since we are working in XML, empty elements have to be closed with a forward slash: <code>&lt;br/&gt;</code>. (This is the same as in XHTML.)</p>
 
-<h2>Including HTML markkup in OpenLaszlo applications</h2>
+<h2>Including HTML markup in OpenLaszlo applications</h2>
 
 <p>If you've had any experience with HTML in the past, you are no doubt wondering if you can use other HTML tags. The answer is yes. Below is a list of tags that are supported:</p>
 
@@ -137,7 +137,7 @@ explain more advanced topics.</p>
     <tagname>img</tagname>
   </td>
   <td>
-    <p>image (Flashplayer 7 and later only)</p>
+    <p>image (Flash Player 7 and later only)</p>
   </td>
 </tr>
 </table>
@@ -323,7 +323,7 @@ OpenLaszlo supports both <i>embedded </i>fonts, which are downloaded with your a
 &lt;/canvas&gt;
 </example>
 
-<p>Using these two methods, it is possible to concatanate text, and work with it as a string.</p>
+<p>Using these two methods it is possible to concatenate text and work with it as a string.</p>
 
 <p>An important thing to remember when working with text is that everything between the <tagname>text</tagname> tags is returned by <method>getText</method>.</p>
 
@@ -387,7 +387,7 @@ OpenLaszlo supports both <i>embedded </i>fonts, which are downloaded with your a
 
 <p><code>getText</code> and <code>setText</code> methods will work on <tagname>inputtext</tagname> fields as well.</p>
 
-<p>To overcome the problem of the text field not being recognizeable, OpenLaszlo provides the <tagname>edittext</tagname> tag:</p>
+<p>To overcome the problem of the text field not being recognizable, OpenLaszlo provides the <tagname>edittext</tagname> tag:</p>
 
 <example class="code" title="Using &lt;edittext&gt;">
 &lt;canvas height="160" width="500"&gt;

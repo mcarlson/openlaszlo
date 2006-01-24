@@ -26,7 +26,7 @@ configure and define the application.  For example,</p>
 measured in pixels; if you do not specify values for these attributes
 the default width  and height are "100%".</p>
 <p>
-In addition to the LZX code contained in the &lt;canvas&gt; block, Laszlo applications 
+In addition to the LZX code contained in the &lt;canvas&gt; block, OpenLaszlo applications 
 may use code contained in separate library files. These libraries can be either compiled
 into the main program (using the <tagname>include</tagname> tag) or separately compiled and downloaded at 
 run time (the <tagname>import</tagname> tag).  These are described below.
@@ -56,7 +56,7 @@ For example,</p>
 
 <p>
 A dynamic library is a portion of a program that can be loaded after the main application execution file has loaded. The goal for dynamic
- libraries is to reduce the initial download size of a Laszlo application. This is required because initial download size (including all 
+ libraries is to reduce the initial download size of an OpenLaszlo application. This is required because initial download size (including all 
 requests that precede initial user interaction) is used to evaluate web applications. Reducing the initial download size has 
 the additional benefits of reducing the time to first interaction (although there are other ways of doing this), and of reducing 
 bandwidth costs in the case where an optional feature of the application is not used.
@@ -128,7 +128,7 @@ ways:</p>
 <li>To include text from a text file.</li>
 </ul>
 
-<p>The source code for a Laszlo application can be contained in a
+<p>The source code for an OpenLaszlo application can be contained in a
 single source file which specifies all aspects of the application.
 Alternatively, the <tagname>include</tagname> and <tagname
 link="true">library</tagname> tags can be used to separate the
@@ -259,7 +259,7 @@ fragments have the same effect:</p>
 <p>Similarly, you can write <code>&lt;include
 href="utils/states"/&gt;</code> to include the files that the
 file <code>utils/states/library.lzx</code> includes, and
-<code>&lt;include href="lz"/&gt;</code> to include the Laszlo
+<code>&lt;include href="lz"/&gt;</code> to include the OpenLaszlo
 component set.</p>
 
 <h4><a name="autoinclude">Auto-includes</a></h4>
@@ -294,7 +294,7 @@ component set.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>A file is only included if the application references a class that it does not define in its own sources.  The following two programs define their own <tagname link="false">button</tagname> tag, and therefore do not implicitly include the file that defines the Laszlo <tagname>button</tagname> tag.</p>
+<p>A file is only included if the application references a class that it does not define in its own sources.  The following two programs define their own <tagname link="false">button</tagname> tag, and therefore do not implicitly include the file that defines the OpenLaszlo <tagname>button</tagname> tag.</p>
 
 <example title="Define button">
 &lt;canvas height="50"&gt;

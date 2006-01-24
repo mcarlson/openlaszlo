@@ -10,7 +10,7 @@
 <todo>
 References to other chapters that deal with classes.
 </todo>
-<p>LZX is an object-oriented, proto-type based language that allows you to create custom, reusable classes to streamline and minimize code.</p>
+<p>LZX is an object-oriented, prototype based language that allows you to create custom, reusable classes to streamline and minimize code.</p>
 
 <p> This tutorial shows you how to define and instantiate classes, as well as where to use them. 
 The <tagname>class</tagname> tag is used to define classes. Classes are instantiated when the tag is used.</p>
@@ -36,13 +36,10 @@ which is a pre-defined class.</p>
 
 <p>In this example, there is only one element within the class (the <tagname>text</tagname> element). But classes can contain many objects;
 for example, views can contain many subviews. </p>
-<h4>The id attribute</h4>
+<h3>The id attribute</h3>
 <p>
-It's important to note that you should not give an <attribute tagname="node">id</attribute> attribute 
-to the subview of a class, as ids are global and creating several instances of a class will create several views with the same id.</p>
-<todo>
-What the above is saying is that instances, not classes, should get IDs.  What happens otherwise?
-</todo>
+It's important to note that you should not assign an <attribute tagname="node">id</attribute> attribute 
+in a class definition.  Each id should be unique; ids are global and if you were to include an id assignment in the class definition, then creating several instances of a class would several views with the same id, which would cause unpredictable behavior.</p>
 
 
 <h2><a name="inheritance"></a>Inheritance</h2>

@@ -31,7 +31,7 @@ immediately. <tagname>script</tagname> tags are only embeddable in the
 <tagname>canvas</tagname>. </p>
 <note>
  In the program below, note  the <code>debug="true"</code>
-attribute, which opens up the Laszlo Debugger. In these tutorials we will use the debugger as a scratchpad to illustrate
+attribute, which opens up the OpenLaszlo Debugger. In these tutorials we will use the debugger as a scratchpad to illustrate
 scripting concepts.</note>
 
 <example title="Using the debugger">
@@ -61,7 +61,7 @@ scripting concepts.</note>
 <h3>Javascript gotchas</h3>
 <p>
 If you've never worked with Javascript before, you may be surprised by some subtle features of the language.
-For example, consider this slight expanasion of the preceding program:</p>
+For example, consider this slight expansion of the preceding program:</p>
 <example title="JavaScript subtleties">
 &lt;canvas width="500" height="200" debug="true"&gt;
   &lt;script&gt;
@@ -83,10 +83,10 @@ For example, consider this slight expanasion of the preceding program:</p>
 </example>
 
 <p>Everthing there is fine, except the "<code>4 plus 3 is &#x2026;</code>" line. Four plus three should be 7, as in 
-the line immediately above it, right? What happened there is that we concatanated numbers to strings 
+the line immediately above it, right? What happened there is that we concatenated numbers to strings 
 earlier on (<code>4 + " plus " + 3</code>), and that operation converted the numbers to strings.</p>
 <p>
-Laszlo documentation is not intended to provide a completed reference for Javascript. Later chapters do explain some
+Laszlo documentation is not intended to provide a complete reference for Javascript. Later chapters do explain some
 advanced topics in scripting, but we recommend that you have a Javascript reference handy while writing LZX.
 </p>
 <h3>XML characters in script</h3>
@@ -199,14 +199,14 @@ before. There are a few methods that apply to it. The
 <pre>    onclick=</pre>
 
 <p>Like all of the on[event] attributes,  
-this one takes JavaScript that will be run in the context of the object when the event is recieved. </p>
+this one takes JavaScript that will be run in the context of the object when the event is received. </p>
 
 <p>The next part:</p>
 
 <code>    this.parent</code>
 
-<p>Is a reference to an object. In Javascript, the scope is generally global unless you say otherwise. That means 
-that any class or instance methods or variables always need to be preceeded by the keyword <code>this</code>. As 
+<p>is a reference to an object. In Javascript, the scope is generally global unless you say otherwise. That means 
+that any class or instance methods or variables must be preceded by the keyword <code>this</code>. As 
 for the 'parent' part: Let's  start by saying that the lzx viewsystem always assigns each view a variable 'parent' 
 which points to that view's hierarchical parent. View hierarchies are discussed in detail in <xref linkend="views">
 subsequent chapters.</xref>
