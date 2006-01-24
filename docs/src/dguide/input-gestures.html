@@ -12,8 +12,8 @@
 <!--=========================================================================-->
 <h2>Overview</h2>
 <p>
-	This chapter explains how to incorporate mouse and keyboard input into an OpenLaszlo application. This chapter will cover the basic concepts
-	as well as more advanced topics such as tracking the mouse across multiple views while the mouse is down. 
+This chapter explains how to incorporate mouse and keyboard input into an OpenLaszlo application. It covers the basic concepts
+as well as more advanced topics such as tracking the mouse across multiple views while the mouse is down, and how to implement the "right click" context menu in OpenLaszlo applications. 
 </p>
 
 <h2>The Mouse</h2>
@@ -227,7 +227,7 @@ This generates a lot of points, but you can decide how much data to filter or no
 	while the onmousetrackover and onmousetrackout events change the color of the view. As you drag the mouse, the first view
 	will continue to change its size and color while the other views will only change their color. Again, 
 	this is because the basic onmouseover and onmouseout events are only being sent to the first view that was clicked. 
-	However, onmousetrackover and onmousetrackout are sent all views while the mouse is down.
+	However, onmousetrackover and onmousetrackout are sent to all views while the mouse is down.
 </p>
 <example title="Using basetrackgroup">
 &lt;canvas height="160"&gt;
