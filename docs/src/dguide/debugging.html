@@ -372,7 +372,17 @@ The debugger has capabilities for formatting output according to control strings
 When the debugger prints a string and <tt>Debug.printPretty</tt> is false, it will escape all the <tt>SingleEscapeCharacter</tt>'s in the string (i.e., <tt>' " \ b \f \n \r \t \v</tt>).  For example:</p>
 
 	<pre><tt>Debug.format('%#w', 'This is a "test"\nS\bring')  ->&#xAB;string#6| "This is a \"test\"\nS\bring"&#xBB;</tt></pre> 
-
+<h4>On-the-fly type conversions</h4>
+<p>
+The %d, %u, %i, %o, and %x directives (and their capital
+    variants) cast their arguments to the type Number before formatting
+    them.  The %s directive casts its argument to a String. There is no
+    default precision for these format directives &#8212;they will
+    print the fractional part of non-integers by default. If you
+    require that they round to the nearest integer, you can use
+    %.0d. If passed an argument that cannot be coerced to a
+    Number, these format directives print `NaN` (Not a Number).
+</p>
 <h3>Inspecting Warnings and Errors</h3>
 <p>Warnings and Errors are 'inspectable'.  If you click on them, you will inspect the warning or error object.  If backtracing is enabled, a backtrace will be one of the properties of the object that you can inspect.  Inspecting the backtrace will reveal the recorded stack frames which record:  the function called, <tt>this</tt> and the arguments to the function.</p>
 
