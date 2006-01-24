@@ -16,55 +16,9 @@ var _Copyright = "Portions of this file are copyright (c) 2001-2004 by Laszlo Sy
 // Compiler runtime support first
 #include "compiler/LzRuntime.as"
 
-// Not _root.$krank because the compile-time constant optimizer will
-// not trigger
-if ($krank) {
-  _root.makeResolverClosure = function (fn, arg) {
-    var c = function () {
-      // call fn on object with arg
-      this[arguments.callee.fn](arguments.callee.arg);
-    };
-    // This is how krank knows to make a 'closure' 
-    // TODO: [2005-04-21 ptw] See LPP-277 'Krank can't really
-    // reconstruct closures' for why we have to close over arguments
-    // manually
-    c.fn = fn;
-    c.arg = arg;
-    c.name = arguments.callee.name + '()';
-    return c;
-  }
-}
-
 if ($debug) {
   // Must be loaded first
   #include "debugger/Library.as"
-  if ($krank) {
-  } else {
-    // For debugging serialization without kranking
-    #include "LzSerializer.as"
-  }
-}
-
-// Not _root.$krank because the compile-time constant optimizer will
-// not trigger
-if ($krank) {
-  // This has to load before libraries, so markLibraryMovies does not
-  // enumerate any movies constructed by top-level forms
-  #include "LzSerializer.as"
-
-  // Define after LzSerializer
-  _root.$SID_TRANSIENT = {
-    // Reset on load
-    _url : _root.LzSerializer.transient ,
-    $version : _root.LzSerializer.transient ,
-    // TODO: [2004-12-15 ptw] Really we want to serialize this as
-    // false, not undefined
-    $krank: _root.LzSerializer.transient ,
-    // This is preserved by edit-movie, don't duplicate
-    lzpreloader: _root.LzSerializer.transient
-  };
-
-  LzSerializer.markLibraryMovies();
 }
 
 if ($profile) {
@@ -99,23 +53,3 @@ if ($debug) {
   // Must be loaded last -- tells the core debugger loading is done
   #include "debugger/LzInit.as"
 }
-
-// Not _root.$krank because the compile-time constant optimizer will
-// not trigger
-if ($krank) {
-  _root.$SID_RESOLVE_OBJECT = function () {
-    // The debugger tests this
-    _root.$krank = false;
-    // Finish preloader, if it exists  [See also LzSerializer.start]
-    // (Normally this is handled by the compiler -- it is the last
-    // top-level expression in the swf.)
-    if (typeof(_root.lzpreloader) != 'undefined') {
-      _root.lzpreloader.done();
-    }
-    // Finish LzCanvas.__LzcallInit
-    _root.canvas.init();
-    _root.canvas.oninit.sendEvent( this );
-    _root.canvas.datapath.__LZApplyDataOnInit();
-  }
-}
-

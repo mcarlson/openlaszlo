@@ -141,27 +141,24 @@ function done() {
   // Don't create the view version of this if kranking, it will be
   // (re-)created when done is called by _root.$SID_RESOLVE_OBJECT
   var vis = (this.hideafterinit != true) ? true : false;
-  if (! _root.$krank ) {
-    // In a kranked app, views get created while loading, done
-    // gets called when done loading, so we have to carefully
-    // insert ourself at the bottom of the depth list.
-    var svd = _root.canvas.__LZsvdepth;
-    _root.canvas.__LZsvdepth = 0;
-    var v = new _root.LzView(_root.canvas, {name:this.name, visible:vis,
-                                            options: {ignorelayout:true}});
-    v.setMovieClip(this);
-    _root.canvas.__LZsvdepth = svd;
-  }
+
+  var svd = _root.canvas.__LZsvdepth;
+  _root.canvas.__LZsvdepth = 0;
+  var v = new _root.LzView(_root.canvas, {name:this.name, visible:vis,
+                                          options: {ignorelayout:true}});
+  v.setMovieClip(this);
+  _root.canvas.__LZsvdepth = svd;
+
   this._visible = vis;
-  if (! _root.$krank) {
-    for (var i = 0; i < this.protoviews.length; i++) {
-      var mc = this.protoviews[i];
-      var nv = new _root.LzView(v, {name: mc.name, x: mc._x, y: mc._y,
-                                    width: mc._width, height: mc._height,
-                                    options: {ignorelayout: true}});
-      nv.setMovieClip(mc);
-      mc._visible = true;
-    }
+
+  for (var i = 0; i < this.protoviews.length; i++) {
+    var mc = this.protoviews[i];
+    var nv = new _root.LzView(v, {name: mc.name, x: mc._x, y: mc._y,
+                                  width: mc._width, height: mc._height,
+                                  options: {ignorelayout: true}});
+    nv.setMovieClip(mc);
+    mc._visible = true;
   }
+
 }
 

@@ -555,11 +555,6 @@ LzView.prototype.doReplaceResource = function (){
       this.FOREGROUND_DEPTH_OFFSET;
     this._newatp.attachMovie(  this._newrescname, this._newrname , newd );
     var mc = this._newatp[ this._newrname ];
-    // Krank annotation
-    if (_root.$krank) {
-      mc.$SID_LINK = this._newrescname;
-      mc.$SID_DEPTH = newd;
-    }
     this.setMovieClip( mc , this._newrescname );
 
     if ( reclick ){
@@ -685,12 +680,6 @@ LzView.prototype.attachResourceToChildView = function ( resourceName,
 
     var newmc = childView.attachMovieResourceToParent(this, depth, resourceName, this.__LZsubUniqueNum);
 
-    // Krank annotation
-    if (_root.$krank) {
-      newmc.$SID_LINK = resourceName;
-      newmc.$SID_DEPTH = depth;
-    }
-
     //@event onaddsubresource: Sent when a child view adds a resource
     this.onaddsubresource.sendEvent( childView );
 
@@ -729,11 +718,6 @@ LzView.prototype.attachBackgroundToChild = function ( forview ){
       this.BACKGROUND_DEPTH_OFFSET;
     this.__LZmovieClipRef.attachMovie( "swatch", "$b" + this.__LZsubUniqueNum, atdepth );
     var mc = this.__LZmovieClipRef[ ("$b" + this.__LZsubUniqueNum )];
-    // Krank annotation
-    if (_root.$krank) {
-      mc.$SID_LINK = "swatch";
-      mc.$SID_DEPTH = atdepth ;
-    }
     forview.__LZbgRef = mc;
 
     forview.__LZbgRef._xscale = forview.width;
@@ -940,49 +924,6 @@ LzView.prototype.setWidth = function ( v ){
     this.immediateparent.__LZcheckwidth( this );
     this.onwidth.sendEvent( v );
     
-    // If we're kranking, and this view wanted a custom input text resource,
-    // then record the resource name that it wants, to go to the serializer
-    if (_root.$krank && this.__lzkrank_fixedsize) {
-        this.updateFixedResourceName();
-    }
-}
-
-
-if ($krank) {
-    //---
-    // Annotate a fixed-size inputtext's movieclip with a name of the
-    // text resource that we really want to use. It's up to the krank
-    // recompiler to create that swf resource if it doesn't exist and to
-    // set the movieclip to use it when it's regenerated.
-    // @keywords private
-    //---
-    LzView.prototype.updateFixedResourceName = function () {
-        var delim = "/";
-        var dname = "lzinputtext" + delim + this.font.name + delim +
-                    this.fontsize + delim + this.fontstyle + delim + 
-                    Math.ceil(this.width) + delim + Math.ceil(this.height);
-
-        var options = ""
-        if (this.html) {
-            options += delim + "html";
-        }
-        if ( this.password ) {
-            options += delim + "passwd";
-        }
-
-        if ( this.multiline ) {
-            options += delim + "m";
-        } else {
-            options += delim + "s";
-        }
-
-        dname += options;
-
-        var mc;
-        mc = this.__LZmovieClipRef;
-
-        mc.$SID_DESIRED_LINK = dname;
-    }
 }
 
 //------------------------------------------------------------------------------
@@ -1031,11 +972,6 @@ LzView.prototype.setHeight = function ( v ){
     this.immediateparent.__LZcheckheight( this );
     this.onheight.sendEvent( v );
     
-    // If we're kranking, and this view wanted a custom input text resource,
-    // then record the resource name that it wants, to go to the serializer
-    if (_root.$krank && this.__lzkrank_fixedsize) {
-        this.updateFixedResourceName();
-    }
 }
 
 
@@ -1297,10 +1233,6 @@ LzView.prototype.setPosConstraint = function ( v , f , widthorheight ){
 LzView.prototype.setColor = function ( c ){
     this.fgcolor = c;
     this.getColorObj().setRGB( c );
-    // Krank annotation
-    if (_root.$krank) {
-      this.getColorObj().$SID_RGB = c;
-    }
 }
 
 
@@ -1330,10 +1262,6 @@ LzView.prototype.getColor = function (){
 //-----------------------------------------------------------------------------
 LzView.prototype.setColorTransform = function ( o ){
     this.getColorObj().setTransform( o );
-    if (_root.$krank) {
-      // Save out the transform for reconstituting
-      this.getColorObj().$SID_RESOLVE_OBJECT = _root.makeResolverClosure('setTransform', o);
-    }
 }
 
 
@@ -1363,10 +1291,6 @@ LzView.prototype.getColorObj = function (){
             this.makeContainerResource();
         }
         this.__LZcolorobj = new Color( this.__LZmovieClipRef );
-        // Krank annotation
-        if (_root.$krank) {
-          this.__LZcolorobj.$SID_MC = this.__LZmovieClipRef;
-        }
     }
 
     return this.__LZcolorobj;
@@ -1423,14 +1347,6 @@ LzView.__LZcheckSize = function (){
         }
     }
 
-    if ($krank) {
-        // This is how krank knows to make a 'closure'
-        // TODO: [2005-04-21 ptw] See LPP-277 'Krank can't really
-        // reconstruct closures' for why this barely works
-        // Note that we manually close over the free references after
-        // constructing below
-        f.name = arguments.callee.name + '()';
-    }
     return f;
 }
 
@@ -1959,12 +1875,6 @@ LzView.prototype.changeOrder = function (cView , dir , fv , inf ){
             movnv = this.getAttachPoint( nv );
         }
         movnv.swapDepths( cVMv );
-        // Krank annotation
-        if (_root.$krank) {
-          var tmp = cVMv.$SID_DEPTH;
-          cVMv.$SID_DEPTH = movnv.$SID_DEPTH;
-          movnv.$SID_DEPTH = tmp;
-        }
 
         nv.__LZdepth = d;
         cView.__LZdepth = d+next;
@@ -2121,7 +2031,6 @@ LzView.prototype.removeBG = function () {
         this.__LZbgRef.removeMovieClip();
         this.__LZbgRef = null;
         delete this.__LZbgColorO;
-        // also deletes the $krank info
         this.__LZisBackgrounded = false;
     }
 }
@@ -2138,16 +2047,8 @@ LzView.prototype.applyBG = function () {
     if ( bgc != null ) {
         if ( this.__LZbgColorO == null ) {
             this.__LZbgColorO = new Color( this.__LZbgRef );
-            // Krank annnotation
-            if (_root.$krank) {
-              this.__LZbgColorO.$SID_MC = this.__LZbgRef;
-            }
         }
         this.__LZbgColorO.setRGB( bgc );
-        // Krank annotation
-        if (_root.$krank) {
-          this.__LZbgColorO.$SID_RGB = bgc;
-        }
     }
 }
 
@@ -2218,11 +2119,6 @@ LzView.prototype.applyMask = function (s) {
         var mask = mc.attachMovie("swatch", "$mcM", this.MASK_DEPTH);
     }
     //mask.tabIndex = _root.tabindexcounter++;
-    // Krank annotation
-    if ($krank) {
-        mask.$SID_LINK = "swatch";
-        mask.$SID_DEPTH = this.MASK_DEPTH ;
-    }
     // The mask is attached as a child of the view clip, so we just
     // align it with the clip and it will follow along if the clip is
     // scaled, translated or rotated.
@@ -2236,15 +2132,6 @@ LzView.prototype.applyMask = function (s) {
     this.masked = true;
     this.mask = this;
     mc.setMask(mask);
-}
-
-if ($krank) {
-    LzView.prototype.$SID_RESOLVE_OBJECT =  function () {
-        super.$SID_RESOLVE_OBJECT();
-        if (typeof(this.__LZmaskClip) != 'undefined') {
-            this.__LZmovieClipRef.setMask(this.__LZmaskClip);
-        }
-    }
 }
 
 //-----------------------------------------------------------------------------
@@ -2310,11 +2197,6 @@ LzView.prototype.setClickable = function ( amclickable ){
 
         //mc.tabIndex = _root.tabindexcounter++;
         if (this.showhandcursor == false) this.setShowHandCursor(this.showhandcursor);
-        if (_root.$krank) {
-            // Krank annotation
-            mc.$SID_LINK = "LzMouseEvents";
-            mc.$SID_DEPTH = this.BUTTON_DEPTH;
-        }
         this.__LZbuttonRef = mc;
         this.setButtonSize = this._setButtonSize;
         this.setButtonSize( "width" , this.width );
@@ -2555,11 +2437,6 @@ LzView.prototype.play = function (f, rel){
         m.play();
     }
 
-    // Track for kranking
-    if (_root.$krank) {
-      m.$SID_PLAYING = true;
-    }
-
     this.trackPlay();
     //@event onplay: Sent when a view begins playing its resource
     this.onplay.sendEvent(this);
@@ -2585,11 +2462,6 @@ LzView.prototype.stop = function (f, rel){
         m.gotoAndStop( f > 0 ? f : 1 );
     } else {
         m.stop();
-    }
-
-    // Track for kranking
-    if (_root.$krank) {
-      m.$SID_PLAYING = false;
     }
 
     //@event onstop: Sent when a view's resource that is capable of playing is

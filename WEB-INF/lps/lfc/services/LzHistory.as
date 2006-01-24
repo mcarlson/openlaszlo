@@ -127,15 +127,6 @@ LzHistory.makeConnection = function () {
 
 LzHistory.makeConnection();
 
-if ($krank) {
-    // Don't serialize the local connection
-    LzHistory.$SID_TRANSIENT = {
-        __lzconn: _root.LzSerializer.transient
-    }
-    // Reconstitute the local connection
-    LzHistory.$SID_RESOLVE_OBJECT = LzHistory.makeConnection;
-}
-
 //-----------------------------------------------------------------------------
 // Saves a value and attribute name callback in the current offset of the 
 // history stack.  When the browser back button causes the history offset 

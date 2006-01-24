@@ -60,25 +60,7 @@ LzLoadQueue.timeoutDel = new _root.LzDelegate( LzLoadQueue , "checkTimeout" );
 //@keywords private
 //---
 LzLoadQueue.nextcheck = Infinity;
-// Not _root.$krank because the compile-time constant optimizer will
-// not trigger
-if ( $krank ){
-    //---
-    //Not pretty, but let's get it to work for now.
-    //@keywords private
-    //---
-    _root.LzLoadQueue.checkQueueForKrank = function (){
-        if ( !_root.$krank ){
-            while( this.openConx < this.maxOpen && this.hasMoreInQueue() ){
-                this.makeRequest( this.getNextFromQueue() );
-            }
-            this.checkQueueForKrankDel.unregisterAll();
-        }
-    }
-    _root.LzLoadQueue.checkQueueForKrankDel=new _root.LzDelegate( LzLoadQueue, 
-                                                        "checkQueueForKrank" );
-    _root.LzLoadQueue.checkQueueForKrankDel.register ( _root.LzIdle , "onidle" );
-}
+
 //==============================================================================
 // @keywords private
 //==============================================================================
@@ -88,7 +70,7 @@ LzLoadQueue.enqueueRequest = function( loadmc ){
     //browsers support at least two connections. Although this value may be set
     //through script, increasing the value may have undesirable results in
     //browsers that can only handle two open connections.
-    if ( this.openConx < this.maxOpen && !_root.$krank ){
+    if ( this.openConx < this.maxOpen ){
         //make request
         this.makeRequest( loadmc );
     } else {

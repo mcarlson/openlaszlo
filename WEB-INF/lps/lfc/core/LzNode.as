@@ -110,12 +110,6 @@ var mvn = function (){
         }
     };
 
-    if ($krank) {
-        // This is how krank knows to make a 'closure'
-        // TODO: [2005-04-21 ptw] See LPP-277 'Krank can't really
-        // reconstruct closures' for why this barely works
-        f.name = arguments.callee.name + '()';
-    }
     return f;
 }
 
@@ -1529,12 +1523,4 @@ LzNode.prototype.__LZassignClassRoot = function( arr , depth){
 LzNode.prototype.__LZmakeDatapath = function( dpobj ){
     dpobj.__proto__ = Object.prototype;
     this.makeChild( dpobj , true);
-}
-
-if ($krank) {
-    //---
-    // Default method does nothing but prevent warnings
-    // @keywords private
-    //---
-    LzNode.prototype.$SID_RESOLVE_OBJECT = function () {};
 }

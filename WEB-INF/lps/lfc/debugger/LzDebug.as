@@ -56,11 +56,7 @@ Debug.saved_msgs = [];
 // @keywords private
 //---
 Debug.addText = function (msg) {
-  if ($krank) {
-    _root.LzSerializer.comment('Debug.write', String(msg));
-  } else {
-    this.saved_msgs.push(msg);
-  }
+  this.saved_msgs.push(msg);
 }
 
 // The compiler may set a var called _dbg_log_all_writes, which tells

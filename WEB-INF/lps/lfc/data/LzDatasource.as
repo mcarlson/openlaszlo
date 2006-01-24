@@ -32,11 +32,6 @@ LzDatasource.prototype.getNewLoader = function (proxied){
     if ( ! _root.$dataloaders ){
         _root.attachMovie("empty", "$dataloaders", 4242);
         var mc = _root.$dataloaders;
-        // Krank annotation
-        if (_root.$krank) {
-          mc.$SID_LINK = "empty";
-          mc.$SID_DEPTH = 4242;
-        }
         mc.dsnum = 1;
     }
 
@@ -45,11 +40,6 @@ LzDatasource.prototype.getNewLoader = function (proxied){
                                    _root.$dataloaders.dsnum );
     var newloadermc = _root.$dataloaders[ "dsloader" + 
                                           _root.$dataloaders.dsnum ];
-    // Krank annotation
-    if (_root.$krank) {
-      newloadermc.$SID_LINK = "empty";
-      newloadermc.$SID_DEPTH = _root.$dataloaders.dsnum;
-    }
     _root.$dataloaders.dsnum++;
     
     //_root.Debug.write("dataset timeout", this.timeout);

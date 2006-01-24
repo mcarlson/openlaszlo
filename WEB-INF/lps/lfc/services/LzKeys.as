@@ -299,11 +299,6 @@ LzKeys.removeKeyComboCall = function ( d , kCArr ){
 LzKeys.enableEnter = function ( onroff ){
     //_root.Debug.write("enableEnter: "+onroff);
     _root.entercontrol.gotoAndStop( onroff ? 1 : 2 );
-
-    // Track for kranking
-    if (_root.$krank) {
-      _root.entercontrol.$SID_PLAYING = false;
-    }
 }
 
 LzKeys.keyCodes = {

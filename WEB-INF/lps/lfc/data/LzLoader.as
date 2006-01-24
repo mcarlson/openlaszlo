@@ -17,12 +17,6 @@ LzLoader = function ( owner , args ){
     if ( args.attachRef == null && args.attachname != null ){
         this.mc.attachMovie( "empty" , args.attachname , this.newContextDepth );
         this.mc = this.mc[ args.attachname ];
-
-        // Krank annotation
-        if (_root.$krank) {
-          this.mc.$SID_LINK = "empty";
-          this.mc.$SID_DEPTH = this.newContextDepth;
-        }
     }
 
     this.loadmcnum = 1;
@@ -167,11 +161,6 @@ LzLoader.prototype.getLoadMovie = function ( ){
         var newmc = this.mc[ lmname ];
         newmc.loader = this;
         newmc.mc = newmc;
-        // Krank annotation
-        if (_root.$krank) {
-          newmc.$SID_LINK = "empty";
-          newmc.$SID_DEPTH = this.loadmcdepth
-        }
         this.loadmcdepth++
         if ($debug) {
             LzLoader.debugLoadObj(newmc);

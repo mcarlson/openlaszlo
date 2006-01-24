@@ -191,25 +191,6 @@ LzText.prototype.hscroll = 0;
 //------------------------------------------------------------------------------
 LzText.prototype.maxhscroll = 0;
 
-
-if ($krank) {
-      LzText.prototype.$SID_RESOLVE_OBJECT = function () {
-        if (typeof(this.__LZmaskClip) != 'undefined') {
-            this.__LZmovieClipRef.setMask(this.__LZmaskClip);
-        }
-        this.__LZtextclip.htmlText = this.format + this.text;
-    }
-
-      // TODO [2004-06-14 hqm] why doesn't this work, to called super.$SID_RESOLVE_OBJECT()?
-      /*    LzText.prototype.$SID_RESOLVE_OBJECT = function () {
-        super.$SID_RESOLVE_OBJECT();
-        this.__LZtextclip.htmlText = this.format + this.text;
-    }
-      */
-
-}
-
-
 LzText.prototype._viewconstruct = LzView.prototype.construct;
 
 //DEFAULT_WIDTH: Width to use for text field if none is specified
@@ -776,11 +757,6 @@ LzText.prototype.escapeText = function( ts ){
 //-----------------------------------------------------------------------------
 LzText.prototype.setSelectable = function ( isSel ){
     this.__LZtextclip.selectable = isSel;
-
-    // Track for kranking
-    if (_root.$krank) {
-      this.__LZtextclip.$SID_PLAYING = false;
-    }
 
 }
 

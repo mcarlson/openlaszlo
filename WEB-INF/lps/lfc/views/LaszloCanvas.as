@@ -269,10 +269,6 @@ LzCanvas.prototype.__LZinstantiationDone = function (){
 LzCanvas.prototype.okToInit = function (){
     _root.LzInstantiator.resume();
     this.__LZcallInit();
-    // When kranking, start the serializer as soon as you are initialized.
-    if (_root.$krank) {
-      _root.LzSerializer.start();
-    }
 }
 
 
@@ -312,17 +308,12 @@ LzCanvas.prototype.__LZcallInit = function ( an ){
         s.__LZcallInit( );
     }
 
-    // If not kanking, init the canvas now.  If kranking, canvas.init
-    // (and the oninit event) are invoked by the root resolver in
-    // LaszloLibrary.
-    if ( ! _root.$krank ){
-        this.init();
-        //@event oninit: This event is sent right before a node becomes active
-        //-- e.g. before a view displays, or before a layout affects its
-        //subviews.
-        this.oninit.sendEvent( this );
-        this.datapath.__LZApplyDataOnInit();
-    }
+    this.init();
+    //@event oninit: This event is sent right before a node becomes active
+    //-- e.g. before a view displays, or before a layout affects its
+    //subviews.
+    this.oninit.sendEvent( this );
+    this.datapath.__LZApplyDataOnInit();
     
     // Note canvas end
     if ($profile) {
@@ -419,11 +410,6 @@ LzCanvas.prototype.setContextMenu = function (cmenu){
         var depth = LzView.prototype.CANVAS_CONTEXT_MENU_DEPTH;
 
         var mmc = mc.attachMovie("swatch",  "$rightclkmenu", depth );
-
-        if (_root.$krank) {
-            mmc.$SID_LINK = "swatch";
-            mmc.$SID_DEPTH = depth;
-        }
 
         mmc._alpha = 0;
 
