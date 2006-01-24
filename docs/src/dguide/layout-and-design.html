@@ -7,11 +7,12 @@
  
 <h1>Layout and Design</h1>
 <p>
-LZX enables the creation of applications that have high design values and fluid, graceful interaction.  In this chapter we discuss some basic tools for layout and design.  For more advanced topics and exploration of the aesthetics of OpenLaszlo application design, see the <a href="${design}">Designer's Guide</a>.
+LZX enables the creation of applications that have high design values and fluid, graceful interaction.  
+In this chapter we discuss some basic tools for layout and design.  For more advanced topics and exploration of the aesthetics of OpenLaszlo application design, see the <a href="${design}">Designer's Guide</a>.
 </p>
 <h2>Declarative positioning of views using layouts</h2>
 <p>
-By default, all views will position themselves at x="0" y="0" in their coordinate space. That means 
+By default, all views position themselves at x="0" y="0" in their coordinate space. That means 
 that two sibling views will sit on top of each other. Aside from explicitly positioning the views so they don't overlap, 
 the easiest way to separate the siblings is to use a <classname>simplelayout</classname>:</p>
 
@@ -248,7 +249,7 @@ way would be to use a <a href="#floatingviews">floating view</a>:
 <h3><a name="constantlayout"></a>Constant Layout</h3>
 <p>
 The <tagname link="true">constantlayout</tagname> tag is a way of defining a margin. For example, if all of the children of a container needed to be
- indented 10 px from the left hand edge of the container:
+ indented 10 pixels from the left hand edge of the container:
 </p>
 
 <example title="ConstantLayout">
@@ -323,9 +324,7 @@ You can use views with background colors when mocking up applications as shown a
 <p>If you approach the application in this manner, you've effectively broken it up into manageable pieces already. <varname>listOfImages</varname>, <varname>stage</varname> and <varname>trash</varname> could all be developed independently of one another. <varname>listOfImages</varname> would contain the text-list of images that are bound to some data with the descriptive text showing. When the user clicks one of the images, it would call a <method>showImage</method> method on <varname>stage</varname> with the URL of the image to show as an argument.</p>
 
 <p>The replicated views inside of <varname>listOfImages</varname>
-would probably be positioned using a layout, and the fact that the
-view hierarchy would help here because it would isolate them from the
-rest of the application.
+would best be positioned using a layout.
 </p>
 
 
@@ -719,7 +718,7 @@ For an example and an explanation of how this is done, see <xref linkend="animat
 
 <h2>Writing Custom Layouts</h2>
 <p>
-When none of the LFC layouts do what you need, you can write a custom layout of your own. This section shows the essential aspects of building one.
+When none of the default OpenLaszlo layouts do what you need, you can write a custom layout of your own. This section shows the essential aspects of building one.
 </p>
 
 
