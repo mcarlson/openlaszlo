@@ -737,8 +737,15 @@ the <attribute>onaddsubview</attribute> event instead.</p>
 
 <p>If you have experience doing graphics programming, you may be interested in the following paragraph.
 Otherwise you can safely skip this topic.</p>
-<p>Laszlo's coordinate system is distinctive in that 'rotate' and 'xscale', and 'yscale' are the primitives for
-defining the coordinate system within a view.  Other systems define
+<p>The fundamental properties of a view are:</p>
+<ul>
+<li><i>stretches</i> &#8212;which says whether to scale or not and in which dimensions</li>
+<li><i>unstretched{height,width}</i>&#8212;which are the original's dimensions (and can be used to implement a scale factor)</li>
+<li><i>{height,width}</i>&#8212;which will clip or scale according to the setting of `stretches`</li>
+</ul>
+<p>
+The OpenLaszlo system is equivalent to the Flash Player's, but syntactically OpenLaszlo is closer to HTML/CSS standard (and would be if stretches defaulted to `both` instead of `none`).</p>
+<p>Other systems define
 only a translation, or only a translation and scale, or allow an
 arbitrary 3x2 or 3x3 transformation.  OpenLaszlo is distinctive both in
 not defining a translation ('x' and 'y' position the bounds of the
