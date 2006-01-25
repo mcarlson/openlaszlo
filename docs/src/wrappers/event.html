@@ -16,8 +16,8 @@
     <seealso>delegate</seealso>
 </lzelement>
 
-<p>Events underly most of the functionality in Laszlo  applications. 
-Unlike events in similar systems, Laszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy. Instead, objects called <a href="delegate.html">delegates</a> <a href="delegate.html#meth-register">register</a> for events, and if they try to register for an event that doesn't exist yet, the system creates the event. Because of the loose type requirements in Laszlo script, calling an event that no delegate is listening for (and which therefore hasn't been created) has no effect. This allows objects to publish many more events than they actually need to create at runtime.
+<p>Events underly most of the functionality in OpenLaszlo  applications. 
+Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy. Instead, objects called <a href="delegate.html">delegates</a> <a href="delegate.html#meth-register">register</a> for events, and if they try to register for an event that doesn't exist yet, the system creates the event. Because of the loose type requirements in LZX, calling an event that no delegate is listening for (and which therefore hasn't been created) has no effect. This allows objects to publish many more events than they actually need to create at runtime.
 </p>
 
 <p>There are two syntaxes with which you can specify an event handler for a system-defined event associated with an object: in the tag used to create that object, or by using the <code>event</code> keyword in a 

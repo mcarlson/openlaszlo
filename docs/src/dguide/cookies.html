@@ -8,8 +8,8 @@
 <h1>Cookies and Sessions</h1>
  
 <warning>
-Note.  Use of cookies requires the presence of LPS, the Laszlo Presentation Server.
-Applications that use cookies cannot be delployed serverlessly.
+Note.  Use of cookies requires the presence of the OpenLaszlo Server.
+Applications that use cookies cannot be delployed serverlessly (SOLO).
 </warning>
 <!--========= --> 
 <!-- cookies  -->
@@ -30,12 +30,12 @@ server. A great reference for cookie information is the Unofficial Cookie FAQ at
 
 <h2>Proxying request and response headers</h2>
 
-<p>The LPS proxies client request headers and backend server response
-headers. Because clients always talk to the LPS, only headers in the LPS domain
+<p>The OpenLaszlo Server proxies client request headers and backend server response
+headers. Because clients always talk to the server, only headers in the OpenLaszlo Server domain
 will be sent. If a client makes a request to a server that has a different
-domain than the LPS, incorrect headers will be forwarded.</p>
+domain than the servere, incorrect headers will be forwarded.</p>
 
-<p>For example, assume your LPS is hosted in the myhost.com domain. If your
+<p>For example, assume your OpenLaszlo Server is hosted in the myhost.com domain. If your
 application makes a request to a server that lives in myhost.com, then the right
 headers will be sent. If the server is hosted in anotherhost.com, then the
 client's myhost.com headers will be incorrectly proxied. </p>
@@ -43,9 +43,9 @@ client's myhost.com headers will be incorrectly proxied. </p>
 <h2>Lifecycle of a data request</h2>
 
 <p>As previously mentioned, all http data requests have to go through the
-LPS. When the LPS receives a request, it proxies the request headers (like the
+OpenLaszlo Server. When the server receives a request, it proxies the request headers (like the
 <tt>Cookie</tt> header, if found) and makes a request to the destination server
-on behalf of the application. When the backend data is returned, the LPS proxies
+on behalf of the application. When the backend data is returned, the server proxies
 the response headers (like the <tt>Set-Cookie</tt> header, if found) and compiles
 the XML into bytecode. Once the bytecode is ready, it is sent down to the
 application.</p>
@@ -55,14 +55,14 @@ application.</p>
 
 <h2>Things to consider when deploying sessioned applications</h2>
 
-<p>Things to keep in mind when building sessioned Laszlo apps:</p>
+<p>Things to keep in mind when building sessioned OpenLaszlo apps:</p>
 
 <ul>
 
     <li>Make sure your authentication server's host has the same domain as your
-    LPS</li>
+    OpenLaszlo Server</li>
 
-    <li>Because your laszlo application lives in the Flash runtime, there's no
+    <li>Because your OpenLaszlo application lives in the Flash runtime, there's no
     way to directly access your browser's cookies. A trick you can use is to
     make a data request to a JSP (or server) that responds with the cookie
     embedded in body of the response. See the next section for an example of how
@@ -72,7 +72,7 @@ application.</p>
 
 <h2>Getting at cookies from LZX</h2>
 
-<p>This section demonstrates how a Laszlo application can get at its cookie by
+<p>This section demonstrates how an OpenLaszlo application can get at its cookie by
 calling a JSP. The JSP will parse and display the cookie value from the
 application and return the data to the application as XML. The application will
 then display the information using a text datapath.</p>
@@ -98,12 +98,12 @@ then display the information using a text datapath.</p>
 </pre>
 
 <p>Copy the LZX code and save it in a file called <tt>cookie.lzx</tt>. Make sure you
-can access this file using your LPS. Before you run it, you'll need to create
+can access this file using your OpenLaszlo Server. Before you run it, you'll need to create
 the JSP.</p>
 
 <p>Take the following JSP code and drop it in a web application directory
 that you can access by URL. Make sure the LZX code's dataset is pointing to this
-URL, i.e., replace the <code>src</code> value with your URL.</p>
+URL, that is, replace the <code>src</code> value with your URL.</p>
 
 <example extract="false" title="jsp code for generating cookie">
 &lt;%@ page import="java.util.*" %&gt;

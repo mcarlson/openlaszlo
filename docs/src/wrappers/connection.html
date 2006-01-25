@@ -18,8 +18,8 @@
 </lzelement>
 
 <p>The <tagname>connection</tagname> tag instantiates a connection
-manager object that handles asynchronous messages sent from the Laszlo
-Presentation Server. Use the the <method>LzConnection.connect</method> method to establish a
+manager object that handles asynchronous messages sent from the OpenLaszlo
+Server. Use the the <method>LzConnection.connect</method> method to establish a
 persistent connection and <method>disconnect</method> to close it down.</p>
 
 <example title="Connection example" >
@@ -57,12 +57,11 @@ connection when it next becomes aware that the connection has been dropped.</p>
 <p>The previous example declares <tagname>connection</tagname> with
 <code>authenticator="anonymous"</code>, which tells the connection
 manager that no authentication should be used to handle the persistent
-connection. Normally, the connection manager will tell the LPS to
+connection. Normally, the connection manager will tell the OpenLaszlo Server to
 verify that your connection is authenticated with a back-end
 authentication server before allowing the persistent connection, which
 is done through a session cookie. The default authentication server it
-uses is the <code>AuthenticationServlet</code> bundled with your LPS
-release. The set of usernames that server uses is located in
+uses is the <code>AuthenticationServlet</code> bundled with the OpenLaszlo Server. The set of usernames that server uses is located in
 <tt>lps/config/lzusers.xml</tt>. To session and unsession your
 application, use the connection's <method>login</method> and
 <method>logout</method> methods.</p>

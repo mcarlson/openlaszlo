@@ -10,7 +10,7 @@
 <warning>This feature is provisional.  It works in limited capacity
 situations and is fine to develop with, but we do not recommend
 deployment (with the possible exception of low-capacity, non-mission
-critical deployment) with this feature. Please consult Laszlo directly
+critical deployment) with this feature. Please consult Laszlo Systems directly
 if you have questions about the robustness of an application that uses
 this version of the persistent connnection.
 </warning>
@@ -28,7 +28,7 @@ HTTP cookies/sessions.</p>
 <h2><a name="overview"/>Overview</h2>
 
 <p>A <dfn>persistent connection</dfn> is a one-way pipe held by an application from
-the LPS. Because all transactions are done through an HTTP port, it allows an
+the OpenLaszlo Server. Because all transactions are done through an HTTP port, it allows an
 application to receive asynchronous messages from the server without the need to
 open up a port in the firewall. Maintanance of an application's persistent
 connection is done by the <a href="#connection-manager"><dfn>connection
@@ -78,7 +78,7 @@ library). Once constructed, the connection manager can be accessed using
   &lt;/canvas>
 </example>
 
-<p>To establish a persistent connection to the LPS, use the
+<p>To establish a persistent connection to the OpenLaszlo Server, use the
 <method>LzConnection.connect</method> method.</p>
 
 <example extract="false">
@@ -117,14 +117,14 @@ connection belongs to</dd>
 <dd>used to establish a secure persistent
 connection</dd>
 <dt><attribute>heartbeat</attribute>/<attribute>timeout</attribute></dt>
-<dd>sets the frequency the LPS checks to see
+<dd>sets the frequency at which the OpenLaszlo Server checks to see
 if an application is still listening to the persistent connection</dd>
 <dt><attribute>receiveuserdisconnect</attribute></dt>
-<dd>if true, receives notification from LPS whenever a
+<dd>if true, receives notification from the OpenLaszlo Server whenever a
 client closes their persistent connection</dd>
 <dt><attribute>authenticator</attribute>/<attribute>authparam</attribute></dt>
 <dd>the java authentication class to use
-in LPS for connection requests</dd>
+in the OpenLaszlo Server for connection requests</dd>
 </dl>
 
 <h4><a name="group"/>group</h4>
@@ -154,13 +154,13 @@ can also specify a different port if your SSL listener is not on the standard
 </pre>
 <p>
 Setting the secure attribute also secures connection functions that make
-requests to the LPS, e.g., <method>LzConnection.connect</method>,
+requests to the OpenLaszlo Server, for example, <method>LzConnection.connect</method>,
 <method>LzConnectionDatasource.sendMesage</method>, etc.</p>
 
 
 <h4><a name="heartbeat"/>heartbeat/timeout</h4>
 
-<p>By default, LPS verifies a connection is alive by sending a <dfn>heartbeat</dfn>
+<p>By default, the OpenLaszlo Server verifies a connection is alive by sending a <dfn>heartbeat</dfn>
 every 5 seconds. The connection is configured to timeout if a message or
 heartbeat hasn't been heard from the server in 20 seconds. You can change these
 values using the <code>heartbeat</code> and <code>timeout</code> attributes,
@@ -189,7 +189,7 @@ By default, the connection uses
 <code>org.openlaszlo.auth.HTTPAuthentication</code>. By default, this
 authenticator contacts the provided authentication servlet located in
 <code>http://.../WEBAPP/AuthenticationServlet</code>, where <code>WEBAPP</code>
-is the web application path where you installed Laszlo (typically,
+is the web application path where you installed the OpenLaszlo Server (typically,
 <code>lps-@VERSIONID@</code>).</p>
 
 
@@ -572,9 +572,9 @@ events:</p>
 
 <h2><a name="agents"/>Agents</h2>
 
-<p>An agent is a back-end server that pushes and receives client data. LPS
+<p>An agent is a back-end server that pushes and receives client data. The OpenLaszlo Server
 proxies the data between agents and clients. All communication between agent and
-LPS is done using HTTP. Only white-listed agent IPs are allowed, which can be
+the server is done using HTTP. Only white-listed agent IPs are allowed, which can be
 configured using the "connection-agent-ip" option.</p>
 
 <pre>
@@ -589,7 +589,7 @@ configured using the "connection-agent-ip" option.</p>
 can't send or receive data outside of its own group(s). A connection group is a
 set of connected applications. Messages sent to a group can be received by
 applications and other agents registered to that group. An application with an
-unspecified group name has its webapp path as its group. LPS must receive an
+unspecified group name has its webapp path as its group. The OpenLaszlo Server must receive an
 agent's url and group with each request for validation.</p>
 
 <p>Agents are configured in the application as child elements of the
@@ -608,14 +608,14 @@ location.</p>
 
 <h3><a name="receiving-data"/>Receiving data</h3>
 
-<p>LPS sends data to an agent using the "xml" query parameter. An agent must be
+<p>The OpenLaszlo Server sends data to an agent using the "xml" query parameter. An agent must be
 able to accept that parameter and parse its contents. Agents designed only to
 push information can choose to ignore this.</p>
 
 
 <h3><a name="agent-sending-data"/>Sending data</h3>
 
-<p>Agents can use the "agentmessage" LPS request type to send data to clients
+<p>Agents can use the "agentmessage" request type to send data to clients
 and/or other agents. In addition to the validation parameters, "agentmessage"
 expects:</p>
 
@@ -636,13 +636,13 @@ expects:</p>
   </dd>
 </dl>
 
-<p>The query string to LPS should look something like:</p>
+<p>The query string to OpenLaszlo Server should look something like:</p>
 
 <code>
 <em>lzt=agentmessage</em>&amp;<em>url</em>=http://info.com/StockTicker&amp;<em>group</em>=business&amp;<em>to</em>=*&amp;<em>dset</em>=portfolio&amp;<em>msg</em>=&lt;url-encoded>&lt;stock-list>
   &lt;stock name="BACL" price="50.0"/>&lt;stock name="BGRT" price="38.0"/>&lt;/stock-list>&lt;/url-encoded>&amp;<em>range</em>=user</code>
 
-<p>The response from LPS will look like:</p>
+<p>The response from the server will look like:</p>
 
 <pre>
 &lt;lps>
@@ -656,7 +656,7 @@ expects:</p>
 
 <h3><a name="agent-get-list"/>Getting a list of connected users</h3>
 
-<p>The "agentlist" LPS request type sends back a list of connected clients and
+<p>The "agentlist" OpenLaszlo request type sends back a list of connected clients and
 expects only the "users" query parameter, which can be a list of names or *. The
 query should look something like:</p>
 
@@ -664,7 +664,7 @@ query should look something like:</p>
 <em>lzt=agentlist</em>&amp;<em>name</em>=stock&amp;<em>password</em>=secret&amp;<em>group</em>=business&amp;<em>users</em>=*
 </code>
 
-<p>The response from LPS will look like:</p>
+<p>The response from the server will look like:</p>
 
 <pre>
 &lt;lps>
@@ -687,15 +687,15 @@ query should look something like:</p>
 <!--=========================================================================-->
 <h2><a name="authentication"/>Authentication</h2>
 
-<p>LPS authenticates all <dfn>server connection requests</dfn> to ensure
+<p>The OpenLaszlo Server authenticates all <dfn>server connection requests</dfn> to ensure
 that they are not spoofed. Server connection requests are made through
 function calls in LzConnection and LzConnectionDatasource. They are
 the connect function, the disconnect function, any of the send message
 functions, and the get list of connected users function. <fixme>See
 "Using connection functions" for more details.</fixme></p>
 
-<p>LPS uses an <dfn>authenticator</dfn> to validate each server connection
-request. You can tell LPS what authenticator to use for your connection using
+<p>The server uses an <dfn>authenticator</dfn> to validate each server connection
+request. You can tell the server what authenticator to use for your connection using
 the connection tag's <code>authenticator</code> attribute. Parameters for an
 authenticator can be passed through the <code>authparam</code> attribute. The
 string has to be in query string format.</p>
@@ -709,7 +709,7 @@ string has to be in query string format.</p>
 encode values that contain <code>&amp;</code> or <code>=</code> to %26 and %3D,
 respectively.</p>
 
-<p>If no authenticator is defined for the connection, LPS uses the
+<p>If no authenticator is defined for the connection, the server uses the
 <code><a href="#httpauthentication">HTTPAuthentication</a></code>
 authenticator. HTTPAuthentication validates a connection by using an
 application's session cookie. It proxies the cookie to a default security server
@@ -723,9 +723,9 @@ parameter:</p>
 </pre>
 
 <p>If the authentication was successful, the security server should return
-HTTPAuthentication a username, which, in turn, is returned to LPS. You can
+HTTPAuthentication a username, which, in turn, is returned to the OpenLaszlo Server. You can
 change the default authenticator with the
-<code>connection.default.authenticator</code> LPS property. See the "Deployer's
+<code>connection.default.authenticator</code> property. See the "Deployer's
 Guide" for more on how to configure your server and <a
 href="#httpauthentication">HTTPAuthentication</a> for what the XML response
 format of authentication servers should look like.</p>
@@ -772,7 +772,7 @@ authenticator.</p>
 
 <p>The anonymous authenticator assigns your connection a default username of
 <code>user</code>. You can change the default value through the
-<code>connection.none-authenticator.username</code> LPS property. Optionally,
+<code>connection.none-authenticator.username</code> property. Optionally,
 you can pass it a <code>usr</code> parameter with the name of your choice. For
 example, this sets the connection's username to sam:</p>
 
@@ -786,7 +786,7 @@ example, this sets the connection's username to sam:</p>
 <h3><a name="implementing-an-authenticator"/>Implementing an authenticator</h3>
 
 <p>Connection authenticators are server-side java objects that implement the
-<code>org.openlaszlo.servlets.Authentication</code> interface. LPS validates
+<code>org.openlaszlo.servlets.Authentication</code> interface. The server validates
 a request if and only if an authenticator returns a username. Four functions
 must be implemented:</p>
 
@@ -804,11 +804,11 @@ int <em>logout</em>(HttpServletRequest req, HttpServletResponse res,
 </pre>
 
 <p>The <method>init</method> function is called right after an authenticator is
-instantiated by LPS. Parameters from the <code>lps.properties</code> file
+instantiated by the OpenLaszlo Server. Parameters from the <code>lps.properties</code> file
 (located in the <code>WEB-INF/lps/config</code> server directory) are passed
 into <method>init</method>.</p>
 
-<p>LPS uses <method>getUsername</method> to authenticate each server connection
+<p>The server uses <method>getUsername</method> to authenticate each server connection
 request. A value of null is assumed to mean that the request is invalid. Any
 other string value, including an empty string, is considered ok.</p>
 
@@ -968,7 +968,7 @@ Reference.</p>
 connection.</p>
 
 <p><b>server connection requests</b>: LzConnection and LzConnectionDatasource
-function calls that make requests to LPS. They are <method>connect</method>,
+function calls that make requests to the server. They are <method>connect</method>,
 <method>disconnect</method>, <method>sendMessage</method>, <method>sendXML</method>,
 <method>sendUserXML</method>, and <method>sendAgentXML</method>.</p>
 

@@ -10,7 +10,7 @@ This feature works in proxied applications only.  It does not work in serverless
 <h1>XML-RPC</h1>
 
 <p>XML-RPC is simple spec that describes how to invoke a remote operation using
-XML over HTTP. Laszlo XML-RPC is part of <a href="${dguide}rpc.html">Laszlo
+XML over HTTP.  OpenLaszlo XML-RPC is part of <a href="${dguide}rpc.html"> OpenLaszlo
 RPC</a> and shares many of the same APIs and concept. Laszlo RPC includes <a
 href="${dguide}rpc-soap.html">SOAP</a> and <a
 href="${dguide}rpc-javarpc.html">JavaRPC</a>. For more information on XML-RPC,
@@ -41,7 +41,7 @@ init stage. If false, the proxy must be loaded using the load() method. See the
 proxy section in the RPC chapter for details. <b>Default is true.</b></p>
 
 <p><dfn>secure</dfn>: (Boolean) if true, creates a secure HTTPS connection
-between the client and LPS. Also see secureport below. <b>Default is
+between the client and the OpenLaszlo Server. Also see secureport below. <b>Default is
 false.</b></p>
 
 <p><dfn>secureport</dfn>: (Number) valid only when secure attribute is set to
@@ -73,7 +73,7 @@ the call returns, an onunload event is sent.</p>
 
 <h2>Using remotecall to creating function stubs</h2>
 
-<p>Most Laszlo RPC objects like JavaRPC and SOAP will set function stubs in the
+<p>Most  OpenLaszlo RPC objects like JavaRPC and SOAP will set function stubs in the
 proxy property during load based on methods described by a class (for JavaRPC)
 or on a service description (using a WSDL in SOAP). Remotecall declarations
 refer to these function stubs and any remotecalls not pointing to a function

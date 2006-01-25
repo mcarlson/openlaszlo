@@ -5,11 +5,11 @@
 <html id="deployers-guide" xmlns="http://www.w3.org/1999/xhtml"
       xmlns:d="docbook">
 <head>
-  <title>Deploying Laszlo Applications</title>
+  <title>Deploying OpenLaszlo Applications</title>
 </head>
 <body>
 
-<h1>Deploying Laszlo Applications</h1>
+<h1>Deploying OpenLaszlo Applications</h1>
 <fixme>
 Need introductory paragraph about deploying serverless or serverful.
 </fixme>
@@ -122,7 +122,7 @@ hostname <code><i>host</i></code> and port number <code><i>$port</i></code> to i
 settings.</p>
 
 <h3>Java</h3>
-<p>To run the LPS you <em>must</em> have the Java SDK (sometimes
+<p>To run the OpenLaszlo Server you <em>must</em> have the Java SDK (sometimes
 called the JDK, J2SDK, or J2SE SDK), not just the JRE, version 1.4 or greater. It's available at
 <a
 href="http://java.sun.com/j2se/1.4.2/download.html">http://java.sun.com/j2se/1.4.2/download.html</a>
@@ -135,7 +135,7 @@ installed with OSX by default.</note>
 within a servlet container is called, confusingly, a Java web
 application, or often simply a webapp.  Webapps are sometimes packaged
 as single files that are called web application archive (WAR) files.</p>
-<p>The LPS (standard) distribution comes with a Laszlo-enabled webapp
+<p>The LPS (standard) distribution comes with an OpenLaszlo-enabled webapp
 directory pre-installed in Tomcat.  The web application directory is</p>
 <pre class="code">$INSTALLDIR/Server/lps-@VERSIONID@</pre>
 <p>This webapp includes sample Laszlo applications, example LZX files,
@@ -167,7 +167,7 @@ Laszlo application(s) inside the myapp directory.
 <note>
 Note that the lps-@VERSIONID@ webapp that is packaged with LPS comes
 pre-configured for development, not deployment. Before deploying your applications 
-you will nteed to reconfigure LPS 
+you will nteed to reconfigure the OpenLaszlo Server 
 for deployment, as explained in the next section.
 </note>
 <h3>Creating the minimal OpenLaszlo Server</h3>
@@ -176,7 +176,7 @@ or want to deploy with your OpenLaszlo application. To create a minimal deployme
 (For LPS 2.2 and later).
 </p>
 <ol>
-	<li>clear the lps caches and lps logs (or stop server and remove caches/logs and restart server)</li>
+	<li>clear the OpenLaszlo Server caches and server logs (or stop server and remove caches/logs and restart server)</li>
 	<li>compile your applications</li>
 </ol>
 <p>
@@ -199,7 +199,7 @@ You <i>should</i> also remove</p>
 
 
 
-<h2><a name="configuring"></a>Configuring the LPS</h2>
+<h2><a name="configuring"></a>Configuring the OpenLaszlo Server</h2>
 <p>The OpenLaszlo Server comes preconfigured for use as a development platform.  There
 are a number of configurable settings that affect the Server performance
 and security that should be set properly when deploying OpenLaszlo
@@ -212,23 +212,23 @@ OpenLaszlo Server are:</p>
     <li><a href="#web.xml"><b>$WEBAPP/WEB-INF/web.xml</b></a> - Java web
 application configuration</li>
     <li><a href="#lps.properties"><b>$WEBAPP/WEB-INF/lps/config/lps.properties</b></a>
-- LPS configuration properties</li>
+- OpenLaszlo Server configuration properties</li>
   <li><a href="#lps.xml"><b>$WEBAPP/WEB-INF/lps/config/lps.xml</b></a> -
-LPS log configuration and filters for data requests and user-agents. <br/>
+OpenLaszlo Server log configuration and filters for data requests and user-agents. <br/>
   </li>
     <li><a href="#lzusers.xml"><b>$WEBAPP/WEB-INF/lps/config/lzusers.xml</b></a>
-- User database for default LPS security servlet</li>
+- User database for default OpenLaszlo Server security servlet</li>
     <li><a href="#crossdomain.xml"><b>$WEBAPP/WEB-INF/lps/config/crossdomain.xml</b></a>
     - Sample Cross Domain Policy file for applications that need runtime HTTPS access.</li>
 </ul>
 <p>Changing settings in any of these files will require that the
-Laszlo-enabled web application be restarted.  See you servlet container
+OpenLaszlo-enabled web application be restarted.  See you servlet container
 documentation for instructions on how to restart.  For the OpenLaszlo (standard)
 distribution, you can simply stop and re-start Tomcat.</p>
 
 <h3><a name="web.xml"></a>WEB-INF/web.xml </h3>
-<p>This file is used to configure the webapp that houses Laszlo
-application as well as the main LPS servlet.</p>
+<p>This file is used to configure the webapp that houses OpenLaszlo
+applications as well as the main OpenLaszlo servlet.</p>
 <p>The web.xml must contain a servlet declaration that uses the
 <classname link="false">org.openlaszlo.servlets.LZServlet</classname> class like:</p>
 
@@ -246,7 +246,7 @@ servlet like:</p>
 &lt;/servlet-mapping&gt;</pre>
 
 <p>There are also other settings you can make here that affect the
-authentication scheme used by the OpenLaszlo Server to authenticate use of the LPS
+authentication scheme used by the OpenLaszlo Server to authenticate use of the OpenLaszlo Server's
 persistent connection feature.  See the 'Using the Persistent Connection
 Feature' document for more details.</p>
 
@@ -504,7 +504,7 @@ application</span></td>
   <dt><code>never</code></dt>
   <dd>compile the LZX application only if there is
   no cached version.  This results in highest server performance but
-  requires LPS restarts to pick up any application changes.</dd>
+  requires server restarts to pick up any application changes.</dd>
 </dl>
 
 <p>In general, deployments where the LZX source files and assets are
@@ -515,20 +515,20 @@ provide the <code>lzrecompile=true</code> query string at the end
 of a request for the application.  You may also need to provide the administrator
 password for this to take affect.</p>
 
-<h4>LPS script compiler cache</h4>
-<p>The LPS maintains an in-memory cache of recently compiled script
+<h4>OpenLaszlo Server script compiler cache</h4>
+<p>The server maintains an in-memory cache of recently compiled script
 segments. In general, the default value of 100 should suffice.  Under
 rare circumstances, when deployed Laszlo application will be edited,
 recompiled frequently, or generated automatically via a pre-processing
 request, you may want to increase the size of this cache.</p>
 
-<h4>LPS cache directories</h4>
+<h4>OpenLaszlo Server cache directories</h4>
 <p>By default, LPS places its caches inside the web application's WEB-INF
 directory.  this is
 <code>$INSTALLDIR/lps-@VERSIONID@/WEB-INF/lps/work/cache</code>.</p>
 
 <h3><a name="caches"></a>Configuring Compiler, Media, and Data Caches</h3>
-<p>The LPS uses several caches that are maintained
+<p>The server uses several caches that are maintained
 via a standard LRU (least recently used) algorithm.  Each caches can
 be configured independently and each one can be set to use
 disk only or memory (backed by disk) plus additional disk space.
@@ -796,7 +796,7 @@ paths by using the <attribute>pattern</attribute> attribute:</p>
     &lt;/application&gt;
 </pre>
 
-<p>The LPS uses the following precedence to determine which filter
+<p>The OpenLaszlo Server uses the following precedence to determine which filter
 will be applied to your application:</p>
 
 <ol>
@@ -811,18 +811,16 @@ will be applied to your application:</p>
 
 <h3><a name="logfile"></a>LPS logging configuration</h3>
 
-<p>The LPS provides a highly configurable and efficient logging
+<p>The OpenLaszlo Server provides a highly configurable and efficient logging
 mechanism that you can use to debug and monitor server activities.
-(Note that some of the details covered here may also be found in
-<xref linkend="logging">the chapter on <a
-href="loggging.html">Logging</a></xref>.)</p>
+</p>
 
-<p>The LPS uses the well-known <a target="_blank"
+<p>The server uses the well-known <a target="_blank"
 href="http://jakarta.apache.org/log4j/docs/documentation.html">Log4j</a>
 package for logging details about its operation. You can configure LPS
 logging by modifying elements of the
 <code>log4j:configuration</code> tag in the lps.xml
-configuration file. The default location for the detailed LPS log file
+configuration file. The default location for the detailed log file
 is inside the web application's WEB-INF directory at 
 <code><i>$webapp</i>/WEB-INF/lps/work/logs/lps.log</code>.</p>
 
@@ -860,31 +858,31 @@ Your servlet container will likely maintain logs of its own.  See your
 servlet container documentation of the location and configuration of these logs.
 </p>
 <p>
-The default configuration that ships with the LPS also includes a logger named,
-<code>org.openlaszlo.exceptions</code>.  The LPS will log unexpected
+The default configuration that ships with the OpenLaszlo Server also includes a logger named,
+<code>org.openlaszlo.exceptions</code>.  The server will log unexpected
 exceptions to this logger.  During development this logger should be left as
 WARN or ERROR level, but most deployments will prefer to comment it out, unless
 they are troubleshooting.
 </p>
 <h4>Runtime log configuration</h4>
 <p>
-The LPS logging can be configured during runtime with the
+Logging can be configured during runtime with the
 <code>lzt=logconfig</code> request type. The request by itself returns the
-server's log4j configuration. You can modify and tell the LPS to read your new
+server's log4j configuration. You can modify and tell the OpenLaszlo Server to read your new
 configuration options by passing a <code>lzt=logconfig&amp;reread=1</code> query
-parameter. The LPS always looks for a log4j.xml file first in the server's
+parameter. The server always looks for a log4j.xml file first in the server's
 configuration directory before checking for the &lt;log4j:configuration&gt;
 element in lps.xml.
 </p>
 <p>
-You can also pass the LPS a new XML configuration by sending using the
+You can also pass a new XML configuration to the server by sending using the
 <code>xml</code> parameter.
 </p>
 <pre class="code">
     lzt=logconfig&amp;xml=%3Clog4j:configuration%3E...%3C/log4j:configuration%3E
 </pre>
 <p>
-To save your new settings into a log4j.xml file that your LPS can use as your default log configuration, send <code>save=1</code> with your new settings.
+To save your new settings into a log4j.xml file that your server can use as your default log configuration, send <code>save=1</code> with your new settings.
 </p>
 <pre class="code">
     lzt=logconfig&amp;xml=...&amp;save=1
@@ -909,7 +907,7 @@ server for changes to take effect.</p>
 <h4>Modifying AXIS SOAP Transport</h4>
 
 <p>The <a href="http://ws.apache.org/axis/">Apache Axis</a> library is used to
-support SOAP in the LPS. The LPS uses <a
+support SOAP in the OpenLaszlo Server. The server uses <a
 href="http://jakarta.apache.org/commons/httpclient/">HttpClient</a> as its HTTP
 transport of choice through its configuration of
 WEB-INF/lps/config/client-config.wsdd.</p>
@@ -927,20 +925,19 @@ href="http://ws.apache.org/axis/java/apiDocs/org/apache/axis/transport/http/Comm
 class uses HttpClient to call SOAP services.</p>
 
 <h3><a name="lzusers.xml"></a>WEB-INF/lps/config/lzusers.xml </h3>
-<p>This file contains the set of users recognized by the default LPS
-security servlet used by the default LPS authenticator interface.  The
-LPS authenticator is used by the LPS for authenticating users who
-attempt to connect to the LPS via LPS Persistent Connections.  See Using
-LPS Persistent Connections for details. </p>
+<p>This file contains the set of users recognized by the default
+security servlet (used by the default OpenLaszlo Server authenticator interface).  The
+authenticator is used by to authenticate users who
+attempt to connect to the ther sever via the Persistent Connection Manager.</p>
 
 
 <h3><a name="config-deploy"></a>WEB-INF/lps/config-deploy sample deploymeht configuration</h3>
 <p>In parallel with the <code>config</code> directory in <code>WEB-INF/lps</code> there is
-a directory named <code>config-deploy</code> which contains a sample LPS configuration
+a directory named <code>config-deploy</code> which contains a sample OpenLaszlo configuration
 for deployment purposes.  To use this directory, simply delete, move, or rename
 the <code>config</code> directory out of the way and copy, rename the <code>config-deploy</code> one
  to <code>config</code>.  You should definitely review the configuration and modify it to suit your needs. 
- Of course you will have to (re)start your LPS.</p>
+ Of course you will have to (re)start your OpenLaszlo Server.</p>
 
 
 <h2><a name="security"></a>Security</h2>
@@ -949,8 +946,8 @@ There should be a section in "Deploying with Laszlo Presentation Server" on "Loc
   The existing section 8.2 "Readability of Source Files" is part of this, but it needs to go over the lps properties that need to be changed (all the allowRequest properties?), to remind the user to check the docs for the servlet container, and probably additional stuff that Eric and Antun know and that we should capture.
 
 </fixme>
-<p>The LPS and Laszlo Applications inherit the security of the container in/from
-which they are deployed.  If you would like to serve Laszlo Applications over secure
+<p>The OpenLaszlo Server and OpenLaszlo applications inherit the security of the container in/from
+which they are deployed.  If you would like to serve OpenLaszlo applications over secure
 HTTPS transport, you will need to enable this feature in your servlet container.
 </p>
 <p>
@@ -965,19 +962,19 @@ when served over HTTPS.  The two exceptions are:</p>
 
 <p>Laszlo applications served over standard (insecure) HTTP transport can 
 make secure runtime HTTPS requests.  These requests are transported securely 
-from the client to the LPS.  (They are also transported securely from any 
-back-end to the LPS itself).</p>
+from the client to the OpenLaszlo Server.  (They are also transported securely from any 
+back-end to the server itself).</p>
 <a name="crossdomain.xml"></a>
 
-    <note>Laszlo applications served over (insecure) HTTP that run 
+    <note>OpenLaszlo applications served over (insecure) HTTP that run 
     in the Macromedia Flash 7 player may require additional server configuration to 
     access runtime data and media over secure HTTPS.  According to Macromedia
     documentation, you will need to provide a cross-domain policy file that explicitly 
-    allows such access to your remote data.  Laszlo provides a sample (and <i>lenient</i>) 
+    allows such access to your remote data.  OpenLaszlo provides a sample (and <i>lenient</i>) 
     cross-domain policy file (<code>$WEBAPP/WEB-INF/lps/config/crossdomain.xml</code>) 
     that, when copied to the <i>root</i>
     directory of the front-most server that serves the
-    Laszlo application, will enable HTTPS access from applications that
+    OpenLaszlo application, will enable HTTPS access from applications that
     are loaded over (insecure) HTTP from any server.  
     If you need to support HTTPS access from HTTP-loaded apps, you should 
     read this example file and follow the instructions inside it before copying.
@@ -986,7 +983,7 @@ back-end to the LPS itself).</p>
     interpretation of the cross-domain policy file.</note>
     
     <p>
-    If you are running the LPS inside a servlet container and
+    If you are running the OpenLaszlo Server inside a servlet container and
     the servlet container is directly accessible, then the file <code>crossdomain.xml</code> should be placed in 
     container's ROOT web application.  See your servlet container's documentation for 
     locating this directory.
@@ -1028,11 +1025,11 @@ I don't know if we need to go into them, but there are container specific issues
 - maximum lenght of a request header
 - maximum size of a request body
 ?>
-<h2><a name="monitoring"></a>Monitoring LPS activity</h2>
-<p>You can monitor LPS activity by looking at the log file.  You can
+<h2><a name="monitoring"></a>Monitoring OpenLaszlo Server activity</h2>
+<p>You can monitor OpenLaszlo Server activity by looking at the log file.  You can
 examine the log file directly on the server (see <a href="#logfile">above</a>
 for locating the log file).  Or you can use the simple administrator's console
-that comes with LPS at
+that comes with OpenLaszlo Server at
 <code>http://$host:$port/$webapp/lps/admin/console.lzx</code>.</p>
 <p>(If the administrative password has been configured in the <code>lps.properties</code>
 file, then you will need this password to use the console.)</p>
@@ -1068,7 +1065,7 @@ matching on their user-agent string.</p>
 
 
 
-<h2><a name="lpsstatistics"></a>LPS statistics</h2>
+<h2><a name="lpsstatistics"></a>OpenLaszlo Server statistics</h2>
 <p>You can use the <a href="#requesttypes">lzt=stat</a> request type to track
 server statistics. You will need to verify that you have the stat request type
 enabled in your <a href="#lps.properties">lps.properties</a>. The stat request

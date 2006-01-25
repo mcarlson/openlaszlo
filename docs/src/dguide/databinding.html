@@ -8,7 +8,7 @@
 <h1>Data Access and Binding</h1>
 <p>This chapter describes various methods of tying XML data structures into your LZX application.  See 
 <xref linkend="data-structures"/> for discussion of some of the concepts used in this chapter.
-For a gentle introduction to databinding and manipulation in Laszlo applications, you may start
+For a gentle introduction to databinding and manipulation in OpenLaszlo applications, you may start
  with the <a href="${tutorials}data-tutorial.html">tutorials</a>.
 </p>
 <h2>Preview of databinding</h2>
@@ -17,8 +17,8 @@ For a gentle introduction to databinding and manipulation in Laszlo applications
 <p>
 A dataset (<classname link="true">LzDataset</classname>) is two things:</p>
 <ul>
-	<li>Firstly, it is the client side store for XML data. It's where a single XML document lives in a Laszlo application. </li>
-	<li>Secondly, it's the mechanism by which Laszlo apps make HTTP GET or POST requests.</li>
+	<li>Firstly, it is the client side store for XML data. It's where a single XML document lives in an OpenLaszlo application. </li>
+	<li>Secondly, it's the mechanism by which OpenLaszlo applications make HTTP GET or POST requests.</li>
 </ul>
 <p>An <classname link="true">LzDataElement</classname> is the LZX class that represents a single XML data tag in OpenLaszlo applications. LzDataElements are usually kept in a dataset, although data-bound views can get pointers to them even if they are not in a dataset. Inside of a dataset, LzDataElements are linked in a tree-like structure, but that doesn't mean to say that an LzDataElement <i>must</i> go inside of a dataset. </p>
 <p>
@@ -54,7 +54,7 @@ In addition to LzDataNodes, which can only be manipulated in script, LZX include
  <tagname link="true">datapath</tagname> and <tagname link="true">datapointer</tagname>, which provide a convenient, tag-based
 mechanism for typical data manipulation. By using datapointers to move through the data, you control the behavior of views that are bound to that data.
 </p>
-<h2><a name="datasets"/>Laszlo Datasets and data nodes</h2>
+<h2><a name="datasets"/>OpenLaszlo datasets and data nodes</h2>
 <p>
 Data in OpenLaszlo applications can be declared with a tag, or built up using procedural (script) APIs. The script APIs operate on <classname link="true">LzDataNode</classname>s.
 </p>
@@ -68,11 +68,11 @@ runtime, or procured from remote servers.  A dataset may be declared on the canv
 <p>
 
 To embed a dataset directly
-in a Laszlo application, you use the <tagname>dataset</tagname> tag as
+in an OpenLaszlo application, you use the <tagname>dataset</tagname> tag as
 below. In this example, you can get access to the given dataset by referring to
 <code>canvas.shelf</code>.</p>
 
-<example title="Embedding data in a Laszlo application" extract="false">
+<example title="Embedding data in an OpenLaszlo application" extract="false">
 &lt;canvas&gt;
   &lt;dataset name="shelf"&gt;
     &lt;bookshelf&gt;
@@ -161,7 +161,7 @@ The data within a dataset is accessed using a <tagname link="true">datapointer</
 is a Javascript object that provides a <glossterm>Document Object
 Model</glossterm> (DOM) API for accessing, manipulating, and creating
 XML elements and attributes in memory.  These APIs are discussed in
-<xref linkend="databinding"/>.  The Laszlo dataset also has APIs that
+<xref linkend="databinding"/>.  The dataset also has APIs that
 pertain to data transport.</p>
   <a name="datapaths"></a>
 
@@ -498,7 +498,7 @@ exactly one of <event>ondata</event>, <event>onerror</event>, or
 
 <h3>POST support</h3>
 <p>Datasets support both HTTP GET and POST methods for communicating
-with the LPS and back-end servers.  The default is GET but this can be
+with the OpenLaszlo Server and back-end servers.  The default is GET but this can be
 changed with the <code>LzDataset.setQueryType()</code> API.  In
 general, requests with large query parameters should be sent via
 POST.</p>
@@ -518,7 +518,7 @@ Note that response headers are not available to SOLO applications.
 
 <h3>Cookies</h3>
 
-<p>The LPS proxies all "Cookie" request headers and all
+<p>The OpenLaszlo Server proxies all "Cookie" request headers and all
 "<code>Set-Cookie</code>" response headers.  Because of
 the domain name restrictions on cookies, the OpenLaszlo Server can only properly
 proxy these cookie headers when the back-end host is in the same
@@ -532,7 +532,7 @@ domain (or a subdomain) or the OpenLaszlo host.  For more on this topic, see <xr
 specific communication.  In general, you do not need to use the
 datasource object yourself, except for very rare situations.</p>
 <p>
-For example, one situation is when you are running the LPS secure port
+For example, one situation is when you are running the OpenLaszlo Server secure port
 on something other than 443; the only place you can specify the
 secure port is on the datasource.</p>
 
@@ -654,7 +654,7 @@ Also, in SOLO deployed applications, the <classname>XMLHTTPRequest</classname> c
 <h3>Datasets</h3>
 
 <p>A <tagname link="true">dataset</tagname> provides a way to
-encapsulate arbitrary XML data in a Laszlo application. Depending on
+encapsulate arbitrary XML data in an OpenLaszlo application. Depending on
 the source of the data, datasets can be static or dynamic. When a
 dataset is explicitly declared with <code>type="http"</code>, the
 value of its <attribute>src</attribute> is interpreted as an URL and

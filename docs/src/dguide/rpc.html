@@ -44,8 +44,8 @@ document), overloaded methods, passing header information, and so forth.</p>
 <p>The <tagname link="true">rpc</tagname>tag is the abstract base class for all<dfn>RPC classes</dfn>.
 Instances of RPC classes are referred to as <dfn>RPC objects</dfn>. RPC classes
 include &lt;soap&gt;, &lt;javarpc&gt;, &lt;xmlrpc&gt;, &lt;sessionrpc&gt;, and
-&lt;webapprpc&gt;. These classes are essentially LZX wrappers of LFC LzRPC
-services. <classname>LzRPC</classname> is the LFC abstract class for LFC RPC services. This service
+&lt;webapprpc&gt;. These classes are essentially LZX wrappers of ORL LzRPC
+services. <classname>LzRPC</classname> is the ORL abstract class for ORL RPC services. This service
 provides the basic framework to invoke remote functions over the network.
 LzJavaRPCService, LzXMLRPCService, and LzSOAPService are subclasses of LzRPC,
 and implement JavaRPC, XML-RPC, and SOAP, respectively.</p>
@@ -81,7 +81,7 @@ the associated Java API. If you're calling a SOAP function, you will need to loo
 init stage. If false, the proxy must be loaded using the load() method.
 <b>Default is true.</b></p>
 <p><dfn>secure</dfn>: (Boolean) if true, creates a secure HTTPS connection
-between the client and LPS. Also see secureport below. <b>Default is
+between the client and the OpenLaszlo Server. Also see secureport below. <b>Default is
 false.</b></p>
 <p><dfn>secureport</dfn>: (Number) valid only when secure attribute is set to
 true. The secure port to use. There is no client-side default. Most servers use
@@ -200,7 +200,7 @@ method. <method>load</method> is responsible for setting up the proxy </p>
 <p>There are several private, undocumented properties in &lt;rpc&gt;. But one
 that implementors of subclasses should be made aware of is the delegate property
 called _loadDel (note: an underscore prefix in a component variable indicates that it is
-private). This delegate must be passed in to any lower-level LFC APIs or must be
+private). This delegate must be passed in to any lower-level ORL APIs or must be
 called at the end of <method>load</method>, as is done in the xmlrpc.lzx implementation of
 <method>load</method> (shown above). In turn, <code>_loadDel</code> calls the <method>_load</method> method (a private
 method in &lt;rpc&gt;) that sets up the proxy, registers declared

@@ -11,7 +11,7 @@ This feature works in proxied applications only.  It does not work in serverless
 
 <p>JavaRPC is a feature that allows server-side Java objects and methods to be
 accessed from a client application. The &lt;javarpc&gt; element is used to
-declare a JavaRPC object in LZX. JavaRPC is part of the Laszlo RPC family and
+declare a JavaRPC object in LZX. JavaRPC is part of the OpenLaszlo RPC family and
 shares similar APIs with SOAP and XML-RPC. See the RPC chapter for details.</p>
 
 <!-- ========================================================= -->
@@ -22,7 +22,7 @@ shares similar APIs with SOAP and XML-RPC. See the RPC chapter for details.</p>
 <p>Declare a javarpc element to create a JavaRPC object in LZX. The classname
 attribute specifies what class javarpc represents. To use a class, place it in
 WEB-INF/classes or, if it exists in a jar, in WEB-INF lib. This will ensure that
-the class is accessible to the LPS.</p>
+the class is accessible to the OpenLaszlo Server.</p>
 
 <example extract="false">
 &lt;javarpc classname="..."
@@ -80,7 +80,7 @@ init stage. If false, the proxy must be loaded using the load() method.
 <b>Default is true.</b></p>
 
 <p><dfn>secure</dfn>: (Boolean) if true, creates a secure HTTPS connection
-between the client and LPS. Also see secureport below. <b>Default is
+between the client and OpenLaszlo Server. Also see secureport below. <b>Default is
 false.</b></p>
 
 <p><dfn>secureport</dfn>: (Number) valid only when secure attribute is set to
