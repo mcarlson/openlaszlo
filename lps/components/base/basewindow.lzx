@@ -71,11 +71,17 @@
             }
 
             super.init();
-            if (this.visible) {
-                 this.setAttribute('haswindowfocus', true);
-            }
             this.mousedown_del = new LzDelegate ( this, "_mousedown", this , "onmousedown" );
             this.mouseup_del = new LzDelegate ( this, "_mouseup", this , "onmouseup" );
+            var wlist = parent.options['windowlist'];
+            if (wlist == undefined) {
+                wlist = [];
+                parent.setOption('windowlist', wlist);
+            } 
+            if (this.visible) {
+                 wlist.push(this); // frontmost window for now
+                 this.setAttribute('haswindowfocus', true);
+            } 
         </method>
 
         <!--- @keywords private -->
@@ -87,6 +93,17 @@
           super.destroy();
         </method>
         
+        <method name="bringToFront"> <![CDATA[
+            if (this.visible) {
+                var wlist = parent.options['windowlist'];
+                if (wlist[wlist.length-1] != this) {
+                    this._removeFromWindowlist();
+                    wlist.push(this);
+                }
+            }
+            super.bringToFront();
+            ]]>
+        </method>
         <!--- Called onmousedown, sets haswindowfocus to true and starts the
               drag behavior. Subclasses may override to create different
               behavior.
@@ -138,19 +155,35 @@
             setAttribute('state', 1);
         </method>
 
+       <!--- remove this window from the windowlist 
+             @keywords private -->
+        <method name="_removeFromWindowlist"> <![CDATA[
+            var wlist = parent.options['windowlist'];
+                for (var i=0; i < wlist.length; i++) {
+                   if (wlist[i] == this) {
+                        wlist.splice(i,1);
+                        break;
+                    }
+                }
+            ]]>
+        </method>
+
         <!--- Setter for the visible property that also brings the window to the
               front.
               @param Boolean isVisible: whether the window should be made
               visible. -->
-        <method name="setVisible" args="isVisible">
+        <method name="setVisible" args="isVisible"> <![CDATA[
             super.setVisible(isVisible);
             if (isVisible) {
                 this.setAttribute('haswindowfocus', true);
             } else {
+                this._removeFromWindowlist();
+                // remove windowfocus
                 if (this['haswindowfocus']) {
                      this.setAttribute('haswindowfocus', false);
                 }
             }
+            ]]>
         </method>
 
         <!--- @keywords private -->
@@ -197,15 +230,9 @@
                     }
                 }
                 if (!siblingfocus) {    // need to select a frontmost window
-                    for (var i=0; i < len; i++) {
-                        var s = parent.subviews[i];
-                        if (s.visible
-                            && s['haswindowfocus'] != null
-                            && s!=this) {
-                           s.setAttribute('haswindowfocus', true);
-                           break;
-                        }
-                    }
+                    var wlist = parent.options['windowlist'];
+                    var v = wlist[wlist.length-1];
+                    v.setAttribute('haswindowfocus', true);
                 }
             }
             if (this.onhaswindowfocus) this.onhaswindowfocus.sendEvent(windowfocus);
@@ -213,8 +240,8 @@
         ]]>
         </method>
 
-        <!--- Called onmousedown when this is the frontmost window to see if the
-              click should bring a different window to the front.
+        <!--- Called onmousedown when this is the frontmost window to see if 
+              the click should bring a different window to the front.
               @keywords private -->
         <method name="_checkmouse" args="v"> <![CDATA[
             if (v == null || v == this) return;
