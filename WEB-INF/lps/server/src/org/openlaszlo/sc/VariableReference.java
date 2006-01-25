@@ -23,27 +23,29 @@ public class VariableReference extends Reference {
     this.name = name;
     this.context = (TranslationContext)translator.getContext();
     Map registers = (Map)context.get(TranslationContext.REGISTERS);
-    // TODO: [2005-12-22 ptw] Conditionalize case check for swf7 and above
     if (registers != null) {
-      Map lowerRegisters = (Map)context.get(TranslationContext.LOWERREGISTERS);
-      this.register = (Instructions.Register)lowerRegisters.get(name.toLowerCase());
-      if (register != null && (! registers.containsKey(name))) {
-        System.out.println("Warning: Different case used for " + name +
-                           " in " + node.filename +
-                           " (" + node.beginLine + ")");
+      this.register = (Instructions.Register)registers.get(name);
+      if ("swf6".equals(Instructions.getRuntime())) {
+        Map lowerRegisters = (Map)context.get(TranslationContext.LOWERREGISTERS);
+        if (register != null && (! lowerRegisters.containsKey(name.toLowerCase()))) {
+          System.err.println("Warning: Different case used for " + name +
+                             " in " + node.filename +
+                             " (" + node.beginLine + ")");
+        }
       }
     } else {
       this.register = null;
     }
     Set variables = (Set)context.get(TranslationContext.VARIABLES);
-    // TODO: [2005-12-22 ptw] Conditionalize case check for swf7 and above
     if (variables != null) {
-      Set lowerVariables = (Set)context.get(TranslationContext.LOWERVARIABLES);
-      this.known = lowerVariables.contains(name.toLowerCase());
-      if (known && (! variables.contains(name))) {
-        System.out.println("Warning: Different case used for " + name +
-                           " in " + node.filename +
-                           " (" + node.beginLine + ")");
+      this.known = variables.contains(name);
+      if ("swf6".equals(Instructions.getRuntime())) {
+        Set lowerVariables = (Set)context.get(TranslationContext.LOWERVARIABLES);
+        if (known && (! lowerVariables.contains(name.toLowerCase()))) {
+          System.err.println("Warning: Different case used for " + name +
+                             " in " + node.filename +
+                             " (" + node.beginLine + ")");
+        }
       }
       // TODO: [2005-12-22 ptw] Not true ECMAscript
       // Ensure undefined is "defined"
@@ -103,7 +105,7 @@ public class VariableReference extends Reference {
       }
     }
     if ((! known) && warnGlobal.booleanValue()) {
-      System.out.println("Warning: Assignment to free variable " + name +
+      System.err.println("Warning: Assignment to free variable " + name +
                          " in " + node.filename + 
                          " (" + node.beginLine + ")");
     }

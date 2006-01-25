@@ -1,0 +1,12 @@
+<canvas debug="true">
+  <script><![CDATA[
+    var MyClass = function () {}
+
+    function f() {
+      var myclass = new MyClass;
+      return myclass;
+    }
+
+    Debug.write(f());
+  ]]></script>
+</canvas>
