@@ -185,10 +185,8 @@
 </example>
 
 
-<note>In the example above, <code>phonebook.lzx</code> and
-<code>phonebook.xml</code> are in the same directory
-<fixme>fixme</fixme>. You can also use a fully qualified or another
-relative URL to point to the desired file.</note>
+<note>Due to a limitation of the OpenLaszlo documentation system, relative paths to referenced files (for example, ../phonebook.xml) are problematic in example programs. Examples that work inline don't work when you edit them. This is because when you press "edit" on an example in the documentation, a new instance of the example program is created. This new instance is in a different spot than the original, so relative paths are incorrect, and the example breaks. A work around for editing examples like the above is to copy and paste the example and any supporting files to your working environment.</note>
+
 
 
 <h2>Updating Datasets</h2>
