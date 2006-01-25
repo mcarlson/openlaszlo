@@ -897,6 +897,21 @@ throw new CompilationError(
 
                 tempFileStream = new FileInputStream(tempFile);
 
+                // If css property is set, add it to dependency
+                String cssDepend = 
+                    compilationProperties.getProperty("cssdepend");
+                if (cssDepend != null && ! "".equals(cssDepend)) {
+                    String sep = File.separator;
+                    if (sep.equals("\\")) sep = "\\\\";
+
+                    String[] files = cssDepend.split(sep + sep);
+                    for (int i=0; i < files.length; i++) {
+                        dependencyTracker.addFile(new File(files[i]));
+                    }
+                }
+                compilationProperties.remove("cssdepend");
+
+
                 item.update(tempFileStream);
                 dependencyTracker.addFile(objectFile);
                 String encoding = compilationProperties.getProperty(LZHttpUtils.CONTENT_ENCODING);
@@ -1056,7 +1071,7 @@ class TrackingFileResolver implements FileResolver {
         System.out.println("depends on");
         for (java.util.Iterator e = mDependencies.iterator();
              e.hasNext(); ) {
-            FileInfo fi = (FileInfo) e.next();
+             FileInfo fi = (FileInfo) e.next();
             System.out.println(fi.mPathname + " -> " + fi.mChecksum);
         }
         }*/

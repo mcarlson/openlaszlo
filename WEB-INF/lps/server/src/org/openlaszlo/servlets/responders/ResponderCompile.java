@@ -440,6 +440,7 @@ public abstract class ResponderCompile extends Responder
      * <li> "sourcelocators"
      * <li> "lzr" (swf version := swf5 | swf6)
      * <li> "lzproxied" true|false
+     * <li> "cssfile"
      * <ul>
      * also grabs the request URL.
      */
@@ -458,38 +459,44 @@ public abstract class ResponderCompile extends Responder
         // separate property to see if this allows debug.
         if (mAllowRequestSOURCE) {
             // Look for "logdebug=true" flag
-            props.setProperty("logdebug", "false");
-            String logdebug = req.getParameter("logdebug");
+            props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, "false");
+            String logdebug = req.getParameter(CompilationEnvironment.LOGDEBUG_PROPERTY);
             if (logdebug != null) {
-                props.setProperty("logdebug", logdebug);
+                props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
             }
 
             // Look for "debug=true" flag
-            props.setProperty("debug", "false");
-            String debug = req.getParameter("debug");
+            props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "false");
+            String debug = req.getParameter(CompilationEnvironment.DEBUG_PROPERTY);
             if (debug != null) {
-                props.setProperty("debug", debug);
+                props.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
             }
 
             // Look for "sourcelocators=true" flag
-            props.setProperty("sourcelocators", "false");
-            String sl = req.getParameter("sourcelocators");
+            props.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, "false");
+            String sl = req.getParameter(CompilationEnvironment.SOURCELOCATOR_PROPERTY);
             if (sl != null) {
-                props.setProperty("sourcelocators", sl);
+                props.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, sl);
             }
 
             // Look for "profile=true" flag
-            props.setProperty("profile", "false");
-            String profile = req.getParameter("profile");
+            props.setProperty(CompilationEnvironment.PROFILE_PROPERTY, "false");
+            String profile = req.getParameter(CompilationEnvironment.PROFILE_PROPERTY);
             if (profile != null) {
-                props.setProperty("profile", profile);
+                props.setProperty(CompilationEnvironment.PROFILE_PROPERTY, profile);
             }
         }
 
+        // Look for cssfile param
+        String cssfile = req.getParameter(CompilationEnvironment.CSSFILE_PROPERTY);
+        if (cssfile != null && ! "".equals(cssfile)) {
+            props.setProperty(CompilationEnvironment.CSSFILE_PROPERTY, cssfile);
+        }
+
         // Set the 'lzproxied' default = false
-        String proxied = req.getParameter("lzproxied");
+        String proxied = req.getParameter(CompilationEnvironment.PROXIED_PROPERTY);
         if (proxied != null) {
-            props.setProperty("lzproxied", proxied);
+            props.setProperty(CompilationEnvironment.PROXIED_PROPERTY, proxied);
         }
 
         if (mAllowRecompile) {
@@ -519,11 +526,11 @@ public abstract class ResponderCompile extends Responder
             // instrumented object (.swf) file. This tells the
             // compilation manager to actually launch a krank
             // listener.
-            props.setProperty("krank", "false");
+            props.setProperty(CompilationEnvironment.KRANK_PROPERTY, "false");
             String lzt  = req.getParameter("lzt");
-            String krank = req.getParameter("krank");
+            String krank = req.getParameter(CompilationEnvironment.KRANK_PROPERTY);
             if (krank != null && "swf".equals(lzt)) {
-                props.setProperty("krank", krank);
+                props.setProperty(CompilationEnvironment.KRANK_PROPERTY, krank);
             }
         }
 

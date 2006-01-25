@@ -79,6 +79,8 @@ element canvas {
     ## Text which extends beyond this width will be clipped.
     ## If this attribute is omitted, it defaults to the canvas width.
     attribute maxtextwidth {sizeLiteral}?
+  & ## The CSS file to use for the application.
+    attribute cssfile {xsd:anyURI}?
   & ## If present, specifies the maximum height in pixels of any output text field.
     ## Text which extends beyond this height will be clipped.
     ## If this attribute is omitted, it defaults to the canvas height.
@@ -223,6 +225,10 @@ placementAttribute =
   ## Defaults to the container itself.
   [lza:modifiers="final"]
   attribute placement {string}
+classAttribute =
+  ## The CSS class of a node
+  [lza:modifiers="final"]
+  attribute class {token}
 ignoreplacementAttribute =
   ## Overrides placement attribute (and defaultplacement in lexical parent). See
   ## the <method>LzNode.determinePlacement</method> method.
@@ -233,6 +239,7 @@ ignoreplacementAttribute =
 objectAttributes = (
   idAttribute?,
   nameAttribute?,
+  classAttribute?,
   oninitAttribute?,
   datapathAttribute?,
   placementAttribute?,

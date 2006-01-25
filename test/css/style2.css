@@ -1,0 +1,23 @@
+canvas { bgcolor: "#cacaca" }
+
+/* test simple selector  */
+window { bgcolor: green }
+
+/* test group selector */
+button,edittext { bgcolor: "#0000ff" }
+
+myclass {
+    bgcolor: aqua;
+}
+
+/* test node.class selector */
+.mystyle {
+    bgcolor: "#ff00ff";
+}
+
+
+button#mybutton1 { 
+    x: 250; 
+    text: "style2 text";
+    bgcolor: #F00;
+}

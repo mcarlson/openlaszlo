@@ -14,17 +14,13 @@ import java.text.ChoiceFormat;
 import java.text.MessageFormat;
 import java.util.*;
 import org.jdom.*;
-import org.jdom.input.SAXBuilder;
+import org.openlaszlo.css.CSSHandler;
 import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.FileUtils;
 import org.openlaszlo.utils.ListFormat;
-import org.openlaszlo.xml.internal.*;
 import org.openlaszlo.server.LPS;
 import org.apache.log4j.*;
-
-import org.openlaszlo.iv.flash.util.*;
-import org.openlaszlo.iv.flash.api.*;
 
 
 
@@ -106,7 +102,7 @@ public class Compiler {
     }
 
     /** Sets the media cache for this compiler.
-     * @param resolver a CompilerMediaCache
+     * @param cache a CompilerMediaCache
      */
     public void setMediaCache(CompilerMediaCache cache) {
         this.mMediaCache = cache;
@@ -116,9 +112,7 @@ public class Compiler {
      * FileResolver of this compiler.
      */
     public CompilationEnvironment makeCompilationEnvironment() {
-        CompilationEnvironment env =
-            new CompilationEnvironment(mProperties, mFileResolver, mMediaCache);
-        return env;
+        return new CompilationEnvironment(mProperties, mFileResolver, mMediaCache);
     }
     
     /** Compiles <var>sourceFile</var> to <var>objectFile</var>.  If
@@ -204,7 +198,7 @@ public class Compiler {
      * Compiles <var>file</var>, and write the bytes to
      * a stream.
      *
-     * @param sourceFile a <code>File</code> value
+     * @param file a <code>File</code> value
      * @param ostr an <code>OutputStream</code> value
      * @param props parameters for the compilation
      * @exception CompilationError if an error occurs
@@ -223,11 +217,11 @@ public class Compiler {
         
         // Copy target properties (debug, logdebug, profile, krank,
         // runtime) from props arg to CompilationEnvironment
-        String swfversion = props.getProperty(env.SWFVERSION_PROPERTY);
+        String swfversion = props.getProperty(CompilationEnvironment.SWFVERSION_PROPERTY);
         
         if (swfversion != null) {
             mLogger.info("canvas compiler compiling runtime = " + swfversion);
-            env.setProperty(env.SWFVERSION_PROPERTY, swfversion);
+            env.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, swfversion);
             if (! KNOWN_RUNTIMES.contains(swfversion)) {
                 List runtimes = new Vector();
                 for (Iterator iter = KNOWN_RUNTIMES.iterator();
@@ -248,7 +242,7 @@ public class Compiler {
             }
         }
 
-        String proxied = props.getProperty(env.PROXIED_PROPERTY);
+        String proxied = props.getProperty(CompilationEnvironment.PROXIED_PROPERTY);
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
@@ -266,32 +260,32 @@ public class Compiler {
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 Compiler.class.getName(),"051018-266", new Object[] {proxied})
 );
-            env.setProperty(env.PROXIED_PROPERTY, proxied);
+            env.setProperty(CompilationEnvironment.PROXIED_PROPERTY, proxied);
         }
 
-        String debug = props.getProperty(env.DEBUG_PROPERTY);
+        String debug = props.getProperty(CompilationEnvironment.DEBUG_PROPERTY);
         if (debug != null) {
-            env.setProperty(env.DEBUG_PROPERTY, debug);
+            env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
         }
 
-        String profile = props.getProperty(env.PROFILE_PROPERTY);
+        String profile = props.getProperty(CompilationEnvironment.PROFILE_PROPERTY);
         if (profile != null) {
-            env.setProperty(env.PROFILE_PROPERTY, profile);
+            env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, profile);
         }
 
-        String krank = props.getProperty(env.KRANK_PROPERTY);
+        String krank = props.getProperty(CompilationEnvironment.KRANK_PROPERTY);
         if (krank != null) {
-            env.setProperty(env.KRANK_PROPERTY, krank);
+            env.setProperty(CompilationEnvironment.KRANK_PROPERTY, krank);
         }
 
-        String logdebug = props.getProperty(env.LOGDEBUG_PROPERTY);
+        String logdebug = props.getProperty(CompilationEnvironment.LOGDEBUG_PROPERTY);
         if (logdebug != null) {
-            env.setProperty(env.LOGDEBUG_PROPERTY, logdebug);
+            env.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
         }
 
-        String sourcelocators = props.getProperty(env.SOURCELOCATOR_PROPERTY);
+        String sourcelocators = props.getProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY);
         if (sourcelocators != null) {
-            env.setProperty(env.SOURCELOCATOR_PROPERTY, sourcelocators);
+            env.setProperty(CompilationEnvironment.SOURCELOCATOR_PROPERTY, sourcelocators);
         }
 
         try {
@@ -310,19 +304,50 @@ public class Compiler {
             // Override passed in runtime target properties with the
             // canvas values.
             if ("true".equals(root.getAttributeValue("debug"))) {
-                env.setProperty(env.DEBUG_PROPERTY, true);
+                env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
             }
 
             if ("true".equals(root.getAttributeValue("profile"))) {
-                env.setProperty(env.PROFILE_PROPERTY, true);
+                env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, true);
             }
             if ("false".equals(root.getAttributeValue("validate"))) {
-                env.setProperty(env.VALIDATE_PROPERTY, false);
+                env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, false);
+            }
+
+            // If css map already exists, don't look at canvas's css property.
+            String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
+            if (cssfile == null || "".equals(cssfile)) {
+                cssfile = root.getAttributeValue("cssfile");
+            } 
+
+            if ( cssfile != null && ! "".equals(cssfile) ) {
+                mLogger.debug("Using " + cssfile + " CSS file");
+
+                // CSS path is relative to LZX file
+                String parentPath = file.getParent();
+                if ( parentPath == null || "".equals(parentPath) ) {
+                    parentPath = ".";
+                }
+
+                // CSS file is relative to directory of LZX file. 
+                String cssFullPath = parentPath + File.separatorChar + cssfile;
+                mLogger.debug("CSS file's full path is " + cssFullPath);
+
+                try {
+                    // set canvas's attribute to cssfile value 
+                    root.setAttribute("cssfile", cssfile);
+                    CSSHandler handler = CSSHandler.getHandler(parentPath, cssfile);
+                    env.setCSSHandler(handler);
+                    props.setProperty("cssdepend", handler.getFileDependencies());
+                } catch (Exception e) {
+                    mLogger.error(e.getMessage(), e);
+                    throw new ChainedException(e);
+                }
             }
             // Krank cannot be set in the canvas tag
             
             mLogger.debug("Making a writer...");
-            
+
             // Initialize the schema from the base RELAX file
             try {
                 env.getSchema().loadSchema();
@@ -341,7 +366,7 @@ public class Compiler {
                 }
             }
             
-            if (env.getBooleanProperty(env.VALIDATE_PROPERTY))
+            if (env.getBooleanProperty(CompilationEnvironment.VALIDATE_PROPERTY))
                 Parser.validate(doc, file.getPath(), env);
             
             SWFWriter writer = new SWFWriter(env.getProperties(), ostr,
@@ -407,9 +432,9 @@ public class Compiler {
     public void compileAndWriteToSWF (String script, String seqnum, OutputStream out, String swfversion) {
         try {
             CompilationEnvironment env = makeCompilationEnvironment();
-            env.setProperty(env.DEBUG_PROPERTY, true);
+            env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, true);
             Properties props = (Properties) env.getProperties().clone();
-            env.setProperty(env.SWFVERSION_PROPERTY, swfversion);
+            env.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, swfversion);
             byte[] action;
 
             // Try compiling as an expression first.  If that fails,
@@ -475,6 +500,7 @@ public class Compiler {
 
     static ElementCompiler getElementCompiler(Element element,
                                               CompilationEnvironment env) {
+        env.preprocessCSS(element);
         if (CanvasCompiler.isElement(element)) {
             return new CanvasCompiler(env);
         } else if (ImportCompiler.isElement(element)) {
@@ -515,7 +541,6 @@ public class Compiler {
      *
      * @param element an <code>Element</code> value
      * @param env a <code>CompilationEnvironment</code> value
-     * @param base a <code>String</code> value
      * @exception CompilationError if an error occurs
      */
     protected static void compileElement(Element element,
@@ -555,7 +580,7 @@ public class Compiler {
     static void importLibrary(File file, CompilationEnvironment env) {
         Element root = LibraryCompiler.resolveLibraryElement(
             file, env, env.getImportedLibraryFiles(),
-            env.getBooleanProperty(env.VALIDATE_PROPERTY));
+            env.getBooleanProperty(CompilationEnvironment.VALIDATE_PROPERTY));
         if (root != null) {
             compileElement(root, env);
         }

@@ -317,11 +317,11 @@ public class NodeModel implements Cloneable {
         Element elt, ViewSchema schema, 
         boolean includeChildren, CompilationEnvironment env)
     {
-            NodeModel model = new NodeModel(elt, schema, env);
-            ComparisonMap attrs = model.attrs;
-            Map events = model.events;
-            Map delegates = model.delegates;
-            model.addAttributes(env);
+        NodeModel model = new NodeModel(elt, schema, env);
+        ComparisonMap attrs = model.attrs;
+        Map events = model.events;
+        Map delegates = model.delegates;
+        model.addAttributes(env);
 
             // Trying to be future-compatible with JDOM 1.0:
             // Element.getParentElement() will possibly return a
@@ -334,25 +334,25 @@ public class NodeModel implements Cloneable {
                              && !((Element)parent).getName().equals("connectiondatasource")
                              && !((Element)parent).getName().equals("datasource"));
 
-            // This emits a local dataset node, so only process
-            // <dataset> tags that are not top level datasets.
-            if (local && (elt.getName().equals("dataset"))) {
-                attrs.put("initialdata", getDatasetContent(elt, env));
-                includeChildren = false;
-            }
-
-            if (includeChildren) {
-                model.addChildren(env);
-                model.addText();
-                if (!attrs.containsKey("clickable")
-                    && computeDefaultClickable(schema, attrs, events, delegates)) {
-                    attrs.put("clickable", "true");
-                }
-            }
-            // Record the model in the element for classes
-            ((ElementWithLocationInfo) elt).model = model;
-            return model;
+        // This emits a local dataset node, so only process
+        // <dataset> tags that are not top level datasets.
+        if (local && (elt.getName().equals("dataset"))) {
+            attrs.put("initialdata", getDatasetContent(elt, env));
+            includeChildren = false;
         }
+
+        if (includeChildren) {
+            model.addChildren(env);
+            model.addText();
+            if (!attrs.containsKey("clickable")
+                && computeDefaultClickable(schema, attrs, events, delegates)) {
+                attrs.put("clickable", "true");
+            }
+        }
+        // Record the model in the element for classes
+        ((ElementWithLocationInfo) elt).model = model;
+        return model;
+    }
 
     // Calculate how many nodes this object will put on the
     // instantiation queue.
@@ -810,6 +810,7 @@ solution =
         // Encode the children
         for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
             ElementWithLocationInfo child = (ElementWithLocationInfo) iter.next();
+            env.preprocessCSS(child);
             try {
                 if (isPropertyElement(child)) {
                     addPropertyElement(child);

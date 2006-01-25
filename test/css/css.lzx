@@ -1,0 +1,55 @@
+<canvas>
+
+    <style name="button_style" 
+        basecolor="teal"
+        bgcolor="offwhite"
+        textfieldcolor="offwhite" textcolor="black" texthilitecolor="iceblue1"
+        textselectedcolor="white"  textdisabledcolor="gray50"
+        hilitecolor="gray80" selectedcolor="gray70"
+        bordercolor="gray20" bordersize="1" />
+
+    <!-- change styles by specifying different css files on the query string
+         like css.lzx?css=style2.lzx -->
+
+    <class name="myclass" width="400" height="400" bgcolor="teal">
+        <simplelayout/>
+        <view name="blah" x="100" y="100" width="200" height="200" bgcolor="red">
+        </view>
+        <view class="mystyle" width="50" height="50" bgcolor="white" />
+        <text class="mystyle" align="center" valign="middle" text="one" />
+        <text class="mystyle" align="center" valign="middle" text="two" />
+        <text class="mystyle" align="center" valign="middle" text="three" />
+        <text class="mystyle" align="center" valign="middle" text="four" />
+        <text class="mystyle" align="center" valign="middle" text="five" />
+    </class>
+
+    <simplelayout axis="x" spacing="10" />
+
+    <view id="foo" width="100" height="100" bgcolor="yellow">
+        <view name="goo" x="25" y="25" width="50" height="50" /> 
+    </view>
+
+    <text id="bar" resize="true" />
+
+    <window id="mywindow" resizable="true" width="400" height="530"
+            x="250" y="50" layout="spacing: 10; inset: 20">
+
+        <text name="mytext1" id="mytext1" text="mytext1 text" bgcolor="blue" />
+
+        <text id="mytext2" text="mytext2 text xxx" bgcolor="teal" 
+              class="mystyle" />
+
+        <edittext id="myedit"  text="myedit text" />
+
+        <button id="mybutton1" class="foo" text="mybutton1 text" style="button_style" />
+
+        <button id="mybutton2" text="mybutton2 text" />
+
+        <button id="mybutton3" text="mybutton3 text" style="button_style" />
+
+        <button id="mybutton4" text="mybutton4 text" class="mystyle" />
+
+        <myclass />
+    </window>
+
+</canvas>

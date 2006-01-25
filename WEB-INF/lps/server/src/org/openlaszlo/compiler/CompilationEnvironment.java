@@ -13,6 +13,7 @@ import java.io.*;
 import java.util.*;
 import org.jdom.Element;
 import org.apache.log4j.*;
+import org.openlaszlo.css.CSSHandler;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.ComparisonMap;
@@ -28,17 +29,19 @@ import org.openlaszlo.xml.internal.XMLUtils;
 public class CompilationEnvironment {
     private final Properties mProperties;
     public static final String SWFVERSION_PROPERTY = "runtime";
-    static final String PROXIED_PROPERTY           = "lzproxied";
-    static final String DEBUG_PROPERTY             = "debug";
-    static final String PROFILE_PROPERTY           = "profile";
-    static final String KRANK_PROPERTY             = "krank";
-    static final String VALIDATE_PROPERTY          = "validate";
+    public static final String PROXIED_PROPERTY    = "lzproxied";
+    public static final String DEBUG_PROPERTY      = "debug";
+    public static final String PROFILE_PROPERTY    = "profile";
+    public static final String KRANK_PROPERTY      = "krank";
+    public static final String VALIDATE_PROPERTY   = "validate";
+    public static final String CSSFILE_PROPERTY    = "cssfile";
+
     // Log all debug.write messages back to the server
-    static final String LOGDEBUG_PROPERTY            = "logdebug";
-    public static final String REMOTEDEBUG_PROPERTY  = "remotedebug";
-    public static final String CONSOLEDEBUG_PROPERTY = "lzconsoledebug";
-    static final String EMBEDFONTS_PROPERTY          = "embedfonts";
-    static final String SOURCELOCATOR_PROPERTY       = "sourcelocators";
+    public static final String LOGDEBUG_PROPERTY      = "logdebug";
+    public static final String REMOTEDEBUG_PROPERTY   = "remotedebug";
+    public static final String CONSOLEDEBUG_PROPERTY  = "lzconsoledebug";
+    public static final String EMBEDFONTS_PROPERTY    = "embedfonts";
+    public static final String SOURCELOCATOR_PROPERTY = "sourcelocators";
 
     // Flag used internally, to mark whether the user instantiated a <debug>
     // tag manually. If they didn't, we need to add a call to instantiate one.
@@ -74,6 +77,11 @@ public class CompilationEnvironment {
      * CompilerMediaCache
      */
     private CompilerMediaCache mMediaCache = null;
+
+    /**
+     * CSSHandler
+     */
+    private CSSHandler mCSSHandler = null;
 
     /** A cache of a compiled validator */
     private org.iso_relax.verifier.Verifier cachedVerifier = null;
@@ -222,6 +230,16 @@ public class CompilationEnvironment {
     }
     public CompilerMediaCache getMediaCache() {
         return this.mMediaCache;
+    }
+
+    public void setCSSHandler(CSSHandler cssHandler) {
+        mCSSHandler = cssHandler;
+    }
+    public CSSHandler getCSSHandler() {
+        return mCSSHandler;
+    }
+    public void preprocessCSS(Element elt) {
+        if (mCSSHandler!=null) mCSSHandler.preprocessCSS(elt);
     }
 
     public void setDefaultFontInfo(FontInfo fi) {
