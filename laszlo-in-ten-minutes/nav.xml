@@ -8,7 +8,7 @@
 <!--          <item name="Getting Started" src="/laszlo-explorer/coverpages/getting_started.html"/>-->
 <!--    </section>-->
 
-<!--    <section name="Laszlo in 10 Minutes" title="Laszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">-->
+<!--    <section name="Laszlo in 10 Minutes" title="OpenLaszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">-->
 <!--    </section>-->
 
     <section name="Introduction"
@@ -26,7 +26,7 @@
             text="A form"/>
 
     </section>
-    <section name="Basics" title="Laszlo application basics"
+    <section name="Basics" title="OpenLaszlo application basics"
            text="Essential concepts" autoselect="true">
       <topic name="View" action="explore"
             src="/laszlo-explorer/basics/view.lzx"
@@ -65,7 +65,7 @@
     </section>
 
     <section title="Data" name="Data"
-           text="XML Data in Laszlo Applications" autoselect="true">
+           text="XML Data in OpenLaszlo Applications" autoselect="true">
       <topic name="Data Binding" action="explore"
             src="/laszlo-explorer/data/databinding.lzx"
             text="Databinding, not data processing."/>
