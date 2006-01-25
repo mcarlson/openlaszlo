@@ -62,19 +62,19 @@
             <!-- descriptive text -->
             <text fgcolor="0x394660" multiline="true"
                 width="560">
-                Welcome to Laszlo, the open source XML-native
-                platform for building rich Internet applications.  Laszlo technology
-                allows you to create a new generation of web applications with a breakthrough user experience.
-                We built this Explorer to quickly introduce you to the power and flexibility of the Laszlo Platform.
+                Welcome to OpenLaszlo, the open source XML-native
+                platform for building rich Internet applications.  OpenLaszlo technology
+                allows you to create web applications with a breakthrough user experience.
+                We built this Explorer to quickly introduce you to the power and flexibility of the OpenLaszlo Platform.
                 <br/><br/>Explore and enjoy!
             </text>
 
             <view id="clockintro" layout="axis:y" >
-                <text fgcolor="0x394660" fontstyle="bold">Laszlo World Clock</text>
+                <text fgcolor="0x394660" fontstyle="bold">OpenLaszlo World Clock</text>
                 <text fgcolor="0x394660" multiline="true" width="178">
-                This sample Laszlo application displays time around the world.
-                Check out the Demos and Sample Applications sections for more Laszlo examples,
-                read the Developers Guide, and start creating your own Laszlo Applications.
+                This sample OpenLaszlo application displays time around the world.
+                Check out the Demos and Sample Applications sections for more OpenLaszlo examples,
+                read the Developers Guide, and start creating your own OpenLaszlo applications.
                 </text>
             </view>
         </view>

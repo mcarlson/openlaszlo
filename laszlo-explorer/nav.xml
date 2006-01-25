@@ -3,14 +3,14 @@
 * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-    <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/welcome.lzx" title="Laszlo Presentation Server" text="Designed for developers. Developed for design.">
+    <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/welcome.lzx" title="OpenLaszlo Server" text="Designed for developers. Developed for design.">
           <item name="Overview" src="/laszlo-explorer/coverpages/overview.html"/>
           <item name="Getting Started" src="/laszlo-explorer/coverpages/getting_started.html"/>
     </section>
     
     <section name="Demos" src="/laszlo-explorer/coverpages/demos_cover.html" 
              title="Demos" 
-             text="See Laszlo in action. Be sure to inspect the source code." >
+             text="See OpenLaszlo in action. Be sure to inspect the source code." >
         <item title="Dashboard" name="Dashboard"  
           src="/laszlo-explorer/coverpages/dashboard_cover.html"
           text="A portal to media, communications, and personal information."  >
@@ -30,7 +30,7 @@
 	    </item>
     </section>
     
-    <section name="Laszlo in 10 Minutes" title="Laszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">
+    <section name="OpenLaszlo in 10 Minutes" title="OpenLaszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">
       <topic name="Introduction" 
       		 src="/laszlo-explorer/coverpages/intor_cover.html" 
              text="Essential concepts" autoselect="true">
@@ -48,7 +48,7 @@
 
       </topic>
       
-      <topic name="Basics" title="Laszlo application basics" 
+      <topic name="Basics" title="OpenLaszlo application basics" 
              src="/laszlo-explorer/coverpages/basics_cover.html" 
              text="Essential concepts" autoselect="true">
         <item name="View" action="explore" 
@@ -90,7 +90,7 @@
 
       <topic title="Data" name="Data" 
              src="/laszlo-explorer/coverpages/data_cover.html" 
-             text="XML Data in Laszlo Applications" autoselect="true">
+             text="XML Data in OpenLaszlo Applications" autoselect="true">
         <item name="Data Binding" action="explore" 
               src="/laszlo-explorer/data/databinding.lzx"  
               text="Databinding, not data processing."/>
@@ -110,7 +110,7 @@
       
       <topic title="Object Orientation" name="Object Orientation" src="/laszlo-explorer/coverpages/object_orientation_cover.html" text="LZX is an Object-Oriented language." autoselect="true">
         <item action="explore" src="/laszlo-explorer/classes/withoutclasses.lzx" name="The Problem"  text="Why you need an OO language."/>
-        <item action="explore" src="/laszlo-explorer/classes/withclasses.lzx" name="The Solution"   text="Laszlo's &lt;class&gt; tag"/>
+        <item action="explore" src="/laszlo-explorer/classes/withclasses.lzx" name="The Solution"   text="OpenLaszlo's &lt;class&gt; tag"/>
         <item action="explore" src="/laszlo-explorer/classes/inheritance.lzx" name="Inheritance"    text="Extending classes"/>
         <item action="explore" src="/laszlo-explorer/classes/attributes.lzx" name="Defining Attributes"   text="Attributes and instances" />
         <item action="explore" src="/laszlo-explorer/classes/events.lzx" name="Defining Events"  text="An event-driven system"/>
@@ -145,7 +145,7 @@
     </section>
     
     <section name="Small Applications" src="/laszlo-explorer/coverpages/small_applications_cover.html"  
-             title="Small Applications" text="short programs that illustrate specific aspects of Laszlo development">
+             title="Small Applications" text="short programs that illustrate specific aspects of OpenLaszlo development">
         <item title="Weather" name="Weather" 
               src="/demos/weather/weather.html" 
               text="Displays weather information for a given zip code, based on and XML document.">
@@ -153,7 +153,7 @@
         </item>
         <item title="Survey" name="Survey" 
               src="/demos/vacation-survey/vacation-survey.html" 
-              text="A survey built using Laszlo components." >
+              text="A survey built using OpenLaszlo components." >
              <subitem title="Learn by doing" src="/demos/vacation-survey/vacation-survey.lzx" name="Source" action="source" />
         </item>
         <item title="Contact List" name="Contact List" 
@@ -173,12 +173,12 @@
         </item>
     </section>
     
-    <section name="Components" src="/laszlo-explorer/coverpages/components_cover.html"  title="Examples" text="Small applications that show key Laszlo capabilities.">
+    <section name="Components" src="/laszlo-explorer/coverpages/components_cover.html"  title="Examples" text="Small applications that show key OpenLaszlo capabilities.">
      <topic name="Sampler" src="/examples/components/style_example.lzx" >
          <subitem popup="/docs/reference/index.html?style.html" text="Reference Page" name="Style Reference" action="popup" target="laszlo-reference"/>
          <subitem src="/examples/components/style_example.lzx" name="Source" action="source" />
      </topic>
-    <topic  name="Form Components" src="/laszlo-explorer/coverpages/form_cover.html" title="Laszlo Form Components" text="Collect and submit responses without refresh.">
+    <topic  name="Form Components" src="/laszlo-explorer/coverpages/form_cover.html" title="OpenLaszlo Form Components" text="Collect and submit responses without refresh.">
       <item title="Button" src="/examples/components/button_example.lzx" name="Button" text="A simple multi-frame button.">
           <subitem popup="/docs/reference/index.html?lz-button.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszlo-reference"/>
           <subitem src="/examples/components/button_example.lzx" name="Source" action="source" />
@@ -209,8 +209,8 @@
           <subitem src="/examples/components/slider_example.lzx" name="Source" action="source" />
       </item>
     </topic>
-    <topic name="General Components" src="/laszlo-explorer/coverpages/general_cover.html" title="Laszlo Components" text="Build applications with pre-built coponents written in LZX.">
-        <item title="Window" src="/examples/components/window_example.lzx" name="Window" text="Laszlo's basic window.">
+    <topic name="General Components" src="/laszlo-explorer/coverpages/general_cover.html" title="OpenLaszlo Components" text="Build applications with pre-built coponents written in LZX.">
+        <item title="Window" src="/examples/components/window_example.lzx" name="Window" text="OpenLaszlo's basic window.">
             <subitem popup="/docs/reference/index.html?lz-window.html" text="Reference Page" name="LZX Reference Manual" action="popup" target="laszlo-reference"/>
             <subitem src="/examples/components/window_example.lzx" name="Source" action="source" />
         </item>
