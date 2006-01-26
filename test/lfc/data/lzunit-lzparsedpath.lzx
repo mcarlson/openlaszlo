@@ -1,0 +1,22 @@
+<canvas debug="true">
+  <include href="lzunit"/>
+
+  <dataset name="mydata">
+    <record uri="http://www.google.com">Slashes text</record>
+    <record uri="http:www.google.com">No-slashes text</record>
+    <record uri="'quoted'">Quoted text</record>
+  </dataset>
+
+  <TestSuite>
+    <TestCase>
+      <method name="testsuccess">
+        assertEquals("No-slashes text", mydata.getPointer().xpathQuery("mydata:/record[@uri='http:www.google.com']/text()"));
+        assertEquals("Slashes text", mydata.getPointer().xpathQuery("mydata:/record[@uri='http://www.google.com']/text()"));
+        assertEquals("Quoted text", mydata.getPointer().xpathQuery("mydata:/record[@uri='\'quoted\'']/text()"));
+      </method>
+    </TestCase>
+  </TestSuite>
+  
+</canvas>
+
+

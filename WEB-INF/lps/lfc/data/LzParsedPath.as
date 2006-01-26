@@ -57,8 +57,37 @@ _root.LzParsedPath = function ( pa, node ){
     } else {
         var rest = pa;
     }
+
+    // Too simple - see lpp-737
+    // var nodes = rest.split( "/" );
+
+    var nodes = [];
+    var currnode = '';
+    var instring = false;
+    var escape = false;
+    for (var i = 0; i < rest.length; i++) {
+        var c = rest.charAt(i);
+        if (c == '\\' && escape == false) {
+            escape = true;
+            continue;
+        } else if (escape == true) {
+            escape = false;
+            currnode += c;
+            continue;
+        } else if (instring == false && c == "/") {
+            // only count slashes as new nodes if we're not inside a string 
+            // literal
+
+            nodes.push(currnode);
+            currnode = '';
+            continue;
+        } else if (c == "'") {
+            instring = instring ? false : true;   
+        }
+        currnode += c;
+    }
+    nodes.push(currnode);
             
-    var nodes = rest.split( "/" );
 
     if (nodes != null) {
         for ( var i = 0 ; i < nodes.length ; i++ ){
