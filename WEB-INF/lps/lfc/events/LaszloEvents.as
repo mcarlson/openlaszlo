@@ -17,17 +17,26 @@
 // @param String eventName: Optional, but required if eventSender is used; The name
 // of the event to register the new delegate for.
 //=============================================================================
-LzDelegate = function (context, functionName, eventSender, eventName){
+LzDelegate = function (context, functionName, eventSender, eventName) {
 //     if ($debug) {
 //         this._dbg_created = _root.__LzDebug.backtrace();
 //     }
-    //@field Object c: The context in which to call the method
-    this.c = context;
-    //@field String f: The name of the method to call
-    this.f = functionName;
-    if ( eventSender != null ){
-        this.register( eventSender , eventName );
+//@field Object c: The context in which to call the method
+  this.c = context;
+  if ( $debug ){
+    if (typeof(functionName) != "string") 
+      Debug.warn('LzDelegate functionName must be a string in %w', arguments.caller);
+  }
+  //@field String f: The name of the method to call
+  this.f = functionName;
+  if ( eventSender != null ){
+    if ( $debug ) {
+      if (typeof(eventName) != "string") {
+        Debug.warn('LzDelegate eventName must be a string in %w', arguments.caller);
+      }
     }
+    this.register( eventSender , eventName );
+  }
 }
 
 LzDelegate.prototype.lastevent = 0;
