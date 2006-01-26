@@ -6,6 +6,7 @@
     <include href="multistatebutton.lzx"/>
     <include href="style.lzx"/>
     <include href="basecomponent.lzx"/>
+    <include href="basedatacombobox.lzx"/>
     <include href="basedatepicker.lzx"/>
     <include href="basedatepickerday.lzx"/>
     <include href="basedatepickerweek.lzx"/>

@@ -94,6 +94,9 @@
                                         </method>
                                     </linktree>
                                 </linktree>
+                                <linktree text="basedatacombobox" key="base">
+                                    <linktree text="datacombobox" isleaf="true" file="lz-datacombobox.html" />
+                                </linktree>
                                 <linktree text="baselist" key="base">
                                     <linktree text="radiogroup" isleaf="true"
                                               file="lz-radiogroup.html" />

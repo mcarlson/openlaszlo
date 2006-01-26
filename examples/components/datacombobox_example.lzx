@@ -1,0 +1,105 @@
+<canvas bgcolor="#EAEAEA" width="640" height="400">
+    <include href="lz/datacombobox.lzx"/>
+
+    <silverstyle name="silvercolors"/>
+    <greenstyle name="greencolors"/>
+    <bluestyle name="bluecolors"/>
+    <goldstyle name="goldcolors"/>
+    <whitestyle name="whitecolors"/>
+    <purplestyle name="purplecolors"/>
+    
+    <dataset name="styles">
+        <item value="silvercolors">Silver</item>
+        <item value="greencolors">Green</item>
+        <item value="bluecolors">Blue</item>
+        <item value="goldcolors">Gold</item>
+        <item value="whitecolors">White</item>
+        <item value="purplecolors">Purple</item>
+    </dataset>
+    
+    <dataset name="items">
+        <item value="item1" >item one</item>
+        <item value="item2" >item two</item>
+        <item value="item3" >item three</item>
+        <item value="item4" >item four</item>
+    </dataset>
+
+    <dataset name="longdata">
+        <date>
+            <day>1</day>
+            <day>2</day>
+            <day>3</day>
+            <day>4</day>
+            <day>5</day>
+            <day>6</day>
+            <day>7</day>
+            <day>8</day>
+            <day>9</day>
+            <day>10</day>
+            <day>11</day>
+            <day>12</day>
+            <day>13</day>
+            <day>14</day>
+            <day>15</day>
+            <day>16</day>
+            <day>17</day>
+            <day>18</day>
+            <day>19</day>
+            <day>20</day>
+            <day>21</day>
+            <day>22</day>
+            <day>23</day>
+            <day>24</day>
+            <day>25</day>
+            <day>26</day>
+            <day>27</day>
+            <day>28</day>
+            <day>29</day>
+            <day>30</day>
+            <day>31</day>
+        </date>
+    </dataset>
+
+    <constantlayout axis="x" value="60"/>
+    <simplelayout axis="y" inset="60" spacing="20"/>
+
+    <view name="stylechooser" layout="axis:x; spacing:4">
+        <text>Style:</text>
+        <datacombobox width="120" editable="false" itemdatapath="styles:/item/">
+            <method event="onselect">
+                var colorchoice = this.getValue();
+                canvas[colorchoice].setAttribute("isdefault", true);
+            </method>
+        </datacombobox>
+
+    </view>
+    
+    <view  layout="axis:y;spacing:4">
+        <text multiline="true" width="350">The text that appears in the combobox may be different from the
+        value represented by the list item.  In the examples below the value is
+        displayed using a constraint tied to the value attribute of the combobox </text>
+        <view layout="axis:x; spacing:30">
+            <view layout="spacing:4">
+                <text>non-editable datacombobox</text>
+                <datacombobox  id="cbox2"
+                          width="130"
+                          itemdatapath="items:/item/"/>
+                <text text="${'value: ' + cbox2.value}"/>
+
+            </view>
+        </view>
+    </view>
+
+    <view  layout="axis:x;spacing:10">
+        <text multiline="true" width="260">You can present a long list of
+            items but specify fewer "shownitems" and the list will be displayed
+            with a scrollbar.  The combobox to the right has shownitems="7"</text>
+        <datacombobox y="10" width="40"
+            shownitems="7" itemdatapath="longdata:/date/day/"/>
+    </view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

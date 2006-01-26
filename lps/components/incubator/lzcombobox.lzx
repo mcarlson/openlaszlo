@@ -1,6 +1,6 @@
 <library>
     <include href="styledtext.lzx" />
-    <include href="newcombobox.lzx" />
+    <include href="base/basedatacombobox.lzx" />
     <include href="tooltip/tooltip.lzx" />
 
     <!--- mouseover/selection for combobox list items -->
@@ -52,7 +52,7 @@
     
     <!--- Subclass used to create an item in a lzcombobox's list.  For laszlo mail, need custom selection/highlight graphics.
           @keywords private -->
-    <class name="lzcombobox_item" extends="newcombobox_item" width="${null}" style="comboboxitem_style">
+    <class name="lzcombobox_item" extends="basedatacombobox_item" width="${null}" style="comboboxitem_style">
         <!--- white background to hide the superclass text -->
         <view name="bg" width="${parent.width}" height="${parent.height}" bgcolor="#ffffff" />
         <!--- selection/highlight background -->
@@ -92,7 +92,7 @@
         </method>
     </class>
 
-    <!--- Subclass of newcombobox with laszlo mail look. See newcombobox for
+    <!--- Subclass of basedatacombobox with laszlo mail look. See basedatacombobox for
           details. Usage:
           <code>
           <dataset name="dsHours">
@@ -118,11 +118,11 @@
           </lzcombobox>
           </code>
     -->
-    <class name="lzcombobox" extends="newcombobox" width="100" style="combobox_style" >
+    <class name="lzcombobox" extends="basedatacombobox" width="100" style="combobox_style" >
         <!--- The name of the class for items in the floating list. -->
         <attribute name="itemclassname" value="lzcombobox_item" type="string"/>
         
-        <!--- Property _cbtext must be set by subclasses.
+       <!--- Property _cbtext must be set by subclasses.
               @keywords private -->
         <attribute name="_cbtext" value="$once{this._text}" />
 

@@ -1,0 +1,60 @@
+<canvas bgcolor="#EAEAEA" width="640" height="460">
+
+    <include href="lz/datacombobox.lzx"/>
+    
+    <!--attribute name="defaultstyle" value="${greenstyle}"/-->
+	<dataset name="itemsdata" type="http" src="test-combobox-data.xml" 
+	         request="true" />
+
+    <dataset name="items">
+        <item value="item0" >item 0</item>
+        <item value="item1" >item 1</item>
+        <item value="item2" >item 2</item>
+        <item value="item3" >item 3</item>
+        <item value="item4" >item 4</item>
+        <item value="item5" >item 5</item>
+        <item value="item6" >item 6</item>
+        <item value="item7" >item 7</item>
+        <item value="item8" >item 8</item>
+        <item value="item9" >item 9</item>
+        <item value="item10" >item 10</item>
+        <item value="item11" >item 11</item>
+    </dataset>
+    
+    <dataset name="anotheritems">
+        <item>
+           <text>item one really</text>
+           <value>1</value>
+        </item>
+        <item>
+           <text>item two really</text>
+           <value>2</value>
+        </item>
+        <item>
+           <text>item three really</text>
+           <value>3</value>
+        </item>
+    </dataset>
+
+	<view x="20" y="20" >
+	    <simplelayout axis="y" spacing="15"/>
+        <text> local data, defaulttext="choose one.." </text>
+        <datacombobox id="cbox1"
+                   width="130"  
+                   shownitems="6"
+                   defaulttext="Choose One..."
+                   itemdatapath="items:/item"/>
+
+        <text> http data, defaulttext="choose one.." </text>
+        <datacombobox id="cbox3"
+                   width="130"  
+                   shownitems="6"
+                   defaulttext="Choose One..."
+                   itemdatapath="itemsdata:/ds/item"/>
+	</view>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
