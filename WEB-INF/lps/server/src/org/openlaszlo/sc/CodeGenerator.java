@@ -97,7 +97,7 @@ public class CodeGenerator implements Translator {
 
   public void setOptions(Compiler.OptionMap options) {
     this.options = options;
-    this.runtime = ((String)options.get(RUNTIME)).intern();
+    this.runtime = ((String)options.get(Compiler.RUNTIME)).intern();
     assert "swf6".equals(runtime) || "swf7".equals(runtime) || "swf8".equals(runtime) : "unknown runtime " + runtime;
     Instructions.setRuntime(runtime);
   }
@@ -105,7 +105,7 @@ public class CodeGenerator implements Translator {
   public void translate(SimpleNode program) {
     // Make a new collector each time, since the old one may be
     // referenced by the instruction cache
-    this.collector = new InstructionCollector(this.options.getBoolean(DISABLE_CONSTANT_POOL), true);
+    this.collector = new InstructionCollector(this.options.getBoolean(Compiler.DISABLE_CONSTANT_POOL), true);
     translateInternal(program, "b", true);
   }
 
@@ -121,61 +121,22 @@ public class CodeGenerator implements Translator {
     return collector.newLabel((name != null ? name + ":" : "") + node.filename + ":" + node.beginLine);
   }
 
-  // Compiler Options
-  // TODO [2004-03-11 ptw] share with CompilationEnvironment.java
-  public static String ACTIVATION_OBJECT = "createActivationObject";
-  public static String COMPUTE_METAREFERENCES = "computeMetaReferences";
-  public static String CONDITIONAL_COMPILATION = "conditionalCompilation";
-  public static String ALLOW_ROOT = "allowRoot";
-  public static String CACHE_COMPILES = "cacheCompiles";
-  public static String COMPILE_TRACE = "compileTrace";
-  public static String COMPILE_TIME_CONSTANTS = "compileTimeConstants";
-  public static String CONSTRAINT_FUNCTION = "constraintFunction";
-  public static String DEBUG = "debug";
-  public static String DEBUG_BACKTRACE = "debugBacktrace";
-  public static String DISABLE_CONSTANT_POOL = "disableConstantPool";
-  public static String ELIMINATE_DEAD_EXPRESSIONS = "eliminateDeadExpressions";
-  public static String FLASH_COMPILER_COMPATABILITY = "flashCompilerCompatability";
-  public static String GENERATE_FUNCTION_2 = "generateFunction2";
-  public static String GENERATE_FUNCTION_2_FOR_LZX = "generateFunction2ForLZX";
-  public static String INCLUDES = "processIncludes";
-  public static String INSTR_STATS = "instrStats";
-  public static String KRANK = "krank";
-  public static String RUNTIME = "runtime";
-  public static String METHOD_NAME = "methodName";
-  public static String NAME_FUNCTIONS = "nameFunctions";
-  public static String OBFUSCATE = "obfuscate";
-  public static String PROFILE = "profile";
-  public static String PROFILE_COMPILER = "profileCompiler";
-  public static String PROGRESS = "progress";
-  public static String PRINT_COMPILER_OPTIONS = "printCompilerOptions";
-  public static String PRINT_CONSTRAINTS = "printConstraints";
-  public static String PRINT_INSTRUCTIONS = "printInstructions";
-  public static String RESOLVER = "resolver";
-  public static String SCRIPT_ELEMENT = "scriptElement";
-  public static String VALIDATE_CACHES = "validateCaches";
-  public static String WARN_UNDEFINED_REFERENCES = "warnUndefinedReferences";
-  public static String WARN_GLOBAL_ASSIGNMENTS = "warnGlobalAssignments";
-  public static String WARN_UNUSED_LOCALS = "warnUnusedLocals";
-  public static String WARN_UNUSED_PARAMETERS = "warnUnusedParameters";
-  public static String WITH_THIS = "withThis";
-
   // Options that don't affect code generation.  This is used to decide
   // what it's okay to cache across LFC build versions.  It's okay if
   // it's too small.
   static Set NonCodeGenerationOptions = new HashSet();
   static {
-    NonCodeGenerationOptions.add(CACHE_COMPILES);
-    NonCodeGenerationOptions.add(INSTR_STATS);
-    NonCodeGenerationOptions.add(PRINT_COMPILER_OPTIONS);
-    NonCodeGenerationOptions.add(PRINT_CONSTRAINTS);
-    NonCodeGenerationOptions.add(PROFILE_COMPILER);
-    NonCodeGenerationOptions.add(PROGRESS);
-    NonCodeGenerationOptions.add(RESOLVER);
+    NonCodeGenerationOptions.add(Compiler.CACHE_COMPILES);
+    NonCodeGenerationOptions.add(Compiler.INSTR_STATS);
+    NonCodeGenerationOptions.add(Compiler.PRINT_COMPILER_OPTIONS);
+    NonCodeGenerationOptions.add(Compiler.PRINT_CONSTRAINTS);
+    NonCodeGenerationOptions.add(Compiler.PROFILE_COMPILER);
+    NonCodeGenerationOptions.add(Compiler.PROGRESS);
+    NonCodeGenerationOptions.add(Compiler.RESOLVER);
     // These affect the default settings for the options above, but
     // do not themselves make a difference.
-    NonCodeGenerationOptions.add(DEBUG);
-    NonCodeGenerationOptions.add(KRANK);
+    NonCodeGenerationOptions.add(Compiler.DEBUG);
+    NonCodeGenerationOptions.add(Compiler.KRANK);
   }
 
   static class LessHalfAssedHashMap extends HashMap {
@@ -360,7 +321,7 @@ public class CodeGenerator implements Translator {
   // when called, otherwise expects the function object.
   // TODO: [2006-01-04 ptw] Rewrite as a source transform
   void checkUndefinedFunction(SimpleNode node, String reference) {
-    if (options.getBoolean(WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+    if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
       String label = newLabel(node);
       collector.emit(Instructions.DUP);                // ref ref
       // Get the value of a function reference
@@ -385,7 +346,7 @@ public class CodeGenerator implements Translator {
   // left on the stack.
   // TODO: [2006-01-04 ptw] Rewrite as a source transform
   void checkUndefinedMethod(SimpleNode node, String methodName) {
-    if (options.getBoolean(WARN_UNDEFINED_REFERENCES) && node.filename != null) {
+    if (options.getBoolean(Compiler.WARN_UNDEFINED_REFERENCES) && node.filename != null) {
       // Check that object is not undefined
       String isUndefined = newLabel(node); // stack: object
       collector.emit(Instructions.DUP); // stack: object, object
@@ -444,7 +405,7 @@ public class CodeGenerator implements Translator {
   String prevStatFile = null;
   int prevStatLine = -1;
   void showStats(SimpleNode node) {
-    if (! options.getBoolean(INSTR_STATS)) { return; }
+    if (! options.getBoolean(Compiler.INSTR_STATS)) { return; }
     String statFile;
     int statLine;
     if (node != null) {
@@ -467,7 +428,7 @@ public class CodeGenerator implements Translator {
 
   Boolean evaluateCompileTimeConditional(SimpleNode node) {
     if (node instanceof ASTIdentifier) {
-      Map constants = (Map)options.get(COMPILE_TIME_CONSTANTS);
+      Map constants = (Map)options.get(Compiler.COMPILE_TIME_CONSTANTS);
       if (constants != null) {
         String name = ((ASTIdentifier)node).getName();
         if (constants.containsKey(name)) {
@@ -500,7 +461,7 @@ public class CodeGenerator implements Translator {
     }
     if ("1".equals(cpass) && top) {
       // emit compile-time contants to runtime
-      Map constants = (Map)options.get(COMPILE_TIME_CONSTANTS);
+      Map constants = (Map)options.get(Compiler.COMPILE_TIME_CONSTANTS);
       if (constants != null) {
         for (Iterator i = constants.entrySet().iterator(); i.hasNext(); ) {
           Map.Entry entry = (Map.Entry)i.next();
@@ -527,7 +488,7 @@ public class CodeGenerator implements Translator {
         }
         continue;
       } else if (directive instanceof ASTIfDirective) {
-        if (! options.getBoolean(CONDITIONAL_COMPILATION)) {
+        if (! options.getBoolean(Compiler.CONDITIONAL_COMPILATION)) {
           // TBD: different type; change to CONDITIONALS
           throw new CompilerError("`if` at top level");
         }
@@ -545,7 +506,7 @@ public class CodeGenerator implements Translator {
         // Disabled by default, since it isn't supported in the
         // product.  (It doesn't go through the compilation
         // manager for dependency tracking.)
-        if (! options.getBoolean(INCLUDES)) {
+        if (! options.getBoolean(Compiler.INCLUDES)) {
           throw new UnimplementedError("unimplemented: #include", directive);
         }
         String userfname = (String)((ASTLiteral)directive.get(0)).getValue();
@@ -572,7 +533,7 @@ public class CodeGenerator implements Translator {
       if ("2".equals(cpass)) {
         // Statements are processed in pass 2
         if (directive instanceof ASTStatement) {
-          //               int newIndex = compileAssignments(directives, index-1, options.getBoolean(OBFUSCATE));
+          //               int newIndex = compileAssignments(directives, index-1, options.getBoolean(Compiler.OBFUSCATE));
           //               //newIndex = false
           //               if (newIndex != -1) {
           //                 index = newIndex;
@@ -613,9 +574,9 @@ public class CodeGenerator implements Translator {
     String sourceKey = file.getAbsolutePath();
     String sourceChecksum = "" + file.lastModified(); // source;
     ParseResult entry = (ParseResult)Compiler.CachedParses.get(sourceKey, sourceChecksum);
-    if ((entry == null) || options.getBoolean(VALIDATE_CACHES)) {
+    if ((entry == null) || options.getBoolean(Compiler.VALIDATE_CACHES)) {
       boolean hasIncludes = includePattern.matcher(source).matches();
-      if (options.getBoolean(PROGRESS)) {
+      if (options.getBoolean(Compiler.PROGRESS)) {
         // Even though code generation is re-run
         // for every file, just print this for
         // files that are re-parsed, to indicate
@@ -629,7 +590,7 @@ public class CodeGenerator implements Translator {
       // the #include again.
       ParseResult realentry = new ParseResult(program, hasIncludes);
       Compiler.CachedParses.put(sourceKey, sourceChecksum, realentry);
-      if ((entry != null) && options.getBoolean(VALIDATE_CACHES)) {
+      if ((entry != null) && options.getBoolean(Compiler.VALIDATE_CACHES)) {
         if (! realentry.equals(entry)) {
           System.err.println("Bad parse cache for " + sourceKey + ": " + entry + " != " + realentry);
         }
@@ -673,8 +634,8 @@ public class CodeGenerator implements Translator {
     File file;
     String source;
     try {
-      if (options.containsKey("resolver")) {
-        fname = ((lzsc.Resolver)options.get("resolver")).resolve(userfname);
+      if (options.containsKey(Compiler.RESOLVER)) {
+        fname = ((lzsc.Resolver)options.get(Compiler.RESOLVER)).resolve(userfname);
       }
       file = new File(new File(fname).getCanonicalPath());
       FileInputStream stream = new FileInputStream(file);
@@ -702,7 +663,7 @@ public class CodeGenerator implements Translator {
         getCodeGenerationOptionsKey(Collections.singletonList(
                                       // The constant pool isn't cached, so it doesn't affect code
                                       // generation so far as the cache is concerned.
-                                      DISABLE_CONSTANT_POOL));
+                                      Compiler.DISABLE_CONSTANT_POOL));
       // If these could be omitted from the key for files that didn't
       // reference them, then the cache could be shared between krank
       // and krank debug.  (The other builds differ either on OBFUSCATE,
@@ -713,15 +674,15 @@ public class CodeGenerator implements Translator {
       // but check against optionsKey
       String instrsChecksum = "" + file.lastModified() + optionsKey; // source;
       List instrs = null;
-      if (options.getBoolean(CACHE_COMPILES)) {
+      if (options.getBoolean(Compiler.CACHE_COMPILES)) {
         instrs = (List)Compiler.CachedInstructions.get(instrsKey, instrsChecksum);
       }
-      if ((instrs != null) && (! options.getBoolean(VALIDATE_CACHES))) {
+      if ((instrs != null) && (! options.getBoolean(Compiler.VALIDATE_CACHES))) {
         collector.appendInstructions(instrs);
       } else {
         ParseResult result = parseFile(file, userfname, source);
         int startpos = collector.size();
-        if (false && options.getBoolean(PROGRESS)) {
+        if (false && options.getBoolean(Compiler.PROGRESS)) {
           System.err.println("Translating " + userfname + " (pass " + cpass + ")...");
         }
         translateInternal(result.parse, cpass, false);
@@ -729,7 +690,7 @@ public class CodeGenerator implements Translator {
           assert (! collector.constantsGenerated);
           // Copy for cache
           List realinstrs = new ArrayList(collector.subList(startpos, collector.size()));
-          if ((instrs != null) && options.getBoolean(VALIDATE_CACHES)) {
+          if ((instrs != null) && options.getBoolean(Compiler.VALIDATE_CACHES)) {
             if ((! realinstrs.equals(instrs))) {
               System.err.println("Bad instr cache for " + instrsKey + ": " + instrs + " != " + realinstrs);
             }
@@ -738,7 +699,7 @@ public class CodeGenerator implements Translator {
           // noConstantPool=true, which produces vastly
           // larger binaries.
           //instrs = combineInstructions(instrs, true)
-          if (options.getBoolean(CACHE_COMPILES)) {
+          if (options.getBoolean(Compiler.CACHE_COMPILES)) {
             Compiler.CachedInstructions.put(instrsKey, instrsChecksum, realinstrs);
           }
         }
@@ -889,7 +850,7 @@ public class CodeGenerator implements Translator {
   public void visitFunctionDeclaration(SimpleNode node, SimpleNode[] ast) {
     // Inner functions are handled by translateFunction
     if (ASTProgram.class.equals(context.type)) {
-      assert (! options.getBoolean(CONSTRAINT_FUNCTION));
+      assert (! options.getBoolean(Compiler.CONSTRAINT_FUNCTION));
       // Make sure all our top-level functions have root context
       String block;
       if (true) {
@@ -1187,9 +1148,9 @@ public class CodeGenerator implements Translator {
       String breakLabel = newLabel(node);
       context.setTarget("break", breakLabel);
       context.setTarget("continue", continueLabel);
-      options.putBoolean(WARN_GLOBAL_ASSIGNMENTS, true);
+      options.putBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS, true);
       visitStatement(init);
-      options.putBoolean(WARN_GLOBAL_ASSIGNMENTS, false);
+      options.putBoolean(Compiler.WARN_GLOBAL_ASSIGNMENTS, false);
       Object[] code = {new Integer(0),
                        new ForValue(test),
                        Instructions.BranchIfFalse.make(breakLabel),
@@ -1218,7 +1179,7 @@ public class CodeGenerator implements Translator {
     // SimpleNode _ = children[1];
     SimpleNode obj = children[2];
     SimpleNode body = children[3];
-    if (options.getBoolean(ACTIVATION_OBJECT)) {
+    if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
       translateForInStatement(node, var, Instructions.SetVariable, obj, body);
       return;
     }
@@ -1320,7 +1281,7 @@ public class CodeGenerator implements Translator {
       }
     }
     visitExpression(value);
-    if (options.getBoolean(PROFILE) || options.getBoolean(DEBUG_BACKTRACE)) {
+    if (options.getBoolean(Compiler.PROFILE) || options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
       collector.emit(Instructions.BRANCH.make(c.label));
     } else {
       collector.emit(Instructions.RETURN);
@@ -1651,10 +1612,10 @@ public class CodeGenerator implements Translator {
     // Side-effect free expressions can be suppressed if not referenced
     // Following is disabled by default for regression testing.
     // TODO: [2003-02-17 ows] enable this
-    if ((! isReferenced) && options.getBoolean(ELIMINATE_DEAD_EXPRESSIONS)) {
+    if ((! isReferenced) && options.getBoolean(Compiler.ELIMINATE_DEAD_EXPRESSIONS)) {
       return true;
     }
-    if ("_root".equals(((ASTIdentifier)node).getName()) && (! options.getBoolean(ALLOW_ROOT))) {
+    if ("_root".equals(((ASTIdentifier)node).getName()) && (! options.getBoolean(Compiler.ALLOW_ROOT))) {
       throw new SemanticError("Illegal variable name: " + node, node);
     }
     translateReference(node).get();
@@ -1665,7 +1626,7 @@ public class CodeGenerator implements Translator {
     // Side-effect free expressions can be suppressed if not referenced
     // Following is disabled by default for regression testing.
     // TODO: [2003-02-17 ows] enable this
-    if ((! isReferenced) && options.getBoolean(ELIMINATE_DEAD_EXPRESSIONS)) {
+    if ((! isReferenced) && options.getBoolean(Compiler.ELIMINATE_DEAD_EXPRESSIONS)) {
       return true;
     }
     Object value = translateLiteralNode(node);
@@ -1739,7 +1700,7 @@ public class CodeGenerator implements Translator {
     Compiler.OptionMap savedOptions = options;
     try {
       options = options.copy();
-      options.putBoolean(CONSTRAINT_FUNCTION, false);
+      options.putBoolean(Compiler.CONSTRAINT_FUNCTION, false);
       // Make sure all our top-level functions have root context
       String block = null;
       if (ASTProgram.class.equals(context.type)) {
@@ -1811,9 +1772,9 @@ public class CodeGenerator implements Translator {
         collector.emit(Instructions.GetTimer);
         return false;
       }
-      if (options.getBoolean(FLASH_COMPILER_COMPATABILITY)) {
+      if (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) {
         if ("trace".equals(name)) {
-          if (options.get(COMPILE_TRACE) == "flash") {
+          if (options.get(Compiler.COMPILE_TRACE) == "flash") {
             // FIXME: [2003-01-08 ows] Nicer warning for trace()
             // FIXME: [2003-01-08 ows] Warn, at least, when
             // there's more than one arg.
@@ -1823,7 +1784,7 @@ public class CodeGenerator implements Translator {
             collector.push("trace");
             collector.emit(Instructions.CallFunction);
             return false;      // was true for trace instruction?
-          } else if (options.get(COMPILE_TRACE) == "debug") {
+          } else if (options.get(Compiler.COMPILE_TRACE) == "debug") {
             visitExpression(args[0]);
             collector.push("_root");
             collector.emit(Instructions.GetVariable);
@@ -1889,8 +1850,8 @@ public class CodeGenerator implements Translator {
     if (fnexpr instanceof ASTPropertyIdentifierReference &&
         "setAttribute".equals(((ASTIdentifier)fnexpr.get(1)).getName()) &&
         arglen == 2 &&
-        (! options.getBoolean(FLASH_COMPILER_COMPATABILITY)) &&
-        (! options.getBoolean(GENERATE_FUNCTION_2))) {
+        (! options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY)) &&
+        (! options.getBoolean(Compiler.GENERATE_FUNCTION_2))) {
       Object[] onprop = new Instruction[] 
         {Instructions.PUSH.make("on"),
          Instructions.PUSH.make(Values.Register(1)),
@@ -1973,7 +1934,7 @@ public class CodeGenerator implements Translator {
     } else {
       name = ((ASTIdentifier)fname).getName();
     }
-    String methodName = (String)options.get(METHOD_NAME);
+    String methodName = (String)options.get(Compiler.METHOD_NAME);
     if ((! name.equals(methodName))) {
       String supplement = "";
       if (name.equalsIgnoreCase(name)) {
@@ -2085,7 +2046,7 @@ public class CodeGenerator implements Translator {
       }
       return false;
     }
-    if (options.getBoolean(FLASH_COMPILER_COMPATABILITY) && ParserConstants.MINUS == (op)) {
+    if (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) && ParserConstants.MINUS == (op)) {
       collector.push(0);
       visitExpression(arg);
       collector.emit(Instructions.SUBTRACT);
@@ -2102,7 +2063,7 @@ public class CodeGenerator implements Translator {
       visitExpression(arg);
     }
     Instruction[] instrs = (Instruction[])UnopInstrs.get(op);
-    if (options.getBoolean(FLASH_COMPILER_COMPATABILITY) &&
+    if (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) &&
         ParserConstants.TILDE == (op)) {
       instrs = new Instruction[] {Instructions.PUSH.make(new Long(0xffffffffL)),
                                   Instructions.BitwiseXor};
@@ -2272,7 +2233,7 @@ public class CodeGenerator implements Translator {
     if (functionName != null) {
       userFunctionName = functionName;
       // needed?
-      options.put(METHOD_NAME, functionName.substring(functionName.lastIndexOf('.')+1));
+      options.put(Compiler.METHOD_NAME, functionName.substring(functionName.lastIndexOf('.')+1));
     } else {
       // TODO: [2003-06-19 ptw] (krank) Sanitization of names to
       // identifiers moved to krank user, remove #- when it works
@@ -2311,8 +2272,8 @@ public class CodeGenerator implements Translator {
     }
     List prefix = new ArrayList();
     List postfix = new ArrayList();
-    if (options.getBoolean(DEBUG_BACKTRACE)) {
-      prefix.add((new Compiler.Parser()).parse("" +
+    if (options.getBoolean(Compiler.DEBUG_BACKTRACE)) {
+      prefix.addAll(Arrays.asList((new Compiler.Parser()).parse("" +
              "{" +
                "\n#pragma 'warnUndefinedReferences=false'\n" +
                "var $lzsc$s = _root.__LzDebug['backtraceStack'];" +
@@ -2323,11 +2284,11 @@ public class CodeGenerator implements Translator {
                  "$lzsc$s[$lzsc$l] = arguments;" +
                "}" +
              "}" +
-             "").getChildren());
+             "").getChildren()));
       // TODO: [2005-05-12 ptw] (LPP-350) Until we analyze
       // $flasm, have to re-establish our vars here because
       // $flasm may have clobbered them if registered
-      postfix.add((new Compiler.Parser()).parse("" +
+      postfix.addAll(Arrays.asList((new Compiler.Parser()).parse("" +
              "{" +
                "\n#pragma 'warnUndefinedReferences=false'\n" +
                "var $lzsc$s = _root.__LzDebug['backtraceStack'];" +
@@ -2335,16 +2296,17 @@ public class CodeGenerator implements Translator {
                  "$lzsc$s.length--;" +
                "}" +
              "}" +
-             "").getChildren());
+             "").getChildren()));
     }
-    if (options.getBoolean(PROFILE)) {
-      prefix.add(meterFunctionEvent(node, "calls", meterFunctionName));
-      postfix.add(meterFunctionEvent(node, "returns", meterFunctionName));
+    if (options.getBoolean(Compiler.PROFILE)) {
+      prefix.addAll(Arrays.asList(meterFunctionEvent(node, "calls", meterFunctionName)));
+      postfix.addAll(Arrays.asList(meterFunctionEvent(node, "returns", meterFunctionName)));
     }
 
     // Analyze local variables (and functions)
-    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(FLASH_COMPILER_COMPATABILITY));
+    VariableAnalyzer analyzer = new VariableAnalyzer(params, options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY));
     for (Iterator i = prefix.iterator(); i.hasNext(); ) {
+      analyzer.visit((SimpleNode)i.next());
     }
     for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
       analyzer.visit((SimpleNode)i.next());
@@ -2365,16 +2327,16 @@ public class CodeGenerator implements Translator {
       // TODO: [2005-06-29 ptw] with (_root) should not be
       // necessary for the activation object case now that it is
       // done at top level to get [[scope]] right.
-      if (options.getBoolean(ACTIVATION_OBJECT)) {
+      if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
         analyzer.incrementUsed("_root");
       }
-      if (options.getBoolean(WITH_THIS)) {
+      if (options.getBoolean(Compiler.WITH_THIS)) {
         analyzer.incrementUsed("this");
       }
     }
     Map used = analyzer.used;
     // If this is a closure, annotate the Username for metering
-    if ((! closed.isEmpty()) && (functionName != null) && options.getBoolean(PROFILE)) {
+    if ((! closed.isEmpty()) && (functionName != null) && options.getBoolean(Compiler.PROFILE)) {
       // Is there any other way to construct a closure in js
       // other than a function returning a function?
       if (context.findFunctionContext().parent.findFunctionContext() != null) {
@@ -2391,7 +2353,7 @@ public class CodeGenerator implements Translator {
                          ", free: " + free);
     }
     // Deal with warnings
-    if (options.getBoolean(WARN_UNUSED_PARAMETERS)) {
+    if (options.getBoolean(Compiler.WARN_UNUSED_PARAMETERS)) {
       Set unusedParams = new LinkedHashSet(parameters);
       unusedParams.removeAll(used.keySet());
       for (Iterator i = unusedParams.iterator(); i.hasNext(); ) {
@@ -2399,7 +2361,7 @@ public class CodeGenerator implements Translator {
                            " unused in " + filename + "(" + lineno + ")");
       }
     }
-    if (options.getBoolean(WARN_UNUSED_LOCALS)) {
+    if (options.getBoolean(Compiler.WARN_UNUSED_LOCALS)) {
       Set unusedVariables = new LinkedHashSet(variables);
       unusedVariables.removeAll(used.keySet());
       for (Iterator i = unusedVariables.iterator(); i.hasNext(); ) {
@@ -2424,7 +2386,7 @@ public class CodeGenerator implements Translator {
     context.setProperty(TranslationContext.VARIABLES, knownSet);
     context.setProperty(TranslationContext.LOWERVARIABLES, lowerKnownSet);
 
-    boolean scriptElement = options.getBoolean(SCRIPT_ELEMENT);
+    boolean scriptElement = options.getBoolean(Compiler.SCRIPT_ELEMENT);
     Map registerMap = new HashMap();
     Map lowerRegisterMap = new HashMap();
     // Always set register map.  Inner functions should not see
@@ -2435,9 +2397,9 @@ public class CodeGenerator implements Translator {
     // TODO: [2004-03-24] Analyze register usage in $flasm and
     // account for it (or rename $flasm regs?)
     // NB: Only Flash Player 6r65 or better understands function2
-    if (options.getBoolean(GENERATE_FUNCTION_2) &&
-        (options.getBoolean(FLASH_COMPILER_COMPATABILITY) ||
-         options.getBoolean(GENERATE_FUNCTION_2_FOR_LZX)) &&
+    if (options.getBoolean(Compiler.GENERATE_FUNCTION_2) &&
+        (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) ||
+         options.getBoolean(Compiler.GENERATE_FUNCTION_2_FOR_LZX)) &&
         (! scriptElement) &&
         (! used.containsKey("eval")) &&
         (! used.containsKey("$flasm"))) {
@@ -2548,7 +2510,7 @@ public class CodeGenerator implements Translator {
       LinkedHashSet toCreate = new LinkedHashSet(variables);
       toCreate.retainAll(used.keySet());
       toCreate.removeAll(registerMap.keySet());
-      if (options.getBoolean(ACTIVATION_OBJECT)) {
+      if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
         for (Iterator i = toCreate.iterator(); i.hasNext(); ) {
           Object var = i.next();
           collector.push(var);
@@ -2565,7 +2527,7 @@ public class CodeGenerator implements Translator {
     }
     // create unregistered, used parameters in activation context
     // (only needed for activation object, they are already in context)
-    if (options.getBoolean(ACTIVATION_OBJECT)) {
+    if (options.getBoolean(Compiler.ACTIVATION_OBJECT)) {
       LinkedHashSet toCreate = new LinkedHashSet(parameters);
       toCreate.retainAll(used.keySet());
       toCreate.removeAll(registerMap.keySet());
@@ -2598,7 +2560,7 @@ public class CodeGenerator implements Translator {
       }
       collector.emit(Instructions.WITH.make(block));
     }
-    if ((! free.isEmpty()) && options.getBoolean(WITH_THIS)) {
+    if ((! free.isEmpty()) && options.getBoolean(Compiler.WITH_THIS)) {
       if (registerMap.containsKey("this")) {
         collector.push(Values.Register(((Instructions.Register)registerMap.get("this")).regno));
       } else {
@@ -2611,7 +2573,7 @@ public class CodeGenerator implements Translator {
       collector.emit(Instructions.WITH.make(block));
     }
     // inner functions do not get scriptElement treatment
-    options.putBoolean(SCRIPT_ELEMENT, false);
+    options.putBoolean(Compiler.SCRIPT_ELEMENT, false);
     // Now emit functions in the activation context
     if (scriptElement) {
       // create functions in global scope
@@ -2657,7 +2619,7 @@ public class CodeGenerator implements Translator {
     }
     // close function
     collector.emit(Instructions.LABEL.make(block));
-    if (options.getBoolean(NAME_FUNCTIONS)) {
+    if (options.getBoolean(Compiler.NAME_FUNCTIONS)) {
       if (functionName != null) {
         // Named functions do not leave a value on the stack
         collector.push(functionName);
@@ -2670,7 +2632,7 @@ public class CodeGenerator implements Translator {
       collector.push(userFunctionName);
       collector.emit(Instructions.SetMember);
     }
-    if (options.getBoolean(CONSTRAINT_FUNCTION)) {
+    if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
       assert (functionName != null);
       if (ReferenceCollector.DebugConstraints) {
         System.err.println("stmts: " + stmts);
@@ -2685,13 +2647,13 @@ public class CodeGenerator implements Translator {
       // the value; it will also process the call to
       // setAttribute, but ReferenceCollector knows to ignore
       //
-      ReferenceCollector dependencies = new ReferenceCollector(options.getBoolean(COMPUTE_METAREFERENCES));
+      ReferenceCollector dependencies = new ReferenceCollector(options.getBoolean(Compiler.COMPUTE_METAREFERENCES));
       for (Iterator i = stmtList.iterator(); i.hasNext(); ) {
         SimpleNode stmt = (SimpleNode)i.next();
         dependencies.visit(stmt);
       }
       SimpleNode expr = dependencies.computeReferences(userFunctionName);
-      if (options.getBoolean(PRINT_CONSTRAINTS)) {
+      if (options.getBoolean(Compiler.PRINT_CONSTRAINTS)) {
         (new Compiler.ParseTreePrinter()).print(expr);
       }
       return expr;
