@@ -57,8 +57,6 @@
 	    //assertEquals(tester.getAttribute("stretches"), tester.stretches);
 	    assertEquals(tester.getAttribute("play"), tester.play);
 	    //assertEquals(tester.getAttribute("selected"), tester.selected); 
-	    assertEquals(tester.getAttribute("xscale"), tester.xscale);
-	    assertEquals(tester.getAttribute("yscale"), tester.yscale);
 
             <!-- do it again with hardcoding -->
 

@@ -34,20 +34,6 @@
         </method>
     </class>
     
-    <class name="bug_293" extends="TestCase">
-        <view name="txtview" width="100" height="50">
-            <text stretches="width" width="${thesizer.width}" height="20" yscale="${xscale}"> 
-                Hello, World!
-            </text>
-        </view>
-        <view id="thesizer" y="${parent.txtview.y + 20}" width="50" height="10" bgcolor="blue"/>
-        
-        <method name="testStretch">
-            thesizer.setWidth(100)
-            assertEquals(1, txtview.yscale)
-        </method>
-    </class>
-    
     <class name="bug_320" extends="TestCase">
       
       <view name="txtview" fontstyle="bold" layout="axis: y; spacing: 10">
