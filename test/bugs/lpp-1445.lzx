@@ -1,0 +1,35 @@
+<canvas debug="true">    
+    <include href="base/datalistselector.lzx"/>
+    <dataset name="items">       
+        <item value="item0">item zero</item>
+        <item value="item1">item one</item>
+        <item value="item2">item two</item>
+        <item value="item3">item three</item>
+        <item value="item4">item four</item>
+        <item value="item5">item five</item>
+        <item value="item6">item six</item>
+    </dataset>
+    <simplelayout/>
+    <text id="index"/>
+    <view layout="axis:x">
+      <view layout="spacing:4">
+        <text datapath="items:/item/text()">
+           <method event="onclick">
+		var i = textSelector.getItemIndexByData(this.datapath.p);
+		index.setText('clicked index='+i);
+            </method>
+          </text>
+          <datalistselector id="textSelector"/>
+       </view>
+      <view layout="spacing:4">
+        <text datapath="items:/item/@value">
+           <method event="onclick">
+		var i = attributeSelector.getItemIndexByData(this.datapath.p);
+		index.setText('clicked index='+i);
+            </method>
+          </text>
+          <datalistselector id="attributeSelector"/>
+       </view>
+     </view> 
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 
