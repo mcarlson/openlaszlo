@@ -1,0 +1,11 @@
+<canvas width="480" height="322">
+     <attribute name="first"/>
+   <method event="onfirst">
+       Debug.write(first);
+   </method>
+   <attribute name="second"/>
+   <method event="onsecond">
+       Debug.write(second);
+   </method>
+
+</canvas>

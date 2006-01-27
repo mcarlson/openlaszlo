@@ -1,0 +1,42 @@
+
+<!DOCTYPE html
+ PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+   <head>
+       <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+       <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico">
+       <title>Photo to Movie</title>
+       <style type="text/css">
+           html, body { margin: 0; padding: 0; height: 100%; }
+           body { background-color: #ffffff; }
+       </style>
+       <script language="JavaScript1.1" src="/lps-dev/lps/includes/vbembed.js" type="text/javascript"></script>
+       <script src="/lps-dev/lps/includes/embed.js" type="text/javascript"></script>
+       <script type="text/javascript">
+           function loadVideo() {
+               lzSetCanvasAttribute("first", "1st");
+               lzSetCanvasAttribute("second", "2nd");
+           }
+       </script>
+   </head>
+   <body>
+       <form>
+           <input type="button" onclick="loadVideo()" value="Load Video"/>
+       </form>
+       <script type="text/javascript">
+           lzLPSRoot = '/lps-dev';
+           lzCanvasRuntimeVersion = 8 * 1;
+           if (lzCanvasRuntimeVersion == 6) {
+               lzCanvasRuntimeVersion = 6.65;
+           }
+           if (isIE && isWin || detectFlash() >= lzCanvasRuntimeVersion) {
+               lzEmbed({url: 'lpp-1405.lzx?lzt=swf&debug=true&lzr=swf8&__lzhistconn='+top.connuid+'&__lzhisturl=' + escape('/lps-dev/lps/includes/h.html?h='), bgcolor: '#ffffff', width: '480', height: '322', id: 'lzapp'}, lzCanvasRuntimeVersion);
+               lzHistEmbed(lzLPSRoot);
+           } else {
+               document.write('This application requires Flash player ' + lzCanvasRuntimeVersion + '. <a href="http://www.macromedia.com/go/getflashplayer" target="fpupgrade">Click here</a> to upgrade.');
+           } </script>
+       <noscript>
+           Please enable JavaScript in order to use this application.
+       </noscript>
+   </body>
+</html> 

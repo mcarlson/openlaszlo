@@ -272,7 +272,26 @@ function lzHistEmbed(wr) {
 // string name
 // string value
 // bool add history	event   
+lzSetCanvasAttributeQ = null;
 function lzSetCanvasAttribute(name, value, addhist) {
+    if (lzSetCanvasAttributeQ == null) {
+        lzSetCanvasAttributeQ = [[name, value, addhist]];
+        lzSetCanvasAttributeprocess();
+    } else {
+        lzSetCanvasAttributeQ.push([name, value, addhist]);
+    }
+}
+
+function lzSetCanvasAttributeprocess(name, value, addhist) {
+    if (lzSetCanvasAttributeQ.length > 0) {
+        var o = lzSetCanvasAttributeQ.shift();
+        _lzSetCanvasAttribute(o[0],o[1],o[2]);
+    }
+    setTimeout('lzSetCanvasAttributeprocess()', 100);
+}
+
+
+function _lzSetCanvasAttribute(name, value, addhist) {
     var id = '_lzevent';
     var fv = 'n='+ escape(name) + '&v=' + escape(value) +'&__lzevent=1&__lzhistconn='+top.connuid;
     var src= top.webapproot+'/lps/includes/h.swf'
