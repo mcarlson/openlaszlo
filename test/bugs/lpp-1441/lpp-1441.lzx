@@ -1,0 +1,9 @@
+<canvas>
+
+<view x="10" y="10" resource="testimage.png"/>
+<text x="40" y="10">integer coordinates</text>
+
+<view x="10.5" y="50.5" resource="testimage.png" />
+<text x="40" y="50">non-integer coordinates</text>
+
+</canvas>
