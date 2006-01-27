@@ -834,8 +834,11 @@ solution =
         } else if (tagName.equals("handler")) {
             addHandlerElement(element);
         } else if (tagName.equals("event")) {
-            element.setAttribute("value", "null");
-            addAttributeElement(element);
+          element.setAttribute("value", "$immediately{null}");
+          // needed to prevent interpretation as an event handler for
+          // schema-defined events
+          element.setAttribute("type", "expression");
+          addAttributeElement(element);
         } else if (tagName.equals("attribute")) {
             addAttributeElement(element);
         }

@@ -18,6 +18,7 @@
 // of the event to register the new delegate for.
 //=============================================================================
 LzDelegate = function (context, functionName, eventSender, eventName) {
+  // too expensive to leave on all the time
 //     if ($debug) {
 //         this._dbg_created = _root.__LzDebug.backtrace();
 //     }
@@ -97,6 +98,8 @@ LzDelegate.prototype.register = function ( eventSender , eventName){
         if (! anEvent.hasOwnProperty('_dbg_eventSender')) {
             anEvent._dbg_eventSender = eventSender;
             anEvent._dbg_eventName = eventName;
+            // too expensive to leave on all the time
+//             anEvent._dbg_created = _root.__LzDebug.backtrace();
         }
     }
 }
