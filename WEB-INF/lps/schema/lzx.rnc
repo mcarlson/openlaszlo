@@ -362,16 +362,6 @@ viewAttributes = (
   ## upper left corner of its container
   [a:defaultValue="0"]
     attribute y {numberExpression}?,
-  ## The horizontal scaling applied to the view's resource. If xscale
-  ## is set, the view stretches in its x axis. A value of 1 means that
-  ## the resource will be distorted in the horizontal axis.
-  [a:defaultValue="1.0"]
-    attribute xscale {numberExpression}?,
-  ## The vertical scaling applied to the view's resource. If yscale is
-  ## set, the view stretches in its y axis. A value of 1 means that
-  ## the resource will be distorted in the vertical axis.
-  [a:defaultValue="1.0"]
-    attribute yscale {numberExpression}?,
   ## Set accessibility name
   attribute aaname {string}?,
   ## Activate/inactivate children for accessibility

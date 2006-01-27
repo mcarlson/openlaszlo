@@ -208,11 +208,6 @@ LzView.prototype.setters.play =   "setPlay";
 //@field Boolean showhandcursor: Show or hide the handcursor for this view, if clickable
 LzView.prototype.setters.showhandcursor =   "setShowHandCursor";
 
-//deprecated for Krank release
-LzView.prototype.setters.xscale =   "setXScale";
-LzView.prototype.setters.yscale =   "setYScale";
-//end deprecated setters
-
 LzView.prototype.setters.frame =   "setResourceNumber";
 
 //@field Object layout: A CSS property when declared in the tag:
@@ -293,10 +288,8 @@ LzView.prototype.__LZrsin = 0;
 LzView.prototype.__LZrcos = 1;
 LzView.prototype.__LZcaloffset = false;
 
-//deprecated for Krank release
-LzView.prototype.xscale =   1;
-LzView.prototype.yscale =   1;
-//end deprecated slots
+LzView.prototype._xscale =   1;
+LzView.prototype._yscale =   1;
 
 //@field Number totalframes: The total number of frames for this view's
 //resource.
@@ -893,9 +886,8 @@ LzView.prototype.setWidth = function ( v ){
             // will be updated by reevaluateSize
             this.unstretchedwidth = null;
             // defaults
-            this.xscale = 1;
+            this._xscale = 1;
             this.__LZmovieClipRef._xscale =  100;
-            this.onxscale.sendEvent( 1 );
         }
         this.reevaluateSize( 'width' );
         return;
@@ -903,11 +895,9 @@ LzView.prototype.setWidth = function ( v ){
     this.width = v;
     if ( this.pixellock ) v = Math.floor( v );
     if ( this._setrescwidth ){
-        this.xscale = this.unstretchedwidth == 0 ? 100 : v/this.unstretchedwidth;
-        this.__LZmovieClipRef._xscale = this.xscale * 100;
-        //@event onxscale: Sent when a view which is resizing in the x
-        //axis changes its width
-        this.onxscale.sendEvent( this.xscale );
+        var xscale = this.unstretchedwidth == 0 ? 100 : v/this.unstretchedwidth;
+        this._xscale = xscale;
+        this.__LZmovieClipRef._xscale = xscale * 100;
     } else {
         this.__LZcheckwidth = null;
         // If the view does not stretch, we have to resize the mask
@@ -942,9 +932,8 @@ LzView.prototype.setHeight = function ( v ){
             // will be updated by reevaluateSize
             this.unstretchedheight = null;
             // defaults
-            this.yscale = 1;
+            this._yscale = 1;
             this.__LZmovieClipRef._yscale =  100;
-            this.onyscale.sendEvent( 1 );
         }
         this.reevaluateSize( 'height' );
         return;
@@ -952,11 +941,9 @@ LzView.prototype.setHeight = function ( v ){
     this.height = v;
     if ( this.pixellock ) v = Math.floor( v );
     if ( this._setrescheight ){
-        this.yscale = this.unstretchedheight == 0 ? 100 : v/this.unstretchedheight;
-        this.__LZmovieClipRef._yscale = this.yscale * 100;
-        //@event onyscale: Sent when a view which is resizing in the y
-        //axis changes its height
-        this.onyscale.sendEvent( this.yscale );
+        var yscale = this.unstretchedheight == 0 ? 100 : v/this.unstretchedheight;
+        this._yscale = yscale;
+        this.__LZmovieClipRef._yscale = yscale * 100;
     } else {
         this.__LZcheckheight = null;
         // If the view does not stretch, we have to resize the mask
@@ -1442,20 +1429,20 @@ if ($profile) {
 // @keywords private
 //-----------------------------------------------------------------------------
 LzView.prototype.updateSize = function ( axis , newsize ){
+    var sc = "_" + (axis == "width" ? "x" : "y" ) + "scale";
     if ( this[ "_setresc" + axis ] ){
         this[ "unstretched" + axis ] = newsize;
 
         if ( this[ 'hasset' + axis ] ){
-            var scalevar = (axis == "width" ? "xscale" : "yscale");
-            this[ scalevar ] = this[ axis ] / this[ "unstretched" + axis ]
+            var scale = this[ axis ] / newsize;
+            this[ sc ] = scale;
 
-            this.__LZmovieClipRef[ "_" + scalevar ] = 100 * this[ scalevar ];
+            this.__LZmovieClipRef[ sc ] = 100 * scale;
         }
 
-        this['onunstretched' + axis ].sendEvent( this[ "unstretched" + axis ] );
+        this['onunstretched' + axis ].sendEvent( newsize );
     }
 
-    var sc = "_" + (axis == "width" ? "x" : "y" ) + "scale";
     if ( this.masked ){
         // If the view does not stretch, we have to resize the mask
         if ( !this[ '_setresc' + axis ] ){
@@ -1527,8 +1514,8 @@ LzView.prototype.updateResourceSize = function ( ){
     this.__LZmovieClipRef._yscale = 100;
     this.resourcewidth = this.__LZmovieClipRef._width;
     this.resourceheight = this.__LZmovieClipRef._height;
-    this.__LZmovieClipRef._xscale = this.xscale * 100;
-    this.__LZmovieClipRef._yscale = this.yscale * 100;
+    this.__LZmovieClipRef._xscale = this._xscale * 100;
+    this.__LZmovieClipRef._yscale = this._yscale * 100;
     this.reevaluateSize();
 }
 
@@ -1689,38 +1676,6 @@ LzView.prototype.getLinkage = function( refView ) {
     }
 
     return this.__LZviewLinks[ uid ];
-}
-
-//-----------------------------------------------------------------------------
-// Sets the <attribute>xscale</attribute> of the view to the given value
-// @deprecated Use the view property <code>unstretchedwidth</code> instead.
-// @param Number val: the new _xscale for the view
-//-----------------------------------------------------------------------------
-LzView.prototype.setXScale = function( val ) {
-    if ( $debug ){
-        _root.Debug.warn( "LzView.setXScale has been deprecated. "+
-                          "Use the view property unstretchedwidth instead." );
-    }
-    if ( ! this._setrescwidth ) {
-        this.stretchResource( "width" );
-    }
-    this.setWidth ( this.unstretchedwidth * val );
-}
-
-//-----------------------------------------------------------------------------
-// Sets the <attribute>yscale</attribute> of the view to the given value
-// @deprecated Use the view property <code>unstretchedheight</code> instead.
-// @param Number val: the new yscale for the view
-//-----------------------------------------------------------------------------
-LzView.prototype.setYScale = function( val ) {
-    if ( $debug ){
-        _root.Debug.warn( "LzView.setYScale has been deprecated. "+
-                          " Use the view property unstretchedheight instead." );
-    }
-    if ( ! this._setrescheight ) {
-        this.stretchResource( "height" );
-    }
-    this.setHeight ( this.unstretchedheight * val );
 }
 
 //-----------------------------------------------------------------------------
