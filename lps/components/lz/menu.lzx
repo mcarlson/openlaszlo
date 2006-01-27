@@ -107,7 +107,11 @@
     <class name="menubutton" extends="button" 
            respondtomouseout="false"
            height="${parent.height}" doesenter="false" focusable="false">
-          
+        
+        <!--- Reference to menu that created this button.
+              @keywords private -->
+        <attribute name="_menuref" value="null"/>
+        
         <!--- this method is called to override the default event handling inherited
              from button @keywords private -->          
         <method name="registerEventHandlers"> <![CDATA[
@@ -515,6 +519,14 @@
                 
                 //Likewise, have the menubutton keep a reference to this menu
                 this._menubutton._menuref = this;
+                
+                // Apply a constraint so that the menubutton's title changes if
+                // the menu's title changes.
+                var f = function() {
+                    this.setAttribute("text", this._menuref.text);
+                }
+                var d = [this, "text"];
+                this._menubutton.applyConstraint("text", f, d);
                 
                 // Have the floating list constrain to the menubutton and not
                 // the parent of the menu ( which would have been menubar in
