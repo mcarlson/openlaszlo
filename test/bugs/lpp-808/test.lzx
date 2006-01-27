@@ -1,0 +1,4 @@
+<canvas>
+	<resource name="test" src="test.png"/>
+	<view resource="test"/>
+</canvas>
