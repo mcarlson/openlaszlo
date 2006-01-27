@@ -16,7 +16,7 @@
             x="100"
             y="100"
             > Change Tooltip to Testies
-    <tooltip name="tt" manager="$once{myManager}">This is my tooltip</tooltip>
+    <tooltip name="tt" manager="$once{myManager}">This is my tooltip. This is my tooltip. This is my tooltip</tooltip>
     <method event="onclick">
       tt.setAttribute("text","testies...");
     </method>
@@ -24,9 +24,10 @@
     
     <button onmouseover="Debug.write('mouseover')" 
             onmouseout="Debug.write('mouseout')"
-            x="500"
+            x="520"
             y="600"
             > Button 2
+    <tooltip name="tt" manager="$once{myManager}">This is my tooltip. This is my tooltip. This is my tooltip</tooltip>
     <method event="oninit">
       myManager.register(this);
     </method>        

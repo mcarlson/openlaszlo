@@ -81,13 +81,14 @@
       //Debug.write("showTooltip entry ",component);
       
       var tooltip = new __krosscore_tooltipManager__tooltip(canvas,null);
-      var tooltipWidth = tooltip.getAttribute("width");
       
       var myDesc = component.getAttribute("__krosscore_tooltip");
       if (typeof(myDesc) != "undefined") {
         tooltip.body.label.setAttribute("text",myDesc);        
       }
       
+      var tooltipWidth = tooltip.getAttribute("width");
+
       //Debug.write("myDesc = "+myDesc);
       //Debug.write("tooltip = "+tooltip.body.label.getAttribute("text"));
       
