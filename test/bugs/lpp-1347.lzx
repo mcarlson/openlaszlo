@@ -1,0 +1,30 @@
+<canvas>
+
+<!-- Dependencies -->
+<include href="incubator/borderinput.lzx" />
+<include href="incubator/stylishbutton.lzx" />
+
+<!-- Includes for the stuff I really want to test. --> 
+<include href="incubator/baseedittext.lzx" />
+<include href="incubator/rich-text/richtexteditarea.lzx" />
+    <window id="gWindowRTEA" title="richtexteditarea" x="400" height="100" resizable="true" y="300">
+        <richtexteditarea x="2" width="${parent.width-20}" id="gRTEA" 
+            text="richtexteditarea"
+            multiline="true"
+            height="${parent.height-10}"
+            />
+    </window>
+
+    <richtexteditarea x="2" width="${parent.width-20}" 
+        text="richtexteditarea"
+        multiline="true"
+        height="${parent.height-10}"
+        />
+    
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

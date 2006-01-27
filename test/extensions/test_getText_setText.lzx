@@ -1,0 +1,38 @@
+<canvas>
+
+    <class name="tester" bgcolor="0x7F7F7F">
+        <simplelayout axis="y" spacing="5" />
+        <attribute name="target" value="null" />
+        <button>test get set. (hit me repeatedly. the text should not change.)
+            <method event="onclick">
+                var str = parent.target.getText();
+                Debug.write("got str for ", parent.target.id, ":", str);
+                parent.target.setText(str);
+            </method>
+        </button>
+    </class>
+
+<view x="20" y="20">
+    <simplelayout axis="y" spacing="20"/>
+        
+    <view layout="axis: x; spacing: 5" bgcolor="0xEEEEEE">
+        <text>i'm a richinputtext (i have problems)</text>
+        <richinputtext id="rit" width="300" height="100" multiline="true">foo</richinputtext>
+        <tester target="${rit}" />
+    </view>
+
+    <view layout="axis: x; spacing: 5" bgcolor="0xEEEEEE">
+        <text>potential fix applied here</text>
+        <richinputtext id="frit" width="300" height="100" multiline="true">
+            <method name="getText">
+                var old = super.getText();
+                var str = old.split("\r").join("\n");
+                return str;
+            </method>
+            foo
+        </richinputtext>
+        <tester target="${frit}" />
+    </view>
+
+</view>
+</canvas>

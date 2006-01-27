@@ -85,16 +85,18 @@
              then the scrollbar should be its parent's height, see oninit -->
         <state name="heightConstraint">
             <attribute name="height"
-                value="${othersb ? (immediateparent.height - othersb.height) :
-                                    immediateparent.height}"/>
+                value="${othersb &amp;&amp; othersb.visible 
+                       ? immediateparent.height - othersb.height
+                       : immediateparent.height}"/>
         </state>
 
         <!-- if the scrollbar is horizontal and the developer has not set a width
              then the scrollbar should be its parent's width, see oninit -->
         <state name="widthConstraint">
             <attribute name="width"
-                value="${othersb ? immediateparent.width - othersb.width :
-                                   immediateparent.width }"/>
+                value="${othersb &amp;&amp; othersb.visible
+                       ? immediateparent.width - othersb.width 
+                       : immediateparent.width }"/>
         </state>
 
         <!---  @keywords private -->

@@ -1,0 +1,60 @@
+<canvas bgcolor="0xBBBBBB">
+
+
+
+<simplelayout axis="y" spacing="20" />
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting color at compile time or at runtime with fgcolor or setColor works fine on plain old text</text>
+<text id="gText" fgcolor="0xFF0000">i am gText, i should start off red</text>
+<button onclick="gText.setAttribute('fgcolor', 0xBA5700)">set attribute fgcolor of gText to orangeish</button>
+<button onclick="gText.setColor(0x005440)">setColor of gText to greenish</button>
+</view>
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting fgcolor of edittext at runtime doesn't do anything</text>
+<button onclick="gKitty.setAttribute('fgcolor', 0xBA5700)">set fgcolor of gKitty to orangeish</button>
+<edittext id="gKitty">i am gKitty</edittext>
+</view>
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting color of edittext at compile time</text>
+<edittext color="0xBA1FB5">test should be purple</edittext>
+</view>
+
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting fgcolor of edittext oninit doesn't work. pup should be orange.</text>
+<edittext id="gPup" oninit="setAttribute('fgcolor', 0xBA5700)">i am gPup</edittext>
+<button onclick="gPup.setAttribute('fgcolor', red)" text="set red" />
+<button onclick="gPup.setAttribute('fgcolor', 0x00FFFF)" text="set aqua as number"/>
+</view>
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting color of edittext oninit doesn't work. fish should be orange.</text>
+<edittext id="gFish" oninit="setAttribute('color', 0xBA5700)">i am gFish</edittext>
+</view>
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting fgcolor of edittext to a constant doesn't do anything.</text>
+<edittext>plain old edittext</edittext>
+<edittext fgcolor="0x005440">should be green, set attribute fgcolor</edittext>    
+</view>
+
+<view layout="axis:y" bgcolor="0xFFFFFF">
+<text>Setting color of edittext at runtime doesn't do anything</text>
+<button onclick="gFoo.setColor(0x005440)">set color of foo to greenish (actually sets bgcolor)</button>
+<button onclick="gFoo.setAttribute('color',0x005440)">set attribute color of foo to greenish</button>
+<edittext id="gFoo">i am gFoo</edittext>
+</view>
+
+
+
+
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

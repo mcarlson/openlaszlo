@@ -107,12 +107,15 @@ richinputtext.prototype.setHTMLText = function ( t ){
 }
 
 //-----------------------------------------------------------------------------
-// Returns the string represented in the text field
+// Returns the string represented in the text field.
+// Substitutes \r's with \n's because otherwise flash loses line breaks on
+// setText(getText()).
 // 
 // @return: The string in the text field
 //-----------------------------------------------------------------------------
 richinputtext.prototype.getText = function ( ){
-    return this.__LZtextclip.text;
+    var rawtext = this.__LZtextclip.text;
+    return rawtext.split("\r").join("\n");
 }
 
 //-----------------------------------------------------------------------------

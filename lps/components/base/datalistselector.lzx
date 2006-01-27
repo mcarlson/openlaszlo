@@ -238,7 +238,7 @@
                   }
               }
             }
-            else if( svs[0].data == data )
+            else if( svs[0].datapath.p == data )
               return 0;
             return null;
             ]]>
