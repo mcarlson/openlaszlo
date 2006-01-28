@@ -1,0 +1,18 @@
+<canvas debug="true">    
+  <simplelayout/>
+  <view id="wait" resource="../resources/swf/wait.swf" bgcolor="teal"/>
+  <view layout="axis:x">
+    <button onclick="wait.stop();">stop()</button>
+    <button onclick="wait.play();">play()</button>
+    <button onclick="wait.setPlay(false);">setPlay(false)</button>
+    <button onclick="wait.setPlay(true);">setPlay(true)</button>
+  </view>
+  <view id="logo" resource="../resources/swf/logo.swf" bgcolor="teal"/>
+  <view layout="axis:x">
+    <button onclick="logo.stop();">stop()</button>
+    <button onclick="logo.play();">play()</button>
+    <button onclick="logo.setPlay(false);">setPlay(false)</button>
+    <button onclick="logo.setPlay(true);">setPlay(true)</button>
+  </view>
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 
