@@ -1,10 +1,5 @@
 <!--
-    list.lzx
-
-    Copyright 2004 Laszlo Systems, Inc.  All Rights Reserved.
-    Unauthorized use, duplication or distribution is strictly prohibited.
-    This software is the proprietary information of Laszlo Systems, Inc.
-    Use is subject to license terms.
+    newlist.lzx
 -->
 <library>
 
@@ -16,7 +11,7 @@
     <include href="utils/layouts/simplelayout.lzx" />
 
      <!--- A list containing listitems and providing selection capabilities. -->
-     <class name="list"  extends="baselist"
+     <class name="newlist"  extends="baselist"
          width="100" >
 
         <!--- used to adjust the width of the content when a scrollbar is present
@@ -312,6 +307,11 @@
                 if (this._bgcolor == null) interior.setBGColor(s.bgcolor);
             }
         </method>
-    </class> <!-- end list -->
+    </class> <!-- end newlist -->
 
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

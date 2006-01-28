@@ -3,7 +3,7 @@
     <include href="base/multistatebutton.lzx"/>
 
     <!--- Regular sized checkbox resource. --> 
-    <resource name="lzcheckbox_rsrc">
+    <resource name="newcheckbox_rsrc">
         <frame src="resources/checkbox/checkbox_dslct.swf" />
         <frame src="resources/checkbox/checkbox_dslct_mo.swf" />
         <frame src="resources/checkbox/checkbox_slct.swf" />
@@ -16,8 +16,8 @@
 
     <!--- The basecheckbox implementation representing a boolean, i.e., checked
           if true, else false. -->
-    <class name="checkbox" extends="basecheckbox" pixellock="true">
-        <multistatebutton name="cb" resource="lzcheckbox_rsrc" text=""
+    <class name="newcheckbox" extends="basecheckbox" pixellock="true">
+        <multistatebutton name="cb" resource="newcheckbox_rsrc" text=""
             statenum="${parent.value ? 1 : 0}" statelength="4" maxstate="1"
             reference="parent">
         </multistatebutton>
@@ -37,3 +37,8 @@
     </class>
 
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

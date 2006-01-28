@@ -1,13 +1,13 @@
 <library>
 
 <include href="base/basescrollbar.lzx"/>
-<include href="hscrollbar_resources.lzx"/>
+<include href="newhscrollbar_resources.lzx"/>
 
 <!--- A scrollbar manipulates the x or y position of a target view that is
       clipped by its parent, creating a scrolling effect when the user clicks
       up/down arrows, clicks on the scroll track or drags the thumb. -->
 
-<class name="hscrollbar" extends="basescrollbar"
+<class name="newhscrollbar" extends="basescrollbar"
     styleable="true" style="scrollbar_style"
     bgcolor="0x595959"
     visible="${this.scrollable &amp;&amp; (this.width > 21)}"
@@ -106,3 +106,8 @@
 
 </class>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
