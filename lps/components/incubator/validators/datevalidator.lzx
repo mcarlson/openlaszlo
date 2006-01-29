@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!--
+********************************************************
+* [[validators/datevalidator]]
+* 2005/12/21 ver.2.0.0
+* 2005/12/06 ver.1.0.1 add trim attribute [togawa manabu]
+*
+* 2005/11/06 ver.1.0. release
+* togawa manabu
+* web:http://laszlo.jp
+* mail:webmaster@laszlo.jp 
+********************************************************
+-->
+<library>
+	<include href="basevalidator.lzx" />
+	
+	<class name="datevalidator" extends="basevalidator">
+		<attribute name="format" type="string" value="mm/dd/yyyy" />
+		<attribute name="trim" type="boolean" value="true" />
+		
+		<attribute name="invaliedformatErrorstring" type="string" value="Please input the date in the valied format." />
+		<attribute name="invaliedyearErrorstring" type="string" value="Please enter a Year between 0 to 9999." />
+		<attribute name="invaliedmonthErrorstring" type="string" value="Please enter a Month between 1 to 12." />
+		<attribute name="invalieddateErrorstring" type="string" value="Please enter a right date." />
+		
+		<method name="doValidation" args="val">
+			<![CDATA[
+
+			var valtext = getValueText(val);
+
+			if(this.required && valtext.length < 1){
+				this.setErrorstring(this.requiredErrorstring);
+				return false;
+			}
+			if(valtext != ""){
+				if(!isValiedLength(valtext)){
+					this.setErrorstring(this.invaliedformatErrorstring);
+					return false;
+				}
+				if(!isValiedYear(valtext)){
+					this.setErrorstring(this.invaliedyearErrorstring);
+					return false;
+				}
+				if(!isValiedMonth(valtext)){
+					this.setErrorstring(this.invaliedmonthErrorstring);
+					return false;
+				}
+				if(!isValiedDate(valtext)){
+					this.setErrorstring(this.invalieddateErrorstring);
+					return false;
+				}
+			}
+
+			
+			this.setErrorstring("");
+			return true;
+		]]>
+		</method>
+		
+		<method name="isValiedLength" args="value">
+			if(this.format.length == value.length)
+				return true;
+			else
+				return false;
+		</method>
+		
+		<method name="isValiedYear" args="value">
+		<![CDATA[
+			var year = getYear(value);
+			if(isInt(year)){
+				var intYear = parseInt(year);
+				if( -1 < intYear && intYear < 10000)
+					return true;  
+			}
+			
+			return false;
+			]]>
+		</method>
+		<method name="isValiedMonth" args="value">
+		<![CDATA[
+			var month = getMonth(value);
+			if(isInt(month)){
+				var intMonth = parseInt(month);
+				if(0 < intMonth && intMonth < 13)
+					return true;
+			}
+			
+			return false;
+			]]>
+		</method>
+		<method name="isValiedDate" args="value">
+		<![CDATA[
+			var date = getDate(value);
+			if(isInt(date)){
+				var intDate = parseInt(date);
+				if(0 < intDate&& intDate <= getlastdate(value))
+					return true;
+			}
+			
+			return false;
+			]]>
+		</method>
+		<method name="getlastdate" args="value">
+			switch (parseInt(getMonth(value))){
+		        case  2:
+		          return getlastdayofFeb(value);
+		        case  4: case  6: case  9: case 11:
+		          return 30;
+		        default:
+		          return 31;
+		      }
+		</method>
+		<method name="getlastdayofFeb" args="value">
+		<![CDATA[
+			var year = parseInt(getYear(value));
+			if(year % 4 == 0 && year % 100 != 0 || year % 400 == 0)
+				return 29;
+			else
+				return 28;
+			]]>
+		</method>
+		
+		<method name="isInt" args="value">
+			return ! isNaN(value);
+		</method>
+		
+		<method name="getYear" args="value">
+			var idx = this.format.indexOf("yyyy");
+			return value.substring(idx, idx+4);
+		</method>
+		<method name="getMonth" args="value">
+			var idx = this.format.indexOf("mm")
+			return value.substring(idx, idx+2);
+		</method>
+		<method name="getDate" args="value">
+			var idx = this.format.indexOf("dd")
+			return value.substring(idx, idx+2);
+		</method>
+	</class>
+</library>

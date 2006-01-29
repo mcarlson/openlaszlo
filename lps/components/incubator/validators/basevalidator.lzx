@@ -1,0 +1,115 @@
+<!--
+********************************************************
+* [[validators/basevalidator]]
+* 2005/12/21 ver.2.0.0
+* 2005/11/06 ver.1.0.
+* togawa manabu
+* web:http://laszlo.jp
+* mail:webmaster@laszlo.jp 
+********************************************************
+-->
+<library>
+	<resource name="rsc_ok" src="resources/ok.gif" />
+	<resource name="rsc_error" src="resources/error.gif" />
+
+	<class name="basevalidator">
+		<attribute name="isformvalidator" type="boolean" value="true" />
+		<attribute name="errorstring" type="string" value="" />
+		<attribute name="required" type="boolean" value="false" />
+		<attribute name="requiredErrorstring" type="string" value="this field is required." />
+		<attribute name="innercompornent" type="expression" value="null" />
+		<attribute name="iserror" type="boolean" value="false" />
+
+		<method name="oninit" args="arg">
+			super.oninit(arg);
+			this.ok.setsource("resources/ok.gif");
+			this.error.setsource("resources/error.gif");
+		</method>
+
+		<method name="doValidation" />
+		
+		<method name="addSubview" args="item">
+			super.addSubview(item);
+			if(item.classname == "edittext"){
+				new LzDelegate(this, "doValidation", item, "onkeyup");
+				new LzDelegate(this, "doValidation", item, "ontext");
+				this.innercompornent = item;
+			}
+		</method>
+
+		<method name="getValueText" args="val">
+			<![CDATA[
+			var valtext = this.innercompornent.getText();
+			if(trim && val == null){
+				valtext = this.dotrim(valtext);
+				this.innercompornent.setText(valtext);
+			}
+
+			return valtext;
+			]]>
+		</method>
+
+		<!-- this trim method from bfagan. Thanks a lot!. -->
+		<method name="dotrim" args="s">
+		<![CDATA[
+			var aEntry = s.split(' ');
+			
+			var tEntry = new Array();
+			for (var n = 0; n < aEntry.length; n++) {
+				if (aEntry[n] != '') {
+					tEntry.push(aEntry[n]);
+				}
+			}
+									
+			return tEntry.join(" ");
+		]]>
+		</method>
+		
+		<method name="setErrorstring" args="message">
+			this.errorstring = message;
+			setErrorMessage();
+		</method>
+		<method name="getErrorstring">
+			return parent.errorstring;
+		</method>
+		
+		<method name="setErrorMessage" >
+			if(this.errorstring == ""){
+				messagetext.setText("");
+				icon.setok();
+				this.setAttribute("iserror", false);
+			}else{
+				messagetext.setText(this.errorstring);
+				icon.seterror();
+				this.setAttribute("iserror", true);
+			}
+		</method>
+
+		<method name="cleanErrors">
+			messagetext.setText("");
+			icon.clear();
+		</method>
+
+		<reverselayout axis="x" />
+
+		<text name="messagetext" fgcolor="red" resize="true" />
+
+		<view name="icon" width="18" height="16">
+			<view name="ok" resource="rsc_ok" visible="false" width="10" height="10" />
+			<view name="error" resource="rsc_error" visible="false" width="10" height="10" />
+			<method name="setok">
+				this.ok.setVisible(true);
+				this.error.setVisible(false);
+			</method>
+			<method name="seterror">
+				this.ok.setVisible(false);
+				this.error.setVisible(true);
+			</method>
+			<method name="clear">
+				this.ok.setVisible(false);
+				this.error.setVisible(false);
+			</method>
+		</view>
+		
+	</class>
+</library>
