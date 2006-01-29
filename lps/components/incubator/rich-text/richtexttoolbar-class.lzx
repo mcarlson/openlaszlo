@@ -57,7 +57,7 @@
 
         <!--- Update the GUI to match the format passed in 
             @param LzTextFormat spec: TextFormat object-->
-        <method name="matchformat" args="spec">
+        <method name="matchformat" args="spec"><![CDATA[
             
             var cfmt = spec; 
             var font; 
@@ -74,10 +74,10 @@
             }
             
             // 'broadcast' out the setState call with the format value to the registered tools
-            for(i=0;i <![CDATA[<]]> _atools.length;i++){
+            for (var i=0;i < _atools.length;i++){
                 _atools[i].ref.setState(cfmt[_atools[i].fmt]);
             }
-            
+            ]]>            
         </method>
         
         <!--- Update the GUI to match the format specified in the editor's currentformat -->
@@ -91,7 +91,7 @@
         <!--- Reset the state of the richtexttoolbar's tools. -->
         <method name="reset">
             // 'broadcast' out the reset method call to all registered tools
-            for(obj in _atools){
+            for(var obj in _atools){
                 _atools[obj].ref.reset();
             }
         </method>

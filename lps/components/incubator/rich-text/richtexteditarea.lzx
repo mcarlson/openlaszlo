@@ -130,10 +130,7 @@
                     case 46: // delete key
                         if (this.getText().length == 0) {
                             this.reset();
-                        }else{
-                            this.toolbar.matchformat(this.getTextFormat(this._field.getSelectionPosition()-1, this._field.getSelectionPosition()));
-                        }
-                        break;
+            }
                     case 35: // home
                     case 36: // end
                     case 37: // left arrow
