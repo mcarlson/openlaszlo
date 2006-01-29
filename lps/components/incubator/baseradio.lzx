@@ -1,6 +1,6 @@
 <library>
 
-    <include href="incubator/baseformitem.lzx" />
+    <include href="base/baseformitem.lzx" />
 
     <!--- A helper intermediary service used by baseradiobutton and
           baseradiogroup. Handles creation of baseradiogroups, and adds and
