@@ -1,12 +1,14 @@
-<canvas>
+<canvas proxied="false">
 
 <view x="10" y="10" resource="icon_folder.swf" /> 
+<view x="100" y="10" resource="box.swf" /> 
 <view x="10" y="30" resource="icon_junk.swf" /> 
 <view x="10" y="40" resource="icon_sent.swf" /> 
 <view x="10" y="60" resource="icon_folder.swf" /> 
-<text x="40" y="10">integer coordinates</text>
+<view x="10" y="80" oninit="this.setSource('icon_folder.swf')"/> 
+<text x="40" y="80">integer coordinates</text>
 
-<view x="10.5" y="80.5" resource="icon_folder.swf" />
-<text x="40" y="80">non-integer coordinates</text>
+<view x="10.5" y="100.5" resource="icon_folder.swf" />
+<text x="40" y="100">non-integer coordinates</text>
 
 </canvas>
