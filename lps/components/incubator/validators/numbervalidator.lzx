@@ -12,64 +12,69 @@
 ********************************************************
 -->
 <library>
-	<include href="basevalidator.lzx" />
-	
-	<class name="numbervalidator" extends="basevalidator">
-		<attribute name="minvalue" type="number" value="null"/>
-		<attribute name="maxvalue" type="number" value="null"/>
-		<attribute name="domain" type="string" value="real"/> <!-- real/int -->
-		<attribute name="trim" type="boolean" value="true" />
-		
-		<attribute name="notnumberErrorstring" type="string" value="this field contains invalid characters." />
-		<attribute name="notintErrorstring" type="string" value="Enter integer value." />
-		<attribute name="toobigErrorstring" type="string" value="this number entered is too big." />
-		<attribute name="toosmallErrorstring" type="string" value="this number entered is too small." />
-		
-		<method name="doValidation" args="val">
-		<![CDATA[
-			var valtext = getValueText(val);
+    <include href="basevalidator.lzx" />
+    
+    <class name="numbervalidator" extends="basevalidator">
+        <attribute name="minvalue" type="number" value="null"/>
+        <attribute name="maxvalue" type="number" value="null"/>
+        <attribute name="domain" type="string" value="real"/> <!-- real/int -->
+        <attribute name="trim" type="boolean" value="true" />
+        
+        <attribute name="notnumberErrorstring" type="string" value="this field contains invalid characters." />
+        <attribute name="notintErrorstring" type="string" value="Enter integer value." />
+        <attribute name="toobigErrorstring" type="string" value="this number entered is too big." />
+        <attribute name="toosmallErrorstring" type="string" value="this number entered is too small." />
+        
+        <method name="doValidation" args="val">
+        <![CDATA[
+            var valtext = getValueText(val);
 
-			if(required && valtext.length < 1){
-				this.setErrorstring(this.requiredErrorstring);
-				return false;
-			}
-			
-			if(valtext != ""){
-				if(!isValiedNumber(valtext)){
-					this.setErrorstring(this.notnumberErrorstring);
-					return false;
-				}
-				if(domain == "int" && !isInt(valtext)){
-					this.setErrorstring(this.notintErrorstring);
-					return false;
-				}
-				var valNum = parseFloat(valtext);
-				if(valNum < this.minvalue){
-					this.setErrorstring(this.toosmallErrorstring);
-					return false;
-				}
-				if(this.maxvalue < valNum){
-					this.setErrorstring(this.toobigErrorstring);
-					return false;
-				} 
-			}		
-			
-			this.setErrorstring("");
-			return true;
-		]]>
-		</method>
-		
-		<method name="isValiedNumber" args="value">
-			return ! isNaN(value)
-		</method>
-		
-		<method name="isInt" args="value">
-		<![CDATA[
-			if (value.toString().indexOf(".") < 0)
-				return true;
-			else
-				return false;
-		]]>
-		</method>
-	</class>
+            if(required && valtext.length < 1){
+                this.setErrorstring(this.requiredErrorstring);
+                return false;
+            }
+            
+            if(valtext != ""){
+                if(!isValiedNumber(valtext)){
+                    this.setErrorstring(this.notnumberErrorstring);
+                    return false;
+                }
+                if(domain == "int" && !isInt(valtext)){
+                    this.setErrorstring(this.notintErrorstring);
+                    return false;
+                }
+                var valNum = parseFloat(valtext);
+                if(valNum < this.minvalue){
+                    this.setErrorstring(this.toosmallErrorstring);
+                    return false;
+                }
+                if(this.maxvalue < valNum){
+                    this.setErrorstring(this.toobigErrorstring);
+                    return false;
+                } 
+            }       
+            
+            this.setErrorstring("");
+            return true;
+        ]]>
+        </method>
+        
+        <method name="isValiedNumber" args="value">
+            return ! isNaN(value)
+        </method>
+        
+        <method name="isInt" args="value">
+        <![CDATA[
+            if (value.toString().indexOf(".") < 0)
+                return true;
+            else
+                return false;
+        ]]>
+        </method>
+    </class>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -14,11 +14,16 @@
 ********************************************************
 -->
 <library>
-	<include href="validatingForm.lzx"/>
-	
-	<!-- validators -->
-	<include href="stringvalidator.lzx"/>
-	<include href="emailvalidator.lzx"/>
-	<include href="datevalidator.lzx"/>
-	<include href="numbervalidator.lzx"/>
+    <include href="validatingForm.lzx"/>
+    
+    <!-- validators -->
+    <include href="stringvalidator.lzx"/>
+    <include href="emailvalidator.lzx"/>
+    <include href="datevalidator.lzx"/>
+    <include href="numbervalidator.lzx"/>
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
