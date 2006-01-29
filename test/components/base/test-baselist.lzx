@@ -58,7 +58,7 @@
     <view layout="spacing:4">
         <text>no dataoption</text>
         <text>5 items</text>
-        <baselist id="mylist1">
+        <baselist id="mylist">
             <simplelayout/>
             <myitem datapath="listdata1:/item">
                 <text datapath="text()"/>
@@ -78,8 +78,8 @@
             </view>
         </baselist>
         <view layout="axis:y; spacing:10">
-            <button onclick="v.setY(Math.Max(-v.height+mylist.height, v.y-20))">scroll up</button>
-            <button onclick="v.setY(Math.Min(0, v.y+20))">scroll down</button>
+            <button onclick="v.setY(Math.max(-v.height+mylist.height, v.y-20))">scroll up</button>
+            <button onclick="v.setY(Math.min(0, v.y+20))">scroll down</button>
         </view>
     </view>
 
@@ -100,8 +100,8 @@
             </view>
         </baselist>
         <view layout="axis:y; spacing:10">
-            <button onclick="v2.setY(Math.Max(-v2.height+mylist2.height, v2.y-20))">scroll up</button>
-            <button onclick="v2.setY(Math.Min(0, v2.y+20))">scroll down</button>
+            <button onclick="v2.setY(Math.max(-v2.height+mylist2.height, v2.y-20))">scroll up</button>
+            <button onclick="v2.setY(Math.min(0, v2.y+20))">scroll down</button>
         </view>
     </view>
 </view>
