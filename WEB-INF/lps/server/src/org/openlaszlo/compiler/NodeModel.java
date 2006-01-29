@@ -834,10 +834,14 @@ solution =
         } else if (tagName.equals("handler")) {
             addHandlerElement(element);
         } else if (tagName.equals("event")) {
-          element.setAttribute("value", "$immediately{null}");
           // needed to prevent interpretation as an event handler for
-          // schema-defined events
-          element.setAttribute("type", "expression");
+          // schema-defined events -- setting the value to immediate
+          // null is enough to do that
+          // TODO: [2006-01-29 ptw] This mechanism is a little
+          // fragile: right now ${} trumps any type, which is why this
+          // works; but that could easily break if we enforce
+          // types...
+          element.setAttribute("value", "$immediately{null}");
           addAttributeElement(element);
         } else if (tagName.equals("attribute")) {
             addAttributeElement(element);
