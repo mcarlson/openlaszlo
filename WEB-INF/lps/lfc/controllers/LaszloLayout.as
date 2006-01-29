@@ -215,7 +215,11 @@ LzLayout.prototype.locked = 2;
 //-----------------------------------------------------------------------------
 LzLayout.prototype.__parentInit = function (){
     if ( this.locked == 2){
-        this.unlock();
+        if (this.isinited) {
+            this.unlock();
+        } else {
+            new _root.LzDelegate( this , "unlock", this, "oninit" );
+        }
     }
 }
 
