@@ -7,10 +7,6 @@ REM * Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.         *
 REM * Use is subject to license terms.                                       *
 REM * R_LZ_COPYRIGHT_END *****************************************************
 
-if exist %~dp0..\Server (
-    set LPS_HOME=%~dp0..\Server\lps-3.0b2
-)
-
 call "%LPS_HOME%\WEB-INF\lps\server\bin\lzenv.bat"
 
 set CLASSPATH_SAVE=%CLASSPATH%

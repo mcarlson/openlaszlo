@@ -722,12 +722,13 @@
       <copy todir="${builddir-dev-bin}"
           file="${webapp-lps-home}/server/bin/lzmc" />
       <chmod file="${builddir-dev-bin}/lzmc" perm="755" />
-      <copy todir="${builddir-dev-bin}"
-          file="${webapp-lps-home}/server/bin/lzc.bat" />
-      <copy todir="${builddir-dev-bin}"
-          file="${webapp-lps-home}/server/bin/lzmc.bat" />
-      <copy todir="${builddir-dev-bin}"
-          file="${webapp-lps-home}/server/bin/lzdc.bat" />
+      <copy todir="${builddir-dev-bin}">
+          <fileset dir="${webapp-lps-home}/server/bin" includes="*.bat.proto" />
+          <mapper type="glob" from="*.proto" to="*" />
+          <filterset>
+               <filter token="VERSIONID" value="${version.id}" />
+          </filterset>
+      </copy>
 
       <!-- copy in the Server - the lps directory and the server(tomcat) directory -->
       <mkdir dir="${builddir-dev-server}"/>
