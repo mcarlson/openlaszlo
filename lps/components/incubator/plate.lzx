@@ -1,7 +1,7 @@
 <library>
 
-	<!--By including the 9 resources necessary to make a resizable window
-		below, you can test the various elements for fit and finish.-->
+    <!--By including the 9 resources necessary to make a resizable window
+        below, you can test the various elements for fit and finish.-->
 
     <resource name="plate_top_left_rsc"  >
         <frame src="resources/plate/plate_top_lft_sq.swf" />
@@ -51,8 +51,8 @@
         <attribute name="roundbottomright" value="false" />
 
         <view name="topRow"
-			  width="${parent.width}">
-			<stableborderlayout axis="x"/>
+              width="${parent.width}">
+            <stableborderlayout axis="x"/>
             <view name="topLeft"   resource="plate_top_left_rsc"  frame="${ classroot.roundtopleft ? 2:1}"/>
             <view name="topCenter" resource="plate_top_mid_rsc"   stretches="width" />
             <view name="topRight"  resource="plate_top_right_rsc" frame="${ classroot.roundtopright ? 2:1}"/>
@@ -91,7 +91,7 @@
                 this.setTint(this.bottomRow, s.basecolor, 45);
             }
         </method>
-		
+        
     </class >
 
  </library>
