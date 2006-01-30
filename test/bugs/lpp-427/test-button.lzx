@@ -1,7 +1,7 @@
 <canvas height="1000" width="600" >
     <include href="classes/buttons.lzx" />
     
-    <font src="fonts/FuturNo2DBol_small.ttf" name="futura" />
+    <font src="helmetr.ttf" name="futura" />
     
     <class name="testiconbutton" extends="iconbutton">
         <attribute name="fpath" value="classes/resources/icons/"/>
