@@ -13,7 +13,12 @@
 By using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities.
 /todo -->
 
+<!--todo
+Users have reported problems with applications embedded in some versions of Internet Explorer -- the applications don't appear. if you can't get your OpenLaszlo application to show up in IE, try using the older version of embed.js from 3.0.2. We couldn't fix it because we couldn't reproduce the problem, but using older versions of the embed.js sometimes made the problem go away.
+-->
+
 <body class="release-notes">
+
 <h1><b>Release Notes for OpenLaszlo 3.1 </b> </h1>
 
 <p class="bodytext">
@@ -493,7 +498,8 @@ error at compile time.
  
 <li>If a resource referenced in a &lt;splash&gt; view is not present, an odd error message -- 
 the single word "undefined" -- with half of the "u" chopped off-- appears. 
-<pre>&lt;canvas&gt; 
+<pre>
+&lt;canvas&gt; 
   &lt;splash&gt; 
     &lt;view resource="images/logo.png"/&gt; 
   &lt;/splash&gt; 
