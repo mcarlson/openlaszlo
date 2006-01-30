@@ -1,0 +1,50 @@
+<canvas debug="true" title="lzunit-basedatacombobox.lzx" >
+  <include href="lzunit" />
+  <include href="base/basedatacombobox.lzx"/>
+
+  <class name="simplecombobox" extends="basedatacombobox" width="100">
+      <attribute name="_cbtext" value="$once{this._text}"/>
+      <view width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
+          <handler name="onclick">
+              LzFocus.setFocus(this,false); 
+              classroot.toggle()
+          </handler>
+          <handler name="onmouseout">
+              this.setBGColor(0xCCCCCC);
+          </handler>
+          <handler name="onmouseup">
+              this.setBGColor(0xCCCCCC);
+          </handler>
+          <handler name="onmouseover">
+              this.setBGColor(0xEEEEEE);
+          </handler>
+          <handler name="onmousedown">
+              this.setBGColor(0xAAAAAA);
+          </handler>
+      </view>
+      <text name="_text" width="${ parent.width - 19 }" x="7" />
+  </class>
+
+  <dataset name="ds1">
+    <item value="1" text="A"/>
+    <item value="2" text="B"/>
+    <item value="3" text="C"/>
+  </dataset>
+  
+  <simplecombobox itemdatapath="ds1:/"/>
+  
+  <TestSuite>
+
+    <TestCase>
+    
+    </TestCase>
+    
+  </TestSuite>
+  
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -13,7 +13,7 @@
     <class name="newcombobox" extends="basedatacombobox">
          <!-- The name of the class for the floating list.
              @keywords private -->
-        <attribute name="floatinglistclassname" value="plainfloatinglist" type="string"/>
+        <attribute name="menuclassname" value="plainfloatinglist" type="string"/>
     </class>        
 
 </library>

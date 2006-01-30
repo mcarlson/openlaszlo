@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<canvas>
+    <debug y="100" x="100" height="250" />
+    <include href="lz/datacombobox.lzx" />
+    <dataset name="ds">
+<!--
+        <item thename="maddy" val="0"/>
+        <item thename="martin" val="0"/>
+        <item thename="melvin" val="0"/>
+        <item thename="becky" val="1"/>
+-->
+        <item thename="bob" val="2"/>
+        <item thename="esther" val="3" />
+    </dataset>
+
+    <dataset name="ds2">
+<!--
+        <item thename="maddy" val="0"/>
+        <item thename="martin" val="0"/>
+        <item thename="melvin" val="0"/>
+        <item thename="becky" val="1"/>
+-->
+        <item thename="bob" val="2"/>
+        <item thename="esther" val="3" />
+    </dataset>
+
+    <text>bound to an attribute of ds:/*</text>
+    <datacombobox 
+                 itemdatapath="ds:/*" 
+                 textdatapath="@thename"
+                 valuedatapath=".">
+        <method event="ondata" args="v">
+            Debug.write("ondata", v);
+        </method>
+
+        <!--
+            for editable comboboxes, it make sense to have check for typeof value
+        -->
+        <method event="onvalue" args="v">
+            if (typeof v == 'object') v=v.attributes['thename'];
+            Debug.write("onvalue", v);
+        </method>
+        <!--
+            ontext fires whenever the text is changed, but not when a user selects a new item
+        -->
+        <method event="ontext" args="v">
+//            Debug.write("ontext", v);
+        </method>
+        <method event="onchange" args="v">
+            Debug.write("onchange", v);
+        </method>
+    </datacombobox>
+
+    <text>bound to a different attribute of ds:/*</text>
+    <datacombobox itemdatapath="ds:/*" 
+                 textdatapath="@val"
+                 valuedatapath=".">
+        <method event="ondata" args="v">
+            Debug.write("ondata", v);
+        </method>
+
+        <!--
+            for editable comboboxes, it make sense to have check for typeof value
+        -->
+        <method event="onvalue" args="v">
+            if (typeof v == 'object') v=v.attributes['val'];
+            Debug.write("onvalue", v);
+        </method>
+        <!--
+            ontext fires whenever the text is changed, but not when a user selects a new item
+        -->
+        <method event="ontext" args="v">
+//            Debug.write("ontext", v);
+        </method>
+        <method event="onchange" args="v">
+            Debug.write("onchange", v);
+        </method>
+    </datacombobox>
+
+    <text>bound to a different (but identical in structure) dataset ds2:/*</text>
+    <datacombobox itemdatapath="ds2:/*" 
+                 textdatapath="@val"
+                 valuedatapath=".">
+        <method event="ondata" args="v">
+            Debug.write("ondata", v);
+        </method>
+
+        <!--
+            for editable comboboxes, it make sense to have check for typeof value
+        -->
+        <method event="onvalue" args="v">
+            if (typeof v == 'object') v=v.attributes['val'];
+            Debug.write("onvalue", v);
+        </method>
+        <!--
+            ontext fires whenever the text is changed, but not when a user selects a new item
+        -->
+        <method event="ontext" args="v">
+//            Debug.write("ontext", v);
+        </method>
+        <method event="onchange" args="v">
+            Debug.write("onchange", v);
+        </method>
+    </datacombobox>
+
+    <simplelayout />
+</canvas>

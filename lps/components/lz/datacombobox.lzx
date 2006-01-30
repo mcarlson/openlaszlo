@@ -4,7 +4,7 @@
     <include href="lz/floatinglist.lzx" />
 
     <!-- resources -->
-    <resource name="datacombobox_lft_rsc">
+    <resource name="datacombobox_left_rsc">
         <frame src="resources/combobox/popup_lft_up.swf" />
         <frame src="resources/combobox/popup_lft_dsbl.swf" />
     </resource>
@@ -14,7 +14,7 @@
         <frame src="resources/combobox/popup_mid_dsbl.swf" />
     </resource>
 
-    <resource name="datacombobox_rgt_rsc">
+    <resource name="datacombobox_right_rsc">
         <frame src="resources/combobox/popbtn_rt_up.swf" />
         <frame src="resources/combobox/popbtn_rt_mo.swf" />
         <frame src="resources/combobox/popbtn_rt_dn.swf" />
@@ -27,7 +27,7 @@
 
         <!-- The name of the class for the floating list.
              @keywords private -->
-        <attribute name="floatinglistclassname" value="floatinglist" type="string"/>
+        <attribute name="menuclassname" value="floatinglist" type="string"/>
         
         <!--- Tell base class about our label view.
               @keywords private -->
@@ -36,24 +36,24 @@
         <method name="_showEnabled">
            super._showEnabled();
            if (_enabled) {
-                this.bkgnd.lft.setResourceNumber( 1 );
+                this.bkgnd.left.setResourceNumber( 1 );
                 this.bkgnd.mid.setResourceNumber( 1 );
             } else {
-                this.bkgnd.lft.setResourceNumber( 2 );
+                this.bkgnd.left.setResourceNumber( 2 );
                 this.bkgnd.mid.setResourceNumber( 2 );
             }
         </method>
         <view name="bkgnd" width="100%" height="20" focusable="false" bgcolor="#CCCCCC">
-            <method event="onclick">
+            <handler name="onclick">
                 classroot.toggle()
                 if (immediateparent['onclick']) immediateparent.onclick.sendEvent();
-            </method>
-            <view name="lft" resource="datacombobox_lft_rsc"/>
+            </handler>
+            <view name="left" resource="datacombobox_left_rsc"/>
             <view name="mid" resource="datacombobox_mid_rsc" stretches="width"/>
-            <basebutton name="rgt" resource="datacombobox_rgt_rsc" styleable="true">
-                <method event="onclick">
+            <basebutton name="right" resource="datacombobox_right_rsc" styleable="true">
+                <handler name="onclick">
                     if (immediateparent['onclick']) immediateparent.onclick.sendEvent();
-                </method>
+                </handler>
             </basebutton>
             <stableborderlayout axis="x"/>
         </view>
@@ -67,9 +67,9 @@
         <!--- @keywords private -->
         <method name="_applystyle" args="s">
             if (s != null) {
-                this.setTint(this.bkgnd.lft, s.basecolor);
+                this.setTint(this.bkgnd.left, s.basecolor);
                 this.setTint(this.bkgnd.mid, s.basecolor);
-                this.setTint(this.bkgnd.rgt, s.basecolor);
+                this.setTint(this.bkgnd.right, s.basecolor);
             }
         </method>
 
