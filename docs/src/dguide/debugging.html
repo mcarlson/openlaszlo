@@ -290,7 +290,21 @@ then clicking on the object's representation.</p>
   &lt;/method&gt;
 &lt;/canvas&gt;
 </example>
-
+<h3>Conditional Compilation of Debugging Code</h3>
+<p>
+Sometimes you may have computations that you need to make only when you're debugging an application. For example, you may include some time stamps in order to measure performance of certain sections of code.
+</p>
+<p>
+The best practice here is to enclose any debug-only computations in
+</p>
+<pre>
+if ($debug) {
+  ...
+}
+</pre>
+<p>
+The compiler will omit those statements when you compile without debugging.
+</p>
 <h2>Configuring the Debugger</h2>
 <h3>Debugger Window Position</h3>
 
@@ -465,6 +479,6 @@ Call <tt>__LzDebug.whyAlive()</tt>. This returns a ''leak list'', which you can 
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
