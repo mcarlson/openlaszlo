@@ -1,0 +1,12 @@
+<canvas debug="true">
+    <method event="onidle" reference="LzIdle">
+        if ( LzKeys.isKeyDown( "shift" ) ){
+            Debug.write( "shift is down" );
+        }
+    </method>
+</canvas> 
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
