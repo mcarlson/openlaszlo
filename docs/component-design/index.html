@@ -1,17 +1,17 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <html>
 <link href="../../lps/includes/styles.css" type="text/css" rel="STYLESHEET">
 <head>
-<title>Component Design Guide</title>
+<title>OpenComponent Design Guide</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </head>
 
 <body bgcolor="#ffffff">
-<h1>Working with the Laszlo Component Set</h1>
+<h1>Working with the OpenLaszlo Component Set</h1>
 <h2>An Overview for User Interface Designers</h2>
 <ol start="0">
   <li><a href="#overview">Components Overview</a></li>
@@ -49,9 +49,9 @@
 </ol>
 <p></p>
 <h2><a name="overview"></a>Components Overview</h2>
-<p>Laszlo Components (LZ Components) are a core set of customizable user interface
-  devices included with Laszlo Presentation Server 2.0 (LPS 2.0).</p>
-<p>LZ Components are written in the Laszlo language (LZX) and designed to facilitate
+<p>OpenLaszlo Components (LZ Components) are a core set of customizable user interface
+  devices included with the OpenLaszlo Server.</p>
+<p>LZ Components are written in the OpenLaszlo language (LZX) and designed to facilitate
   the construction of LZX applications. The set (illustrated on the following
   page) mimics the rich behavior of operating system and client software interface
   elements. </p>
@@ -73,7 +73,7 @@
 <p><strong>Colorization</strong></p>
 <p>The simplest method of modifying components is to change the "style". </p>
 <p>Style is a palette which defines a family of colors for the component set.
-  There are 6 styles included with LPS 2.0. New styles can easily be included
+  There are 6 styles included with the OpenLaszlo platform. New styles can easily be included
   by modifying existing values.</p>
 <p><strong>Modifying Attributes</strong></p>
 <p>Each component has a set of adjustable parameters called "attributes".
@@ -84,9 +84,8 @@
 <p>Visual transformation of the components is possible by replacing resources
   (skinning). Knowledge of component construction, details of assembly and production
   methods are necessary to accomplish this.</p>
-<p><strong>Laszlo Components Set</strong></p>
-<p>These are examples of the components included with Laszlo Presentation Server
-  2.0 (LPS 2.0).</p>
+<p><strong>OpenLaszlo Components Set</strong></p>
+<p>These are examples of the components included with OpenLaszlo Server:</p>
 
 <blockquote>
   <blockquote>
@@ -98,7 +97,7 @@
 <h3><a name="colorization"></a>Colorization</h3>
 <p>The color of the components can be globally modified by changing the style.
   Style is referenced by the application utilizing the component set and automatically
-  affects any component included. There are six styles included in the Laszlo
+  affects any component included. There are six styles included in the OpenLaszlo
   component set. The default style is "white". </p>
 <blockquote>
   <blockquote>
@@ -183,19 +182,19 @@
   or interactivity beyond the scope of the default component set, the LZ and/or
   Base components will need to be modified.</p>
 <h3>Component Files</h3>
-<p>Component files are located in the LPS 2.0 directory. The path to the "Components" directory
-  is: $LPS_HOME/lps/components/... The Laszlo component set is comprised
+<p>Component files are located in the LPS directory. The path to the "Components" directory
+  is: $LPS_HOME/lps/components/... The OpenLaszlo component set is comprised
   of four categories of files:</p>
 <p></p>
 <p><strong>Base Components</strong></p>
 <p>LZ Components extend one or more base components. These provide the underlying
-  logic for the set and contain no visual resources. For the most part, a designer
+  logic for the set and contain no visual resources. For the most part, designers
   will not need to manipulate these files.</p>
 <p></p>
 <p><strong>LZ Components</strong></p>
 <p>LZ Components define the class for the UI device. These files utilize visual
   resources and define attributes of the component. These are the LZX files which
-  will most likely be modified by a designer. They generally contain resource
+  will most likely be modified by designers. They generally contain resource
   inclusions and attributes at the top of the code and are relatively easy to
   understand and manipulate.</p>
 <p></p>
@@ -204,8 +203,7 @@
   Resources may be a variety of file types, depending on the behaviors of the
   objects, the desired effect, or look. The resources are often pieces used to
   create whole components and their respective states. Visual reference for resources
-  are covered in the "Component Construction" section beginning
-  on page 7. The default color of the resources is gray, which is used to provide
+  are covered in the "Component Construction" section. The default color of the resources is gray, which is used to provide
   a neutral palette for colorizing. There are some visual elements in the components
   that are not external file resources. The LZX language is capable of building
   primitive shapes (rectangles) and these are used where possible within components.
@@ -213,8 +211,8 @@
   load time of an application and increase performance. </p>
 <p></p>
 <p><strong>Fonts</strong></p>
-<p>A collection of various True Type Format (ttf) fonts are included with LPS
-  2.0. The default fonts used in components are the outline font Bitstream "Vera" and
+<p>A collection of various True Type Format (ttf) fonts are included with the OpenLaszlo platform.
+ The default fonts used in components are the outline font Bitstream "Vera" and
   the Ultra Pixel Font "Verity". The outline font can be used at
   any point size, but is not recommended for sizes smaller than 12 point due
   to poor rendering quality of the Flash player. To circumvent this problem,
@@ -245,7 +243,7 @@
   The primary reason for using .swf files is that they are vector-based, and
   therefore resolution independent. This independence allows files to be resized
   or stretched without degrading. .Swf files are the only vector file type supported
-  by LPS 2.0. Although the obvious tool for creating ..swf files is Macromedia
+  by OpenLaszlo. Although the obvious tool for creating ..swf files is Macromedia
   Flash, many vector-based applications, such as Adobe Illustrator allow export
   of files to this format. If the option is given, .swf files should always be
   saved as version 5.0. The exporter for Illustrator 10 does not provide an option,
@@ -333,7 +331,7 @@
 <p></p>
 <hr/>
 <div>
-  <p class="copyright">Copyright &copy; 2001-2004 Laszlo Systems, Inc.</p>
+  <p class="copyright">Copyright &copy; 2001-2006 Laszlo Systems, Inc.</p>
 </div>
 <div>
   <div class="legalnotice">
