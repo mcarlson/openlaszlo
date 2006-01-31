@@ -47,6 +47,8 @@
     <simplelayout axis="y" inset="60" spacing="60"/>
 
     <view  layout="axis:y;spacing:4">
+        <text multiline="true" width="350">The OpenLaszlo platform includes the combobox component, in which data is included within the
+instance declaration, and datacombobox, which provides the same functionality but which gets its data from a dataset.</text>
         <text multiline="true" width="350">The text that appears in the combobox may be different from the
         value represented by the list item.  In the examples below the value is
         displayed using a constraint tied to the value attribute of the combobox </text>
@@ -86,7 +88,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

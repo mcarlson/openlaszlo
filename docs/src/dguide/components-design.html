@@ -8,12 +8,12 @@
 <h1>Designing Custom Components</h1>
  
 <p>A component is a reusable class that is typically simple and easy to
-use. Examples of a few components that ship with Laszlo are <classname>button</classname>, <classname>window</classname>, and
+use. Examples of a few components that ship with OpenLaszlo are <classname>button</classname>, <classname>window</classname>, and
 <classname>tabslider</classname>. The standard shipping components can be found in the
 <code>lps/components</code> directory.</p>
 
-<p>This chapter assumes you know how to use the Laszlo components, have a good
-understanding of Laszlo classes, know how to include resources, and are
+<p>This chapter assumes you know how to use the OpenLaszlo components, have a good
+understanding of OpenLaszlo classes, know how to include resources, and are
 well-versed in LZX.</p>
 
 <h2>Base components and LZ components</h2>
@@ -37,16 +37,15 @@ straightforward. For example: you would sublass lz classes, if you want a class
   for a frequently used icon button or a specific kind of listitem. Subclass
   a base
   component
-  if a
-  complete
+  if you want
+  a completely
   different look and feel
-is wanted and/or the functionality is extensively different than one can
-find in the lz classes.</p>
+or if the functionality is extensively different than what's available in the lz classes.</p>
 
-<p>Ideally, when writing a complex custom component, it's best that as much of
-the non-visual behaviors be implemented in a base class. Visible views and
+<p>Ideally, when writing a complex custom component, it's best to implement as much of
+the non-visual behaviors as possible in a base class. Visible views and
 functions that are applied specifically to those views should go into an visual
-component class. While this can seem a lot fo extra effort, it promotes base
+component class. While this can seem a lot of extra effort, it promotes base
   class
 reusability by allowing subclasses to create different looks while maintaining
 the same functionality. For examples, compare <code>base/basebutton.lzx</code>
@@ -131,7 +130,7 @@ submitted using the <tagname>form</tagname> tag. Subclass
 <classname>baseformitem</classname> if the custom component needs to
 be accessed in a <classname>form</classname>. Examples of
 <classname>baseformitem</classname>: <classname>checkbox</classname>,
-<classname>radiogroup</classname>, <classname>combobox</classname>.
+<classname>radiogroup</classname>, <classname>combobox</classname> and <tagname link="true">datacombobox</tagname>.
 Note that <classname>radiobutton</classname> is a
 <classname>basevalueitem</classname> not a
 <classname>baseformitem</classname>, because it contributes its vaue
@@ -152,7 +151,10 @@ accessed in a list context. Examples of baseformitem: <classname>radiobutton</cl
   Typically a subclass of <classname>baselist</classname> will contribute its value to
   a form (like <classname>list</classname> and <classname>combobox</classname>, although <classname>baselist</classname> is also used by any
   component that manages any list of items, such as <classname>tabslider</classname> and <classname>tabs</classname>. </p>
-
+<h3>basefloatinglist</h3>
+<p>
+This implements the base class for lists that "float" above the application.  Two kinds of floating lists that are derived from it ship with the OpenLaszlo platform: <tagname>floatinglist</tagname> and <tagname>plainfloatinglist</tagname>.
+</p>
 <h2>Writing the slider component</h2>
 
 <p>The slider will be used to demonstrate how to design and write a custom
@@ -629,6 +631,6 @@ code set.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -14,7 +14,7 @@
         <view layout="axis: x; spacing: 5" >
             <view width="${classroot.boxsize}" height="${classroot.boxsize}"
                   bgcolor="${ canvas.lfccolor }"/>
-            <text><b>Laszlo Foundation Classes</b></text>
+            <text><b>OpenLaszlo Runtime Library</b></text>
         </view>
         <view layout="axis: x; spacing: 5" >
             <view width="${classroot.boxsize}" height="${classroot.boxsize}"
@@ -33,7 +33,7 @@
             <view width="${classroot.boxsize}" height="${classroot.boxsize}"
                   bgcolor="${ canvas.lcicolor }"/>
             <view name="desc" layout="axis: y; spacing: 2">
-                <text><b>Laszlo Component Classes</b></text>
+                <text><b>OpenLaszlo Component Classes</b></text>
                 <text multiline="true" width="${classroot.width}">
                     These are intermediary classes which define a look and feel
                     used by one or more subclasses.
@@ -44,7 +44,7 @@
             <view width="${classroot.boxsize}" height="${classroot.boxsize}"
                   bgcolor="${ canvas.lcdcolor }"/>
             <view name="desc" layout="axis: y; spacing: 2" >
-                <text><b>Laszlo Component Classes</b></text>
+                <text><b>OpenLaszlo Component Classes</b></text>
                 <text multiline="true" width="${classroot.width}">
                     These can be used directly to create a
                     graphical user experience. These components share a unified look
@@ -85,6 +85,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

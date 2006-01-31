@@ -103,9 +103,13 @@
                                     <linktree text="basetabslider" key="base">
                                         <linktree text="tabslider" isleaf="true" />
                                     </linktree>
-                                    <linktree text="list" file="lz-list.html">
-                                        <linktree text="floatinglist" file="lz-floatinglist.html" 
-                                                  isleaf="true" />
+                                   <linktree text="list" file="lz-list.html">
+                                   <linktree text="basefloatinglist" file="lz-basefloatinglist.html">
+                                            <linktree text="floatinglist" file="lz-floatinglist.html"
+                                                      isleaf="true" />
+                                            <linktree text="plainfloatinglist" file="lz-plainfloatinglist.html"
+                                                      isleaf="true" />
+                                    </linktree>
                                     </linktree>
                                     <linktree text="basetabsbar" key="base">
                                         <linktree text="tabsbar" file="lz-tabsbar.html" 
@@ -195,6 +199,6 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

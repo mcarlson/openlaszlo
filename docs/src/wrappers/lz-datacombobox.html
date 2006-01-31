@@ -14,7 +14,61 @@
     </lzshortdesc>
     <lztag>lz/datacombobox.xml</lztag>
 </lzelement>
+<p>A combination box or "combobox"  is a common UI element for
+displaying a pop-up list associated with a text field. </p>
+<p>
+OpenLaszlo includes two variants of the combobox:</p>
+<ul>
+	<li> <tagname link="true">combobox</tagname> has list items defined inline.</li>
+	<li><tagname>datacombobox</tagname>, has list items determined by a dataset, which may be local or remote.</li>
+</ul>
 
+<p>The selected
+text of the combobox is displayed within the text field.  This field
+is an <classname>LzInputText</classname> field if the
+<attribute>editable</attribute> of the combobox is <code>true</code>
+(the default), or a static <classname>LzText</classname> field if it
+is <code>false</code>.</p>
+
+<p>The number of items shown in the combobox can be set using the
+<attribute>shownitems</attribute> attribute.  If there are more items
+available than are shown, a scrollbar will be created
+automatically.</p>
+
+<p>The list of items in a combobox can be created explicity using the
+<tagname>textlistitem</tagname> tag with assigned
+<attribute>text</attribute> and <attribute>value</attribute>
+attributes.</p>
+<example title="simple datacombobox">
+&lt;canvas bgcolor="#EAEAEA"  height="200"&gt;
+    &lt;include href="lz/datacombobox.lzx"/&gt;
+    
+    &lt;dataset name="items"&gt;
+        &lt;item value="item0" &gt;item 0&lt;/item&gt;
+        &lt;item value="item1" &gt;item 1&lt;/item&gt;
+        &lt;item value="item2" &gt;item 2&lt;/item&gt;
+        &lt;item value="item3" &gt;item 3&lt;/item&gt;
+        &lt;item value="item4" &gt;item 4&lt;/item&gt;
+        &lt;item value="item5" &gt;item 5&lt;/item&gt;
+        &lt;item value="item6" &gt;item 6&lt;/item&gt;
+        &lt;item value="item7" &gt;item 7&lt;/item&gt;
+        &lt;item value="item8" &gt;item 8&lt;/item&gt;
+        &lt;item value="item9" &gt;item 9&lt;/item&gt;
+        &lt;item value="item10" &gt;item 10&lt;/item&gt;
+        &lt;item value="item11" &gt;item 11&lt;/item&gt;
+    &lt;/dataset&gt;
+  
+    &lt;view x="20" y="20" &gt;
+        &lt;simplelayout/&gt;
+        &lt;text&gt; local data, defaulttext="choose one.." &lt;/text&gt;
+        &lt;datacombobox id="cbox1"
+                   width="130"  
+                   shownitems="6"
+                   defaulttext="Choose One..."
+                   itemdatapath="items:/item"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</example>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

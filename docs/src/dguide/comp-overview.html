@@ -75,6 +75,13 @@ In the example below, section one and two of the tabslider and the checkboxes in
 </example>
 <p>
 </p>
+<h2>Data-backed versus instance components</h2>
+<p>
+Many components, such as lists and combination, or "combo" boxes, are driven by data that is in XML format.  For some components, you supply the data to the component "inline", that is, within the actual tag that defines an instance. For others, data comes from an associated dataset.
+</p>
+<p>
+To see how these compare, inspect the reference pages for <tagname link="true">combobox</tagname> and <tagname link="true">datacombobox</tagname>. The choice of which to use depends on personal preference and the nature of the problem you're trying to solve.  Data-backed components such as <tagname>datacombobox</tagname> provide a nice separation between data and presentation and make it easier to consume data from external sources. Instance components like <tagname>combobox</tagname> are conceptually simpler and often more convenient and easier to understand. 
+</p>
 <h2>Building your own components</h2>
 <p>
 As you design more powerful applications you may find that the existing components do not meet your needs. In that situation you
@@ -124,6 +131,6 @@ from the default <tagname>alert</tagname>; its only difference is that it center
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
