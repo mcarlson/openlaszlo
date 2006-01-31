@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -1051,8 +1051,8 @@ LzDatapointer.prototype.comparePointer = function (  ptr ){
 }
 
 //-----------------------------------------------------------------------------
-// Duplicates the node that <param>dp</param> is pointing to, and adds
-// it to the node pointed to by this datapointer.
+// Duplicates the node that <param>dp</param> is pointing to, and appends it
+// it to the node pointed to by this datapointer, making the added node the last on the list.
 // @param LzDatapointer dp: A pointer to the node to add
 // @return LzDatapointer: A pointer to the new node
 //-----------------------------------------------------------------------------

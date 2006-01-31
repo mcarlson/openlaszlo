@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -22,8 +22,9 @@
 // play without updating the value of the view's frame property. This
 // can save CPU usage in cases where the application doesn't need to
 // know what frame the resource is showing while it is playing.
+//Removed "at" sign from the line below so that this field does not appear in the documentation.
 //
-// @field selected: Setting this attribute calls the abstract method
+// field selected: Setting this attribute calls the abstract method
 // <method>setSelected</method>.  See
 // <classname>LzSelectionManager</classname>.
 //
