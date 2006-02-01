@@ -1,6 +1,6 @@
 <menu>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
     <section name="Welcome" src="/laszlo-explorer/coverpages/welcome/welcome.lzx" title="OpenLaszlo Server" text="Designed for developers. Developed for design.">
@@ -30,7 +30,7 @@
 	    </item>
     </section>
     
-    <section name="OpenLaszlo in 10 Minutes" title="OpenLaszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">
+    <section name="Laszlo in 10 Minutes" title="Laszlo in 10 minutes" text="A walkthrough for developers." action="explore_welcome">
       <topic name="Introduction" 
       		 src="/laszlo-explorer/coverpages/intor_cover.html" 
              text="Essential concepts" autoselect="true">
