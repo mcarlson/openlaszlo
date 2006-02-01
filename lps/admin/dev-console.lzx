@@ -76,18 +76,9 @@
        var app_opt_exists = appdata.getPointer().xpathQuery("/request/@opt-exists")
        var app_lps_root = appdata.getPointer().xpathQuery("/request/@lps")
        var app_lzt = null;
-       var app_krank = false;
        var app_uid = (typeof(global.lzappuid) != 'undefined') ? "_"+global.lzappuid : '';
-       var app_viewkranked = app_fullpath.substring(app_fullpath.length - 4) == '.lzo';
        ]]>
     </script>
-
-    <method name="lastKranked">
-    // substitute .lzo for .lzx
-      app_fullpath = app_fullpath.substring(0,app_fullpath.length -4)+".lzo";
-      canvas.reloadApp();
-    </method>
-
 
   <method name="deploySOLO">
      var path = escape(app_fullpath.substring(app_lps_root.length));
@@ -111,11 +102,6 @@
      canvas.reloadApp();
    </method>
 
-   <method name="krankApp">
-     app_krank = true;
-     canvas.reloadApp();
-   </method>
-
    <method name="viewDocs">
      var url = app_lps_root + "/docs/index.html";
      LzBrowser.loadURL(url);
@@ -136,7 +122,7 @@
   <view name="main" width="${parent.width}">
       <view name="logo" resource="footer_logo" bgcolor="0x4c4c4c" height="100%"/>
       <view name="controls" x="70">
-        <view name="firstrow" visible="${app_viewkranked == false}" y="4">
+        <view name="firstrow" y="4">
             <text fontsize="11" x="8" y="7"><b>Compile Options:</b></text>
             <drawview x="125" name="compilecontrols">
                 <method event="oninit">
@@ -156,19 +142,12 @@
                 <button onclick="canvas.gotoApp()" x="233" y="4">Compile</button>
             </drawview>
             <view width="22" x="439"/>
-            <button onclick="canvas.krankApp()" x="465" y="3">Krank</button>
-            <button id="lastopt" visible="${app_opt_exists == 'true'}"
-                    onclick="canvas.lastKranked()" x="529" y="3">Last Kranked</button>
-            <button onclick="canvas.viewSource()" x="${app_opt_exists == 'true' ? 634 : 529}" y="3">View Source</button>
+            <button onclick="canvas.viewSource()" x="529" y="3">View Source</button>
         </view>
-        <view visible="${app_viewkranked != false}" width="530">
-            <text fontsize="11" x="8" y="11"><b>You are viewing the Kranked version of the application</b></text>
-            <button onclick="canvas.gotoApp()" x="376" y="7">Return to Original</button>
-        </view>
-        
+
         <view bgcolor="black" width="8000" height="1" y="39"/>
           
-        <view width="${app_viewkranked != false ? 550 : parent.firstrow.width}" y="43">
+        <view width="${parent.firstrow.width}" y="43">
           <text fontsize="11" x="8" y="4"><b>Deploy:</b></text>
           <button x="65" onclick="canvas.viewWrapper()">Server</button>
           <button x="134" onclick="canvas.deploySOLO()">SOLO</button>
@@ -188,28 +167,6 @@
             <text resize='true'  datapath="request/@fullpath"/>
             <text resize='true'  datapath="info/@runtime"/>
             </view>
-          
-
-
-        <view layout="axis:x;spacing:2">
-       <combobox  id="krank_combo" editable="false"
-                  shownitems="2" width="200">
-        <method event="oninit">
-            var lzxpath = app_fullpath.substring(0,app_fullpath.length -4)+".lzx";
-            var lzopath = app_fullpath.substring(0,app_fullpath.length -4)+".lzo";
-            new textlistitem(this, { text: app_unopt_url, value: lzxpath });
-            if (app_opt_exists == "true") {
-                new textlistitem(this, { text: app_opt_url, value: lzopath });
-            }
-        </method>
-    </combobox>
-
-
-
-          <view width="50" name="spacer"/>
-          
-
-        </view>
 
           <view name="blank2" width="200"/>
 
@@ -319,16 +276,9 @@
     }
 
     // can be {swf,source,deployment}
-    if (app_krank) {
-      qitems['krank'] = 'true';
-      qitems['debug'] = 'false';
-    } else {
-       if (app_lzt != null) {
-         qitems['lzt'] = app_lzt;
-       }
-       delete qitems.showKrankDuration;
+    if (app_lzt != null) {
+        qitems['lzt'] = app_lzt;
     }
-    
 
     // Copy values to LzParam object
     for ( var key in qitems) {
@@ -412,3 +362,8 @@
 
 
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
