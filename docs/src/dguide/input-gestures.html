@@ -265,30 +265,34 @@ This generates a lot of points, but you can decide how much data to filter or no
 <h2>"View Source" right click menu item </h2>
 <p>
  The default canvas context (right click) menu has a "view source" 
- item, available in Flash player Version 7 and later.
+ item, available in Flash player Version 7 and later. By default this menu includes an "About OpenLaszlo" entry, which links to the <a href="http://www.openlaszlo.org">OpenLaszlo</a> website, and an option to view source.
 </p>
 <p>
-For an application <tt>framitz.lzx</tt> that is deployed proxied (using the OpenLaszlo Server), this will fetch 
-<tt>framitz.lzx?lzt=source</tt> in a new browser window. If you don't wish to make source visible, set <tt>allowRequestSOURCE=false </tt>in WEB-INF/lps/config/lps.properties.
+For an application <tt>framitz.lzx</tt> that is deployed proxied (using the OpenLaszlo Server), clicking on View Source will fetch 
+<tt>framitz.lzx?lzt=source</tt> in a new browser window. If you don't wish to make source visible, set <tt>allowRequestSOURCE=false </tt>in <tt>WEB-INF/lps/config/lps.properties</tt>. 
 </p>
 <p>
-To preserve the "about OpenLaszlo" information while disabling source, you can use a method like the following, on the canvas:
+You can control the content of the menu using the class <classname>LzContextMenu</classname>, which you
+instantiate using <code>new LzContextMenu()</code>.
+You can tell the canvas to install a default context menu with something
+like
 </p>
-<example extract="false" title="Disabling 'View Source'">
-&lt;method event="oninit"&gt;
-this.removeViewSourceMenu();
-&lt;/method&gt;
-
-&lt;method name="removeViewSourceMenu"&gt;
-var cm1 = new ContextMenu();
-cm1.hideBuiltInItems();
-cm1.addItem(this.__LZdefaultMenuItem);
-this.setContextMenu(cm1);
-&lt;/method&gt;
-</example>
+<pre>
+var cmenu = new LzContextMenu();
+canvas.setDefaultContextMenu(cmenu)
+</pre>
+<p>
+That would give you an empty context menu.
+</p>
+<p>
+There is an unresolved bug with nesting of context menus in views that were
+not direct children of the canvas which seems to happen in Flash 7, but is
+not present when you compile for Flash 8 target (lzr=swf8).  That is, in the
+Flash 7 runtime, you cannot put a menu on a view unless its immediate
+parent is the canvas.</p>
 <p>
 SOLO deployed applications, say, <tt>framitz.lzx</tt>, will attempt to fetch <tt>"framitz.lzx.zip"</tt>.This assumes that a copy 
-of the source will be placed there if you desire to make your source visible. If you don't wish to share code of your SOLO application, use the method above to disable the ViewSourceMenu.
+of the source will be placed there if you desire to make your source visible. If you don't wish to share code of your SOLO application, use the method above.
 
 </p>
 <h2>Keyboard Input</h2>
@@ -395,6 +399,6 @@ The example below illustrates use of <tagname>LzFocus</tagname> to make a view a
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
