@@ -31,7 +31,7 @@ using a text editor, write program code; save the file with a .lzx extension</li
 <li>
 place file in an appropriate directory</li>
 <li>
-load the application into a web browser</li>
+compile the application</li>
 <li>
 debug and modify the program</li>
 <li>
@@ -76,8 +76,17 @@ can nest subdirectories, such as</p>
 
 <p>so long as they are under the correct path to the OpenLaszlo Server (lps).</p>
 
-
-<h3>Load the application into a web browser</h3>
+<h3>Compile the application</h3>
+<p>
+There are two distinct techniques for compiling the application:</p>
+<ul>
+<li>You can load it into a web browser, which will cause the OpenLaszlo Server to compile it automatically when the program is first used and any time it changes; or</li>
+<li>You can invoke the stand-alone compiler separately.</li>
+</ul>
+<p>
+The simplest and most common way to compile applications, especially when you are first getting familiar with OpenLaszlo, is to let the OpenLaszlo Server handle it.  Both techniques are described in turn below.
+</p>
+<h4>Compiling by loading the application into a web browser</h4>
 
 <p>
 In order to run your program, simply load it into your browser. The exact URL depends on the configuration of the server, but will typically look something like:</p>
@@ -90,6 +99,56 @@ in the browser:</p>
 
 <img src="images/browser.png" class="screenshot"/>
 
+<h4>Using lzc the stand-along compiler</h4>
+<p>
+The standalone compiler is called <code>lzc</code>. It is located in <code>$LPS_HOME/WEB-INF/lps/server/bin/lzc</code>.</p>
+<p>
+Here are the options available for compilation:
+</p>
+<p><b>Options:</b></p>
+<dl>
+<dt>-D&lt;name&gt;=&lt;value&gt;</dt>
+ <dd> Set the name/var property to value (See Compiler.getProperties).</dd>
+<dt>-D&lt;name&gt;</dt>
+  <dd> Short for -Dname=true.</dd>
+<dt>-v</dt>
+   <dd>Write progress information to standard output.</dd>
+<dt>--mcache on|off</dt>
+   <dd>Turns on/off media cache.  Default is off.</dd>
+<dt>--onerror [throw|warn]</dt>
+   <dd>Action to take on compilation errors.  Defaults to warn.</dd>
+<dt>--help</dt>
+   <dd>lists all options.</dd>
+<dt>--flush-script-cache</dt>
+   <dd>Doesn't flush script cache before compiling.</dd>
+</dl>
+<p><b>Output options:</b></p>
+<dl>
+<dt>--runtime=[swf6|swf7|swf8]</dt>
+  <dd> Compile to swf6, swf7, swf8.</dd>
+<dt>--dir outputdir</dt>
+   <dd>Output directory.</dd>
+<dt>-g | --debug</dt>
+  <dd> Add debugging information into the output object.</dd>
+<dt>-p | --profile</dt>
+  <dd> Add profiling information into the output object.</dd>
+</dl>
+
+<p><b>Logging options:</b></p>
+<dl>
+<dt>-l&lt;loglevel&gt;</dt>
+   <dd>Logging level (See org.apache.log4j.Level)</dd>
+<dt>-l&lt;loggerName&gt;=&lt;loglevel&gt;</dt>
+   <dd>Logging level (See org.apache.log4j.Level)</dd>
+<dt>-lp file</dt>
+   <dd>Log4j properties files</dd>
+<dt>--log logfile</dt>
+   <dd>Specify logfile (output still goes to console as well)</dd>
+<dt>--schema</dt>
+  <dd> Writes the schema to standard output.</dd>
+<dt>--script</dt>
+   <dd>Writes JavaScript to standard output.</dd>
+</dl>
 
 <h3>Debug and modify the program</h3>
 
@@ -529,6 +588,6 @@ http://localhost:8080/lps-@VERSIONID@/lps/utils/lps/viewer.jsp?file=/my-apps/cop
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
