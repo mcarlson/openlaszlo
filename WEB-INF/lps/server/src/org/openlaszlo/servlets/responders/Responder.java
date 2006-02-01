@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -41,6 +41,7 @@ public abstract class Responder
     public static final int MIME_TYPE_SWF  = 0;
     public static final int MIME_TYPE_HTML = 1;
     public static final int MIME_TYPE_XML  = 2;
+    public static final int MIME_TYPE_XMLDATA  = 3;
 
     public static final String LZCOOKIE = "lzc";
 
@@ -168,8 +169,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes=p[0] + " is not a directory."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-171", new Object[] {cacheDir})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-171", new Object[] {cacheDir})
 );
         }
         try {
@@ -179,8 +180,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="can't read " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-182", new Object[] {cacheDir})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-182", new Object[] {cacheDir})
 );
             }
         } catch (SecurityException e) {
@@ -189,8 +190,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="can't read " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-182", new Object[] {cacheDir})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-182", new Object[] {cacheDir})
 );
         }
         try {
@@ -200,8 +201,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes=p[0] + " is not writable."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-203", new Object[] {cacheDir})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-203", new Object[] {cacheDir})
 );
             }
         } catch (SecurityException e) {
@@ -211,8 +212,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes=p[0] + " is not writable."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-203", new Object[] {cacheDir})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-203", new Object[] {cacheDir})
 );
         }
         return dir;
@@ -229,8 +230,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Forbidden request type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-232", new Object[] {lzt})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-232", new Object[] {lzt})
 ;
                 res.sendError(HttpServletResponse.SC_FORBIDDEN, msg);
                 mLogger.info(msg);
@@ -292,14 +293,17 @@ public abstract class Responder
             case MIME_TYPE_XML    :
                 respondWithErrorXML(res, xmlErrorMsg(status, m));
                 break;
+            case MIME_TYPE_XMLDATA    :
+                respondWithErrorXML(res, xmlErrorMsg(status, m), false);
+                break;
             default:
                 throw new ChainedException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Responder mime type unknown"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-301")
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-301")
 );
         }
     }
@@ -318,14 +322,17 @@ public abstract class Responder
             case MIME_TYPE_XML    :
                 respondWithErrorXML(res, msg);
                 break;
+            case MIME_TYPE_XMLDATA    :
+                respondWithErrorXML(res, msg, false);
+                break;
             default:
                 throw new ChainedException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Responder mime type unknown"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-301")
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-301")
 );
         }
     }
@@ -341,8 +348,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Responding with error SWF: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-344", new Object[] {s})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-344", new Object[] {s})
 );
         ServletOutputStream out = null;
         InputStream in = null;
@@ -372,8 +379,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="StreamWritingException while sending error: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-375", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-375", new Object[] {e.getMessage()})
 );
         } catch (Exception e) {
             mLogger.warn(
@@ -381,8 +388,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Exception while sending error: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-384", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-384", new Object[] {e.getMessage()})
 );
             mExceptionStackTraceLogger.error("exception", e);
         } finally {
@@ -418,8 +425,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="StreamWritingException while sending message: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-421", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-421", new Object[] {e.getMessage()})
 );
         } catch (Exception e) {
             mLogger.warn(
@@ -427,8 +434,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Exception while sending message: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-430", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-430", new Object[] {e.getMessage()})
 );
             mExceptionStackTraceLogger.error("exception", e);
         } finally {
@@ -461,8 +468,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Responding with error (text/html): " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-464", new Object[] {s})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-464", new Object[] {s})
 );
         ServletOutputStream out = null;
         try {
@@ -479,8 +486,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Exception while sending error HTML: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-482", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-482", new Object[] {e.getMessage()})
 );
             mExceptionStackTraceLogger.error("exception", e);
         } finally {
@@ -496,29 +503,40 @@ public abstract class Responder
     /**
      * Send an XML response indicating the error.
      */
-    protected void respondWithErrorXML(HttpServletResponse res, String s) 
+    protected void respondWithErrorXML(HttpServletResponse res, String s) {
+        respondWithErrorXML(res, s, true);
+    }
+
+    /**
+     * Send an XML response indicating the error.
+     */
+    protected void respondWithErrorXML(HttpServletResponse res, String s, boolean escape) 
     {
         mLogger.info(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Responding with error (text/xml): " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-506", new Object[] {s})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-506", new Object[] {s})
 );
         ServletOutputStream out = null;
         try {
             res.setContentType ("text/xml");
             out = res.getOutputStream();
-            out.println("<lps-error>" + XMLUtils.escapeXml(s) + "</lps-error>");
+            if (escape) {
+                out.println("<lps-error>" + XMLUtils.escapeXml(s) + "</lps-error>");
+            } else {
+                out.println(s);
+            }
         } catch (Exception e) {
             mLogger.warn(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Exception while sending error XML: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-520", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-520", new Object[] {e.getMessage()})
 );
             mExceptionStackTraceLogger.error("exception", e);
         } finally {
@@ -622,8 +640,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="StreamWritingException while sending status: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-625", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-625", new Object[] {e.getMessage()})
 );
         } catch (Exception e) {
             mLogger.warn(
@@ -631,8 +649,8 @@ public abstract class Responder
  * @i18n.test
  * @org-mes="Exception while sending status: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Responder.class.getName(),"051018-634", new Object[] {e.getMessage()})
+            org.openlaszlo.i18n.LaszloMessages.getMessage(
+                Responder.class.getName(),"051018-634", new Object[] {e.getMessage()})
 );
             mExceptionStackTraceLogger.error("exception", e);
         } finally {
