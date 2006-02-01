@@ -9,9 +9,10 @@
       <year>2003</year>
       <year>2004</year>
       <year>2005</year>
+      <year>2006</year>
       <holder>Laszlo Systems, Inc.</holder>
     </copyright>
-    <pubdate>April, 2005</pubdate>
+    <pubdate>February, 2006</pubdate>
    <legalnotice>
       <para>
         All Rights Reserved. Use is subject to license terms.</para>
@@ -22,3 +23,8 @@
 
     </legalnotice>
   </bookinfo>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
