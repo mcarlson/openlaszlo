@@ -94,7 +94,7 @@ data="hello.lzx?lzt=swf" width="500" height="400"&gt;
 <h2>Embedding OpenLaszlo Applications</h2>
 
 <p>
-OpenLaszlo applications are .swf files sent from the OpenLaszlo Server to be rendered in the flash player. They can be from the OpenLaszlo Server to client:
+OpenLaszlo applications are .swf files sent from the OpenLaszlo Server to be rendered in the Flash Player. They can be from the OpenLaszlo Server to client:
 </p>
 
 <ul>
@@ -119,6 +119,12 @@ In particular, this filed defines the function <code>LzEmbed</code>.
 <p>
 You can, of course, put this information into an HTML file "by hand", but the easier way is to use the OpenLaszlo Server to generate a "wrapper" page that 
 contains all the necessary information. You can edit this wrapper or paste its contents into an existing HTML page The steps below show how to do this.
+</p>
+<p>
+The easiest way cause the OpenLaszlo Server to generate the appropriate wrapper pages, for both SOLO and proxied applications, is to use the Developer's Console.  Simply press the appropriate button, "Server" or "SOLO", and follow the instructions that are then displayed. 
+</p>
+<p>
+Alternatively, you can generate wrappers by using the various request types on the url you use to browse to your application:
 </p>
 <ol>
 	<li>Invoke the lzx application with request type "?lzt=html". This generates the "wrapper."</li>
@@ -205,13 +211,9 @@ lt;/object&gt;
 
 <h3>Detecting which flash player is running</h3>
 <p>
-To generate a wrapper page that contains logic to detect the version of flash running on the client, invoke the application with the request type
-</p>
-<pre>
-          ?lzt=history
-</pre>
+The default wrapper page contains logic to detect the version of flash running on the client.</p>
 <p>
-This will generate a page that will look something like the following:</p>
+This page that will look something like the following:</p>
 <example extract="false" title="Flash player version-detecting wrapper">
 &lt;!DOCTYPE html
   PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"&gt;
@@ -237,34 +239,14 @@ This will generate a page that will look something like the following:</p>
 &lt;/html&gt;
 </example>
 
-
-<fixme>
-<p>
-Should this just be nixed?
-</p>
-<p>The following code (from <a href="http://javascript.about.com/library/scripts/blflashdetect.htm">about.com</a>), 
-detects which version of the player is running:</p>
-
-<example extract="false" title="Version Detection">
-&lt;script language="JavaScript"&gt;
-function FlashInstalled() {
-  result = false;
-  if (navigator.mimeTypes &amp;&amp; navigator.mimeTypes["application/x-shockwave-flash"]){
-    result = navigator.mimeTypes["application/x-shockwave-flash"].enabledPlugin;
-  } else {
-    if (document.all &amp;&amp; (navigator.applicationVersion.indexOf("Mac")==-1)){
-    // IE Windows only -- check for ActiveX control, have to hide code in eval from Netscape (doesn't like try)
-      eval('try {var xObj = new ActiveXObject("ShockwaveFlash.ShockwaveFlash");' +
-           'if (xObj) result = true; xObj = null;} catch (e){}');
-    }
-  }
-  return result;
-}
-&lt;/script&gt;
-</example>
-</fixme>
 <p>Depending on which version is running, you may wish to use some LZX features that run in some, but not all, versions 
-of the Flash player.</p>
+of the Flash Player.</p>
+<h4>Version detection</h4>
+<p>
+OpenLaszlo uses client-side player detection. If the user either a) doesn't have the Flash Player plug-in or b) has an older version, 
+they'll be prompted to download a fresh version. This feature is included in the default HTML wrappers for lzt=html and the SOLO 
+deployment wizard
+</p>
 <h4>Features available only in Flash 7 or later </h4>
 <p>
 The following features are available only in the Flash 7 or later environments:</p>
@@ -456,21 +438,7 @@ application, or for creating a bookmark for an
 application. Another thing to do is read browser cookies from
 javascript and pass in the parameters when calling
 <method>LzEmbed</method>.</p>
-<h3>Passing Parameters to SOLO applications</h3>
-<p>
-If you are deploying a SOLO application and wish to pass parameters down to the application from the base URL, you need to make some
- modifications to the stock html wrapper page that the server provides. 
-</p>
-<p>
-Here is an <code>lzEmbed</code> line that passes all of the query parameters down to the OpenLaszlo app undamaged:</p>
-<pre>
-lzEmbed({url: 'main.lzx.swf?'+window.location.search.substring(1), bgcolor: '#ffffff', width: '100%', height: '100%'});
-</pre>
-<p>
 
-The thing that's different is the alteration to <code>main.lzx.swf? </code>from <code>main.lzx?lzt=swf</code> and the addition of 
-<code>'+window.location.search.substring(1)'</code>
-</p>
 <!--=========================================================================-->
 <!-- Multi Resolution applications                                                   -->
 <!--=========================================================================-->
@@ -590,7 +558,7 @@ would cause the foo attribute to contain 'bar' when the application starts up.
 <h3>Bidirectional Communication</h3>
 <p>
 The <classname>LzHistory</classname>service allows you to establish bidirectional communication between the browser and the OpenLaszlo application.
-When you invoke your OpenLaszlo application with the request type <code>?lzt=history</code> (the default) a wrapper is returned that includes the javascript
+When you deploy your OpenLaszlo application with the the default wrapper,it includes the javascript
 functions that enable this.  
 </p>
 <p>
@@ -740,24 +708,37 @@ lzEmbed({url: 'createaccount.lzx?lzt=swf&amp;__lzhistconn='+top.connuid+'&amp;__
 &lt;/html&gt;
 
 </example>
+<h3>Passing Parameters to SOLO applications</h3>
+<p>
+If you are deploying a SOLO application and wish to pass parameters down to the application from the base URL, you need to make some
+ modifications to the stock html wrapper page that the server provides. 
+</p>
+<p>
+Here is an <code>lzEmbed</code> line that passes all of the query parameters down to the Laszlo app undamaged:</p>
+<pre>
+lzEmbed({url: 'main.lzx.swf?'+window.location.search.substring(1), bgcolor: '#ffffff', width: '100%', height: '100%'});
+</pre>
+<p>
 
+The thing that's different is the alteration to <code>main.lzx.swf? </code>from <code>main.lzx?lzt=swf</code> and the addition of 
+<code>'+window.location.search.substring(1)'</code>
+</p>
 <h2>Using the browser's "back" button</h2>
 <p>
 The <classname>LzHistory</classname> service allows you to preserve the state of your application, and then use the "back" button of the 
 browser to move among such states.
 </p>
 <p>
-When you request your app with <code>lzt=history</code> you'll get a wrapper page 
-that enables the 
-back button and browser-to-LZX communication.  Once you've done this you can call the browser javascript method 
+The default wrapper page 
+enables the 
+back button and browser-to-LZX communication.  Once you've  got this, you can call the browser javascript method 
 </p>
 <pre>
         javascript:lzSetCanvasAttribute(attributeName, value)
 </pre> 
 <p>
 to set a canvas attribute and send an event.  The following example shows the way the <classname>LzHistory</classname> service works
-to move among states.  To see the program in action, copy this code to your applications directory and invoke it with the <code>
-lzt="history" </code>request.
+to move among states.  To see the program in action, copy this code to your applications directory.
 
 </p>
 <example extract="false" title="Communicating with Back button">
@@ -853,10 +834,7 @@ lzt="history" </code>request.
 &lt;/canvas&gt;
 
 </example>
-<fixme>
 
-
-</fixme>
 <!--=========================================================================-->
 <!-- Browser Imposed limitations & caveats                                   -->
 <!--=========================================================================-->
@@ -1062,6 +1040,6 @@ To crop the application to the width and height, add  scale: 'noscale' to the li
   </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

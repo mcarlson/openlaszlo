@@ -26,7 +26,7 @@ everything in the same directory.
 <h2>Review of deployment modes</h2>
 <p>
 As explained in <xref linkend="architecture"/>, there are two distinct ways in which    
-Laszlo applications can be <i>deployed</i>, that is, made available on the web:
+OpenLaszlo applications can be <i>deployed</i>, that is, made available on the web:
 </p>
 
 <ol>
@@ -37,20 +37,10 @@ Laszlo applications can be <i>deployed</i>, that is, made available on the web:
 With SOLO deployment, the LZX source is pre-compiled into a stand-alone SWF
 file that can be placed within the HTML docs directory of a common HTTP Web
 Server (such as Apache or IIS). SOLO deployments are simple to manage, and
-supported by nearly any Web hosting service. </p>
+supported by nearly any Web hosting service, such as, for example Apache. </p>
 <p>
 Colloquially, SOLO deployment is sometimes called "serverless," because the
  OpenLaszlo Server is not required for operation of the application.
-</p>
-<p>
-With OpenLaszlo Server deployment, the LZX source is placed within the
-Web-apps directory of the OpenLaszlo Server, and is dynamically compiled.
-OpenLaszlo Server deployment requires a Java Application Server or servlet
-container. It provides additional capabilities dependent on the server,
-including support for SOAP, XML-RPC, Java-RPC and persistent connections.
-The OpenLaszlo Server is also required for applications that use some media formats that are not
-natively supported by the Flash player. The OpenLaszlo Server transcodes these media files "on the fly"
-into formats supported by the Flash player.
 </p>
 
 <p>
@@ -59,17 +49,28 @@ is always running, and it mediates, or <i>proxies</i>, communication between the
 running on the client machine and any back-end services or resources located elsewhere on the web.
 </p>
 <p>
+With OpenLaszlo Server ("proxied") deployment, you place the LZX source (.lzx) file within the
+Web-apps directory of the OpenLaszlo Server. The first time you browse to that file it is dynamically compiled, and it is automatically recompiled whenever the source changes. (You refresh the page to force the recompilation.)
+OpenLaszlo Server deployment requires a Java Application Server or servlet
+container. It provides additional capabilities dependent on the server,
+including support for SOAP, XML-RPC, Java-RPC and persistent connections.
+The OpenLaszlo Server is also required for applications that use some media formats that are not
+natively supported by the Flash Player. The OpenLaszlo Server transcodes these media files "on the fly"
+into formats supported by the Flash Player.
+</p>
+
+<p>
 Deploying SOLO is generally more convenient than deploying with OpenLaszlo Server, and often gives better performance. 
 </p>
 <note>
 Applications compiled with LPS 2.2 (or earlier) require access to a running copy of the 
-OpenLaszlo Server (called LPS in earlier releases) in order to make data (XML over HTTP), media, SOAP, Java Direct, and XML-RPC requests.  
+OpenLaszlo Server (called "LPS, for Laszlo Presentation Server, in earlier releases) in order to make data (XML over HTTP), media, SOAP, Java Direct, and XML-RPC requests.  
 OpenLaszlo 3.0 removes this requirement for applications that make only certain kinds of data and media requests. 
 The rest of this chapter pertains to OpenLaszlo 3.0 and later releases.
 </note>
 
 <p>
-OpenLaszlo 3.0 compiles to the SWF Version 6 and/or 7 (Macromedia Flash) file format. See <xref linkend="browser-integration"/> for discussion
+OpenLaszlo compiles to the SWF Version 6, 7 or 8 (Macromedia Flash) file format. See <xref linkend="browser-integration"/> for discussion
 of issues related to differences in target format.
 </p>
 
@@ -91,7 +92,7 @@ in the <tagname>canvas </tagname> tag, which means that trying to deploy it SOLO
 <p>
 How do you decide whether to target proxied or SOLO deployment? Here is a heuristic:</p>
 <ol>
-	<li>Do you have the option of installing the OpenLaszlo Server on a deployment server? If not, you must deploy SOLO.</li>
+	<li>Do you have the option of installing the OpenLaszlo Server on a deployment server? In particular, is there a Java Application Servere or servlet container available? If not, you must deploy SOLO.</li>
 	<li>Does your application require services available only in proxied applications? If yes, you must deploy with OpenLaszlo Server.</li>
 	<li>If your application can be deployed in either manner, which gives the best performance?</li>
 </ol>
@@ -412,13 +413,13 @@ to create a file <code>/path/to/canvas.lzx.swf </code>(the object file).  Recomp
 </ul>
 
 <p>
-An HTTP request for a SOLO application returns the object file from the source directory instead of from the LPS cache.
+An HTTP request for a SOLO application returns the object file from the source directory instead of from the OpenLaszlo Server cache.
 </p>
 
 <h4>SOLO Deployment of a single file</h4>
 
 <ol>
-	<li> Using LPS, request the application URL.</li>
+	<li> Using the OpenLaszlo Server, request the application URL.</li>
 	<li> Copy the .lzx.swf file to a directory on the deployment server.</li>
 </ol>
 
@@ -429,7 +430,7 @@ This is necessary to deploy an application that consists of several deployment f
 source directory that are requested during application execution.
 </p>
 <ol>
-	<li> Using LPS, request the application URL.</li>
+	<li> Using the OpenLaszlo Server request the application URL.</li>
 	<li> Copy the source directory to the deployment server.</li>
 </ol>
 
@@ -438,7 +439,7 @@ source directory that are requested during application execution.
 <p>
 You can chose whether or not to make visible the source code to your application.  When you want to make sure that your source is not available, do this: </p>
 <ol>
-	<li> Using LPS, request the application URL.</li>
+	<li> Using the OpenLaszlo Server, request the application URL.</li>
 	<li> Make a copy of the source directory.  The copy is the "staging directory".</li>
 	<li> Remove all .lzx files from the staging directory.  </li>
 	<li> Remove any other data and media files that are not referenced during application execution.</li>
@@ -579,6 +580,6 @@ In particular, Cookies and HTTP Request/Response Headers will all need to be re-
 </body>
 </html>
 <!--  X_LZ_COPYRIGHT_BEGIN 
- Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              
+ Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
  Use is subject to license terms.                                            
  X_LZ_COPYRIGHT_END  -->

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -62,7 +62,7 @@
       1.0 version.)</p>
 
       <p>To deploy using static XHTML 1.0 compliant code, place the
-      following in your HTML document where the Laszlo application
+      following in your HTML document where the OpenLaszlo application
       should appear:</p>
 
       <pre>&lt;object type="application/x-shockwave-flash"
@@ -78,7 +78,7 @@
       <h2>Deployment with the JavaScript <code>embed.js</code> Library</h2>
       <p>To deploy using the JavaScript <code>embed.js</code> library,
       place the following line within the <code>&lt;head&gt;</code>
-      section of the HTML document that embeds the Laszlo
+      section of the HTML document that embeds the OpenLaszlo
       application:</p>
       
       <pre>&lt;script src="<xsl:value-of select="/canvas/request/@lps"/>/lps/includes/embed.js" type="text/javascript">&lt;/script></pre>
@@ -103,25 +103,7 @@
       lzx source file, the value of the 'url' parameter will need to
       be changed.</p>
       
-      <h2>Deploying a Kranked Application</h2>
-      <p>To use the Kranked version of an application, replace
-      <code><xsl:value-of select="//@url"/></code> above by
-      <code><xsl:value-of select="//@opt-url"/></code>.  See the <a
-      href="{/canvas/request/@lps}/docs/guide/krank.html">Krank
-      chapter</a> of the <a href="{/canvas/request/@lps}/docs/guide/">LZX
-      Developers' Guide</a> for more information about the Krank
-      feature.</p>
-      
-      <p>To use the kranked version if it is available, and compile an
-      unkranked application otherwise, replace <code><xsl:value-of
-      select="//@url"/></code> above by <code><xsl:value-of
-      select="//@opt-url"/>?fb=1</code>.</p>
-      
-      <h2>Scaling and Cropping</h2>
-      <p>To crop the application to the width and height, add
-      <code>scale: 'noscale'</code> to the list of arguments to
-      <code>lzEmbed</code> above.  Otherwise the application will be
-      scaled.</p>
+     
 <h2>Passing Parameters to SOLO applications</h2>
 <p>
 If you are deploying a SOLO application and wish to pass parameters down to the application from the base URL, you need to make some
