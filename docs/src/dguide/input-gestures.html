@@ -273,8 +273,22 @@ For an application <tt>framitz.lzx</tt> that is deployed proxied (using the Open
 </p>
 <p>
 You can control the content of the menu using the class <classname>LzContextMenu</classname>, which you
-instantiate using <code>new LzContextMenu()</code>.
-You can tell the canvas to install a default context menu with something
+instantiate using <code>new LzContextMenu()</code>. The method <method>LzContextMenu.makeMenuItem </method>instantiates an <tt>LzContextMenuItem</tt>.
+</p>
+<p>
+To make a new menu, first you create the menu, then you create a menu item, and then you add the menu item to the menu.  The data type of the menu item is
+<tt>LzContextMenuItem</tt>; you supply the text that you want to appear in the menu and a delegate that specifies how you want that menu item to be handled. <method>LzContextMenu.addItem</method> adds an item to that menu. So, to create a new menu you would do:
+</p>
+<example extract="false" title="creating a context menu">
+
+    var cm = new LzContextMenu();
+    // Set up a LzDelegate as a callback
+    var item1 = cm.makeMenuItem('Item1', new LzDelegate(this,
+"handlerightclick"));
+    cm.addItem(item1);
+</example>
+<p>
+There is no method to clear the menu, but you can erase one  with something
 like
 </p>
 <pre>
