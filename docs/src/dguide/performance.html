@@ -2,13 +2,7 @@
 <head>
   <title>Performance Monitoring and Tuning</title>
 </head>
-<fixme>
-Rewriting without constraints is a major optimization technique.  Constraints are useful for quickly writing code and for writing compact maintainable programs, but with a significant performance cost.
 
-The significant contributions to the cost of constraints aren't so much in the evaluation of the constraint expression itself.  Rather, they come about from two causes:
-- It's expensive to register a constraint.  Partly this is because each constraint requires two functions (which contributes to application size), and one function call (which contributes to startup time).  There have been some proposals to reduce this overhead, by combining multiple constraint initializers ("dependency functions") into one function call, but no one has had time to explore these.
-- It's expensive to trigger a constraint, both because because there's one function call (it's the other function, this time), and because of the constraint machinery.
-</fixme>
 <body>
 <h1>Performance Monitoring and Tuning</h1>
 <p>
@@ -899,9 +893,32 @@ constraints do not consume large amounts of memory.
 <code>$once</code> and <code>$always</code> are equivalent in memory usage, but clearly <code>$always</code> will require more cpu.
 
 </p>
+<h2>Hand-tuning constraints and attributes</h2>
+<p>
+Once you get your program's functionality set, you can further optimize by "rebuilding in place."
+</p>
+<h3>Rewrigint constraints</h3>
+<p>
+Constraints are an extremely useful way to nicely lay out an application. They are conceptually elegant, allow for writing compact maintainable programs, and help with rapid application development. However, they can be expensive in terms of performance. 
+</p>
+<p>
+The significant contributions to the cost of constraints aren't so much in the evaluation of the constraint expression itself.  Rather, they come about from two causes:</p>
+<ul>
+<li>It's expensive to register a constraint.  Partly this is because each constraint requires two functions (which contributes to application size), and one function call (which contributes to startup time). </li>
+ <li>It's expensive to trigger a constraint, both because because there's one function call (it's the other function, this time), and because of the constraint machinery.</li>
+</ul>
+<p>
+ Therefore it is sometimes helpful to replace constraints by explicitly setting attributes and chaining events with delegates. You should do this after the functionality of the program is essentially complete.
+</p>
+<h3>Tuning attribute assignments</h3>
+<p>
+You may, in some limited circumstances, gain a performance boost by assinging attribute valutes instead of setting them using a setter, (preferably, the <method>setAttribute</method> method). In general, using <code>object.setAttribute('attr', value); </code> to set an attribute is the best way to set attributes, as explained in <xref linkend="methods-events-attributes"/>. </p>
+<p>
+For speed, however, you may sometimes use a direct assignment, as in <code>object.attr = value;</code>.  When you do this, you need to be aware that no events are generated, and you are giving up the chance for any dependency that refers to <code>object.attr</code> to update. Use this technique with caution and only if you are sure that you have handled any dependencies. As we have heard said at Laszlo Systems, it's like overclocking your motherboard. You can do it if you think you know what you're doing, but don't blame us if your machine catches on fire. (Your machine won't literaly catch on fire, of course, but your application may fail spectacularly!)
+</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
