@@ -43,8 +43,8 @@ public class ConnectionAgent
  * @i18n.test
  * @org-mes="bad host in url"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ConnectionAgent.class.getName(),"051018-46")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ConnectionAgent.class.getName(),"051018-46")
 );
 
             mLogger.debug("Agent " + url);

@@ -60,8 +60,8 @@ public class ConnectionGroup
  * @i18n.test
  * @org-mes="register(" + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ConnectionGroup.class.getName(),"051018-63", new Object[] {application})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ConnectionGroup.class.getName(),"051018-63", new Object[] {application})
 );
         synchronized (mApplications) {
             mApplications.add(application);
@@ -74,8 +74,8 @@ public class ConnectionGroup
  * @i18n.test
  * @org-mes="unregisterApplication(" + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ConnectionGroup.class.getName(),"051018-77", new Object[] {application})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ConnectionGroup.class.getName(),"051018-77", new Object[] {application})
 );
         synchronized (mApplications) {
             mApplications.remove(application);
@@ -89,8 +89,8 @@ public class ConnectionGroup
  * @i18n.test
  * @org-mes="list(users)"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ConnectionGroup.class.getName(),"051018-92")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ConnectionGroup.class.getName(),"051018-92")
 );
 
         Set set = new HashSet();
@@ -109,8 +109,8 @@ public class ConnectionGroup
  * @i18n.test
  * @org-mes="sendMesage(users, mesg, range, xmlResult)"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ConnectionGroup.class.getName(),"051018-112")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ConnectionGroup.class.getName(),"051018-112")
 );
 
         int count = 0;

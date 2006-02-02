@@ -96,8 +96,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="adding operation: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ClientSOAPService.class.getName(),"051018-99", new Object[] {opName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ClientSOAPService.class.getName(),"051018-99", new Object[] {opName})
 );
                 }
 
@@ -459,8 +459,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="io error creating object SWF: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ClientSOAPService.class.getName(),"051018-462", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ClientSOAPService.class.getName(),"051018-462", new Object[] {e.getMessage()})
 );
             throw e;
         }

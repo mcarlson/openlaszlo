@@ -48,8 +48,8 @@ public final class ResponderCLEARLOG extends ResponderAdmin
  * @i18n.test
  * @org-mes="Cleared log."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCLEARLOG.class.getName(),"051018-51")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCLEARLOG.class.getName(),"051018-51")
 );
         else
             mLogger.info(
@@ -57,8 +57,8 @@ public final class ResponderCLEARLOG extends ResponderAdmin
  * @i18n.test
  * @org-mes="Could not clear log."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCLEARLOG.class.getName(),"051018-60")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCLEARLOG.class.getName(),"051018-60")
 );
 
     }

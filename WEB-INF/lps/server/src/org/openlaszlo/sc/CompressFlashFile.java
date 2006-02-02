@@ -38,8 +38,8 @@ public class CompressFlashFile {
  * @i18n.test
  * @org-mes="usage: compressFlashFile infile outfile"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompressFlashFile.class.getName(),"051018-41")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompressFlashFile.class.getName(),"051018-41")
 );
             System.exit(1);
         }
@@ -79,9 +79,9 @@ public class CompressFlashFile {
  * @i18n.test
  * @org-mes="exception in CompressFlashFile.compressFile"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompressFlashFile.class.getName(),"051018-82")
-				, e);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompressFlashFile.class.getName(),"051018-82")
+                                , e);
         }
     }
 
@@ -98,9 +98,9 @@ public class CompressFlashFile {
  * @i18n.test
  * @org-mes="exception in CompressFlashFile.writeFlashFile"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompressFlashFile.class.getName(),"051018-101")
-				, e);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompressFlashFile.class.getName(),"051018-101")
+                                , e);
         }
     }
 

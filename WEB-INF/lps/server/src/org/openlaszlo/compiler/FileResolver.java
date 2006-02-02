@@ -65,8 +65,8 @@ class DefaultFileResolver implements FileResolver {
  * @i18n.test
  * @org-mes="Resolving pathname: " + p[0] + " and base: " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileResolver.class.getName(),"051018-68", new Object[] {pathname, base})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileResolver.class.getName(),"051018-68", new Object[] {pathname, base})
 );
         if (!FILE_PROTOCOL.equals(protocol)) {
             throw new CompilationError(
@@ -74,8 +74,8 @@ class DefaultFileResolver implements FileResolver {
  * @i18n.test
  * @org-mes="unknown protocol: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileResolver.class.getName(),"051018-77", new Object[] {protocol})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileResolver.class.getName(),"051018-77", new Object[] {protocol})
 );
         }
 

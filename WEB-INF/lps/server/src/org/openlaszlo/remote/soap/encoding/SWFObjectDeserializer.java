@@ -84,8 +84,8 @@ public class SWFObjectDeserializer extends DeserializerImpl
  * @i18n.test
  * @org-mes="Enter: SWFObjectDeserializer::onStartChild" + "( namespace: " + p[0] + ", localname: " + p[1] + ", prefix: " + p[2] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFObjectDeserializer.class.getName(),"051018-87", new Object[] {namespace, localName, prefix})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFObjectDeserializer.class.getName(),"051018-87", new Object[] {namespace, localName, prefix})
             );
         }
 
@@ -101,8 +101,8 @@ public class SWFObjectDeserializer extends DeserializerImpl
  * @i18n.test
  * @org-mes="itemType is null"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFObjectDeserializer.class.getName(),"051018-104")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFObjectDeserializer.class.getName(),"051018-104")
 ); 
         } else {
             mClassName = itemType.getLocalPart();
@@ -122,8 +122,8 @@ public class SWFObjectDeserializer extends DeserializerImpl
  * @i18n.test
  * @org-mes="Enter: SWFObjectDeserializer::onStartChild" + "( namespace: " + p[0] + ", localname: " + p[1] + ", prefix: " + p[2] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFObjectDeserializer.class.getName(),"051018-87", new Object[] {namespace, localName, prefix})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFObjectDeserializer.class.getName(),"051018-87", new Object[] {namespace, localName, prefix})
             );
         }
 
@@ -167,8 +167,8 @@ public class SWFObjectDeserializer extends DeserializerImpl
  * @i18n.test
  * @org-mes="Enter: SWFObjectDeserializer::valueComplete()"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFObjectDeserializer.class.getName(),"051018-170")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFObjectDeserializer.class.getName(),"051018-170")
 );
         }
 

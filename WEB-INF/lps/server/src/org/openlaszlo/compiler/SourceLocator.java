@@ -61,8 +61,8 @@ public class SourceLocator {
  * @i18n.test
  * @org-mes="element start and end don't match"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SourceLocator.class.getName(),"051018-64")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SourceLocator.class.getName(),"051018-64")
 );
         }
         if (this.messagePathname != null && !this.messagePathname.equals(messagePathname)) {
@@ -71,8 +71,8 @@ public class SourceLocator {
  * @i18n.test
  * @org-mes="element start and end don't match"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SourceLocator.class.getName(),"051018-64")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SourceLocator.class.getName(),"051018-64")
 );
         }
         this.pathname = pathname;

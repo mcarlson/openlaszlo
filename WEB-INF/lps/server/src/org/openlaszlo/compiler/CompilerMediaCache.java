@@ -87,8 +87,8 @@ public class CompilerMediaCache extends Cache {
  * @i18n.test
  * @org-mes="transcoding from " + p[0] + " to " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilerMediaCache.class.getName(),"051018-90", new Object[] {fromType, toType})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilerMediaCache.class.getName(),"051018-90", new Object[] {fromType, toType})
 );
         if (fromType.equalsIgnoreCase(toType)) {
             return inputFile;
@@ -115,9 +115,9 @@ public class CompilerMediaCache extends Cache {
  * @i18n.test
  * @org-mes="transcoding input: " + p[0] + " output: " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilerMediaCache.class.getName(),"051018-118", new Object[] {inputFilePath, cacheFilePath})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilerMediaCache.class.getName(),"051018-118", new Object[] {inputFilePath, cacheFilePath})
+                                );
 
         InputStream input = null;
         FileOutputStream output = null;
@@ -133,8 +133,8 @@ public class CompilerMediaCache extends Cache {
  * @i18n.test
  * @org-mes="transcoding..."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilerMediaCache.class.getName(),"051018-135")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilerMediaCache.class.getName(),"051018-135")
 );
 
             CachedInfo info = item.getInfo();
@@ -145,8 +145,8 @@ public class CompilerMediaCache extends Cache {
  * @i18n.test
  * @org-mes="done transcoding"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilerMediaCache.class.getName(),"051018-147")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilerMediaCache.class.getName(),"051018-147")
 );
                 item.update(input, null);
                 info.setLastModified(cacheFile.lastModified());
@@ -161,8 +161,8 @@ public class CompilerMediaCache extends Cache {
  * @i18n.test
  * @org-mes="using cached transcode"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilerMediaCache.class.getName(),"051018-163")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilerMediaCache.class.getName(),"051018-163")
 );
         }
 

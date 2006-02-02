@@ -78,8 +78,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="using connection pool"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-81")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-81")
 );
             mConnectionMgr = new MultiThreadedHttpConnectionManager();
         } else {
@@ -88,8 +88,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="not using connection pool"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-91")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-91")
 );
         }
     
@@ -191,8 +191,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes=p[0] + " timed out"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-194", new Object[] {surl})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-194", new Object[] {surl})
 );
                 }
             } else {
@@ -214,8 +214,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="too many retries, exception: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-217", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-217", new Object[] {e.getMessage()})
 );
                 }
                 mLogger.warn(
@@ -223,8 +223,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="retrying a recoverable exception: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-226", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-226", new Object[] {e.getMessage()})
 );
             } catch (HttpException e) {
                 String msg = 
@@ -232,16 +232,16 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="HttpException: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-235", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-235", new Object[] {e.getMessage()})
 ;
                 throw new IOException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="HttpException: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-235", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-235", new Object[] {e.getMessage()})
 );
             } catch (IOException e) {
 
@@ -253,9 +253,9 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="SSL exception: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-256", new Object[] {e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-256", new Object[] {e.getMessage()})
+                                );
                     }
                 } catch (ClassNotFoundException cfne) {
                 }
@@ -310,8 +310,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="url is empty or null"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-312")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-312")
 );
             }
     
@@ -357,8 +357,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="setting header " + p[0] + "=" + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-359", new Object[] {n, v})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-359", new Object[] {n, v})
 );
                     }
                 }
@@ -374,8 +374,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="can't form uri from " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-376", new Object[] {surl})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-376", new Object[] {surl})
 ); 
             }
     
@@ -387,16 +387,16 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="encoded path:  " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-389", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-389", new Object[] {path})
 );
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="encoded query: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-397", new Object[] {query})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-397", new Object[] {query})
 );
     
             // This call takes a decoded (unescaped) path
@@ -427,8 +427,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="ignoring bad token (missing '=' char) in query string: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-429", new Object[] {it})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-429", new Object[] {it})
 );
                             }
                         }
@@ -448,8 +448,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="proxying lms: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-450", new Object[] {lms})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-450", new Object[] {lms})
 );
             }
                 
@@ -458,8 +458,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="setting up http client"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-460")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-460")
 );
             HttpClient htc = null;
             if (mConnectionMgr != null) {
@@ -476,8 +476,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="timeout set to " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-478", new Object[] {new Integer(timeout)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-478", new Object[] {new Integer(timeout)})
 );
             htc.setTimeout(timeout);
     
@@ -502,8 +502,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="remote response status: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-504", new Object[] {status})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-504", new Object[] {status})
 );
     
             HttpData data = null;
@@ -515,8 +515,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="Following URL from redirect: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-517", new Object[] {hostURI})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-517", new Object[] {hostURI})
 );
                 long t2 = System.currentTimeMillis();
                 if (timeout > 0) {
@@ -527,8 +527,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes=p[0] + " timed out after redirecting to " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-529", new Object[] {surl, loc})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-529", new Object[] {surl, loc})
 );
                     }
                 }
@@ -555,8 +555,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="connecting to " + p[0] + ":" + p[1] + " timed out beyond " + p[2] + " msecs."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-557", new Object[] {hcfg.getHost(), new Integer(hcfg.getPort()), new Integer(mConnectionTimeout)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-557", new Object[] {hcfg.getHost(), new Integer(hcfg.getPort()), new Integer(mConnectionTimeout)})
             );
         } catch (HttpRecoverableException hre) {
             if (request != null) {
@@ -590,8 +590,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="HTTP Status code: " + p[0] + ":" + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-592", new Object[] {new Integer(code), HttpStatus.getStatusText(code)});
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-592", new Object[] {new Integer(code), HttpStatus.getStatusText(code)});
     }
 
     /**
@@ -653,8 +653,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="data with last modified at " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-655", new Object[] {lm})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-655", new Object[] {lm})
 );
                 long l = LZHttpUtils.getDate(lm);
                 // Truncate to nearest second
@@ -665,8 +665,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="data has no mod time"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-667")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-667")
 );
                 return -1;
             }
@@ -708,8 +708,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="content type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-710", new Object[] {contentType})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-710", new Object[] {contentType})
 );
             return contentType;
         }
@@ -772,8 +772,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="http response body is null"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-774")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-774")
 );
             }
             return str;
@@ -792,8 +792,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="content length: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-794", new Object[] {contentLength})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-794", new Object[] {contentLength})
 );
                     int cl = Integer.parseInt(contentLength);
                     return cl;
@@ -826,8 +826,8 @@ public class HTTPDataSource extends DataSource {
  * @i18n.test
  * @org-mes="Need an url"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HTTPDataSource.class.getName(),"051018-828")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HTTPDataSource.class.getName(),"051018-828")
 ); 
             }
             String surl = args[0];

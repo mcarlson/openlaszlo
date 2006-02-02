@@ -101,8 +101,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="Can't create DocumentBuilder"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-104")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-104")
 );
         }
 
@@ -113,8 +113,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="WSDL load option is set to \"" + p[0] + "\""
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-116", new Object[] {mLoadOption})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-116", new Object[] {mLoadOption})
 );
         }
     }
@@ -198,8 +198,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="unknown SOAP datasource request"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-201")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-201")
 ) );
     }
 
@@ -212,8 +212,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="request must be POST"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-215")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-215")
 );
             return exceptionToSOAPData
                 ( swfnum, new DataSourceException(
@@ -221,8 +221,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="request must be POST"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-215")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-215")
 ) );
         }
 
@@ -233,8 +233,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="no post body"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-236")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-236")
 );
             return exceptionToSOAPData
                 ( swfnum, new DataSourceException(
@@ -242,8 +242,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="no post body"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-236")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-236")
 ) );
         }
 
@@ -261,8 +261,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="could not find service"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-264")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-264")
 ) );
             }
 
@@ -320,8 +320,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="documentsToSOAPData"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-323")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-323")
 );
         }
 
@@ -331,16 +331,16 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="no document return"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-334")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-334")
 );
             throw new DataSourceException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="no document return"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-334")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-334")
 ); 
         }
 
@@ -352,16 +352,16 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="problems getting SOAP document element"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-355")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-355")
 , e);
             throw new DataSourceException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="problems getting SOAP document element"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-355")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-355")
 );
         }
     }
@@ -405,8 +405,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="no wsdl specified"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-408")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-408")
 );
         }
 
@@ -450,9 +450,9 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="unsupported WSDL protocol: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-453", new Object[] {wsdlurl})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-453", new Object[] {wsdlurl})
+                                );
             }
             String _wsdl = data.getAsString();
             LZSOAPService soapService = 
@@ -465,8 +465,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="could not find SOAP service (" + p[0] + ", " + p[1] + ", " + p[2] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-468", new Object[] {wsdl, service, port})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-468", new Object[] {wsdl, service, port})
                 );
             }
 
@@ -505,8 +505,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="programToSOAPData"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-508")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-508")
 );
         }
 
@@ -518,16 +518,16 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="problems creating RPC program"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-521")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-521")
 , e);
             throw new DataSourceException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="problems creating RPC program"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-521")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-521")
 );
         }
     }
@@ -619,8 +619,8 @@ public class SOAPDataSource extends DataSource
  * @i18n.test
  * @org-mes="ioexception getting size soap data encoder"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SOAPDataSource.class.getName(),"051018-622")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SOAPDataSource.class.getName(),"051018-622")
 );
                 }
             } 

@@ -110,8 +110,8 @@ public abstract class ResponderConnection extends ResponderCompile
  * @i18n.test
  * @org-mes="'s' is not a number"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderConnection.class.getName(),"051018-113")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderConnection.class.getName(),"051018-113")
 );
                 return;
             }
@@ -197,9 +197,9 @@ public abstract class ResponderConnection extends ResponderCompile
  * @i18n.test
  * @org-mes="connected app settings " + "- authenticator: " + p[0] + ", senduserdisconnect: " + p[1] + ", heartbeat: " + p[2] + ", lmt: " + p[3]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderConnection.class.getName(),"051018-200", new Object[] {authenticator, new Boolean(sendUserDisconnect), new Long(heartbeat), new Long(lmt)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderConnection.class.getName(),"051018-200", new Object[] {authenticator, new Boolean(sendUserDisconnect), new Long(heartbeat), new Long(lmt)})
+                                );
             }
 
         } else if (app != null) {
@@ -211,8 +211,8 @@ public abstract class ResponderConnection extends ResponderCompile
  * @i18n.test
  * @org-mes="Removed " + p[0] + " as a connected application"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderConnection.class.getName(),"051018-213", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderConnection.class.getName(),"051018-213", new Object[] {path})
 ); 
         }
 

@@ -93,8 +93,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="req last modified time: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-96", new Object[] {hdr})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-96", new Object[] {hdr})
 );
                since = LZHttpUtils.getDate(hdr);
             }
@@ -105,8 +105,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="requesting URL: '" + p[0] + "'"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-108", new Object[] {DataSource.getURL(req)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-108", new Object[] {DataSource.getURL(req)})
 );
         try {
             data = getData(app, req, res, since);
@@ -117,8 +117,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="NOT_MODIFIED"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-120")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-120")
 );
                 res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 return;
@@ -135,8 +135,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="converted to " + p[0] + " bytes of SWF"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-138", new Object[] {new Long(size)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-138", new Object[] {new Long(size)})
 );
                 // FIXME: [2003-09-22 bloch] input.available not realiable
 
@@ -153,8 +153,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="remote content was SWF"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-156")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-156")
 );
                 input = data.getInputStream();
                 size = data.size();
@@ -166,8 +166,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="setting content length: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-169", new Object[] {new Long(size)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-169", new Object[] {new Long(size)})
 );
                 res.setContentLength((int)size);
             }
@@ -189,8 +189,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes=p[0] + " bytes sent"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-192", new Object[] {new Long(n)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-192", new Object[] {new Long(n)})
 );
             } catch (FileUtils.StreamWritingException e) {
                 mLogger.warn(
@@ -198,9 +198,9 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="StreamWritingException while responding: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-201", new Object[] {e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-201", new Object[] {e.getMessage()})
+                                );
             }
 
         } finally {
@@ -239,8 +239,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="requesting URL: '" + p[0] + "'"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-241", new Object[] {DataSource.getURL(req)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-241", new Object[] {DataSource.getURL(req)})
 );
 
         try {
@@ -264,8 +264,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="setting content length: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-266", new Object[] {new Long(size)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-266", new Object[] {new Long(size)})
 );
                 res.setContentLength((int)size);
             }
@@ -280,8 +280,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes=p[0] + " bytes sent"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-282", new Object[] {new Long(n)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-282", new Object[] {new Long(n)})
 );
 
         } finally {
@@ -337,8 +337,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="'url' is " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-339", new Object[] {surl})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-339", new Object[] {surl})
 );
         return LZHttpUtils.modifyWEBAPP(req, surl);
     }
@@ -360,8 +360,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="'url' parameter missing from request"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-362")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-362")
 );
         }
 
@@ -401,8 +401,8 @@ abstract public class DataSource
  * @i18n.test
  * @org-mes="URIException: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DataSource.class.getName(),"051018-403", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DataSource.class.getName(),"051018-403", new Object[] {e.getMessage()})
 );
         } 
         return map;

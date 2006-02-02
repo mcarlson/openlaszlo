@@ -90,8 +90,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="Unknown output mime-type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-93", new Object[] {to})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-93", new Object[] {to})
 );
         }
 
@@ -100,8 +100,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="Transcoding from " + p[0] + " to " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-103", new Object[] {from, to})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-103", new Object[] {from, to})
 );
 
         // We assume this mime type is correct if we get it
@@ -149,8 +149,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="can't guess a supported mime-type from content"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-152")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-152")
 );
             }
         } finally {
@@ -190,8 +190,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="trying swf"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-193")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-193")
 );
             if (SWFUtils.hasSWFHeader(stream)) {
                 return MimeType.SWF;
@@ -242,9 +242,9 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="Unknown input font type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-245", new Object[] {from})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-245", new Object[] {from})
+                                );
             }
         } else {
             InputStream fis = new FileInputStream(input);
@@ -290,8 +290,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="starting generate"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-292")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-292")
 );
             FlashOutput out = file.generate();
             mLogger.debug(
@@ -299,8 +299,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="ending generate"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-301")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-301")
 );
             return out.getInputStream();
         } catch (IVException e) {
@@ -346,8 +346,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="Can't read property file for lps.swf.audio.framerate"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-348")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-348")
 );
         }
 
@@ -363,8 +363,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="transcoding streaming mp3"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-365")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-365")
 );
             SoundStreamBuilder ssb = SoundStreamBuilder.newSoundStreamBuilder(fib, file.getFrameRate());
             SoundStreamHead head = ssb.getSoundStreamHead();
@@ -390,8 +390,8 @@ public class Transcoder {
  * @i18n.test
  * @org-mes="LPS hit max SWF frame count when converting this clip" + "; truncating it at " + p[0] + " frames"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Transcoder.class.getName(),"051018-392", new Object[] {new Integer(MAX_SWF_FRAMES)});
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Transcoder.class.getName(),"051018-392", new Object[] {new Integer(MAX_SWF_FRAMES)});
                     mLogger.warn(msg);
                     script.getFrameAt(0).addFlashObject(WarningProgram(msg));
                     break;

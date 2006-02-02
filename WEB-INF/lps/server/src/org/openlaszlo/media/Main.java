@@ -97,8 +97,8 @@ public class Main {
  * @i18n.test
  * @org-mes="Converting from " + p[0] + " to " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Main.class.getName(),"051018-100", new Object[] {fromType, toType})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Main.class.getName(),"051018-100", new Object[] {fromType, toType})
 );
             File         from = new File(fromFileName);
             OutputStream to   = new FileOutputStream(toFileName);
@@ -108,8 +108,8 @@ public class Main {
  * @i18n.test
  * @org-mes="Finished conversion"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Main.class.getName(),"051018-111")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Main.class.getName(),"051018-111")
 );
             FileUtils.send(cvt, to);
             to.flush();
@@ -119,8 +119,8 @@ public class Main {
  * @i18n.test
  * @org-mes="Finished writing file"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Main.class.getName(),"051018-122")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Main.class.getName(),"051018-122")
 );
         } catch (TranscoderException e) {
             exitStatus = -1;
@@ -129,8 +129,8 @@ public class Main {
  * @i18n.test
  * @org-mes="Transcoder Exception:" + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Main.class.getName(),"051018-132", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Main.class.getName(),"051018-132", new Object[] {e.getMessage()})
 );
         } catch (IOException e) {
             exitStatus = -1;
@@ -139,8 +139,8 @@ public class Main {
  * @i18n.test
  * @org-mes="IO exception: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Main.class.getName(),"051018-142", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Main.class.getName(),"051018-142", new Object[] {e.getMessage()})
 );
             e.printStackTrace();
         }

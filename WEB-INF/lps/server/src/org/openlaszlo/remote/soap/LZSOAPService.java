@@ -127,8 +127,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="could not create client SOAP service object"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-130")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-130")
 ); 
             }
         }
@@ -301,8 +301,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="parameter " + p[0] + " should an array"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-304", new Object[] {new Integer(pos + 1)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-304", new Object[] {new Integer(pos + 1)})
                     );
                 }
 
@@ -332,8 +332,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="primitive param: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-335", new Object[] {strValue})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-335", new Object[] {strValue})
 );
                     }
 
@@ -350,9 +350,9 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="bad parameter " + p[0] + ": " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-353", new Object[] {new Integer(pos + 1), paramNode})
-                    	);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-353", new Object[] {new Integer(pos + 1), paramNode})
+                        );
                 }
 
             }
@@ -366,8 +366,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="wrong number of params"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-368")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-368")
 );
         }
 
@@ -380,8 +380,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="multiple return values unsupported"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-382")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-382")
 );
         }
 
@@ -397,8 +397,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="type of return unspecified"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-399")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-399")
 ); 
             }
         }
@@ -419,8 +419,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="setDocumentParams"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-421")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-421")
 );
         }
 
@@ -460,9 +460,9 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="could not find operation named " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-462", new Object[] {operation})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-462", new Object[] {operation})
+                                );
         }
 
         try {
@@ -580,8 +580,8 @@ throw new ServiceException(
  * @i18n.test
  * @org-mes="registered type mapping for object: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPService.class.getName(),"051018-581", new Object[] {structQName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPService.class.getName(),"051018-581", new Object[] {structQName})
 );
                     }
                 } 

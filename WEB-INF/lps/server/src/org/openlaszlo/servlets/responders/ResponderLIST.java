@@ -37,8 +37,8 @@ public final class ResponderLIST extends ResponderConnection
  * @i18n.test
  * @org-mes="missing 'users' parameter"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLIST.class.getName(),"051018-40")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLIST.class.getName(),"051018-40")
 );
             return;
         }
@@ -76,8 +76,8 @@ public final class ResponderLIST extends ResponderConnection
  * @i18n.test
  * @org-mes="StreamWritingException while sending list response: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLIST.class.getName(),"051018-79", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLIST.class.getName(),"051018-79", new Object[] {e.getMessage()})
 );
         } catch (DataCompilerException e) {
             respondWithExceptionSWF(res, e);

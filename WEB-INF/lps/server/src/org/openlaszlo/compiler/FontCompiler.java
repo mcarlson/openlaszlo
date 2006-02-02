@@ -46,8 +46,8 @@ class FontCompiler extends ElementCompiler {
  * @i18n.test
  * @org-mes="A loadable library cannot embed fonts; If you want to use this font, add it to the main application sources."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FontCompiler.class.getName(),"051018-49")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FontCompiler.class.getName(),"051018-49")
 , element);
         }
 

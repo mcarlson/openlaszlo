@@ -52,8 +52,8 @@ public final class ResponderWINDOW extends ResponderCompile
  * @i18n.test
  * @org-mes="Responding with WINDOW for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderWINDOW.class.getName(),"051018-55", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderWINDOW.class.getName(),"051018-55", new Object[] {fileName})
 );
         if (fileName.endsWith(".lzo")) {
             fileName = StringUtils.setCharAt(fileName, fileName.length() - 1, 'x');

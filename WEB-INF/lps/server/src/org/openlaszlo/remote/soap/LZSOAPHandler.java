@@ -31,8 +31,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="========== handleRequest(" + p[0] + ") "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPHandler.class.getName(),"051018-34", new Object[] {context})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPHandler.class.getName(),"051018-34", new Object[] {context})
 );
             displaySOAPMessage(context);
             mLogger.debug("==========");
@@ -47,8 +47,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="========== handleResponse(" + p[0] + ") "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPHandler.class.getName(),"051018-50", new Object[] {context})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPHandler.class.getName(),"051018-50", new Object[] {context})
 );
 //             displaySOAPMessage(context);
             mLogger.debug("==========");

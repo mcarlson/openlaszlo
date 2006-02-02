@@ -83,8 +83,8 @@ public class CachedInfo implements Serializable {
  * @i18n.test
  * @org-mes="writeTo " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CachedInfo.class.getName(),"051018-86", new Object[] {file.getAbsolutePath()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CachedInfo.class.getName(),"051018-86", new Object[] {file.getAbsolutePath()})
 );
         File dir = file.getParentFile();
         if (dir != null) {
@@ -104,9 +104,9 @@ public class CachedInfo implements Serializable {
  * @i18n.test
  * @org-mes="Getting canvas with size " + p[0] + " by " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CachedInfo.class.getName(),"051018-107", new Object[] {new Integer(mCanvas.getWidth()), new Integer(mCanvas.getHeight())})
-		);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CachedInfo.class.getName(),"051018-107", new Object[] {new Integer(mCanvas.getWidth()), new Integer(mCanvas.getHeight())})
+                );
         return mCanvas;
     }
 

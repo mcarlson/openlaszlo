@@ -38,8 +38,8 @@ public final class ResponderMESSAGE extends ResponderConnection
  * @i18n.test
  * @org-mes="missing 'to' parameter"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderMESSAGE.class.getName(),"051018-41")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderMESSAGE.class.getName(),"051018-41")
 );
             return;
         }
@@ -49,8 +49,8 @@ public final class ResponderMESSAGE extends ResponderConnection
  * @i18n.test
  * @org-mes="missing 'msg' parameter"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderMESSAGE.class.getName(),"051018-52")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderMESSAGE.class.getName(),"051018-52")
  );
             return;
         }
@@ -74,8 +74,8 @@ public final class ResponderMESSAGE extends ResponderConnection
  * @i18n.test
  * @org-mes="message not sent: no one specified connected " + "(range: " + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderMESSAGE.class.getName(),"051018-77", new Object[] {range});
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderMESSAGE.class.getName(),"051018-77", new Object[] {range});
             respondWithErrorSWF(res, m);
         }
     }

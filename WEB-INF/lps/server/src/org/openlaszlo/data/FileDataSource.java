@@ -68,16 +68,16 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="bad protocol for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-71", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-71", new Object[] {url})
  );
             throw new DataSourceException(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="protocol " + p[0] + "is not 'file:' "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-79", new Object[] {protocol})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-79", new Object[] {protocol})
 );
         }
 
@@ -88,8 +88,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="'file' data request type is not supported."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-91")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-91")
 );
         }
 
@@ -102,8 +102,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="empty filename"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-105")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-105")
 );
         }
 
@@ -114,8 +114,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="app " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-117", new Object[] {app})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-117", new Object[] {app})
 );
             String appdir = app.substring(0, 
                             app.lastIndexOf(File.separatorChar) + 1);
@@ -124,8 +124,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="appdir " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-127", new Object[] {appdir})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-127", new Object[] {appdir})
 );
             filename = appdir + filename;
             mLogger.debug(
@@ -133,8 +133,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="filename " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-136", new Object[] {filename})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-136", new Object[] {filename})
 );
         }
 
@@ -180,8 +180,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="filename " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-136", new Object[] {filename})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-136", new Object[] {filename})
 );
             File f = new File(filename);
             if (f == null) {
@@ -190,8 +190,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="can't construct file"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-193")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-193")
 );
             } else if (!f.exists()) {
                 throw new IOException(
@@ -199,8 +199,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes=p[0] + " doesn't exist."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-202", new Object[] {filename})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-202", new Object[] {filename})
 );
             } else if (!f.canRead()) {
                 throw new IOException(
@@ -208,8 +208,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="can't read " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-211", new Object[] {filename})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-211", new Object[] {filename})
 );
             } 
             lastModifiedTime = lm;
@@ -280,8 +280,8 @@ public class FileDataSource extends DataSource
  * @i18n.test
  * @org-mes="ignoring exception while closing stream: "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FileDataSource.class.getName(),"051018-283")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FileDataSource.class.getName(),"051018-283")
                         , e);
             }
         }

@@ -51,8 +51,8 @@ public final class ResponderUTCSWF extends ResponderAdmin
  * @i18n.test
  * @org-mes="StreamWritingException while sending utcswf: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderUTCSWF.class.getName(),"051018-54", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderUTCSWF.class.getName(),"051018-54", new Object[] {e.getMessage()})
 );
         } finally {
             FileUtils.close(in);

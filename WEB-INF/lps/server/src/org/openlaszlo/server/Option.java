@@ -96,8 +96,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="ignoring bad regexp syntax: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Option.class.getName(),"051019-99", new Object[] {p})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Option.class.getName(),"051019-99", new Object[] {p})
                 );
                 continue;
             }
@@ -117,8 +117,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="checking: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Option.class.getName(),"051019-120", new Object[] {val})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Option.class.getName(),"051019-120", new Object[] {val})
         );
 
         // If we don't specify what's allowed, allow all.
@@ -192,8 +192,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="ignoring bad regexp syntax: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Option.class.getName(),"051019-99", new Object[] {p})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Option.class.getName(),"051019-99", new Object[] {p})
                 );
                 continue;
             }
@@ -211,8 +211,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="ignoring bad regexp syntax: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Option.class.getName(),"051019-99", new Object[] {p})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Option.class.getName(),"051019-99", new Object[] {p})
                 );
                 continue;
             }

@@ -59,8 +59,8 @@ public final class ResponderCONNECT extends ResponderConnection
  * @i18n.test
  * @org-mes="respondImpl(username=" + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECT.class.getName(),"051018-62", new Object[] {username})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECT.class.getName(),"051018-62", new Object[] {username})
 );
 
         // This case is annoying
@@ -71,16 +71,16 @@ public final class ResponderCONNECT extends ResponderConnection
  * @i18n.test
  * @org-mes="request has no user-agent header"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECT.class.getName(),"051018-74")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECT.class.getName(),"051018-74")
 );
             mLogger.warn(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="request has no user-agent header"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECT.class.getName(),"051018-74")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECT.class.getName(),"051018-74")
 );
             return;
         } 
@@ -92,8 +92,8 @@ public final class ResponderCONNECT extends ResponderConnection
  * @i18n.test
  * @org-mes="forbidden user-agent: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECT.class.getName(),"051018-95", new Object[] {ua})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECT.class.getName(),"051018-95", new Object[] {ua})
 );
             return;
         }
@@ -119,8 +119,8 @@ public final class ResponderCONNECT extends ResponderConnection
  * @i18n.test
  * @org-mes="tried reconnecting but there was no previous connection"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECT.class.getName(),"051018-122")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECT.class.getName(),"051018-122")
 );
             }
         } 

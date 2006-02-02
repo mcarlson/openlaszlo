@@ -259,8 +259,8 @@ throw new Exception(
  * @i18n.test
  * @org-mes="missing close bracket: '}'"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				StringUtils.class.getName(),"051018-262")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                StringUtils.class.getName(),"051018-262")
                 );
 
             // Append part of string we've skipped
@@ -276,8 +276,8 @@ throw new Exception(
  * @i18n.test
  * @org-mes="System property " + p[0] + " does not exist"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				StringUtils.class.getName(),"051018-279", new Object[] {propName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                StringUtils.class.getName(),"051018-279", new Object[] {propName})
                     );
             } catch (SecurityException e) {
                 // TODO [2004-07-14 bloch]: log exception?

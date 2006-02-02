@@ -65,8 +65,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="Can't create DocumentBuilder"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-68")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-68")
 );
         }
     }
@@ -204,8 +204,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="no service named " + p[0] + " was found."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-207", new Object[] {serviceName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-207", new Object[] {serviceName})
                 );
             else
                 throw new WSDLException(
@@ -213,8 +213,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="no service was found"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-216")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-216")
 );
         }
 
@@ -226,8 +226,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="service has no name"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-229")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-229")
 );
         }
 
@@ -240,9 +240,9 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="No SOAP ports found for service " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-243", new Object[] {serviceName})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-243", new Object[] {serviceName})
+                                );
 
         for (int i=0; i < len; i++) {
             Element port = (Element)portList.item(i);
@@ -254,8 +254,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="encountered port with no name"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-256")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-256")
 );
                 continue;
             }
@@ -279,8 +279,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="no SOAP binding for port " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-281", new Object[] {portName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-281", new Object[] {portName})
                     );
                 }
 
@@ -293,8 +293,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="port " + p[0] + " does not have a valid SOAP transport"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-294", new Object[] {servicePort})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-294", new Object[] {servicePort})
                         );
                     } else {
                         continue;
@@ -318,8 +318,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="port " + p[0] + " does not support SOAP"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-319", new Object[] {servicePort})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-319", new Object[] {servicePort})
                 );
             }
         }
@@ -330,8 +330,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="could not find requested SOAP service " + "(service: " + p[0] + ", port: " + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-331", new Object[] {serviceName, servicePort})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-331", new Object[] {serviceName, servicePort})
             );
         }
 
@@ -367,8 +367,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="binding does not have a type attribute"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-368")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-368")
 );
         }
         QName bindingTypeQName = XMLUtils.getQNameFromString(bindingType, binding);
@@ -381,8 +381,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="could not find portType named " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-382", new Object[] {bindingTypeQName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-382", new Object[] {bindingTypeQName})
             );
         }
 
@@ -395,8 +395,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="portType named " + p[0] + " has no operations"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-396", new Object[] {bindingTypeQName.getLocalPart()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-396", new Object[] {bindingTypeQName.getLocalPart()})
             ); 
         }
 
@@ -413,8 +413,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="name not found for an operation element"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-414")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-414")
 );
                 continue;
             }
@@ -439,8 +439,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="required soapAction attribute not found for <soap:operation>"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-440")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-440")
 );
                     continue;
                 }
@@ -462,8 +462,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="(0) WARNING: operation named " + p[0] + " is not a supported operation." + " Only request-response operations are supported."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-463", new Object[] {opName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-463", new Object[] {opName})
                 );
                 continue;
             }
@@ -480,8 +480,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="could not find portType operation named " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-481", new Object[] {opName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-481", new Object[] {opName})
 );
                 continue;
             }
@@ -493,8 +493,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="(1) WARNING: portType operation named " + p[0] + " is not a supported operation." + " Only request-response operations are supported."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-494", new Object[] {opName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-494", new Object[] {opName})
                 );
                 continue;
             }
@@ -523,8 +523,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="(0) operation " + p[0] + " is not unique"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-524", new Object[] {op.getMangledName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-524", new Object[] {op.getMangledName()})
 );
                 continue;
             }
@@ -541,8 +541,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="(1) operation " + p[0] + " is not unique"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-542", new Object[] {op.getMangledName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-542", new Object[] {op.getMangledName()})
                     );
                     continue;
                 }
@@ -683,8 +683,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="found port type operation for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-684", new Object[] {opname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-684", new Object[] {opname})
 );
                     }
                     return e;
@@ -759,9 +759,9 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="could not find " + p[0] + " element for bind operation " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-760", new Object[] {tag, opName})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-760", new Object[] {tag, opName})
+                                );
         }
 
         // only parse <soap:body> element for now
@@ -776,9 +776,9 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="Attribute use is not defined for " + p[0] + " <soap:body> in operation " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-776", new Object[] {tag, opName})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-776", new Object[] {tag, opName})
+                                );
         }
         message.setUse(use);
 
@@ -796,9 +796,9 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="could not find message element named " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-795", new Object[] {mesgQName.getLocalPart()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-795", new Object[] {mesgQName.getLocalPart()})
+                                );
         }
 
         
@@ -830,8 +830,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="part for message named " + p[0] + " does not have required name attribute"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-828", new Object[] {mesgElement.getAttribute("name")})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-828", new Object[] {mesgElement.getAttribute("name")})
                 );
             }
             String name = nameAttr.getValue();
@@ -873,8 +873,8 @@ public class WSDLParser
  * @i18n.test
  * @org-mes="could not find type for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				WSDLParser.class.getName(),"051018-871", new Object[] {qname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                WSDLParser.class.getName(),"051018-871", new Object[] {qname})
 );
                     }
                 }

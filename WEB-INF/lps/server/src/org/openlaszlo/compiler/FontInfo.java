@@ -312,8 +312,8 @@ public class FontInfo implements java.io.Serializable {
  * @i18n.test
  * @org-mes="Unknown style " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FontInfo.class.getName(),"051018-315", new Object[] {name})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FontInfo.class.getName(),"051018-315", new Object[] {name})
 );
                 }
             }

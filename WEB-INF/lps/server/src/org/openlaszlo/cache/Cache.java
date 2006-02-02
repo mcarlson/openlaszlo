@@ -180,8 +180,8 @@ public abstract class Cache {
  * @i18n.test
  * @org-mes="loading " + p[0] + " took " + p[1] + " seconds"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-183", new Object[] {mName, MathUtils.formatDouble((System.currentTimeMillis() - t) / 1000.0, 2)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-183", new Object[] {mName, MathUtils.formatDouble((System.currentTimeMillis() - t) / 1000.0, 2)})
         );
     }
 
@@ -267,8 +267,8 @@ public abstract class Cache {
  * @i18n.test
  * @org-mes="Made new item for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-270", new Object[] {key.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-270", new Object[] {key.toString()})
 );
 
             } else {
@@ -282,8 +282,8 @@ public abstract class Cache {
  * @i18n.test
  * @org-mes="Reckoning an old item for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-285", new Object[] {key.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-285", new Object[] {key.toString()})
 );
                     item.reckon();
                 }
@@ -293,8 +293,8 @@ public abstract class Cache {
  * @i18n.test
  * @org-mes="Found a dirty item for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-296", new Object[] {key.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-296", new Object[] {key.toString()})
 );
                     if (doLockAndLeaveActive) {
                         item.removeAndUnlock();
@@ -312,8 +312,8 @@ public abstract class Cache {
  * @i18n.test
  * @org-mes="Removed and made new item for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-315", new Object[] {key.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-315", new Object[] {key.toString()})
 );
                 } else {
                     // Remove the item and re-add it below
@@ -322,8 +322,8 @@ public abstract class Cache {
  * @i18n.test
  * @org-mes="Found old item for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-325", new Object[] {key.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-325", new Object[] {key.toString()})
 );
                     curMap.remove(key);
                     if (curMap == mDiskMap) {
@@ -479,8 +479,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes=p[0] + " cache at " + p[1] + " bytes on-disk and " + p[2] + " bytes in-memory."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-482", new Object[] {mName, new Long(mDiskSize), new Long(mMemSize)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-482", new Object[] {mName, new Long(mDiskSize), new Long(mMemSize)})
         );
         // Infinite mem size... (nothing will get reckoned, hope that's ok)
         if (mMaxMemSize == -1) {
@@ -518,8 +518,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="mem item was already on disk"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-521")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-521")
                     );
                 }
                 mLogger.debug(
@@ -527,8 +527,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Pushing item " + p[0] + " from mem to disk (" + p[1] + " bytes)"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-530", new Object[] {key, new Long(removedBytes)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-530", new Object[] {key, new Long(removedBytes)})
                 );
                 mMemMap.remove(key);
                 mDiskMap.put(key, item);
@@ -540,8 +540,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Removing dirty item " + p[0] + " from mem "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-543", new Object[] {key})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-543", new Object[] {key})
 );
                 }
             }
@@ -571,8 +571,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Removing item " + p[0] + " from disk (" + p[1] + " bytes)"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-574", new Object[] {key, new Long(removedBytes)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-574", new Object[] {key, new Long(removedBytes)})
  );
                 mDiskSize -= removedBytes;
                 mDiskMap.remove(key);
@@ -583,8 +583,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Removing dirty item " + p[0] + " from disk "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-586", new Object[] {key})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-586", new Object[] {key})
 );
             }
         }
@@ -593,16 +593,16 @@ mLogger.debug(
  * @i18n.test
  * @org-mes=p[0] + " now at disk: " + p[1] + " bytes."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-596", new Object[] {mName, new Long(mDiskSize)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-596", new Object[] {mName, new Long(mDiskSize)})
 );
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes=p[0] + " now at mem: " + p[1] + " bytes."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-604", new Object[] {mName, new Long(mMemSize)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-604", new Object[] {mName, new Long(mMemSize)})
 );
     }
 
@@ -714,8 +714,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="ignoring a strange .dat file in the cache named: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-717", new Object[] {fileNames[i]})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-717", new Object[] {fileNames[i]})
 );
                 continue;
             }
@@ -730,8 +730,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="can't load cache file: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-733", new Object[] {fileNames[i]})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-733", new Object[] {fileNames[i]})
                 );
 
                 mLogger.error(
@@ -739,16 +739,16 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="exception: "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-742")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-742")
                         , e);
                 mLogger.error(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="deleting cache files for : " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-750", new Object[] {fileNames[i]})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-750", new Object[] {fileNames[i]})
                 );
                 // Deletes name* files.
                 if (!FileUtils.deleteFilesStartingWith(mCacheDirectory, name)) {
@@ -757,8 +757,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="couldn't delete some files with name: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-760", new Object[] {fileNames[i]})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-760", new Object[] {fileNames[i]})
 );
                 }
                 continue;
@@ -782,8 +782,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="loaded cached item for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-785", new Object[] {keystring})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-785", new Object[] {keystring})
             );
 
         }
@@ -801,8 +801,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Clearing " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-804", new Object[] {mName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-804", new Object[] {mName})
 );
 
         boolean ok1 = clearMap(mActiveMap);
@@ -1029,8 +1029,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="acquiring lock: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1032", new Object[] {getKey()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1032", new Object[] {getKey()})
 );
             try {
                 mLock.acquire();
@@ -1042,8 +1042,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="acquired lock: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1045", new Object[] {getKey()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1045", new Object[] {getKey()})
 );
         }
 
@@ -1056,8 +1056,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="releasing read lock: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1059", new Object[] {getKey()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1059", new Object[] {getKey()})
 );
             mLock.release();
             mLockLogger.debug(
@@ -1065,8 +1065,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="released read lock: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1068", new Object[] {getKey()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1068", new Object[] {getKey()})
 );
         }
 
@@ -1149,8 +1149,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Temporary file is " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1152", new Object[] {tempFile.getAbsolutePath()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1152", new Object[] {tempFile.getAbsolutePath()})
 );
             FileUtils.encode(f, tempFile, enc);
             long size = tempFile.length();
@@ -1160,8 +1160,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Can't delete " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1163", new Object[] {f.getAbsolutePath()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1163", new Object[] {f.getAbsolutePath()})
 );
             }
             if (!tempFile.renameTo(f)) {
@@ -1170,8 +1170,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Can't rename temporary file to " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1173", new Object[] {f.getAbsolutePath()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1173", new Object[] {f.getAbsolutePath()})
                 );
             }
             return size;
@@ -1193,8 +1193,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Can't delete " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1163", new Object[] {getPathName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1163", new Object[] {getPathName()})
 );
             }
             f = new File(getInfoName());
@@ -1204,8 +1204,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Can't delete " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1163", new Object[] {getInfoName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1163", new Object[] {getInfoName()})
 );
             }
             mDirty = true;
@@ -1216,8 +1216,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Marking item dirty: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1219", new Object[] {mInfo.getKey()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1219", new Object[] {mInfo.getKey()})
 );
             if (mInfo.isInMemory()) {
                 mMemSizeToReckon  -= mInfo.getSize();
@@ -1229,8 +1229,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="disk to reckon : " + p[0] + ", mem to reckon : " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1232", new Object[] {new Long(mDiskSizeToReckon), new Long(mMemSizeToReckon)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1232", new Object[] {new Long(mDiskSizeToReckon), new Long(mMemSizeToReckon)})
             );
             mInfo.setSize(0);
         }
@@ -1277,8 +1277,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="removing item for " + p[0] + " (" + p[1] + " - " + p[2] + " bytes) ."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1280", new Object[] {mInfo.getKey(), getPathName(), new Long(getSize())})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1280", new Object[] {mInfo.getKey(), getPathName(), new Long(getSize())})
             );
             File f = new File(getPathName());
             if (f.exists() && !f.delete()) {
@@ -1287,8 +1287,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Can't delete " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1163", new Object[] {getPathName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1163", new Object[] {getPathName()})
 );
                 ok = false;
             }
@@ -1299,8 +1299,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Can't delete " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1163", new Object[] {getInfoName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1163", new Object[] {getInfoName()})
 );
                 ok = false;
             }
@@ -1396,8 +1396,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="updating item stream and metadata"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1399")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1399")
 );
             update(metaData);
 
@@ -1425,8 +1425,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="updating item from stream"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Cache.class.getName(),"051018-1428")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Cache.class.getName(),"051018-1428")
 );
 
                 out = new FileOutputStream(getPathName());

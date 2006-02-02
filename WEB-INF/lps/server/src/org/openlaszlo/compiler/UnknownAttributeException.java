@@ -43,8 +43,8 @@ return
  * @i18n.test
  * @org-mes="Unknown attribute named " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				UnknownAttributeException.class.getName(),"051018-46", new Object[] {attrName});
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                UnknownAttributeException.class.getName(),"051018-46", new Object[] {attrName});
     }
 
 }

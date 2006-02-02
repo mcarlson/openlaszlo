@@ -225,9 +225,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
  * @i18n.test
  * @org-mes="exception getting library size"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ToplevelCompiler.class.getName(),"051018-228")
-				, e);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ToplevelCompiler.class.getName(),"051018-228")
+                                , e);
         }
         canvas.addInfo(info);
         

@@ -68,8 +68,8 @@ public final class ResponderLIB extends Responder
  * @i18n.test
  * @org-mes="could not find 'libpath' query arg in lzt=lib request"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLIB.class.getName(),"051018-71")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLIB.class.getName(),"051018-71")
 );
             }
 
@@ -101,8 +101,8 @@ public final class ResponderLIB extends Responder
  * @i18n.test
  * @org-mes="Responding with LIB for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLIB.class.getName(),"051018-104", new Object[] {filename})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLIB.class.getName(),"051018-104", new Object[] {filename})
 );
             res.setContentType(MimeType.SWF);
             InputStream ins = null;

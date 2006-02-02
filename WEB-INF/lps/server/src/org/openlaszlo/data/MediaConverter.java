@@ -59,8 +59,8 @@ public class MediaConverter extends Converter  {
  * @i18n.test
  * @org-mes="calling transcoder on " + "mime type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				MediaConverter.class.getName(),"051018-62", new Object[] {mimeType})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                MediaConverter.class.getName(),"051018-62", new Object[] {mimeType})
 );
 
         try {

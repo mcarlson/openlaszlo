@@ -76,8 +76,8 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
  * @i18n.test
  * @org-mes="Cache cleared"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCLEARCACHE.class.getName(),"051018-79")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCLEARCACHE.class.getName(),"051018-79")
 );
         } else {
             mLogger.info(
@@ -85,8 +85,8 @@ public final class ResponderCLEARCACHE extends ResponderAdmin
  * @i18n.test
  * @org-mes="Problems clearing cache:\n" + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCLEARCACHE.class.getName(),"051018-88", new Object[] {buf.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCLEARCACHE.class.getName(),"051018-88", new Object[] {buf.toString()})
 );
         }
 

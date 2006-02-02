@@ -57,9 +57,9 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="Can't find font " + p[0] + " of style " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-60", new Object[] {fontName, fontInfo.getStyle()})
-						);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-60", new Object[] {fontName, fontInfo.getStyle()})
+                                                );
         }
     }
 
@@ -84,9 +84,9 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="computeTextWidth fontName " + p[0] + " (style: " + p[1] + ", size: " + p[2] + ") text: " + p[3]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-87", new Object[] {fontName, fontInfo.getStyle(), new Integer(fontInfo.getSize()), text})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-87", new Object[] {fontName, fontInfo.getStyle(), new Integer(fontInfo.getSize()), text})
+                                );
 
         if (text.length() == 0) {
             return 0;
@@ -106,9 +106,9 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="Can't measure text because font " + p[0] + " " + p[1] + " is missing."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-109", new Object[] {FontInfo.styleBitsToString(style), fontName})
-											);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-109", new Object[] {FontInfo.styleBitsToString(style), fontName})
+                                                                                        );
         }
 
         Rectangle2D[] bounds = family.getBounds(style);
@@ -119,9 +119,9 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="Can't measure text because font " + p[0] + " " + p[1] + " is missing its bounds array."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-122", new Object[] {FontInfo.styleBitsToString(style), fontName})
-											);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-122", new Object[] {FontInfo.styleBitsToString(style), fontName})
+                                                                                        );
         }
 
         double width = 0;
@@ -140,9 +140,9 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="Character \'" + p[0] + "\' (" + p[1] + ") not available in font " + p[2] + " (style " + p[3] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-143", new Object[] {new Character(c), new Integer((int) c), fontName, fontInfo.getStyle()})
-						);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-143", new Object[] {new Character(c), new Integer((int) c), fontName, fontInfo.getStyle()})
+                                                );
                 continue;
             } else {
                 double adv = font.getAdvanceValue(idx);
@@ -198,9 +198,9 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="computeTextWidth: " + p[0] + " (font: " + p[1] + ", size: " + p[2] + ", style: " + p[3] + ") has textwidth: " + p[4]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-201", new Object[] {text, fontInfo.getName(), new Integer(fontInfo.getSize()), fontInfo.getStyle(), new Double(w)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-201", new Object[] {text, fontInfo.getName(), new Integer(fontInfo.getSize()), fontInfo.getStyle(), new Double(w)})
+                                );
 
         // FIXME: [2003-09-26 bloch] handle empty string case? should it be w/out slop?
         // Match this in LzNewText.as
@@ -415,8 +415,8 @@ abstract class TextCompiler {
  * @i18n.test
  * @org-mes="encountered unexpected EntityRef node in getElementWidth()"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TextCompiler.class.getName(),"051018-418")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TextCompiler.class.getName(),"051018-418")
 );
             } 
         }

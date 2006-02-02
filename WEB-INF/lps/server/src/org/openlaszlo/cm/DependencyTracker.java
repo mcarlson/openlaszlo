@@ -125,16 +125,16 @@ class DependencyTracker implements java.io.Serializable {
  * @i18n.test
  * @org-mes="updating webappPath from: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-128", new Object[] {mWebappPath})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-128", new Object[] {mWebappPath})
 );
         mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="updating webappPath to:   " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-136", new Object[] {webappPath})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-136", new Object[] {webappPath})
 );
         for (Iterator e = mDependencies.iterator(); e.hasNext(); ) {
             FileInfo saved = (FileInfo) e.next();
@@ -144,8 +144,8 @@ class DependencyTracker implements java.io.Serializable {
  * @i18n.test
  * @org-mes="updating dependencies from: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-147", new Object[] {saved.mPathname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-147", new Object[] {saved.mPathname})
 );
                 saved.mPathname = webappPath +
                         saved.mPathname.substring(mWebappPath.length());
@@ -154,8 +154,8 @@ class DependencyTracker implements java.io.Serializable {
  * @i18n.test
  * @org-mes="updating dependencies to  : " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-157", new Object[] {saved.mPathname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-157", new Object[] {saved.mPathname})
 );
             }
         }
@@ -178,16 +178,16 @@ class DependencyTracker implements java.io.Serializable {
  * @i18n.test
  * @org-mes="my size " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-181", new Object[] {new Integer(mProperties.size())})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-181", new Object[] {new Integer(mProperties.size())})
 );
                 mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="new size " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-189", new Object[] {new Integer(properties.size())})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-189", new Object[] {new Integer(properties.size())})
 );
                 return false;
             }
@@ -204,8 +204,8 @@ class DependencyTracker implements java.io.Serializable {
  * @i18n.test
  * @org-mes="Missing or changed property: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				DependencyTracker.class.getName(),"051018-207", new Object[] {val0})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                DependencyTracker.class.getName(),"051018-207", new Object[] {val0})
 );
                     return false;
                 }

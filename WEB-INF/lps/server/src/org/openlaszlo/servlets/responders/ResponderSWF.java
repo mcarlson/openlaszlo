@@ -57,8 +57,8 @@ public final class ResponderSWF extends ResponderCompile
  * @i18n.test
  * @org-mes="Requesting object for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSWF.class.getName(),"051018-60", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSWF.class.getName(),"051018-60", new Object[] {fileName})
 );
 
             output = res.getOutputStream();
@@ -81,8 +81,8 @@ public final class ResponderSWF extends ResponderCompile
  * @i18n.test
  * @org-mes="Encoding into " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSWF.class.getName(),"051018-84", new Object[] {objName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSWF.class.getName(),"051018-84", new Object[] {objName})
 );
                             FileUtils.encode(obj, gz, "gzip");
                         }
@@ -95,8 +95,8 @@ public final class ResponderSWF extends ResponderCompile
  * @i18n.test
  * @org-mes="Decoding into " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSWF.class.getName(),"051018-98", new Object[] {objName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSWF.class.getName(),"051018-98", new Object[] {objName})
 );
                             FileUtils.decode(gz, obj, "gzip");
                         }
@@ -127,8 +127,8 @@ public final class ResponderSWF extends ResponderCompile
  * @i18n.test
  * @org-mes="StreamWritingException while sending SWF: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSWF.class.getName(),"051018-130", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSWF.class.getName(),"051018-130", new Object[] {e.getMessage()})
 );
             } catch (IOException e) {
                 mLogger.error(
@@ -136,8 +136,8 @@ public final class ResponderSWF extends ResponderCompile
  * @i18n.test
  * @org-mes="IO exception while sending SWF: "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSWF.class.getName(),"051018-139")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSWF.class.getName(),"051018-139")
 , e);
             } 
             mLogger.info(
@@ -145,8 +145,8 @@ public final class ResponderSWF extends ResponderCompile
  * @i18n.test
  * @org-mes="Sent SWF, " + p[0] + " bytes"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSWF.class.getName(),"051018-148", new Object[] {new Long(total)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSWF.class.getName(),"051018-148", new Object[] {new Long(total)})
 );
 
         } catch (Exception e) {

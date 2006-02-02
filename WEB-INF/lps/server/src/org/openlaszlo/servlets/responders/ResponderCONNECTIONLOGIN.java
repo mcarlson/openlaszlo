@@ -61,8 +61,8 @@ public final class ResponderCONNECTIONLOGIN extends ResponderConnection
  * @i18n.test
  * @org-mes="could not find <authentication> element: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECTIONLOGIN.class.getName(),"051018-64", new Object[] {xmlResponse})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECTIONLOGIN.class.getName(),"051018-64", new Object[] {xmlResponse})
 );
             }
         } catch (AuthenticationException e) {
@@ -77,8 +77,8 @@ public final class ResponderCONNECTIONLOGIN extends ResponderConnection
  * @i18n.test
  * @org-mes="AuthenticationException"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECTIONLOGIN.class.getName(),"051018-80")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECTIONLOGIN.class.getName(),"051018-80")
 , e);
         }
 
@@ -95,8 +95,8 @@ public final class ResponderCONNECTIONLOGIN extends ResponderConnection
  * @i18n.test
  * @org-mes="StreamWritingException while sending connection login response: "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECTIONLOGIN.class.getName(),"051018-98")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECTIONLOGIN.class.getName(),"051018-98")
  + e.getMessage());
         } catch (DataCompilerException e) {
             respondWithExceptionSWF(res, e);

@@ -50,8 +50,8 @@ public final class ResponderFILTER extends ResponderCompile
  * @i18n.test
  * @org-mes="Responding with FILTER for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderFILTER.class.getName(),"051018-53", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderFILTER.class.getName(),"051018-53", new Object[] {fileName})
 );
         if (fileName.endsWith(".lzo")) {
             fileName = StringUtils.setCharAt(fileName, fileName.length() - 1, 'x');
@@ -74,16 +74,16 @@ public final class ResponderFILTER extends ResponderCompile
  * @i18n.test
  * @org-mes="Bad or undefined filter: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderFILTER.class.getName(),"051018-77", new Object[] {FILTER})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderFILTER.class.getName(),"051018-77", new Object[] {FILTER})
 );
                 mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Bad or undefined filter: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderFILTER.class.getName(),"051018-77", new Object[] {FILTER})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderFILTER.class.getName(),"051018-77", new Object[] {FILTER})
 );
                 return;
             }

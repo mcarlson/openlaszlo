@@ -46,8 +46,8 @@ public final class ResponderLOG extends ResponderAdmin
  * @i18n.test
  * @org-mes="Sent log"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLOG.class.getName(),"051018-49")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLOG.class.getName(),"051018-49")
 );
         } finally {
             FileUtils.close(in);

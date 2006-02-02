@@ -158,8 +158,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="exception: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-161", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-161", new Object[] {e.getMessage()})
 , e);
             throw new RuntimeException(e.getMessage()); 
         }
@@ -187,8 +187,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="getData"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-190")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-190")
 );
 
         int swfversion = LPS.getSWFVersionNum(req);
@@ -199,8 +199,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="request must be POST"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-202")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-202")
 , swfversion);
 
         String url;
@@ -212,8 +212,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="malformed url"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-215")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-215")
 , e, swfversion);
         }
 
@@ -224,8 +224,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="invalid class or bad url: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-227", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-227", new Object[] {url})
 , swfversion);
 
         if (! isClassOk(cname, req.getServletPath())) 
@@ -234,8 +234,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="forbidden class: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-237", new Object[] {cname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-237", new Object[] {cname})
 , swfversion);
 
         Class targetClass = getClass(cname);
@@ -245,8 +245,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="no such class " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-248", new Object[] {cname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-248", new Object[] {cname})
 , swfversion);
 
         int scope = getScope(req);
@@ -256,8 +256,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="no scope request parameter"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-259")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-259")
 , swfversion);
 
         String postbody = req.getParameter("lzpostbody");
@@ -267,8 +267,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="no post body"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-270")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-270")
 , swfversion);
 
         // one of 'pojo' or 'javabean'
@@ -283,24 +283,24 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="class name: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-286", new Object[] {cname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-286", new Object[] {cname})
 );
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="object return type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-294", new Object[] {objectReturnType})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-294", new Object[] {objectReturnType})
 );
             mLogger.debug(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="POST body:\n" + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-302", new Object[] {postbody})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-302", new Object[] {postbody})
 );
         }
 
@@ -319,8 +319,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="exception executing " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-322", new Object[] {xr.getMethodName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-322", new Object[] {xr.getMethodName()})
 , e,
                                 swfversion);
         } finally {
@@ -355,8 +355,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="execute(" + p[0] + ", [" + p[1] + "],context)"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-358", new Object[] {methodName, p.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-358", new Object[] {methodName, p.toString()})
             );
         }
 
@@ -382,8 +382,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="adding request to method"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-385")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-385")
 );
             reqPos = paramCount;
             httpCount++;
@@ -397,8 +397,8 @@ public class JavaDataSource extends DataSource
  * @i18n.test
  * @org-mes="adding response to method"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-400")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-400")
 );
             resPos = (reqPos != -1 ? reqPos + 1 : paramCount);
             httpCount++;
@@ -513,8 +513,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="could not find " + p[0] + " instance " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-516", new Object[] {getScopeName(scope), oname});
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-516", new Object[] {getScopeName(scope), oname});
                         mLogger.error(errmsg);
                         return compileFault(errmsg, swfversion);
                     }
@@ -539,9 +539,9 @@ String errmsg =
  * @i18n.test
  * @org-mes="Searching for method: " + p[0] + " in class " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-542", new Object[] {methodName, targetClass.getName()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-542", new Object[] {methodName, targetClass.getName()})
+                                );
                 if (argClasses.length != 0) {
                     for (int i = 0; i < argClasses.length; i++) {
                         mLogger.debug(
@@ -549,9 +549,9 @@ String errmsg =
  * @i18n.test
  * @org-mes="Parameter " + p[0] + ": " + p[1] + " (" + p[2] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-551", new Object[] {new Integer(i), argValues[i], argClasses[i]})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-551", new Object[] {new Integer(i), argValues[i], argClasses[i]})
+                                );
                     }
                 }
             }
@@ -564,8 +564,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="NoSuchMethodException"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-565")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-565")
 , e);
                 return compileFault(e.getMessage(), e, swfversion);
             } catch(SecurityException e) {
@@ -574,8 +574,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="SecurityException"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-575")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-575")
 , e);
                 return compileFault(e.getMessage(), e, swfversion);
             }
@@ -588,8 +588,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="Can't call methods in java.lang.Object"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-589")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-589")
 , swfversion);
             }
 
@@ -662,8 +662,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="using default void"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-663")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-663")
 , e);
             voidobj = DEFAULT_VOID;
         }
@@ -680,8 +680,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="getStaticPrototype(" + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-681", new Object[] {cname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-681", new Object[] {cname})
 );
         }
         return getPrototype(cname, SCOPE_NONE, swfversion);
@@ -701,8 +701,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="getInstancePrototype(" + p[0] + "," + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-702", new Object[] {cname, oname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-702", new Object[] {cname, oname})
 );
         }
 
@@ -720,8 +720,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="couldn't find " + p[0] + " instance " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-721", new Object[] {getScopeName(scope), oname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-721", new Object[] {getScopeName(scope), oname})
 ;
         mLogger.error(errmsg);
         return compileFault(errmsg, swfversion);
@@ -741,8 +741,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="createInstancePrototype(" + p[0] + "," + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-742", new Object[] {cname, oname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-742", new Object[] {cname, oname})
 );
         }
 
@@ -762,9 +762,9 @@ String errmsg =
  * @i18n.test
  * @org-mes="not clobbering existing " + p[0] + " object " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-763", new Object[] {getScopeName(scope), oname })
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-763", new Object[] {getScopeName(scope), oname })
+                                );
                 }
                 return getPrototype(cname, scope, swfversion);
             }
@@ -780,9 +780,9 @@ String errmsg =
  * @i18n.test
  * @org-mes="could not create instance of " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-780", new Object[] {cname})
-				, e, swfversion);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-780", new Object[] {cname})
+                                , e, swfversion);
         }
 
         return getPrototype(cname, scope, swfversion);
@@ -810,8 +810,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="creating client prototype for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-809", new Object[] {cname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-809", new Object[] {cname})
 );
                 byte[] b = LZClientObject.createObject(cname, getScopeName(scope),
                                                        swfversion);
@@ -832,9 +832,9 @@ String errmsg =
  * @i18n.test
  * @org-mes="could not get " + p[0] + " in scope " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-831", new Object[] {cname, getScopeName(scope)})
-			, e, 
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-831", new Object[] {cname, getScopeName(scope)})
+                        , e, 
                                 swfversion);
         }
     }
@@ -859,8 +859,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="destroyInstance(" + p[0] + ", " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-858", new Object[] {oname, new Integer(scope)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-858", new Object[] {oname, new Integer(scope)})
 );
         }
         removeJavaObject(req.getSession(false), scope, oname);
@@ -889,8 +889,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="class not found: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-888", new Object[] {cname})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-888", new Object[] {cname})
 );
         }
         return null;
@@ -947,8 +947,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="no such constructor found: " + p[0] + "(" + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-946", new Object[] {classname, buf.toString()});
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-946", new Object[] {classname, buf.toString()});
             mLogger.error(msg);
             throw new Exception(msg);
         }
@@ -1000,8 +1000,8 @@ String errmsg =
  * @i18n.test
  * @org-mes=p[0] + "(" + p[1] + "): no such method"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-999", new Object[] {methodName, buf.toString()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-999", new Object[] {methodName, buf.toString()})
 );
     }
 
@@ -1046,9 +1046,9 @@ String errmsg =
  * @i18n.test
  * @org-mes="setting java object with no session in scope " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-1045", new Object[] {getScopeName(scope)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-1045", new Object[] {getScopeName(scope)})
+                                );
             }
             return;
         }
@@ -1072,8 +1072,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="tried setting object with scope " + p[0] + "(" + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-1070", new Object[] {getScopeName(scope), new Integer(scope)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-1070", new Object[] {getScopeName(scope), new Integer(scope)})
             );
             return;
         }
@@ -1102,8 +1102,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="tried removing java object with no session in scope " + p[0] + "(" + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-1100", new Object[] {getScopeName(scope), new Integer(scope)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-1100", new Object[] {getScopeName(scope), new Integer(scope)})
                 );
             }
             return;
@@ -1120,8 +1120,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="tried removing object with scope " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-1118", new Object[] {getScopeName(scope)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-1118", new Object[] {getScopeName(scope)})
 );
             return;
         }
@@ -1161,8 +1161,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="compileFault mesg: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-1159", new Object[] {mesg})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-1159", new Object[] {mesg})
 );
         } else {
             mLogger.error(
@@ -1170,8 +1170,8 @@ String errmsg =
  * @i18n.test
  * @org-mes="compileFault mesg: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				JavaDataSource.class.getName(),"051018-1159", new Object[] {mesg})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                JavaDataSource.class.getName(),"051018-1159", new Object[] {mesg})
 , e);
         }
         try {

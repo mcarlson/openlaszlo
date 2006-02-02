@@ -49,8 +49,8 @@ throw new RuntimeException(
  * @i18n.test
  * @org-mes="unimplemented functionality"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ListFormat.class.getName(),"051018-52")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ListFormat.class.getName(),"051018-52")
         );
     }
 }

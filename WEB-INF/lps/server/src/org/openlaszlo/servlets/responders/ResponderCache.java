@@ -325,8 +325,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="POST request, flash player version: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-328", new Object[] {new Float(fpv)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-328", new Object[] {new Float(fpv)})
 );
             if (fpv < 6.47 && 
                 LPS.configuration.optionAllows("disable-post-keep-alive", ua)) {
@@ -336,8 +336,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="Disabling keep-alive for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-339", new Object[] {ua})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-339", new Object[] {ua})
 );
                 res.setHeader("Connection", "close");
                 res.setHeader("Keep-Alive", "close");
@@ -374,8 +374,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="proxying " + p[0] + ", cacheable on server and client"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-377", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-377", new Object[] {url})
 );
                 } else {
                     mLogger.info(
@@ -383,8 +383,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="proxying " + p[0] + ", cacheable on server and not client"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-386", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-386", new Object[] {url})
 );
                 }
                 mCache.getAsSWF(app, req, res, source);
@@ -395,8 +395,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="proxying " + p[0] + ", not cacheable on server and cacheable on the client"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-398", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-398", new Object[] {url})
 );
                 } else {
                     mLogger.info(
@@ -404,8 +404,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="proxying " + p[0] + ", not cacheable on server or client"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-407", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-407", new Object[] {url})
 );
                 }
                 source.getAsSWF(app, req, res, getConverter());
@@ -416,9 +416,9 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="data conversion error for " + p[0] + ": " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-419", new Object[] {url, e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-419", new Object[] {url, e.getMessage()})
+                                );
             errType = URLStat.ERRTYPE_CONVERSION;
         } catch (DataSourceException e) {
                 respondWithErrorSWF(res, 
@@ -426,9 +426,9 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="data source error for " + p[0] + ": " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-428", new Object[] {url, e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-428", new Object[] {url, e.getMessage()})
+                                );
             errType = URLStat.ERRTYPE_DATA_SOURCE;
         } catch (UnknownHostException e) {
             respondWithErrorSWF(res, 
@@ -436,9 +436,9 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="unknown host for " + p[0] + ": " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-437", new Object[] {url, e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-437", new Object[] {url, e.getMessage()})
+                                );
             errType = URLStat.ERRTYPE_UNKNOWN_HOST;
         } catch (URIException e) {
             respondWithErrorSWF(res, 
@@ -446,8 +446,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="bad url: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-446", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-446", new Object[] {e.getMessage()})
 );
             errType = URLStat.ERRTYPE_MALFORMED_URL;
         } catch (MalformedURLException e) {
@@ -456,8 +456,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="bad url: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-446", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-446", new Object[] {e.getMessage()})
 );
             errType = URLStat.ERRTYPE_MALFORMED_URL;
         } catch (InterruptedIOException e) {
@@ -466,9 +466,9 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="backend timeout for " + p[0] + ": " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-466", new Object[] {url, e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-466", new Object[] {url, e.getMessage()})
+                                );
             errType = URLStat.ERRTYPE_TIMEOUT;
         } catch (IOException e) {
             // Handle SocketTimeoutExceptions as timeouts instead of IO issues
@@ -484,9 +484,9 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="backend timeout for " + p[0] + ": " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-466", new Object[] {url, e.getMessage()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-466", new Object[] {url, e.getMessage()})
+                                );
             } else {
                 respondWithExceptionSWF(res, e);
                 errType = URLStat.ERRTYPE_IO;
@@ -542,8 +542,8 @@ public abstract class ResponderCache extends Responder
  * @i18n.test
  * @org-mes="Can't find a data source for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCache.class.getName(),"051018-540", new Object[] {urlstr})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCache.class.getName(),"051018-540", new Object[] {urlstr})
 );
         }
         return source;

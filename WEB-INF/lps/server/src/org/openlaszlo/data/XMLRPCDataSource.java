@@ -59,8 +59,8 @@ public class XMLRPCDataSource extends DataSource
  * @i18n.test
  * @org-mes="getData"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				XMLRPCDataSource.class.getName(),"051018-62")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                XMLRPCDataSource.class.getName(),"051018-62")
 );
 
         int swfversion = LPS.getSWFVersionNum(req);
@@ -71,8 +71,8 @@ public class XMLRPCDataSource extends DataSource
  * @i18n.test
  * @org-mes="Remote request must be POST"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				XMLRPCDataSource.class.getName(),"051018-74")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                XMLRPCDataSource.class.getName(),"051018-74")
 , swfversion);
 
             String url = getHTTPURL(getURL(req));
@@ -82,8 +82,8 @@ public class XMLRPCDataSource extends DataSource
  * @i18n.test
  * @org-mes="invalid url specified: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				XMLRPCDataSource.class.getName(),"051018-85", new Object[] {url})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                XMLRPCDataSource.class.getName(),"051018-85", new Object[] {url})
 , swfversion);
             }
 

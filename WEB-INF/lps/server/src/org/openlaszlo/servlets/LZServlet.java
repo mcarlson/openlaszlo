@@ -77,8 +77,8 @@ respondWithInitError(req, res,
  * @i18n.test
  * @org-mes="Must be at least " + "Version 2.3 Servlet Container!"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-80")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-80")
             );
             return false;
         }
@@ -97,8 +97,8 @@ respondWithInitError(req, res,
  * @i18n.test
  * @org-mes="LPS requires a servlet container" + " that can implements ServletContent.getRealPath()"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-100")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-100")
                 );
                 return false;
             }
@@ -114,8 +114,8 @@ log(
  * @i18n.test
  * @org-mes="LPS config directory is: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-117", new Object[] {lpsConfigDir})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-117", new Object[] {lpsConfigDir})
         );
 
         try {
@@ -136,16 +136,16 @@ logInitInfo(
  * @i18n.test
  * @org-mes="Laszlo Presentation Server, " + p[0] + ", initialized"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-139", new Object[] {LPS.getVersion()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-139", new Object[] {LPS.getVersion()})
             );
 logInitInfo(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Running in context:" + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-147", new Object[] {ctxt.getServerInfo()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-147", new Object[] {ctxt.getServerInfo()})
             );
             logInitInfo("Build: " + LPS.getBuild());
             logInitInfo("Built on: " + LPS.getBuildDate());
@@ -165,24 +165,24 @@ logInitInfo(
  * @i18n.test
  * @org-mes="Max memory: " + p[0] + " MB"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-168", new Object[] {MathUtils.formatDouble(mx, 2)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-168", new Object[] {MathUtils.formatDouble(mx, 2)})
             );
 logInitInfo(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Total memory: " + p[0] + " MB"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-176", new Object[] {MathUtils.formatDouble(total, 2)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-176", new Object[] {MathUtils.formatDouble(total, 2)})
             );
 logInitInfo(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Available memory: " + p[0] + " MB"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-184", new Object[] {MathUtils.formatDouble(avail, 2)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-184", new Object[] {MathUtils.formatDouble(avail, 2)})
             );
 
 mLogger.info(
@@ -190,8 +190,8 @@ mLogger.info(
  * @i18n.test
  * @org-mes="LPS_HOME is: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-193", new Object[] {lhome})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-193", new Object[] {lhome})
             );
         }
 
@@ -216,8 +216,8 @@ String message =
  * @i18n.test
  * @org-mes="LPS running against JRE version < 1.4; this is *not* supported!"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-219");
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-219");
                 
                 log(message);
                 mLogger.warn(message);
@@ -228,8 +228,8 @@ mLogger.warn(
  * @i18n.test
  * @org-mes="Can't parse JRE specification version: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-231", new Object[] {jvmVersion})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-231", new Object[] {jvmVersion})
             );
         }
 
@@ -263,8 +263,8 @@ respondWithInitError(req, res,
  * @i18n.test
  * @org-mes="Initialization error: no request type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-266", new Object[] {lzt[i]})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-266", new Object[] {lzt[i]})
                     );
                     return false;
                 }
@@ -281,8 +281,8 @@ mLogger.info(
  * @i18n.test
  * @org-mes="Default request type is " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-284", new Object[] {mDefaultRequestType})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-284", new Object[] {mDefaultRequestType})
         );
 
         mCharacterEncoding = mProperties.getProperty(CHARACTER_ENCODING, mCharacterEncoding);
@@ -299,8 +299,8 @@ mLogger.info(
  * @i18n.test
  * @org-mes="Character encoding is " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-302", new Object[] {mCharacterEncoding})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-302", new Object[] {mCharacterEncoding})
         );
 
         return true;
@@ -360,8 +360,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="Request " + p[0] + " finished"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-363", new Object[] {new Integer(requestID)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-363", new Object[] {new Integer(requestID)})
             );
             NDC.pop();
             NDC.remove();
@@ -417,8 +417,8 @@ mLogger.info(
  * @i18n.test
  * @org-mes="Request for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-420", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-420", new Object[] {fileName})
         );
 
         String lzt = getLZT(req);
@@ -430,8 +430,8 @@ mLogger.debug(
  * @i18n.test
  * @org-mes="No request type: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-433", new Object[] {lzt})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-433", new Object[] {lzt})
             );
             res.sendError(HttpServletResponse.SC_NOT_FOUND, "No request type: " + lzt);
             return;
@@ -473,8 +473,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Exception getting template responder"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-476")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-476")
                             , t);
                 }
                 // The case where this returns null is handled by the caller.
@@ -484,8 +484,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="no matching template responder " + "or class named " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-487", new Object[] {className})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-487", new Object[] {className})
                     );
                 }
             } catch (Throwable e) {
@@ -547,8 +547,8 @@ mLogger.error(
  * @i18n.test
  * @org-mes="Exception trying to respond with initialization error"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-550")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-550")
                 , e);
             }
             if (lzres != null) {
@@ -609,8 +609,8 @@ mLogger.info(
  * @i18n.test
  * @org-mes="LPS destroyed in context: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZServlet.class.getName(),"051018-612", new Object[] {webappName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZServlet.class.getName(),"051018-612", new Object[] {webappName})
         );
     }
 }

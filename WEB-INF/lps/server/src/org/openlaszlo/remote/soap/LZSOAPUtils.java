@@ -70,8 +70,8 @@ public class LZSOAPUtils {
  * @i18n.test
  * @org-mes="can't create document builder"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZSOAPUtils.class.getName(),"051018-73")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZSOAPUtils.class.getName(),"051018-73")
 );
         } finally {
             if (builder != null) {

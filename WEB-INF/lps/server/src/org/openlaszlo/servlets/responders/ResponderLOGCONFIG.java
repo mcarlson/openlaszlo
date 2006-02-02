@@ -90,8 +90,8 @@ public final class ResponderLOGCONFIG extends ResponderAdmin
  * @i18n.test
  * @org-mes="LPS log not configured"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLOGCONFIG.class.getName(),"051018-93")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLOGCONFIG.class.getName(),"051018-93")
 );
             return;
         }
@@ -130,16 +130,16 @@ public final class ResponderLOGCONFIG extends ResponderAdmin
  * @i18n.test
  * @org-mes="Detailed LPS log is at " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLOGCONFIG.class.getName(),"051018-133", new Object[] {logfile})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLOGCONFIG.class.getName(),"051018-133", new Object[] {logfile})
 );
             servlet.log(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="LPS log configured with " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLOGCONFIG.class.getName(),"051018-141", new Object[] {configFile})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLOGCONFIG.class.getName(),"051018-141", new Object[] {configFile})
 );
         }
     }
@@ -271,8 +271,8 @@ public final class ResponderLOGCONFIG extends ResponderAdmin
  * @i18n.test
  * @org-mes="LPS log file is now " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLOGCONFIG.class.getName(),"051018-274", new Object[] {logFileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLOGCONFIG.class.getName(),"051018-274", new Object[] {logFileName})
 );
         }
 
@@ -290,8 +290,8 @@ public final class ResponderLOGCONFIG extends ResponderAdmin
  * @i18n.test
  * @org-mes="server configured but could not write out configuration."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderLOGCONFIG.class.getName(),"051018-293")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderLOGCONFIG.class.getName(),"051018-293")
 );
         }
 

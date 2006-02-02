@@ -91,8 +91,8 @@ public class AddInputText {
  * @i18n.test
  * @org-mes="inputtext resource name '" + p[0] + "' couldn't be parsed into a form like lzinputtext/lztahoe8/8/plain/398/157[/html][/passwd]/(m|s)"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				AddInputText.class.getName(),"051018-94", new Object[] {rsrc})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                AddInputText.class.getName(),"051018-94", new Object[] {rsrc})
 );
                     e.printStackTrace();
                     throw e;
@@ -109,8 +109,8 @@ public class AddInputText {
  * @i18n.test
  * @org-mes="could not find font " + p[0] + " " + p[1] + " for inputtext resource named '" + p[2]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				AddInputText.class.getName(),"051018-112", new Object[] {fname, fstyle, rsrc})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                AddInputText.class.getName(),"051018-112", new Object[] {fname, fstyle, rsrc})
 );
                     e.printStackTrace();
                     throw e;
@@ -139,8 +139,8 @@ public class AddInputText {
  * @i18n.test
  * @org-mes="exception in AddInputText.addtext"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				AddInputText.class.getName(),"051018-142")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                AddInputText.class.getName(),"051018-142")
 , e);
         }
     }
@@ -158,8 +158,8 @@ public class AddInputText {
  * @i18n.test
  * @org-mes="exception in AddInputText.writeFlashFile"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				AddInputText.class.getName(),"051018-161")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                AddInputText.class.getName(),"051018-161")
 , e);
         }
     }

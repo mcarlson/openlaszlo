@@ -29,9 +29,9 @@ public class SessionBindingMap extends HashMap
  * @i18n.test
  * @org-mes=p[0] + " bound for session " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SessionBindingMap.class.getName(),"051018-32", new Object[] {event.getName(), event.getSession()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SessionBindingMap.class.getName(),"051018-32", new Object[] {event.getName(), event.getSession()})
+                                );
         }
         JavaDataSource.mSessionCounter.increment();
     }
@@ -42,9 +42,9 @@ public class SessionBindingMap extends HashMap
  * @i18n.test
  * @org-mes=p[0] + " unbound for session " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SessionBindingMap.class.getName(),"051018-44", new Object[] {event.getName(), event.getSession()})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SessionBindingMap.class.getName(),"051018-44", new Object[] {event.getName(), event.getSession()})
+                                );
         }
         JavaDataSource.mSessionCounter.decrement();
 

@@ -68,9 +68,9 @@ class ImportCompiler extends ToplevelCompiler {
  * @i18n.test
  * @org-mes="The value of the 'proxied' attribute on this library, '" + p[0] + "', conflicts with the import element value of '" + p[1] + "'"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ImportCompiler.class.getName(),"051018-71", new Object[] {libproxied, importproxied})
-				, element);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ImportCompiler.class.getName(),"051018-71", new Object[] {libproxied, importproxied})
+                                , element);
             }
                 
             // We're not compiling this into the current app, we're
@@ -100,9 +100,9 @@ class ImportCompiler extends ToplevelCompiler {
  * @i18n.test
  * @org-mes="calling compilerLibrary libsrcfile=" + p[0] + " objfile=" + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ImportCompiler.class.getName(),"051018-103", new Object[] {libsrcfile, objfilename})
-            				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ImportCompiler.class.getName(),"051018-103", new Object[] {libsrcfile, objfilename})
+                                        );
 
             try {
                 FileUtils.makeFileAndParentDirs(new File(objfilename));
@@ -207,8 +207,8 @@ class ImportCompiler extends ToplevelCompiler {
  * @i18n.test
  * @org-mes=p[0] + "; compilation aborted"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ImportCompiler.class.getName(),"051018-210", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ImportCompiler.class.getName(),"051018-210", new Object[] {e.getMessage()})
 ));
             throw errors.toCompilationError();
         } catch (IOException e) {

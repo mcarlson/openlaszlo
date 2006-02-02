@@ -38,8 +38,8 @@ public final class ResponderERRORCOUNT extends ResponderAdmin
  * @i18n.test
  * @org-mes="Cleared error count"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderERRORCOUNT.class.getName(),"051018-41")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderERRORCOUNT.class.getName(),"051018-41")
 );
             }
         } finally {

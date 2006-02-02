@@ -207,8 +207,8 @@ public class SWFSimpleDeserializer extends DeserializerImpl
  * @i18n.test
  * @org-mes="treating " + p[0] + " like string: " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFSimpleDeserializer.class.getName(),"051018-210", new Object[] {javaType, source})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFSimpleDeserializer.class.getName(),"051018-210", new Object[] {javaType, source})
 );
                 program.push(source);
             }

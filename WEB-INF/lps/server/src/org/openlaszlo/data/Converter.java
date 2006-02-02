@@ -62,8 +62,8 @@ public abstract class Converter {
  * @i18n.test
  * @org-mes="Temporary file is " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Converter.class.getName(),"051018-65", new Object[] {tempFile.getAbsolutePath()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Converter.class.getName(),"051018-65", new Object[] {tempFile.getAbsolutePath()})
 );
             try {
                 FileUtils.encode(in, tempFile, enc);

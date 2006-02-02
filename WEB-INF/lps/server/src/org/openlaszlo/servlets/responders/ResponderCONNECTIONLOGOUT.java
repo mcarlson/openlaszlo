@@ -70,8 +70,8 @@ public final class ResponderCONNECTIONLOGOUT extends ResponderConnection
  * @i18n.test
  * @org-mes="AuthenticationException"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECTIONLOGOUT.class.getName(),"051018-73")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECTIONLOGOUT.class.getName(),"051018-73")
 , e);
         }
 
@@ -88,8 +88,8 @@ public final class ResponderCONNECTIONLOGOUT extends ResponderConnection
  * @i18n.test
  * @org-mes="StreamWritingException while sending connection logout response: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCONNECTIONLOGOUT.class.getName(),"051018-91", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCONNECTIONLOGOUT.class.getName(),"051018-91", new Object[] {e.getMessage()})
 );
         } catch (DataCompilerException e) {
             respondWithExceptionSWF(res, e);

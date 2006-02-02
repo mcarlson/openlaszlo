@@ -88,8 +88,8 @@ mLogger.warn(
  * @i18n.test
  * @org-mes="request has no user-agent header"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ContentEncoding.class.getName(),"051018-91")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ContentEncoding.class.getName(),"051018-91")
             );
             return null;
         }

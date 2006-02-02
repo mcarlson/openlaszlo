@@ -60,8 +60,8 @@ final class FontFamily {
  * @i18n.test
  * @org-mes="Unknown style " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FontFamily.class.getName(),"051018-63", new Object[] {new Integer(style)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FontFamily.class.getName(),"051018-63", new Object[] {new Integer(style)})
 );
         }
     }
@@ -101,8 +101,8 @@ final class FontFamily {
  * @i18n.test
  * @org-mes="Unknown style " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				FontFamily.class.getName(),"051018-63", new Object[] {new Integer(style)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                FontFamily.class.getName(),"051018-63", new Object[] {new Integer(style)})
 );
         }
     }

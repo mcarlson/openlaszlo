@@ -232,9 +232,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes=p[0] + " is older than " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-235", new Object[] {f.getName(), new ListFormat().format(newerFiles)})
-							);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-235", new Object[] {f.getName(), new ListFormat().format(newerFiles)})
+                                                        );
                 }
             }
         } catch (FileNotFoundException e) {
@@ -265,8 +265,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Preloader not added yet."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-268")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-268")
 );
 
         addScript(script, 0);
@@ -279,8 +279,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Preloader already added."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-282")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-282")
 );
 
         // TODO: [2004-03-04 bloch] maybe someday we have different versions of
@@ -407,8 +407,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Adding a program of " + p[0] + " bytes."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-410", new Object[] {new Integer(action.length)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-410", new Object[] {new Integer(action.length)})
 );
          addProgram(program);
          return action.length;
@@ -428,8 +428,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Adding a program of " + p[0] + " bytes."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-410", new Object[] {new Integer(action.length)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-410", new Object[] {new Integer(action.length)})
 );
          addProgram(program, offset);
     }
@@ -546,8 +546,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="bad mime type"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-549")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-549")
 ), mEnv);
                 }
             }
@@ -581,9 +581,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="importing: " + p[0] + " as " + p[1] + " from cache; size: " + p[2]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-584", new Object[] {fileName, name, new Long(outputFile.length())})
-					);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-584", new Object[] {fileName, name, new Long(outputFile.length())})
+                                        );
 
             long fileSize =  FileUtils.getSize(outputFile);
 
@@ -601,8 +601,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Can't get resource " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-604", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-604", new Object[] {fileName})
 );
             throw new ImportResourceError(fileName, e, mEnv);
         }
@@ -1222,8 +1222,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="importing " + p[0] + " of style " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1225", new Object[] {face, style})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1225", new Object[] {face, style})
 );
 
         FontInfo fontInfo = mEnv.getCanvas().getFontInfo(); 
@@ -1249,8 +1249,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Redefined plain style of font: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1252", new Object[] {face})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1252", new Object[] {face})
 );
                     }
                 }
@@ -1262,8 +1262,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Redefined bold style of font: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1265", new Object[] {face})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1265", new Object[] {face})
 );
                 }
                 family.bold = font; break;
@@ -1274,8 +1274,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Redefined italic style of font: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1277", new Object[] {face})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1277", new Object[] {face})
 );
                 }
                 family.italic = font; break;
@@ -1286,8 +1286,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Redefined bold italic style of font: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1289", new Object[] {face})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1289", new Object[] {face})
 );
                 }
                 family.bitalic = font; break;
@@ -1297,8 +1297,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Unexpected style"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1300")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1300")
 );
         }
 
@@ -1324,8 +1324,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Importing font " + p[0] + " from " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1327", new Object[] {face, fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1327", new Object[] {face, fileName})
 );
 
         String fromType = FontType.fromName(fileName);
@@ -1365,8 +1365,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Font file name " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1368", new Object[] {location})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1368", new Object[] {location})
 );
             FlashFile fontFile = FlashFile.parse( location );
             Enumeration defs = fontFile.definitions();
@@ -1382,9 +1382,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Can't handle SHIFT_JIS font: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1385", new Object[] {fileName})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1385", new Object[] {fileName})
+                                );
             }
             // Make sure font has LAYOUT info 
             if ((font.flags & Font.HAS_LAYOUT) == 0) {
@@ -1393,9 +1393,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes=p[0] + " has no layout information."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1396", new Object[] {fileName})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1396", new Object[] {fileName})
+                                );
             }
 
             // Put in our face name
@@ -1482,8 +1482,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="No canvas.  Skipping font table"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1485")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1485")
 );
             return;
         }
@@ -1499,8 +1499,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Adding font family: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1502", new Object[] {name})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1502", new Object[] {name})
 );
 
             actions.append("_root.LzFontManager.addFont('" + name + "', " );
@@ -1912,8 +1912,8 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Add custom inputtext " + p[0] + " " + p[1] + " " + p[2]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-1915", new Object[] {name, new Integer(width), new Integer(height)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-1915", new Object[] {name, new Integer(width), new Integer(height)})
 );
 
         frame.addInstance(input, 1, null, null);
@@ -2086,9 +2086,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="Font '" + p[0] + "' style ('" + p[1] + "') used but not defined"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-2089", new Object[] {fontName, style})
-					);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-2089", new Object[] {fontName, style})
+                                        );
         }
         return font;
     }
@@ -2122,9 +2122,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="default font " + p[0] + " missing " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-2125", new Object[] {mDefaultFontFileName, fnfe})
-					);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-2125", new Object[] {mDefaultFontFileName, fnfe})
+                                        );
             }
             return true;
         }
@@ -2140,9 +2140,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="default bold font " + p[0] + " missing " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-2143", new Object[] {mDefaultBoldFontFileName, fnfe})
-						);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-2143", new Object[] {mDefaultBoldFontFileName, fnfe})
+                                                );
             }
             return true;
         } 
@@ -2158,9 +2158,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="default italic font " + p[0] + " missing " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-2161", new Object[] {mDefaultItalicFontFileName, fnfe})
-						);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-2161", new Object[] {mDefaultItalicFontFileName, fnfe})
+                                                );
             }
             return true;
         } 
@@ -2176,9 +2176,9 @@ class SWFWriter {
  * @i18n.test
  * @org-mes="default bold italic font " + p[0] + " missing " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SWFWriter.class.getName(),"051018-2179", new Object[] {mDefaultBoldItalicFontFileName, fnfe})
-						);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SWFWriter.class.getName(),"051018-2179", new Object[] {mDefaultBoldItalicFontFileName, fnfe})
+                                                );
             }
             return true;
         } 

@@ -92,8 +92,8 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="application cache is at " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-95", new Object[] {cacheDir})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-95", new Object[] {cacheDir})
 );
 
             if (mCompMgr == null) {
@@ -119,8 +119,8 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="Setting cm option to \"" + p[0] + "\""
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-122", new Object[] {cmOption})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-122", new Object[] {cmOption})
 );
                 mCompMgr.setProperty("recompile", cmOption);
             }
@@ -260,8 +260,8 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="Preprocessing request at " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-263", new Object[] {surl})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-263", new Object[] {surl})
 );
         GetMethod getRequest = new LZGetMethod();
         getRequest.setPath(url.getPath());
@@ -310,8 +310,8 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="StreamWritingException while sending error: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-313", new Object[] {e.getMessage()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-313", new Object[] {e.getMessage()})
 );
             } finally {
                 FileUtils.close(output);
@@ -367,9 +367,9 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="modsince " + p[0] + " lastmod " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-370", new Object[] {new Long(ifModifiedSince), new Long(lastModified)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-370", new Object[] {new Long(ifModifiedSince), new Long(lastModified)})
+                                );
                 if (lastModified <= ifModifiedSince) {
                     res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     mLogger.info(
@@ -377,8 +377,8 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="Responding with NOT_MODIFIED"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-379")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-379")
 );
                     return true;
                 }
@@ -513,8 +513,8 @@ public abstract class ResponderCompile extends Responder
  * @i18n.test
  * @org-mes="lzrecompile attempted but not allowed"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderCompile.class.getName(),"051018-523")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderCompile.class.getName(),"051018-523")
 );
                 }
             }

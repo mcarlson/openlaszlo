@@ -118,8 +118,8 @@ throw new IllegalArgumentException(
  * @i18n.test
  * @org-mes="The argument 'size' is not greater than 0."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-121")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-121")
             );
         }
 
@@ -169,8 +169,8 @@ throw new IllegalArgumentException(
  * @i18n.test
  * @org-mes="The arguments 'key' is null."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-172")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-172")
             );
         }
 
@@ -206,8 +206,8 @@ throw new IllegalArgumentException(
  * @i18n.test
  * @org-mes="The arguments 'key' is null."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-172")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-172")
             );
         }
 
@@ -246,8 +246,8 @@ throw new IllegalArgumentException(
  * @i18n.test
  * @org-mes="The arguments 'key' is null."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-172")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-172")
             );
         }
 
@@ -305,8 +305,8 @@ throw new IllegalArgumentException(
  * @i18n.test
  * @org-mes="The arguments 'key' is null."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-172")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-172")
             );
         }
 
@@ -370,8 +370,8 @@ throw new IllegalArgumentException(
  * @i18n.test
  * @org-mes="The arguments 'key' is null."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-172")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-172")
             );
         }
 
@@ -586,8 +586,8 @@ throw new NoSuchElementException(
  * @i18n.test
  * @org-mes="No more elements in exception."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				HashIntTable.class.getName(),"051018-589")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                HashIntTable.class.getName(),"051018-589")
             );    
         }
         

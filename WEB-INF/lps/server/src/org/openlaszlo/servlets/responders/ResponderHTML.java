@@ -40,8 +40,8 @@ public final class ResponderHTML extends ResponderCompile
  * @i18n.test
  * @org-mes="Responding with HTML wrapper for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderHTML.class.getName(),"051018-43", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderHTML.class.getName(),"051018-43", new Object[] {fileName})
 );
         res.setContentType ("text/html");
         ServletOutputStream out = res.getOutputStream();

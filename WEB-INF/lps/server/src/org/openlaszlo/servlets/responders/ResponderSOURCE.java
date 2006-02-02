@@ -50,8 +50,8 @@ public final class ResponderSOURCE extends ResponderCompile
  * @i18n.test
  * @org-mes="Responding with SOURCE for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSOURCE.class.getName(),"051018-53", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSOURCE.class.getName(),"051018-53", new Object[] {fileName})
 );
         if (fileName.endsWith(".lzo")) {
             fileName = StringUtils.setCharAt(fileName, fileName.length() - 1, 'x');

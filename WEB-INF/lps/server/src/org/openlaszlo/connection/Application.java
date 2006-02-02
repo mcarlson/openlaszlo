@@ -128,8 +128,8 @@ public class Application
  * @i18n.test
  * @org-mes="connection group not set"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-131")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-131")
             ); 
     }
 
@@ -176,8 +176,8 @@ public class Application
  * @i18n.test
  * @org-mes="sendMessage(users=" + p[0] + ",range=" + p[1] + ",mesg=" + p[2] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-179", new Object[] {users, range, mesg})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-179", new Object[] {users, range, mesg})
 );
 
         if (users == null || users.equals(""))
@@ -215,8 +215,8 @@ public class Application
  * @i18n.test
  * @org-mes="send to " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-218", new Object[] {connection.getUsername()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-218", new Object[] {connection.getUsername()})
 );
                                 connection.send(mesg);
                                 ++count;
@@ -226,8 +226,8 @@ public class Application
  * @i18n.test
  * @org-mes="user " + p[0] + " not connected"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-229", new Object[] {connection.getUsername()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-229", new Object[] {connection.getUsername()})
                                 );
                                 iter.remove();
                             }
@@ -263,8 +263,8 @@ public class Application
  * @i18n.test
  * @org-mes="IOException: agent " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-266", new Object[] {agent.getURL()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-266", new Object[] {agent.getURL()})
 );
                 }
             }
@@ -292,8 +292,8 @@ public class Application
  * @i18n.test
  * @org-mes=p[0] + " sent message"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-295", new Object[] {connection.getUsername()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-295", new Object[] {connection.getUsername()})
 );
                     } catch (IOException e) {
                         iter.remove();
@@ -302,8 +302,8 @@ public class Application
  * @i18n.test
  * @org-mes=p[0] + " not connected"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-305", new Object[] {connection.getUsername()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-305", new Object[] {connection.getUsername()})
 );
                     }
                 }
@@ -334,8 +334,8 @@ public class Application
  * @i18n.test
  * @org-mes="IOException: agent " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-337", new Object[] {agent.getURL()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-337", new Object[] {agent.getURL()})
 );
                     }
                 }
@@ -363,8 +363,8 @@ public class Application
  * @i18n.test
  * @org-mes="list(users=" + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				Application.class.getName(),"051018-366", new Object[] {users})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                Application.class.getName(),"051018-366", new Object[] {users})
 );
 
             if (users.equals("*")) {

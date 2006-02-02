@@ -49,8 +49,8 @@ throw new ServletException(
  * @i18n.test
  * @org-mes="No LZF_URL attribute set"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZViewer.class.getName(),"051018-52")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZViewer.class.getName(),"051018-52")
             );
         }
         String uri = (new URL(url)).getFile();
@@ -61,8 +61,8 @@ throw new ServletException(
  * @i18n.test
  * @org-mes="No LZF_FILENAME attribute set"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZViewer.class.getName(),"051018-64")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZViewer.class.getName(),"051018-64")
             );
         }
         File file = new File(fileName);
@@ -73,8 +73,8 @@ throw new ServletException(
  * @i18n.test
  * @org-mes="No LZF_COMPMGR attribute set"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZViewer.class.getName(),"051018-76")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZViewer.class.getName(),"051018-76")
             );
         }
  

@@ -64,8 +64,8 @@ public final class ResponderSETCACHESIZE extends ResponderAdmin
  * @i18n.test
  * @org-mes="ignored bad size parameter"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSETCACHESIZE.class.getName(),"051018-67")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSETCACHESIZE.class.getName(),"051018-67")
 );
                 }
                 res.setContentType ("text/xml");
@@ -78,8 +78,8 @@ msg =
  * @i18n.test
  * @org-mes="Can't set cache size: size parameter missing from setcachesize request"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSETCACHESIZE.class.getName(),"051018-81")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSETCACHESIZE.class.getName(),"051018-81")
 ;
                 mLogger.error(msg);
                 msg = msg + "<br/>" + ResponderCACHEINFO.cacheInfo(false, false);

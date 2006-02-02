@@ -97,8 +97,8 @@ public class LZObjectSerializer implements Serializer {
  * @i18n.test
  * @org-mes="serialize(" + p[0] + "," + p[1] + "," + p[2] + "," + p[3] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZObjectSerializer.class.getName(),"051018-100", new Object[] {name, attributes, value, context})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZObjectSerializer.class.getName(),"051018-100", new Object[] {name, attributes, value, context})
         );
         context.startElement(name, attributes);
         NodeList list = ((ObjectWrapper)value).getElement().getChildNodes();
@@ -121,8 +121,8 @@ public class LZObjectSerializer implements Serializer {
  * @i18n.test
  * @org-mes="unimplemented"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZObjectSerializer.class.getName(),"051018-124")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZObjectSerializer.class.getName(),"051018-124")
 );
     }
 }

@@ -117,8 +117,8 @@ public class CompilationError extends RuntimeException {
  * @i18n.test
  * @org-mes="file not found: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-120", new Object[] {message})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-120", new Object[] {message})
 ;
         } else if (cause instanceof java.lang.NumberFormatException) {
             return 
@@ -126,8 +126,8 @@ public class CompilationError extends RuntimeException {
  * @i18n.test
  * @org-mes="invalid number: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-129", new Object[] {message})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-129", new Object[] {message})
 ;
         } else if (cause instanceof org.openlaszlo.compiler.ViewSchema.ColorFormatException) {
             return 
@@ -135,8 +135,8 @@ public class CompilationError extends RuntimeException {
  * @i18n.test
  * @org-mes="invalid color: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-138", new Object[] {message})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-138", new Object[] {message})
 ;
         } else if (cause instanceof ParseException) {
             return ((ParseException) cause).getMessage(false);
@@ -179,9 +179,9 @@ public class CompilationError extends RuntimeException {
  * @i18n.test
  * @org-mes="initElement called twice, on " + p[0] + " and " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-182", new Object[] {mElement, element})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-182", new Object[] {mElement, element})
+                                );
         }
         this.mElement = element;
         this.initPathname(Parser.getSourceMessagePathname(element));
@@ -230,9 +230,9 @@ throw new IllegalStateException(
  * @i18n.test
  * @org-mes="initPathname called twice, on " + p[0] + " and " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-232", new Object[] {mPathname, pathname})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-232", new Object[] {mPathname, pathname})
+                                );
         }
         this.mPathname = pathname;
     }
@@ -270,9 +270,9 @@ throw new IllegalStateException(
  * @i18n.test
  * @org-mes="initColumnNumber called twice, on " + p[0] + " and " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-271", new Object[] {mColumnNumber, new Integer(columnNumber)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-271", new Object[] {mColumnNumber, new Integer(columnNumber)})
+                                );
         setColumnNumber(columnNumber);
     }
 
@@ -295,9 +295,9 @@ throw new IllegalStateException(
  * @i18n.test
  * @org-mes="initLineNumber called twice, on " + p[0] + " and " + p[1]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				CompilationError.class.getName(),"051018-295", new Object[] {mLineNumber, new Integer(lineNumber)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                CompilationError.class.getName(),"051018-295", new Object[] {mLineNumber, new Integer(lineNumber)})
+                                );
         setLineNumber(lineNumber);
     }
 

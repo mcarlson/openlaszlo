@@ -193,8 +193,8 @@ class ClassModel {
  * @i18n.test
  * @org-mes="The class has a " + p[0] + " attribute"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ClassModel.class.getName(),"051018-196", new Object[] {DEFAULTPLACEMENT_ATTR_NAME})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ClassModel.class.getName(),"051018-196", new Object[] {DEFAULTPLACEMENT_ATTR_NAME})
 );
         if (instance.hasAttribute(DEFAULTPLACEMENT_ATTR_NAME))
             throw new InlineClassError(this, instance, 
@@ -202,8 +202,8 @@ class ClassModel {
  * @i18n.test
  * @org-mes="The instance has a " + p[0] + " attribute"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ClassModel.class.getName(),"051018-205", new Object[] {DEFAULTPLACEMENT_ATTR_NAME})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ClassModel.class.getName(),"051018-205", new Object[] {DEFAULTPLACEMENT_ATTR_NAME})
 );
         if (descendantDefinesAttribute(instance, PLACEMENT_ATTR_NAME))
             throw new InlineClassError(this, instance, 
@@ -211,8 +211,8 @@ class ClassModel {
  * @i18n.test
  * @org-mes="An element within the instance has a " + p[0] + " attribute"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ClassModel.class.getName(),"051018-214", new Object[] {PLACEMENT_ATTR_NAME})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ClassModel.class.getName(),"051018-214", new Object[] {PLACEMENT_ATTR_NAME})
 );
         
         try {

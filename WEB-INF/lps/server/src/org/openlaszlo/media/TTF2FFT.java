@@ -72,8 +72,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="Can't read: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-75", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-75", new Object[] {path})
 );
         }
 
@@ -93,8 +93,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="font missing ttf name table; made name, " + p[0] + ", based on filename "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-96", new Object[] {fontName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-96", new Object[] {fontName})
 );
         } else {
             fontName = nameTable.getRecord((short)1); 
@@ -110,8 +110,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes=p[0] + " missing ttf head table; this ttf font not supported"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-113", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-113", new Object[] {path})
 );
         }
 
@@ -121,8 +121,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes=p[0] + " missing ttf hmtx (horiz. metrics) table; this ttf font not supported"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-124", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-124", new Object[] {path})
 );
         }
 
@@ -221,8 +221,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="Can't find a cmap table in " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-224", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-224", new Object[] {path})
 );
         }
 
@@ -271,8 +271,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="index: " + p[0] + " charcode: " + p[1] + " char: " + p[2] + " numPoints: " + p[3]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-274", new Object[] {new Integer(index), new Integer(code), new Character((char) code), new Integer(glyph.getNumPoints())})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-274", new Object[] {new Integer(index), new Integer(code), new Character((char) code), new Integer(glyph.getNumPoints())})
                 );
             } else {
                 mLogger.debug(
@@ -280,8 +280,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="index: " + p[0] + " charcode: " + p[1] + " has no glyph."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-283", new Object[] {new Integer(index), new Integer(code)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-283", new Object[] {new Integer(index), new Integer(code)})
                 );
             }
 
@@ -418,9 +418,9 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="Font metrics: " + p[0] + " " + p[1] + " " + p[2]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-421", new Object[] {new Integer(ascent), new Integer(descent), new Integer(leading)})
-				);
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-421", new Object[] {new Integer(ascent), new Integer(descent), new Integer(leading)})
+                                );
 
         buf.writeWord( ascent );
         buf.writeWord( descent );
@@ -454,8 +454,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes=p[0] + " kern pairs"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-456", new Object[] {new Integer(nKern)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-456", new Object[] {new Integer(nKern)})
 );
                 // We optimize out all 0s
                 int goodKern = nKern;
@@ -470,8 +470,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes=p[0] + " non-zero kern pairs"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-472", new Object[] {new Integer(goodKern)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-472", new Object[] {new Integer(goodKern)})
 );
                 for (int i = 0; i < nKern; i++) {
                     KerningPair pair = kst.getKerningPair(i);
@@ -492,8 +492,8 @@ public class TTF2FFT {
  * @i18n.test
  * @org-mes="skipping non-empty kerning table in " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				TTF2FFT.class.getName(),"051018-494", new Object[] {path})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                TTF2FFT.class.getName(),"051018-494", new Object[] {path})
 );
             }
         } else {

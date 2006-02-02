@@ -98,48 +98,48 @@ class SolutionMessages {
  * @i18n.test
  * @org-mes="The content of elements must consist of well-formed character data or markup"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-101")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-101")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Look for stray or unmatched XML escape chars ( <, >, or & ) in your source code. When using '<' in a Script, XML requires wrapping the Script content with '<![CDATA[' and ']]>'. "
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-108")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-108")
+                                                                        ));
 
         errs.add(new SolutionMessage(PARSER,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="entity name must immediately follow the '&' in the entity reference"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-117")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-117")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Look for unescaped '&' characters in your source code."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-124")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-124")
+                                                                        ));
                                      
         errs.add(new SolutionMessage(VIEWCOMPILER,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Was expecting one of: instanceof"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-133")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-133")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="The element and attribute names in .lzx files are case-sensitive; Look for a mistake in the upper/lower case spelling of attribute names, i.e., \"onClick\" instead of \"onclick\""
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-140")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-140")
+                                                                        ));
 
 
         errs.add(new SolutionMessage(PARSER,
@@ -147,64 +147,64 @@ class SolutionMessages {
  * @i18n.test
  * @org-mes="\"\" is not a valid local name"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-150")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-150")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Make sure that every <class> and <attribute> tag element contains a non-empty 'name' attribute, and each <method> element contains a non-empty 'name' or 'event' attribute."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-157")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-157")
+                                                                        ));
 
         errs.add(new SolutionMessage(PARSER,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="The root element is required in a well-formed document"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-166")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-166")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Check for invalid UTF8 characters in your source file. LZX XML files may contain only legal UTF-8 character codes. If you see a character with an accent over it, it might be the problem."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-173")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-173")
+                                                                        ));
 
         errs.add(new SolutionMessage(PARSER,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Content is not allowed in prolog"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-182")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-182")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Some text editors may insert a Byte-Order Mark (the sequence of characters 0xEFBBBF) at the start of your source file without your knowledge. Please remove any non-whitespace characters before the start of the first '<' character."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-189")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-189")
+                                                                        ));
 
         errs.add(new SolutionMessage(PARSER,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="The reference to entity.*must end with the"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-198")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-198")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Look for a misplaced or unescaped ampersand ('&') character in your source code."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-205")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-205")
+                                                                        ));
 
 
         errs.add(new SolutionMessage(VIEWCOMPILER,
@@ -212,15 +212,15 @@ class SolutionMessages {
  * @i18n.test
  * @org-mes="Lexical error.  The source location is for the element that contains the erroneous script"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-215")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-215")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Examine the compiler warnings for warnings about undefined class or attribute names."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-222")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-222")
                                      ));
 
         errs.add(new SolutionMessage(PARSER,
@@ -228,16 +228,16 @@ class SolutionMessages {
  * @i18n.test
  * @org-mes="Error in building"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-231")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-231")
 ,
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Check for invalid UTF8 characters in your source file. LZX XML files may contain only legal UTF-8 character codes. If you see a character with an accent over it, it might be the problem."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				SolutionMessages.class.getName(),"051018-238")
-									));
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                SolutionMessages.class.getName(),"051018-238")
+                                                                        ));
 
 
 

@@ -101,8 +101,8 @@ public class LZArraySerializer implements Serializer {
  * @i18n.test
  * @org-mes="serialize(" + p[0] + "," + p[1] + "," + p[2] + "," + p[3] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZArraySerializer.class.getName(),"051018-104", new Object[] {name, attributes, value, context})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZArraySerializer.class.getName(),"051018-104", new Object[] {name, attributes, value, context})
         );
         // Alot of this code copied from
         // org.apache.axis.encoding.ser.ArraySerializer
@@ -241,8 +241,8 @@ public class LZArraySerializer implements Serializer {
  * @i18n.test
  * @org-mes="unimplemented"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LZArraySerializer.class.getName(),"051018-244")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LZArraySerializer.class.getName(),"051018-244")
 );
     }
 }

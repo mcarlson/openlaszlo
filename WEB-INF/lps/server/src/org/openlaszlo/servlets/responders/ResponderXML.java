@@ -49,8 +49,8 @@ public final class ResponderXML extends ResponderCompile
  * @i18n.test
  * @org-mes="Responding with XML for " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderXML.class.getName(),"051018-52", new Object[] {fileName})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderXML.class.getName(),"051018-52", new Object[] {fileName})
 );
         if (fileName.endsWith(".lzo")) {
             fileName = StringUtils.setCharAt(fileName, fileName.length() - 1, 'x');

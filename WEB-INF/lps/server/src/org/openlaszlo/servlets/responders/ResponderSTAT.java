@@ -38,8 +38,8 @@ public final class ResponderSTAT extends ResponderAdmin
  * @i18n.test
  * @org-mes="Statistics collection is off."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderSTAT.class.getName(),"051018-41")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderSTAT.class.getName(),"051018-41")
 );
             return;
         }

@@ -47,8 +47,8 @@ public final class ResponderMEDIA extends ResponderCache
  * @i18n.test
  * @org-mes="Media Cache is at " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderMEDIA.class.getName(),"051018-50", new Object[] {cacheDir})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderMEDIA.class.getName(),"051018-50", new Object[] {cacheDir})
 );
 
             try {

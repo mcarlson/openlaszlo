@@ -47,8 +47,8 @@ public abstract class ResponderConnectionAgent extends Responder
  * @i18n.test
  * @org-mes="Forbidden connection agent host: " + p[0]
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderConnectionAgent.class.getName(),"051018-50", new Object[] {ip})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderConnectionAgent.class.getName(),"051018-50", new Object[] {ip})
 ;
             replyWithXMLStatus(res, err, HttpServletResponse.SC_FORBIDDEN);
             return;
@@ -61,8 +61,8 @@ public abstract class ResponderConnectionAgent extends Responder
  * @i18n.test
  * @org-mes="Bad connection agent"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderConnectionAgent.class.getName(),"051018-64")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderConnectionAgent.class.getName(),"051018-64")
 , SC_ERROR);
             return;
         }
@@ -74,8 +74,8 @@ public abstract class ResponderConnectionAgent extends Responder
  * @i18n.test
  * @org-mes="Bad connection group"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderConnectionAgent.class.getName(),"051018-77")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderConnectionAgent.class.getName(),"051018-77")
 , SC_ERROR);
             return;
         }

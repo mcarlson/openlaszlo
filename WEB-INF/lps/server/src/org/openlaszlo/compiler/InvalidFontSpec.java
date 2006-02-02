@@ -25,8 +25,8 @@ public class InvalidFontSpec extends CompilationError {
  * @i18n.test
  * @org-mes="new InvalidFontSpec ()"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				InvalidFontSpec.class.getName(),"051018-28")
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                InvalidFontSpec.class.getName(),"051018-28")
 );
  }
 
@@ -37,8 +37,8 @@ public class InvalidFontSpec extends CompilationError {
  * @i18n.test
  * @org-mes="new InvalidFontSpec (" + p[0] + ", " + p[1] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				InvalidFontSpec.class.getName(),"051018-40", new Object[] {message, element.getName()})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                InvalidFontSpec.class.getName(),"051018-40", new Object[] {message, element.getName()})
 );
     }
 

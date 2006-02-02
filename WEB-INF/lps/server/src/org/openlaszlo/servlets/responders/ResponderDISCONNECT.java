@@ -34,8 +34,8 @@ public final class ResponderDISCONNECT extends ResponderConnection
  * @i18n.test
  * @org-mes="respondImpl(username=" + p[0] + ")"
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				ResponderDISCONNECT.class.getName(),"051018-37", new Object[] {username})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                ResponderDISCONNECT.class.getName(),"051018-37", new Object[] {username})
 );
 
         // Removes connection and unregisters itself from application through

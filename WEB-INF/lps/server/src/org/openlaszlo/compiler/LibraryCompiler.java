@@ -74,8 +74,8 @@ class LibraryCompiler extends ToplevelCompiler {
  * @i18n.test
  * @org-mes="The library file \"" + p[0] + "\" included by loadable library \"" + p[1] + "\" was also included by another loadable library \"" + p[2] + "\". " + "This may lead to unexpected behavior, especially if the library defines new classes."
  */
-			org.openlaszlo.i18n.LaszloMessages.getMessage(
-				LibraryCompiler.class.getName(),"051018-77", new Object[] {file, env.getApplicationFile(), env.getLoadableImportedLibraryFiles().get(key)})
+                        org.openlaszlo.i18n.LaszloMessages.getMessage(
+                                LibraryCompiler.class.getName(),"051018-77", new Object[] {file, env.getApplicationFile(), env.getLoadableImportedLibraryFiles().get(key)})
                         );
                     }
 
