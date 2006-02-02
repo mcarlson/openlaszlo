@@ -3,7 +3,7 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** --><title>OpenLaszlo 3.1 Release Notes</title>
+* X_LZ_COPYRIGHT_END ****************************************************** --><title>OpenLaszlo 3.2cr1 Release Notes</title>
   
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css" />
@@ -13,20 +13,20 @@
 
 <body class="release-notes">
 
-<h1><b>Release Notes for OpenLaszlo 3.2 </b> </h1>
+<h1><b>Release Notes for OpenLaszlo 3.2cr1 </b> </h1>
 
 <p class="bodytext">
 
 <p>
-OpenLaszlo 3.2 is a "community release" of the platform. This release has been partially tested and is believed to be stable, but it is not a fully-qualified release. The purpose of this release is to give you, the OpenLaszlo developer community, a chance to try out some of the new features we've been working on as we move towards our next major release in Spring, 2006. The most recent fully qualified release is 3.1.1 (December, 2005). The most recent major release is 3.1 (November, 2005)</p>
+OpenLaszlo 3.2cr1 is a community release, giving you a chance to preview the new functionality that will be released shortly as part of OpenLaszlo 3.2. This release has been partially tested and is believed to be stable, but it is not a fully-qualified release.</p>
 <p>
 There have been a few significant new features added to OpenLaszlo since Release 3.1.1, and many bugs have been fixed. There have also been significant improvements to the documentation.
 </p>
 <p>
-Also please note that the documentation is virtually always under development. For the most up-to-date version, you may want to consult <a href="http://www.openlaszlo.org/docs/nightly/">the nightly build</a> hosted on OpenLaszlo.org. (The latest documentation may include information pertinent to the upcoming release and therefore will not necessarily be accurate for 3.2; however, it will also include general improvements.)
+Also please note that the documentation is virtually always under development. For the most up-to-date version, you may want to consult <a href="http://www.openlaszlo.org/about/latestdocs/">the nightly build</a> hosted on OpenLaszlo.org. (The latest documentation may include information pertinent to the next-following release (e.g. 4.0) and therefore will not necessarily be accurate for 3.2; however, it will also include general improvements.)
 </p>
 <p>
-The OpenLaszlo development team depends on you, the users of the platform, to help us ensure its quality and determine its future direction. We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP">bug tracking system.</a>
+The OpenLaszlo development team depends on you, the users of the platform, to help us ensure its quality and determine its future direction. We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking system.</a>
 </p>
 <p>
 Here is a summary of what you will find in these notes:
@@ -44,8 +44,7 @@ Here is a summary of what you will find in these notes:
 Since release 3.1.1, the following features have been added to OpenLaszlo:
 </p>
 <ul>
-	<li>New goodies in the incubator </li>
-	<li>CSS support in incubator (LPP-824)</li>
+	<li>New contributions in the incubator </li>
 	<li>&lt;img&gt; tags within rich text views (LPP-874)</li>
 	<li>MSAA-compatible accessibility (LPP-872)</li>
 	<li>Rich text editor palette in incubator (LPP-873)</li>
@@ -55,50 +54,45 @@ Since release 3.1.1, the following features have been added to OpenLaszlo:
 
 </ul>
 
-<h2>New goodies in the incubator</h2>
+<h2>New Contributions in the Incubator</h2>
 <p> 
-The Incubator directory, <tt>lps/components/incubator/</tt>, contains components and other code that have been contributed to the OpenLaszlo project, but have not yet been fully integrated into the product. It is intended as an easy way to contribute code that doesn't have the level of documentation, testing, or API review that is required in other directories, or that is simply contributed too late in the release cycle to place elsewhere. Some of the more significant contributions are called out below.
+The <a href="http://svn.openlaszlo.org/openlaszlo/trunk/lps/components/incubator/">incubator directory</a> contains components and other code that have been contributed to the OpenLaszlo project, but have not yet been fully integrated into the product. It is intended as an easy way to contribute code that doesn't have the level of documentation, testing, or API review that is required in other directories, or that is simply contributed too late in the release cycle to place elsewhere.
 </p>
 <p>
-In addition there are several new gadgets and gizmos in the incubator, mostly courtesy of the LaszloMail team. Have a look!
+In addition there are several new gadgets and gizmos in the incubator, many courtesy of the LaszloMail team. Have a look!
 </p>
-<h2>CSS support in incubator (LPP-824)</h2>
-<p>
-The incubator now contains an implementation of CSS applied to OpenLaszlo.  Documentation is included.  Please note that this is an incubator project and as such it's subject to change, and there is no guarantee that it will ever formally make it into the platform. 
-</p>
-<h2>&lt;img&gt; tags within rich text views (LPP-874)</h2>
+<h2>&lt;img&gt; Tags within Rich Text Views (LPP-874)</h2>
 <p>
 A partial implementation of the HTML &lt;img&gt; tag allows you to include images within HTML text.  There are some limitations; please see the documentation.</p>
-<h2>MSAA-compatible accessibility (LPP-872)</h2>
+<h2>MSAA-compatible Accessibility (LPP-872)</h2>
 <p>
 By using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities. OpenLaszlo now includes a partial implementation of this specification, with some limitations that depend on the target runtime.  Please see the documentation. 
 </p>
 
-<h2>rich text editor palette in incubator (LPP-873)</h2>
+<h2>Rich Text Editor Palette in Incubator (LPP-873)</h2>
 <p>
-A contribution from the LaszloMail team.
+ A complete, standalone rich text editor with toolbar is now available. Just instantiate it as a normal view and you'll have a rich text editor with toolbar controls for bold, underline, italic, font color, font face, font name, hyperlink and 'remove format'. This is a contribution from the LaszloMail team.
 </p>
 <h2>
-JavaScript compiler ported from Jython to Java (LPP-752)</h2>
+JavaScript Compiler Ported from Jython to Java (LPP-752)</h2>
 <p>
-Much faster compilation.
+The resulting compiler is much faster, with reported gains of up to 5x.
 </p>
-<h2>Automated unit tests</h2>
+<h2>Automated Unit Tests</h2>
 <p>
-For those who build OpenLaszlo from sources. 
-The cool thing about automated unit tests is 'ant runlzunit', which automatically runs the known unit tests against a build.
+Automated unit test are now available for those who build OpenLaszlo from sources. The cool thing about automated unit tests is 'ant runlzunit', which automatically runs the known unit tests against a build. These work on Mac and PC; they have not been tested under Linux.
 </p>
 <h2>New &lt;handler&gt; and &lt;event&gt; syntax</h2>
 <p>
 There is a new syntax for declaring events and event handlers.  The old syntax still works, but we came up with this new style because people find the current syntax somewhat obscure, and anonymous methods sometimes have unanticipated results.
 </p>
 <p>
-The documentation has not caught up with the new syntax, but there is a <a href="http://wiki.openlaszlo.org/Event_and_handler_tags">wiki</a> page that contains the specification:</p>
+The documentation has not caught up with the new syntax, but there is a <a href="http://wiki.openlaszlo.org/Event_and_handler_tags">wiki</a> page that explains the new idiom.</p>
 
 
 <H1><a name="backwards">Backwards-incompatible Changes</a></H1> 
 <p>
-The KRANK feature has been removed (LPP-871)
+The KRANK feature has been removed (LPP-871). This capability was only fully supported under Flash6 and improved performance in later players made it unnecessary.
 </p>
 
 <h1><a name="fixed-bugs">Significant Bugs Fixed</a></h1>
@@ -112,7 +106,7 @@ For the most current and complete information, consult the <a href="http://www.o
 </p>
 <p>
 There are two particular problems that we would like to call to your attention:
-<h2>Mouseovers and animators</h2>
+<h2>Mouseovers and Animators</h2>
 <p>
 There is a common "UI" design pattern that is easily implemented within OpenLaszlo. This implementation, however, reveals a bug that
 some developers have encountered. In this particular UI design, a view is expanded in some dimension on rollover of the mouse and
