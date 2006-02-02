@@ -7,21 +7,21 @@
     </resource>
 
     <!-- small button resource: used by buttons and new combobox -->
-    <resource name="button_small_left_rsc" >
+    <resource name="custombutton_small_left_rsc" >
         <frame src="resources/button/small/sm_btn_up_lft.png" />
         <frame src="resources/button/small/sm_btn_mo_lft.png" />
         <frame src="resources/button/small/sm_btn_dn_lft.png" />
         <frame src="resources/button/small/sm_btn_dsbl_lft.swf" />
     </resource>
 
-    <resource name="button_small_right_rsc" >
+    <resource name="custombutton_small_right_rsc" >
         <frame src="resources/button/small/sm_btn_up_rt.png" />
         <frame src="resources/button/small/sm_btn_mo_rt.png" />
         <frame src="resources/button/small/sm_btn_dn_rt.png" />
         <frame src="resources/button/small/sm_btn_dsbl_rt.swf" />
     </resource>
     
-    <resource name="button_small_middle_rsc" >
+    <resource name="custombutton_small_middle_rsc" >
         <frame src="resources/button/small/sm_btn_up_mid.swf" />
         <frame src="resources/button/small/sm_btn_mo_mid.swf" />
         <frame src="resources/button/small/sm_btn_dn_mid.swf" />
@@ -72,9 +72,9 @@
         <attribute name="collapsedWidth" value="30"/>
                 
         <!--- background resources -->
-        <attribute name="leftrsc"        value="button_small_left_rsc"  type="string" />
-        <attribute name="middlersc"      value="button_small_middle_rsc"  type="string" />
-        <attribute name="rightrsc"       value="button_small_right_rsc"  type="string" />
+        <attribute name="leftrsc"        value="custombutton_small_left_rsc"  type="string" />
+        <attribute name="middlersc"      value="custombutton_small_middle_rsc"  type="string" />
+        <attribute name="rightrsc"       value="custombutton_small_right_rsc"  type="string" />
 
         <!-- button background -->
         <!-- have to use placeholder resources so that basebutton initializes correctly -->     

@@ -1,0 +1,15 @@
+<canvas>
+<include href="lzunit"/>
+<include href="incubator/newvscrollbar.lzx" />
+
+<view height="200" width="200" bgcolor="0x7F7F7F">
+    <view height="800" width="150" />
+    <newvscrollbar />
+</view>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+

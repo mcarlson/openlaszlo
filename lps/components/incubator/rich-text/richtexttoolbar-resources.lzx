@@ -21,13 +21,6 @@
         <frame src="resources/rte_btn_dn.swf"/>
     </resource>
     
-    <resource name="downarrow_icon_rsc">
-        <frame src="../resources/combobox/combobox_arrow_up+dn.swf" />
-        <frame src="../resources/combobox/combobox_arrow_mo.swf" />
-        <frame src="../resources/combobox/combobox_arrow_up+dn.swf" />
-        <frame src="../resources/combobox/combobox_arrow_dsbl.swf" />
-    </resource>
-    
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *

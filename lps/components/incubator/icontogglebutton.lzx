@@ -20,9 +20,9 @@
 
         <!-- use small button assets -->
         <stableborderlayout axis="x" />
-        <view name="left"   resource="button_small_left_rsc"   />
-        <view name="middle" resource="button_small_middle_rsc" stretches="width"/>
-        <view name="right"  resource="button_small_right_rsc"  />
+        <view name="left"   resource="custombutton_small_left_rsc"   />
+        <view name="middle" resource="custombutton_small_middle_rsc" stretches="width"/>
+        <view name="right"  resource="custombutton_small_right_rsc"  />
         
         <view name="icon" resource="${classroot.iconresource}" 
             x="${(parent.width - width)/2}" 

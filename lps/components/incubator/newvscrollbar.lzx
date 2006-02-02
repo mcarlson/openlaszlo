@@ -18,13 +18,13 @@
     <!-- up arrow -->
     <view height="13" name="toparrow">
         <basescrollarrow x="1" y="1"
-            resource="lzscrollbar_ybuttontop_rsc"
+            resource="newvscrollbar_ybuttontop_rsc"
             direction="-1"/>
     </view>
     <view name="scrolltrack">
         <!-- top of the scroll track -->
         <basescrolltrack name="top" x="1" y="1"
-            resource="lzscrollbar_ytrack_rsc" stretches="height"
+            resource="newvscrollbar_ytrack_rsc" stretches="height"
             overResourceNumber="0"
             downResourceNumber="2"
             direction="-1">
@@ -34,19 +34,19 @@
 
         <!-- thumb -->
         <basescrollthumb name="thumb" x="1">
-             <view resource="lzscrollbar_ythumbtop_rsc"/>
-             <view resource="lzscrollbar_ythumbmiddle_rsc" stretches="both"/>
-             <view resource="lzscrollbar_ythumbbottom_rsc"/>
+             <view resource="newvscrollbar_ythumbtop_rsc"/>
+             <view resource="newvscrollbar_ythumbmiddle_rsc" stretches="both"/>
+             <view resource="newvscrollbar_ythumbbottom_rsc"/>
              <stableborderlayout axis="y"/>
              <!-- note: stableborderlayout only acts on the first three views -->
-             <view resource="lzscrollbar_ythumbgripper_rsc" y="2" x="2"
+             <view resource="newvscrollbar_ythumbgripper_rsc" y="2" x="2"
                  height="${Math.min(200, parent.height-16)}" width="11"
                  clip="true" valign="middle"/>
         </basescrollthumb>
 
         <!-- bottom of the scroll track -->
         <basescrolltrack name="bottom" x="1" 
-            resource="lzscrollbar_ytrack_rsc" stretches="height"
+            resource="newvscrollbar_ytrack_rsc" stretches="height"
             overResourceNumber="0"
             downResourceNumber="2">
             <attribute name="y" value="${parent.thumb.y+parent.thumb.height}"/>
@@ -59,7 +59,7 @@
     <!-- down arrow -->
     <view height="14" name="bottomarrow">
         <basescrollarrow x="1" y="1"
-            resource="lzscrollbar_ybuttonbottom_rsc"/>
+            resource="newvscrollbar_ybuttonbottom_rsc"/>
     </view>
     <stableborderlayout axis="y"/>
 
