@@ -9,27 +9,21 @@
   <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css" />
   <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico" />
   </head>
-<!--todo
-By using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities.
-/todo -->
 
-<!--todo
-Users have reported problems with applications embedded in some versions of Internet Explorer -- the applications don't appear. if you can't get your OpenLaszlo application to show up in IE, try using the older version of embed.js from 3.0.2. We couldn't fix it because we couldn't reproduce the problem, but using older versions of the embed.js sometimes made the problem go away.
--->
 
 <body class="release-notes">
 
-<h1><b>Release Notes for OpenLaszlo 3.1 </b> </h1>
+<h1><b>Release Notes for OpenLaszlo 3.2 </b> </h1>
 
 <p class="bodytext">
 
 <p>
-OpenLaszlo 3.1 is a fully qualified release of the OpenLaszlo Platform. The previous qualified release was 3.0.2 (July, 2005). </p>
+OpenLaszlo 3.2 is a "community release" of the platform. This release has been partially tested and is believed to be stable, but it is not a fully-qualified release. The purpose of this release it to give you, the OpenLaszlo developer community, a chance to try out some of the new features we've been working on as we move towards our next major release in Spring, 2006. The most recent fully qualified release is 3.1.1 (December, 2005). The most recent major release is 3.1 (November, 2005)</p>
 <p>
-There have been many significant new features added to OpenLaszlo since Release 3.0.2, and more than 100 bugs have been fixed. There have also been significant improvements to the documentation.
+There have been a few significant new features added to OpenLaszlo since Release 3.1.1, and many bugs have been fixed. There have also been significant improvements to the documentation.
 </p>
 <p>
-Also please note that the documentation is virtually always under development. For the most up-to-date version, you may want to consult <a href="http://www.openlaszlo.org/docs/nightly/">the nightly build</a> hosted on OpenLaszlo.org. (The latest documentation may include information pertinent to the upcoming release and therefore will not necessarily be accurate for 3.1; however, it will also include general improvements.)
+Also please note that the documentation is virtually always under development. For the most up-to-date version, you may want to consult <a href="http://www.openlaszlo.org/docs/nightly/">the nightly build</a> hosted on OpenLaszlo.org. (The latest documentation may include information pertinent to the upcoming release and therefore will not necessarily be accurate for 3.2; however, it will also include general improvements.)
 </p>
 <p>
 The OpenLaszlo development team depends on you, the users of the platform, to help us ensure its quality and determine its future direction. We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP">bug tracking system.</a>
@@ -38,945 +32,138 @@ The OpenLaszlo development team depends on you, the users of the platform, to he
 Here is a summary of what you will find in these notes:
 </p>
 <ul> 
-<li><a href="#target-runtimes">Target Runtimes</a>
-<li><a href="#nomenclature">A Note on Nomenclature</a>
 <li><a href="#key-features">New Features</a></li> 
 <li><a href="#backwards">Backwards-incompatible Changes</a></li> 
-<li><a href="#fixed-bugs">Significant Bugs Fixed Since 3.0.2</a></li> 
+<li><a href="#fixed-bugs">Significant Bugs Fixed Since 3.1.1</a></li> 
 <li><a href="#Known">Known Problems and Workarounds</a></li> 
-</ul> 
-
-<h1><a name="target-runtimes">Target Runtimes</a></h1>
-<p>OpenLaszlo 3.1 supports compilation to <code>swf6, swf7</code> and <code>swf8</code> formats. For OpenLaszlo 3.1, Flash 7 is the default runtime.  You can specify the target runtime by selecting the corresponding button on the Developer's Console or by explicitly using the <code>lzr=</code> request type.</p>
-<p>
-If you have a choice, we strongly encourage you to target Flash 7 or higher. All of the applications and demos bundled with the SDK are compiled using <code>swf7 </code>as the target.</p>
-<p>
-The OpenLaszlo SDK still supports development and deployment using Flash 6.0.65. However, note that the demos and examples in the SDK have been compiled against Flash 7 and due to a limitation in our wrapper implementation they do not completely function even if you force the compiler to use swf6 by setting <code>lzr=swf6</code>. The default runtime can be set at server startup time by changing <code>"compiler.runtime.default=swf7"</code> to <code>"compiler.runtime.default=swf6"</code> in <code>WEB-INF/lps/config/lps.properties</code>, but the demos and examples will need to be recompiled after you do this.
-</p>
-<h1><a name="nomenclature">A Note on Nomenclature</a></h1>
-<p>
-In the documentation, most instances of "Laszlo Presentation Server" (or "LPS") have been changed to say "OpenLaszlo Server". (You may discover instances of the old terms that we have missed, but be aware that those terms have been deprecated.)  However, the string "LPS" still appears in the code base and in path names. Over time the term "LPS" may be expunged from the code, but there is no plan to do so now.</p>
-<p>
-Similarly, the terms "Laszlo Foundation Classes" and "LFC" have been deprecated in favor of "OpenLaszlo Runtime Library" and "ORL". As in the case of LPS, the older terms will persist longer in the code than in the documentation. </p>
-<h1><a name="key-features">New Features since OpenLaszlo 3.0.2</a></h1> 
-<p>
-Since release 3.0.2, the following features have been added to OpenLaszlo:
-</p>
-<ul>
-	<li>Rich Text Class</li>
-	<li>New components: hbox, vbox, and image</li>
-	<li>Flash 8 file generation</li>
-	<li>Local datasets</li>
-    <li>Browser history integration: the default HTML wrappers now include support for browser history and setcanvasAttribute()</li>
-	<li>XMLHttpRequest ("AJAX") API</li>
-    <li>setcanvasAttribute() Javascript function can optionally add browser history events</li>
-	<li>Applications default to window size</li>
-	<li>"View source" menu item</li>
-    <li>Charting and Graphing Components (Beta)</li>
-     <li>Tutorial introduction to Drawview</li>
-	<li>Version detection</li>
-	<li>Developer console enhancements</li>
-    <li>Global "hand cursor" parameter</li>
-    <li>Backtrace facility in the debugger</li>
-	<li>Other debugger improvements</li>
-     <li>Splash screen takes percentages</li>
-     <li>New goodies in the incubator</li>
-</ul>
-<h2>Rich Text Class</h2>
-
-<p>The new component, &lt;richinputtext&gt;
-provides methods for adding rich text capabilities to your
-applications.</p>
-<p>
-To use it, include the line:
-</p>
-<pre>
-&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
-</pre>
-<p>
-The <code>richinputtext</code> component deals with html-formatted text. You can specify the html formatting directly in the <code>richinputtext</code> tag, if you escape it with CDATA, like this:</p>
-<pre>
-
-&lt;canvas bgcolor="#EAEAEA" height="400" width="400"&gt;
-&lt;include href="/extensions/views/richinputtext.lzx" /&gt;
-    &lt;simplelayout axis="y" spacing="4" /&gt;
-    &lt;richinputtext name="myRichText" width="300" height="100"&gt;
-        &lt;![CDATA[
-            foo &lt;b&gt;bar&lt;/b&gt; baz lum
-         ]]&gt;
-    &lt;/richinputtext&gt;
-&lt;/canvas&gt; 
-</pre>
-<p>
-The class includes an object to specify the format of a
-text object (in Javascript,
-<code>richinputtext.setTextFormat</code>).</p>
-<p>
-Formatting capabilities include: </p>
-<ul>
-<li>Text style of bold, underline, or italics</li>
-<li>Font type and size</li>
-<li>Text color</li>
-<li>Hyperlink creation, specifying a URL, and choosing a target type</li>
-<li>Paragraph alignment: left, right, center</li>
-<li>Block indent/outdent</li>
 </ul>
 
-<p>The test file
-<code>test/extensions/test/test-richinputtext.lzx</code>
-demonstrates several ways that the <code>richinputtext</code> class
-can be used to apply rich formatted text. </p>
-<h2>New components: hbox, vbox, and image</h2>
-<p>
-Three new components support horizontal boxes, vertical boxes and images. Sources are in lps/components/base. See the LZX Reference and the Developer's Guide chapter on Layout and Design for examples.
-</p>
 
-<h2>Compilation for Flash 8 player</h2>
+<h1><a name="key-features">New Features since OpenLaszlo 3.1.1</a></h1> 
 <p>
-The OpenLaszlo compiler now has an option to generate Flash 8 format files.  Use the developers' console or the query parameter <code>?lzr=swf8</code>.
-</p>
-<h2>Local datasets</h2>
-<p>
-Datasets no longer have to be specified on the canvas; they can be local to a class.
+Since release 3.1.1, the following features have been added to OpenLaszlo:
 </p>
 <ul>
-<li>Datasets will automatically name themselves 'localdata' if a name is not             specified </li>
-<li>Local datapath syntax is <br/>
-datapath="local:<i>reference.to.dataset.relative.to.parent</i>:/path" <br/>
-</li>
-<li> The name of the dataset can be omitted from the datapath if the dataset name is the default 'localdata', e.g. 'local:classroot:/' can be used instead of 'local:classroot.localdata:/' for a dataset named localdata in the classroot</li>
-</ul>
-<p>
-See the Databinding chapter of the Developer's Guide for an explanation and example code.
-</p>
-<h2>Browser Integration</h2>
-<p>
-The scheme of "wrappers" that is generated has been simplified. There's no <code>lzt=version</code> or <code>lzt=history</code> anymore &#8212;they've both been folded into the main wrappers. The default HTML wrappers now include support for browser  history and <code>setcanvasAttribute()</code>. 
-</p>
-<h2>XMLHttpRequest() API</h2>
-<p>
-For AJAX style applications, there now is an XMLHttpRequest class. 
-This class implements XMLHttpRequest as <a href="http://developer.apple.com/internet/webcontent/xmlhttpreq.html"> specified</a> by the <a href="http://www.whatwg.org/specs/web-apps/current-work/#scripted-http">WHATWG
-</a> consortium.
-</p>
-<p>
-<code>XMLHttpRequest()</code> implements the functionality of the &lt;dataset&gt; tag in a syntax that is more familiar to people with AJAX programming experience. If you are comfortable using datasets there is no reason to use this class.
-</p>
-<p>
-In SOLO deployed applications, this class departs from the specification in these ways:</p>
-<ul>
-	<li>Cannot set HTTP headers </li>
-	<li>Cannot access response headers</li>
-	<li>Cannot send raw POST data</li>
-	<li>Cannot send repeated query args in a POST using LoadVars</li>
-	<li>Username/password HTTP Auth args to send() not supported.</li>
+	<li>New goodies in the incubator </li>
+	<li>CSS support in incubator (LPP-824)</li>
+	<li>&lt;img&gt; tags within rich text views (LPP-874)</li>
+	<li>MSAA-compatible accessibility (LPP-872)</li>
+	<li>Rich text editor palette in incubator (LPP-873)</li>
+	<li>JavaScript compiler ported from Jython to Java (LPP-752)</li>
+	<li>Automated unit tests</li>
+	<li>New &lt;handler&gt; and &lt;event&gt; syntax</li>
+
 </ul>
 
-<p>
- See the Databinding chapter of the Developer's Guide, and the XMLHttpRequest page in the LZX Reference Manual for more details. There is a test case in  test/AJAX/request.lzx.
-</p>
-
-
-<h2>Applications default to window size</h2>
-<p>The canvas size now defaults to <code>height="100%" width="100%"</code>. This means that the OpenLaszlo application will size itself to completely fill the HTML page or frame in which it is placed. 
-</p>
-
-<h2>"View Source" right click menu item </h2>
-<p>
- The default canvas context (right click) menu now has a "view source" 
- item to allow you to share your LZX code if you would like to do so.
-</p>
-<p>See the Input Devices and Gestures chapter of the Developer's Guide for details.</p>
-<h2>Charting and Graphing Components</h2>
-<p>
-A new suite of data-driven components for charting and graphing, written in LZX, is included in this release.  These are some of the components:</p>
-<ul>
-	<li>linechart.lzx</li>
-	<li>barchart.lzx</li>
-	<li>piechart.lzx</li>
-	<li>columnchart.lzx</li>
-</ul>
-<p>
-There are many ancillary components, such as horizontal and vertical axes, and data labels and markers.  
-Sources are in the subdirectory <code>lps/components/charts</code> of the directory in which the OpenLaszlo SDK is located. 
-</p>
- <p>
-The charting and graphing components included in this release are still undergoing development and are included in this release at Beta quality only.  Preliminary documentation is included in the LZX Reference.
-</p>
-<h2>Flash Player version detection</h2>
-<p>
-Version detection now forces an upgrade to the Flash Player version specified in <code>lzr=</code>. For example, <code>lzr=swf8</code> will require version 8 or higher. People browsing to your url who do not have the appropriate version of the Flash Player will be prompted to upgrade.
-</p>
-<h2><code>setcanvasAttribute()</code> Javascript function can optionally add browser history events</h2>
-<p>
-Calling the browser javascript function <code>setcanvasAttribute(name, value, true)</code> will cause a browser history event to be added.  This will cause the canvas attribute to be reset as the browser's forward and back buttons are used.
-</p>
-<h2>Tutorial Introduction to &lt;drawview&gt;</h2>
-<p>
-The Developer's Guide now contains an introduction to the drawing API.
-</p>
-<h2>Global Hand Cursor Parameter</h2>
-<p>A new method, <code>LzCursor.showHandCursor(true)</code>, has
-been added which allows you to control whether or not the cursor is changed to a hand-shaped cursor when moved over clickable views.</p>
-<p>There's also a property on &lt;view&gt; that shows/hides the hand cursor:
-
-<code>LzView.showhandcursor</code>
-</p>
-<p>See the Input Devices and Gestures chapter  of the Developer's Guide (the section on ("Cursor Management") for details.</p>
-<h2>Developers' console enhancements</h2> 
-<p>
-The "Developers' Console" application, otherwise known as "that HTML thingy at the bottom of my compiled LPS apps" has been implemented as an LZX application.  As part of its implementation:</p>
-<ul>
-	<li>You can switch between swf6, swf7 and swf8 targets by pushing a button.</li>
-	<li>You can enable or disable debugging.</li>
-<li>SOLO deployment is simplified by the SOLO deployment "wizard", which packages all necessary files, such as <code>embed.js</code> and the "build" subdirectory, into a zip file for uploading to a server (Apache, etc). The zip file is placed in the same directory as the canvas source file.
-</li>
-</ul>
-<p>
- 
-<h2>New debugger capabilities</h2>
-<p>
-The OpenLaszlo debugger has been upgraded with several powerful features:
-</p>
-<ul>
-<li>
-Backtracing.  When enabled, the compiler will
-instrument functions to maintain a call stack.</li>
-	<li>Detection of corrupted objects.</li>
-
-	<li>Substantially enhanced control of string formatting</li>
-
-	<li>Inspectable warnings and errors.  If you click on them, you will inspect the warning or error object.</li>
- 
-<li>Ability to monitor and report when any property of an object has changed.
-</li>
-</ul>
-<p>See the Developer's Guide for explanations and examples of these new features.</p>
-<h2>The Incubator</h2>
+<h2>New goodies in the incubator</h2>
 <p> 
-The Incubator directory, <tt>lps/components/incubator/</tt>, contains components and other code that have been contributed to the OpenLaszlo project, but have not yet been fully integrated into the product. It is intended as an easy way to contribute code that doesn't have the level of documentation, testing, or API review that is required in other directories, or that is simply contributed too late in the release cycle to place elsewhere.
-</p><p>
-Recent contributions to the incubator include user contributions for:</p>
-<ul>
-	<li>base64 encoding</li>
-	<li>dragging</li>
-	<li>floating lists</li>
-	<li>gradient views</li>
-	<li>stepper component</li>
-	<li>code inspector</li>
-</ul>
-
-<h2>Splash ratio</h2>
-<p>The splash ratio can be expressed as a floating point or percentage. 
+The Incubator directory, <tt>lps/components/incubator/</tt>, contains components and other code that have been contributed to the OpenLaszlo project, but have not yet been fully integrated into the product. It is intended as an easy way to contribute code that doesn't have the level of documentation, testing, or API review that is required in other directories, or that is simply contributed too late in the release cycle to place elsewhere. Some of the more significant contributions are called out below.
 </p>
-<h1><a name="backwards">Backwards-incompatible changes</a></h1> 
 <p>
-As noted above, the canvas size now defaults to <code>height="100%" width="100%"</code>. This means that the OpenLaszlo application will size itself to completely fill the HTML page or frame in which it is placed. In earlier releases, OpenLaszlo applications had a fixed default height and width. Applications that depended on that default size will not work correctly.  The solution is to explicitly set the canvas height and width.
+In addition there are several new gadgets and gizmos in the incubator, mostly courtesy of the LaszloMail team. Have a look!
+</p>
+<h2>CSS support in incubator (LPP-824)</h2>
+<p>
+The incubator now contains an implementation of CSS applied to OpenLaszlo.  Documentation is included.  Please note that this is an incubator project and as such it's subject to change, and there is no guarantee that it will ever formally make it into the platform. 
+</p>
+<h2>&lt;img&gt; tags within rich text views (LPP-874)</h2>
+<p>
+A partial implementation of the HTML &lt;img&gt; tag allows you to include images within HTML text.  There are some limitations; please see the documentation.</p>
+<h2>MSAA-compatible accessibility (LPP-872)</h2>
+<p>
+By using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities. OpenLaszlo now includes a partial implementation of this specification, with some limitations that depend on the target runtime.  Please see the documentation. 
+</p>
+
+<h2>rich text editor palette in incubator (LPP-873)</h2>
+<p>
+A contribution from the LaszloMail team.
+</p>
+<h2>
+JavaScript compiler ported from Jython to Java (LPP-752)</h2>
+<p>
+Much faster compilation.
+</p>
+<h2>Automated unit tests</h2>
+<p>
+For those who build OpenLaszlo from sources. 
+The cool thing about automated unit tests is 'ant runlzunit', which automatically runs the known unit tests against a build.
+</p>
+<h2>New &lt;handler&gt; and &lt;event&gt; syntax</h2>
+<p>
+There is a new syntax for declaring events and event handlers.  The old syntax still works, but we came up with this new style because people find the current syntax somewhat obscure, and anonymous methods sometimes have unanticipated results.
+</p>
+<p>
+The documentation has not caught up with the new syntax, but there is a <a href="http://wiki.openlaszlo.org/Event_and_handler_tags">wiki</a> page that contains the specification:</p>
+
+
+<H1><a name="backwards">Backwards-incompatible Changes</a></H1> 
+<p>
+The KRANK feature has been removed (LPP-871)
 </p>
 
 <h1><a name="fixed-bugs">Significant Bugs Fixed</a></h1>
 <p>
-More than a hundred bugs have been fixed since the 3.0.2 release.  Consult <a href="http://www.openlaszlo.org/jira/ ">JIRA</a> for complete information.  Among the more significant fixes are the following: 
-</p>
-<ul>
-<li>mp3 files now work in SOLO mode. <a href="http://www.openlaszlo.org/jira/browse/LPP-487">LPP-487</a></li>
-
-<li>The font in the LZX reference is now embedded&#8212;looks good in all browsers. <a href="http://www.openlaszlo.org/jira/browse/LPP-335">LPP-335</a></li>
-<li>Increased memory consumption reported in some nightly builds has been fixed. <a href="http://www.openlaszlo.org/jira/browse/LPP-714">LPP-714</a></li>
-<li>Debugger issues with swf6 have been cleaned up. <a href="http://www.openlaszlo.org/jira/browse/LPP-753">LPP-753</a></li>
-<li>Javascript issues with Internet Explorer have been cleaned up. <a href="http://www.openlaszlo.org/jira/browse/LPP-657">LPP-657</a></li>
-<li>All international character sets work correctly with XML-RPC. <a href="http://www.openlaszlo.org/jira/browse/LPP-716">LPP-716</a></li>
-<li>Various errors in Laszlo Explorer have been fixed. <a href="http://www.openlaszlo.org/jira/browse/LPP-513">LPP-513</a></li>
-<li>"onlastframe" events now work correctly in mac browsers. <a href="http://www.openlaszlo.org/jira/browse/LPP-715">LPP-715</a></li>
-<li>Setting <code>appendChild()</code> directly on a dataset no longer breaks replication. <a href="http://www.openlaszlo.org/jira/browse/LPP-692">LPP-692</a></li>
-</ul>
- 
+Several dozens of bugs have been fixed since the 3.0.2 release. Consult <a href="http://www.openlaszlo.org/jira/secure/ReleaseNote.jspa?version=10120&styleName=Html&projectId=10020&Create=Create">JIRA</a> for complete information. 
 
 <h1><a name="Known">Known Defects</a></h1>
 
-
-
-
 <p>
-This section of the notes summarizes significant bugs and is included here for your convenience. For the most current and complete information, consult the <a href="http://www.openlaszlo.org/jira/secure/IssueNavigator.jspa?reset=true&pid=10020&fixfor=10085">JIRA</a> bug database.
+For the most current and complete information, consult the <a href="http://www.openlaszlo.org/jira/">JIRA</a> bug database.
 </p>
-<ul>
-
-<li>Compilation Manager<ul>
-
-<li>If you compile a file that includes a font, resource, or library in the 
-components directory, and you then create a file with the same name as the 
-included file in your application directory, the OpenLaszlo Server will not recompile the  application.  You will need to make a gratuitous edit to the application source to force it to recompile.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Compiler<ul> 
-
- <li>
-<a href="http://www.openlaszlo.org/jira/browse/LPP-808">LPP-808</a></p>
 <p>
- When you have an app which uses the OpenLaszlo server transcoder to include a PNG file, and you compile the app as a Flash 8 app (lzr=swf8), the image appears "fuzzy", as if it is scaling it by a small extra fraction so it no longer has integer pixel boundaries. </p>
+There are two particular problems that we would like to call to your attention:
+<h2>Mouseovers and animators</h2>
 <p>
- Note that if the resource is included as a runtime SOLO PNG, this doesn't happen, so it is an interaction of the OpenLaszlo Server PNG transcoder.</p>
-</li>
-<li>A resource whose origin is not (0,0) may appear to have the wrong width and height.</li> 
- 
-<li>Default clickable interacts poorly with classes. 
-<pre>&lt;class name="myclass" clickable="false"/&gt; 
-  &lt;myclass id="bob" onclick="f()"/&gt; 
-</pre> 
-Creates a bob that is clickable. That is, setting the onclick="f()" value 
-overrides the setting in the class definition.  If this isn't what you want, the 
-workaround is to write an explicit clickable on the subclass or instance: 
-<pre>  &lt;class name="myclass" clickable="false"/&gt; 
-  &lt;myclass id="bob" onclick="f()" clickable="false"/&gt; 
-</pre></li> 
- 
-
-<li>When specifying a resource with a constraint expression, you must use either a 
-resource name (instead of a literal path) or an http URL. The following two 
-examples work: 
-<pre>&lt;node id="globals"&gt; 
-        &lt;attribute name="BRAND" 
-                   value="http:logo.swf" 
-                   type="string"/&gt; 
-&lt;/node&gt; 
-&lt;view id="a" x="0" y="0" resource="${globals.BRAND}"/&gt; 
-</pre> 
-or  
-<pre>&lt;resource name="logo" value="logo.swf"/&gt; 
- 
-&lt;node id="globals"&gt; 
-        &lt;attribute name="BRAND" 
-                   value="logo" 
-                   type="string"/&gt; 
-&lt;/node&gt; 
-&lt;view id="a" x="0" y="0" resource="${globals.BRAND}"/&gt; 
-</pre></li> 
-<li>All canvas attributes that CAN be defined as XML attributes MUST be defined as XML attributes.  For example, &lt;canvas&gt;&lt;attribute name="width" value="100"/&gt; does not have the same effect as &lt;canvas width="100"&gt;, and similarly for the other attributes such as bgcolor, font, and fontsize.
-</li> 
- 
-<li>The OpenLaszlo compiler expects .lzx files should be authored using the UTF-8  character set encoding (per the XML document standard), unless you specify another encoding explicitly in the XML declaration at the start of the file,  e.g., 
-<pre>&lt;?xml version="1.0" encoding="ISO-8859-1" ?&gt; 
-</pre> 
-</li> 
-<li>The OpenLaszlo Server supports tomcat 5.0 as a development environment. It has not yet been fully 
-tested for deployment. If you use the Tomcat as provided by Laszlo, the memory 
-parameters will be configured correctly. If you use your own version of Tomcat 5, 
-however, it may fail (due to insufficient memory) after about 35 compilations.</li> 
-<li>Kranking an application with a request parameter (e.g., ?foo=bar) will cause that parameter (e.g., foo)  
-to be serialized and reconstituted.  If you try to supply a different request parameter to the kranked  
-app, Flash's 'security mechanism' will ignore the new parameter (because there is already a variable of  
-that name (e.g., foo)). 
-<p> 
-There are two suggested workarounds:   
+There is a common "UI" design pattern that is easily implemented within OpenLaszlo. This implementation, however, reveals a bug that
+some developers have encountered. In this particular UI design, a view is expanded in some dimension on rollover of the mouse and
+contracted upon mouseout. The code is often written like the following:
 </p>
-<ol> 
-<li>Do not supply the request parameters when kranking your application.  This implies your application  
-must be able to initialize with the request parameters not set.</li>
 
-<li>Use LzBrowser.getLoadUrlAsLzUrl().query to parse the request parameters and set them in your  
-application at initialization time.</li></ol></li>
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Compiler - JavaScript<ul> 
- 
-<li>The shortcut form for specifying unicode characters (e.g., \xAB) does not 
-compile correctly.  As a workaround, specify unicode characters in full form 
-(e.g., \u00AB).</li> 
-<li>An expression of the form (fn)(a1, a2, ...) evaluates the expressions 
-a1, a2, ... before evaluating the expression fn, which is not the strict 
-left-to-right evaluation order required by the ECMAScript standard.  As a 
-workaround use the following equivalent: 
-<pre>var temp = (fn); temp(a1, a2, ...) 
-</pre> 
-This should only be necessary if the expression fn has side-effects that affect 
-the values of the expressions a1, a2, ...</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Compiler - Schema<ul> 
- 
-<li>The "from" and "to" attributes of an animator must be numeric literals 
-such as "1000" or "25.8", or live expressions such as "${parent.x}".  If the 
-animated 
-attribute has a boolean type, use the live expression syntax:  
- 
- 
-<pre>&lt;animator attribute="visible" to="${false}"/&gt;  
-</pre> 
-(or, for greater efficiency,  
-<pre>&lt;animator attribute="visible" to="$immediately{false}"/&gt;) 
-</pre></li> 
-<li>Declaring an "onload" event as an attribute of the tag generates a compiler error: 
-<pre>&lt;class name="resourceloader"&gt; 
-    &lt;view name="media" onload="parent.gotLoad(this);" visible="false"/&gt; 
-</pre> 
- 
-As a workaround, use 
-<pre> &lt;method event="onload" . . .&gt; 
-</pre></li> 
-<li>The id attribute is typed wrong for datapath. A workaround is to declare the 
-attribute with a type: 
-<pre>        &lt;datapath&gt; 
-            &lt;attribute name="id" value="dp" type="string"/&gt; 
-        &lt;/datapath&gt; 
- 
-</pre></li> 
-<li>Combining the attribute properties when="once" and type="number" will cause a 
-compilation error  
-for non-constant values.  Use value="$once{...}" to avoid this error.</li> 
- 
- 
-</ul></li></ul> 
- 
- 
-<ul><li>Compiler - Warnings<ul> 
- 
-<li>Creating an attribute named "options" or "id" on a class or view will cause 
-conflicts with internal methods. Giving a view a "name" or "id" with the same 
-name as a user-defined class will also cause conflicts.  No warning is currently 
-issued in this case, so it can be hard to identify this situation.</li> 
-<li>Forward references to classes are not permitted. The class definition must occur 
-lexically before the first instance of that class is created. The compiler will 
-not warn about this situation. For example, the following will not work: 
-<pre>&lt;canvas&gt; 
-    &lt;foo/&gt; 
-    &lt;class name="foo"&gt; 
-        &lt;text&gt;Hello!&lt;/text&gt; 
- 
-    &lt;/class&gt; 
-&lt;/canvas&gt; 
-</pre> 
-However no warning is issued by the compiler in this case.</li> 
-<li>The following unmatched cases can cause compiler errors with misleading 
-line numbers: 
-<pre>  &lt;view x="${/*}"/&gt; 
-  &lt;view x="$immediate{/*}"/&gt; 
-  &lt;view oninit="/*"/&gt; 
- 
-  &lt;method name="f" args="/*"/&gt; 
-  &lt;method name="f"&gt;/*&lt;/method&gt; 
-  &lt;script&gt;/*&lt;/script&gt; 
-</pre></li> 
-<li>Text that follows &lt;method&gt; or &lt;attribute&gt; in a component class (any tag 
-defined using the &lt;class&gt; tag) will cause a compilation warning, even if the 
-component is declared to accept text or html.  For example: 
- 
-<pre>    &lt;inputtextbox&gt; 
-        &lt;method name="foo"&gt; 
-              Debug.write('xxx'); 
-        &lt;/method&gt; 
-        mytext 
-    &lt;/inputtextbox&gt; 
-</pre> 
-The correct syntax is to place the text before any &lt;method&gt; or &lt;attribute&gt; children: 
- 
-<pre>    &lt;inputtextbox&gt;mytext 
-        &lt;method name="foo"&gt; 
-              Debug.write('xxx'); 
-        &lt;/method&gt; 
-    &lt;/inputtextbox&gt; 
-</pre></li> 
-<li>You cannot reliably use constraints to set the fontsize or font name  
-of an inputtext field. 
- 
-For example, this will probably not display properly, but will not signal an  
-error at compile time.  
-<pre>&lt;canvas&gt; 
- 
-    &lt;class name="tester"&gt; 
-        &lt;inputtext fontsize="${canvas.height}"&gt;hello &lt;/inputtext&gt; 
-    &lt;/class&gt; 
-    &lt;tester /&gt; 
-&lt;/canvas&gt; 
-</pre></li> 
- 
-<li>If a resource referenced in a &lt;splash&gt; view is not present, an odd error message -- 
-the single word "undefined" -- with half of the "u" chopped off-- appears. 
+
 <pre>
-&lt;canvas&gt; 
-  &lt;splash&gt; 
-    &lt;view resource="images/logo.png"/&gt; 
-  &lt;/splash&gt; 
-&lt;/canvas&gt; 
- 
-</pre></li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Components - all<ul> 
- 
-<li>Some XML escape characters cannot be used in the initial text content of input text 
-components. A workaround is to use the "text" attribute. For example, to specify 
-the string "dog &amp; cat" 
-<pre>Right: 
-&lt;simpleinputtext text="dog &amp;amp; cat"/&gt; 
- 
-Wrong: 
-&lt;simpleinputtext&gt;dog &amp;amp; cat&lt;/simpleinputtext&gt; 
-</pre></li> 
-<li>Fonts do not cascade through components, and cannot be set with the &lt;style&gt; tag. 
-However, you can redefine the font named "default", which is used by components.</li> 
-<li>Adding  
-<pre>&lt;datapath replication="lazy"&gt; 
-</pre> 
- 
- inside the leaf basetree  
-causes the titles of many of the intermediate-level trees (one above the leaves) 
-never to appear. 
- 
-This means lazy replication can't be used to optimize the start speed of tree 
-controls.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Components - base<ul> 
-<li>
-<a href="http://www.openlaszlo.org/jira/browse/LPP-115">LPP-115</a>
-<p>
-Mouse wheel event listeners are available only in Windows versions of Flash Player.
-</p>
-
-</li>
- 
-<li>Tabs will not display a tabpane after datamapping changes until a tab is selected.</li> 
-<li>&lt;basebutton&gt; can't be used when canvas version=="1.0". A workaround is to remove 
-version="1.0" from the canvas for this application, 
-or to define a font named "default" in the application.</li> 
-<li> 
- 
-</ul></li></ul> 
- 
-<ul><li>Components - LZ<ul> 
- 
-<li>&lt;tabview&gt; doesn't respect view "visible" property.</li> 
-<li>You must explicitly set a menu's width. It does not automatically calculate the  
-max menuitem and use that as a reference.  
- 
-The height of a menu, however, does grow if menu items are added and deleted.</li> 
-<li>
-For a yummy autumn soup, cook acorn and winter squash with cauliflower, onions, vegetable bullion and one ripe pear. Mix in the blender, add some light cream. Serve hot!
-</li>
-<li>&lt;edittext&gt; does not automatically size to the size of the font; it is always 22 
-pixels high.</li> 
- 
-<li>If you set a datapath as a child of tabpane for replication, you need to set its 
-datacontrolsvisibility attribute to false or the wrong tabpane will be 
-displayed. For example: 
-<pre>&lt;tabs&gt; 
-  &lt;tabpane&gt; 
-    &lt;datapath xpath="[mydatapath]"&gt; 
-      &lt;attribute name="datacontrolsvisibility" value="false"/&gt; 
-    &lt;/datapath&gt; 
-  &lt;/tabpane&gt; 
- 
-&lt;/tabs&gt; 
-</pre></li> 
-<li>&lt;button&gt; face stretches when its parent view has a resource that stretches.</li> 
-<li>In some cases, the "onselect" element for a combobox is sent when the combobox 
-is initialized -- not when it is selected by the user.  A workaround is to 
-include this in the combobox tag:  
-<pre>  &lt;attribute name="isFirstOnselectFired" value="false" /&gt; 
- 
-                    &lt;method event="onselect" args="d"&gt; 
-                        if ( !isFirstOnselectFired ) { 
-                            this.setAttribute( 'isFirstOnselectFired', true ); 
-                            return false; 
-                        } 
-                        // Do whatever you were going to do onselect here. 
-                    &lt;/method&gt; 
- 
-</pre></li> 
-<li>Replicated trees with open attributes will not display correctly.</li> 
-<li>Menubar has wrong placement in windows by default.  
-A &lt;menubar/&gt; is not placed in the 'menubar area' of a &lt;window/&gt; by default, so 
-the workaround is the following: 
-<pre>&lt;window 
-	&lt;menubar ... placement="menubar"  /&gt; 
-&lt;/window&gt; 
-</pre></li> 
- 
-<li>Because the gridcolumn is a basecomponent (and is styleable), fonts set on a grid 
-will not cascade to its contents. Set the font on each individual column to 
-control fonts within a grid.</li> 
-<li>The user can't tab out of the grid from the last record or shift-tab out from 
-the first record.</li> 
-<li>At this release, &lt;tree&gt; does not support changes to the underlying 
-dataset. So if you have a dataset, and make a change to it, the tree won't update.</li> 
-<li>&lt;combobox&gt; doesn't send keycode with key events as expected.</li> 
-<li>Using 'onvalue' event on a combobox will not allow making something modal.  For 
-example, the following code will not work as expected: 
-<pre>&lt;canvas&gt; 
- 
-    &lt;combobox defaulttext="Default"&gt; 
-        &lt;method event="onvalue"&gt; 
-            if ( this.value == null ) return; 
-            gAlert.open(); 
-        &lt;/method&gt; 
-        &lt;textlistitem&gt;A&lt;/textlistitem&gt; 
-        &lt;textlistitem&gt;B&lt;/textlistitem&gt; 
- 
-        &lt;textlistitem&gt;C&lt;/textlistitem&gt; 
-    &lt;/combobox&gt; 
- 
-    &lt;alert id="gAlert"&gt;Hi&lt;/alert&gt; 
-&lt;/canvas&gt; 
-</pre> 
- 
-Workaround: If you use 'onselect' the mode will be released appropriately.</li> 
-<li>The z order of basewindows is not well defined.</li> 
- 
- 
-</ul></li></ul> 
- 
- 
-<ul><li>Debugger<ul> 
- 
-<li>Declaring an attribute does not assign it a value. Use of an attribute with no 
-value will throw a debugger warning.</li> 
- 
- 
-</ul></li></ul> 
- 
- 
- 
- 
-<ul>
-  <li>Fonts
-     <ul> 
- 
-        <li>The Verity font has a slightly different baseline than other fonts.  Be sure to 
-visually inspect your application carefully when switching from or to the Verity 
-font.   </li> 
-        <li> 
-  Disappearing fonts&#8212;
-Client fonts (such as the default font) disappear when rotated, and (mostly) ignore the opacity parameter.
-This is a limitation of the Flash player. Use an embedded font if rotation or opacity is required.
-        </li> 
-     
-    </ul>
-  </li>
- </ul>
-<ul><li>Installer<ul> 
- 
-<li>The installer and OpenLaszlo Server may fail to function properly in Windows if Java is moved 
-from the location where it was originally installed.</li> 
-<li>In order to change the port number that OpenLaszlo Server runs on, you need to edit 
-both $TOMCAT_HOME/conf/server.xml and $LPS_WEBAPP_HOMElz-utils/startup.var, 
-and change any instance of 8080 to something else. 
- 
-Also, if you have another instance of Tomcat up and running, you may 
-want to change the shutdown port in server.xml to something other than default 
-of 8009.</li> 
- 
-</ul></li></ul> 
- 
-<ul><li>JGenerator<ul> 
- 
-<li>The OpenLaszlo compiler uses routines from AWT. This sometimes requires that the target 
-deployment server installs X Windows.</li> 
-<li>Using a swf asset as a resource in the splash tag can cause strange problems if 
-the asset has an embedded font and the font name collides with the name used 
-for an embedded font in the LZX app.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Krank<ul> 
-<li> 
-There is a bug in the KRANK feature in OpenLaszlo 3.0 that is a 
-regression from LPS 2.2. It was probably present in LPS 3.0b2. 
-<p>For some applications, if the application is KRANKed using an 
-OpenLaszlo development server and a browser that are running on the 
-same machine (this is the typical configuration), it may only work when 
-deployed to a browser on the same machine as the server. 
-Conversely, an application that is KRANKed from a separate client will 
-only work when deployed to a browser that is not running on the server 
-machine. 
-</p> 
-<p> 
-There are two implications:
-</p><ol> 
-<li>The KRANK feature when used in the standard configuration will not 
-produce a deployable application. The workaround is to use a second 
-machine to KRANK from.</li> 
-<li>Some of the demos that are distributed in the SDK (portions of 
-dashboard, chat, calendar) will not work when viewed from a second 
-machine. 
-This is a rare use case (especially since the demos are present on the 
-web site, and since firewalls disallow access by default anyway), so 
-this is less serious.</li> 
-</ol> 
-</li> 
- 
-<li>When running the optimizer, the  source directory  of the application being 
-optimized must be writable by the web server. If the server cannot write to the 
-directory, an error message will be written to the lps log.</li> 
- 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>OpenLaszlo Runtime Library (formerly known as Laszlo Foundation Classes)<ul> 
- <li>
-<p><a href="http://www.openlaszlo.org/jira/browse/LPP-823">LPP-823</a>:</p>
-<p>
-The word "filters" appears to be reserved under Flash 8.
- This program doesn't work as expected:
-<pre>
- &lt;canvas&gt;
-    &lt;class name="filters"/&gt;
-    &lt;filters oninit="Debug.write( 'hi there' )"/&gt;
- &lt;canvas&gt;
-</pre>
-<p>
- If you change the name of the class and instance to just, say, "filter" it works fine.</p>
-</li>
-<li>The contents of a view with clip=true may not display properly when the size of 
-the view is changed.  The contents may be stretched by one pixel.  All text is 
-clip=true, and small clipped resized text may be drawn slightly blurry.</li> 
-<li>When operating under heavy processing loads, OpenLaszlo applications may send spurious 
-global mouseup and mousedown events. When this happens, the warning  
-<pre> WARNING: Sent extra global mouse event 
- 
-</pre> 
-will print in the debugger.</li> 
-<li>A constraint that depends on a.b.c is only updated if the value of a.b.c 
-changes, not if a.b changes. 
- 
-For example:  
-<pre>    &lt;attribute name="dec" type="number" value="0"/&gt; 
-    &lt;attribute name="hexString" type="string" value="${'0x'+dec.toString(16)}"/&gt; 
-</pre> 
-hexString will not be updated when setAttribute() is called on dec. As a 
-workaround, create your own event handler for the base value: 
-<pre>    &lt;attribute name="dec" type="number" value="0"/&gt; 
- 
-    &lt;attribute name="hexString" type="string" /&gt; 
-    &lt;method event="ondec"&gt; 
-      hexString = '0x'+dec.toString(16); 
-    &lt;/method&gt; 
-</pre></li> 
- <li>
- Views become invisible when opacity=0
-This produces odd effects in programs that use automatic layout; e.g.<pre>
- &lt;canvas layout="axis: x"/&gt;
-   &lt;view width="20" height="20" bgcolor="red"/&gt;
-   &lt;view width="20" height="20" bgcolor="blue" onclick="animate('opacity', 0, 1000)"/&gt;
-   &lt;view width="20" height="20" bgcolor="gree"/&gt;
- &lt;/canvas&gt;
-
+&lt;canvas&gt;
+   &lt;view width="100" height="100" bgcolor="blue"
+         onmouseover="this.expand.doStart()"
+         onmouseout="this.contract.doStart()" &gt;
+       &lt;animator name="expand"   attribute="width" to="150"  duration="500" /&gt;
+       &lt;animator name="contract" attribute="width" to="100"  duration="500" /&gt;
+   &lt;/view&gt;
+&lt;/canvas&gt;
 </pre>
 
-</li>
-<li>Align and valign cannot be modified once they are set initially. To work around 
-this issue use a state with an explicit constraint (rather than align or valign)</li> 
- 
-<li>&lt;animatorgroup&gt; attributes not settable after init. To work around, set the 
-individual attributes of the individual animators in the group.</li> 
-<li>A view which uses align or valign may affect its parent's size before the 
-alignment is applied. This means that using alignment in a view which is sized 
-to its content will not work reliably.</li> 
- 
-<li>LzView.getMouse() doesn't work properly when stretches is enabled. To 
-work around, getMouse relative to an unstretched view.</li> 
-<li>Undocumented/unreserved globals may exist. This causes a collision with the id 
-of some nodes and views. Views and nodes with an id of o, or s will 
-eventually get overwritten.</li> 
-<li>Using LzView.bringToFront() and LzView.sendToBack() will not work properly on 
-views which whose parent is the canvas in an application which has a &lt;splash&gt;.</li> 
- 
+<p>
+The visual effect of the above code will fail, however, if the mouse is  moved so fast by the user that
+the 2nd mouseover event occurs before the first expand animation is complete.
+</p>
+<p>
+In other words, calling doStart() on an animator that is already running does nothing. It seems that the view has missed
+the 2nd mouseover event, when in actuality it is the animator that ignored  its doStart() method call because it was already running.
+</p>
 
-<li>A multiframe swf resource that has no sound will be played at 30 fps, regardless of its specified framerate.</li> 
-<li>Most private LFC attributes begin with __LZ. However, some of them do not. In 
-general, if an attribute does not appear in the documentation, it should be 
-considered private, regardless of its name.</li> 
-<li>LzView.getAttributeRelative() hangs Flash Player when called with null second 
-argument.</li> 
-<li>The canvas does not send an onconstruct event.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>OpenLaszlo Runtime Library (formerly known as Laszlo Foundation Classes) - Data<ul> 
- 
-<li>Datasets which have their request attribute set to true will make 
-a request even if they don't have a src attribute when they init.</li> 
-<li>Using a state to create a view which is data-replicated may appear to work, but 
-the state will not be removed properly. To work around, wrap the replicated view 
-inside an extra view.  
-For example: 
-change this:  
-<pre>&lt;state&gt;&lt;view datapath="manyNodes"/&gt; 
-</pre>  
-to:           
-<pre>&lt;state&gt;&lt;view&gt;&lt;view datapath="manyNodes"/&gt; 
-</pre></li> 
-<li>Datapointer's serialize() method is slow and can hang the Flash player.</li> 
- 
-<li>The dataselectionmanager only works with a lazy replicated list. Attempting to 
-use it with a node that has not replicated will not work.</li> 
-<li>Runtime HTTP requests for very long urls (&gt; 1024 chars) made from a Laszlo 
-application running in Internet Explorer can cause the all subsequent HTTP 
-requests to fail.  To work around, this use the setQueryType('POST') so that 
-query string parameters are passed in the post body.</li> 
-<li>Although a LzReplicationManager and its subclass (LzLazyReplicationManager) descend from  
-LzDatapointer, they do not actually point to an LzDataNode. For this reason, they do not support  
-relative xpathQuery() or setPointer() calls.</li> 
-<li>A node's datapath attribute is null unless a datapath is given for 
-it, either as a datapath= attribute, or as a declared child. To force a 
-view to create a datapath, set its datapath to ".".</li> 
-<li>Using the $path constraint syntax will force a node to create a 
-datapath with an xpath of "." if it does not already have one. This can 
-cause unexpected results due to the fact that a datapath which does not 
-match any node will hide its view. See the datacontrolsvisibility 
-attribute of datapath.</li> 
-<li>Because the canvas can't have a datapath, $path bindings for attributes on the 
-canvas don't work.</li> 
+<p>
+For now, the work around is to use the javascript interface for animators like the following.
+</p>
 
-<li>$path syntax for value of attribute declared as number creates string value. As 
-a workaround, you can use the parseint() function to cast the string back to a number.</li> 
 
-<li>When setting a replication manager from a pointer, the replication manager is 
-not dynamically bound to its data since it has no xpath query to rerun when the 
-data changes. This means that, for instance, it will not re-sort when the data 
-changes. To get a dynamic binding, set an xpath for the replication manager -- 
-don't set its pointer directly. Alternatively, you can reset the pointer when 
-sort values have changed.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>OpenLaszlo Runtime Library (formerly known as Laszlo Foundation Classes) - Text<ul> 
- 
-<li>The dash at the end of a word does not force a wrap if the width is less than 
-the width at the dash but greater than the width at the last character before 
-the dash.</li> 
-<li>Single words in an input text field that are too long for the line will be clipped.</li> 
-<li>Input text fields do not wrap on dashes -- only on spaces.</li> 
-<li>Using the fgcolor property of the inputtext element changes the selection color 
-to the same color as the text color.</li> 
- 
-<li>There is currently no way to center or right-align multiline text in Laszlo. If 
-this is absolutely necessary, use a series of single line text fields and right 
-align them.</li> 
-<li>A Laszlo text field may not display correctly if it is given an extremely long 
-line and it is multiline=false</li> 
-<li>&lt;p&gt;text&lt;/p&gt; does not display unless multiline=true.</li> 
-<li>The fontsize attribute doesn't cascade to children when reset at runtime. 
-Although font information set on a parent will cascade to its children at 
-construct-time, the binding is not active. Changing the parent's font after 
-construction (say, at constraint resolution time) will not change the child's font.</li> 
-<li>very long strings in singleline inputtext cause display problems</li> 
-<li>&lt;text&gt; and &lt;inputtext&gt; views are not designed to have subviews.</li> 
- 
-<li>A &lt;text&gt; which uses the &lt;font...&gt; tag will not automatically size its height 
-properly.</li> 
-<li>fgcolor attribute has no effect on inputtext</li> 
-<li>Mouse events are not reported by &lt;edittext&gt;.  They are reported by &lt;inputtext&gt;.</li> 
-<li>This doesn't work when something else has been focused: 
-   this.editbox.setSelection(0); 
- 
-This did work: 
-   LzFocus.setFocus(this.editbox); 
-   this.editbox.setSelection(0);</li> 
- 
-<li>setfontstyle('bold') or setattribute('fontstyle','bold') require that you also 
-update the text. </li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>LFC Object System<ul> 
- 
-<li>super.&lt;member&gt; is not supported and will produce a compilation error</li> 
-<li>"meth" is a reserved word previously undocumented. Creating nodes with this name 
-or id causes unpredictable behavior in lzbrowser.loadurl() and other calls.</li> 
- 
-</ul></li></ul> 
- 
- 
- 
- 
- 
-<ul><li>RPC - SOAP<ul> 
- 
-<li>If you get a NullPointerException reported when writing SOAP-based apps, look in 
-the lps.log to find debugging information. Type mismatches in document style 
-messages can throw NullPointerExceptions.</li> 
- 
- 
-</ul></li></ul> 
- 
- 
- 
-<ul><li>Server data transport<ul> 
- 
-<li>LPS may maintain stale DNS mappings between hosts and IP addresses. 
-Restarting LPS will cause it to drop any such stale mappings.</li> 
-<li>When redirects are disallowed, backend 302 is reported as timeout instead of 
-datasource error.</li> 
-<li>The Persistent Connection manager can, in some cases, hold open sockets when the 
-window is closed. As stated in the documentation, the persistent connection 
-feature is provisional and should not be used in production software.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Server globals<ul> 
- 
- 
-<li>LPS does not gracefully handle syntax errors in the lps.properties file. A 
-file with unexpected values for certain properties can cause the server to fail 
-its initialization.</li> 
- 
- 
-</ul></li></ul> 
- 
-<ul><li>Server media<ul> 
- 
-<li>An audio resource which is included at compile time will not play. For example, 
-this: &lt;view resource="myaudio.mpg"/&gt; won't work. To work around, load the media 
-at runtime (like this: &lt;view resource="http:myaudio.mpg"/&gt;) or use the LzAudio APIs.</li> 
-<li>LPS may fail to proxy images and data from remote web sites that block 
-proxies.  Such requests will come back from the remote web sites marked as 
-Forbidden.</li> 
- 
-</ul></li></ul> 
- 
-<ul><li>Server misc.<ul> 
- 
-<li>LPS does not work in the Turkish locale.  The workaround is to add a 
--Duser.language=en to the JAVA_OPTS in your servlet container startup.</li> 
-<li>The LZX source viewer does not display component resources</li> 
- 
- 
-</ul></li></ul> 
- 
- 
-<ul><li>Server XML<ul> 
- 
-<li>The data system requires well formed XML input. However, 
-passing in XML with no root element will 
-be sent to the client (which will get undefined results when it tries to  
-process it) with no error. For example: 
- 
-<pre>&lt;foo&gt; 
-    &lt;........&gt; 
-&lt;/foo&gt; 
-&lt;bar&gt; 
-    &lt;........&gt; 
-&lt;/bar&gt; 
-</pre></li> 
- 
-</ul></li></ul> 
+<pre>
+&lt;canvas&gt;
+   &lt;view width="100" height="100" bgcolor="red"
+         onmouseover=" this.animate('width',150,500) "
+         onmouseout="  this.animate('width',100,500) " /&gt;
+&lt;/canvas&gt;
+</pre>
 
-<p class="bodytext">&copy;Copyright 2002-2005 <a href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a> All rights reserved. Unauthorized use, duplication or distribution is strictly prohibited.</p> 
-</body></html>
+<p>
+in this case, new animators are created with each new mouse event. These animators will run independently and so
+will not have the same problems associated with them like those encountered with the animator tags. Run the examples above,
+and move the mouse quickly in and out of both views. Notice how in the second example the motion of the red box seems more natural.
+ 
+</p>
+<h2>Applications embedded in IE</h2>
+<p>
+Users have reported problems with applications embedded in some versions of Internet Explorer -- the applications don't appear. if you can't get your OpenLaszlo application to show up in IE, try using the older version of embed.js from 3.0.2. We couldn't fix it because we couldn't reproduce the problem, but using older versions of the embed.js sometimes made the problem go away.
+</p>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
