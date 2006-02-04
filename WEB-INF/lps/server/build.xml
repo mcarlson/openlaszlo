@@ -5,7 +5,7 @@
 
 <project name="server" default="build" basedir=".">
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -64,8 +64,6 @@
   <!-- Ignore the system classpath -->
   <property name="build.sysclasspath" value="ignore" />
 
-  <!-- We use jikes -->
-  <property name="build.compiler" value="jikes"/>
 
   <property name="build.debug" value="off"/>
 
