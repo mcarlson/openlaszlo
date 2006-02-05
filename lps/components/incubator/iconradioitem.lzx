@@ -1,5 +1,6 @@
 <library>
     <include href="custombutton.lzx" />
+    <include href="iconradioitem-resources.lzx" />
 
     <!--- the iconradioitem class is a radio button with only an icon
         @START_CODE
@@ -7,7 +8,7 @@
         @END_CODE
     -->
    <class name="iconradioitem" extends="baselistitem" 
-        height="18" style="$once{custombutton_style}" >
+        height="18" >
    
         <!--- icon filename -->
         <attribute name="iconname"  value=""  type="string" />
@@ -18,21 +19,21 @@
         <attribute name="icon_y"    value="null"  />
         
          <!--- background resources -->
-        <attribute name="leftrsc"        value="button_small_left_rsc"  type="string" />
-        <attribute name="middlersc"      value="button_small_middle_rsc"  type="string" />
-        <attribute name="rightrsc"       value="button_small_right_rsc"  type="string" />
+        <attribute name="leftrsc"        value="iconradiobutton_small_left_rsc"  type="string" />
+        <attribute name="middlersc"      value="iconradiobutton_small_middle_rsc"  type="string" />
+        <attribute name="rightrsc"       value="iconradiobutton_small_right_rsc"  type="string" />
 
         <!-- button background -->
         <!-- have to use placeholder resources so that basebutton initializes correctly -->     
-        <view name="left"   resource="transparent_button_rsc" height="${parent.height}" 
+        <view name="left"   resource="iconradiotransparent_button_rsc" height="${parent.height}" 
             x="0"  >
             <method event="onload">this.updateResourceSize();</method>
         </view>
-        <view name="middle" resource="transparent_button_rsc" height="${parent.height}" 
+        <view name="middle" resource="iconradiotransparent_button_rsc" height="${parent.height}" 
             x="${parent.left.width}" width="${parent.width-parent.left.width-parent.right.width}" stretches="both">
             <method event="onload">this.updateResourceSize();</method>
         </view>
-        <view name="right"  resource="transparent_button_rsc" height="${parent.height}" 
+        <view name="right"  resource="iconradiotransparent_button_rsc" height="${parent.height}" 
             x="${parent.width-width}" stretches="height">
             <method event="onload">this.updateResourceSize();</method>
         </view>
