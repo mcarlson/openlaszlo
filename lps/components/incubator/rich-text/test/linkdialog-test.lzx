@@ -76,7 +76,7 @@
             assertTrue(ldlg.height > 0); 
         ]]>
         </method>
-    </TestCase>!
+    </TestCase>
     <TestCase>
         <method name="testLinkCompleteWord">
             grte.setText("012345 abcde mnopqr stuvwx"); 
@@ -108,7 +108,7 @@
             assertEquals("d", grte.getText().substr(10, 1));
         </method>
     </TestCase>
-    
+
 </TestSuite>
 
 </canvas>
