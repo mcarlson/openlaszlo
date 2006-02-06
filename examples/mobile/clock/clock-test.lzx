@@ -1,0 +1,93 @@
+<canvas height="208" width="176" bgcolor="#EAEAEA">
+
+    <include href="clock.lzx"/>
+    
+    <font name="Helmet">
+        <face src="helmetr.ttf" />
+        <face src="helmetb.ttf"  style="bold" />
+    </font>
+
+    <dataset name="cities">
+        <cities>
+        <city x="36" y="79" labelposition="2" timezoneoffset="-8"
+                  dst_start="3,6,2,0" dst_end="9,26,2,0">
+            <name>San Francisco</name>
+        </city>
+        </cities>
+    </dataset>
+
+    <!-- SECONDTIMER: an object that sends out an 'onsecond' event -->
+    <node id="secondtimer" >
+        <!-- trigger the initial animation on the oninit of the canvas.
+             this helps in the krank process so that the initial time that the app
+             get's is not stored in internal variables causing two animations to occur. -->
+        <method event="oninit" reference="canvas">
+           this.del = new LzDelegate ( this, "tick" );
+           LzTimer.addTimer( this.del, 1000 );
+         </method>
+        <method name="tick" >
+           this.onsecond.sendEvent();
+           LzTimer.addTimer( this.del, 1000 );
+        </method>
+    </node>
+
+    <simplelayout axis="x" inset="8"/>
+    <simplelayout axis="y" inset="8"/>
+    
+    <clock datapath="cities:/cities/city[1]" width="160" height="160">
+
+        <!-- Create a date in the current year -->
+        <method name="makeDate" args="dateparts">
+            var currentYear = new Date();
+            currentYear = 1900 + currentYear.getYear();
+
+            // dateparts is month,day,hours,mins
+            var datepartsarray = dateparts.split( ',' );
+
+            return new Date( currentYear,
+                             datepartsarray[0],
+                             datepartsarray[1],
+                             datepartsarray[2],
+                             datepartsarray[3] );
+        </method>
+
+        <!-- Data has been received so process it -->
+        <method  event="ondata">
+            <![CDATA[
+            // Now set the timezone for the city
+            this.timezoneoffset = (1*this.datapath.xpathQuery('@timezoneoffset'));
+            this.dst_start = this.datapath.xpathQuery('@dst_start');
+            this.dst_end = this.datapath.xpathQuery('@dst_end');
+            var cd = new Date();
+            var currentGMTDate = cd.getTime() + ( 1000 * 60 * cd.getTimezoneOffset() );
+
+            // Adjust time for city's offset from GMT.
+            var localDate = currentGMTDate + ( this.timezoneoffset * 60 * 60 * 1000 );
+
+            // Are we in Daylight Savings Time (DST)?
+            this.isDST = false;
+            var dstStart = this.makeDate( this.dst_start );
+            var dstEnd = this.makeDate( this.dst_end );
+            if ( (localDate > dstStart.getTime()) && (localDate < dstEnd.getTime()) ) {
+                this.isDST = true;
+            }
+            // Southern hemisphere - invert DST
+            if ( dstStart.getMonth() > dstEnd.getMonth() ) {
+                this.isDST = !true;
+            }
+            
+             var myOffset = this.timezoneoffset;
+            if ( this.isDST ) { // in daylight savings time
+                myOffset += 1;
+            }
+            this.setTimeZone( myOffset );
+           ]]>
+        </method>
+    </clock>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
