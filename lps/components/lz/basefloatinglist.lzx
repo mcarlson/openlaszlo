@@ -16,10 +16,6 @@
         <!--- @keywords private -->
         <attribute name="_currentattachx" value="bottom" type="string"/>
 
-        <!--- The size of the bottom border which defaults to bordersize. -->
-        <attribute name="border_bottom"  value="${this._currentattachy == 'bottom' ? 0:this.bordersize}" />
-        <attribute name="border_top"  value="${this._currentattachy == 'top' ? 0:this.bordersize}" />
-        
         <!--- The view to which this floatinglist will attach. By default, this
               will be the lexical parent.  The style of the attachtarget will be
               inherited. -->
@@ -27,11 +23,6 @@
                            setter="this.setAttachTarget(attachtarget)" />
         <!--- The distance from the attachtarget. -->
         <attribute name="attachoffset"  value="0" />
-        
-        <!--- @keywords private -->
-        <attribute name="_fx" value="null"/>
-        <!--- @keywords private -->
-        <attribute name="_fy" value="null"/>
         
         <!--- Number of items originally requested to display.
               @keywords private -->
@@ -331,7 +322,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

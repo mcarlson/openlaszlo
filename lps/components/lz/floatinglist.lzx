@@ -88,6 +88,10 @@
           occurs. -->
     <class name="floatinglist" extends="basefloatinglist">
 
+        <!--- The size of the bottom border which defaults to bordersize. -->
+        <attribute name="border_bottom"  value="${this._currentattachy == 'bottom' ? 0:this.bordersize}" />
+        <attribute name="border_top"  value="${this._currentattachy == 'top' ? 0:this.bordersize}" />
+        
         <!--- @keywords private -->
         <attribute name="shadowcrn"     value="0" />
 
@@ -113,7 +117,7 @@
 
         <view name="menucap" y="${parent._currentattachy == 'top'? -height:parent.height }"
               width="${classroot.width}" 
-              placement="ignore" 
+              ignoreplacement="true" 
               oninit="this.setResourceNumber(1)">
             <view resource="menucap_lft"/>
             <view resource="menucap_mid" stretches="width"/>
@@ -164,7 +168,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
