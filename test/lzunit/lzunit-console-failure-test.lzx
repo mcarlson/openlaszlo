@@ -1,0 +1,69 @@
+<canvas>
+<!-- This test is SUPPOSED to fail, so we can see what errors look like in the
+ LzUnit console. [bshine] -->
+
+<include href="lzunit" />
+
+<TestSuite>
+    <TestCase>
+        <method name="testGood">
+            assertTrue(true);
+        </method>
+    </TestCase>
+    <TestCase>
+        <method name="testBad">
+            assertTrue(false);
+        </method>
+    </TestCase>
+
+    <TestCase>
+        <method name="testLaLaLa">
+            assertEquals("oops", "whoops"); 
+        </method>
+        <method name="testLaLa">
+            assertEquals("yeah", "yeah"); 
+        </method>
+    </TestCase>
+
+    <TestCase>
+        <method name="testLotsMore">
+            assertEquals("my torty cat is named isabel", "my grey cat is named darling");
+        </method>
+        <method name="testLots">
+            assertEquals("my grey cat is named sweetness", "my grey cat is named darling");
+        </method>
+        <method name="testLotsAgain">
+            assertEquals("my grey cat is named darling", "my grey cat is named darling");
+        </method>
+    </TestCase>     
+
+    <TestCase>
+        <method name="testSomeMore">
+            assertEquals("my torty cat is named isabel", "my blue cat is named darling");
+        </method>
+        <method name="testSome">
+            assertEquals("my blue cat is named sweetness", "my blue cat is named darling");
+        </method>
+        <method name="testSomeAgain">
+            assertEquals("my blue cat is named darling", "my blue cat is named darling");
+        </method>
+    </TestCase>
+    <TestCase>
+        <method name="testOodlesMore">
+            assertEquals("my torty fish is named isabel", "my grey fish is named darling");
+        </method>
+        <method name="testOodles">
+            assertEquals("my grey fish is named sweetness", "my grey fish is named darling");
+        </method>
+        <method name="testOodlesAgain">
+            assertEquals("my grey fish is named darling", "my grey fish is named darling");
+        </method>
+    </TestCase>
+</TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+

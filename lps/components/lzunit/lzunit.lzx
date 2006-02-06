@@ -897,7 +897,9 @@ TestError.prototype.toString = function toString() {
                 }
             }
             if (totalBad > 0) {
-                redalert.setAttribute("errors", true);
+                display.showFailure();
+            } else {
+                display.showSuccess(); 
             }
             // TODO: [2002-11-10 ptw] setAttribute("text", ...) does not work?
             readout.setText(LzBrowser.xmlEscape(this.toString()));
@@ -914,48 +916,34 @@ TestError.prototype.toString = function toString() {
       Below the progress bar a textual presentation of the test status
       and any failures is given.
     -->
-    <view name="display" width="500" height="300" oninit="bringToFront()">
-        <resizelayout axis="y" spacing="10" />
-        <text>Test Progress</text>
-        <view name="progress" bgcolor="black" width="${parent.width}" height="10">
+    <silverstyle id="errorstyle" basecolor="0xFF0000" bgcolor="0xFFAAAA" textcolor="0xFFFFFF"/>
+    <greenstyle id="successstyle" basecolor="0x1D490B" bgcolor="0xC2FFAA" textcolor="0xFFFFFF"/>
+    <silverstyle id="progstyle" textcolor="0xFFFFFF"/>
+    <window name="display" title="LzUnit Console Output" 
+        width="400" height="300" opacity="0.7" oninit="bringToFront()"
+        resizable="true"
+        style="progstyle">
+        <method name="showFailure">
+            this.setAttribute("style", errorstyle); 
+        </method>
+        <method name="showSuccess">
+            this.setAttribute("style", successstyle); 
+        </method>
+        <view name="progress" x="0" y="10" bgcolor="black" width="${parent.width}" height="10">
             <view name="background" bgcolor="white" width="${parent.width-2}" height="8" x="1" y="1" />
             <view name="donebar" bgcolor="green" width="0" height="8" x="1" y="1" />
             <view name="failbar" bgcolor="red" width="0" height="8" x="1" y="1" />
             <view name="errorbar" bgcolor="yellow" width="0" height="8" x="1" y="1" />
         </view>
-        <view options="releasetolayout" clip="true">
-            <text id="readout" selectable="true" width="$once{parent.parent.width - parent.s_bar.width}" multiline="true">
-                Test Results
-            </text>
-            <scrollbar name="s_bar" visible="${scrollable}"/>
-            <simplelayout axis="x"/>
+        <view clip="true" x="10" width="${parent.width-28}" height="${parent.height-75}" y="30">
+            <view name="contents" id="lzuContents" width="${parent.width-parent.vs.width}">
+                <text id="readout" selectable="true" multiline="true" width="100%" fontsize="10">
+                    Results
+                </text>
+            </view>
+            <vscrollbar name="vs"/>
         </view>
-    </view>
-
-    <!--
-      Failsafe
-
-      If any failures or errors occur, this causes an unmistakable
-      error display.
-    -->
-    <view name="redalert" bgcolor="red"
-          oninit="setAttributeRelative('x', global.canvas); setAttributeRelative('y', global.canvas); sendToBack()"
-          height="${global.canvas.height}"
-          width="${global.canvas.width}"
-          options="ignorelayout" opacity="${this.errors ? .9 : 0}">
-        <attribute name="errors" type="boolean" value="false"/>
-        <view align="center" valign="middle">
-            <text align="center" fontsize="28"
-                 font="Helvetica">
-                 Danger, Will Robinson!
-            </text>
-            <text align="center" fontsize="14"
-                font="Helvetica">
-                One or more tests did not pass.
-            </text>
-            <simplelayout axis="y" />
-        </view>
-    </view>
+    </window>
 
 </class>
 
@@ -1222,6 +1210,6 @@ TestError.prototype.toString = function toString() {
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

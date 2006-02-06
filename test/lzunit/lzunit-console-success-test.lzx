@@ -1,0 +1,20 @@
+<canvas>
+<!-- This test is supposed to succeed, so we can see what success looks like in the
+ LzUnit console. [bshine] -->
+
+<include href="lzunit" />
+
+<TestSuite>
+    <TestCase>
+        <method name="testGood">
+            assertTrue(true);
+        </method>
+    </TestCase>
+</TestSuite>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+
