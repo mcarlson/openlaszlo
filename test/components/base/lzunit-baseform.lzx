@@ -8,7 +8,13 @@
     <TestCase>
     
         <baseform name="bf1">
-            <checkbox name="cb1" value="true" text="cb1"/>
+            <checkbox name="cb1" value="true" text="cb1">
+                <attribute name="hassubmitname" value="false"/>
+                <handler name="oninit">
+                    if (this.submitname == "cb1")
+                        this.setAttribute("hassubmitname", true);
+                </handler>
+            </checkbox>
             <view name="v1">
                 <checkbox name="cb2" submitname="scb2" value="true" text="cb2"/>
             </view>
@@ -27,9 +33,33 @@
             bf1.v1.cb2.setAttribute("submitname", "foo");
             assertEquals("foo", bf1.v1.cb2.submitname);
         </method>
+
+        <method name="testEarlySubmitName">
+            // this is related to LPP-1535
+            assertEquals(true, bf1.cb1.hassubmitname);
+        </method>
+        
     </TestCase>
     
     <TestCase>
+        <baseform name="bf1">
+            <checkbox name="cb1" value="true" text="cb1"/>
+            <view name="v1">
+                <checkbox name="cb2" submitname="scb2" value="true" text="cb2"/>
+            </view>
+        </baseform>
+        
+        <method name="testToXML">
+            // this is related to LPP-1535
+            var str = bf1.cb1.toXML();
+            assertTrue(str.indexOf("cb1") >= 0);
+            bf1.cb1.setAttribute("submitname", "carabiner");
+            str = bf1.cb1.toXML();
+            assertTrue(str.indexOf("carabiner") >= 0);
+        </method>
+     </TestCase>
+
+   <TestCase>
     
         <baseform name="bf2">
             <checkbox name="cb1" value="true" text="cb1"/>
@@ -74,7 +104,7 @@
 </canvas>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
