@@ -51,6 +51,10 @@
               more items than shownitems. -->
         <attribute name="autoscrollbar" value="true"/>
 
+        <!--- The name of the class to instantiate as our scrollbar.
+              @keywords public -->
+        <attribute name="scrollbarclassname" type="string" value="vscrollbar"/>
+        
         <!--- @keywords private -->
         <method name="init">
             super.init();
@@ -97,33 +101,54 @@
                    classroot.adjustmyheight();
                 ]]></handler>
 
-               <handler name="onheight"> <![CDATA[
+               <handler name="onheight">
                    classroot.adjustmyheight();
-                ]]></handler>
+               </handler>
 
             </basetrackgroup> <!-- end content -->
 
-            <state name="scrollbarstate">
-                <vscrollbar name="_sbar" stepsize="20" />
-
-                <handler name="onapply" >
-                    // if scrollbar is present shrink the width of the content
-                    // this maybe too slow, so analyse
-                    classroot.setAttribute('rightinset',9);
-                </handler>
-
-                <handler name="onremove" >
-                    classroot.setAttribute('rightinset',0);
-                </handler>
-
-            </state>
-
+            <!--- Make a vscrollbar if necessary
+                  @keywords private -->
+            <method name="ensurevscrollbar">
+                if (this._sbar == null) {
+                    var classname = classroot.scrollbarclassname;
+                    if (classname == "") {
+                        classname = "vscrollbar";
+                    }
+                    if ($debug) {
+                        if (typeof(global[classname]) == "undefined") {
+                            Debug.write("scrollbarclassname undefined", this);
+                        }
+                    }
+                    this._sbar = new global[classname](this, { stepsize: "20" });
+                }
+            </method>
+            
+            <method name="showvscrollbar">
+                if (this._sbar == null) {
+                    this.ensurevscrollbar();
+                }
+                this._sbar.setAttribute('visible', true);
+                classroot.setAttribute('rightinset', this._sbar.width);
+            </method>
+            
+            <method name="hidevscrollbar">
+                if (this._sbar != null) {
+                    this._sbar.setAttribute('visible', false);
+                }
+                classroot.setAttribute('rightinset', 0);
+            </method>
+            
+            <method name="vscrollbarisvisible"><![CDATA[
+                return (this._sbar != null && this._sbar.visible);
+            ]]></method>
+            
             <handler name="onmousetrackoutbottom" args="y" >
-                if ( this._sbar ) _sbar.step(1);
+                if ( this.vscrollbarisvisible() ) _sbar.step(1);
             </handler>
 
             <handler name="onmousetrackouttop" args="y" >
-                if ( this._sbar ) _sbar.step(-1);
+                if ( this.vscrollbarisvisible() ) _sbar.step(-1);
             </handler>
 
         </view> <!-- end interior -->
@@ -227,15 +252,13 @@
 
          <!--- @keywords private -->
          <method name="checkscrollbar"> <![CDATA[
-         if (this.autoscrollbar) {
-             if ( this._contentview.height > this.interior.height ) {
-                 if ( ! this.interior.scrollbarstate.isapplied ) {
-                     this.interior.scrollbarstate.apply();
+             if (this.autoscrollbar) {
+                 if ( this._contentview.height > this.interior.height ) {
+                     this.interior.showvscrollbar();
+                 } else {
+                     this.interior.hidevscrollbar();
                  }
-             } else if ( this.interior.scrollbarstate.isapplied ) {
-                 this.interior.scrollbarstate.remove();
              }
-         }
             ]]>
          </method>
 
@@ -294,7 +317,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

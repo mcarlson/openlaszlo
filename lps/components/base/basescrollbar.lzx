@@ -26,8 +26,11 @@
         <!--- The maximum distance to scroll, default: the height or width
               of the scrolltarget.
               @keywords final -->
-        <attribute name="scrollmax" type="number" value="null"/>
-
+        <attribute name="scrollmax" type="number" value="null" />
+        
+        <!--- @keywords public -->
+        <event name="onscrollmax"/>
+        
         <!--- The maximum distance to scroll, default: the height or width
               of the scrollbar.
               @keywords final -->
@@ -231,8 +234,8 @@
 
         <!---  @keywords private -->
         <method name="targetSizeUpdate">
-              this.scrollmax = this.scrolltarget[this.sizeAxis];
-              this.scrollbarSizeUpdate();
+            this.setAttribute("scrollmax", this.scrolltarget[this.sizeAxis]);
+            this.scrollbarSizeUpdate();
         </method>
 
         <!---  @keywords private -->
@@ -443,7 +446,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

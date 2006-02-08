@@ -7,7 +7,7 @@
            multiline="true" clip="true" height="100">
 
         <attribute name="border" value="0" />
-
+        
         <view name="_face" bgcolor="0xffffff" 
               width="${parent.width-parent.border*2}" 
               height="${parent.height-parent.border*2}" 
@@ -16,13 +16,13 @@
         <_newinternalinputtext name="inp" x="${parent.border}" 
             y="${parent.border}" 
             height="${parent.height-parent.border*2}"
-            width="${parent.vs.visible
-                     ? parent.width - parent.vs.width - parent.border*2 
-                     : parent.width - parent.border*2 }">
+            width="${parent.width - parent.vscrollwidth - parent.border*2 }">
             <attribute name="lineheight"
-                       value="${this.getTextHeight()/this.maxscroll}"/>
+                       value="${this.getTextHeight()/this.getMaxScroll()}"/>
+            <attribute name="maxtextheight"
+                       value="${this.getTextHeight() - (this.getTextHeight()/this.getMaxScroll())}"/>
             <attribute name="maxheight" 
-                       value="${this.height + this.lineheight * (this.maxscroll - 1)}"/>
+                       value="${this.height + this.maxtextheight}"/>
             <attribute name="onpos" value="null"/>
             <attribute name="pos" value="0" setter="this.setPos(pos)"/>
             
@@ -33,16 +33,77 @@
                     if (this.onpos) this.onpos.sendEvent(p);
                 }
             </method>
-            <method event="onscroll">
+            <handler name="onscroll">
                 this.setPos(-this.lineheight * (this.scroll - 1), true);
-            </method>
+            </handler>
         </_newinternalinputtext>
 
-        <vscrollbar name="vs" axis="y" scrollattr="pos"
+        <!--- Width to give for scrollbar
+              @keywords private -->
+        <attribute name="vscrollwidth" value="${(_vs &amp;&amp; _vs.visible) ? _vs.width : 0}"/>
+        
+<!--
+        <vscrollbar name="_vs" axis="y" scrollattr="pos"
             scrolltarget="parent.inp"
             x="${parent.width - this.width - parent.border + 1}" 
             stepsize="${parent.inp.lineheight}" 
-            scrollmax="${parent.inp.maxheight}" />
+            scrollmax="${parent.inp.maxheight}">
+        </vscrollbar>
+-->
+
+        <!--- Name of class to instantiate for vertical scroll bar.
+              @keywords public -->
+        <attribute name="vscrollbarclassname" type="string" value="vscrollbar"/>
+        
+        <!--- Our vertical scrollbar
+              @keywords private -->
+        <attribute name="_vs" value="null"/>
+        
+        <!--- @keywords private -->
+        <method name="ensurevscrollbar">
+            if (this._vs == null) {
+                var classname = this.vscrollbarclassname;
+                if (classname == "") {
+                    classname = "vscrollbar";
+                }
+                if ($debug) {
+                    if (typeof(global[classname]) == "undefined") {
+                        Debug.write("scrollbarclassname undefined", this);
+                    }
+                }
+                var vsinit = function () {
+                    var p = this.parent;
+                    // (_vs) x="${parent.width - this.width - parent.border + 1}" 
+                    this.applyConstraint("x", 
+                        function() { this.setAttribute("x", this.parent.width - this.width - this.parent.border + 1); },
+                        [p, "width", this, "width", p, "border"]);
+                    
+                    // (_vs) stepsize="${scrolltarget.lineheight}" 
+                    this.applyConstraint("stepsize", 
+                        function() { this.setAttribute("stepsize", this.scrolltarget.lineheight); }, 
+                        [p.inp, "lineheight"]);
+                    
+                    // (_vs) scrollmax="${scrolltarget.maxheight}" />
+                    this.applyConstraint("scrollmax", 
+                        function() { this.setAttribute("scrollmax", this.scrolltarget.maxheight); }, 
+                        [p.inp, "maxheight"]);
+                        
+                    #pragma "methodName=init"
+                    super.init();
+                }
+                this._vs = new global[classname](this, 
+                                                 { axis: "y",
+                                                   scrollattr: "pos",
+                                                   scrolltarget: this.inp,
+                                                   init: vsinit});
+
+            }
+        </method>
+        
+        <method name="init">
+            super.init();
+            this.ensurevscrollbar();
+        </method>
 
     </class>
 

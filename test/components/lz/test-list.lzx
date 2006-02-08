@@ -1,4 +1,5 @@
 <canvas bgcolor="#EAEAEA" width="640" height="1000">
+    <include href="incubator/newvscrollbar.lzx"/>
     <debug x="250"/>
     <dataset name="items">
         <item value="item1" >item 1</item>
@@ -215,13 +216,63 @@
                 <simplelayout axis="x" spacing="10"/>
         </testborder>
 
+        <testborder width="550" height="140" x="10" >List: Automatically show/hide scrollbar
+                <list  id="mylist3_0"
+                           x="5" y="5"
+                           width="100" 
+                           shownitems="3" >
+                    <textlistitem datapath="otheritems:/item" 
+                                  text='$path{"text()"}'
+                                  value='$path{"value/text()"}' />
+                </list>
+        
+                <button>Smaller
+                    <handler name="onclick">
+                        mylist3_0.setAttribute('shownitems', 2);
+                    </handler>
+                </button>
 
+                <button>Larger
+                    <handler name="onclick">
+                        mylist3_0.setAttribute('shownitems', 3);
+                    </handler>
+                </button>
+
+                <simplelayout axis="x" spacing="10"/>
+        </testborder>
+        
+        <testborder>List: Alternate scrollbar look
+                <list id="mylist4_0"
+                      x="5" y="5"
+                      width="100" 
+                      shownitems="3"
+                      scrollbarclassname="newvscrollbar" >
+                    <textlistitem datapath="otheritems:/item" 
+                                  text='$path{"text()"}'
+                                  value='$path{"value()"}' />
+                </list>
+
+                <button>Smaller
+                    <handler name="onclick">
+                        mylist4_0.setAttribute('shownitems', 2);
+                    </handler>
+                </button>
+
+                <button>Larger
+                    <handler name="onclick">
+                        mylist4_0.setAttribute('shownitems', 3);
+                    </handler>
+                </button>
+
+                <simplelayout axis="x" spacing="10"/>
+        </testborder>
+        
 		<simplelayout axis="y" spacing="10"/>
 	</view>
 
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
