@@ -1,6 +1,4 @@
 <library>
-    <include href="incubator/newlist.lzx"/>
-
     <!--- A list class that handles a default value. 
           Input and output for the list is defined to be in this format:
           <code>
@@ -12,7 +10,7 @@
          
           Currently only works with dataoption="lazy" or "pooling"
     -->
-    <class name="simpledefaultlist" extends="newlist">
+    <class name="simpledefaultlist" extends="list">
 
         <!-- methods overridded from baseformitem -->
         <method name="rollback">
