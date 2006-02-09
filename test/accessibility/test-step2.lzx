@@ -1,0 +1,25 @@
+<canvas proxied="false" accessible="true" width="700">
+    <simplelayout spacing="4"/>
+    <handler name="oninit">
+        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
+        LzTimer.addTimer(upddel, 500);
+    </handler>
+    <vbox spacing="6" inset="12">
+        <text aatabindex="1" width="200" bgcolor="0xdeadbf" oninit="this.setText(this.getText() + ' ' + LzBrowser.isAAActive())">
+            Accessibility on 
+        </text>
+        <hbox spacing="6">
+            <text aatabindex="2" aasilent="true" width="200" height="200" bgcolor="0xdeadbf" multiline="true">
+                Aliquam porttitor elit non sapien. Praesent ipsum eros, egestas at, porta ac, placerat eu, felis. Quisque auctor, purus id mollis dictum, enim nisl convallis ligula, id blandit nunc ante in elit. Donec pellentesque ligula nec nibh. Vestibulum mattis, mi quis vestibulum sagittis, dui odio sollicitudin metus, ac pellentesque urna nulla.
+            </text>
+            <text aatabindex="3" width="200" height="200" bgcolor="0xdeadbf" multiline="true">
+                Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Pellentesque ante nisl, tincidunt ac, cursus nec, varius nec, est. Mauris eget enim. Sed pulvinar felis vitae tortor. Integer porta. Mauris nulla lorem, sagittis nec, ornare posuere, pretium sed, felis. Nulla iaculis augue et libero. Integer varius.
+            </text>
+        </hbox>
+    </vbox>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

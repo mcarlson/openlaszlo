@@ -1,0 +1,35 @@
+<html>
+<head>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<script LANGUAGE="JavaScript" xml:space="preserve">
+<!--
+// if there is a url parameter, it is expected to be a filename and that
+// file is loaded into the content frame
+function loadContentFrame(filename) {
+  urlquery = location.href.split('?');
+  if (urlquery.length > 1) {
+    filename = urlquery[1];
+    top.content.location=filename;
+  }
+}
+ -->
+</script>
+
+</head>
+
+
+<frameset onload="loadContentFrame()" cols="30%,*">
+    
+<frame name="index" src="html-nav.html" marginwidth="10" marginheight="10" scrolling="auto" frameborder="1">
+    
+<frame name="content" src="./test-step1.html" marginwidth="10" marginheight="10" scrolling="auto" frameborder="0">
+
+</frameset>
+
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

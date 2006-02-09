@@ -1,0 +1,32 @@
+<library>
+
+<class name="screen1">
+    <handler name="oninit">
+        itext1.setFocus(true);
+    </handler>
+    <vbox spacing="6">
+        <text id="text1_1"></text>
+        <hbox spacing="6">
+            <text id="text1_2" width="100" bgcolor="0xdeadbf">Text Label 1</text>
+            <inputtext id="itext1_1" aatabindex="1" width="200" bgcolor="0xeeccdd" />
+        </hbox>
+        <hbox spacing="6">
+            <text id="text1_3" width="100" bgcolor="0xdeadbf">Text Label 2</text>
+            <inputtext id="itext1_2" aatabindex="2" width="200" bgcolor="0xeeccdd" />
+        </hbox>
+        <hbox spacing="6">
+            <text id="text1_4" width="100" bgcolor="0xdeadbf">Text Label 3</text>
+            <inputtext id="itext1_3" aatabindex="3" width="200" bgcolor="0xeeccdd" />
+        </hbox>
+        <button id="button1_1" aatabindex="4" onclick="canvas.nextscreen();">
+            Button
+        </button>
+    </vbox>
+</class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

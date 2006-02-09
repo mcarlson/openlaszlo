@@ -1,0 +1,47 @@
+<canvas proxied="false" accessible="true" width="700">
+    <!--- Notes
+            - doesn't include scrollbar on text field 2.
+      -->
+    <simplelayout spacing="4"/>
+    <handler name="oninit">
+        var upddel = new LzDelegate(LzBrowser, 'updateAccessibility');
+        LzTimer.addTimer(upddel, 500);
+    </handler>
+    <method name="changeText">
+        text1.setText("Changed " + text1.getText());
+        text2.setText("Modified " + text2.getText());
+        text4.setText("Updated " + text4.getText());
+        text4.setAATabindex(1);
+        text3.setAATabindex(2);
+        text2.setAATabindex(3);
+        text1.setAATabindex(4);
+        button1.setAATabindex(5);
+        LzBrowser.updateAccessibility(); // trigger re-read
+    </method>
+    <vbox spacing="6" inset="12">
+        <text id="text1" aatabindex="2" width="200" bgcolor="0xdeadbf" oninit="this.setText(this.getText() + ' ' + LzBrowser.isAAActive())">
+            Accessibility on 
+        </text>
+        <hbox spacing="6">
+            <vbox spacing="6">
+                <text id="text2" aatabindex="1" width="200" height="200" bgcolor="0xdeadbf" multiline="true">
+                    Nam convallis eros eu felis. Curabitur sed sapien a arcu vestibulum sollicitudin. Fusce cursus. Donec lacinia magna id dolor. Sed dolor. Maecenas mattis ipsum. Mauris eros. Fusce nec augue quis erat ornare pharetra. Donec gravida mi a neque. Ut sodales. Phasellus varius ligula pulvinar lorem. Donec a mi suscipit leo porttitor bibendum. Cras fermentum viverra lectus. Fusce varius mauris. Etiam tortor. In laoreet, est et elementum vestibulum, lacus diam volutpat odio, at commodo arcu nibh placerat elit. In a felis. Suspendisse at quam. Sed sed lectus. Aliquam erat volutpat. Aliquam mattis massa eget nunc. Maecenas auctor sagittis nisl. Ut consequat.
+                </text>
+                <text id="text4" aatabindex="3" width="200" bgcolor="0xdeadbf">
+                    This is the text of field 4
+                </text>
+                <button id="button1" aatabindex="4" onclick="canvas.changeText();" focusable="true">
+                    Button
+                </button>
+            </vbox>
+            <text id="text3" aatabindex="5" width="200" height="200" bgcolor="0xdeadbf" multiline="true" >
+                Maecenas iaculis leo bibendum nunc. Donec a lorem. Praesent sollicitudin accumsan mi. Sed ut purus. Suspendisse luctus. Maecenas cursus. In sapien nisl, consectetuer pharetra, porta non, vehicula non, turpis. Nunc sem. Phasellus convallis. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae. Maecenas dictum, pede et euismod euismod, eros augue posuere est, non imperdiet quam tellus et nisi. Suspendisse id lectus. Etiam lectus erat, dictum eu, aliquam a, venenatis ac, enim. Morbi quis risus at nulla dignissim vestibulum. Sed id dui convallis ligula consectetuer lacinia. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus.
+            </text>
+        </hbox>
+    </vbox>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
