@@ -1,3 +1,13 @@
+/* *****************************************************************************
+ * LaszloMessages.java
+ * ****************************************************************************/
+
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+
+
 package org.openlaszlo.i18n;
 
 import java.text.MessageFormat;
@@ -42,13 +52,13 @@ public class LaszloMessages {
     
     public static String getValue(String fullKey, Object[] args){
         try {
-            mLogger.debug(BUNDLE_NAME+".key="+fullKey);
+            //mLogger.debug(BUNDLE_NAME+".key="+fullKey);
             if(args.length==0){
-                mLogger.debug("value="+RESOURCE_BUNDLE.getString(fullKey));
+                //mLogger.debug("value="+RESOURCE_BUNDLE.getString(fullKey));
                 return RESOURCE_BUNDLE.getString(fullKey);
             }else{
                 String format = RESOURCE_BUNDLE.getString(fullKey);
-                mLogger.debug(MessageFormat.format(format, args));
+                //mLogger.debug(MessageFormat.format(format, args));
                 return MessageFormat.format(format, args);
             }
         } catch (MissingResourceException e) {
