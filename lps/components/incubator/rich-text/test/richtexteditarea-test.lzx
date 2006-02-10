@@ -1,0 +1,84 @@
+<canvas title="richtexteditarea-test" height="300" bgcolor="0x7C7C8D">
+<include href="lzunit" />
+
+<!-- This file tests the link dialog functionality --> 
+<include href="incubator/stylishbutton.lzx" /> 
+<include href="incubator/shadowbox.lzx"/>
+<include href="incubator/borderinput.lzx"/>
+<include href="incubator/lzcombobox.lzx"/>
+<include href="incubator/textstyle.lzx"/>
+<include href="incubator/tooltip/tooltip.lzx"/>
+<include href="incubator/baseedittext.lzx" />
+<include href="incubator/tooltip/tooltipview.lzx" />
+    
+<include href="incubator/rich-text/richtexttoolbar.lzx"/>
+<include href="incubator/rich-text/richtexteditarea.lzx"/>
+<include href="incubator/rich-text/linkdialog.lzx"/>
+<include href="incubator/rich-text/formatbtn.lzx"/>
+<include href="incubator/rich-text/formatfontcolor.lzx"/>
+<include href="incubator/rich-text/formatfontface.lzx"/>
+
+<view x="20" y="80" width="${canvas.width-40}" height="${canvas.height-80}">
+    <richtexttoolbar name="toolbar" id="gTB" editor="${grte}" height="30" width="${parent.width-5}" x="2" y="0" bgcolor="0xD4D7E5">
+        <!-- this toolbar has no buttons or anything. it's just here so we get to test a fully hooked-up richtexteditarea. --> 
+       <formatfontface name="fontfacecb" y="${(parent.height-this.height)/2}"/>
+       <formatfontcolor name="fontcolorcb" y="${(parent.height-this.height)/2}"/>
+                
+    </richtexttoolbar>
+        
+
+    <view width="100%" y="35" height="${parent.height-70}" bgcolor="0xFFFFFF">
+                 <!-- sample text from democracy, an american novel by henry adams, 1880 (in public domain) --> 
+        <richtexteditarea id="grte" name="txt" 
+            height="100%"
+            width="100%"
+            defaultfontname="Verdana" 
+            defaultfontsize="18" 
+            defaultfontcolor="0x336699"
+
+            border="10"  text="For reasons which many persons thought ridiculous, Mrs. Lightfoot Lee decided to pass the winter in Washington. She was in excellent health, but she said that the climate would do her good. In New York she had troops of friends, but she suddenly became eager to see again the very small number of those who lived on the Potomac. It was only to her closest intimates that she honestly acknowledged herself to be tortured by ennui. Since her husband's death, five years before, she had lost her taste for New York society; she had felt no interest in the price of stocks, and very little in the men who dealt in them; she had become serious. What was it all worth, this wilderness of men and women as monotonous as the brown stone houses they lived in? In her despair she had resorted to desperate measures. She had read philosophy in the original German, and the more she read, the more she was disheartened that so much culture should lead to nothing... nothing.">
+        </richtexteditarea>
+    </view> 
+</view>
+
+<TestSuite>
+    <TestCase>
+        <method name="testTextIsPresent">
+            assertNotNull(grte.getText()); 
+            assertTrue(grte.getText().length > 0); 
+        </method>
+        <method name="testGetFormat">
+            grte.setTextFormat( {font: "Verdana", size: 24, color: "0xAA00FF"}, 0, 40); 
+            grte.setSelection(20,30);
+            var fmt = grte.getTextFormat(21,22);
+            assertNotNull(fmt);
+            assertEquals(fmt.font, "Verdana"); 
+            assertEquals(fmt.size, 24); 
+            assertEquals(fmt.color, 0xAA00FF); 
+        </method>
+    </TestCase>
+
+    <TestCase>
+        <method name="setUp">
+            grte.reset();
+        </method>
+        <method name="testReset">
+            assertTrue(grte.getText().length == 0); 
+            assertFalse(grte.isHTML); 
+        </method>
+
+        <method name="testMakeHTML">
+            assertFalse(grte.isHTML); 
+            grte.setFormatAttribute("bold", true); 
+            assertTrue(grte.isHTML); 
+        </method>
+    </TestCase>
+</TestSuite>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+    * Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+    * Use is subject to license terms.                                            *
+    * X_LZ_COPYRIGHT_END ****************************************************** -->
+    <!-- @LZX_VERSION@                                                         -->
+    
