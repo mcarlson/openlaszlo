@@ -1,0 +1,25 @@
+<canvas width="100%" height="100%" debug="true">
+
+  <!-- Copyright 2006 -->
+  <script>LzLoader.__LZmonitorState = true</script>
+
+   <resource name="compiled" src="d_c_train_lzx.jpg"/>
+
+   <simplelayout axis="y" spacing="10"/>
+
+   <view name="imageView" resource="compiled" width="200" height="80" 
+         stretches="both">
+      <method event="onload">
+         Debug.write( "onload sent" );
+      </method>
+      <method event="onerror">
+         Debug.write( "onerror sent" );
+      </method>
+   </view>
+   <button>Load progress animation via http url
+      <method event="onclick">
+         Debug.write( "Setting..." );
+         parent.imageView.setSource( "progress.swf" );
+      </method>
+   </button>
+</canvas>
