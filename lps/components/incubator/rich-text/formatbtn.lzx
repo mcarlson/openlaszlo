@@ -20,11 +20,7 @@
         <!--- the tint for when the button is active. 
             when inactive, use "tint" attribute. --> 
         <attribute name="activecolor" value="0xEAE4B7"/>
-        
-        <!--- Whether this button's formatting should be applied to an entire paragraph,
-            or a character at a time. --> 
-        <attribute name="paragraphformat" value="false" /> 
-        
+                
         <!--- Text to show in tooltip when this is active -->
         <attribute name="activetooltiptext" value="" type="string" />
 
@@ -68,11 +64,7 @@
             // toggle it
             this.setActive(!this.isactive);
             if (this.toolbar._passthruchanges) {
-                if (this.paragraphformat) {
-                    this.editor.setParagraphAttribute(this.format, this.isactive);  
-                } else {
-                    this.editor.setFormatAttribute(this.format, this.isactive);
-                }
+                this.editor.setFormatAttribute(this.format, this.isactive);
             }            
             
         // Restore the selection immediately. 
@@ -104,7 +96,7 @@
 
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

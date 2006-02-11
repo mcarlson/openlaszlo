@@ -1,4 +1,4 @@
-<canvas title="richtexteditarea-test" height="300" bgcolor="0x7C7C8D">
+<canvas title="richtexteditarea-test" bgcolor="0x7C7C8D">
 <include href="lzunit" />
 
 <!-- This file tests the link dialog functionality --> 
@@ -18,12 +18,19 @@
 <include href="incubator/rich-text/formatfontcolor.lzx"/>
 <include href="incubator/rich-text/formatfontface.lzx"/>
 
+<!-- These includes are part of the test. We actually want them to break. --> 
+<include href="indentbuttongroup.lzx" />
+<include href="formatfontsize.lzx" />
+
 <view x="20" y="80" width="${canvas.width-40}" height="${canvas.height-80}">
     <richtexttoolbar name="toolbar" id="gTB" editor="${grte}" height="30" width="${parent.width-5}" x="2" y="0" bgcolor="0xD4D7E5">
-        <!-- this toolbar has no buttons or anything. it's just here so we get to test a fully hooked-up richtexteditarea. --> 
-       <formatfontface name="fontfacecb" y="${(parent.height-this.height)/2}"/>
-       <formatfontcolor name="fontcolorcb" y="${(parent.height-this.height)/2}"/>
-                
+
+    <formatbtn name="boldbtn" id="gBoldBtn" format="bold" iconname="bold" icony="4" />    
+    <formatbtn name="underlinebtn" id="gUnderlineBtn" format="underline" iconname="underline" />  
+    <formatbtn name="italicbtn" id="gItalicBtn" format="italic" iconname="italic" icony="4" />
+    <formatfontface name="fontfacecb" y="${(parent.height-this.height)/2}"/>
+    <formatfontcolor name="fontcolorcb" y="${(parent.height-this.height)/2}"/>
+    <formatfontsize name="fontsizecb" y="${Math.round((parent.height-this.height)/2)}"/>
     </richtexttoolbar>
         
 
@@ -43,10 +50,10 @@
 
 <TestSuite>
     <TestCase>
-        <method name="testTextIsPresent">
+        <method name="testTextIsPresent"><![CDATA[
             assertNotNull(grte.getText()); 
             assertTrue(grte.getText().length > 0); 
-        </method>
+        ]]></method>
         <method name="testGetFormat">
             grte.setTextFormat( {font: "Verdana", size: 24, color: "0xAA00FF"}, 0, 40); 
             grte.setSelection(20,30);
@@ -73,6 +80,71 @@
             assertTrue(grte.isHTML); 
         </method>
     </TestCase>
+
+<!-- We expect these values for paragraph format, or null: 
+            this.currentformat.leading = 0;
+            this.currentformat.indent = 0;
+            this.currentformat.blockIndent = false;
+            this.currentformat.align = "left";
+            this.currentformat.bullet = false; 
+    
+-->     
+    <TestCase>
+        <method name="setUp">
+            grte.reset();
+            grte.setText("Oop ark org eep means you are fantastic.");                 
+        </method>
+
+        <method name="testNoLeading"><![CDATA[
+            var fmt = grte.getTextFormat(5,10);
+            assertTrue( (!fmt.leading) || (fmt.leading==0));
+        ]]></method>
+        
+        <method name="testNoIndent"><![CDATA[
+            var fmt = grte.getTextFormat(5,10);
+            assertTrue( (fmt.getAttribute("indent") == null) || (fmt.indent==0));
+        ]]></method>
+        
+        <method name="testNoBlockIndent"><![CDATA[
+            var fmt = grte.getTextFormat(5,10);
+            assertTrue( (fmt.getAttribute("blockIndent") == null) || (!fmt.blockIndent));
+        ]]></method>
+        
+        <method name="testNoAlign"><![CDATA[
+            var fmt = grte.getTextFormat(5,10);
+            assertTrue( (fmt.getAttribute("align") == null) || (fmt.align == "left"));
+        ]]></method>
+        <method name="testNoBullet"><![CDATA[
+            var fmt = grte.getTextFormat(5,10);
+            assertTrue( (fmt.getAttribute("bullet") == null) || (fmt.bullet == false));
+        ]]></method>        
+    </TestCase>
+    
+    <TestCase>
+        <method name="setUp">
+            grte.reset();
+            grte.setText("Oop ark org eep means you are fantastic.\nGoo bar bum.\nEep.");                 
+            grte.setSelection(5,10);
+        </method>
+        <method name="testApplyBold">
+            var fmt = grte.getTextFormat(5,10);
+            assertFalse(fmt.bold); 
+            gBoldBtn.doClick(); 
+            fmt = grte.getTextFormat(5,10);
+            assertTrue( fmt.bold ); 
+        </method>
+        <method name="testApplyItalic">
+            var fmt = grte.getTextFormat(12,18);
+            assertFalse(fmt.italic); 
+            grte.setSelection(12,18); 
+            gItalicBtn.doClick();             
+            fmt = grte.getTextFormat(12,18);
+            assertTrue( fmt.italic ); 
+        </method>
+    </TestCase>         
+
+    
+
 </TestSuite>
 
 </canvas>
