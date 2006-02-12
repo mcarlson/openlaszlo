@@ -1,12 +1,11 @@
 <canvas width="200" height="605" bgcolor="0xeaeaea" debug="false">
 
   <!-- Datasets -->
-  <dataset name="sinfo" src="http:explorer-nav.lzx?lzt=serverinfo" autorequest="true" />
+  <dataset name="sinfo" src="http:explorer-nav.lzx?lzt=serverinfo" request="true" />
   <dataset name="navdata" src="nav.xml"/>
 
   <!-- Included Libraries -->
   <include href="base/basetree.lzx" />
-<!--  <include href="inspector/inspector.lzx" />-->
 
   <include href="resources.lzx" />
 
@@ -17,67 +16,159 @@
 
   <!-- CLASSES -->
 
+  <!-- Animator group classes to be instantiated when needed -->
+  <class name="openanimator" extends="animatorgroup" process="sequential" start="false">
+    <attribute name="item" value="null"/>
+    <animator target="$once{parent.item}" attribute="width" to="$once{160 + 7*(parent.item.level+1)}"
+        duration="100" relative="false"/>
+    <animatorgroup name="open" process="simultaneous" duration="250" start="false"
+        onstop="parent.item.onopendone.sendEvent()">
+        <!-- note the spacing & inset to -6, since the shadow is 6 pixels high -->
+        <animator attribute="inset" to="-6"
+            start="false" relative="false"/>
+        <animator attribute="spacing" to="-6"
+            start="false"  relative="false"/>
+    </animatorgroup>
+  </class>
+
+  <class name="closeanimator" extends="animatorgroup" process="sequential" start="false">
+    <attribute name="item" value="null"/>
+    <animatorgroup name="items" process="simultaneous" duration="200"  start="false"
+        onstop="parent.item.children.setVisible(false);">
+        <!-- note the spacing & inset from -6, since the shadow is 6 pixels high -->
+        <animator attribute="spacing" to="${-parent.parent.parent.hgt}" from="-6"
+            start="false"
+            relative="false"/>
+        <animator attribute="inset" to="${-parent.parent.parent.hgt}" from="-6"
+            start="false"/>
+    </animatorgroup>
+    <animator target="$once{parent.item}" attribute="width" to="$once{160 + 7*parent.item.level}"
+        duration="100" relative="false"/>
+  </class>
+
   <!-- NavButton Class parent of all item buttons -->
   <class name="menubutton" extends="basetree" xindent="0" yindent="${this.item.height}"
     closechildren="true" closesiblings="true" layout="class:null">
     <attribute name="level" type="number"/>
     <attribute name="defaultplacement" value="itemlist" type="string"/>
-<!--    <attribute name="pos" value="$path{'position()'}"/>-->
 
-    <method event="oninit">
+    <datapath xpath="*">
+        <attribute name="doneDel" value="null"/>
+        <handler name="onclones">
+            var lastclone = clones[ clones.length - 1 ];
+            if ( !this.doneDel ){
+                this.doneDel = new LzDelegate( this, 'replicationDone');
+            } else {
+                this.doneDel.unregisterAll();
+            }
+            this.doneDel.register( lastclone , "oninit" );
+        </handler>
+        <method name="replicationDone">
+            var mb = this.parent;
+            if (mb instanceof menubutton) {
+                mb.dataBound();
+            }
+        </method>
+    </datapath>
+
+    <handler name="oninit">
         this.children.sendToBack();
-    </method>
+        this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
+    </handler>
+
+    <method event="ondata">
+        if( !this['clonenumber'] || this.clonenumber == 0) {
+            var mb = this.parent;
+            if (mb instanceof menubutton) {
+                mb.dataBound();
+            }
+        }
+    </method> 
+            
+    <attribute name="deferOpen" value="false"/>
+
+    <method name="_setOpen" args="o"><![CDATA[
+        if (_initcomplete && this.isleaf) {
+            this.open = false;
+            return;
+        }
+
+        if (o && this.children.itemlist.subviews.length == 0) {
+            this.deferOpen = true;
+            new navbutton(this, { level: this.level + 1 });
+        }
+        else
+            super._setOpen(o);
+            
+    ]]></method>
+    
+    <method name="dataBound"><![CDATA[
+        if (this.deferOpen) {
+            this.deferOpen = false;
+            this.setAttribute('open', true);
+        }
+        if (this['nextOpenList']) {
+            var nol = this.nextOpenList;
+            var no = this[nol[0]];
+            if (no != null)
+                this[nol[0]].openSequence(nol);
+            else if ($debug) {
+                Debug.format("WARNING: invalid element in open sequence %w\n", nol[0]);
+            }
+        }
+    ]]></method>
+    
     <method name="openChildren" args="o">
-        //debug.write('openChildren', this, o, this.children.itemlist.subviews);
-        if (this.children.itemlist.subviews) {
+        if (this.children.itemlist.subviews.length > 0) {
+            // Debug.write('doOpenChildren', this, o, this.children.itemlist.subviews);
             var item_hgt = this.item.height;
 
             this.itemlist.childlayout.setAttribute('hgt', item_hgt);
-            //debug.write("this.open = ",o,this.open,this);
             if (o) {
                 this.itemlist.childlayout.setAttribute('spacing', -item_hgt);
                 this.itemlist.childlayout.setAttribute('inset', -item_hgt);
                 this.children.setVisible(true);
-                this.itemlist.childlayout.open.doStart();
+                this.itemlist.childlayout.doOpen();
             } else {
-                this.itemlist.childlayout.close.doStart();
+                this.itemlist.childlayout.doClose();
             }
         }
     </method>
 
+    <method name="openSequence" args="seq">
+        if (seq[0] == this.name) {
+            // first, open self
+            this.header.open();
+            if (seq.length > 1) {
+                this.nextOpenList = seq.splice(1,seq.length - 1);
+            }
+        }
+    </method>
+    
     <view name="itemlist" width="${classroot.width}" placement="children" >
         <simplelayout name="childlayout" spacing="-20">
             <attribute name="hgt" value="0" />
 
-            <animatorgroup name="open" process="sequential" start="false">
-                <animator target="${classroot}" attribute="width" to="${160 + 7*(classroot.level+1)}"
-                    duration="100" relative="false"/>
-                <animatorgroup name="open" process="simultaneous" duration="250" start="false"
-                    onstop="classroot.onopendone.sendEvent()">
-                    <!-- note the spacing & inset to -6, since the shadow is 6 pixels high -->
-                    <animator attribute="inset" to="-6"
-                        start="false" relative="false"/>
-                    <animator attribute="spacing" to="-6"
-                        start="false"  relative="false"/>
-                </animatorgroup>
-            </animatorgroup>
-
-            <animatorgroup name="close"  process="sequential" start="false">
-                <animatorgroup name="items" process="simultaneous" duration="200"  start="false"
-                    onstop="classroot.children.setVisible(false);">
-                    <!-- note the spacing & inset from -6, since the shadow is 6 pixels high -->
-                    <animator attribute="spacing" to="${-parent.parent.parent.hgt}" from="-6"
-                        start="false"
-                        relative="false"/>
-                    <animator attribute="inset" to="${-parent.parent.parent.hgt}" from="-6"
-                        start="false"/>
-                </animatorgroup>
-                <animator target="${classroot}" attribute="width" to="${160 + 7*classroot.level}"
-                    duration="100" relative="false"/>
-            </animatorgroup>
+            <method name="doOpen">
+                if (this.animateOpen == null) {
+                    this.animateOpen = new openanimator(this, { item: classroot });
+                }
+                this.animateOpen.doStart();
+            </method>
+            
+            <method name="doClose">
+                if (this.animateClose == null) {
+                    this.animateClose = new closeanimator(this, { item: classroot });
+                }
+                this.animateClose.doStart();
+            </method>
+            
+            <attribute name="animateOpen" value="null"/>
+            <attribute name="animateClose" value="null"/>
+            
         </simplelayout>
     </view>
-    <itembutton name="header" level="$once{classroot.level}" placement="item"
+    <itembutton name="header" level="$once{classroot.level}"
        text="$once{classroot.name}" width="${classroot.width}"/>
   </class>
 
@@ -87,67 +178,88 @@
     onmouseout="showUp()"
     onmousedown="background.setResourceNumber(3)"
     onmouseup="showUp()" clickable="true">
-    <attribute name="tagtype" value="$path{'name()'}"/>
-    <attribute name="params" value="$path{'@params'}"/>
-    <attribute name="popup" value="$path{'@popup'}"/>
-    <attribute name="tagline" value="$path{'@text'}"/>
-    <attribute name="title" value="$path{'@title'}"/>
-    <attribute name="src" value="$path{'@src'}"/>
-    <attribute name="action" value="$path{'@action'}"/>
-    <attribute name="target" value="$path{'@target'}"/>
-    <attribute name="autoselect" value="$path{'@autoselect'}"/>
 
-    <attribute name="infoOpen" value="false"/>
     <attribute name="level" type="number"/>
-    <attribute name="resourceOffset" value="0" />
     <attribute name="text" type="string"/>
+    
+    <event name="onopendone"/>
 
-    <method event="ondata">
-        this.background.setResource(this.tagtype + "_btn");
-        if (this.tagtype == 'subitem') {
-             this.smalltext.apply();
+    <method name="largetext">
+        icon.setAttribute("y", 9);
+        label.setAttribute("y", 3);
+        label.setAttribute("fgcolor", 0xffffff);
+        label.setAttribute("fontsize", 13);
+    </method>
+    
+    <method name="smalltext">
+        icon.setAttribute("y", 5);
+        label.setAttribute("y", 2);
+        label.setAttribute("fgcolor", 0xd4dcec);
+        label.setAttribute("fontsize", 11);
+    </method>
+    
+    <handler name="ondata">
+        var dp = this.datapath;
+
+        var tagtype = dp.xpathQuery("name()");
+        this.background.setResource(tagtype + "_btn");
+        if (tagtype == 'subitem') {
+             this.smalltext();
         } else {
-            this.largetext.apply();
+            this.largetext();
         }
 
-        if (this.action == 'popup' || this.action == 'source') {
+        var action = dp.xpathQuery("@action");
+        if (action == 'popup' || action == 'source') {
             icon.setResourceNumber(4);
         }
-    </method>
+    </handler>
 
-    <method event="onopendone" reference="classroot" name="doaction">  <![CDATA[
-        if (this.autoselect == "true") {
+    <handler name="onopendone" reference="classroot" method="doaction"/>
+    <method name="doaction">  <![CDATA[
+        var dp = this.datapath;
+        var autoselect = dp.xpathQuery("@autoselect");
+        if (autoselect == "true") {
             classroot.itemlist.subviews[0].header.open();
         } else {
-              if (this.action=='popup'){
-                LzBrowser.loadURL('loading.jsp?src=' + this.popup + '&action=' + this.action + '&' + this.params,
-                      this.target=="" ? "_blank" : this.target);
-                if (this.src != null){
-                  LzBrowser.loadURL('content.jsp?src=' + this.src + '&tag=' + this.tagline +
-                                    '&title=' + this.title + '&' + this.params, 'content');
+            var action = dp.xpathQuery("@action");
+            var params = dp.xpathQuery("@params");
+            var src = dp.xpathQuery("@src");
+            var tagline = dp.xpathQuery("@text");
+            var title = dp.xpathQuery("@title");
+              if (action=='popup'){
+                var popup = dp.xpathQuery("@popup");
+                var target = dp.xpathQuery("@target");
+                LzBrowser.loadURL('loading.jsp?src=' + popup + '&action=' + action + '&' + params,
+                      target=="" ? "_blank" : target);
+                if (src != null){
+                  LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
+                                    '&title=' + title + '&' + params, 'content');
                 }
-              } else if (this.action=='source'){
-                  LzBrowser.loadURL('content.jsp?src=' + this.src + '&tag=' + this.tagline +
-                                '&title=' + this.title + '&action=source' + '&' + this.params, 'source');
+              } else if (action=='source'){
+                  LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
+                                '&title=' + title + '&action=source' + '&' + params, 'source');
               } else {
-                if (this.title ==null){
-                   this.title = classroot.name;
+                if (title ==null){
+                   title = classroot.name;
                 }
-                LzBrowser.loadURL('content.jsp?src=' + this.src + '&tag=' + this.tagline +
-                                   '&title=' + this.title + '&action=' + this.action+ '&' + this.params, 'content');
+                LzBrowser.loadURL('content.jsp?src=' + src + '&tag=' + tagline +
+                                   '&title=' + title + '&action=' + action+ '&' + params, 'content');
            }
         }
         ]]>
     </method>
-    <method name="open" event="onclick">
+    
+    <handler name="onclick" method="open"/>
+    <method name="open">
       <![CDATA[
-      global.opened[classroot.level]=classroot.name;
-      global.opened.length=classroot.level +1;
-      //debug.Write(global.opened.join("|"));
+        var dp = this.datapath;
+        var tagtype = dp.xpathQuery("name()");
+
       classroot.changeFocus();
 
       // only open subitems if there are
-      if (this.tagtype != 'subitem' || this.datapath.getNodeCount() > 0) {
+      if (tagtype != 'subitem' || this.datapath.getNodeCount() > 0) {
         // only open menu if not already opened ( i.e don't toggle like before )
         // if ( !classroot.open ) -- this did not completely work, so just always open
         classroot.setAttribute("open", true);
@@ -156,7 +268,9 @@
       }
       ]]>
     </method>
-    <method event="onopen" reference="classroot" name="showUp">
+
+    <handler name="onopen" reference="classroot" method="showUp"/>
+    <method name="showUp">
         background.setResourceNumber(classroot.open ? 4 : 1);
         // Only toggle arrow if there are subnodes
         if (this.datapath.getNodeCount()) {
@@ -164,25 +278,19 @@
         }
     </method>
 
-      <view  name="background"  width="${classroot.width}" x="${classroot.width-200}" />
+    <view name="background"  width="${classroot.width}" x="${classroot.width-200}" />
 
-    <state name="largetext" apply="false">
-        <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
-          x="${classroot.width - this.width - 6 }" />
-        <text x="${6 + classroot.level*7}" y="3" font="itemfont" fgcolor="#ffffff"
-            fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
-    </state>
-    <state name="smalltext" apply="false">
-        <view name="icon" resource="icon" y="5" stretches="both" width="11" height="11"
-          x="${classroot.width - this.width - 6 }" />
-        <text x="${6 + classroot.level*7}" y="2" font="itemfont" fgcolor="#d4dcec"
-            fontsize="11" width="${parent.width-x}" text="${classroot.text}"/>
-    </state>
+    <view name="icon" resource="icon" y="9" stretches="both" width="11" height="11"
+        x="${classroot.width - this.width - 6 }" />
+      
+    <text name="label" x="${6 + classroot.level*7}" y="3" font="itemfont" fgcolor="#ffffff"
+        fontsize="13" width="${parent.width-x}" text="${classroot.text}"/>
+        
   </class>
 
-    <class name="navbutton" extends="menubutton" width="${immediateparent.width}">
-        <attribute name="name" value="$path{'@name'}"/>
-    </class>
+  <class name="navbutton" extends="menubutton" width="${immediateparent.width}">
+      <attribute name="name" value="$path{'@name'}"/>
+  </class>
 
   <!-- APPLICATION -->
   <!-- navigation bar and classes -->
@@ -212,22 +320,14 @@
       <method event="oninit" reference="canvas">
         // this is how we restore the state of the app from an incoming URL, 
         // this is always provided by the JSP wrappers 
-        var restore = new Array(); 
         if (typeof(global.bookmark) != 'undefined'){
-          restore = global.bookmark.split('|');
-          this[restore[0]].header.open();
-          this[restore[0]][restore[1]].header.open();
-          this[restore[0]][restore[1]][restore[2]].header.open();
-          this[restore[0]][restore[1]][restore[2]][restore[3]].header.open();
+          var restore = global.bookmark.split('|');
+          if (restore.length > 0) {
+              this[restore[0]].openSequence(restore);
+          }
         }
       </method>
-      <navbutton width="160" datapath="*" level="0">
-        <navbutton datapath="*" level="1">
-          <navbutton datapath="*" level="2">
-            <navbutton datapath="*" level="3">
-            </navbutton>
-          </navbutton>
-        </navbutton>
+      <navbutton width="160" level="0">
       </navbutton>
     </basetree>
   </view>
@@ -235,7 +335,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
