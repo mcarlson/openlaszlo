@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -699,6 +699,9 @@ public class ViewCompiler extends ElementCompiler {
             // if there is no defined parent width, we can't compute
             // any meaningful result
             Matcher m = sParentWidthPat.matcher(width);
+            if (m.groupCount() != 4) {
+                return FontInfo.NULL_SIZE;
+            }
             if (fontInfo.getWidth() == FontInfo.NULL_SIZE) {
                 return FontInfo.NULL_SIZE;
             }
@@ -750,6 +753,9 @@ public class ViewCompiler extends ElementCompiler {
                 return FontInfo.NULL_SIZE;
             }
             Matcher m = sParentHeightPat.matcher(height);
+            if (m.groupCount() != 4) {
+                return FontInfo.NULL_SIZE;
+            }
             // Get numeric operator and arg
             String operator = m.group(3);
             if (operator.equals("")) {
