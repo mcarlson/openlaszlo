@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -19,9 +19,9 @@ var mvn = function (){
         if ($profile) {
             var nm = null;
             // Have to extract name from attrs
-            if (attrs['id']) {
+            if (attrs['id'] && (attrs.id != this._ignoreAttribute)) {
                 nm = '#' + attrs.id;
-            } else if (attrs['name']) {
+            } else if (attrs['name'] && (attrs.name != this._ignoreAttribute)) {
                 nm = ((parent == _root.canvas)?'#':'.') + attrs.name;
             }
             if (nm) {
@@ -433,7 +433,7 @@ LzNode.prototype.__LZapplyArgs = function ( args , constcall ){
 
       for ( var a in args ){
           //handle flash bug where objects slots are enumerated multiple times
-          if ( oset[a] || args[a] == this._ignoreAttribute ) continue;
+          if ( oset[a] || args[a] === this._ignoreAttribute ) continue;
           oset[ a ] = true;
 
           if ( setrs[ a ] == null ){
