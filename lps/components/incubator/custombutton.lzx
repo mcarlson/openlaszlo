@@ -105,6 +105,10 @@
                         // scale the resource proportionally to the view height
                         this.setWidth( Math.round(this.resourcewidth*height*1.0/this.resourceheight) );
                     }
+
+                    // FIXME: [gse 2006-02-06] for some reason play="false" causes a hard loop on startup
+                    // See http://www.openlaszlo.org/jira/browse/LPP-1577
+                    this.stop(0);
                     ]]>
                 </method>
             </view>
@@ -193,6 +197,14 @@
                 this.content.txt.setAttribute("font", s.font);
                 this.content.txt.setAttribute("fontsize", s.fontsize);
             }
+        </method>
+
+        <method name="iconPlay">
+            this.content.icon.play();
+        </method>
+
+        <method name="iconStop">
+            this.content.icon.stop(0);
         </method>
 
     </class>
