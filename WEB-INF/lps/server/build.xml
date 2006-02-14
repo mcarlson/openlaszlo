@@ -344,13 +344,13 @@
 
     <!-- Build jar files  -->
     <mkdir dir="${lib}" />
-    <jar jarfile="${LPS_JAR}" manifest="manifest.mf" basedir="${build}"
-         includes="org/**,EDU/**"
-         excludes="org/openlaszlo/*/internal/*_Test.class,
-                   org/openlaszlo/*/*_Test*.class,
-                   org/openlaszlo/test/*"
-         />
-
+    <jar jarfile="${LPS_JAR}" manifest="manifest.mf">
+        <fileset dir="${build}" includes="org/**,EDU/**"
+                 excludes="org/openlaszlo/*/internal/*_Test.class,
+                           org/openlaszlo/*/*_Test*.class,
+                           org/openlaszlo/test/*" />
+        <fileset dir="${src}" includes="org/openlaszlo/i18n/*.properties" />
+    </jar>
   </target>
 
   <!--===============  Target [test]  ====================-->
