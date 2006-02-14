@@ -1,0 +1,74 @@
+<!--=======================================================================-->
+<!--                                                                       -->
+<!-- tab-slider.lzx                                                        -->
+<!--                                                                       -->
+<!-- Laszlo Application Language (LZX) Example                             -->
+<!--                                                                       -->
+<!--=======================================================================-->
+
+<library>
+    <!-- clickable="true" onmouseup="weatherContent.openTab(this)" -->
+    <class name="TabElement" clickable="true" clip="true" onmouseup="this.parent.openTab(this)" >
+
+        <view name="top" width="240" fontstyle="bold">
+            <view name="bg" resource="tabtop" 
+                  width="parent.width"
+                  stretches="width" />
+            <view name="icon" resource="slider_icon" x="2" y="3" />
+            <text name="titleboxsh" width="240" fgcolor="#3B4057" x="16" y="5">
+            </text>
+            <text name="titlebox"   width="240" fgcolor="#CAD0EC" x="15" y="4">
+            </text>
+        </view>
+
+        <view name="container" height="20" width="parent.width">
+            <view name="details" width="parent.width" />
+        </view>
+
+        <resizelayout axis="y" />
+
+        <method name="doinit"  args="title" >
+            this.layouts[0].release(this.container);
+            this.top.titleboxsh.settext(title);
+            this.top.titlebox.settext(title);
+            //this.container.details.setAttribute("opacity",0);
+        </method>
+
+        <method name="open" args="h,withAnimation" >
+            if( withAnimation ) {
+                this.animate("height",h,333,true);
+                this.top.bg.animate("opacity",.33,333,false)
+            } else {
+                this.setAttribute("height",h);
+                this.top.bg.setAttribute("opacity",.33);
+            }
+            this.top.titlebox.setColor(0xFFFFFF);
+        </method>
+        
+        <method name="close" args="h">
+            this.animate("height",h,333,true);
+            this.top.bg.animate("opacity",1,333,false);
+            this.top.titlebox.setColor(0xCAD0EC);
+        </method>
+
+    </class>
+
+    <class name="TabSlider">
+        <attribute name="opennedTab" value="null" />
+        <attribute name="opennedheight" value="229" />
+        <simplelayout axis="y" spacing="0"/>
+        <method name="openTab" args="tabelement,withAnimation" >
+            //Debug.write("openTab tabelement = " + tabelement);
+            if (this.opennedTab != tabelement) {
+                tabelement.open(this.opennedheight,true)
+                this.opennedTab.close(-this.opennedheight);
+                this.opennedTab = tabelement;
+            }
+        </method>
+    </class>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
