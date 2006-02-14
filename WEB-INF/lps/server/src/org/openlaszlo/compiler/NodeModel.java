@@ -3,7 +3,7 @@
  * ***************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -516,7 +516,7 @@ public class NodeModel implements Cloneable {
                     env.warn(
 /* (non-Javadoc)
  * @i18n.test
- * @org-mes="Replacing defaultPlacement=\"" + p[0] + "\" by \"" + p[1] + "\".  For future compatability" + ", you should make this change to your source code."
+ * @org-mes="Replacing defaultPlacement=\"" + p[0] + "\" by \"" + p[1] + "\".  For future compatibility" + ", you should make this change to your source code."
  */
             org.openlaszlo.i18n.LaszloMessages.getMessage(
                 NodeModel.class.getName(),"051018-513", new Object[] {oldValue, value})
