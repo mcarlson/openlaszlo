@@ -73,10 +73,10 @@
 
     <handler name="oninit">
         this.children.sendToBack();
-        this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
     </handler>
 
     <method event="ondata">
+        this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
         if( !this['clonenumber'] || this.clonenumber == 0) {
             var mb = this.parent;
             if (mb instanceof menubutton) {
@@ -113,7 +113,7 @@
             if (no != null)
                 this[nol[0]].openSequence(nol);
             else if ($debug) {
-                Debug.format("WARNING: invalid element in open sequence %w\n", nol[0]);
+                Debug.warn("invalid element in open sequence %w\n", nol[0]);
             }
         }
     ]]></method>
@@ -181,6 +181,7 @@
 
     <attribute name="level" type="number"/>
     <attribute name="text" type="string"/>
+    <attribute name="isleaf" value="false"/>
     
     <event name="onopendone"/>
 
@@ -200,6 +201,8 @@
     
     <handler name="ondata">
         var dp = this.datapath;
+
+        this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
 
         var tagtype = dp.xpathQuery("name()");
         this.background.setResource(tagtype + "_btn");
@@ -259,12 +262,12 @@
       classroot.changeFocus();
 
       // only open subitems if there are
-      if (tagtype != 'subitem' || this.datapath.getNodeCount() > 0) {
+      if (this.isleaf) {
+        this.doaction();
+      } else {
         // only open menu if not already opened ( i.e don't toggle like before )
         // if ( !classroot.open ) -- this did not completely work, so just always open
         classroot.setAttribute("open", true);
-      } else {
-        this.doaction();
       }
       ]]>
     </method>
