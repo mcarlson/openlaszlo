@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -22,6 +22,7 @@ LzMakeLoad = new LzTransformer();
 // TODO [2005-07-14 ptw] apply is a bad name to choose, since you are
 // overriding Function.apply!
 LzMakeLoad.apply = function ( v , src , cache, headers ){
+    //_root.Debug.write('LzMakeLoad.apply', v, src, cache, headers);
 
     super.apply( v );
 
@@ -29,16 +30,19 @@ LzMakeLoad.apply = function ( v , src , cache, headers ){
     v.firstcache = cache;
     v.firstheaders = headers;
 
+    //_root.Debug.write('LzMakeLoad.apply', v.__LZhaser, v.__LZmovieClipRef);
+
     if ( v.__LZmovieClipRef == null ){
         v.makeContainerResource();
     }
 
-    if ( v.__LZhaser ){
+    if (v.__LZhaser ){
         v.createLoader();
     } else {
         //the view doesn't have the empty resource. We need to try and replace
         //it
         v.makeContainerResource();
+        if (! this.loader) v.createLoader();
     }
 }
     
@@ -68,6 +72,7 @@ LzMakeLoad.createLoader = function (){
     this.timeoutDel = new _root.LzDelegate( this , "__LZsendTimeout" );
     this.timeoutDel.register( this.loader , "ontimeout" );
 
+    //__root.Debug.write('LzMakeLoad.createLoader', this.firstsrc)
     if ( this.firstsrc != null ){
         this.setSource( this.firstsrc , this.firstcache, this.firstheaders );
     }
