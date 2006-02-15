@@ -22,8 +22,8 @@
         
         <attribute name="notnumberErrorstring" type="string" value="this field contains invalid characters." />
         <attribute name="notintErrorstring" type="string" value="Enter integer value." />
-        <attribute name="toobigErrorstring" type="string" value="this number entered is too big." />
-        <attribute name="toosmallErrorstring" type="string" value="this number entered is too small." />
+        <attribute name="toobigErrorstring" type="string" value="this number is too large." />
+        <attribute name="toosmallErrorstring" type="string" value="this number is too small." />
         
         <method name="doValidation" args="val">
         <![CDATA[

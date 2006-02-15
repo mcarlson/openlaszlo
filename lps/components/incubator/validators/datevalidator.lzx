@@ -18,10 +18,10 @@
         <attribute name="format" type="string" value="mm/dd/yyyy" />
         <attribute name="trim" type="boolean" value="true" />
         
-        <attribute name="invaliedformatErrorstring" type="string" value="Please input the date in the valied format." />
-        <attribute name="invaliedyearErrorstring" type="string" value="Please enter a Year between 0 to 9999." />
-        <attribute name="invaliedmonthErrorstring" type="string" value="Please enter a Month between 1 to 12." />
-        <attribute name="invalieddateErrorstring" type="string" value="Please enter a right date." />
+        <attribute name="invaliedformatErrorstring" type="string" value="Please input the date in a valid format." />
+        <attribute name="invaliedyearErrorstring" type="string" value="Please enter a year between 0 and 9999." />
+        <attribute name="invaliedmonthErrorstring" type="string" value="Please enter a month between 1 to 12." />
+        <attribute name="invalieddateErrorstring" type="string" value="Please enter a valid date." />
         
         <method name="doValidation" args="val">
             <![CDATA[

@@ -19,8 +19,8 @@
         <attribute name="minLength" type="number" value="0" />
         <attribute name="trim" type="boolean" value="false" />
         
-        <attribute name="minErrorstring" type="string" value="this string is shorter than minmum allowed length." />
-        <attribute name="maxErrorstring" type="string" value="this string is longer than maximum allowed length." />
+        <attribute name="minErrorstring" type="string" value="this string is shorter than the minimum allowed length." />
+        <attribute name="maxErrorstring" type="string" value="this string is longer than the maximum allowed length." />
         
         <method name="doValidation"  args="val">
             <![CDATA[

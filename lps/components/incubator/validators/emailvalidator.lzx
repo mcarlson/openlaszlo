@@ -17,9 +17,9 @@
     <class name="emailvalidator" extends="basevalidator" errorstring="it's not valied e-mail address">
         <attribute name="trim" type="boolean" value="true" />
 
-        <attribute name="missingatmarkErrorstring" type="string" value="Missing an @ charancter in your email address." />
+        <attribute name="missingatmarkErrorstring" type="string" value="Missing a @ character in your email address." />
         <attribute name="toomanyatmarkErrorstring" type="string" value="Too many @ characters in your email address." />
-        <attribute name="missingperiodErrorstring" type="string" value="The domain in your email address is Missing a period." /> 
+        <attribute name="missingperiodErrorstring" type="string" value="The domain in your email address is missing a period." /> 
         <attribute name="incorrectlydomainErrorstring" type="string" value="The domain in your email address is incorrectly formatted." />
         <method name="doValidation" args="val">
             <![CDATA[
