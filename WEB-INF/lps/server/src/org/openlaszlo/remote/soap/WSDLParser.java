@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -967,7 +967,7 @@ public class WSDLParser
     String getEndpointAddress(Element port) {
         Element soapAddress = 
             LZSOAPUtils.getFirstElementByTagNameNS(mNamespaceURI_WSDL_SOAP, 
-                                                   mDefinitions, "address");
+                                                   port, "address");
         String name = port.getAttribute("name");
         return soapAddress.getAttribute("location");
     }
