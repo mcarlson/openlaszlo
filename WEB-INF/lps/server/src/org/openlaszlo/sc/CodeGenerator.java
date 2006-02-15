@@ -7,7 +7,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -2633,7 +2633,7 @@ public class CodeGenerator implements Translator {
       collector.emit(Instructions.SetMember);
     }
     if (options.getBoolean(Compiler.CONSTRAINT_FUNCTION)) {
-      assert (functionName != null);
+//       assert (functionName != null);
       if (ReferenceCollector.DebugConstraints) {
         System.err.println("stmts: " + stmts);
       }

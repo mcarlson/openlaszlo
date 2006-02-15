@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -132,8 +132,8 @@ abstract class ToplevelCompiler extends ElementCompiler {
         {
             Set defined = new HashSet();
             Set referenced = new HashSet();
-            collectReferences(env, element, defined, referenced);
-            referenced.removeAll(defined);
+            Set visited = new HashSet();
+            collectReferences(env, element, defined, referenced, visited);
             // keep the keys sorted so the order is deterministic for qa
             Set additionalLibraries = new TreeSet();
             // iterate undefined references
@@ -142,8 +142,18 @@ abstract class ToplevelCompiler extends ElementCompiler {
                 String key = (String) iter.next();
                 if (autoincludes.containsKey(key)) {
                     String value = (String) autoincludes.get(key);
-                    additionalLibraries.add(value);
-                    explanations.put(value, "reference to <" + key + "> tag");
+                    // Ensure that a library that was explicitly
+                    // included that would have been auto-included is
+                    // emitted where the auto-include would have been.
+                    if (defined.contains(key)) {
+                      if (visited.contains(value)) {
+                        explanations.put(value, "explicit include");
+                        additionalLibraries.add(value);
+                      }
+                    } else {
+                      explanations.put(value, "reference to <" + key + "> tag");
+                      additionalLibraries.add(value);
+                    }
                 }
             }
             libraryNames.addAll(additionalLibraries);
