@@ -1,6 +1,6 @@
 /* Stylesheet for Laszlo Systems docs.  */
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -43,6 +43,8 @@ h3 {
 .docPrototype .param {font-style: italic}
 
 /* Tables */
+
+td {vertical-align: top}
 
 .docTableTitle {
     font-family : Verdana, Geneva, Arial, Helvetica, sans-serif;

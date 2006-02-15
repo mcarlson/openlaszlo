@@ -1,3 +1,7 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 </head>
@@ -14,6 +18,50 @@
     </lzshortdesc>
     <lztag>rpc/xmlhttprequest.xml</lztag>
 </lzelement>
+
+<p>This class implements the XMLHTTPRequest as <a href="http://developer.apple.com/internet/webcontent/xmlhttpreq.html">specified</a> by the <a href="http://www.whatwg.org/specs/web-apps/current-work/#scripted-http">WHATWG</a> consortium.</p>
+
+<p>In SOLO deployed applications, this class departs from the specification in these ways:</p>
+<ul>
+  <li>Cannot set HTTP headers</li>
+  <li>Cannot access response headers</li>
+  <li>Cannot send raw POST data</li>
+  <li>Cannot send repeated query args in a POST using LoadVars</li>
+  <li>Username/password Auth args to send() not supported</li>
+</ul>
+
+<example executable="false">
+  &lt;script&gt;
+    function loadXMLDoc(url) {
+      var req = new XMLHttpRequest();
+      req.onreadystatechange = processReqChange;
+      req.open("GET", url, true);
+      req.setRequestHeader('X-Test', 'one');
+      req.setRequestHeader('X-Test', 'two');
+      req.send(null);
+    }
+
+    function processReqChange(request) {
+      Debug.write("processReqChange: req.readyState", request.readyState);
+      // only if request shows "loaded"
+      if (request.readyState == 4) {
+        // only if "OK"
+        if (request.status == 200) {
+          Debug.write("arg =", request);
+          Debug.write("request.status", request.status);
+          Debug.write("request.responseText:", request.responseText);
+          Debug.write("request.responseXML:", request.responseXML);
+          Debug.write("request.getAllResponseaders:",
+                      request.getAllResponseHeaders());
+      } else {
+        Debug.write("There was a problem retrieving the XML data:\n" +
+                    request.statusText);
+        }
+      }
+    }
+  &lt;/script&gt;
+</example>
+
 </body>
 </html>
 
