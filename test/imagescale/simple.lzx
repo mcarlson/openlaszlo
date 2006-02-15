@@ -1,0 +1,26 @@
+<canvas>
+    <simplelayout axis="y" spacing="10" />
+    <class name="shrinker" resource="images/IMG_7492.jpg" 
+            stretches="both" width="100" height="100" >
+        <animatorgroup motion="linear" process="sequential" repeat="10">
+            <animatorgroup duration="1000" process="simultaneous" >
+                <animator attribute="height" to="200"/> 
+                <animator attribute="width" to="300"/>
+            </animatorgroup>
+            <animatorgroup duration="4000" motion="linear" process="simultaneous"> 
+                <animator attribute="height" to="50"/> 
+                <animator attribute="width" to="60"/>
+            </animatorgroup>
+        </animatorgroup>
+    </class>
+
+    <shrinker x="20" y="20" />
+    <shrinker x="20" y="80" resource="images/IMG_6582.jpg" />
+    <shrinker x="79" y="20" resource="images/IMG_7523.jpg" />
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
+
