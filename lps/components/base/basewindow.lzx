@@ -1,3 +1,8 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
 <library>
 
 <include href="utils/states/dragstate.lzx"/>
@@ -93,6 +98,36 @@
           super.destroy();
         </method>
         
+        <method name="sendInFrontOf" args="v"> <![CDATA[
+            if (this.visible) {
+                this._removeFromWindowlist();
+                var wlist = parent.options['windowlist'];
+                for (var i in wlist) {
+                    if (wlist[i]==v) {
+                        wlist.splice(i+1,0,this);
+                        break;
+                    }
+                }
+            }
+            super.sendInFrontOf(v);
+            ]]>
+        </method>
+
+        <method name="sendBehind" args="v"> <![CDATA[
+            if (this.visible) {
+                this._removeFromWindowlist();
+                var wlist = parent.options['windowlist'];
+                for (var i in wlist) {
+                    if (wlist[i]==v) {
+                        wlist.splice(i,0,this);
+                        break;
+                    }
+                }
+            }
+            super.sendBehind(v);
+            ]]>
+        </method>
+
         <method name="bringToFront"> <![CDATA[
             if (this.visible) {
                 var wlist = parent.options['windowlist'];
@@ -102,6 +137,18 @@
                 }
             }
             super.bringToFront();
+            ]]>
+        </method>
+
+        <method name="sendToBack"> <![CDATA[
+            if (this.visible) {
+                var wlist = parent.options['windowlist'];
+                if (wlist[0] != this) {
+                    this._removeFromWindowlist();
+                    wlist.splice(0,0,this);
+                }
+            }
+            super.sendToBack();
             ]]>
         </method>
         <!--- Called onmousedown, sets haswindowfocus to true and starts the
@@ -282,8 +329,3 @@
 
 
 </library>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
