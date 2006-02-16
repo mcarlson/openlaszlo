@@ -1,0 +1,56 @@
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
+<canvas debug="true">
+    <window width="150" height="150" x="10" y="10" title="winOne"
+            name="winOne" />
+    <window width="150" height="150" x="110" y="110" title="winTwo"
+            name="winTwo" />
+    <window width="150" height="150" x="210" y="210" title="winThree"
+            name="winThree" />
+
+    <window x="400" y="10" title="Test Harness">
+        <simplelayout axis="y" spacing="10" />
+
+        <text width="100%" multiline="true">
+            Reload app between each test and inspect the order of windows.
+        </text>
+
+        <button>Write out windowlist
+            <method event="onclick">
+                Debug.write( canvas.options["windowlist"] );;
+            </method>
+        </button>
+
+        <button>Send winOne in front of winTwo (broken)
+            <method event="onclick">
+                winOne.sendInFrontOf(winTwo);
+                Debug.write( canvas.options["windowlist"] );;
+            </method>
+        </button>
+
+        <button>Send winThree behind winTwo (broken)
+            <method event="onclick">
+                winThree.sendBehind(winTwo);
+                Debug.write( canvas.options["windowlist"] );;
+            </method>
+        </button>
+
+
+        <button>Send winThree to back (broken)
+            <method event="onclick">
+                winThree.sendToBack();
+                Debug.write( canvas.options["windowlist"] );;
+            </method>
+        </button>
+
+        <button>Bring winOne to front (works)
+            <method event="onclick">
+                winOne.bringToFront();
+                Debug.write( canvas.options["windowlist"] );;
+            </method>
+        </button>
+
+    </window>
+</canvas>
