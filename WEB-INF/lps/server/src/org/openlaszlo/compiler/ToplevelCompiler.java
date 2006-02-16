@@ -120,6 +120,8 @@ abstract class ToplevelCompiler extends ElementCompiler {
     static List getLibraries(CompilationEnvironment env, Element element, Map explanations) {
         List libraryNames = new ArrayList();
         String librariesAttr = element.getAttributeValue("libraries");
+        String base = new File(Parser.getSourcePathname(element)).getParent();
+        FileResolver resolver = env.getFileResolver();
         if (librariesAttr != null) {
             for (StringTokenizer st = new StringTokenizer(librariesAttr);
                  st.hasMoreTokens();) {
@@ -136,8 +138,17 @@ abstract class ToplevelCompiler extends ElementCompiler {
             collectReferences(env, element, defined, referenced, visited);
             // keep the keys sorted so the order is deterministic for qa
             Set additionalLibraries = new TreeSet();
-            // iterate undefined references
             Map autoincludes = env.getSchema().sAutoincludes;
+            Map canonicalAuto = new HashMap();
+            try {
+              for (Iterator iter = autoincludes.keySet().iterator(); iter.hasNext(); ) {
+                String key = (String) iter.next();
+                canonicalAuto.put(key, resolver.resolve((String)autoincludes.get(key), base).getCanonicalFile());
+              }
+            } catch (IOException e) {
+              throw new CompilationError(element, e);
+            }
+            // iterate undefined references
             for (Iterator iter = referenced.iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
                 if (autoincludes.containsKey(key)) {
@@ -146,7 +157,8 @@ abstract class ToplevelCompiler extends ElementCompiler {
                     // included that would have been auto-included is
                     // emitted where the auto-include would have been.
                     if (defined.contains(key)) {
-                      if (visited.contains(value)) {
+                      File canonical = (File)canonicalAuto.get(key);
+                      if (visited.contains(canonical)) {
                         explanations.put(value, "explicit include");
                         additionalLibraries.add(value);
                       }
@@ -160,11 +172,10 @@ abstract class ToplevelCompiler extends ElementCompiler {
         }
         // Turn the library names into pathnames
         List libraries = new ArrayList();
-        String base = new File(Parser.getSourcePathname(element)).getParent();
         for (Iterator iter = libraryNames.iterator(); iter.hasNext(); ) {
             String name = (String) iter.next();
             try {
-                libraries.add(env.getFileResolver().resolve(name, base));
+                libraries.add(resolver.resolve(name, base));
             } catch (FileNotFoundException e) {
                 throw new CompilationError(element, e);
             }
