@@ -20,9 +20,12 @@
               @keywords final -->
         <attribute name="minheight" value="50"/>
 
-        <!--- True if the window is frontmost, default: false. -->
+        <!--- True if the window is frontmost, default: false. Set this
+              attribute to bring the window to the fore of its sibling
+              windows, and bring window focus.
+              @keywords defaultsetter -->
         <attribute name="haswindowfocus" value="false"
-            setter="_setwindowfocus(haswindowfocus)"/>
+            setter="setWindowFocus(haswindowfocus)"/>
 
         <!--- @keywords private -->
         <event name="onhaswindowfocus"/>
@@ -99,9 +102,9 @@
         </method>
         
         <method name="sendInFrontOf" args="v"> <![CDATA[
+            var wlist = parent.options['windowlist'];
             if (this.visible) {
                 this._removeFromWindowlist();
-                var wlist = parent.options['windowlist'];
                 for (var i in wlist) {
                     if (wlist[i]==v) {
                         wlist.splice(i+1,0,this);
@@ -110,13 +113,14 @@
                 }
             }
             super.sendInFrontOf(v);
+            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
             ]]>
         </method>
 
         <method name="sendBehind" args="v"> <![CDATA[
+            var wlist = parent.options['windowlist'];
             if (this.visible) {
                 this._removeFromWindowlist();
-                var wlist = parent.options['windowlist'];
                 for (var i in wlist) {
                     if (wlist[i]==v) {
                         wlist.splice(i,0,this);
@@ -125,30 +129,33 @@
                 }
             }
             super.sendBehind(v);
+            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
             ]]>
         </method>
 
         <method name="bringToFront"> <![CDATA[
+            var wlist = parent.options['windowlist'];
             if (this.visible) {
-                var wlist = parent.options['windowlist'];
                 if (wlist[wlist.length-1] != this) {
                     this._removeFromWindowlist();
                     wlist.push(this);
                 }
             }
             super.bringToFront();
+            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
             ]]>
         </method>
 
         <method name="sendToBack"> <![CDATA[
+            var wlist = parent.options['windowlist'];
             if (this.visible) {
-                var wlist = parent.options['windowlist'];
                 if (wlist[0] != this) {
                     this._removeFromWindowlist();
                     wlist.splice(0,0,this);
                 }
             }
             super.sendToBack();
+            wlist[wlist.length-1].setAttribute("haswindowfocus",true);
             ]]>
         </method>
         <!--- Called onmousedown, sets haswindowfocus to true and starts the
@@ -206,12 +213,12 @@
              @keywords private -->
         <method name="_removeFromWindowlist"> <![CDATA[
             var wlist = parent.options['windowlist'];
-                for (var i=0; i < wlist.length; i++) {
-                   if (wlist[i] == this) {
-                        wlist.splice(i,1);
-                        break;
-                    }
+            for (var i=0; i < wlist.length; i++) {
+                if (wlist[i] == this) {
+                    wlist.splice(i,1);
+                    break;
                 }
+            }
             ]]>
         </method>
 
@@ -236,13 +243,12 @@
         <!--- @keywords private -->
         <attribute name="mousedel" value="null"/>
 
-        <!--- Used internally to bring the window to front when it has the
+        <!--- Brings the window to front when it has the
               windowfocus and sets the 'state' to 2, the selected state.
               Subclasses may override to create different behavior
               @param Boolean windowfocus: whether the window should be selected
-              @keywords private
               -->
-        <method name="_setwindowfocus" args="windowfocus">
+        <method name="setWindowFocus" args="windowfocus">
         <![CDATA[
             if (this['haswindowfocus'] == windowfocus) return;
             this.haswindowfocus = windowfocus;
@@ -250,10 +256,11 @@
                 this.bringToFront();
                 setAttribute('state', 1);
                 // loop through siblings and disable active window
-                var len = immediateparent.subviews.length;
+                var wlist = parent.options["windowlist"];
+                var len = wlist.length;
                 for (var i=0; i < len; i++) {
-                    var s = parent.subviews[i];
-                    if (typeof(s['haswindowfocus']) != "undefined" && s!=this) {
+                    var s = wlist[i];
+                    if (s!=this) {
                        if (s.haswindowfocus) s.setAttribute('haswindowfocus', false);
                     }
                 }
@@ -262,18 +269,17 @@
                 }
                 this.mousedel.register(LzGlobalMouse, 'onmousedown');
             } else {
-                 if (this.mousedel) this.mousedel.unregisterAll();
+                if (this.mousedel) this.mousedel.unregisterAll();
                 setAttribute('state', 2);
                 // make sure there is a frontmost window
                 var siblingfocus = false;
-                if (immediateparent.subviews != null) {
-                    var len = immediateparent.subviews.length;
-                    for (var i=0; i < len; i++) {
-                        var s = parent.subviews[i];
-                        if (s.visible && s['haswindowfocus'] == true) {
-                           siblingfocus=true;
-                           break;
-                        }
+                var wlist = parent.options["windowlist"];
+                var len = wlist.length;
+                for (var i=0; i < len; i++) {
+                    var s = wlist[i];
+                    if (s['haswindowfocus'] == true) {
+                        siblingfocus=true;
+                        break;
                     }
                 }
                 if (!siblingfocus) {    // need to select a frontmost window
@@ -298,7 +304,7 @@
 
             var foundwindow = v.searchParents('haswindowfocus');
             if (foundwindow != null) {
-                foundwindow._setwindowfocus(true);
+                foundwindow.setWindowFocus(true);
             }
             ]]>
         </method>

@@ -12,8 +12,12 @@
     <window width="150" height="150" x="210" y="210" title="winThree"
             name="winThree" />
 
-    <window x="400" y="10" title="Test Harness">
+    <view x="400" y="10" bgcolor="0xeaeaea">
         <simplelayout axis="y" spacing="10" />
+
+        <text align="center" fontstyle="bold">
+            Test Harness
+        </text>
 
         <text width="100%" multiline="true">
             Reload app between each test and inspect the order of windows.
@@ -54,5 +58,5 @@
             </method>
         </button>
 
-    </window>
+    </view>
 </canvas>
