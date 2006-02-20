@@ -1,0 +1,23 @@
+<!-- snarfed from examples/dataimage2.lzx -->
+<canvas width="176" height="240" proxied="false">
+
+    <simplelayout />
+    
+    <text>Loading image</text>
+    <text id="result">Result: </text>
+    <view name="img" x="0" y="0" bgcolor="#EFFFFF"
+          resource="http://www.laszlosystems.com/img/h_head_logo.gif" 
+          clickable="true" >
+        <handler name="onload">
+            result.setText("Result: loaded");
+        </handler>
+        <handler name="onerror">
+            result.setText("Result: error");
+        </handler>
+    </view>
+</canvas>    
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

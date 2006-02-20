@@ -1,0 +1,49 @@
+<!-- Resources and positions for weather demo on 176x208 canvas --> 
+<canvas width="176" height="208" bgcolor="0x7F7F7F">
+    <!-- No mouseover or mousedown state for zip "button" b/c it's really just
+        a label --> 
+    <resource name="zip_btn_rsc"    src="zip_btn_up.png" />
+
+    <!-- ok btn only has up and down states, no mouseover, because we have no
+        mouse on mobile --> 
+    <resource name="zip_ok_btn_rsc" >
+        <frame src="zip_ok_btn_up.png" />
+        <frame src="zip_ok_btn_dn.png" />        
+        <frame src="zip_ok_btn_mo.png" />                
+    </resource>
+    
+    <resource name="logo"       src="laszlo_weather_logo.png" />    
+    <resource name="weather_bg" src="clouds.png"/>
+    <resource name="enter_zip"  src="enter_zip_type.png" />
+
+    <view x="0" y="0" resource="weather_bg" />
+    <view x="31" y="5" resource="logo" />
+    <view x="15" y="154" resource="enter_zip" />
+    <view x="17" y="177" resource="zip_btn_rsc" />
+    
+    <!-- This view now has mouseover and mousedown states. 
+        Mouseover is subtle and should probably be more pronounced.
+     -->
+    <view x="116" y="177" resource="zip_ok_btn_rsc">
+        <method event="onmousedown">
+            this.setAttribute('frame', 2);
+        </method>
+        <method event="onmouseup">
+            this.setAttribute('frame', 0);
+        </method>        
+        <method event="onmouseover">
+            this.setAttribute('frame', 1);
+        </method>
+        <method event="onmouseout">
+            this.setAttribute('frame', 0);
+        </method>
+
+    </view>
+    <view bgcolor="0xFFFFFF" x="50" y="181" width="66" height="12" />
+    <inputtext id="zipcode" x="52" y="179" width="60" fontsize="10">94403</inputtext>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->

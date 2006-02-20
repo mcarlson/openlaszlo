@@ -1,0 +1,122 @@
+<!-- Resources and positions for weather demo on 176x208 canvas --> 
+<canvas width="176" height="208" bgcolor="0x7F7F7F" font="Helvetica">
+
+    <resource name="weather_bg" src="clouds.png"/>
+
+    <resource name="tab_bg" src="tab.png" />
+    <resource name="slider_icon" src="slider_icon.png"/>
+
+    <class name="weathertabelement" extends="basetabelement" minheight="20"  
+         onclick="parent.openTab(this,true)">
+        <attribute name="defaultplacement" value="details"  type="string" />
+        <attribute name="label" value=""  type="string" />    
+        <view resource="tab_bg" stretches="width" width="176" />
+        <view name="icon" resource="slider_icon" x="2" y="3" />
+        <text name="titleboxsh" text="${classroot.label}"
+                  width="176" fgcolor="#3B4057" x="16" y="5" />
+        <text name="titlebox"   text="${classroot.label}"
+                  width="176" fgcolor="#CAD0EC" x="15" y="4" />
+        <view name="container"
+              width="${parent.width}"
+              visible="${classroot.contentvisible}"
+              options="releasetolayout"
+              y="25"
+              clip="true">
+            <view name="details" width="${parent.width}" />
+        </view>                  
+    </class>
+
+    <class name="weatherSummary" height="64">
+        <view name="icon" width="52" height="52" stretches="both" bgcolor="white"
+              resource="http://us.i1.yimg.com/us.yimg.com/i/us/we/52/32.gif"/>    
+        <text name="date" fgcolor="#FFFFFF"
+              fontstyle="bold" x="60" y="5"
+              text="February 19 2006"/>
+        <text name="desc" x="60" y="22" fgcolor="#FFFFFF"
+              text="Sunny"/>
+        <view x="60" y="39" fgcolor="#FFFFFF">
+            <simplelayout axis="x" spacing="3" />
+            <text text="Low"/>
+            <text text="70" width="20"/>
+            <text text="High" />
+            <text text="80"/>
+        </view>
+    </class>
+
+
+    <!-- Background image --> 
+    <view x="0" y="0" resource="weather_bg" />
+    <!-- Screen over background --> 
+    <view width="176" height="208" bgcolor="#666d92" opacity="0.63" />
+    
+    <basetabslider
+        x="0"
+        width="208" height="208">
+        <weathertabelement label="Current Conditions" selected="true">
+            <view id="currentData">
+                <view  name="form">
+                    <text name="where" x="10" fgcolor="#FFFFFF"
+                        fontsize="12"
+                        fontstyle="bold" text="San Mateo" />
+                    <image name="icon"  x="12" y="18" 
+                        bgcolor="black"
+                        width="64"
+                        height="64"
+                        stretches="both"
+                    />
+                    <text name="temperature"  x="85" y="18" 
+                        fontsize="40"
+                        fgcolor="#FFFFFF" fontstyle="bold"
+                        text="57 F"/>
+                    <text name="description" x="85" y="60"
+                        fgcolor="#FFFFFF" fontstyle="bold"
+                        text="Rather rainy"/>
+                </view>
+                <view name="moredata" x="12">
+                    <view name="labels">
+                        <text fgcolor="#FFFFFF"><b>Humidity:</b></text>
+                        <text fgcolor="#FFFFFF"><b>Windspeed:</b></text>
+                        <text fgcolor="#FFFFFF"><b>Last Update:</b></text>                            
+                        <simplelayout axis="y" spacing="1" />
+                    </view>
+                    <view name="fields" x="73">
+                        <text name="humidity" 
+                            fgcolor="#FFFFFF"
+                            text="31%"
+                        />
+                        <text name="windspeed"
+                            fgcolor="#FFFFFF"
+                            text="10 knots"
+                        />
+                        <text name="lastupdate"
+                            fgcolor="#FFFFFF"
+                            text="Today 8:53 pm"
+                        />                            
+                        <simplelayout axis="y" spacing="1" />
+                    </view>
+                </view>
+                <simplelayout axis="y" spacing="10" />
+            </view>
+        </weathertabelement>
+        
+        <weathertabelement label="Radar Maps">
+            <image name="radarscan" 
+                y="-10"
+                width="176" height="130"
+                stretches="both"
+                resource="radar_dummy.png"/>
+        </weathertabelement> 
+        
+        <weathertabelement label="Forecast">
+            <view x="10">
+                <weatherSummary />
+            </view>
+        </weathertabelement>
+    </basetabslider>
+    
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->

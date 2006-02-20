@@ -1,0 +1,44 @@
+<canvas width="176" height="208" bgcolor="0x7F7F7F">
+
+    <class name="item">
+        <attribute name="label" type="string" value="" />
+        <attribute name="val" type="string" value="" />
+        <simplelayout axis="x"/>
+        <text width="60" bgcolor="0xeaeaea" text="${parent.label}"/>
+        <text text="${parent.val}"/>
+    </class>
+
+    <method name="systemLanguage">
+        {
+            #pragma "flashCompilerCompatibility"
+            return System.capabilities.language;
+        }
+    </method>
+
+    <handler name="oninit"><![CDATA[
+        err.setAttribute("val", "--");
+        
+        var result = LzMobile.SetFullScreen(true);
+        
+        lan.setAttribute("val", systemLanguage());
+        
+        dev.setAttribute("val", LzMobile.GetDeviceID());
+        
+        var freemem = LzMobile.GetFreePlayerMemory();
+        var totalmem = LzMobile.GetTotalPlayerMemory();
+        mem.setAttribute("val", String(freemem / totalmem));
+    ]]></handler>
+    
+    <simplelayout axis="y"/>
+
+    <item id="err" label="error: " />
+    <item id="lan" label="language: " />
+    <item id="dev" label="device: " />
+    <item id="mem" label="memory: " />
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->

@@ -1,4 +1,4 @@
-<canvas height="208" width="176" bgcolor="#EAEAEA">
+<canvas height="640" width="480" bgcolor="#EAEAEA">
 
     <include href="clock.lzx"/>
     
