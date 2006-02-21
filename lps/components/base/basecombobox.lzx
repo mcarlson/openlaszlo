@@ -1,3 +1,8 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
 <library>
 
     <include href="base/baseformitem.lzx" />
@@ -75,7 +80,12 @@
         <attribute name="text_y" value="2" type="number"/>
 
         <!--- the width the text. default: combowidth - 19 -->
-        <attribute name="text_width" value="$once{this.width - 19}" type="number"/>
+        <attribute name="text_width" value="${this.width - 19}" type="number"/>
+
+        <!--- The minimum width this component is allowed to be.
+              Defaults to 50 pixels.
+              @keywords defaultsetter -->
+        <attribute name="min_width" value="50" type="number" />
 
         <!--- Since we are not focusable, defer to the inputtext's next selection,
               so that when floatinglist is tabbed out of, we can provide a next
@@ -115,7 +125,7 @@
         <view name="interior"
             x="$once{classroot.text_x}"
             y="$once{classroot.text_y}"
-            width="$once{classroot.text_width}"
+            width="${classroot.text_width}"
              height="${classroot.height - 2*classroot.bordersize - 2}"
              focusable="false">
             <!--- @keywords private -->
@@ -191,7 +201,7 @@
             </state>
 
             <state name="non_editable_state" >
-                <text x="2" y="1" name="cbtext" width="$once{parent.width - 4}"
+                <text x="2" y="1" name="cbtext" width="${parent.width - 4}"
                     clickable="true" focusable="true">
                     <attribute name="text" type="string" />
 
@@ -647,12 +657,10 @@
             }
         </method>
 
+        <method name="setWidth" args="w">
+            super.setWidth(Math.max(w,this.min_width));
+        </method>
 
     </class>
 
 </library>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
