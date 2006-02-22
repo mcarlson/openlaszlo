@@ -1,9 +1,10 @@
 # File: rng2xml.py
 # Author: Oliver Steele
 # Author: P. Tucker Withington
+# Author: Antun Karlovac
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -174,6 +175,8 @@ def makeAttribute(a, parseComments):
             category = 'final'
         elif 'readonly' in c.keywords:
             category = 'readonly'
+        elif 'defaultsetter' in c.keywords:
+            category = 'defaultsetter'
         ctext = c.comment
     return Attribute(name=a.name,
                     type=xstr(a),
