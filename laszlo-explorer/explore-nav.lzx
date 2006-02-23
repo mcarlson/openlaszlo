@@ -2,7 +2,7 @@
 
   <!-- Datasets -->
   <dataset name="sinfo" src="http:explorer-nav.lzx?lzt=serverinfo" request="true" />
-  <dataset name="navdata" src="nav.xml"/>
+  <dataset name="navdata"/>
 
   <!-- Included Libraries -->
   <include href="base/basetree.lzx" />
@@ -14,6 +14,14 @@
     var opened = new Array(4);
   </script>
 
+  <handler name="oninit">
+    var navset = global['navset'];
+    if (typeof(navset) == 'undefined')
+        navset = "nav.xml";
+    canvas.navdata.setSrc(navset);
+    canvas.navdata.doRequest();
+  </handler>
+  
   <!-- CLASSES -->
 
   <!-- Animator group classes to be instantiated when needed -->
@@ -65,9 +73,7 @@
         </handler>
         <method name="replicationDone">
             var mb = this.parent;
-            if (mb instanceof menubutton) {
-                mb.dataBound();
-            }
+            mb.dataBound();
         </method>
     </datapath>
 
@@ -320,7 +326,7 @@
         showroot="false" x="2" y="2"
         layout="spacing:-6">
         <!-- note spacing is -6, since the shadonw is 6 pixels high -->
-      <method event="oninit" reference="canvas">
+      <method name="dataBound">
         // this is how we restore the state of the app from an incoming URL, 
         // this is always provided by the JSP wrappers 
         if (typeof(global.bookmark) != 'undefined'){

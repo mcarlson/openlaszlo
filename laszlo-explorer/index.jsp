@@ -2,7 +2,7 @@
 <!-- Laszlo Explorer index.jsp                                             -->
 <!--                                                                       -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!--=======================================================================-->
@@ -33,7 +33,7 @@ if (userAgent.indexOf("MSIE") > 0 ){ // looks like MSIE
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
 <HTML>
 <HEAD>
-<title>Laszlo Explorer</title>
+<title>OpenLaszlo Explorer</title>
 <link href="../lps/includes/explore.css" rel="stylesheet" type="text/css">
 
 </HEAD>
