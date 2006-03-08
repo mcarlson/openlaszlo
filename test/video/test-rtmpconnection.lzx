@@ -1,0 +1,20 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas>
+    <include href="rtmpconnection.lzx"/>
+        <simplelayout/>
+    <rtmpconnection id="rtc" src="rtmp:/test"/>
+    <text text="${rtc.status}"/>
+    <view id="gStatus" bgcolor="red" width="20" height="20">
+        <method event="onstage" args="s" reference="rtc">
+            switch (s) {
+                case 0: setBGColor(red); break;
+                case 1: setBGColor(yellow); break;
+                case 2: setBGColor(green); break;
+            }
+        </method>
+    </view>
+    <button onclick="rtc.connect()"/>
+</canvas>

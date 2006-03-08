@@ -1,0 +1,70 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<library>
+
+  <class name="video" width="160" height="120">
+
+    <method name="init">
+        super.init();
+        Debug.write('init');
+       // no other subviews should be allowed (todo: schema)
+        var mc = parent.attachResourceToChildView ("__LZvideo", this);
+        this.setMovieClip(mc);
+        Debug.write('setMovieClip', mc);
+        Debug.write('this.__LZmovieClipRef', this.__LZmovieClipRef);
+        
+        this.__LZmovieClipRef.__lzvideo._x=0;
+        this.__LZmovieClipRef.__lzvideo._y=0;
+        this.__LZmovieClipRef.__lzvideo._width = this.width;
+        this.__LZmovieClipRef.__lzvideo._height = this.height;
+        
+    </method>
+    
+    <method name="showCamera" >
+        Debug.write('showCamera');
+        var cam = Camera.get();
+        var vid =  this.__LZmovieClipRef.__lzvideo;
+        vid.attachVideo(cam);
+        Debug.write('attaching video to ', vid);
+    </method>
+
+    <method name="setWidth" args="w">
+        if (!this.isinited) { this.width = w; return; }
+        this.__LZmovieClipRef.__lzvideo._width = w;
+    </method>
+    <method name="setHeight" args="h">
+        if (!this.isinited) { this.height = h; return; }
+        this.__LZmovieClipRef.__lzvideo._height = h;
+    </method>
+
+   <method name="playvideo" args="name">
+        Debug.write("playvideo", rtc);
+        this._ns = new NetStream(rtc._nc);
+        this._ns.onStatus = function(info) {
+            _root.Debug.write('onStatus ', info);
+        }
+            
+        Debug.write('stream=',this._ns);
+
+        /**        
+        this.showCamera();
+        var cam = Camera.get();
+        this._ns.attachVideo(cam);
+        this._ns.publish("recordedstream", "record");
+        **/
+        var vid =  this.__LZmovieClipRef.__lzvideo;
+        vid.attachVideo(this._ns);
+        this._ns.play(name);
+    </method>
+
+    <method name="pausevideo">
+         this._ns.pause();
+    </method>
+  </class>
+
+
+
+
+</library>

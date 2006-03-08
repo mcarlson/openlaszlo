@@ -120,7 +120,7 @@ public final class Tag {
     public static final int IMPORTASSETS         = 57;  // Flash 5
     public static final int ENABLEDEBUGGER       = 58;  // Flash 5
     public static final int INITCLIPACTION       = 59;  // Flash 6
-    //public static final int                      = 60;
+    public static final int DEFINEVIDEOSTEAM     = 60; // Flash 6
     //public static final int                      = 61;
     public static final int DEFINEFONTINFO2      = 62;  // Flash 6
 
@@ -185,7 +185,7 @@ public final class Tag {
         "ImportAssets",
         "EnableDebugger",
         "InitClipAction",
-        "Unknown",
+        "DefineVideoStream",
         "Unknown",
         "DefineFontInfo2",
     };

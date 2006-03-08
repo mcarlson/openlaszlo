@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -105,6 +105,7 @@ class SWFFile extends FlashFile {
             Frame f0, f1;
             Program p;
             Button2 but;
+            VideoStream video;
             Shape shape;
             AffineTransform at = new AffineTransform();
             AffineTransform offScreen = new AffineTransform();
@@ -267,6 +268,13 @@ class SWFFile extends FlashFile {
                 movieClip.getFrameAt(0).addFlashObject(block); 
                 movieClip.getFrameAt(1).addFlashObject(block); 
             }
+
+
+            // 9.2 A definevideostream tag inside a movieClip so we can attach video streams
+            movieClip = new Script(1);  // add single frame movieClip
+            export("__LZvideo", movieClip);
+            video = new VideoStream(160,120);
+            movieClip.getFrameAt(0).addInstance(video, 8, offScreen, null, "__lzvideo");
 
             // 10. The LFC ActionScript block, the only def in the incoming file 
             FlashFile oldLibrary = FlashFile.parse(path);
