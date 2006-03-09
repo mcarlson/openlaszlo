@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
@@ -96,11 +96,15 @@ change them at compile time is with CSS.
     </method>
     
     <method event="onwidth">
+        if (!this['_rr']) return;     // ignore these events if the roundrect 
+                                      // itself hasn't been built yet
         _rr.setWidth(this.width);
         _rr.drawStructure();
     </method>
     
     <method event="onheight">
+        if (!this['_rr']) return;     // ignore these events if the roundrect 
+                                      // itself hasn't been built yet
         _rr.setHeight(this.height);
         _rr.drawStructure();
     </method>
