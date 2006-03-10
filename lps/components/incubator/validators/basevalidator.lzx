@@ -20,8 +20,7 @@
         <attribute name="innercompornent" type="expression" value="null" />
         <attribute name="iserror" type="boolean" value="false" />
 
-        <method name="oninit" args="arg">
-            super.oninit(arg);
+        <method event="oninit" args="arg">
             this.ok.setsource("resources/ok.gif");
             this.error.setsource("resources/error.gif");
         </method>
