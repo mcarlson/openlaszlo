@@ -1,0 +1,10 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas>
+    <dataset name='ds'>
+        <node f="200"/>
+    </dataset>
+
+    <view resource="../../examples/image-loading/logo.swf" 
+          datapath="ds:/node" frame="$path{ 'ds:/node/@f' }">
+    </view>
+</canvas>
