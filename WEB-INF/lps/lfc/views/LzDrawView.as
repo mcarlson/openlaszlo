@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -121,6 +121,7 @@ LzDrawView.prototype.quadraticCurveTo = function(cpx, cpy, x, y) {
 // Note that closePath() is called before the line is filled.
 //------------------------------------------------------------------------------
 LzDrawView.prototype.fill = function(m) {
+    var savedStyle = this.fillStyle;
     if (m == null) {
         m = this.__mc;
     }
@@ -129,6 +130,7 @@ LzDrawView.prototype.fill = function(m) {
         //_root.Debug.write('before apply');
         this.fillStyle.__applyTo(m);
     } else {
+        this.fillStyle = this.cssColorToLong(this.fillStyle);
         //_root.Debug.write('fill', m, this.fillStyle, this.globalAlpha * 100);
         m.beginFill(this.fillStyle, this.globalAlpha * 100);
     }
@@ -136,6 +138,7 @@ LzDrawView.prototype.fill = function(m) {
     this.__playPath(m);
     m.endFill();
     this.updateResourceSize();
+    this.fillStyle = savedStyle;
 }
 
 //------------------------------------------------------------------------------
@@ -153,16 +156,19 @@ LzDrawView.prototype.clip = function() {
 // Strokes each subpath of the current path in turn, using the strokeStyle and lineWidth attributes.
 //------------------------------------------------------------------------------
 LzDrawView.prototype.stroke = function() {
+    var savedStyle = this.strokeStyle;
     if (typeof this.strokeStyle == 'object' && this.strokeStyle instanceof LzCanvasGradient) {
-        //_root.Debug.warn ("Gradient line fills aren't supported.");
+        _root.Debug.warn ("Gradient line fills aren't supported.");
         return;
     }
+    this.strokeStyle = this.cssColorToLong(this.strokeStyle);
     var m = this.__mc;
     m.lineStyle(this.lineWidth, this.strokeStyle, this.globalAlpha * 100);
     //_root.Debug.write(m, 'stroke',this.lineWidth, this.strokeStyle, this.globalAlpha * 100);
     this.__playPath(m);
     m.lineStyle(undefined);
     this.updateResourceSize();
+    this.strokeStyle = savedStyle;
 }
 
 //------------------------------------------------------------------------------
@@ -517,7 +523,7 @@ LzCanvasGradient.prototype.__init = function(c, m) {
 //------------------------------------------------------------------------------
 LzCanvasGradient.prototype.addColorStop = function(o, c) {
     this._o[this._o.length] = o * 255;
-    this._c[this._c.length] = c;
+    this._c[this._c.length] = LzDrawView.prototype.cssColorToLong(c);
     this._a[this._a.length] = this._context.globalAlpha * 100;
 }
 
@@ -527,4 +533,26 @@ LzCanvasGradient.prototype.addColorStop = function(o, c) {
 LzCanvasGradient.prototype.__applyTo = function(m) {
     //_root.Debug.write('LzCanvasGradient.__applyTo', this._t, this._c, this._a, this._o, this._m);
     m.beginGradientFill(this._t, this._c, this._a, this._o, this._m)
+}
+
+// Convert a css color string to an integer.  This recognizes only
+// '#rgb', '#rrggbb', and the color names that have been defined in
+// the global namespace ('red', 'green', 'blue', etc.)
+LzDrawView.prototype.cssColorToLong = function(value) {
+	if (typeof value != 'string') return value;
+    if (value.charAt(0) == '#') {
+        var n = parseInt(value.slice(1), 16);
+        switch (!isNaN(n) && value.length-1) {
+        case 3:
+            return ((n & 0xf00) << 8 | (n & 0xf0) << 4 | (n & 0xf)) * 17;
+        case 6:
+            return n;
+        default:
+            Debug.warn('invalid color: ' + value);
+        }
+    }
+    if (typeof eval(value) == 'number')
+        return eval(value);
+	_root.Debug.warn('unknown color format: ' + value);
+    return 0;
 }

@@ -8,11 +8,11 @@
             this.quadraticCurveTo(150, 250, 200, 200);
             this.closePath();
 
-            this.fillStyle = 0x0000ff;
+            this.fillStyle = '#0000ff';
             this.globalAlpha = .5;
             this.fill();
             
-            this.strokeStyle = 0xffff00;
+            this.strokeStyle = '#ffff00';
             this.lineWidth = 5;
             this.stroke();
             
@@ -20,7 +20,7 @@
             this.globalAlpha = 0;
             g.addColorStop(0, 0x000000);
             this.globalAlpha = 1;
-            g.addColorStop(1, 0xffffff);
+            g.addColorStop(1, '#ffffff');
             this.fillStyle = g;
             this.fill();
 
@@ -86,7 +86,7 @@
     </drawview>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>
