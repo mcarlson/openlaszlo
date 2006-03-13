@@ -9,17 +9,17 @@
 ********************************************************
 -->
 
-<canvas>
+<canvas width="640">
     <include href="incubator/validators" />
     <include href="incubator/formlayout.lzx" />
     
-    <validatingForm name="myform">
+    <validatingForm name="myform" width="100%">
         <submit name="submit" />
         
         <formlayout spacing="10" />
         
         <text>name(5~20 chars):</text>
-        <stringvalidator required="true" minLength="5" maxLength="20">
+        <stringvalidator id="sv1" required="true" minLength="5" maxLength="20">
             <edittext name="name" />
         </stringvalidator>
 

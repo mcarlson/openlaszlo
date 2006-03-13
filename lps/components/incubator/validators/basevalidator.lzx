@@ -29,7 +29,7 @@
         
         <method name="addSubview" args="item">
             super.addSubview(item);
-            if(item.classname == "edittext"){
+            if(item instanceof edittext) {
                 new LzDelegate(this, "doValidation", item, "onkeyup");
                 new LzDelegate(this, "doValidation", item, "ontext");
                 this.innercompornent = item;
@@ -82,6 +82,7 @@
                 icon.seterror();
                 this.setAttribute("iserror", true);
             }
+            this.rv.update();
         </method>
 
         <method name="cleanErrors">
@@ -89,7 +90,7 @@
             icon.clear();
         </method>
 
-        <reverselayout axis="x" />
+        <reverselayout name="rv" axis="x" />
 
         <text name="messagetext" fgcolor="red" resize="true" />
 

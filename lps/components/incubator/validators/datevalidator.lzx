@@ -18,10 +18,10 @@
         <attribute name="format" type="string" value="mm/dd/yyyy" />
         <attribute name="trim" type="boolean" value="true" />
         
-        <attribute name="invaliedformatErrorstring" type="string" value="Please input the date in a valid format." />
-        <attribute name="invaliedyearErrorstring" type="string" value="Please enter a year between 0 and 9999." />
-        <attribute name="invaliedmonthErrorstring" type="string" value="Please enter a month between 1 to 12." />
-        <attribute name="invalieddateErrorstring" type="string" value="Please enter a valid date." />
+        <attribute name="invalidformatErrorstring" type="string" value="Please input the date in a valid format." />
+        <attribute name="invalidyearErrorstring" type="string" value="Please enter a year between 0 and 9999." />
+        <attribute name="invalidmonthErrorstring" type="string" value="Please enter a month between 1 and 12." />
+        <attribute name="invaliddateErrorstring" type="string" value="Please enter a valid date." />
         
         <method name="doValidation" args="val">
             <![CDATA[
@@ -33,20 +33,20 @@
                 return false;
             }
             if(valtext != ""){
-                if(!isValiedLength(valtext)){
-                    this.setErrorstring(this.invaliedformatErrorstring);
+                if(!isValidLength(valtext)){
+                    this.setErrorstring(this.invalidformatErrorstring);
                     return false;
                 }
-                if(!isValiedYear(valtext)){
-                    this.setErrorstring(this.invaliedyearErrorstring);
+                if(!isValidYear(valtext)){
+                    this.setErrorstring(this.invalidyearErrorstring);
                     return false;
                 }
-                if(!isValiedMonth(valtext)){
-                    this.setErrorstring(this.invaliedmonthErrorstring);
+                if(!isValidMonth(valtext)){
+                    this.setErrorstring(this.invalidmonthErrorstring);
                     return false;
                 }
-                if(!isValiedDate(valtext)){
-                    this.setErrorstring(this.invalieddateErrorstring);
+                if(!isValidDate(valtext)){
+                    this.setErrorstring(this.invaliddateErrorstring);
                     return false;
                 }
             }
@@ -57,14 +57,14 @@
         ]]>
         </method>
         
-        <method name="isValiedLength" args="value">
+        <method name="isValidLength" args="value">
             if(this.format.length == value.length)
                 return true;
             else
                 return false;
         </method>
         
-        <method name="isValiedYear" args="value">
+        <method name="isValidYear" args="value">
         <![CDATA[
             var year = getYear(value);
             if(isInt(year)){
@@ -76,7 +76,7 @@
             return false;
             ]]>
         </method>
-        <method name="isValiedMonth" args="value">
+        <method name="isValidMonth" args="value">
         <![CDATA[
             var month = getMonth(value);
             if(isInt(month)){
@@ -88,7 +88,7 @@
             return false;
             ]]>
         </method>
-        <method name="isValiedDate" args="value">
+        <method name="isValidDate" args="value">
         <![CDATA[
             var date = getDate(value);
             if(isInt(date)){
