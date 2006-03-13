@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -383,7 +383,7 @@ numlock : 144
 LzKeys.keyCodes['add'] = 107;
 // Backspace doesn't work in the Authoring tool player...
 LzKeys.keyCodes['delete'] = 46;
-LzKeys.keyCodes['0']  = 48;
+LzKeys.keyCodes['0']  = 48 ;
 LzKeys.keyCodes['1']  = 49 ;
 LzKeys.keyCodes['2']  = 50 ;
 LzKeys.keyCodes['3']  = 51 ;
@@ -394,23 +394,24 @@ LzKeys.keyCodes['7']  = 55 ;
 LzKeys.keyCodes['8']  = 56 ;
 LzKeys.keyCodes['9']  = 57 ;
 
-LzKeys.keyCodes['!']  = 48;
-LzKeys.keyCodes['@']  = 49 ;
-LzKeys.keyCodes['#']  = 50 ;
-LzKeys.keyCodes['$']  = 51 ;
-LzKeys.keyCodes['%']  = 52 ;
-LzKeys.keyCodes['^']  = 53 ;
-LzKeys.keyCodes['&']  = 54 ;
-LzKeys.keyCodes['*']  = 55 ;
+LzKeys.keyCodes[')']  = 48 ;
+LzKeys.keyCodes['!']  = 49 ;
+LzKeys.keyCodes['@']  = 50 ;
+LzKeys.keyCodes['#']  = 51 ;
+LzKeys.keyCodes['$']  = 52 ;
+LzKeys.keyCodes['%']  = 53 ;
+LzKeys.keyCodes['^']  = 54 ;
+LzKeys.keyCodes['&']  = 55 ;
 LzKeys.keyCodes['*']  = 56 ;
 LzKeys.keyCodes['(']  = 57 ;
-LzKeys.keyCodes[')']  = 57 ;
 
 LzKeys.keyCodes[';']  = 186 ;
 LzKeys.keyCodes[':']  = 186 ;
 LzKeys.keyCodes['=']  = 187 ;
 LzKeys.keyCodes['+']  = 187 ;
 
+LzKeys.keyCodes['<']  = 188 ;
+LzKeys.keyCodes['>']  = 190 ;
 LzKeys.keyCodes['-']  = 189 ;
 LzKeys.keyCodes['_']  = 189; 
 LzKeys.keyCodes['/']  = 191 ;
