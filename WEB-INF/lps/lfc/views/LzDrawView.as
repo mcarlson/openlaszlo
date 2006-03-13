@@ -492,6 +492,33 @@ LzDrawView.prototype._drawArc = function(x, y, radius, arc, startAngle, yRadius)
 }
 
 
+//-----------------------------------------------------------------------------
+// Convert a css color string to an integer.  This recognizes only
+// '#rgb', '#rrggbb', and the color names that have been defined in
+// the global namespace ('red', 'green', 'blue', etc.)
+// 
+// @param value: Color value to convert
+//-----------------------------------------------------------------------------
+LzDrawView.prototype.cssColorToLong = function(value) {
+	if (typeof value != 'string') return value;
+    if (value.charAt(0) == '#') {
+        var n = parseInt(value.slice(1), 16);
+        switch (!isNaN(n) && value.length-1) {
+        case 3:
+            return ((n & 0xf00) << 8 | (n & 0xf0) << 4 | (n & 0xf)) * 17;
+        case 6:
+            return n;
+        default:
+            _root.Debug.warn('invalid color: ' + value);
+        }
+    }
+    if (typeof eval(value) == 'number')
+        return eval(value);
+	_root.Debug.warn('unknown color format: ' + value);
+    return 0;
+}
+
+
 
 //=============================================================================
 // DEFINE OBJECT: LzCanvasGradient
@@ -533,26 +560,4 @@ LzCanvasGradient.prototype.addColorStop = function(o, c) {
 LzCanvasGradient.prototype.__applyTo = function(m) {
     //_root.Debug.write('LzCanvasGradient.__applyTo', this._t, this._c, this._a, this._o, this._m);
     m.beginGradientFill(this._t, this._c, this._a, this._o, this._m)
-}
-
-// Convert a css color string to an integer.  This recognizes only
-// '#rgb', '#rrggbb', and the color names that have been defined in
-// the global namespace ('red', 'green', 'blue', etc.)
-LzDrawView.prototype.cssColorToLong = function(value) {
-	if (typeof value != 'string') return value;
-    if (value.charAt(0) == '#') {
-        var n = parseInt(value.slice(1), 16);
-        switch (!isNaN(n) && value.length-1) {
-        case 3:
-            return ((n & 0xf00) << 8 | (n & 0xf0) << 4 | (n & 0xf)) * 17;
-        case 6:
-            return n;
-        default:
-            Debug.warn('invalid color: ' + value);
-        }
-    }
-    if (typeof eval(value) == 'number')
-        return eval(value);
-	_root.Debug.warn('unknown color format: ' + value);
-    return 0;
 }
