@@ -2,7 +2,7 @@
 # TODO: [unknown] treat the constructor specially
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -85,12 +85,15 @@ class Visitor:
 
 # end scaffolding
 
+# This is a bit of a kludge.  The doc tool will barf if documentation
+# is different for different targets, so we just ignore all targets
+# but one.
 COMPILER_CONSTANTS = {'$debug': true,
-                      '$krank': false,
                       '$profile': false,
-                      '$swf5': false,
                       '$swf6': true,
-                      '$swf7': false}
+                      '$swf7': false,
+                      '$swf8': false,
+                      '$dhtml': false}
 
 class DocumentationError(CompilerError):
     pass
@@ -464,13 +467,18 @@ class Handler:
             return
         kn, mn = name.split('.')
         params = [Param(name=pn) for pn in args]
+        undoced = list(args)
         for k, v in c.params.items():
             candidates = [p for p in params if p.name == k]
             if len(candidates) != 1:
                 raise DocumentationError('%s: comment for nonexistent parameter %r' % (name, k))
                 continue
+            undoced.remove(k)
             candidates[0].desc = v
             candidates[0].type = c.paramTypes.get(k)
+        # TODO [2006-03-13 ptw] Enable this when all params are actually doc-ed
+#         if undoced:
+#             raise DocumentationError('%s: no comment for parameter(s) %r' % (name, undoced))
         method = Method(name=mn, parameters=params, desc=c.comment)
         if hasattr(c, 'return'):
             rd = getattr(c, 'return')
@@ -564,7 +572,7 @@ def process(fname='LaszloLibrary.as'):
     #print 'ignored', IGNORED
     if errors:
         for e in errors:
-            print e
+            print e.toString()
         print "Mistakes were made"
         return 1
     else:

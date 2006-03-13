@@ -1,5 +1,5 @@
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -8,7 +8,7 @@ package org.openlaszlo.sc;
 import org.openlaszlo.sc.parser.SimpleNode;
 
 public class CompilerError extends RuntimeException {
-  SimpleNode node;
+  public SimpleNode node;
 
   public CompilerError (String message) {
     super(message);
