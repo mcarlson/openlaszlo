@@ -273,13 +273,17 @@ LzDrawView.prototype.createRadialGradient = function(x0, y0, r0, x1, y1, r1) {
 // @param Number x: Starting x position
 // @param Number y: Starting y position
 // @param Number radius: Radius
-// @param Number startAngle: Angle to start in degrees
-// @param Number endAngle: Angle to end in degrees
+// @param Number startAngle: Angle to start in radians
+// @param Number endAngle: Angle to end in radians
 // @param Number clockwise: anticlockwise if true, clockwise otherwise 
 //-----------------------------------------------------------------------------
 LzDrawView.prototype.arc = function(x, y, radius, startAngle, endAngle, clockwise) {
+	x += radius*Math.cos(startAngle);
+	y += radius*Math.sin(startAngle);
+	startAngle *= 180/Math.PI;
+	endAngle *= 180/Math.PI;
     var arc = clockwise == true ? startAngle - endAngle : endAngle - startAngle;
-    this.moveTo(x, y);
+	this.moveTo(x, y);
     return this._drawArc(x, y, radius, arc, startAngle);
 }
 
