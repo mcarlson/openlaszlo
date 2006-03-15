@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -287,7 +287,10 @@ RuntimeException(
      * Set SWF version default.
      */
     public static void setSWFVersionDefault(String swfversion) {
-        if (swfversion.equals("swf7")) {
+        if (swfversion.equals("swf8")) {
+            mSWFVersionNumDefault = 8;
+            mSWFVersionDefault = "swf8";
+        } else if (swfversion.equals("swf7")) {
             mSWFVersionNumDefault = 7;
             mSWFVersionDefault = "swf7";
         } else if (swfversion.equals("swf6")) {
@@ -313,6 +316,7 @@ RuntimeException(
      */
     public static int getSWFVersionNum(String swfversion) {
         if (swfversion == null)        return mSWFVersionNumDefault;
+        if (swfversion.equals("swf8")) return 8;
         if (swfversion.equals("swf7")) return 7;
         if (swfversion.equals("swf6")) return 6;
         if (swfversion.equals("swf5")) return 5;
@@ -320,6 +324,7 @@ RuntimeException(
     }
 
     public static String getSWFVersion(int num) {
+        if (num == 8) return "swf8";
         if (num == 7) return "swf7";
         if (num == 6) return "swf6";
         if (num == 5) return "swf5";
