@@ -85,6 +85,20 @@
         </method>
     </drawview>
 
+<!-- test new bezierCurveTo method  - from http://developer.mozilla.org/samples/canvas-tutorial/2_6_canvas_beziercurveto.html -->
+    <drawview>
+        <method event="oninit">
+            this.beginPath();
+            this.moveTo(75,40);
+            this.bezierCurveTo(75,37,70,25,50,25);
+            this.bezierCurveTo(20,25,20,62.5,20,62.5);
+            this.bezierCurveTo(20,80,40,102,75,120);
+            this.bezierCurveTo(110,102,130,80,130,62.5);
+            this.bezierCurveTo(130,62.5,130,25,100,25);
+            this.bezierCurveTo(85,25,75,37,75,40);
+            this.fill();
+        </method>
+    </drawview>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
