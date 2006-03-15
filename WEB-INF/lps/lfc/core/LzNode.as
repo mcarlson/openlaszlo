@@ -33,14 +33,16 @@ var mvn = function (){
         var iargs =  attrs || {};
         if ( ! iargs.$hasdefaultattrs ){
             for ( var k in iargs ){
-                if ( typeof( iargs[ k ] ) == "object"  &&
-                     typeof( this.defaultattrs[ k ]) == "object" ) {
-                    if ( iargs[ k ].__proto__ == Array.prototype ){
-                        iargs[ k ] = iargs[ k ].concat(
-                            this.defaultattrs[ k ] );
+                var iargk = iargs[ k ];
+                if ( typeof( iargk ) == "object") {
+                  var dargk = this.defaultattrs[ k ];
+                  if (typeof( dargk) == "object" ) {
+                    if ( iargk.__proto__ == Array.prototype ){
+                        iargs[ k ] = iargk.concat( dargk );
                     } else {
-                        iargs[ k ].__proto__ = this.defaultattrs[ k ];
+                        iargk.__proto__ = dargk;
                     }
+                  }
                 }
                 if ( this.defaultattrs.$refs[ k ] ){
                     //override a constraint with a literal
@@ -261,10 +263,13 @@ LzNode.prototype.construct = function ( parent , args ){
     //this LzNode their parent. This list is similar to the subviews list,
     //but it contains all the children of this node, not just the view
     //children.
-    if (ip.subnodes == null)
-      ip.subnodes = new Array;
+    var ip_subnodes = ip.subnodes;
+    if (ip_subnodes == null) {
+      ip_subnodes = new Array;
+      ip.subnodes = ip_subnodes;
+    }
   
-    ip.subnodes.push(this);
+    ip_subnodes[ip_subnodes.length] = this;
     
     var nl = ip.nodeLevel; // nl == nodeLevel
     this.nodeLevel = nl ? nl + 1 : 1;

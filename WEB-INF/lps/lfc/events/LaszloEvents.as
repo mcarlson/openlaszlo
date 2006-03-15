@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -102,6 +102,12 @@ LzDelegate.prototype.register = function ( eventSender , eventName){
 //             anEvent._dbg_created = _root.__LzDebug.backtrace();
         }
     }
+    if ($profile) {
+        var anEvent = eventSender[ eventName ];
+        if (! anEvent.hasOwnProperty('_dbg_profileName')) {
+            anEvent._dbg_profileName = eventName;
+        }
+    }        
 }
 
 //-----------------------------------------------------------------------------
@@ -210,6 +216,12 @@ LzEvent = function ( eventSender , eventName , d ){
             anEvent._dbg_eventName = eventName;
         }
     }
+    if ($profile) {
+        var anEvent = eventSender[ eventName ];
+        if (! anEvent.hasOwnProperty('_dbg_profileName')) {
+            anEvent._dbg_profileName = eventName;
+        }
+    }        
 
 }
 
@@ -234,174 +246,51 @@ LzEvent.prototype.addDelegate = function (d){
 // @param sd: The data to send with the event.
 //-----------------------------------------------------------------------------
 LzEvent.prototype.sendEvent = function ( sd ){
-    if ( false ){
-        "push 'this'"
-        //'this'
-        "getVariable"
-        //this
-        "dup"
-        //this, this
-        "push 'locked'"
-        //this, this , locked
-        "getMember"
-        //this, this.locked
-        "branchIfTrue labelExit"
-        //this
-        "dup"
-        //this , this
-        "push 'locked', TRUE"
-        //this , this , 'locked' , TRUE
-        "setMember"
-        //this
-        "dup"
-        //this , this
-        "push 'delegateList'"
-        //this , this , 'delegateList'
-        "getMember"
-        //this , delegateList
-        "dup"
-        //this , delegateList , delegateList
-        "push length"
-        //this , delegateList , delegateList , length
-        "getMember"
-        //this , delegateList , delegateList.length
-        "setRegister r:1"
-        //r:1 = counter
-        "pop"
-        //this , delegateList
-        "push 0"
-        //this , delegateList , 0
-        "swap"
-        //this , 0 , delegateList
-        "labelCallem:"
-            //this, 0 , ..d.. , delegateList | r:1 = counter
-            //..d.. are the delegates that have already accumulated on
-            //the stack
-            "push 0 , r:1"
-            //this, 0 , ..d.. , delegateList , 0 , counter
-            "equals"
-            //this, 0 , ..d.. , delegateList , counter=0?
-            "branchIfTrue labelEnterClean"
-            //this, 0 , ..d.. , delegateList
-        "dup"
-        //this, 0 , ..d.. , delegateList , delegateList
-        "push r:1"
-        //this, 0 , ..d.. , delegateList , delegateList , counter
-        "decrement"
-        //this, 0 , ..d.. , delegateList , delegateList , counter-1
-        "setRegister r:1"
-        "getMember"
-        //this, 0 , ..d.. , delegateList , d (current delegate)
-        "push r:1"
-        //this, 0 , ..d.. , delegateList , d , nextcounter
-        "swap"
-        //this, 0 , ..d.. , delegateList , nextcounter , d
-        "setRegister r:3"
-        //this, 0 , ..d.. , delegateList , nextcounter , d
-        //  r:3 = currentDelegate
-        "push 'event_called'"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , 'event_called'
-        "getMember"
-        //this, 0 , ..d.. , delegateList , nextcounter , d.event_called
-        "branchIfTrue skipDelegate"
-        //this, 0 , ..d.. , delegateList , nextcounter
-        "push r:3, 'sd' , r:3, 'event_called', TRUE"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , 'sd' d ,
-        //  'event_called' , TRUE
-        "setMember"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , 'sd'
-        "getVariable"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , sd
-        "push 1, r:3, 'c'"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , sd , 1 , d , 'c'
-        "getMember"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , sd , 1 , d.c
-        "push r:3 ,'f'"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , sd , 1 , d.c ,
-        //  d , 'f'
-        "getMember"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , sd , 1 , d.c , d.f
-        "callMethod"
-        //this, 0 , ..d.. , delegateList , nextcounter , d , result
-        "pop"
-        //this, 0 , ..d.. , delegateList , nextcounter , d
-        "swap"
-        //this, 0 , ..d.. , delegateList , d , nextcounter
-        "setRegister r:1"
-        //r:1=counter again
-        "pop"
-        //this, 0 , ..d.. , delegateList , d
-        "swap"
-        //this, 0 , ..d.. , d , delegateList
-        "branch labelCallem"
-       "skipDelegate:"
-         //this, 0 , ..d.. , delegateList , nextcounter
-         "pop"
-         "branch labelCallem"
-        "labelExit:"
-        "pop"
-        //[nothing]
-        "push UNDEF"
-        //UNDEF
-        "return"
-        //[nothing]
-        "labelEnterClean:"
-            //coming in : this, 0 , ..d.. , delegateList
-            "pop"
-            //this, 0 , ..d..
-            "labelClean:"
-                //this, 0 , ..d..
-                "dup"
-                //this , 0 , ..d.. , d
-                "push 0"
-                //this , 0 , ..d.. , d , 0
-                "equals"
-                //this , 0 , ..d.. , ?islast
-                "branchIfTrue labelFinal"
-                //this , 0 , ..d..
-                "push 'event_called', FALSE"
-                //this , 0 , ..d.. , 'event_called' , FALSE
-                "setMember"
-                //this , 0 , ..d-1..
-                "branch labelClean"
-        "labelFinal:"
-        //this , 0
-        "pop"
-        //this
-        "push 'locked', FALSE"
-        //this , 'locked' , FALSE
-        "setMember"
-        //[nothing]
-    } else{
-        //@field locked: Bool which is true when event is being sent.
-        if ( this.locked ) { return; } //don't allow for multiple calls
+    //@field locked: Bool which is true when event is being sent.
+    if ( this.locked ) { return; } //don't allow for multiple calls
 
-        var calledDelegates = new Array;
+    var dll = this.delegateList.length;
+    if (dll == 0) { return; }
 
-        this.locked = true;
-
-        var dll = this.delegateList.length;
-        var d;
-        for (var i = dll; i >= 0; i--){
-            d = this.delegateList[ i ];
-            //pointer may be bad due to deletions
-            if ( d && ! d.event_called){
-                d.event_called = true; //this delegate has been called
-                calledDelegates.push( d );
-                // d.execute( sd ); inlined
-                // We don't worry about deleted contexts here, because
-                // we assume that delegates registered on events are
-                // properly managed
-                d.c[d.f]( sd );
-            }
+    if ($profile) {
+        var nm = this._dbg_profileName;
+        
+        if (nm) {
+            _level0.$lzprofiler.event(nm, 'calls');
         }
-
-        while ( d = calledDelegates.pop() ){
-            d.event_called = false;
-        }
-
-        this.locked = false;
     }
+    
+    this.locked = true;
+
+    var calledDelegates = new Array;
+
+    var d;
+    for (var i = dll; i >= 0; i--){
+        d = this.delegateList[ i ];
+        //pointer may be bad due to deletions
+        if ( d && ! d.event_called){
+            d.event_called = true; //this delegate has been called
+            calledDelegates.push( d );
+            // d.execute( sd ); inlined
+            // We don't worry about deleted contexts here, because
+            // we assume that delegates registered on events are
+            // properly managed
+            d.c[d.f]( sd );
+        }
+    }
+
+    while (d = calledDelegates.pop() ){
+        d.event_called = false;
+    }
+    
+    if ($profile) {
+        var nm = this._dbg_profileName;
+        if (nm) {
+            _level0.$lzprofiler.event(nm, 'returns');
+        }
+    }
+    
+    this.locked = false;
 }
 
 //-----------------------------------------------------------------------------
