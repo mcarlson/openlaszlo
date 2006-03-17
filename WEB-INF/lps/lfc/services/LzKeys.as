@@ -45,7 +45,7 @@ LzKeys.gotKeyDown = function ( kC, info ){
             if (  dkC == kC ) continue;
 
             if ( !Key.isDown( dkC ) ){
-                //ruh roh -- must have missed the event (stupid Safari)
+                // Trouble here. Browser issues specific to Safari. 
                 if ( !badkeys ) badkeys = [];
                 badkeys.push( dkC );
             }
