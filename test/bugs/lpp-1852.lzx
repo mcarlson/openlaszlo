@@ -41,12 +41,26 @@ datapath="column3/text()"></text>
      </class>
 
      <view width="500" height="300">
+     <!-- This instance of myGrid displays the headers correctly. Unlike the one
+     below, it does not specify a value for stretches. -->
 <myGrid
 width="${parent.width}"
 height="${parent.height - 28}"
-stretches="both"
 datapath="testdata:/items"
 contentdatapath="item"
 multiselect="true"/>
      </view>
+     
+     <!-- This instance of myGrid has stretches="both", which causes the headers
+        to not be displayed until mouse-over'd and mouse-out'd. --> 
+     <view width="500" height="300" y="350">
+<myGrid
+stretches="both"
+width="${parent.width}"
+height="${parent.height - 28}"
+datapath="testdata:/items"
+contentdatapath="item"
+multiselect="true"/>
+     </view>
+     
 </canvas>
