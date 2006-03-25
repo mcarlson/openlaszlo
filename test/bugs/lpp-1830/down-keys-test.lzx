@@ -1,0 +1,97 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas debug="true">
+
+<script><![CDATA[
+#pragma 'warnUndefinedReferences=false' 
+LzKeys.gotKeyDown = function ( kC, info ){
+_root.Debug.write('gotKeyDown', kC);
+    if ( this.downKeysArray.length > 0 ){
+        var badkeys = null;
+
+        for ( var i = this.downKeysArray.length-1 ; i >=0; i-- ){
+            var dkC = this.downKeysArray[ i ];
+            if (  dkC == kC ) continue;
+
+            if ( !Key.isDown( dkC ) ){
+                //ruh roh -- must have missed the event (stupid Safari)
+                if ( !badkeys ) badkeys = [];
+                badkeys.push( dkC );
+            }
+        }
+
+        if ( badkeys ){
+            for ( var i = badkeys.length-1; i >=0; i-- ){
+                this.gotKeyUp( badkeys[ i ] );
+            }
+        }
+    }
+    var firstkeydown = !this.downKeysHash[ kC ];
+    if (firstkeydown) {
+        this.downKeysHash[ kC ] = true;
+        this.downKeysArray.push (  kC );
+    } 
+    // send key down event first, so inputtext will get key event
+    // before a command that may change the focus
+    if (firstkeydown || info != "extra") {
+        // won'tdown || info != "extra") {
+        // won't send repeated key events in player XXX ?
+
+        // check for IME
+        if (this.downKeysHash[229] != true) {
+            this.onkeydown.sendEvent( kC );
+        }
+    }
+
+    if ( firstkeydown ){
+        var cp = this.keycombos;
+        var dkeys = this.downKeysArray;
+        dkeys.sort();
+        for ( var i = 0 ; i < dkeys.length && cp != null ; i++ ){
+            cp  = cp[ dkeys[ i ] ];
+        }
+
+        for ( var i = 0 ; i < cp.delegates.length ; i++ ){
+            cp.delegates[ i ].execute( this.downKeysArray );
+        }
+    }
+
+    /*if ( Selection.getFocus() != null ){
+        this.passKeyPress( kC );
+    }*/
+            
+}
+
+LzKeys.gotKeyUp = function ( kC ) {
+_root.Debug.write('got key up', kC);
+
+    if (!this.downKeysHash[ kC ]) {
+        // _root.Debug.write("derived keyDown", kC);
+    }
+    
+    if ( this.downKeysHash[229] != true && !this.downKeysHash[ kC ]) {
+        // in FP5 some keys don't get a keydown event, but do get a keyup
+        _root.LzKeys.gotKeyDown( kC );
+    }
+
+    delete this.downKeysHash[ kC ];
+
+    this.downKeysArray = [];
+    for ( var k in this.downKeysHash ){
+        this.downKeysArray.push( k );
+    }
+    this.onkeyup.sendEvent( kC );
+}
+]]>
+</script>
+
+<button text="show down keys">
+    <method event="onclick">
+        Debug.write('down keys are:', LzKeys.downKeysArray);
+    </method>
+</button>
+
+</canvas>
+

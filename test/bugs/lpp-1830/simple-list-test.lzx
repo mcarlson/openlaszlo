@@ -1,0 +1,33 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<canvas>
+    <dataset name="items">
+        <item value="item1" >item 1</item>
+        <item value="item2" >item 2</item>
+        <item value="item3" >item 3</item>
+        <item value="item4" >item 4</item>
+        <item value="item5" >item 5</item>
+        <item value="item6" >item 6</item>
+        <item value="item7" >item 7</item>
+        <item value="item8" >item 8</item>
+        <item value="item9" >item 9</item>
+        <item value="item10" >item 10</item>
+        <item value="item11" >item 11</item>
+    </dataset>
+   
+   <simplelayout spacing="10" inset="10"/>
+   <edittext/>
+                <text>a1: multi-select</text>
+                <list  id="a1"  multiselect="true"
+                           x="5" y="5"
+                           width="130" 
+                           shownitems="3">
+                    <textlistitem datapath="items:/item"
+                               text='$path{"text()"}'
+                               value='$path{"@value"}'/>
+
+                </list>
+
+</canvas>
