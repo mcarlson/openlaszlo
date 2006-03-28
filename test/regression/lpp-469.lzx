@@ -1,0 +1,42 @@
+<canvas width="100%" height="100%" debug="true">
+  <dataset name="ds">
+    <data>
+      <person name="a assdfasfva asdf sad" surname="a surname"/>
+      <person name="b" surname="b surname"/>
+      <person name="c" surname="c surname"/>
+      <person name="d" surname="d surname"/>
+      <person name="e" surname="e surname"/>
+      <person name="f" surname="f surname"/>
+    </data>
+  </dataset>
+  <simplelayout axis="y"/>
+  <text>
+    Clicking the button should show 6 replications the Datapath case
+    to replicate and trigger a Debug ERROR in the $path case.
+  </text>
+  <button onclick="thedata.setAttribute('datapath', 'ds:/')">Set datapath</button>
+  <view id="thedata">
+    <simplelayout axis="y"/>
+    <view>
+      <simplelayout axis="x"/>
+      <text>Datapath:</text>
+      <view>
+        <simplelayout axis="y"/>
+        <text datapath='data/person/@name' resize="true" />
+      </view>
+    </view>
+    <view>
+      <simplelayout axis="x"/>
+      <text>$path:</text>
+      <view>
+        <simplelayout axis="y"/>
+        <text text="$path{'data/person/@name'}" resize="true" />
+      </view>
+    </view>
+  </view>
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+

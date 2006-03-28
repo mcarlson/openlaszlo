@@ -1,0 +1,20 @@
+
+<canvas width="600" height="500" debug="true">
+  <include href="/base/datalistselector.lzx"/>
+  <datalistselector id="bob"/>
+
+  <script>
+    Debug.write("Height errors");
+    bob._ensureItemInViewByIndex();
+    Debug.write("Clone errors");
+    bob.getItemByIndex(0);
+  </script>
+
+
+
+</canvas> 
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+

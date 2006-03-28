@@ -1,0 +1,50 @@
+<canvas height="90%" debug="true">
+  <dataset name="mydata">
+    <list>
+      <item>tricycle</item>
+    </list>
+  </dataset>
+  <dataset name="mydata2">
+    <list>
+      <item>tricycle</item>
+    </list>
+  </dataset>
+
+  <class name="selectme" onclick="immediateparent.selector.select(this)"
+         height="17" width="100" bgcolor="white">
+    <text datapath="text()"/>
+    <method event="oninit">
+        Debug.monitor(this, 'data');
+    </method>
+    <method name="setSelected" args="isselected">
+      if (isselected) {
+        Debug.write('selected ', this, this.data, this.datapath.p); 
+        setAttribute('bgcolor', yellow);
+      } else {
+        setAttribute('bgcolor', white);
+      }
+    </method>
+  </class>
+
+  <simplelayout axis="x"/>
+
+  <view height="70" clip="true">
+    <view>
+      <dataselectionmanager name="selector"/>
+      <selectme ondata="Debug.warn('.data %w %w %w', this, this.data, this.datapath.p)">
+        <datapath xpath="mydata:/list/item/" replication="lazy"/>
+      </selectme>
+      <simplelayout/>
+    </view>
+    <scrollbar/>
+  </view>
+
+  <button datapath="mydata:/list" visible="true">Add node
+    <method event="onclick">
+      this.datapath.addNode('item', 'bat');
+    </method>
+  </button>
+
+  <text>Add a node by clicking the button.  Note how ondata its .datapath.p and .data properties are null.  Then click the first node - its .datapath.p will be set but .data is still null</text>
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 

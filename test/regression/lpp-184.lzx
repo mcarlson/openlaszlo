@@ -1,0 +1,17 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+    <simplelayout/>
+    <edittext text="Default"/>
+    <edittext text="Default 2"/>
+    <edittext password="true" text="Default 2"/>
+    <edittext text="Disabled" enabled="false"/>
+    <edittext password="true" text="Secret Password" enabled="false"/>
+
+
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+

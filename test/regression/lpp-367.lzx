@@ -1,0 +1,65 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+
+    <simplelayout spacing="20" inset="20" />
+    <constantlayout axis="x" value="20" />
+
+    <view width="300" height="300" bgcolor="black">
+        <inputtext fontsize="14" fgcolor="blue" 
+                   id="inp" multiline="true" x="1" y="1" bgcolor="white"
+            width="$once{parent.width-2}" height="$once{parent.height-2}" />
+    </view>
+
+    <button text="add count">
+        <attribute name="count" value="0" />
+        <method event="onclick">
+          var t = inp.getText();
+          t = (t + '\n\n' + (count++));
+          inp.setText(t);
+        </method>
+    </button>
+
+    <button text="check compare">
+      <method event="onclick">
+      var mytext = new LzInputText(canvas, {x: 100, y: 100, width: 200});
+      mytext.setText("foo\n\nbar");
+      // test getText() not eating newlines
+      Debug.write("foo\n\nbar" == mytext.getText());   
+      mytext.setText(mytext.getText() + "\nbaz\nfoo    whitespace\nbar.");
+      Debug.write("foo\n\nbar\nbaz\nfoo    whitespace\nbar." ==  mytext.getText());
+      </method>
+    </button>
+
+    <button text="set color red">
+      <method event="onclick">
+        inp.setColor(0xff0000);
+      </method>
+    </button>
+
+
+    <button text="set fontsize 7">
+      <method event="onclick">
+        inp.setFontSize(7);
+      </method>
+    </button>
+
+
+
+
+    <button text="set fontsize 14">
+      <method event="onclick">
+        inp.setFontSize(14);
+      </method>
+    </button>
+
+
+
+
+
+
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+

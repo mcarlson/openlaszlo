@@ -1,0 +1,27 @@
+<canvas>
+  <resource name="g" src="../resources/swf/grad_up.swf"/>
+  <resource name="o" src="../resources/swf/grad_dwn.swf"/>
+
+  <view width="20" height="20" 
+	stretches="both"
+	resource="o" 
+	bgcolor="0x0b4d5d" onclick="flip()">
+    <attribute name="flipped" value="0" when="once"/>
+    <method name="flip">
+      if (flipped == 1){
+        setResource(o);
+        setAttribute("flipped",0);
+      } else {
+        setResource(g);
+        setAttribute("flipped",1);    
+      }
+
+    </method>
+  </view>
+</canvas>
+
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+

@@ -1,0 +1,71 @@
+<canvas width="100%" height="100%">
+
+
+  <debug width="600" height="400" y="500" />
+
+<class name="clientsWindowClass" extends="view">
+  <!-- ==================== -->
+  <!-- Menubar Declarations -->
+  <!-- ==================== -->
+  <menubar name="mb" width="500">
+
+    <menu name="file" text="File" width="175">   <!-- FILE MENU OPTIONS -->
+      <menuitem text="New Client"    onselect="createNewClient()"        />   <!-- command="cmd_newClient" -->
+      <menuitem text="Delete Client" onselect="clientDeleteAlert.open()" />   <!-- command="cmd_delClient" -->
+      <menuitem text="Back Up Files" onselect="" />
+      <menuitem text="Export List"   onselect="" />
+      <menuitem text="Import Client">
+        <menu name="importClientSubMenu">
+          <menuitem text="From Previous Year"  onselect="" />
+          <menuitem text="From Other Software" onselect="" />
+        </menu>   <!-- End importClientSubMenu -->
+      </menuitem>
+      <menuitem text="Organizer"     onselect="" />
+      <menuseparator />
+      <menuitem text="Print">
+        <menu name="printSubMenu">
+          <menuitem text="Form(s)" onselect="" />
+          <menuitem text="Notes"   onselect="" />
+        </menu>
+      </menuitem>
+      <menuseparator />
+      <menuitem text="Log Out"     onselect="loginWindow.open(); clientsWindow.destroy();" />
+    </menu>   <!-- End File menu -->
+
+    <menu text="View" width="150">   <!-- VIEW MENU OPTIONS -->
+      <menuitem text="Administration"        onselect="loadAdminWindow()" />
+      <menuitem text="Previous Years"        onselect="" />
+      <menuitem text="Custom View"           onselect="" />
+      <menuitem text="Paid Preparer"         onselect="" />
+      <menuitem text="View Company Invoices" onselect="" />
+      <menuitem text="View Bank Products"    onselect="" />
+    </menu>   <!-- End View menu -->
+
+    <menu text="Help" width="100">   <!-- HELP MENU OPTIONS -->
+	<menuitem text="Index"               onselect="" />
+	<menuitem text="Tutorial" 	     onselect="" />
+	<menuitem text="Options/Preferences" onselect="" />
+	<menuitem text="Tax Help"  	     onselect="" />
+        <menuseparator />
+	<menuitem text="About"	 	     onselect="" />
+    </menu>   <!-- End Help menu -->
+
+  </menubar>   <!-- End Primary Menubar -->
+</class>
+
+   <simplelayout axis="y" />
+
+   <clientsWindowClass  oninit="Debug.write(menu) "/>
+
+   <button text="LoadClass" >
+      <method event="onclick">
+         // Create the Clients window
+         var temp_ptr = new clientsWindowClass(canvas);
+         Debug.write(menu);
+      </method>
+   </button>
+
+
+
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 

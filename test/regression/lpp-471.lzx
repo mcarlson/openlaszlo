@@ -1,0 +1,19 @@
+<canvas debug="true">
+  <view id='foo' width="20" height="20" bgcolor="teal">
+    <animator name="anim" to="90" attribute="rotation" duration="400"
+              motion="linear" relative="true"
+              start="true" repeat="Infinity" >
+      <method event="onstart">
+       Debug.write("onstart!");
+      </method>
+      <method event="onstart">
+       Debug.write("onrepeat!");
+      </method>
+    </animator>
+  </view>
+</canvas> 
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+

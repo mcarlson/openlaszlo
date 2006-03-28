@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<canvas debug="true">
+  <simplelayout/>
+  <edittext id="id1" width="100"
+    onfocus="Debug.write(id + ' focus');"
+    onblur="Debug.write(id + 'blur')"/>
+  <edittext id="id2" width="100"
+    onfocus="Debug.write(id + ' focus');"
+    onblur="Debug.write(id + 'blur')"/>
+</canvas> 
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+
+

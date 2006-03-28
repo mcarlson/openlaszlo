@@ -1,0 +1,7 @@
+<canvas debug="true">
+  <connection receiveuserdisconnect="true" group="bsdClient"
+              authenticator="anonymous" authparam="usr=bsdControler" >
+    <agent url="http://localhost/laszlo.agents/message_spy.php"/>
+  </connection>
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 

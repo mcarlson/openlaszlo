@@ -1,0 +1,22 @@
+<canvas width="1400" height="600" debug="true">
+  <debug width="400" height="300" fontsize="12" x="400"/>
+  <dataset name="contacts" request="true"
+      src="http:../../demos/contacts/contactsdata.xml"/>
+  <basegrid datapath="contacts:/resultset" width="200">
+    <basegridcolumn>
+      <text placement="header">Check 'em off</text>
+      <checkbox text="$path{ '@displayname'}"
+                value="$path{'@checked'}">
+        <method event="onvalue">
+          this.datapath.updateData();
+        </method>
+      </checkbox>
+    </basegridcolumn>
+    <scrollbar placement="content"/>
+  </basegrid>
+</canvas>
+<!-- Copyright 2006 Laszlo Systems INC. --> 
+
+
+
+
