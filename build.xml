@@ -7,7 +7,7 @@
 <!--  Author: Eric Bloch                                                    -->
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -283,7 +283,6 @@
         value="openlaszlo-noship-${version.id}-${build.platform}.tar.gz" />
 
     <property name="source-distro-gzfile" value="openlaszlo-${version.id}-src.tar.gz" />
-    <property name="source-distro-zipfile" value="openlaszlo-${version.id}-src.zip" />
 
     <property name="done.init" value="true" />
 
@@ -458,9 +457,6 @@
               <include name="LICENSE.txt" />
           </tarfileset>
       </tar>
-
-      <!-- Create zip  -->
-      <zip basedir="${source-distro}" destfile="${source-distro-zipfile}" />
 
   </target>
 

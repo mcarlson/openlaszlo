@@ -3,8 +3,9 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** --><title>OpenLaszlo 3.2cr1 Release Notes</title>
-  
+* X_LZ_COPYRIGHT_END ****************************************************** --><title>OpenLaszlo 3.2 Release Notes</title>
+ 
+
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css" />
   <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/images/laszlo.ico" />
@@ -13,20 +14,25 @@
 
 <body class="release-notes">
 
-<h1><b>Release Notes for OpenLaszlo 3.2cr1 </b> </h1>
+<h1><b>Release Notes for OpenLaszlo 3.2 </b> </h1>
 
 <p class="bodytext">
 
 <p>
-OpenLaszlo 3.2cr1 is a community release, giving you a chance to preview the new functionality that will be released shortly as part of OpenLaszlo 3.2. This release has been partially tested and is believed to be stable, but it is not a fully-qualified release.</p>
-<p>
-There have been a few significant new features added to OpenLaszlo since Release 3.1.1, and many bugs have been fixed. There have also been significant improvements to the documentation.
+OpenLaszlo 3.2 is the next fully-qualified release since 3.1.1. OpenLaszlo 3.2 
+includes useful new features, many new incubator contributions,
+improvements to the documentation, and numerous bug fixes. Many of the
+incubator contributions came from the <a href="http://www.laszlosystems.com/products/laszloMail/">Laszlo Mail</a> team, which has shared 
+some of the look-and-feel from their components. In addition, there
+have been significant contributions from the OpenLaszlo community - thank you!
 </p>
 <p>
-Also please note that the documentation is virtually always under development. For the most up-to-date version, you may want to consult <a href="http://www.openlaszlo.org/about/latestdocs.html">the nightly build of the documentation</a> hosted on OpenLaszlo.org. (The latest documentation may include information pertinent to the next-following release (e.g. 4.0) and therefore will not necessarily be accurate for 3.2; however, it will also include general improvements.)
-</p>
-<p>
-The OpenLaszlo development team depends on you, the users of the platform, to help us ensure its quality and determine its future direction. We encourage you to report any problems, and to make suggestions for enhancements, through our <a href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking system.</a>
+For every release, we rely on the OpenLaszlo community to help ensure
+the quality of the platform release and to determine its future
+direction. We encourage you to report any problems, and to make
+suggestions for enhancements, through our <a
+href="http://www.openlaszlo.org/jira/browse/LPP">JIRA bug tracking
+system.</a>
 </p>
 <p>
 Here is a summary of what you will find in these notes:
@@ -45,22 +51,94 @@ Since release 3.1.1, the following features have been added to OpenLaszlo:
 </p>
 <ul>
 	<li>New contributions in the incubator </li>
+	<li>Incubator contributions promoted to components</li>
 	<li>&lt;img&gt; tags within rich text views (LPP-874)</li>
 	<li>MSAA-compatible accessibility (LPP-872)</li>
 	<li>Rich text editor palette in incubator (LPP-873)</li>
 	<li>JavaScript compiler ported from Jython to Java (LPP-752)</li>
+	<li>Documentation improvements</li>
 	<li>Automated unit tests</li>
 	<li>New &lt;handler&gt; and &lt;event&gt; syntax</li>
 
 </ul>
 
 <h2>New Contributions in the Incubator</h2>
-<p> 
-The <a href="http://svn.openlaszlo.org/openlaszlo/trunk/lps/components/incubator/">incubator directory</a> contains components and other code that have been contributed to the OpenLaszlo project, but have not yet been fully integrated into the product. It is intended as an easy way to contribute code that doesn't have the level of documentation, testing, or API review that is required in other directories, or that is simply contributed too late in the release cycle to place elsewhere.
+<p> The <a
+href="http://svn.openlaszlo.org/openlaszlo/branches/3.2/lps/components/incubator/">incubator
+directory</a> contains components and other code that have been
+contributed to the OpenLaszlo project, but have not yet been fully
+integrated into the product. It is intended as an easy way to
+contribute code that doesn't have the level of documentation, testing,
+or API review that is required in other directories, or that is simply
+contributed too late in the release cycle to place elsewhere.
 </p>
 <p>
-In addition there are several new gadgets and gizmos in the incubator, many courtesy of the LaszloMail team. Have a look!
+There have been many new items added to the incubator in this
+release. A large number of items were contributed by the Laszlo Mail
+team at Laszlo Systems after receiving many requests for their awesome
+components. Other members of the OpenLaszlo community have also generously shared their components and utilities. Here is a listing of some of the newest items in the incubator to tempt you:
+
+<ul>
+<li><code>basecheckbox.lzx</code>: Base class for representing a boolean value. Contributed by the Laszlo Mail team.</li>
+<li><code>baseedittext.lzx</code>: Look and feel for user editable text, data binding, and focus events. Contributed by the Laszlo Mail team.</li>
+<li><code>baseradio.lzx</code>: Base class for a single radio button. Contributed by the Laszlo Mail team.</li>
+<li><code>bigcheckbox.lzx</code>: Checkbox using larger resources. Contributed by the Laszlo Mail team.</li>
+<li><code>checkbox.lzx</code>: Smaller checkbox. Contributed by the
+Laszlo Mail team.</li>
+<li><code>closebox.lzx</code>: Button that looks like a closebox. No
+special behavior. Contributed by the Laszlo Mail team.</li>
+<li><code>defaultlistitem.lzx</code>: Item type for
+simpledefaultlist. Contributed by the Laszlo Mail team.</li>
+<li><code>domapi.js</code>: A collection of compatibility functions to
+bring LZX closer to the W3 DOM API bindings for ECMAScript. Created by
+Oliver Steele.</li>
+<li><code>formlayout.lzx</code>: Layout used to arrange title-control pairs as they might appear in a form. Contributed by Togawa Manabu.</li>
+<li><code>hscrollbar.lzx</code>: Horizontal scrollbar with a different look. Contributed by the Laszlo Mail team.</li>
+<li><code>icontab.lzx</code>: Nice looking tab with an icon and a text label. Contributed by the Laszlo Mail team.</li>
+<li><code>icontogglebutton.lzx</code>: Button, which toggles, and has only an icon (no text). Contributed by the Laszlo Mail team.</li>
+<li><code>labeledinputtext.lzx</code>: Horizontal container for a right-aligned label and text field. Contributed by the Laszlo Mail team.</li>
+<li><code>lzcombobox.lzx</code>: Subclass of newcombobox with a visual appearance. Contributed by the Laszlo Mail team.</li>
+<li><code>lzeditcombobox.lzx</code>: Like <code>lzcombobox</code>, but editable. Contributed by the Laszlo Mail team.</li>
+<li><code>lzedittext.lzx</code>: Inputtext with edges. Contributed by the Laszlo Mail team.</li>
+<li><code>lzradio.lzx</code>: Subclass of <code>radiobutton</code> with matching appearance to the other incubator lz components. Contributed by the Laszlo Mail team.</li>
+<li><code>minibutton.lzx</code>: Stylishbutton subclass with specialized resources to be smaller than a usual button. Contributed by the Laszlo Mail team.</li>
+<li><code>opttree/opttree.lzx</code>: An optimized implementation of tree, contributed by Adam Wolff of Laszlo Systems, Inc.</li>
+      
+<li><code>radioitem.lzx</code>: A selectable list item which works like a radio button except it uses  an icon instead of radio button graphics. Contributed by the Laszlo Mail team.</li>
+      
+<li><code>rich-text</code>: A rich text editor, and various support components. Contributed by the Laszlo Mail team.</li>
+
+<li><code>roundrect.lzx</code>: Round rectangle component with optional gradient, created by Oliver Steele.<br><code>roundrect-test.lzx</code> can be found in the <code>test</code> subdirectory.</li>
+
+<li><code>roundrectbutton.lzx</code>: Round rectangle button without art assets (so programmers can make roundrect buttons that look three-dish without a designer in the loo) created by Benjamin Shine of Laszlo Systems, Inc.<br><code>test-roundrectbutton.lzx</code> can be found in the <code>test</code> subdirectory.</li>
+
+<li><code>shadowbox.lzx</code>: A basic container view with an inner dropshadow effect. Contributed by the Laszlo Mail team. </li>
+
+<li><code>stylishbutton.lzx</code>: A button which can be capsule-shaped or rectangular. Contributed by Benjamin Shine and the rest of the Laszlo Mail team.</li>
+    
+<li><code>ulink.lzx</code>: A text link that is decorated with an underline when hovered.  The color, hover color, and hover decoration can be customized, and all attributes can be data bound. Created by Oliver Steele.</li>
+
+<li><code>validators</code>: Utilities for incrementally validating form entry values. Contributed by Togawa Manabu. See <a href="http://laszlo.jp/wiki/index.php?CustomComponents#content_1_2">laszlo.jp</a> for updates.</li>
+
+<li><code>vscrollbar.lzx</code>: Vertical scrollbar with a different look. Contributed by the Laszlo Mail team.</li>
+</ul>
 </p>
+
+
+<h2>Incubator Contributions Promoted to Components</h2>
+<p>There were two major changes in the components for OpenLaszlo
+3.2. First, the <code>components/lz/floatinglist.lzx</code> was split into two
+pieces: <code>components/lz/basefloatinglist.lzx</code>, which contains
+functionality and no look-and-feel, and
+<code>components/lz/plainfloatinglist.lzx</code>, which is a <code>basefloatinglist</code> subclass that defines a thin border around the list. </p>
+<p>Second, the functionality in
+<code>components/incubator/newcombobox.lzx</code> was moved into
+<code>components/base/basedatacombobox.lzx</code>. And,
+<code>components/lz/datacombobox.lzx</code> uses the <code>components/lz/floatinglist.lzx</code>. Note that
+<code>components/lz/combobox.lzx</code> has been preserved to ensure
+compatibility with existing applications, just as <code>components/incubator/newcombobox.lzx</code> is a subclass of <code>basedatacombobox.lzx</code> for the same reason. </p> 
+<p>We recommend that you consider using <code>datacombobox.lzx</code>, which has been defined to perform better than <code>combobox.lzx</code>.</p>
+
 <h2>&lt;img&gt; Tags within Rich Text Views (LPP-874)</h2>
 <p>
 A partial implementation of the HTML &lt;img&gt; tag allows you to include images within HTML text.  There are some limitations; please see the documentation.</p>
@@ -78,6 +156,17 @@ JavaScript Compiler Ported from Jython to Java (LPP-752)</h2>
 <p>
 The resulting compiler is much faster, with reported gains of up to 5x.
 </p>
+<h2>Documentation Improvements</h2>
+<p>
+There have been many improvements to the documentation. Significant new content has been added, existing content has been clarified and updated, and many of the typographical errors have been corrected. The documentation is virtually always under
+development. For the most up-to-date version, you may want to consult
+<a href="http://www.openlaszlo.org/documentation">the nightly build of
+the documentation</a> hosted on OpenLaszlo.org. (The latest
+documentation may include information pertinent to the next-following
+release (e.g. 4.0) and therefore will not necessarily be accurate for
+3.2; however, it will include ongoing general improvements.)
+</p>
+
 <h2>Automated Unit Tests</h2>
 <p>
 Automated unit test are now available for those who build OpenLaszlo from sources. The cool thing about automated unit tests is 'ant runlzunit', which automatically runs the known unit tests against a build. These work on Mac and PC; they have not been tested under Linux.
@@ -91,13 +180,16 @@ The documentation has not caught up with the new syntax, but there is a <a href=
 
 
 <H1><a name="backwards">Backwards-incompatible Changes</a></H1> 
+
 <p>
-The KRANK feature has been removed (LPP-871). This capability was only fully supported under Flash6 and improved performance in later players made it unnecessary.
+The KRANK feature has been removed (LPP-871). This capability was only
+fully supported under Flash6 and improved performance in later players
+made it unnecessary.
 </p>
 
 <h1><a name="fixed-bugs">Significant Bugs Fixed</a></h1>
 <p>
-Several dozens of bugs have been fixed since the 3.1.1 release. Consult <a href="http://www.openlaszlo.org/jira/secure/ReleaseNote.jspa?version=10120&styleName=Html&projectId=10020&Create=Create">JIRA</a> for complete information. Note that the 3.2Cr1 release is code-named "Sage".
+Several dozens of bugs have been fixed since the 3.1.1 release. Consult <a href="http://www.openlaszlo.org/jira/secure/ReleaseNote.jspa?version=10120&styleName=Html&projectId=10020&Create=Create">JIRA</a> for complete information. Note that the 3.2 release is referred to as "Sage" in JIRA. 
 
 <h1><a name="Known">Known Defects</a></h1>
 
