@@ -23,7 +23,7 @@
 
             if (switchImage) {
                 Debug.write("switching image");
-                this.curImage = ((this.curImage) % 6) + 1;
+                this.curImage = ((this.curImage) % 7) + 1;
             }
 
             switch (this.curImage) {
@@ -53,6 +53,10 @@
                 Debug.write("Loading relative file url - should error");
                 url = "file:logo.swf"
                 break;
+            case 7:
+                Debug.write("Loading https jpeg");
+                url = "https://acornf.secure.omnis.com/LeftTab.jpg"
+                break;
              default:
                  break;
             } 
@@ -65,3 +69,4 @@
 <!-- Space images from http://hubble.stsci.edu/ -->
 <!-- see http://hubble.stsci.edu/copyright/copyright/ for copyright info -->
 </canvas>    
+<!-- copyright 2006 Laszlo Systems use subject to license -->
