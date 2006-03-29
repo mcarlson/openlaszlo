@@ -35,9 +35,6 @@
   <!-- Absolute location of lps specific config files (empty means use relative) -->
   <property name="lps.config.dir.abs" value="" />
 
-  <!-- Define to disable noship builds -->
-  <property name="skip.noship" value="true" />
-
   <!-- Configure the custom Ant tasks for the Manager application -->
   <taskdef name="tom.install"   
            classname="org.apache.catalina.ant.InstallTask"/>
@@ -141,7 +138,6 @@
       <include name="**/test-golden-files/**" />
       <!-- Don't ship lps includes source -->
       <exclude name="lps/includes/source/**" />
-      <exclude name="lps-noship*/**" />
       <exclude name="*/${server}/**" />
       <exclude name="**/test-output/**" />
       <exclude name="**/test-diffs/**" />
@@ -175,8 +171,6 @@
         value="${builddir-dev-server}/lps-${version.id}/WEB-INF/lps" />
     <property name="builddir-work"  value="${builddir-dev-server-lps}/work" />
     <property name="builddir-dev-credits" value="${builddir-dev}/3rdPartyCredits" />
-    <property name="noship-builddir"     value="lps-noship-${version.id}-core" />
-    <property name="noship-builddir-dev" value="lps-noship-${version.id}" />
     <property name="source-distro" value="lps-${version.id}-src" />
 
     <property name="check.java.version" value="true" />
@@ -195,9 +189,6 @@
     <echo message="    platform: is  ${build.platform}" />
     <if><isset property="skip.prefetch"/><then>
         <echo message="    Skipping prefetch" />
-    </then></if>
-    <if><isset property="skip.noship"/><then>
-        <echo message="    Skipping noship" />
     </then></if>
     <if><isset property="skip.wrappertest"/><then>
         <echo message="    Skipping wrappertest" />
@@ -266,21 +257,10 @@
     <property name="tomcat.java.opts" 
         value="${java.opts} ${tomcat.debug.opts} -Xms128m -Xmx512m -Dlps.config.dir=${lps.config.dir} -Dlps.config.dir.abs=${lps.config.dir.abs} -Dcom.apple.backgroundOnly=true -Djava.awt.headless=true -Djavax.net.ssl.trustStore=${LPS_HOME}/build-tools/lzcacerts -Djavax.net.ssl.trustStorePassword=changeit -Dfile.encoding=UTF-8" />
 
-    <property name="gzfile"   value="openlaszlo-${version.id}-core.tar.gz" />
     <property name="dev-war-file"  value="openlaszlo-${version.id}.war" />
     <property name="servlet-war-file"  value="openlaszlo-${version.id}-servlet.war" />
-    <property name="zipfile"  value="openlaszlo-${version.id}-core.zip" />
-  
     <property name="dev-gzfile" 
         value="openlaszlo-${version.id}-${build.platform}.tar.gz" />
-    <property name="dev-zipfile"  
-        value="openlaszlo-${version.id}-${build.platform}.zip" />
-    <property name="noship-gzfile" 
-        value="openlaszlo-noship-${version.id}-core.tar.gz" />
-    <property name="noship-dev-zipfile"  
-        value="opelaszlo-noship-${version.id}-${build.platform}.zip" />
-    <property name="noship-dev-gzfile" 
-        value="openlaszlo-noship-${version.id}-${build.platform}.tar.gz" />
 
     <property name="source-distro-gzfile" value="openlaszlo-${version.id}-src.tar.gz" />
 
@@ -309,7 +289,6 @@
           <fileset dir="." >
               <include name="*.tar"/>
               <include name="*.tar.gz"/>
-              <include name="*.zip"/>
               <include name="*.nsi"/>
               <include name="*.sit"/>
               <include name="*.dmg"/>
@@ -368,6 +347,7 @@
   <target name="build-source-distro"
       description="Build source distribution"
       depends="init,clean-nocache" unless="done.build-source-distro">
+    <if><equals arg1="${build.platform}" arg2="unix"/><then>
 
       <!-- Cleanup up old source dir if it exists -->
       <delete>
@@ -391,6 +371,7 @@
 
       <!-- Create packages -->
       <ant target="package-source-distro" />
+    </then></if>
       <property name="done.build-source-distro" value="true" />
   </target>
 
@@ -649,17 +630,7 @@
       <delete dir="${builddir-dev}" />
       <delete file="${dev-war-file}"      />
       <delete file="${servlet-war-file}"      />
-      <delete file="${gzfile}"      />
-      <delete file="${zipfile}"     />
       <delete file="${dev-gzfile}"    />
-      <delete file="${dev-zipfile}"   />
-
-      <delete dir="${noship-builddir}" />
-      <delete dir="${noship-builddir-dev}" />
-      <delete file="${noship-gzfile}" />
-      <delete file="${noship-dev-gzfile}" />
-      <delete file="${noship-dev-zipfile}" />
-
   </target>
 
   <!--================  Target [cleandoc] ==============-->
@@ -756,21 +727,6 @@
       <copy todir="${builddir-dev-server}/${tomcat}/webapps/ROOT" 
             file="${webapp-lps-home}/config/crossdomain.xml"/>
 
-      <!-- Build up a noship directory, too -->
-      <if><not><equals arg1="${skip.noship}" arg2="true" /></not><then>
-
-      <copy todir="${noship-builddir-dev}" >
-          <fileset dir="${builddir-dev}" />
-      </copy>
-      
-      <copy todir="${noship-builddir-dev}/Server/lps-${version.id}" >
-          <fileset dir=".">
-              <patternset refid="manifest.test" />
-          </fileset>
-      </copy>
-
-      </then></if>
-
       <property name="done.build-dist-dir-dev" value="true" />
   </target>
 
@@ -790,12 +746,7 @@
 
       <if><equals arg1="${build.platform}" arg2="unix"/><then>
     
-          <delete file="${dev-zipfile}" />
           <delete file="${dev-gzfile}" />
-    
-          <zip zipfile="${dev-zipfile}" >
-              <zipfileset prefix="${builddir-dev}" dir="${builddir-dev}" />
-          </zip>
     
           <tar tarfile="${dev-gzfile}" longfile="gnu" compression="gzip">
               <tarfileset dir="${builddir-dev}" mode="755" prefix="${builddir-dev}">
@@ -819,23 +770,6 @@
       </then><else><if><equals arg1="${build.platform}" arg2="windows"/><then>
           <ant target="nsi-dev" />
       </then></if></else></if></else></if>
-
-      <!-- Build up a noship image, too -->
-      <if><not><equals arg1="${skip.noship}" arg2="true" /></not><then>
-      <tar tarfile="${noship-dev-gzfile}" longfile="gnu" compression="gzip">
-
-          <tarfileset dir="${noship-builddir-dev}" mode="755" username="laszlo" group="laszlo" >
-              <include name="${builddir-dev-server}/${tomcat}/bin/*"/>
-              <include name="${builddir-dev-server}/${jetty}/bin/*"/>
-          </tarfileset> 
-          <tarfileset dir="${noship-builddir-dev}" username="laszlo" group="laszlo" > 
-              <include name="*/**"/>
-              <exclude name="${builddir-dev-server}/${tomcat}/bin/*"/>
-              <exclude name="${builddir-dev-server}/${jetty}/bin/*"/>
-          </tarfileset>
-
-      </tar>
-      </then></if>
 
       <if><not><isset property="skip.wrappertest" /></not><then>
       <exec executable="bash" failonerror="true">
@@ -943,7 +877,7 @@
 
   <!--================  Target [build-dist-dir-core] ==============-->
   <target name="build-dist-dir-core" 
-      description="Build lps core distribution directory for zip tgz (w/out precache)"
+      description="Build lps core distribution directory for tgz (w/out precache)"
       depends="init,build,doc" >
 
       <property name="webapp"    value="${builddir}/lps-${version.id}" />
@@ -1083,44 +1017,16 @@
 
       <ant target="clean-dist" />
       <ant target="build-dist-dir-core" />
-
-      <!-- Build up a noship image, too -->
-      <if><not><equals arg1="${skip.noship}" arg2="true" /></not><then>
-          <copy todir="${noship-builddir}" >
-              <fileset dir="${builddir}" />
-          </copy>
-    
-          <copy todir="${noship-builddir}/lps-${version.id}" >
-              <fileset dir=".">
-                  <patternset refid="manifest.test" />
-              </fileset>
-          </copy>
-    
-      </then> </if>
   </target>
 
   <target name="dist-core"
           description="Build 'core' distributions including prefetch" 
           depends="init,dist-dev" unless="done.dist.core" >
 
-      <if><not><equals arg1="${skip.noship}" arg2="true" /></not><then>
-          <!-- Copy work dir bits -->
-          <copy todir="${noship-builddir}/lps-${version.id}/WEB-INF/lps">
-              <fileset dir="${builddir-dev-server-lps}" includes="work/**" />
-          </copy>
-          <tar tarfile="${noship-gzfile}" longfile="gnu" compression="gzip">
-              <tarfileset prefix="${noship-builddir}" dir="${noship-builddir}" 
-                          mode="755" username="ant" group="ant" >
-              </tarfileset>
-          </tar>
-      </then> </if>
-
       <!-- Copy work dir bits -->
       <copy todir="${builddir}/lps-${version.id}/WEB-INF/lps">
           <fileset dir="${builddir-dev-server-lps}" includes="work/**" />
       </copy>
-
-      <delete file="${noship-builddir}/lps-${version.id}/WEB-INF/lib/lps*.jar"/>
 
       <war destfile="${dev-war-file}"
            webxml="${builddir}/lps-${version.id}/WEB-INF/web.xml"
@@ -1145,20 +1051,7 @@
            <exclude name="WEB-INF/lps/work/**" />
       </war>
 
-      <!--
-      <zip zipfile="${zipfile}" >
-          <zipfileset prefix="${builddir}" dir="${builddir}" />
-      </zip>
-
-      <tar tarfile="${gzfile}" longfile="gnu" compression="gzip">
-          <tarfileset prefix="${builddir}" dir="${builddir}" 
-                      mode="755" username="ant" group="ant" >
-          </tarfileset>
-      </tar>
-      -->
-
       <property name="done.dist.core" value="1" />
-
   </target>
 
   <!--                                                        -->
