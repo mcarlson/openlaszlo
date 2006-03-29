@@ -1,0 +1,56 @@
+<library>
+  <include href="lzunit/lzunit.lzx" />
+
+  <dataset name="postData" src="http:echo.jsp" request="false"/>
+
+  <class name="TestSetHeaders" extends="TestCase">
+    <attribute name="dpready" value="false"/>
+    <attribute name="t2del" value="false"/>
+    <attribute name="waitcnt" value="0"/>
+
+    <datapointer xpath="postData:/" name="dp" 
+                 oninit="parent.sendit()"
+                 ondata="Debug.write('got data'); parent.dpready = true"/>
+
+    <method name="sendit">
+      postData.setHeader("content-type", "application/xml");
+      postData.setQueryType("POST");
+      Debug.write('making data request');
+      postData.doRequest();
+    </method>
+
+    <method name="test2">
+      Debug.write('test2', this.waitcnt);
+      if ( ! this.dpready ){
+          if ( ! this.t2del ){
+              Debug.write( "test isn't done until async test runs" );
+              this.t2del = new LzDelegate( this , 'test2' );
+          }
+
+          if ( this.waitcnt++ > 100 ){
+              fail( "Didn't get async data" );
+          } else {
+              LzIdle.callOnIdle( this.t2del );
+          }
+          return;
+      }
+
+     Debug.write( 'running async test for loaded data' );
+      this.doIt(dp);
+    </method>
+
+        <method name="doIt" args="dp">
+            <![CDATA[
+            assertTrue(  dp.xpathQuery( '/echo/headers/text()' ).indexOf('application/xml') > 0 );
+            ]]>
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+
