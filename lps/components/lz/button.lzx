@@ -78,23 +78,6 @@
     <!--- @keywords private -->
     <attribute name="doesenter" value="true"/>
 
-    <!--- Called by the button manager when this button is the default-->
-    <method name="doEnterDown">
-        if ( this._enabled ){
-            this.showDown( );
-        }
-    </method>
-
-    <!--- Called by the button manager when this button is the default-->
-    <method name="doEnterUp">
-        if ( this._enabled ){
-            if ( this.onclick ){
-                this.onclick.sendEvent();
-            }
-            this.showUp( );
-        }
-    </method>
-
     <!--- @keywords private -->
     <method name="showDown" args="sd">
         if (this.hasdefault) {
@@ -186,7 +169,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
