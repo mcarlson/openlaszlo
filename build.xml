@@ -1028,6 +1028,7 @@
           <fileset dir="${builddir-dev-server-lps}" includes="work/**" />
       </copy>
 
+    <if><equals arg1="${build.platform}" arg2="unix"/><then>
       <war destfile="${dev-war-file}"
            webxml="${builddir}/lps-${version.id}/WEB-INF/web.xml"
            basedir="${builddir}/lps-${version.id}" compress="true">
@@ -1050,6 +1051,7 @@
            <exclude name="lps/utils/**" />
            <exclude name="WEB-INF/lps/work/**" />
       </war>
+    </then></if>
 
       <property name="done.dist.core" value="1" />
   </target>
