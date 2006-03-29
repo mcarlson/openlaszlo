@@ -1,0 +1,16 @@
+<canvas>
+
+    <font name="clawless" src="clawless.ttf" />
+
+    <text fontsize="48"><font face="clawless">This shows up as Times New Roman</font></text>
+
+    <text font="clawless" fontsize="48">This shows up as Clawless</text>
+
+    <simplelayout/>
+    
+</canvas> 
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
