@@ -2,7 +2,7 @@
 # Author: Oliver Steele
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -133,7 +133,7 @@ class Attribute:
         self.type = 'CDATA' # DTD type
         self.xtype = None # schema type
         self.required = True
-        self.event = False
+        self.isevent = False
         self.default = None
         self.doc = None
     
@@ -162,7 +162,7 @@ class Attribute:
 def mergeAttributes(a, b, doc=True):
     """ Attribute, Attribute -> Attribute """
     assert a.name == b.name
-    assert a.event == b.event
+    assert a.isevent == b.isevent
     #if a.type == b.type:
     #    return a
     c = a.clone()
@@ -646,7 +646,7 @@ def parseUserClass(schema, element, libraryName, depth=0):
             attr.required = child.getAttribute('required') == 'true'
             attr.type = 'CDATA'
             attr.xtype = (None, "expression")
-            attr.event = True
+            attr.isevent = True
             el.attrs.append(attr)
         elif child.tagName == 'method':
             m = Method()

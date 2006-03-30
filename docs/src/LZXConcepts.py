@@ -2,7 +2,7 @@
 # Author: Antun Karlovac
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -341,6 +341,14 @@ class Event(Concept):
     def getDescription(self):
         return self.desc
 
+    # PUBLIC
+    # Return a XML object that represents this attribute.
+    def makeXML(self, xmlDoc):
+        attribNode = xmlDoc.createElement('event')
+        attribNode.setAttribute('name', self.getName())
+
+        return attribNode
+
     # PRIVATE
     # Return the name of the method that this event is triggered on.
     def findMethod(self):
@@ -611,6 +619,12 @@ class Element:
         if self.api: methods += self.api.methods
         return methods
 
+    def getEvents(self):
+        events = []
+        if self.tag: events += self.tag.events
+        if self.api: events += self.api.events
+        return events
+
     # PUBLIC 
     def getAttribute(self, attribName):
         attrs = self.getAttributes()
@@ -679,6 +693,20 @@ class Element:
                         methodNode = meth.makeXML(doc)
                         methodsNode.appendChild(methodNode) 
                     apiNode.appendChild(methodsNode)
+
+        #print 'events', self.getName(), [m.name for m in self.getEvents()]
+        if self.getEvents():
+            apiNode = apiNode or doc.createElement('api')
+            if self.tag:
+                apiNode.setAttribute('name', self.tag.name)
+            events = self.getEvents()
+            if events:
+                if len(events) > 0:
+                    eventsNode = doc.createElement('events')
+                    for evt in events:
+                        eventNode = evt.makeXML(doc)
+                        eventsNode.appendChild(eventNode) 
+                    apiNode.appendChild(eventsNode)
 
         # API
         if self.api:

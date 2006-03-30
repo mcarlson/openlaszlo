@@ -184,6 +184,15 @@ def makeAttribute(a, parseComments):
                     desc=formatDoc(ctext, getattr(a, 'deprecated', None)),
                     category=category)
 
+def makeEvent(a, parseComments):
+    ctext = a.doc
+    if parseComments:
+        c = parseComment(a.doc, ['keywords'])
+        if 'private' in c.keywords: return
+        ctext = c.comment
+    return Event(name=a.name,
+                 desc=formatDoc(ctext, getattr(a, 'deprecated', None)))
+
 def makeMethod(m):
     if not m.name: return
     params = [Param(name=name) for name in m.params if name]
@@ -253,19 +262,20 @@ def makeElement(e):
                     break
     # Filter out attributes from superclasses
     as = filter(None, [makeAttribute(a, e.library) for a in e.attrs
-                       if a.name not in inhAttrs])
+                       if (a.name not in inhAttrs) and (a.isevent == False)])
     if hasattr(attributemap, e.name):
         # don't clobber pre-filled entries
         pass
     else:
         setattr(attributemap, e.name, [a.name for a in as] + inhAttrs)
     methods = filter(None, map(makeMethod, getattr(e, 'methods', [])))
-    events = None
+    events = filter(None, [makeEvent(a, e.library) for a in e.attrs
+                           if (a.name not in inhAttrs) and (a.isevent == True)])
     keywords = None
     if hasattr(e, 'sourcefile'):
         c = parseComment(e.doc, ['keywords', 'param', 'event', 'since'])
         doc = c.comment
-        events = c.getFields('event')
+        events = events + c.getFields('event')
         if 'private' in c.keywords: return
     else:
         doc = formatDoc(e.doc, getattr(e, 'lza:deprecated', None))
