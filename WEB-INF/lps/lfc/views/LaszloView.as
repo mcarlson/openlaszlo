@@ -630,13 +630,13 @@ LzView.prototype.setMovieClip = function ( mc , mcID) {
     if ( (!this.hassetwidth && this.resourcewidth > this.width ) ||
         (this._setrescwidth && this.unstretchedwidth <
                                                 this.resourcewidth)){
-        this.updateSize( "width" , this.resourcewidth  );
+        this.updateWidth( this.resourcewidth  );
     }
 
     if ( (!this.hassetheight && this.resourceheight > this.height ) ||
             (this._setrescheight && this.unstretchedheight <
                                                 this.resourceheight)){
-        this.updateSize( "height" , this.resourceheight  );
+        this.updateHeight( this.resourceheight  );
     }
 
     //@event onload: Sent when the view attaches its resource.
@@ -1326,7 +1326,10 @@ LzView.__LZcheckSize = function (){
 
             if ( ss > ts && sview.visible ){
                 this[ "__LZoutlie" + axis ] = sview;
-                this.updateSize( axis , ss);
+                if (axis == "width")
+                    this.updateWidth(ss);
+                else
+                    this.updateHeight(ss);
             } else if ( this[ "__LZoutlie" + axis ] == sview
                         && ( ss < ts || ! sview.visible ) ){
                 //uhoh -- we need to recheck everything
@@ -1430,37 +1433,90 @@ if ($profile) {
 // @keywords private
 //-----------------------------------------------------------------------------
 LzView.prototype.updateSize = function ( axis , newsize ){
-    var sc = "_" + (axis == "width" ? "x" : "y" ) + "scale";
-    if ( this[ "_setresc" + axis ] ){
-        this[ "unstretched" + axis ] = newsize;
+    if (axis == "width")
+        this.updateWidth(newsize);
+    else
+        this.updateHeight(newsize);
+}
 
-        if ( this[ 'hasset' + axis ] ){
-            var scale = this[ axis ] / newsize;
-            this[ sc ] = scale;
+//-----------------------------------------------------------------------------
+// @keywords private
+//-----------------------------------------------------------------------------
+LzView.prototype.updateWidth = function ( newsize ){
+    if ( this._setrescwidth ){
+        this.unstretchedwidth = newsize;
 
-            this.__LZmovieClipRef[ sc ] = 100 * scale;
+        if ( this.hassetwidth ){
+            var scale = this.width / newsize;
+            this._xscale = scale;
+
+            this.__LZmovieClipRef._xscale = 100 * scale;
         }
 
-        this['onunstretched' + axis ].sendEvent( newsize );
+        var evt1 = this.onunstretchedwidth;
+        if (evt1 != null)
+            evt1.sendEvent( newsize );
     }
 
     if ( this.masked ){
         // If the view does not stretch, we have to resize the mask
-        if ( !this[ '_setresc' + axis ] ){
-            this.__LZmaskClip[ sc ] = newsize;
+        if ( !this._setrescwidth ){
+            this.__LZmaskClip._xscale = newsize;
         }
 
     }
-    if ( !this[ 'hasset' + axis ] ){
-        this[ axis ] = newsize;
-        this[ "on" + axis ].sendEvent( newsize );
+    if ( !this.hassetwidth ){
+        this.width = newsize;
+        var evt2 = this.onwidth;
+        if (evt2 != null)
+            evt2.sendEvent( newsize );
 
-        this.immediateparent[ "__LZcheck" + axis ]( this );
+        this.immediateparent.__LZcheckwidth( this );
 
-        this.__LZbgRef[ sc ] = newsize;
+        this.__LZbgRef._xscale = newsize;
     }
 
-    this.setButtonSize( axis, newsize );
+    this.setButtonSize( "width", newsize );
+}
+
+//-----------------------------------------------------------------------------
+// @keywords private
+//-----------------------------------------------------------------------------
+LzView.prototype.updateHeight = function ( newsize ){
+    if ( this._setrescheight ){
+        this.unstretchedheight = newsize;
+
+        if ( this.hassetheight ){
+            var scale = this.height / newsize;
+            this._yscale = scale;
+
+            this.__LZmovieClipRef._yscale = 100 * scale;
+        }
+
+        var evt1 = this.onunstretchedheight;
+        if (evt1 != null)
+            evt1.sendEvent( newsize );
+    }
+
+    if ( this.masked ){
+        // If the view does not stretch, we have to resize the mask
+        if ( !this._setrescheight ){
+            this.__LZmaskClip._yscale = newsize;
+        }
+
+    }
+    if ( !this.hassetheight ){
+        this.height = newsize;
+        var evt2 = this.onheight;
+        if (evt2 != null)
+            evt2.sendEvent( newsize );
+
+        this.immediateparent.__LZcheckheight( this );
+
+        this.__LZbgRef._yscale = newsize;
+    }
+
+    this.setButtonSize( "height", newsize );
 }
 
 //-----------------------------------------------------------------------------
@@ -1501,7 +1557,10 @@ LzView.prototype.reevaluateSize = function ( ia ){
     }
 
     if ( o != w ){
-        this.updateSize( axis ,  w );
+        if (axis == "width")
+            this.updateWidth(w);
+        else
+            this.updateHeight(w);
     }
 }
 
