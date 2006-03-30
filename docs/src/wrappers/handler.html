@@ -15,14 +15,14 @@
 </lzelement>
 
 <p>Attaches a handler method for the named event to the object that contains this element.  The
-method must have  a <attribute>name</attribute> </p>
+handler method must have  a <attribute>name</attribute> </p>
 
-<p>The <attribute>name</attribute> attribute names the event for which this handler should be invoked.</p>
+<p>The <attribute>name</attribute> attribute gives the event for which this handler should be invoked.</p>
 
-<p>Note: events can be declared via the <tagname link="true">event</tagname> tag.
+<p>Events can be declared via the <tagname link="true">event</tagname> tag.  Events are also generated whenever the value of an attribute is changed using the <method>setAttribute</method> method.
 </p>
 
-For example, if a handler is defined via:<p>
+<p>For example, if a handler is defined via:</p>
 
 <example extract="false">
 &lt;view id="obj"&gt;
@@ -33,7 +33,7 @@ For example, if a handler is defined via:<p>
 &lt;/view&gt;
 </example>
 
-</p>
+
 <p>
 then script code
 <code>obj.onmyevent.sendEvent(259)</code> will invoke this handler method.</p>

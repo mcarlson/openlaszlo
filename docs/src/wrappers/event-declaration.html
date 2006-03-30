@@ -22,7 +22,7 @@
 </lzelement>
 
 <p>The <tagname>event</tagname> tag declares that the containing
-object can generates the event named <attribute>name</attribute>. </p>
+object can generate the event named <attribute>name</attribute>. </p>
 
 <ol>
 
@@ -30,7 +30,7 @@ object can generates the event named <attribute>name</attribute>. </p>
 <p>In a class definition, the <tagname>event</tagname> tag
 defines an event that can be sent from instances of the class.</p>
 
-<example>
+<example extract="false">
   &lt;class name="myclass_with_handler"&gt;
     &lt;event name="myevent"/&gt;
     &lt;handler name="myevent" args="myargs"&gt;
@@ -41,7 +41,7 @@ defines an event that can be sent from instances of the class.</p>
 </li>
 
 <li>
-<p>A language feature is that events are generated automatically by
+<p>In LZX, events are generated automatically by
 the <code>setAttribute</code> method.  When you
 call <code>obj.setAttribute('attrname', val)</code>, an event named
 with the prefix "on" and name of an the attribute is sent, in this case
@@ -50,7 +50,7 @@ arg value of <code><i>val</i></code> would be passed.
 
 </p>
 
-<example>
+<example extract="false">
   &lt;class name="myclass_with_handler"&gt;
     &lt;event name="myevent"/&gt;
     &lt;attribute name="blah" value="259"/&gt;
