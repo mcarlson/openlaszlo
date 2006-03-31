@@ -1054,10 +1054,10 @@ class =
       lza:modifiers="final"]
      attribute extends {token}? &
      ## The comma-separated list of traits, applied in order
-     attribute trait {string}? &
+     attribute traits {string}? &
 # Any attribute can occur, depending on superclass.
 # We need to handle this in a preprocessing step.
-      attribute * - (name|extends) {string}*
+      attribute * - (name|extends|traits) {string}*
    & viewContentElements
   }
 
