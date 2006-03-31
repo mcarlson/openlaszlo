@@ -100,6 +100,13 @@ element canvas {
     [a:defaultValue="1.1"] attribute version {string}?
   & ## Specifies if this application is intended to be accessible
     [a:defaultValue="false"] attribute accessible {booleanLiteral}?
+  & trait*
+}
+
+trait =
+element trait {
+    method*
+  & attributeElement*
 }
 
 library =
@@ -1046,6 +1053,8 @@ class =
      [a:defaultValue="view"
       lza:modifiers="final"]
      attribute extends {token}? &
+     ## The comma-separated list of traits, applied in order
+     attribute trait {string}? &
 # Any attribute can occur, depending on superclass.
 # We need to handle this in a preprocessing step.
       attribute * - (name|extends) {string}*
