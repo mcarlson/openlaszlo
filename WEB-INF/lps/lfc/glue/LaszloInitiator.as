@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -118,6 +118,11 @@ function LzInstantiateView(e, tn)
 function LzFixTags ( e ){
     // If this code is changed, the code in ClassNode.java should be
     // changed too.
+    if ( e.name == "trait" ){
+        new LzTrait( e );
+        return;
+    }
+
     if ( _root.ConstructorMap[ e.name ] !=null ){
         e.name = _root.ConstructorMap[ e.name ];
     }

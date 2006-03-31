@@ -7,7 +7,7 @@
 
     <include href="../lps/components/lzunit"/>
 
-    <class name="testClass1" traits="ta">
+    <class name="testClass1" traits="'ta'">
         <attribute name="foo" value="1"/>
     </class>
 
