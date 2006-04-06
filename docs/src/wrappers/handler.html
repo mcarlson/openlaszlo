@@ -38,6 +38,15 @@ handler method must have  a <attribute>name</attribute> </p>
 then script code
 <code>obj.onmyevent.sendEvent(259)</code> will invoke this handler method.</p>
 
+<p>
+The argument passed to an event handler is whatever value was used in
+the call to sendEvent() which generated the event.  In the case where
+an attribute value is set using setAttribute, the new value is sent as
+the argument to sendEvent, and that will be the argument value
+received to any user-defined handler for that event.
+
+</p>
+
 
 </body>
 </html>
