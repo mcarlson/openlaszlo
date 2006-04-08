@@ -1,28 +1,34 @@
 <html xmlns="http://www.w3.org/1999/xhtml" id="methods-events-attributes">
 <head>
-    <title>Methods, Events, and Attributes</title>
+    <title>Methods, Events, Handlers and Attributes</title>
 </head>
 
 <body>
-<fixme>
-  We also have developers resorting to the idiom of declaring an event as an attribute (to avoid debug warnings when they send an event and there are no listeners).
-Currently, users can attach an anonymous method to an event and then are mystified how to override it. 
-</fixme>
-<h1>Methods, Events, and Attributes</h1>
+<h1>Methods, Events, Handlers, and Attributes</h1>
 
 <h2> Overview </h2>
 
+<p>
+In LZX, the concepts of methods, events, handlers and attributes are related to each other in a braid-like way. In this chapter we'll show you how they weave together.
+</p>
+<p>
+Attributes, events, and methods are all properties of classes that define how instances of the class behave.  Attributes are replicated in each instance and represent the state of the instance.  Events are also per-instance &#8212;from the user point of view they specify what events you can listen for on that instance.  Methods are the same for all instances&#8212;from the user point of view they specify the actions you can take on an instance.
+</p>
+<p>
+Handlers are a special kind of method, each specifically tied to an event. When an event occurs, any handler associated with that event gets called.  Events may have any number of handlers, and handlers can be used to glue events from one instance to methods in another.
+</p>
+<p>
+Because LZX allows you to add properties to instances, you can add attributes, events, methods and handlers to any instance.  (In the terms of other object oriented languages such as Java, effectively LZX allows you to define a class of which there is exactly one instance with the new properties.)
+</p>
 <p> 
-
-Event-driven programming is ideal for programs that respond directly to a user's interactions 
-with a user interface.  The event-driven programming model is used
+Event-driven programming is ideal for programs that respond directly to a user's interactions with a user interface.  The event-driven programming model is used
 extensively in LZX applications.  
 </p>
 <p>
-In LZX you use events, methods and attributes to describe how your application responds to user input or other changes.
-In general, and to a first approximation, when an<em>attribute</em> changes value, it generates an <em>event </em>. 
+In LZX you use  attributes, events, and handlers to describe how your application responds to user input or other changes.
+In general, and to a first approximation, when an<em>attribute</em> changes value, it generates an <em>event </em>. You can additionally declare events with an <tagname link="true">event</tagname>  tag.
 Your application's response to that event is determined by the associated<glossterm>event handler</glossterm>, which is
-usually defined in a <em>method.</em>
+ defined in a <tagname link="true">handler</tagname> tag.
 </p>
 <p>
 An event handler is simply javascript code that is executed whenever the associated event occurs.
@@ -31,18 +37,24 @@ An event handler is simply javascript code that is executed whenever the associa
 Methods, events and attributes are the only concepts you need for many kinds of applications.  Certain kinds of more
 subtle event-driven situations require a fourth concept, <em>delegates</em>, which are described in <xref linkend="delegates"/>.
 </p>
-<h2> Defining methods </h2>
-
 <p>
-Methods may be defined inside any Node or View.   When defining a method, you must specify
-a value for the <attribute>name</attribute> and/or <attribute>event</attribute> attributes. The value of the 
+In the discussion below we'll assume a commonsense understanding of the meaning of <tagname>attribute</tagname>. Attributes are examined more thoroughly at the end of this chapter.
+</p>
+<h2>Methods</h2>
+<p>
+A <tagname link="true">method</tagname> is an 'action' you can perform on an instance. You can call it from any script.
+</p>
+<p>
+Methods may be defined inside any <tagname>node</tagname> or <tagname>view</tagname>.   When defining a method, you must specify
+a value for the <attribute>name</attribute>attribute. The value of the 
 <attribute>name</attribute> attribute represents the name by which you will call this method in script.  In the
 following example, the <method link="false">doSomething</method> method is defined in the only node in the example.  To
 invoke this method from a script, you would write <code>myNode.doSomething();</code>
 </p>
 
-<example executable="false" title="Defining a method">
-&lt;canvas&gt; 
+<example title="Defining a method">
+&lt;canvas debug="true"&gt;
+  &lt;debug /&gt; 
   &lt;node id="myNode"&gt; 
     &lt;method name="doSomething"&gt;
       Debug.write('doSomething called');          
@@ -60,11 +72,9 @@ your new class inherits the methods of the class from which it was extended. If 
  already existing
 method, the original method will be overridden. To avoid such "naming collisions" you should consult the 
 LZX Reference, which 
-lists all methods for all OpenLaszlo Runtime Library classes.
+lists all methods for all Laszlo Foundation Classes (LFC).
 </p>
-<p>
-It is possible to have methods that do not have names. However, a method must have a name in order to be overwritten, as explained in <xref linkend="class-inheritance"/>.
-</p>
+
 <h4>Overriding Methods</h4>
 <p>
 When you create a class by extending another one, the new class inherits all the methods of the original.  You can then give a new definition to any of the inherited methods; this is called overriding.  See <xref linkend="class-inheritance"/> for a complete discussion.
@@ -117,10 +127,11 @@ and the <code>add</code> method returns the result using the 'return' keyword.
 &lt;/canvas&gt; 
 </example>
 
-
-<h3>Implicit and built-in events</h3>
-
-
+<h3>Referencing Methods</h3>
+<todo>
+Explain events by reference.
+</todo>
+<h2>Events</h2>
 <p>
 Any defined attribute has an associated event called
  "on" plus the name of the attribute. Whenever the value of any
@@ -135,18 +146,39 @@ For instance, when a view changes its x position, it sends the event <event>onx<
  value for its x property. 
 </p>
 <p>
-In addition to the implicit event associated with each named attribute, OpenLaszlo Runtime Library classes have a variety of 
+In addition to the implicit event associated with each named attribute, LFC classes have a variety of 
 additional
 events associated with them.  For example, the <tagname>view</tagname> tag has an <attribute>onclick</attribute> event
 that is generated whenever the user clicks the mouse while the cursor is positioned over the view.  See the <a href="${reference}">LZX Reference Manual</a> for a complete
-list of events associated with ORL classes.
+list of events associated with LFC classes.
 </p>
 <p>
 The following sections show how to use these events in the context of an application.
 </p>
 
 
-<h2>Event handler syntaxes</h2>
+<h3>Event Handler Syntaxes</h3>
+<p>The <tagname link="true">handler</tagname> tag defines how an instance responds to an event.</p>
+<p>
+A handler can either specify the code to handle an event or it can specify a method that should be invoked to handle the event.  The reason for these two ways is that a handler is not overridable in a subclass, so you can add as many handlers as you like to an event and they will all fire. 
+</p>
+<p>
+If you want a subclass to be able to override the handling of an event in a superclass, the superclass would associate a method with the event by:
+</p>
+<pre>
+&lt;handler name="eventName" method="methodName" /&gt;
+</pre>
+<p>
+And the subclass would overrride <code>methodName</code>.
+</p>
+<p>
+Recall that a method is an 'action' you can perform on an instance, and that you  can call it from any script.  You could call it from a handler.  For example, the usage above can be written longhand as:
+</p>
+<pre>
+&lt;handler name="eventName"&gt;
+  this.methodName();
+&lt;/handler&gt;
+</pre>
 <p>
 There are two syntaxes that you can use to define handlers:</p>
 <ul>
@@ -154,7 +186,7 @@ There are two syntaxes that you can use to define handlers:</p>
 <li>using the <tagname>method</tagname></li>
 </ul>
 <p>
-For convenience, you can use the onevent syntax for short handlers. For readability, however, the <tagname link="false">
+For convenience, you can use the onevent syntax for short handlers for some kinds of events, such as onclick, as explained below. For readability, however, the <tagname link="false">
 method</tagname> syntax is often better.
 </p>
 <h3>"Onevent" syntax"</h3>
@@ -162,24 +194,24 @@ method</tagname> syntax is often better.
 The "onevent" syntax is available for attributes that correspond to the CSS event model&#8212;onclick, onmouseover, and so
 forth. For such events, the simplest way to declare an event handler is simply to include it in the definition tag of the node that contains the
 attribute.  This syntax does not work for other events generated by class attributes; for those you must use the <tagname>
-method</tagname> syntax.
+handler</tagname> syntax.
 </p>
 <p> 
  In the example below, the event handler for the event generated by the user mouse click changes
 the views's color from red to blue.
 </p>
-<example title="Simple event handler">
+<example title="Event handler defined in opening tag">
 &lt;canvas height="50"&gt;
    &lt;view height="30" width="30" bgcolor="red" onclick="setAttribute('bgcolor', blue)"/&gt;
 &lt;/canvas&gt;
 </example>
-<h3>&lt;method&gt; syntax </h3>
+<h3>Handler syntax </h3>
 <p>
-The <tagname>method</tagname> tag can also be used to define code that is executed when an event is fired. 
-Event handlers defined in this way can be either by name, or by use of the <attribute>event</attribute> attribute.
+The <tagname>handler</tagname> tag defines code that is executed when an event that has the name of the handler is fired. 
+Event handlers defined in this way are executed whenever their associated <attribute>event</attribute> occurs.
 </p>
 
-<h3>&lt;method name="doSomething" event="oninit"&gt;</h3> 
+<h3>&lt;handler name="doSomething" event="oninit"&gt;</h3> 
 
 <p>
 
@@ -195,17 +227,72 @@ Event handlers defined in this way can be either by name, or by use of the <attr
   &lt;/button&gt;
 &lt;/canvas&gt; 
 </example> 
+<example name="Two syntaxes for sending events">
+&lt;canvas debug="true"&gt;
+     &lt;debug /&gt;
+
+    &lt;class name="myclass_with_handler"&gt;
+        &lt;event name="myevent"/&gt;
+        &lt;handler name="myevent" args="myargs"&gt;
+            Debug.write(this, 'handling myevent, myargs=', myargs);
+        &lt;/handler&gt;
+
+        &lt;attribute name="season" type="string" value="spring" /&gt;
+        &lt;event name="onseason" /&gt;
+        &lt;handler name="onseason" args="s"&gt;
+            Debug.write("got season of ", s, ", season is ", season);
+        &lt;/handler&gt;
+    &lt;/class&gt;
+
+  &lt;myclass_with_handler id="foo" /&gt;
 
 
+  &lt;button onclick="foo.myevent.sendEvent(12)" text="send the event" /&gt;
+  &lt;button onclick="foo.setAttribute('season', 'fall')" text="autumn" /&gt;
 
-<h2>An introduction to Attributes</h2>
+  &lt;!-- Don't do this! Setting an attribute directly with '=' shortcuts around
+       the event system. This is not right; use setAttribute instead --&gt;
+  &lt;button onclick="foo.season='winter'" text="evil" /&gt;
+
+  &lt;simplelayout axis="x" spacing="5" /&gt;
+
+&lt;/canvas&gt;
+</example>
+
+
+<h2>Attributes</h2>
+<p>
+Attributes define properties of instances of classes.  For example, consider the <tagname link="true">view</tagname> element.  It has more than forty defined attributes, such as <attribute link="true">x</attribute>, <attribute link="true">y</attribute>,<attribute link="true">bgcolor</attribute>. Some of these attributes are defined on <tagname>view</tagname>, and others are inherited from <tagname link="true">node</tagname> from which it derives. These attributes are specified in the schema that defines the LZX tags. Each attribute has a type, for example: <code>number, boolean,</code> and <code>string</code>.
+</p>
+<p>
+Once an attribute has been defined, you can use it in the open tag for that class.  For example, <attribute>name</attribute> is a defined attribute of view, so you can write </p>
+<pre>
+&lt;view name="charlie"/&gt;
+</pre>
+<p>
+But, for example, <code>framitz</code> is not a defined attribute of<tagname>view</tagname>, so this would generate an error:
+</p>
+<pre>
+<!-- error.  attribute 'framitz' has not been defined-->
+&lt;view framitz="whatnot"/&gt;.
+</pre>
+<p>
+You can define new attributes using the <tagname>attribute</tagname> tag, for example:
+</p>
+<pre>
+&lt;view name="bob"&gt;
+   &lt;attribute name="framitz"/&gt;
+&lt;/view&gt;
+</pre>
 
 <p>Attributes can be an element of a tag or a property of a JavaSctipt
-  class.  Attributes are declared and set in tags, but they can also
+  class. Attributes that are properties of t
+
+Attributes are usually declared and set in tags, but they can also
   be set and read in script.  However, not <em>all</em> attributes can be set in script,
   similarly not all attributes can be in tags. Attributes are
-  characterized based on this behavior into five categories. See below for more information on the various
-  categories.</p>
+  characterized based on this behavior into five categories, as explained below.</p>
+
 
 <p>An attribute can be declared in a tag header as follows:</p>
 
@@ -849,28 +936,10 @@ inconsistent, and may cause confusion or errors when new developers unfamiliar w
 brought on to a project.  Consider these choices carefully when
 setting coding standards for your LZX project.
 </p> 
-<?ignore
-<h2>Delegates</h2>
- 
 
-
-
-<h2>Tables: list of events for LzNode and LzView</h2>
-
-<fixme>
-Here is an example of a custom event from the email app and illustrates the style we use here to avoid debugger warnings.
-
-        &lt;attribute name="loginstate" setter="setLoginstate(loginstate)"/&gt;
-        &lt;attribute name="onloginstate" value="null"/&gt;
-        &lt;method name="setLoginstate" args="newstate"&gt;
-            ...
-            if (this.onloginstate) this.onloginstate.sendEvent(loginstate);
-        &lt;/method&gt;
-</fixme>
-?>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
