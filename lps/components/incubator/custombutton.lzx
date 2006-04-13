@@ -28,12 +28,6 @@
         <frame src="resources/button/small/sm_btn_dsbl_mid.swf" />
     </resource>
     
-    <!-- close box resource -->
-    <resource name="closebox_rsc" >
-        <frame src="resources/button/closebox/close_btn_up.gif" />
-        <frame src="resources/button/closebox/close_btn_mo.gif" />
-        <frame src="resources/button/closebox/close_btn_dn.gif" />
-    </resource>
    
     <include href="base/basebutton.lzx" />
     
