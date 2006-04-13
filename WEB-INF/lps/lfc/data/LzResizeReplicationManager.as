@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -172,8 +172,6 @@ LzResizeReplicationManager.prototype.__LZadjustVisibleClones = function(ln,nn){
     if ( notfirst ) clpos += this.spacing;
     for( var i = 0; i < this.clones.length; i++ ){
         var cnode = this.nodes[ i + newoffset ];
-        var ds = cnode[ this.datasizevar ];
-        var csiz = ( ds == null ) ? this.viewsize : ds;
 
         var cl = this.clones[ i ];
         if ( !cl ){
@@ -187,6 +185,8 @@ LzResizeReplicationManager.prototype.__LZadjustVisibleClones = function(ln,nn){
 
         this.clones[ i ] = cl;
         cl.setAttribute( this.axis , clpos );
+        var ds = cnode[ this.datasizevar ];
+        var csiz = ( ds == null ) ? this.viewsize : ds;
         if ( cl[ this.sizeAxis ] != csiz ){
             cl.setAttribute( this.sizeAxis, csiz, true );
         }
