@@ -99,14 +99,7 @@ element canvas {
   & ## The lpsversion of this lzx application.
     [a:defaultValue="1.1"] attribute version {string}?
   & ## Specifies if this application is intended to be accessible
-    [a:defaultValue="false"] attribute accessible {booleanLiteral}?
-  & trait*
-}
-
-trait =
-element trait {
-    method*
-  & attributeElement*
+    [a:defaultValue="false"] attribute accessible {booleanLiteral}
 }
 
 library =
@@ -129,6 +122,7 @@ toplevelElements = (
   & command*
   & objectElements
   & class*
+  & trait*
   & includeElement*
   & importElement*
   & library*
@@ -1055,9 +1049,20 @@ class =
      attribute extends {token}? &
      ## The comma-separated list of traits, applied in order
      attribute traits {string}? &
-# Any attribute can occur, depending on superclass.
-# We need to handle this in a preprocessing step.
-      attribute * - (name|extends|traits) {string}*
+     ## Any attribute can occur, depending on superclass.
+     ## We need to handle this in a preprocessing step.
+     attribute * - (name|extends|traits) {string}*
+   & viewContentElements
+  }
+
+trait =
+  element trait {
+     ## The name of a new tag that this element defines.
+     [lza:modifiers="final"]
+     attribute name {token} &
+     ## Any attribute can occur
+     ## We need to handle this in a preprocessing step.
+     attribute * - (name|extends|traits) {string}*
    & viewContentElements
   }
 

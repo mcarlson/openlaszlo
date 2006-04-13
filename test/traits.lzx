@@ -7,24 +7,119 @@
 
     <include href="../lps/components/lzunit"/>
 
-    <class name="testClass1" traits="ta">
+    <class name="tc0">
         <attribute name="foo" value="1"/>
+        <attribute name="bar" value="2"/>
+        <attribute name="baz" value="3"/>
     </class>
-
-    <trait bar="7">
-        <attribute name="name" value="9"/>
+    
+    <trait name="ta1">
         <attribute name="foo" value="2"/>
+        <attribute name="bar" value="3"/>
 
         <method name="grag">
             this.plop = 99;
         </method>
+        
+        <node name="A"/>
     </trait>
+
+    <trait name="ta2">
+        <attribute name="foo" value="3"/>
+        <attribute name="baz" value="4"/>
+
+        <method name="grag">
+            this.plop = 45;
+        </method>
+        
+        <node name="B"/>
+    </trait>
+
+    <class name="tc1" extends="tc0" traits="ta1">
+    </class>
+
+    <class name="tc2" extends="tc0" traits="ta2">
+    </class>
+
+    <class name="tc3" extends="tc0" traits="ta1,ta2">
+    </class>
+
+    <class name="tc4" extends="tc0" traits="ta2,ta1">
+    </class>
 
     <TestSuite>
         <TestCase>
-            <method name="test1">
-                var itC1 = new testClass1();
-                assertEquals( itC1.foo , 2 );
+            <method name="test0">
+                var itC0 = new tc0();
+                assertEquals( 1, itC0.foo );
+                assertEquals( 2, itC0.bar );
+                assertEquals( 3, itC0.baz );
+             </method>
+               
+             <method name="test1">
+                assertEquals( 1, tc1.traits.length );
+                assertEquals( ta1, tc1.traits[0] );
+                var itC1 = new tc1();
+                assertEquals( 1, itC1.traits.length );
+                assertEquals( ta1, itC1.traits[0] );
+                assertEquals( 2, itC1.foo );
+                assertEquals( 3, itC1.bar );
+                assertEquals( 3, itC1.baz );
+                itC1.grag();
+                assertEquals( 99, itC1.plop );
+                assertEquals( 1, itC1.subnodes.length);
+                assertEquals( "A", itC1.subnodes[0].name);
+             </method>
+               
+             <method name="test2">
+                assertEquals( 1, tc2.traits.length );
+                assertEquals( ta2, tc2.traits[0] );
+                var itC2 = new tc2();
+                assertEquals( 1, itC2.traits.length );
+                assertEquals( ta2, itC2.traits[0] );
+                assertEquals( 3, itC2.foo );
+                assertEquals( 2, itC2.bar );
+                assertEquals( 4, itC2.baz );
+                itC2.grag();
+                assertEquals( 45, itC2.plop );
+                assertEquals( 1, itC2.subnodes.length);
+                assertEquals( "B", itC2.subnodes[0].name);
+             </method>
+               
+             <method name="test3">
+                assertEquals( 2, tc3.traits.length );
+                assertEquals( ta1, tc3.traits[0] );
+                assertEquals( ta2, tc3.traits[1] );
+                var itC3 = new tc3();
+                assertEquals( 2, itC3.traits.length );
+                assertEquals( ta1, itC3.traits[0] );
+                assertEquals( ta2, itC3.traits[1] );
+                assertEquals( 3, itC3.foo );
+                assertEquals( 3, itC3.bar );
+                assertEquals( 4, itC3.baz );
+                itC3.grag();
+                assertEquals( 45, itC3.plop );
+                assertEquals( 2, itC3.subnodes.length);
+                assertEquals( "A", itC3.subnodes[0].name);
+                assertEquals( "B", itC3.subnodes[1].name);
+             </method>
+               
+             <method name="test4">
+                assertEquals( 2, tc4.traits.length );
+                assertEquals( ta2, tc4.traits[0] );
+                assertEquals( ta1, tc4.traits[1] );
+                var itC4 = new tc4();
+                assertEquals( 2, itC4.traits.length );
+                assertEquals( ta2, itC4.traits[0] );
+                assertEquals( ta1, itC4.traits[1] );
+                assertEquals( 2, itC4.foo );
+                assertEquals( 3, itC4.bar );
+                assertEquals( 4, itC4.baz );
+                itC4.grag();
+                assertEquals( 99, itC4.plop );
+                assertEquals( 2, itC4.subnodes.length);
+                assertEquals( "B", itC4.subnodes[0].name);
+                assertEquals( "A", itC4.subnodes[1].name);
             </method>
         </TestCase>
     </TestSuite>

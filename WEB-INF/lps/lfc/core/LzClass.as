@@ -3,7 +3,7 @@
  *****************************************************************************/
  
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -29,8 +29,9 @@ $class.classnum = 0;
 // @param string classname: the name of the class being defined
 // @param string superclass: the class it inherits from
 // @param function constructorF: the constructor function
+// @param array traitList: array of traits to apply, or null if none
 //=============================================================================
-Class = function ( classname , superclass , constructorF ){
+Class = function ( classname , superclass , constructorF, traitList ){
     if ( typeof( constructorF ) != "function" ){
         var constructorF = superclass.makeDefaultConstructor();
     }
@@ -58,6 +59,15 @@ Class = function ( classname , superclass , constructorF ){
     constructorF.prototype.classname = classname;
 
     if ( superclass ){
+        
+        if (traitList) {
+            constructorF.traits = traitList;
+            constructorF.prototype.traits = traitList;
+            for (var i = 0; i < traitList.length; i++) {
+                superclass = LzTrait.makeInterstitial(traitList[i], superclass);
+            }
+        }
+        
         Class.extends (  superclass , constructorF );
     }
 

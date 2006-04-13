@@ -106,6 +106,13 @@ function LzInstantiateView(e, tn)
 {
     //LzInstantiateSubviews(canvas, e);
 
+    // For now, intercept traits and directly construct an LzTrait object with
+    // the given attributes
+    if ( e.name == "trait" ){
+        new LzTrait( e );
+        return;
+    }
+
     //fix tags
     LzFixTags( e );
 
@@ -118,11 +125,6 @@ function LzInstantiateView(e, tn)
 function LzFixTags ( e ){
     // If this code is changed, the code in ClassNode.java should be
     // changed too.
-    if ( e.name == "trait" ){
-        new LzTrait( e );
-        return;
-    }
-
     if ( _root.ConstructorMap[ e.name ] !=null ){
         e.name = _root.ConstructorMap[ e.name ];
     }
