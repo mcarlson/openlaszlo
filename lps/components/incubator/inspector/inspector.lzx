@@ -1,3 +1,7 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
 <library>
     <include href="colormenu.lzx"/>
     <colormenu id="inspectorcolormenu">
@@ -93,7 +97,7 @@
         <attribute name="showcomponenthelpers" value="false"/>
         <simplelayout/>
         <view layout="axis:x; spacing:4">
-            <text text="..." onclick="debug.write(classroot.reference)"/>
+            <text text="..." onclick="Debug.write(classroot.reference)"/>
             <text text="${classroot.reference.visible ? 'o ' : 'x '}" resize="true"
                 onclick="classroot.reference.setVisible(!classroot.reference.visible)"/>
             <text text="${classroot.reference.name == null ?
