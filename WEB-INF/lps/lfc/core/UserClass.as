@@ -22,31 +22,11 @@ LzMakeClass = function ( classobj , extend ){
         var sup = _root[ mname == null ? extend : mname ];
     }
 
-    var traitsString = classobj.attrs.traits;
-    if ( typeof traitsString == 'string'){
-        var traitNames = traitsString.split(',');
-        var traitList = new Array;
-        for (var i = 0, j = 0; i < traitNames.length; i++) {
-            var traitName = traitNames[i];
-            
-            // strip leading whitespace
-            while (traitName.charAt(0) == ' ') traitName = traitName.slice(1);
-            while (traitName.charAt(traitName.length - 1) == ' ') traitName = traitName.slice(0, traitName.length-1);
-            
-            var t = _root.LzTrait.traits[traitName];
-
-            if (typeof(t) == "undefined") {
-                _root.Debug.warn("Unknown trait '%s'. Ignored.", traitName);
-            } else if (! (t instanceof LzTrait)) {
-                _root.Debug.warn("Trait name does not denote trait instance. Ignored", traitName);
-            } else {
-                traitList[j++] = t;
-            }
-        }
+    var traitList = LzTrait.processTraitList(classobj.attrs.traits);
+    if (traitList != null)
         classobj.attrs.traits = traitList;
-    }
 
-    var newclass = _root.Class( classobj.name , sup, null, classobj.attrs.traits ); 
+    var newclass = _root.Class( classobj.name , sup, null, traitList ); 
     
     delete classobj.attrs.name;
 
