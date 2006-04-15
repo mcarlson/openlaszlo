@@ -107,9 +107,9 @@
 				<method name="getWidth" >
 					return this.getTextWidth();
 				</method>
-				<method event="ontext" >
+				<handler name="ontext" >
 					this.parent.layouts[0].update()
-				</method>
+				</handler>
 			</text>
 			<simplelayout axis="x" spacing="0" />
 			<method name="getWidth" >
@@ -119,21 +119,21 @@
 				if ( this.iconview.width > 0 ) w =  w + this.iconview.width + sp;
 				return w;
 			</method>
-			<method event="oninit" >
+			<handler name="oninit" >
 				if ( this.iconview.width > 0 ) this.layouts[0].spacing = 3;
 				if ( this.parent.alignicon != 'left' ) {
 					this.layouts[0].swapsubvieworder(this.iconview,this.title);
 				}
-			</method>
+			</handler>
 		</view>
 		
 		
 	    <!-- CLASS METHODS -->
-		<method event="oninit" >
+		<handler name="oninit" >
 			this.content.title.setText(this.label);
 			if ( this.rightstyle == "sheer" ) this.padding = 3;
 			this.setWidth(Math.floor(this.content.getWidth() + this.leftinset + this.rightinset + this.padding)); // to allow for shadow
-		</method>
+		</handler>
 		
 		<method name="setStyles" args="cap" >
 			this.leftstyle = this.style;
@@ -189,6 +189,6 @@ this.content.setY(1);
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
