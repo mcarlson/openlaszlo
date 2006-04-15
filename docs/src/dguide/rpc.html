@@ -245,32 +245,32 @@ be used for demonstration.</p>
 <example extract="false">
 &lt;!-- SOAP --&gt;
 &lt;soap name="mySOAP" wsdl="..."&gt;
-    &lt;method event="onload"&gt;
+    &lt;handler name="onload"&gt;
         Debug.write('soap proxy loaded:', this.proxy);
-    &lt;/method&gt;
-    &lt;method event="onunload"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
         Debug.write('soap proxy unloaded:', this.proxy);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 &lt;/soap&gt;
 
 &lt;!-- JavaRPC --&gt;
 &lt;javarpc name="myJavaRPC" classname="..." scope="..."&gt;
-    &lt;method event="onload"&gt;
+    &lt;handler name="onload"&gt;
         Debug.write('javarpc proxy loaded:', this.proxy);
-    &lt;/method&gt;
-    &lt;method event="onunload"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
         Debug.write('javarpc proxy unloaded:', this.proxy);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 &lt;/javarpc&gt;
 
 &lt;!-- XML-RPC --&gt;
 &lt;xmlrpc name="myXMLRPC" service="..."&gt;
-    &lt;method event="onload"&gt;
+    &lt;handler name="onload"&gt;
         Debug.write('xmlrpc proxy loaded:', this.proxy);
-    &lt;/method&gt;
-    &lt;method event="onunload"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
         Debug.write('xmlrpc proxy unloaded:', this.proxy);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 &lt;/xmlrpc&gt;
 </example>
 
@@ -291,22 +291,22 @@ function call will return from the backend. When the response is received, the d
 <example extract="false">
 &lt;!-- Assume mySOAP.proxy contains a function stub called someFunction() --&gt;
 &lt;soap name="mySOAP" wsdl="..."&gt;
-    &lt;method event="onload"&gt;
+    &lt;handler name="onload"&gt;
         Debug.write('soap proxy loaded:');
         Debug.inspect(this.proxy);
-    &lt;/method&gt;
-    &lt;method event="onunload"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onunload"&gt;
         Debug.write('soap proxy unloaded:', this.proxy);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 &lt;/soap&gt;
 
 &lt;button text="clickme"&gt;
     &lt;attribute name="mydel" type="expression"
                value="$once{new LzDelegate(this, 'handler')}"
 
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         mySOAP.proxy.someFunction([p1, p2, ..., pN], this.myDel);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
     &lt;method name="handler" args="retObj"&gt;
         Debug.write('RPC call returned', retObj);
@@ -403,10 +403,10 @@ seconds and can't be changed.</p>
             super.init();
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('temperature service loaded!');
             Debug.inspect(this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;method name="myhandler" args="returnObject"&gt;
             Debug.write('got returned object:');
@@ -417,16 +417,16 @@ seconds and can't be changed.</p>
 
     &lt;view layout="spacing: 5" x="20" y="20"&gt;
         &lt;button text="ok conversion"&gt;
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 Debug.write('requesting good conversion...');
                 temperature.proxy.FtoC([ 100 ], temperature.myDel);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/button&gt;
         &lt;button text="bad conversion"&gt;
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 Debug.write('requesting bad conversion...');
                 temperature.proxy.FtoC([ 'string' ], temperature.myDel);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/button&gt;
     &lt;/view&gt;
 
@@ -456,45 +456,45 @@ method.</p>
     &lt;/method&gt;
 
     &lt;button text="number"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var num = 5;
             canvas.v2e(num);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button text="string"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var str = "a string";
             canvas.v2e(str);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button text="array"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var arr = [1, 2, 3];
             canvas.v2e(arr);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button text="object"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var obj = { p1: "a string", p2: 5 }
             canvas.v2e(obj);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button text="complex array"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var arr = [ 1, { p1: "a string", p2: 5 }, [ 1, 2, 3] ];
             canvas.v2e(arr);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button text="complex object"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var obj = { p1: [1, 2, 3], p2: 5 };
             canvas.v2e(obj);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
 &lt;/canvas&gt;
@@ -612,10 +612,10 @@ array items.</p>
             Debug.write(el.serialize());
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('geography soap service stub loaded');
             this.proxy.getTypes([], this.myDel);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -643,10 +643,10 @@ databinding purposes.</p>
 
     &lt;view datapath="myDataset:/" x="10" layout="inset: 10; spacing: 2"&gt;
         &lt;button text="array"&gt;
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 var arr = [1, 2, 3];
                 canvas.v2e(arr);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/button&gt;
 
         &lt;text datapath="item/text()" /&gt;
@@ -662,7 +662,7 @@ databinding purposes.</p>
 <h3>Using dataobject to map return values</h3>
 
 <p>There is more convenient way to generate data mapped return values. Instead
-of calling LzDataElement.valueToElement() after each call, a <code>dataobject</code> property
+of calling <method>LzDataElement.valueToElement()</method> after each call, a <code>dataobject</code> property
 can be set in the delegate. <dfn>Dataobject</dfn> must be a dataset or an
 LzDataElement and tells the RPC function to create a data mapped return value
 and set it on the dataobject. If the dataobject is a dataset, the child nodes of
@@ -689,14 +689,14 @@ appended as a child of the LzDataElement dataobject.</p>
             }
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('geography soap service stub loaded');
 
             // Here we set data
             this.myDel.dataobject = myDataset;
 
             this.proxy.getTypes([], this.myDel);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -737,11 +737,11 @@ dataset. Here's another example using an LzDataElement.</p>
             }
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('placefinder soap service stub loaded');
             myView.setAttribute('visible', true);
             this.proxy.getTypes([], this.myDel);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -759,7 +759,7 @@ dataset. Here's another example using an LzDataElement.</p>
                 this.t.setText(this.text);
             &lt;/method&gt;
 
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 if (text == "Region-A") {
                     this.regions.setDatapath("element/i[1-6]");
                 } else if (text == "Region-B") {
@@ -770,7 +770,7 @@ dataset. Here's another example using an LzDataElement.</p>
                 var myDel = new LzDelegate(this, "gotData");
                 myDel.dataobject = this.datapath.p;
                 placefinder.proxy.getTypes([], myDel);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
             &lt;view name="regions" x="10"&gt;
                 &lt;text datapath="key/text()" resize="true"/&gt;
@@ -878,13 +878,13 @@ more than once, remotecalls must explicitly define their name attributes.</p>
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service stub loaded');
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall name="search" funcname="doGoogleSearch"&gt;
 
@@ -899,10 +899,10 @@ more than once, remotecalls must explicitly define their name attributes.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('result is:')
                 Debug.inspect(value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         &lt;/remotecall&gt;
 
@@ -933,10 +933,10 @@ more than once, remotecalls must explicitly define their name attributes.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('result is:')
                 Debug.inspect(value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         &lt;/remotecall&gt;
     &lt;/soap&gt;
@@ -944,17 +944,17 @@ more than once, remotecalls must explicitly define their name attributes.</p>
     &lt;simplelayout spacing="10" /&gt;
 
     &lt;button x="10" y="10" text="search"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             Debug.write('invoking search...');
             canvas.google.search.invoke();
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button x="10" y="10" text="toggle search"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             Debug.write('invoking togglesearch...');
             canvas.google.togglesearch.invoke();
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
 &lt;/canvas&gt;
@@ -976,13 +976,13 @@ setting the dataobject attribute.</p>
     &lt;dataset name="googleDset" /&gt;
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service stub loaded');
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall name="search" funcname="doGoogleSearch" 
                     dataobject="googleDset"&gt;
@@ -998,10 +998,10 @@ setting the dataobject attribute.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('got result');
                 Debug.inspect(value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         &lt;/remotecall&gt;
     &lt;/soap&gt;
@@ -1036,9 +1036,9 @@ attribute must be set when declaring a remotecall outside of an RPC object.</p>
     &lt;debug x="100" width="450" height="280" /&gt;
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service stub loaded');
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/soap&gt;
 
     &lt;button text="search" onclick="this.doGoogleSearch.invoke()"&gt;
@@ -1059,13 +1059,13 @@ attribute must be set when declaring a remotecall outside of an RPC object.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('got result');
                 Debug.inspect(value);
-            &lt;/method&gt;
-            &lt;method event="onerror" args="error"&gt;
+            &lt;/handler&gt;
+            &lt;handler name="onerror" args="error"&gt;
                 Debug.write('error:', error);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/remotecall&gt;
     &lt;/button&gt;
 &lt;/canvas&gt;
@@ -1074,6 +1074,6 @@ attribute must be set when declaring a remotecall outside of an RPC object.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

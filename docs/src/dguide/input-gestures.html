@@ -59,18 +59,18 @@ as well as more advanced topics such as tracking the mouse across multiple views
   &lt;view bgcolor="red" clickable="true"
          x="10" y="10"
          width="20" height="20"&gt;
-    &lt;method event="onmousedown"&gt;
+    &lt;handler name="onmousedown"&gt;
       this.setWidth(30);
       this.setheight(30);
       this.setX(5);
       this.setY(5);
-    &lt;/method&gt;
-    &lt;method event="onmouseup"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmouseup"&gt;
       this.setWidth(20);
       this.setheight(20);
       this.setX(10);
       this.setY(10);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;
 </example>
@@ -103,22 +103,22 @@ through windows, without the hand cursor appearing.</p>
 <example title="enabling and disabling the hand cursor">
 &lt;canvas&gt;
     &lt;view width="100" height="100" bgcolor="green"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             LzCursor.showHandCursor(true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/view&gt;
     &lt;view x="110" width="100" height="100" bgcolor="yellow"&gt;
-        &lt;method event="onmouseover"&gt;
+        &lt;handler name="onmouseover"&gt;
             LzCursor.showHandCursor(true);
-        &lt;/method&gt;
-        &lt;method event="onmouseout"&gt;
+        &lt;/handler&gt;
+        &lt;handler name="onmouseout"&gt;
             LzCursor.showHandCursor(false);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/view&gt;
     &lt;view x="220" width="100" height="100" bgcolor="red"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             LzCursor.showHandCursor(false);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/view&gt;
 &lt;/canvas&gt;
 </example>
@@ -196,13 +196,13 @@ This simple program shows how to do basic mouse tracking in a view:
    &lt;debug y="300"/&gt;
    &lt;view width="300" height="300" bgcolor="red" clickable="true" &gt;
        &lt;attribute name="moustracker_del" value="$once{ new LzDelegate( this, 'trackmouse' )}" /&gt;
-         &lt;method event="onmousedown" &gt;
+         &lt;handler name="onmousedown" &gt;
            moustracker_del.register(LzIdle,'onidle');
-       &lt;/method&gt;
+       &lt;/handler&gt;
 
-       &lt;method event="onmouseup" &gt;
+       &lt;handler name="onmouseup" &gt;
            moustracker_del.unregisterAll();
-       &lt;/method&gt;
+       &lt;/handler&gt;
 
        &lt;method name="trackmouse" &gt;
            Debug.write("mousex,mousey =", this.getMouse('x'),this.getMouse('y'));
@@ -238,17 +238,17 @@ This generates a lot of points, but you can decide how much data to filter or no
          width="60" height="30"&gt;
 
     &lt;!-- Use methods for mouse-tracking events --&gt;
-    &lt;method event="onmousetrackover"&gt;
+    &lt;handler name="onmousetrackover"&gt;
       setAttribute('bgcolor', 0x0000FF); //blue
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
-    &lt;method event="onmousetrackout"&gt;
+    &lt;handler name="onmousetrackout"&gt;
       setAttribute('bgcolor', 0xFF0000); //red
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
-    &lt;method event="onmousetrackup"&gt;
+    &lt;handler name="onmousetrackup"&gt;
       setAttribute('bgcolor', 0xFF0000); //red
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
 
   &lt;text&gt;Click on any red view and drag the mouse. &lt;/text&gt;
@@ -372,16 +372,16 @@ The example below illustrates use of <tagname>LzFocus</tagname> to make a view a
           focusable="true"
           oninit="LzFocus.setFocus(this)"&gt;
 
-        &lt;method event="oninit"&gt;
+        &lt;handler name="oninit"&gt;
             this.keyCodes = new Array()
             this.keyCodes[65] = "A for Apple";
             this.keyCodes[76] = "L for Laszlo";
             this.keyCodes[79] = "O for Optometrist";
             this.keyCodes[83] = "S for Sammy";
             this.keyCodes[90] = "Z for Zebra";
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onkeydown" args="akeycode"&gt;
+        &lt;handler name="onkeydown" args="akeycode"&gt;
             // respond here    
             Debug.write( "Key pressed: " + akeycode );
             if ( this.keyCodes[akeycode] != undefined ) {
@@ -389,7 +389,7 @@ The example below illustrates use of <tagname>LzFocus</tagname> to make a view a
             } else {
                 Debug.write( "you pressed: " + String.fromCharCode(akeycode) );
             }
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/view&gt;
 &lt;/canvas&gt;
 </example>

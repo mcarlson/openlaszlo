@@ -53,9 +53,9 @@ Here's an example that shows how to use layouts to resize views in response to u
   &lt;/view&gt;
   
   &lt;button x="10" y="110"&gt;Create A New View
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       var newView = new coloredRect(container, { bgcolor : 0x000000 });
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -90,27 +90,27 @@ In addition to layouts, LZX includes the <tagname link="true">hbox</tagname> and
 &lt;canvas height="50"&gt;
     &lt;hbox spacing="10"&gt;
     &lt;vbox spacing="10" name="column1" bgcolor="red"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
-        &lt;/method&gt;
+        &lt;/handler&gt;
         &lt;text&gt;click&lt;/text&gt;
         &lt;text&gt;to&lt;/text&gt;
         &lt;text&gt;animate&lt;/text&gt;
         &lt;text&gt;spacing&lt;/text&gt;
     &lt;/vbox&gt;
     &lt;vbox spacing="10" name="column2" bgcolor="blue"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
-        &lt;/method&gt;
+        &lt;/handler&gt;
         &lt;text&gt;click&lt;/text&gt;
         &lt;text&gt;to&lt;/text&gt;
         &lt;text&gt;animate&lt;/text&gt;
         &lt;text&gt;spacing&lt;/text&gt;
     &lt;/vbox&gt;
     &lt;vbox spacing="10" name="column3" bgcolor="yellow"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             this.animate('spacing', this.spacing == 10 ? 0 : 10, 1000);
-        &lt;/method&gt;
+        &lt;/handler&gt;
         &lt;text&gt;click&lt;/text&gt;
         &lt;text&gt;to&lt;/text&gt;
         &lt;text&gt;animate&lt;/text&gt;
@@ -144,15 +144,15 @@ A frequent layout problem when designing GUIs is to have an element stretch whil
   &lt;/view&gt;
   
   &lt;button x="205" y="110"&gt;Increase width of container
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       container.setWidth(container.width + 10);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   
   &lt;button x="10" y="110"&gt;Decrease width of container
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       container.setWidth(container.width - 10);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -353,7 +353,7 @@ To position the floating view over the clicked view, you can use the <method>get
   &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
     &lt;attribute name="text" type="text"/&gt;
     &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
-    &lt;method event="onmousedown"&gt;
+    &lt;handler name="onmousedown"&gt;
       this.f = new LzView(canvas, {width: this.width,
                                    height: this.height,
                                    bgcolor: this.bgcolor,
@@ -365,7 +365,7 @@ To position the floating view over the clicked view, you can use the <method>get
       this.x_offset = this.getMouse("x");
       this.y_offset = this.getMouse("y");
       this.startDraggingFloater();
-    &lt;/method&gt;
+    &lt;/handler&gt;
     
     &lt;method name="startDraggingFloater"&gt;
       this.d = new LzDelegate(this, "adjustFloaterPosition", LzIdle, "onidle");
@@ -453,12 +453,12 @@ A better approach would be to have the floating view ready in advance:
   &lt;class name="imageRow" bgcolor="0x93A5FF" width="$once{parent.width}" height="20"&gt;
     &lt;attribute name="text" type="text"/&gt;
     &lt;text name="txt" text="${parent.text}" resize="true"/&gt;
-    &lt;method event="onmousedown"&gt;
+    &lt;handler name="onmousedown"&gt;
       myfloater.showFloater(this.getAttributeRelative("x", canvas),
                             this.getAttributeRelative("y", canvas),
                             this.width,
                             this.txt.getText());
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
   
   &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
@@ -535,12 +535,12 @@ Taking this a step further, if our list of images were replicated against a data
          height="20"&gt;
     &lt;attribute name="text" type="text"/&gt;
     &lt;text name="txt" datapath="@description" resize="true"/&gt;
-    &lt;method event="onmousedown"&gt;
+    &lt;handler name="onmousedown"&gt;
       myfloater.showFloater(this.getAttributeRelative("x", canvas),
                             this.getAttributeRelative("y", canvas),
                             this.width,
                             <em>this.datapath.p</em>);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
   
   &lt;view name="stage" width="400" height="300" x="20" bgcolor="0xeaeaea"&gt;
@@ -647,20 +647,20 @@ that act upon its children:</p>
   &lt;/view&gt;
 
   &lt;button y="150" x="10"&gt;Increase spacing of BOTH x and y layouts
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       &lt;![CDATA[
       for (var i=0; i&lt;container.layouts.length; i++) {
           var lyt = container.layouts[i];
           lyt.setAttribute('spacing', lyt.spacing + 2);
       }
       ]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 
   &lt;button y="150" x="280"&gt;Increase spacing of y layout ONLY
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       yLayout.setAttribute('spacing', yLayout.spacing + 2);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -694,15 +694,15 @@ layout:</p>
   &lt;/view&gt;
 
   &lt;button x="10" y="110"&gt;Lock
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       container.slayout.lock();
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 
   &lt;button x="70" y="110"&gt;Unlock
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       container.slayout.unlock();
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -829,6 +829,6 @@ to register it happens in the <method>addSubview</method> method.
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

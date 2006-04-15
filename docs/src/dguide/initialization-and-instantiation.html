@@ -97,7 +97,7 @@ is called, with these attributes and the parent view.
   declared in a class, not in an instance. You can modify the
   arguments or the parent before calling
   <code>super.construct</code>.</li>
-  <li>Any <code>&lt;method event="<var>...</var>"&gt;</code> for the class or
+  <li>Any <code>&lt;handler name="<var>...</var>"&gt;</code> for the class or
   event handlers (e.g. onclick in the tag) for the class are created
   for the instance</li>
   <li>Attributes with <code>when="immediately"</code> values are applied
@@ -174,7 +174,7 @@ is called, with these attributes and the parent view.
     <ol type="i">
       <li><code>$once{...}</code></li>
       <li><code>$always{...}</code></li>
-      <li><code>&lt;method event="<i>...</i>" reference="<i>...</i>"&gt;</code></li>
+      <li><code>&lt;method<i>...</i>" reference="<i>...</i>"&gt;</code></li>
     </ol>
     </li>
     <li>Initialize subviews that are not <code>initstage="late"</code> or
@@ -189,6 +189,6 @@ is called, with these attributes and the parent view.
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

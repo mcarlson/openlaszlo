@@ -9,7 +9,7 @@
  
 <p>This chapter explains the use of delegates, which are a part of the mechanism that different parts of an OpenLaszlo application use to communicate with each other when values of attributes change. </p>
 <p>
-You generally only need to be aware of delegates for objects that you create in script (that is, not with tags). For objects that you create with tags, for example &lt;view&gt;, you can manage communication using event handlers in either 'onfoo' or '&lt;method event=...&gt;' syntax, as described in <xref linkend="methods-events-attributes"/>. This syntax takes care of delegates for you.  Delegates are still there, behind the scenes, but the system manages them invisibly. However, it's helpful to understand the relationship between tag and script-based event syntax.</p>
+You generally only need to be aware of delegates for objects that you create in script (that is, not with tags). For objects that you create with tags, for example &lt;view&gt;, you can manage communication using event handlers, as described in <xref linkend="methods-events-attributes"/>. When you use handlers, the OpenLaszlo runtime takes care of delegates for you.  Delegates are still there, behind the scenes, but the system manages them invisibly. However, it's helpful to understand the relationship between tag and script-based event syntax.</p>
 <p>The last section of this chapter explains how delegates compare to similar things in other programming languages.</p>
 
 
@@ -85,11 +85,11 @@ is the same as:
 The <classname link="true">LzDelegate</classname> class is used to create delegates in script. 
 </p>
 <p>
-That is to say, you can statically attach a method to an event by:</p>
+That is to say, you can statically attach a handler to an event by:</p>
 <pre>
-    &lt;method event="eventName" reference="eventSender"&gt;
+    &lt;handler name="eventName" reference="eventSender"&gt;
        ...what to do...
-    &lt;/method&gt;
+    &lt;/handler&gt;
 </pre>
 <p>
 but if you don't know <code>eventName</code> or <code>eventSender</code> at compile time, you need to use the dynamic technique:
@@ -114,12 +114,12 @@ onclick="do something or other";
 expands to: 
 </p>
 <pre>
- &lt;method event="onclick" target="this"&gt; 
+ &lt;handler name="onclick" &gt; 
  do something or other; 
- &lt;/method&gt; 
+ &lt;/name&gt; 
 </pre>
 <p>
-(target is optional, defaults to <code>this</code>) Which expands to: </p>
+ Which expands to: </p>
 <pre>
  // make up a unique method name 
  var uid = $m + &lt;unique id&gt; 
@@ -214,7 +214,7 @@ To dynamically attach a method to an event, use a delegate:
 &lt;class ...&gt;
    &lt;method name="doit"&gt; ... &lt;/method&gt;
 
-   &lt;method event="init"&gt;
+   &lt;method name="init"&gt;
      super.init();
      this.myDel = new LzDelegate(this, 'doit', libraryName, 'onload');
    &lt;/method&gt;
@@ -297,7 +297,7 @@ resource by simply registering the <event>onload</event> event instead of the <e
     &lt;view&gt;
         &lt;text&gt;
             &lt;datapath xpath="people:/people/person/@name"&gt;
-                &lt;method event="onclones"&gt;
+                &lt;handler name="onclones"&gt;
                     var lastclone = this.clones[ this.clones.length - 1 ];
 
                     if( typeof this.del == "undefined" ) {
@@ -307,7 +307,7 @@ resource by simply registering the <event>onload</event> event instead of the <e
                     }
 
                     this.del.register( lastclone, "oninit"); 
-                &lt;/method&gt;
+                &lt;/handler&gt;
 
                 &lt;method name="replicationComplete"&gt;
                     lastRepText.setText("The last view has been replicated"); 
@@ -389,6 +389,6 @@ v.  Forward reference to 'initialization/instantiation' chapter
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

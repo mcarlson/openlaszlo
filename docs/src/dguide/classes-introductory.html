@@ -371,10 +371,10 @@ You can also give a view a name no matter how you instantiate it (whether you us
   &lt;/script&gt;
   
   &lt;button&gt;Make window red
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       var nameOfView = "myview";
       canvas[nameOfView].setAttribute('bgcolor', 0xff0000);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt; 
 </example>
@@ -520,6 +520,6 @@ is missing anonymous functions to represent the intermediate step.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

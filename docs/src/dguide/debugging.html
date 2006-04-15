@@ -129,11 +129,11 @@ about request types.</p></dd>
 
 <example>
 &lt;canvas debug="true" height="150"&gt;
-  &lt;method event="oninit"&gt;&lt;![CDATA[
+  &lt;handler name="oninit"&gt;&lt;![CDATA[
     for (var i = 0; i &gt; 10; i ++) {
       canvas.width();
     }
-  ]]&gt;&lt;/method&gt;
+  ]]&gt;&lt;/handler&gt;
 &lt;/canvas&gt;
 </example>
 
@@ -283,10 +283,10 @@ then clicking on the object's representation.</p>
 
 <example title="Two ways of calling Debug.write">
 &lt;canvas debug="true" height="150"&gt;
-  &lt;method event="oninit"&gt;
+  &lt;handler name="oninit"&gt;
     Debug.write('subviews: ' + canvas.subviews); <co><p>The (only) argument to <method>Debug.write</method> is a string, so the value of <code>canvas.subviews</code> is not inspectable.</p></co>
     Debug.write('subviews:',   canvas.subviews); <co><p>The second argument to <method>Debug.write</method> is an non-string Object, so it is inspectable.</p></co> 
-  &lt;/method&gt;
+  &lt;/handler&gt;
 &lt;/canvas&gt;
 </example>
 <h3>Conditional Compilation of Debugging Code</h3>

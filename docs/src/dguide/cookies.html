@@ -146,9 +146,9 @@ Explain how it works
     &lt;dataset name="dsGetCookie" type="http" <em>src="../cookie.jsp</em>" 
              querystring="name=mycookie&amp;amp;op=get" request="true" /&gt;
     &lt;datapointer name="dpCookie" xpath="dsGetCookie:/info[1]/data[1]/item[1]/text()"&gt;
-        &lt;method event="ondata" args="d"&gt;
+        &lt;handler name="ondata" args="d"&gt;
             if (d != '') cbox1.selectItem(d);
-        &lt;/method&gt;        
+        &lt;/handler&gt;        
     &lt;/datapointer&gt;
 
 
@@ -164,12 +164,12 @@ Explain how it works
         &lt;textlistitem datapath="items:/item/" text="$path{'text()'}"
                       value="$path{'@value'}"&gt;
             &lt;!-- when item is selected, save choice in cookie by calling JSP --&gt;
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
             &lt;![CDATA[
                 dsSetCookie.setQueryString("name=mycookie&amp;op=set&amp;item=" + this.value);
                 dsSetCookie.doRequest();
             ]]&gt;
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/textlistitem&gt;
     &lt;/combobox&gt;
 &lt;/canvas&gt;
@@ -311,6 +311,6 @@ Ideally, it'd be nice if there was a getCookie() call in the LFC.
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

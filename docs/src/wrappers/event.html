@@ -17,11 +17,14 @@
 </lzelement>
 
 <p>Events underly most of the functionality in OpenLaszlo  applications. 
-Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy. Instead, objects called <a href="delegate.html">delegates</a> <a href="delegate.html#meth-register">register</a> for events, and if they try to register for an event that doesn't exist yet, the system creates the event. Because of the loose type requirements in LZX, calling an event that no delegate is listening for (and which therefore hasn't been created) has no effect. This allows objects to publish many more events than they actually need to create at runtime.
+Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy. Instead, objects called <a href="delegate.html">delegates</a> <a href="delegate.html#meth-register">register</a> for events, and if they try to register for an event that doesn't exist yet, the system creates the event. </p>
+<p>You can create a delegate explicitly using the <classname link="true">LzDelegate</classname> class, or implicitly by creating an handler.</p>
+<p>
+Because of the loose type requirements in LZX, calling an event that no delegate is listening for (and which therefore hasn't been created) has no effect. This allows objects to publish many more events than they actually need to create at runtime.
 </p>
 
-<p>There are two syntaxes with which you can specify an event handler for a system-defined event associated with an object: in the tag used to create that object, or by using the <code>event</code> keyword in a 
-<tagname>method</tagname> tag associated with the object.</p>
+<p>There are two syntaxes with which you can specify an event handler: in the tag used to create that object, or by using the 
+<tagname link="true">handler</tagname> tag.</p>
 
 <p>To specify an event handler in an object-creation tag, simply include it like any other attribute.  For example,</p>
 
@@ -33,19 +36,19 @@ Unlike events in similar systems, OpenLaszlo's events are point-to-point, meanin
 &lt;/view&gt;
 </example>
 
-<p>If you use the <code>event</code> keyword in the method definition, you do not need to include the handler in the tag that creates the object.</p>
+<p>If you use the <tagname link="true">handler</tagname> tag, you do not need to include the handler in the tag that creates the object.</p>
 
 <example class="code" extract="false">
 &lt;view&gt;
- &lt;method event="onMouseOver"&gt;
+ &lt;handler name="onMouseOver"&gt;
    // code to be executed when the mouse is over the view
- &lt;/method&gt;
+ &lt;/name&gt;
 &lt;/view&gt;
 </example>
 
-<p> The above two examples are functionally equivalent.  Using the <code>event</code> keyword, however, can often lead to more readable code because it removes clutter from the object creation tag.</p> 
+<p> The above two examples are functionally equivalent.  Using the <tagname>handler</tagname> tag, however, can often lead to more readable code because it removes clutter from the object creation tag.</p> 
 
-<p>The following example illustrates how to create custom events.</p>
+<p>Use the <tagname link="true">event</tagname> tag to create the events; then use the <method>sendEvent</method> method to dispatch it. The following example illustrates how to create custom events.</p>
 
 <example class="program"
          title="A simple example of publishing and listening for a custom event">
@@ -54,6 +57,7 @@ Unlike events in similar systems, OpenLaszlo's events are point-to-point, meanin
   &lt;button name="eventSender" 
           <em>onmouseover="this.customevent.sendEvent()"
           onmouseout="this.customevent.sendEvent()"/&gt;</em>
+  &lt;event name="customevent"/&gt;
   &lt;view bgcolor="red" width="20" height="20" oninit="this.setupDelegate()"&gt;
     &lt;method name="setupDelegate"&gt;
       this.del = new LzDelegate( this, "respondToEvent" );
@@ -67,7 +71,7 @@ Unlike events in similar systems, OpenLaszlo's events are point-to-point, meanin
 </example>
 
 <p>
-Events can be sent with a single argument, which usually conveys information about the property that changed. Events and <a href="attribute.html">attributes</a> often work as pairs, and in fact, the default behavior of the <a href="node.html#meth-setAttribute">setAttribute</a> method is to set the named property and send the event called "on" + property. This is general mechanism that updates constraints in a Laszlo program and the convention is widely used: for instance, when a view changes its <attribute>x</attribute> position, it sends the event <event>onx</event> with the new value for its <attribute>x</attribute> property.
+Events can be sent with a single argument, which usually conveys information about the property that changed. The default behavior of the <a href="node.html#meth-setAttribute">setAttribute</a> method is to set the named property and send the event called "on" + property. This is general mechanism that updates constraints in a OpenLaszlo programs. For instance, when a view changes its <attribute>x</attribute> position, it sends the event <event>onx</event> with the new value for its <attribute>x</attribute> property.
 </p>
 
 <example class="program"
@@ -91,8 +95,6 @@ Events can be sent with a single argument, which usually conveys information abo
 &lt;/canvas&gt;
 </example>
 
-<p>
-Finally, event-handlers are related to events. Event handlers are recognized in the schema as attributes whose value is a script to run when the object runs the event. In the code above, for instance, the code that calls the <method>setupDelegate</method> method is executed when the view sends its <event>oninit</event> event.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

@@ -287,22 +287,9 @@ relationship between events and delegates.</p>
 
 <h3>Methods</h3> 
 
-<p>In LZX, a method is a JavaScript function associated with a particular object. Methods must either have a name or be associated with a particular event.</p> 
-<p>If the method has an <attribute>event</attribute> attribute, the
-script will be executed when the referenced view receives an event
-with this name. For example,</p>
+<p>In LZX, a method is a JavaScript function associated with a particular object.</p>
 
-<pre>
-&lt;view&gt; 
-  &lt;method event="onclick"&gt; 
-    &lt;!-- some JavaScript code ---&gt; 
-  &lt;/method&gt; 
-&lt;/view&gt;
-</pre>
-
-<p>defines a function that is executed when the view is clicked on.</p> 
-
-<p>In JavaScript, functions are invoked using the <code>()</code>
+<p>IFunctions are invoked using the <code>()</code>
 operator. Thus,</p>
 
 <pre>
@@ -317,20 +304,36 @@ operator. Thus,</p>
 
 <p><code>dog.bark();</code></p> 
 
-<p>In JavaScript, the <code>this</code> keyword is used to refers to the object though which the function was invoked. Consider</p> 
+<p>In JavaScript, the <code>this</code> keyword is used to refers to the object though which the function was invoked. </p>
+<h3>Handlers</h3>
+<p>
+A handler is like a method. But whereas a method is invoked by its name, a hander msut be associated with a particular event. The handler
+script will be executed when the referenced view receives an event
+with this name. For example,</p>
+
+<pre>
+&lt;view&gt; 
+  &lt;handler name="onclick"&gt; 
+    &lt;!-- some JavaScript code ---&gt; 
+  &lt;/handler&gt; 
+&lt;/view&gt;
+</pre>
+
+<p>defines a function that is executed when the view is clicked on. 
+Consider</p> 
 
 <pre> 
 &lt;view&gt; 
   &lt;method name="bark"&gt; 
     &lt;!-- some JavaScript code ---&gt; 
   &lt;/method&gt; 
-  &lt;method name="handler" event="onclick"&gt; 
+  &lt;handler name="onclick"&gt; 
     this.bark()  
-  &lt;/method&gt; 
+  &lt;/handler &gt; 
 &lt;view&gt;
 </pre>  
 
-<p>When the view is clicked on, the <event>onclick</event> event causes the execution of the method named <method>handler</method> which in turn invokes the method named <method>bark</method>.  Event handlers are often identified in an opening tag, as in</p> 
+<p>When the view is clicked on, the <event>onclick</event> event causes the execution of the <method>handler</method> which in turn invokes the method named <method>bark</method>.  Event handlers are often identified in an opening tag, as in</p> 
 
 <pre>
 &lt;view onclick="clickHandler()"&gt; 
@@ -340,10 +343,10 @@ operator. Thus,</p>
 &lt;/view&gt; 
 </pre>
 
-<p>There are three general categories of methods:</p> 
+<p>There are three general categories of methods and handler:</p> 
 <ul> 
 <li>   "On init" methods that are invoked when their parent object is created;</li> 
-<li>   "On event" methods that are invoked when their parent object receives a specified event;</li> 
+<li>   handlers that are invoked when their parent object receives a specified event;</li> 
 <li>   named methods that are explicitly invoked by other methods.</li> 
 </ul>
 
@@ -633,6 +636,6 @@ display information while the program is being initialized.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

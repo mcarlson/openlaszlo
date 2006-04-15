@@ -250,42 +250,42 @@ the logout XML return.</p>
   &lt;connection/>
 
   &lt;datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]/status[1]"&gt;
-    &lt;method event="ondata">
+    &lt;handler name="ondata">
       var statusMessage = this.xpathQuery('@msg');
       Debug.write('login: ' + statusMessage);
-    &lt;/method>
-    &lt;method event="onerror"&gt;
+    &lt;/handler>
+    &lt;handler name="onerror"&gt;
       Debug.write('login resulted in error');
-    &lt;/method>
-    &lt;method event="ontimeout">
+    &lt;/handler>
+    &lt;handler name="ontimeout">
       Debug.write('login timed out');
-    &lt;/method>
+    &lt;/handler>
   &lt;/datapointer>
 
   &lt;datapointer xpath="connection:logoutDset:/logout[1]/authentication[1]/response[1]/status[1]"&gt;
-    &lt;method event="ondata">
+    &lt;handler name="ondata">
       var statusMessage = this.xpathQuery('@msg');
       Debug.write('logout: ' + statusMessage);
-    &lt;/method>
-    &lt;method event="onerror">
+    &lt;/handler>
+    &lt;handler name="onerror">
       Debug.write('logout resulted in error');
-    &lt;/method>
-    &lt;method event="ontimeout">
+    &lt;/handler>
+    &lt;handler name="ontimeout">
       Debug.write('logout timed out');
-    &lt;/method>
+    &lt;/handler>
   &lt;/datapointer>
 
   &lt;view>
     &lt;simplelayout axis="x" spacing="5"/>
     &lt;button>login
-      &lt;method event="onclick">
+      &lt;handler name="onclick">
         canvas.connection.login('adam', 'adam');
-      &lt;/method>
+      &lt;/handler>
     &lt;/button>
     &lt;button>logout
-      &lt;method event="onclick">
+      &lt;handler name="onclick">
         canvas.connection.logout();
-      &lt;/method>
+      &lt;/handler>
     &lt;/button>
   &lt;/view>
 &lt;/canvas>
@@ -319,42 +319,42 @@ connection.disconnectDset dataset.</p>
 &lt;canvas debug="true" height="200">
   &lt;debug y="60"/&gt;
   &lt;connection authenticator="anonymous">
-    &lt;method event="onconnect">
+    &lt;handler name="onconnect">
       Debug.write('connected');
-    &lt;/method>
-    &lt;method event="ondisconnect">
+    &lt;/handler>
+    &lt;handler name="ondisconnect">
       Debug.write('client disconnected');
-    &lt;/method>
+    &lt;/handler>
   &lt;/connection>
 
   &lt;datapointer xpath="connection:disconnectDset:/*[1]">
-    &lt;method event="ondata">
+    &lt;handler name="ondata">
       Debug.write('server disconnected');
-    &lt;/method>
-    &lt;method event="onerror">
+    &lt;/handler>
+    &lt;handler name="onerror">
       Debug.write('disconnect call to server resulted in error');
-    &lt;/method>
-    &lt;method event="ontimeout">
+    &lt;/handler>
+    &lt;handler name="ontimeout">
       Debug.write('disconnect call to server timed out');
-    &lt;/method>
+    &lt;/handler>
   &lt;/datapointer>
 
   &lt;view>
     &lt;simplelayout axis="x" spacing="5"/>
     &lt;button>connect
-      &lt;method event="onclick">
+      &lt;handler name="onclick">
         canvas.connection.connect();
-      &lt;/method>
+      &lt;/handler>
     &lt;/button>
     &lt;button>disconnect
-      &lt;method event="onclick">
+      &lt;handler name="onclick">
         canvas.connection.disconnect();
-      &lt;/method>
+      &lt;/handler>
     &lt;/button>
     &lt;button>client disconnect
-      &lt;method event="onclick">
+      &lt;handler name="onclick">
         canvas.connection.clientDisconnect();
-      &lt;/method>
+      &lt;/handler>
     &lt;/button>
   &lt;/view>
 &lt;/canvas>
@@ -420,23 +420,23 @@ corresponding dataset. An example is shown below.</p>
   &lt;/connectiondatasource>
 
   &lt;datapointer xpath="myconnection:messages:/*[1]">
-    &lt;method event="ondata">
+    &lt;handler name="ondata">
       var from = this.xpathQuery('/from[0]/@name');
       var mesg = this.xpathQuery('/text()');
       Debug.write('got data from ' + from +  ', mesg is ['+ mesg + ']!');
-    &lt;/method>
+    &lt;/handler>
   &lt;/datapointer>
   
   &lt;datapointer xpath="myconnection:sendMessageDset:/*[1]">
-    &lt;method event="ondata">
+    &lt;handler name="ondata">
       Debug.write("*** got result back ***");
-    &lt;/method>
+    &lt;/handler>
   &lt;/datapointer>
   
   &lt;button>send message
-    &lt;method event="onclick">
+    &lt;handler name="onclick">
       myconnection.sendMessage('*', 'a message', 'messages');
-    &lt;/method>
+    &lt;/handler>
   &lt;/button>
 &lt;/canvas>
 </example>
@@ -994,6 +994,6 @@ value may not be unique among different connections.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

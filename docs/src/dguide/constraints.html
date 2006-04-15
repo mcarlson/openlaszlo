@@ -89,10 +89,10 @@ The above constraint expression could also be written in script as:
 </p>
 
 <example executable="false">
-&lt;method event="oninit"&gt;
+&lt;handler name="oninit"&gt;
   var width_del = new LzDelegate(this, "updateMyWidth");
   width_del.register(parent, "onwidth");
-&lt;/method&gt;
+&lt;/handler&gt;
   
 &lt;method name="updateMyWidth"&gt;
   this.setWidth(parent.width);
@@ -470,6 +470,6 @@ works for many situations, but not for anything complex.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -146,17 +146,17 @@ Amazon.com.  This example doesn't do much: it merely shows that the two ends are
 
     &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('Amazon soap service loaded');
             Debug.write('Compare proxy stubs with WSDL SOAP operations.');
             Debug.write('Amazon WSDL at ' + this.wsdl);            
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -178,20 +178,20 @@ In the example below, the, SOAP service is unloaded.
 
     &lt;soap name="amazon" wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('Amazon soap service loaded');
             Debug.write('proxy is:', this.proxy);
             this.unload();
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onunload"&gt;
+        &lt;handler name="onunload"&gt;
             Debug.write('Amazon soap service unloaded');
             Debug.write('proxy is:', this.proxy)
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -253,23 +253,23 @@ LZX.</p>
         ]]&gt;
         &lt;/method&gt;
        
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             // make buttons visible once SOAP object is loaded
             canvas.buttons.setAttribute('visible', true);            
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ontimeout" args="error"&gt;
+        &lt;handler name="ontimeout" args="error"&gt;
             Debug.write('timeout:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ondata" args="value"&gt;
+        &lt;handler name="ondata" args="value"&gt;
             Debug.write(value);
             result.setText(value);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall funcname="Add"&gt;
             &lt;param value="${ canvas.maths.makedoc(parent.name, a.text, b.text) }" /&gt;
@@ -417,13 +417,13 @@ is described in the WSDL's XML schema.</p>
     &lt;dataset name="googleDset" /&gt;
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service loaded');
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;!-- See RPC chapter for details on remotecall and how dataobject is
              used to data bind to RPC operation results. --&gt; 
@@ -441,9 +441,9 @@ is described in the WSDL's XML schema.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('search result:\n', value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         &lt;/remotecall&gt;
     &lt;/soap&gt;
@@ -612,16 +612,16 @@ example.</p>
 
         &lt;attribute name="handlerDel" value="null" type="expression" /&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('Amazon soap service loaded.');
             Debug.write('Click keyword search button to get started.');
             Debug.write('--');
             search.setAttribute('visible', true);            
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;method name="invokeKeywordSearchRequest" args="keyword"&gt;
 
@@ -741,7 +741,7 @@ Google XML schema type looks like:</p>
     &lt;dataset name="googleDset" /&gt;
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service loaded');
             Debug.write('----------------');
             Debug.write('google proto:');
@@ -754,11 +754,11 @@ Google XML schema type looks like:</p>
             Debug.write('----------------');
             Debug.write('ResultElementArray proto:');
             Debug.inspect(google.proto.ResultElementArray)
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/soap&gt;
 
 &lt;/canvas&gt;
@@ -976,11 +976,11 @@ header value.</p>
 
 <example extract="false" title="Setting SOAP request headers in a method">
 &lt;soap name="calendar" wsdl="http://www.mycompany.com/Calendar.wsdl"&gt; 
-    &lt;method event="onload"&gt;  
+    &lt;handler name="onload"&gt;  
     &lt;![CDATA[
        this.requestheaders = '&lt;usr&gt;name&lt;/usr&gt;' +  '&lt;pwd&gt;secret&lt;/pwd&gt;'
     ]]&gt; 
-    &lt;/method&gt;  
+    &lt;/handler&gt;  
     &lt;!-- ... --&gt; 
 &lt;/soap&gt; 
 </example>
@@ -1001,10 +1001,10 @@ attribute with a dataset.</p>
     &lt;soap name="lq" wsdl="file:ReservationService.wsdl" requestheaders="..." 
           responseheaders="resds"&gt;
           ...
-        &lt;method event="ondata"&gt;
+        &lt;handler name="ondata"&gt;
             // print out response headers whenever we get data.
             Debug.write(resds.serialize());
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -1128,6 +1128,6 @@ The OpenLaszlo implementation of the SOAP specification has the following deviat
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

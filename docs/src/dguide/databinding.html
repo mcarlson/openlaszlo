@@ -386,25 +386,25 @@ Here is a simple program that illustrates use of local datasets (the file tests/
   &lt;simplelayout spacing="2"/&gt;
 
   &lt;view name="nodatanoname" layout="axis: y" bgcolor="#cccccc"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write(this.localdata);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;dataset/&gt;
     &lt;text&gt;empty local dataset with no name&lt;/text&gt;
   &lt;/view&gt;
 
   &lt;view name="nodata" layout="axis: y" bgcolor="#cccccc"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write(this.lds);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;dataset name="lds"/&gt;
     &lt;text&gt;empty local dataset&lt;/text&gt;
   &lt;/view&gt;
 
   &lt;view name="somedata" layout="axis: y" bgcolor="#cccccc"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write(this.lds);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;dataset name="lds"&gt;
         &lt;foo&gt;bar&lt;/foo&gt;
     &lt;/dataset&gt;
@@ -420,9 +420,9 @@ Here is a simple program that illustrates use of local datasets (the file tests/
   &lt;/view&gt;
 
   &lt;view name="filedata" layout="axis: y" bgcolor="#cccccc"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write(this.lds);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;dataset name="lds" src="../testdata.xml"/&gt;
     &lt;text&gt;local dataset compiled in from external file&lt;/text&gt;
     &lt;method reference="lds" event="oninit"&gt;
@@ -436,9 +436,9 @@ Here is a simple program that illustrates use of local datasets (the file tests/
   &lt;/view&gt;
 
   &lt;view name="remotedata" layout="axis: y" bgcolor="#cccccc"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write(this.lds);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
     &lt;text&gt;local dataset loaded at runtime&lt;/text&gt;
     &lt;text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
@@ -453,10 +453,10 @@ Here is a simple program that illustrates use of local datasets (the file tests/
   &lt;/view&gt;
 
   &lt;view name="remotedatarelative" layout="axis: y" bgcolor="#cccccc" datapath="local:lds:/persons/" visible="true"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write(this.lds);
         this.datapath.setXPath(this.datapath.xpath);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
     &lt;text&gt;local dataset loaded at runtime and relative datapath - datapath doesn't resolve because dataset doesn't exist yet.  click to reparse xpath&lt;/text&gt;
     &lt;text datapath="person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
@@ -466,9 +466,9 @@ Here is a simple program that illustrates use of local datasets (the file tests/
     &lt;dataset/&gt;
     &lt;view datapath="local:classroot:/"&gt;
       &lt;simplelayout/&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         this.datapath.addNode('child', 'Click to remove this node', {});
-      &lt;/method&gt;
+      &lt;/handler&gt;
       &lt;text&gt;Click to add a node to my local dataset&lt;/text&gt;
       &lt;text x="10" datapath="child/text()" onclick="this.datapath.deleteNode();"/&gt;
     &lt;/view&gt;
@@ -751,10 +751,10 @@ is bound to a datapath that matches a data node (see below).
 
   &lt;button text="Change view color"&gt;
     &lt;attribute name="ind" value="$once{1}"/&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       if (++ind == 7) ind = 1
       swatch.setDatapath('colors:/value[' + ind + ']/text()')
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -784,15 +784,15 @@ on a node's datapath will store the current value for that attribute back in the
   
   &lt;button text="Shrink me" datapath="sizes:/value[1]" &gt; 
     <em>&lt;attribute name="width" value="$path{'text()'}"/&gt;</em>
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       if (!datapath.selectNext()) this.setAttribute('text', 'Done')
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   &lt;button y="40" text="Stretch me" datapath="sizes:/value[1]"&gt; 
     <em>&lt;attribute name="width" value="$path{'text()'}"/&gt;</em>
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
             datapath.setNodeText(Number(datapath.getNodeText()) + 20)
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -820,13 +820,13 @@ evident from the debugger output.</p>
            opacity="${Math.min(1, this.data / 3)}"/&gt;</em>
     
     &lt;button text="Peel next layer"&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         with (parent.datapath) {
           <em>Debug.write(data)</em>
           if (!selectChild()) this.setAttribute('enabled', false) 
           else setNodeAttribute('order', Number(p.parentNode.attributes['order']) + 1)
          }
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;
@@ -855,10 +855,10 @@ document.</p>
   &lt;datapointer name="top" xpath="numbers:/"/&gt;
   
   &lt;datapointer name="numptr"&gt;
-    <em>&lt;method event="ondata" args="d"&gt;
+    <em>&lt;handler name="ondata" args="d"&gt;
       // d is LzDataElement object 
       result.update(d.nodeName)
-    &lt;/method&gt;</em>
+    &lt;/handler&gt;</em>
   &lt;/datapointer&gt;
   
   &lt;simplelayout spacing="5"/&gt;
@@ -866,19 +866,19 @@ document.</p>
   &lt;view&gt;
     &lt;simplelayout spacing="10" axis="x"/&gt;
     &lt;edittext name="input"&gt;
-      &lt;method event="onkeyup" args="k"&gt;
+      &lt;handler name="onkeyup" args="k"&gt;
         if ( k == 13 ) {
           parent.bSend.handler();
         }
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/edittext&gt;
     &lt;button name="bSend" text="Add"&gt;
-      &lt;method event="onclick" name="handler"&gt;
+      &lt;handler name="onclick" name="handler"&gt;
         top.addNode(parent.input.getText())
         var end = top.xpathQuery('*/last()')
         numptr.setXPath('numbers:/*[' + end + ']')
         parent.input.clearText()
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
 &lt;/view&gt;
 &lt;view height="100" &gt;
@@ -921,15 +921,15 @@ is true.</p>
   &lt;datapointer name="top" xpath="stack:/root"/&gt;
   
   <em>&lt;datapointer xpath="stack:/root/*[1]/name()" rerunxpath="true"&gt;</em>
-    &lt;method event="ondata" args="d"&gt;
+    &lt;handler name="ondata" args="d"&gt;
       good_result.setText(d)
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   <em>&lt;datapointer xpath="stack:/root/*[1]/name()"&gt;</em>
-    &lt;method event="ondata" args="d"&gt;
+    &lt;handler name="ondata" args="d"&gt;
       bad_result.setText(d)
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
   
   &lt;simplelayout spacing="5"/&gt;
@@ -937,14 +937,14 @@ is true.</p>
   &lt;view&gt;
     &lt;simplelayout spacing="10" axis="x"/&gt;
     &lt;edittext name="input"&gt;
-      &lt;method event="onkeyup" args="k"&gt;
+      &lt;handler name="onkeyup" args="k"&gt;
         if ( k == 13 ) {
           parent.bAdd.handler();
         }
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/edittext&gt;
     &lt;button name="bAdd" text="Push"&gt;
-      &lt;method event="onclick" name="handler"&gt;
+      &lt;handler name="onclick" name="handler"&gt;
         var n = parent.input.getText() 
         if (!top.p['childNodes'])
           top.addNode(n)
@@ -954,13 +954,13 @@ is true.</p>
           top.p.insertBefore(ne, top.p.getFirstChild())
         }
         parent.input.clearText()
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
     &lt;button name="bPop" text="Pop"&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         var last = top.xpathQuery('*[1]')
         top.p.removeChild(last)
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/view&gt;
   
@@ -1102,11 +1102,11 @@ set to the top of the dataset, and adds a new node at each level.</p>
   &lt;datapointer name="dptr" xpath="filesys:/entry" /&gt;
   
   &lt;button text="Add a dot dir"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       // Allow to do this only once 
       if (!dptr.xpathQuery('*[@name = "."]')) 
         traverse(dptr);
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;method name="traverse" args="top"&gt;
       var ne = new LzDataElement('entry', {name: '.', type: 'dir'})
         do {
@@ -1188,10 +1188,10 @@ could be used to manipulate and add children nodes.</p>
     &lt;text bgcolor="0xe0e0e0" 
           onmouseover="setBGColor(0xc0c0c0)" onmouseout="setBGColor(0xe0e0e0)"&gt;
       &lt;datapath xpath="*/name()" sortpath="@order" sortorder="ascending"/&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         <em>parent.target.datapath.addNodeFromPointer(this.datapath)
         this.datapath.deleteNode()</em>
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/text&gt;
   &lt;/class&gt;
   
@@ -1239,12 +1239,12 @@ by calling the <method>setXPath</method> method:</p>
   &lt;dataset name="phonebook" src="resources/phonebook.xml"/&gt;
   
   &lt;button text="Previous" y="125"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       <em>with (details.datapath) {
         selectPrev()
         setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']' )
       }</em>
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   
   &lt;view name="details" options="releasetolayout" height="150"&gt;
@@ -1259,12 +1259,12 @@ by calling the <method>setXPath</method> method:</p>
   &lt;/view&gt;
   
   &lt;button text="Next" y="125"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       <em>with (details.datapath) {
         selectNext()
         setXPath('phonebook:/contacts/contact[' + getNodeOffset() + ']')
       }</em>
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   
   &lt;resizelayout axis="x" spacing="10"/&gt;
@@ -1329,22 +1329,22 @@ view's datapath.</p>
   &lt;/dataset&gt;
   &lt;simplelayout axis="x" spacing="25"/&gt;
   &lt;button text="Create tabs">
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       gs.pane.setDatapath('tabnames:/title')
       bs.pane.setDatapath('tabnames:/title')
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   
   &lt;class name="repltabelt" extends="tabelement" text="$path{'@name'}" visible="true"/&gt;
     &lt;tabslider width="150" name="gs" height="150" spacing="2"&gt;
       &lt;repltabelt name="pane"&gt;
         &lt;datapath&gt;
-          <em>&lt;method event="onclones"&gt;</em>
+          <em>&lt;handler name="onclones"&gt;</em>
             if (!this['doneDel']) {
               this.doneDel = new LzDelegate(this, 'openOH')
               this.doneDel.register(clones[clones.length - 1], 'oninit')
             }
-          &lt;/method&gt;
+          &lt;/handler&gt;
           &lt;method name="openOH"&gt;
             parent.select(this.getCloneNumber(0))
           &lt;/method&gt;
@@ -1355,9 +1355,9 @@ view's datapath.</p>
     &lt;tabslider width="150" name="bs" height="150" spacing="2"&gt;
       &lt;repltabelt name="pane"&gt;
         &lt;datapath&gt;
-          <em>&lt;method event="onclones"&gt;</em>
+          <em>&lt;handler name="onclones"&gt;</em>
           parent.select(this.getCloneNumber(0))
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/datapath&gt;
     &lt;/repltabelt&gt;
   &lt;/tabslider&gt;
@@ -1410,16 +1410,16 @@ with the value of the text field, if any.</p>
   &lt;/dataset&gt;
   &lt;simplelayout axis="x" spacing="25"/&gt;
   &lt;button text="Create tabs for user:">
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       nav.pane.setDatapath('tabnames:/title')
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   
   &lt;edittext name="user" width="120" options="ignorelayout" y="25"/&gt;
   &lt;tabslider width="150" name="nav" height="150" spacing="2"&gt;
     &lt;tabelement name="pane" text="$path{'@name'}" visible="true"&gt;
       &lt;datapath&gt;
-        <em>&lt;method event="onnodes"&gt;</em>
+        <em>&lt;handler name="onnodes"&gt;</em>
           <![CDATA[if (user.text.length)
             for (var i = 0; i &lt; nodes.length ; i++) {
               var title = nodes[i].getAttr('name')
@@ -1430,7 +1430,7 @@ with the value of the text field, if any.</p>
                 title = user.text + ': ' + title
               nodes[i].setAttr('name', title)
             }]]>
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/datapath&gt;
     &lt;/tabelement&gt;
   &lt;/tabslider&gt;
@@ -1474,18 +1474,18 @@ Consider the following example.</p>
       &lt;text y="75"&gt;Email:&lt;/text&gt;
       &lt;edittext name="email" datapath="@email" x="80" y="75"/&gt;
       &lt;button width="80" x="200"&gt;Add
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.datapath.updateData();
           var dp= phonebook.getPointer();   
           dp.selectChild();
           dp.addNodeFromPointer(parent.datapath);     
           parent.setDatapath("new:/contact");         
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/view&gt;
   &lt;/view&gt;
   &lt;button text="Delete selected"&gt;
-    &lt;method event="onclick"&gt;&lt;![CDATA[
+    &lt;handler name="onclick"&gt;&lt;![CDATA[
       for (var c = 0; c &lt; all.nodes.length; ++c)
         with (all.clones[c]) {
           if (datapath.xpathQuery('@checked') == true)  {
@@ -1493,7 +1493,7 @@ Consider the following example.</p>
             c--
           }
         }]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   
   &lt;view name="all"&gt;
@@ -1501,9 +1501,9 @@ Consider the following example.</p>
     &lt;view&gt;
       &lt;simplelayout axis="x"/&gt;
       &lt;checkbox width="30" datapath="@checked"&gt;
-        &lt;method event="onvalue"&gt;
+        &lt;handler name="onvalue"&gt;
           datapath.updateData()
-        &lt;/method&gt;
+        &lt;/handler&gt;
         &lt;method name="updateData"&gt;
           return this.value
         &lt;/method&gt;
@@ -1600,9 +1600,9 @@ As you click the "Make it bigger" button, you will see that more items from the 
     &lt;scrollbar/&gt;
   &lt;/view&gt;
   &lt;button&gt;Make it bigger
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       clipper.setAttribute('height', clipper.height + 50);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
@@ -1684,6 +1684,6 @@ Only a datapath can cause replication. Although it might seem that $path might b
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

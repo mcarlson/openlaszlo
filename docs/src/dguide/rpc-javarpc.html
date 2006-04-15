@@ -158,39 +158,39 @@ class specified.</p>
              classname="examples.ConstructExample"
              createargs="[1, 'a string', 1.45]"&gt;
 
-        &lt;method event="onerror" args="err"&gt;
+        &lt;handler name="onerror" args="err"&gt;
             Debug.write("----------");
             Debug.write("onerror:", err)
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write("----------");
             Debug.write("constructed with", this.createargs);
             Debug.write(this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/javarpc&gt;
     
     &lt;simplelayout inset="10" spacing="5" /&gt;
 
     &lt;button x="10" text="construct"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             canvas.ce.load();
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button x="10" text="getinfo"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             this.getInfo.invoke();
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall funcname="getInfo" remotecontext="$once{canvas.ce}"&gt;
-            &lt;method event="ondata" args="res"&gt;
+            &lt;handler name="ondata" args="res"&gt;
                 Debug.write("----------");
                 Debug.write("method:", this.name)
                 Debug.write("return type:", typeof(res))
                 Debug.write("return value:", res);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/remotecall&gt;
     &lt;/button&gt;
 &lt;/canvas&gt;
@@ -256,17 +256,17 @@ returns, an onunload event is sent.</p>
     &lt;javarpc name="ce" scope="session" classname="examples.ConstructExample"
              createargs="[1, 'a string', 1.45]"&gt;
 
-        &lt;method event="onerror" args="err"&gt;
+        &lt;handler name="onerror" args="err"&gt;
             Debug.write("onerror:", err)
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write("loaded proxy:", this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onunload"&gt;
+        &lt;handler name="onunload"&gt;
             Debug.write("unloaded proxy:", this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/javarpc&gt;
     
@@ -361,18 +361,18 @@ considered a double. For example:</p>
     &lt;!-- See WEB-INF/classes/TypesExample.java for java source. --&gt;
     &lt;javarpc name="types_example_rpc" scope="none" classname="examples.TypesExample"&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             // Set buttons visible only after JavaRPC object loads
             canvas.buttons.setAttribute('visible', true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ondata" args="res"&gt;
+        &lt;handler name="ondata" args="res"&gt;
             Debug.write('(types ondata) response is:', res);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="errmsg"&gt;
+        &lt;handler name="onerror" args="errmsg"&gt;
             Debug.write('(types onerror) error:', errmsg);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;!-- Declaratively pass an integer. --&gt;
         &lt;remotecall funcname="passInteger"&gt;
@@ -538,16 +538,16 @@ object isn't saved anywhere in the server.</pre></p>
     &lt;!-- See WEB-INF/classes/ReturnTypeExample.java for java source. --&gt;
     &lt;javarpc name="return_type_example_rpc" scope="none" 
              classname="examples.ReturnTypeExample"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             // Set buttons visible only after JavaRPC object loads
             canvas.buttons.setAttribute('visible', true);
-        &lt;/method&gt;
-        &lt;method event="ondata" args="res"&gt;
+        &lt;/handler&gt;
+        &lt;handler name="ondata" args="res"&gt;
             Debug.write('(return type ondata) value:', res, ', type:', typeof(res));
-        &lt;/method&gt;
-        &lt;method event="onerror" args="errmsg"&gt;
+        &lt;/handler&gt;
+        &lt;handler name="onerror" args="errmsg"&gt;
             Debug.write('(return type onerror) error:', errmsg);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/javarpc&gt;
 
     
@@ -861,6 +861,6 @@ public class ReturnTypeExample {
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

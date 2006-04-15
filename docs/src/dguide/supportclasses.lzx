@@ -55,10 +55,10 @@
     <class name="boxtitle" width="49" height="20" >
     	<attribute name="label" type="string" />
         <text name="title" align="center" valign="middle" pixellock="true" >ROTATION</text>
-        <method event="oninit" >
+        <handler name="oninit" >
         	this.title.setText(this.label)
         	this.title.setX(Math.floor((this.width - this.title.getTextWidth())/2.0));
-        </method>
+        </handler>
     </class>
  
     <class name="slide" >
@@ -95,6 +95,6 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

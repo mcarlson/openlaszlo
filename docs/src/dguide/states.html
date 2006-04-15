@@ -145,11 +145,11 @@ This how it  works in LZX. Here's a little program that proves that:</p>
     &lt;/method&gt;
   &lt;/class&gt;
   &lt;button &gt;Try it
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       ts.apply();
       Debug.write("applies:" + ts.countApplies);
       ts.remove();
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;testState name="ts"/&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
@@ -191,11 +191,11 @@ this optimization.
     &lt;/state&gt;
     &lt;button placement="title_area" align="right" height="16"&gt; Toggle
       &lt;attribute name="isMax" value="true"/&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         if (this.isMax) {parent.max.remove(); parent.min.apply();}
         else {parent.max.apply(); parent.min.remove();}
         this.isMax = !this.isMax;
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
 &lt;/window&gt;
 &lt;/canvas&gt;
@@ -314,6 +314,6 @@ Tags discussed in this chapter: state, dragstate, resizestate,
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

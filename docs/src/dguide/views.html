@@ -310,12 +310,12 @@ using the <method>measureWidth</method> and
 
 <pre>
 &lt;view bgcolor="yellow" width="30" height="100" clickable="true"&gt;
-  &lt;method event="onclick"&gt;
+  &lt;handler name="onclick"&gt;
     Debug.write("Actual Width: " + this.width);
     Debug.write("Actual height: " + this.height);
     Debug.write("Measured Width: " + this.measureWidth());
     Debug.write("Measured Height: " + this.measureHeight());
-  &lt;/method&gt;
+  &lt;/handler&gt;
 
   &lt;view bgcolor="red" width="10" height="10" x="30" y="15"/&gt;
 &lt;/view&gt;
@@ -339,9 +339,9 @@ be 70px wide by 30px high:</p>
   &lt;view width="100" height="20" bgcolor="yellow"/&gt;
   &lt;view width="100" height="20" bgcolor="red"/&gt;
   &lt;button x="10" y="110"&gt;Set Image Now!
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       myImageView.setSource("someimage.jpg");
-      &lt;/method&gt;
+      &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </pre>
@@ -770,6 +770,6 @@ instead of objects.)
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

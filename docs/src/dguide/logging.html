@@ -305,10 +305,10 @@ to emit messages to the <code>C:\mylog.txt</code> file.
       &lt;radiobutton&gt;info&lt;/radiobutton&gt; 
     &lt;/radiogroup&gt; 
     &lt;button isdefault="true"&gt;Log message to server
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         ds.setQueryParams({logger:logger.text, msg: msg.text, type:t.value}); 
           ds.doRequest();
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/form&gt;
 &lt;/canvas&gt;
@@ -322,6 +322,6 @@ to emit messages to the <code>C:\mylog.txt</code> file.
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

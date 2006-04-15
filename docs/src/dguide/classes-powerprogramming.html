@@ -182,9 +182,9 @@ In the example below, we can see that unnamed event handlers that are defined us
    &lt;/class&gt;
 
   &lt;class name="annonymous_way" bgcolor="blue" width="40" height="40"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
         Debug.write('original click');
-     &lt;/method&gt;
+     &lt;/handler&gt;
    &lt;/class&gt;
 
    &lt;simplelayout/&gt;
@@ -194,9 +194,9 @@ In the example below, we can see that unnamed event handlers that are defined us
      &lt;/method&gt;
    &lt;/named_way&gt;
    &lt;annonymous_way&gt;
-     &lt;method event="onclick"&gt;
+     &lt;handler name="onclick"&gt;
          Debug.write('annonymous event handler');
-     &lt;/method&gt;
+     &lt;/handler&gt;
    &lt;/annonymous_way&gt;
 &lt;/canvas&gt;
 </example>
@@ -241,11 +241,11 @@ classroot.</p>
       &lt;view bgcolor="green" width="75%" height="75%"&gt;
         &lt;button text="clickme" width="75%" height="75%"&gt;
           &lt;!-- classroot is a convenient way to access mytext --&gt;
-          &lt;method event="onclick"&gt;
+          &lt;handler name="onclick"&gt;
             Debug.write("classroot.mytext: " + classroot.mytext);
             Debug.write("parent.parent.parent.mytext: " + 
                         parent.parent.parent.mytext);
-          &lt;/method&gt;
+          &lt;/handler&gt;
         &lt;/button&gt;
       &lt;/view&gt;
     &lt;/view&gt;
@@ -1086,6 +1086,6 @@ like:</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

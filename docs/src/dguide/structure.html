@@ -417,9 +417,9 @@ and instantiate it dynamically. (The following discussion assumes an understandi
  To do position code where we want it in the importing application, we would make a delegate that directly listens for the
 <event>onload</event> event from the &lt;import&gt; and instantiates the class (or calls a method to do so).  Something like:</p>
 <pre>
-   &lt;method event="onload" reference="blueview"&gt;
+   &lt;handler name="onload" reference="blueview"&gt;
       this.makeChild({name: 'blueview', ...});
-   &lt;/method&gt;
+   &lt;/handler&gt;
 </pre>
 <p>
 We could define an <method>onload</method> on &lt;import&gt; to call a method to set a global variable "loaded" to true. 
@@ -531,6 +531,6 @@ Microsoft Active Accessibility (MSAA) makes it easier for all assistive technolo
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

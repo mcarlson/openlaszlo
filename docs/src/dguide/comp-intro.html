@@ -55,10 +55,10 @@ The <a href="../reference">LZX Reference</a> documents all the tags, attributes 
             &lt;view name="stylechooser" layout="axis:x; spacing:4"&gt;
                 &lt;text&gt;Style:&lt;/text&gt;
                 &lt;combobox width="120" editable="false"&gt;
-                    &lt;method event="onselect"&gt;
+                    &lt;handler name="onselect"&gt;
                         var colorchoice = this.getText();
                         canvas[colorchoice+'colors'].setAttribute("isdefault", true);
-                    &lt;/method&gt;
+                    &lt;/handler&gt;
 
                     &lt;textlistitem text="silver"/&gt;
                     &lt;textlistitem text="green"/&gt;
@@ -237,9 +237,9 @@ the <code>onclick</code> method procedurally adds an item to the <tagname>list <
     &lt;view layout="axis:x;spacing:4" &gt;
         &lt;edittext id="item" text="new item"/&gt;
         &lt;button text="Add" isdefault="true"&gt;
-         <em>   &lt;method event="onclick"&gt;
+         <em>   &lt;handler name="onclick"&gt;
                mylist.addItem(item.getText());
-            &lt;/method&gt;</em>
+            &lt;/handler&gt;</em>
         &lt;/button&gt;
     &lt;/view&gt;
 &lt;/canvas&gt;
@@ -269,6 +269,6 @@ for each matching node in the "mydata" dataset.
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

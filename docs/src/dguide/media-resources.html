@@ -172,9 +172,9 @@ an example of declaring a multi-frame resource:
     &lt;radiogroup&gt;
       &lt;radiobutton selected="true"&gt;1&lt;/radiobutton&gt;
       &lt;radiobutton&gt;2&lt;/radiobutton&gt;
-      &lt;method event="onvalue" args="v"&gt;
+      &lt;handler name="onvalue" args="v"&gt;
         myview.setResourceNumber(Number(v));
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/radiogroup&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;
@@ -369,9 +369,9 @@ you'd like to test:
   &lt;checkbox text="Cache in server" id="scache"/&gt;
 
   &lt;button id="butt"&gt;Make request
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       this.doit();
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
     &lt;method name="doit"&gt;
     &lt;![CDATA[
@@ -395,15 +395,15 @@ you'd like to test:
   &lt;text text="${me.frame + ' out of ' + me.totalframes + ' frame(s)'}"/&gt;
   &lt;text multiline="true" width="200" height="100" id="status"/&gt;
   &lt;view id="me"&gt;
-    &lt;method event="onload" args="e"&gt;
+    &lt;handler name="onload" args="e"&gt;
       status.setText('loaded: ' + e);
-    &lt;/method&gt;
-    &lt;method event="onerror" args="e"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onerror" args="e"&gt;
       status.setText('error: ' + e);
-    &lt;/method&gt;
-    &lt;method event="ontimeout" args="e"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout" args="e"&gt;
       status.setText('timeout: ' + e);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;
 </example>
@@ -417,6 +417,6 @@ resource with it. This is a convenient shorthand that can make your programs eas
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

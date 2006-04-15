@@ -12,26 +12,19 @@
 In LZX, the concepts of methods, events, handlers and attributes are related to each other in a braid-like way. In this chapter we'll show you how they weave together.
 </p>
 <p>
-Attributes, events, and methods are all properties of classes that define how instances of the class behave.  Attributes are replicated in each instance and represent the state of the instance.  Events are also per-instance &#8212;from the user point of view they specify what events you can listen for on that instance.  Methods are the same for all instances&#8212;from the user point of view they specify the actions you can take on an instance.
+Attributes, events, methods and handlers are all properties of classes that define how instances of the class behave.  Attributes represent the state of the instance.  Events are signifiers that communicate with the rest of the application when something about the instance changes. Methods are blocks of Javascript that are executed when the method is invoked by name. Handlers are a special kind of method, each specifically tied to an event.
 </p>
 <p>
-Handlers are a special kind of method, each specifically tied to an event. When an event occurs, any handler associated with that event gets called.  Events may have any number of handlers, and handlers can be used to glue events from one instance to methods in another.
+When an event occurs, any handler associated with that event gets called.  Events may have any number of handlers, and handlers can be used to glue events from one instance to methods in another.
 </p>
 <p>
 Because LZX allows you to add properties to instances, you can add attributes, events, methods and handlers to any instance.  (In the terms of other object oriented languages such as Java, effectively LZX allows you to define a class of which there is exactly one instance with the new properties.)
-</p>
-<p> 
-Event-driven programming is ideal for programs that respond directly to a user's interactions with a user interface.  The event-driven programming model is used
-extensively in LZX applications.  
 </p>
 <p>
 In LZX you use  attributes, events, and handlers to describe how your application responds to user input or other changes.
 In general, and to a first approximation, when an<em>attribute</em> changes value, it generates an <em>event </em>. You can additionally declare events with an <tagname link="true">event</tagname>  tag.
 Your application's response to that event is determined by the associated<glossterm>event handler</glossterm>, which is
  defined in a <tagname link="true">handler</tagname> tag.
-</p>
-<p>
-An event handler is simply javascript code that is executed whenever the associated event occurs.
 </p>
 <p>
 Methods, events and attributes are the only concepts you need for many kinds of applications.  Certain kinds of more
@@ -42,25 +35,28 @@ In the discussion below we'll assume a commonsense understanding of the meaning 
 </p>
 <h2>Methods</h2>
 <p>
-A <tagname link="true">method</tagname> is an 'action' you can perform on an instance. You can call it from any script.
+A <tagname link="true">method</tagname> is an 'action', expressed in Javascript you can perform on an instance. You can call it from any script.
 </p>
 <p>
-Methods may be defined inside any <tagname>node</tagname> or <tagname>view</tagname>.   When defining a method, you must specify
+Methods may be defined inside any <tagname>node</tagname> or <tagname>view</tagname> (or classes derived from them).   When defining a method, you must specify
 a value for the <attribute>name</attribute>attribute. The value of the 
-<attribute>name</attribute> attribute represents the name by which you will call this method in script.  In the
-following example, the <method link="false">doSomething</method> method is defined in the only node in the example.  To
-invoke this method from a script, you would write <code>myNode.doSomething();</code>
+<attribute>name</attribute> attribute represents the name by which you will call this method in script. When you call the method, you use its name followed by open and close parentheses -- any arguments to the method would be placed within the parentheses.
+</p>
+<p>
+In the following example, the <method link="false">myMethod</method> method is defined in the only node in the example.  It is called by the line in the script <code>myNode.myMethod()</code>. (By using the ID, the node can be referenced from anywhere in the program, including this script block). 
 </p>
 
 <example title="Defining a method">
 &lt;canvas debug="true"&gt;
   &lt;debug /&gt; 
   &lt;node id="myNode"&gt; 
-    &lt;method name="doSomething"&gt;
-      Debug.write('doSomething called');          
+    &lt;method name="myMethod"&gt;
+      Debug.write('Nice day if it do not rain');          
     &lt;/method&gt;
   &lt;/node&gt; 
-  &lt;simplelayout axis="y"/&gt; 
+  &lt;script&gt;
+   myNode.myMethod()
+  &lt;/script&gt;
 &lt;/canvas&gt;
 </example>
 
@@ -91,12 +87,16 @@ script to add two numbers, you would write <code>myNode.add(1, 2);</code>
 
 <example title="Defining a method with arguments">
 &lt;canvas debug="true"&gt;
+  &lt;debug y="10"/&gt;
   &lt;node id="myNode"&gt;
     &lt;method name="add" args="a,b"&gt;
       var sum = a + b;
       Debug.write('a + b = ' + sum);          
     &lt;/method&gt;
   &lt;/node&gt;
+  &lt;script&gt;
+     myNode.add(4,9)
+   &lt;/script&gt;
 &lt;/canvas&gt; 
 </example>
 
@@ -104,41 +104,46 @@ script to add two numbers, you would write <code>myNode.add(1, 2);</code>
 
 <p>
 Sometimes when you write a method, you want the result to be returned to the calling script for
-further processing.  In the following example, the init method makes a call to the <code>add</code> method,
-and the <code>add</code> method returns the result using the 'return' keyword.  
+further processing.  In the following example, <code>returnsum()</code> method uses the 'return' keyword. In the script block, this value is used in turn to compute another.
 </p>
 
 <example  title="Returning data from a method">
 &lt;canvas debug="true"&gt;
+  &lt;debug y="10"/&gt;
   &lt;node id="myNode"&gt;
-    &lt;method name="init"&gt;
-      super.init();  // it's generally correct to call init() on the super class.
-
-      var newVal = this.add(1, 1);             
-      Debug.write("The result of adding 1 to 1 is: " + newVal) 
-    &lt;/method&gt; 
-
-    &lt;method name="add" args="a,b"&gt;
-      var sum = a + b;
+    &lt;method name="returnsum" args="a,b"&gt;
+      var sum = 3 + 4;
       Debug.write('a + b = ' + sum);          
       return sum;
     &lt;/method&gt;
   &lt;/node&gt;
+  &lt;script&gt;
+      var x = 5;
+      var y = myNode.returnsum();
+      var z = x + y;
+      Debug.write('z equals ' +  z)
+  &lt;/script&gt;
 &lt;/canvas&gt; 
 </example>
 
-<h3>Referencing Methods</h3>
-<todo>
-Explain events by reference.
-</todo>
 <h2>Events</h2>
+<p>
+In LZX, changes in the status of objects are communicated through events. Events can be used to trigger the execution of script. The script to be executed can be contained in an <glossterm>event handler</glossterm>, as explained in this chapter, or in a method that is invoked by a <glossterm>delegate</glossterm> as explained in <xref linkend="delegates"/>.
+</p>
+Events can be defined either implicitly or explicitly. Implicit events are associated with attributes. Explicit events are declared with the <tagname link="true">event</tagname> tag.
+<p>
+In addition to the events that you define, there are also events that are built into the LFC but which are not associated with any attribute.  Examples includ <attribute>onclick</attribute> and <attribute>onfocus</attribute>.
+</p>
+<p>
+Unlike events in similar systems, OpenLaszlo's events are point-to-point, meaning that there is no general broadcast mechanism for events, and events do not trickle up or down the instance hierarchy.  Declaring an event that no handler (or delegate) is listening for has no effect. This allows objects to publish many more events than they actually need to create at runtime; this allows you flexibility in prototyping.
+</p>
+<h3>Implicit "on" events</h3>
 <p>
 Any defined attribute has an associated event called
  "on" plus the name of the attribute. Whenever the value of any
-attribute is updated, its associated "on" event is generated. For example, the "height" attribute of a view has an 
+attribute is updated using the <method>setAttribute</method>, its associated "on" event is generated. For example, the "height" attribute of a view has an 
 associated "onheight" event that
-is generated whenever the view's height changes. (These events are implicit in the sense that they are build into the system.
-Later sections explain how you can also generate "custom" events.)
+is generated whenever the view's height changes. These events are implicit in the sense that they are build into the system &#8212; you don't have to declare them or send them.
 </p>
 <p>
 The default behavior of the <method>setAttribute</method> method is to set the named property and send the event. 
@@ -152,12 +157,15 @@ events associated with them.  For example, the <tagname>view</tagname> tag has a
 that is generated whenever the user clicks the mouse while the cursor is positioned over the view.  See the <a href="${reference}">LZX Reference Manual</a> for a complete
 list of events associated with LFC classes.
 </p>
+<h3>The event tag</h3>
+<p> 
+In addition to built-in and implicit events, you can explicitly declare events with the <tagname link="true">event</tagname> tag.
+</p>
+<h3>The sendEvent method</h3>
 <p>
-The following sections show how to use these events in the context of an application.
 </p>
 
-
-<h3>Event Handler Syntaxes</h3>
+<h3>Event Handlers in class definitions</h3>
 <p>The <tagname link="true">handler</tagname> tag defines how an instance responds to an event.</p>
 <p>
 A handler can either specify the code to handle an event or it can specify a method that should be invoked to handle the event.  The reason for these two ways is that a handler is not overridable in a subclass, so you can add as many handlers as you like to an event and they will all fire. 
@@ -187,9 +195,9 @@ There are two syntaxes that you can use to define handlers:</p>
 </ul>
 <p>
 For convenience, you can use the onevent syntax for short handlers for some kinds of events, such as onclick, as explained below. For readability, however, the <tagname link="false">
-method</tagname> syntax is often better.
+handler</tagname> syntax is often better.
 </p>
-<h3>"Onevent" syntax"</h3>
+<h3>"Onevent" open tag syntax"</h3>
 <p>
 The "onevent" syntax is available for attributes that correspond to the CSS event model&#8212;onclick, onmouseover, and so
 forth. For such events, the simplest way to declare an event handler is simply to include it in the definition tag of the node that contains the
@@ -207,26 +215,62 @@ the views's color from red to blue.
 </example>
 <h3>Handler syntax </h3>
 <p>
-The <tagname>handler</tagname> tag defines code that is executed when an event that has the name of the handler is fired. 
+The <tagname>handler</tagname> tag defines code that is executed when an event that has the name of the handler is fired. The name of the handler is the same as the name of the event with which it is associated.  For example, the "onclick" event is handled by a handler also named "onclick".
 Event handlers defined in this way are executed whenever their associated <attribute>event</attribute> occurs.
 </p>
-
-<h3>&lt;handler name="doSomething" event="oninit"&gt;</h3> 
-
 <p>
-
- The following example shows how you might handle a user's clicking a button with the mouse: 
+The following example shows how you might handle a user's clicking a button with the mouse: 
 </p>
 
-<example title="Defining a method in an event">
+<example title="A simple handler">
 &lt;canvas height="40"&gt;
   &lt;button text="not clicked"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       this.setAttribute('text', 'clicked'); 
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
-&lt;/canvas&gt; 
+&lt;/canvas&gt;  
 </example> 
+<h3>Multiple handlers for the same event</h3>
+<p>
+An event can have associated with it any number of handlers. When that event is sent, all handlers associated with it are executed.
+</p>
+<example title="Multiple handlers for one event">
+&lt;canvas debug="true"&gt;
+  &lt;debug y=" 20"/&gt;
+  &lt;button&gt;
+   Howdy!
+   &lt;handler name="onclick"&gt;
+      Debug.write("handler one")
+   &lt;/handler&gt;
+     &lt;handler name="onclick"&gt;
+      Debug.write("handler two")
+   &lt;/handler&gt;
+  &lt;handler name="onclick"&gt;
+      Debug.write("handler three")
+   &lt;/handler&gt;
+   &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+<h3>Handlers that call methods</h3>
+<p>
+A handler may include javascript code to be executed when the event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <attribute link="true">method</attribute> attribute of the <tagname>handler</tagname> tag.
+<example title="Calling a method from a handler">
+&lt;canvas debug="true"&gt;
+   &lt;debug y="50"/&gt;
+ &lt;simplelayout/&gt;
+ &lt;view name="myview" height="30" width="30" bgcolor="blue"/&gt;
+ &lt;button&gt;
+   Make red the blue box!
+  &lt;handler name="onclick" method="redify"/&gt;
+  &lt;method name="redify"&gt;
+     parent.myview.setAttribute("bgcolor", red)
+  &lt;/method&gt;
+  &lt;/button&gt;
+&lt;/canvas&gt;
+</example>
+</p>
+
 <example name="Two syntaxes for sending events">
 &lt;canvas debug="true"&gt;
      &lt;debug /&gt;
@@ -258,8 +302,102 @@ Event handlers defined in this way are executed whenever their associated <attri
 
 &lt;/canvas&gt;
 </example>
+<h3>Overriding handlers</h3>
+<p>
+If you want the superclass to define a handler that the subclass can override, you would have the handler point to a method, and in the subclass you just override the method. Let's repeat that to make it clear: when you want the subclass to have a different behavior than the superclass, don't attempt to override the handler in the subclass, and don't create a new handler in the subclass. Instead, have the handler in the superclass call a method, and then in the subclass, override that method.  Try this example, which hopefully makes all clear:</p>
+<example title="Overriding event-handler method in subclass">
+&lt;canvas debug="true"&gt;
+  &lt;class name="base" extends="button"&gt;
+    &lt;handler name="onclick" method="handleonclick" /&gt;
+    &lt;method name="handleonclick"&gt;
+      Debug.write("base click");
+    &lt;/method&gt;
+  &lt;/class&gt;
 
+  &lt;class name="subaccumulate" extends="base"&gt;
+    &lt;handler name="onclick"&gt;
+      Debug.write("subaccumulate click");
+    &lt;/handler&gt;
+  &lt;/class&gt;
 
+  &lt;class name="suboverride" extends="base"&gt;
+    &lt;method name="handleonclick"&gt;
+      Debug.write("suboverride click");
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;subaccumulate&gt;accumulate&lt;/subaccumulate&gt;
+  &lt;suboverride&gt;override&lt;/suboverride&gt;
+  &lt;simplelayout /&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+Here is the same example with instances:
+</p>
+<example title="Overriding event-handling method in an intance">
+&lt;canvas debug="true"&gt;
+  &lt;class name="base" extends="button"&gt;
+    &lt;handler name="onclick" method="handleonclick" /&gt;
+    &lt;method name="handleonclick"&gt;
+      Debug.write("base click");
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;base text="Accumulate"&gt;
+    &lt;handler name="onclick"&gt;
+      Debug.write("subaccumulate click");
+    &lt;/handler&gt;
+  &lt;/base&gt;
+
+  &lt;base text="Override"&gt;
+    &lt;method name="handleonclick"&gt;
+      Debug.write("suboverride click");
+    &lt;/method&gt;
+  &lt;/base&gt;
+
+  &lt;simplelayout /&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+Suppose you want to handle, in one class, an event from some other object?  In that case, you would use the <attribute>reference</attribute> attribute:
+</p>
+<pre>
+&lt;handler name="onclick" reference="yours"&gt;
+  Debug.write("Someone is pushing your button");
+&lt;/handler&gt;
+</pre>
+<p>
+Here's an example:</p>
+<example title="Referencing an event in another object">
+&lt;canvas debug="true"&gt;
+  &lt;class name="base" extends="button"&gt;
+    &lt;handler name="onclick" method="handleonclick" /&gt;
+    &lt;method name="handleonclick"&gt;
+      Debug.write("base click");
+    &lt;/method&gt;
+  &lt;/class&gt;
+
+  &lt;base id="yours" text="Yours"&gt;
+    &lt;handler name="onclick"&gt;
+      Debug.write("Your click");
+    &lt;/handler&gt;
+  &lt;/base&gt;
+
+  &lt;base text="Mine"&gt;
+    &lt;method name="handleonclick"&gt;
+      Debug.write("My click");
+    &lt;/method&gt;
+    &lt;handler name="onclick" reference="yours"&gt;
+      Debug.write("Someone is pushing your buttons.");
+    &lt;/handler&gt;
+  &lt;/base&gt;
+
+  &lt;simplelayout /&gt;
+&lt;/canvas&gt;
+</example>
+<p>
+Note that Mine handles a click on Yours.  Even though the handler is in Mine, it only runs when you click Yours. 
+</p>
 <h2>Attributes</h2>
 <p>
 Attributes define properties of instances of classes.  For example, consider the <tagname link="true">view</tagname> element.  It has more than forty defined attributes, such as <attribute link="true">x</attribute>, <attribute link="true">y</attribute>,<attribute link="true">bgcolor</attribute>. Some of these attributes are defined on <tagname>view</tagname>, and others are inherited from <tagname link="true">node</tagname> from which it derives. These attributes are specified in the schema that defines the LZX tags. Each attribute has a type, for example: <code>number, boolean,</code> and <code>string</code>.
@@ -420,7 +558,7 @@ Good examples of final attributes are <attribute>name</attribute> and <attribute
 
 <p>The <tagname>attribute</tagname> tag has two uses.</p>
 
-<p>In a class definition, the <tagname>attribute</tagname> tag
+<p>In a class definition, the <tagname link="true">attribute</tagname> tag
 defines attributes that can be set in instances of the class.  For
 example:</p>
 
@@ -661,7 +799,6 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
     Note that an attribute that is not given an initial value will not be created in the element by default: it should either be initialized in the <code>init</code> method using <code>this.<var>attrName</var>=<var>expression</var></code> or made a required attribute using the <code>required="true"</code> option. 
 </p>
 
-
 <h3>Accessing attribute values from JavaScript</h3>
 
 <p>
@@ -680,7 +817,7 @@ in which case they must be referred to using <code>this.</code>, in order to cre
   &lt;!-- 'bar' is only declared, initialized below --&gt;
   &lt;attribute name="bar"/&gt;
 
-  &lt;method event="oninit"&gt;
+  &lt;handler name="oninit"&gt;
     &lt;!--
       the attribute 'bar' will be created in the instance
       sets its value to true
@@ -694,7 +831,7 @@ in which case they must be referred to using <code>this.</code>, in order to cre
       use setAttribute, as below
     --&gt;
     this.foo = 4;            
-  &lt;/method&gt;
+  &lt;/handler&gt;
 
   &lt;method name="dothis"&gt;
     if (bar) {
@@ -716,7 +853,7 @@ in which case they must be referred to using <code>this.</code>, in order to cre
 In many cases, specific code operations need to take place when an attribute is
 set.  For example, when the <attribute>width</attribute> attribute of a <tagname>view</tagname> is set,
 the view needs to update the width of the parent view if clipping is set to
-false.  Though it is very convenient to simply handle the <event>onwidth</event> event to execute the required code, the is no 
+false.  Though it is very convenient to simply handle the <event>onwidth</event> event to execute the required code, there is no 
 guarantee as to order events will be called. This task is instead accomplished best using the <method>setAttribute</method>
 method of <tagname>view</tagname>, to set the width attribute.
 </p>
@@ -729,7 +866,10 @@ in milliseconds is stored in the time attribute.  The custom setter, <method>set
 
 <p>
 Normally, when an attribute is set by invoking <method>setAttribute</method>, <method>setAttribute</method> handles the tasks of setting the value of 
-the attribute, and sending the onattribute event.  When defining a custom setter for an attribute, you are responsible for
+the attribute, and sending the <code>onattribute</code> event. You can change this behavior by using the <attribute link="true">setter</attribute> attribute on the <tagname>attribute</tagname> tag. You would then define a method that has the name of the setter.
+</p>
+<p>
+When defining a custom setter for an attribute, you are responsible for
  setting the value and sending the <attribute>onattribute</attribute> event, as shown in the example below.  If the <code>on<var>attribute</var></code> event isn't sent in the
  custom defined settter, registered <code>on<var>attribute</var></code> events will not fire, and constraints 
 tied to the attribute will not be updated when the value of the attribute is changed.
@@ -742,11 +882,11 @@ tied to the attribute will not be updated when the value of the attribute is cha
     &lt;attribute name="time" setter="setTime(time)"/&gt; 
     &lt;attribute name="ontime" value="null"/&gt; 
 
-    &lt;method event="onclick"&gt; 
+    &lt;handler name="onclick"&gt; 
       Debug.write('inited:' + this.isinited); 
       var now = (new Date()).getTime();
       this.setAttribute("time", now); 
-    &lt;/method&gt; 
+    &lt;/handler&gt; 
 
     &lt;method name="setTime" args="t"&gt; 
       if (!this.isinited) {                                          //catch the case where this.time is being 
@@ -771,15 +911,12 @@ tied to the attribute will not be updated when the value of the attribute is cha
 &lt;/canvas&gt; 
 </example>
 
-
-
-
 <h3>oninit event vs init method</h3>
 
 <p> 
 Instances and subclasses of <classname>LzNode</classname>, including <classname>LzView</classname> and classes defined using
 <tagname>class</tagname>, have both an <method>init</method> method and an <event>oninit</event> event.  
-Since you do not have control over the order that events are fired, you should put all initialization code in the <method>init</method> method. 
+Since you do not have control over the order that events are fired, you should put all initialization code in the <method>init</method> method (and not, for example, in a handler for <code>oninit</code>). 
 </p>
 
 <p>
@@ -803,17 +940,14 @@ button.  The <method>init</method> method for <classname>button</classname> subs
       //do some init code here
     &lt;/method&gt;
     
-    &lt;method event="oninit"&gt;
+    &lt;handler name="oninit"&gt;
       //this isn't fired in any particular order 
       //use the init method instead
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt; 
 </example>
 
-
-
-<h2>Subtleties of setting values</h2>
 
 <h3>The keyword <code>this</code> </h3> 
 
@@ -836,11 +970,12 @@ to those variables using the keyword <code>this</code>.
 <h3> Different ways to get and set attributes </h3>
 
 <p>
-There are three ways of getting and setting attributes in LZX, each with benefits and drawbacks:</p>
+There are four ways of getting and setting attributes in LZX, each with benefits and drawbacks:</p>
 <ul>
 <li>Using <method>setAttribute()</method> and <method>getAttribute()</method></li>
-<li>Using predefined "setters" for certain attributes</li>
-<li>Reading and writing attributes directly</li>
+<li>Using predefined "setters" for certain attributes, such as <method>onx</method> and <method>ony</method></li>
+ <li>using custom getter and setter methods, as explained above</li>
+<li>Reading and writing attributes directly&#8212;that is, without using a setter or getter method</li>
 </ul>
 
 
@@ -864,18 +999,6 @@ attributes.   The reasons for this slowness is twofold:</p>
     <li> <method>setAttribute</method> fires the associated <code>on<var>attribute</var></code> event, and updates 
 constraints on the target attribute. </li>  
 </ul>
-
-
-<example executable="false" title="Example of setAttribute()">
-&lt;view&gt;
-  &lt;attribute name="foo"/&gt;
-
-  &lt;method name="doSomething"&gt;
-    this.setAttribute('width', 10); 
-    Debug.write('width' + this.getAttribute('width'));        
-  &lt;/method&gt; 
-&lt;/view&gt;
-</example>
 
 
 <h4> Explicit attribute setter methods </h4>
@@ -907,8 +1030,8 @@ onattribute event.  </p>
 
 <p> It is also possible to get and set attributes directly without invoking any method at all,
 however, this practice is generally discouraged as it may result in unexpected behavior.  
-Since no method call is made, the associated onattribute events will not be fired.  Any
-constraints tied to the attribute also will not be updated.  When setting attributes on ORL
+Since no method call is made, the associated <code>onattribute</code> events will not be fired.  Any
+constraints tied to the attribute also will not be updated.  When setting attributes on LFC
 objects, it is definitely a bad idea to set attributes  directly as their explicit setter
 methods, which contain important processing code, won't be called. 
 </p>

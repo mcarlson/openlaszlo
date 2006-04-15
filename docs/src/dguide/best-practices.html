@@ -327,9 +327,9 @@ myButton.clickDelegate.register(myButton, "onclick");
   &lt;text text="Temperature in Fahrenheit:"/&gt;
   &lt;simpleinputtext id="fahrenheit" width="120"/&gt;
   &lt;button text="Convert"&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       celsius.setText((fahrenheit.getText()-32)/1.8);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
   &lt;text text="Temperature in Celsius:"/&gt;
   &lt;text id="celsius" width="130" font="vera" fontsize="48"/&gt;
@@ -359,9 +359,9 @@ myButton.clickDelegate.register(myButton, "onclick");
     &lt;attribute name="offset" value="32"/&gt;
     &lt;attribute name="scale" value="1/1.8"/&gt;
     &lt;attribute name="target"/&gt;
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       celsius.setText((fahrenheit.getText()-offset)*scale);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
   
   &lt;text text="Temperature in Fahrenheit:"/&gt;
@@ -414,16 +414,16 @@ such as this:</p>
 this.parent.otherthing.height); Debug.write('called init for' + this);"/&gt;
 </code>
 
-<p>Consider rewriting it to use the <code>&lt;method
-event="<i>eventname</i>"&gt;</code> syntax.</p>
+<p>Consider rewriting it to use the <code>&lt;handler
+name="<i>eventname</i>"&gt;</code> syntax.</p>
 
 <code>
 &lt;view&gt;
-  &lt;method event="oninit"&gt;
+  &lt;handler name="oninit"&gt;
     parent.dosomething(); 
     this.aFancyMethodWhichTakesAnArg(this.parent.otherthing.height);
     Debug.write('called init for ' + this);
-  &lt;/method&gt; 
+  &lt;/handler&gt; 
 </code>
 
 <p>
@@ -521,7 +521,7 @@ chapter</xref> for a detailed discussion of states.
 
 <h3>Use attributes and events </h3>
 <p>
-Laszlo's attribute constraint and event system is very powerful  and it has been carefully optimized.
+OpenLaszlo's attribute constraint and event system is very powerful  and it has been carefully optimized.
 Constraints are often the best way to solve your problem -- whatever it is. 
 You can create arbitrary attributes that work in constraints and send events just like the built-in attributes
  (such as width and height.) Just declare your attribute and (possibly) its initial value or a constraint. 
@@ -529,9 +529,9 @@ You can create arbitrary attributes that work in constraints and send events jus
  
 <fixme>put in more discussion perhaps, but at least a link to constraints and attributes chapters</fixme>
 <p>
-Attributes use Laszlo's event system to notify the rest of the system that the attribute has changed. 
+Attributes use OpenLaszlo's event system to notify the rest of the system that the attribute has changed. 
 This is convenient, because it means that you can listen for changes to that attribute not only with constraints,
- but with the <code>method event=</code> syntax. Here's a little example that puts these concepts together to 
+ but with the <code>handler name=</code> syntax. Here's a little example that puts these concepts together to 
 sketch out how you might implement a minimized state for a window. 
 </p>
 <pre class="code">
@@ -543,10 +543,10 @@ sketch out how you might implement a minimized state for a window.
   &lt;view name="minimizebutton" visible="${!parent.opened}"
           onclick="parent.setAttribute( 'minimized' , true)"&gt;
   &lt;view name="content" &gt;
-    &lt;method event="onminimized" reference="parent" args="ismin"&gt;
+    &lt;handler name="onminimized" reference="parent" args="ismin"&gt;
       if (ismin)    //shrink
         else        //grow
-    &lt;/method&gt; 
+    &lt;/handler&gt; 
 </pre>
 <p>
 
@@ -836,6 +836,6 @@ Other design patterns:
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

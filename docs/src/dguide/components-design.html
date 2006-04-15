@@ -99,12 +99,12 @@ subclasses of <classname>basevaluecomponent</classname> require that
   &lt;include href="base/basevaluecomponent.lzx"/&gt;
 
   &lt;class name="myvaluecomponent" extends="basevaluecomponent"&gt;
-    &lt;method event="oninit"&gt;
+    &lt;handler name="oninit"&gt;
       Debug.write(this.name + ' text: "' + this.text + '"');
       Debug.write(this.name + ' value: "' + this.value + '"');
       Debug.write(this.name + ' getValue(): "' + this.getValue() + '"');
       Debug.write("");
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
   
   &lt;!-- Text is inherited from basecomponent, the superclass of --&gt;
