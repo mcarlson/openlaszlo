@@ -73,6 +73,10 @@
             -->
         <attribute name="_fieldhasfocus" value="false" />
 
+        <!--- True if the next onfocus should be ignored.
+              @keywords private -->
+        <attribute name="_ignorenextfocus" value="false" />
+
 <!-- CONSTRUCTOR    .........................................................-->
 
         <!--- @keywords private -->
@@ -148,7 +152,7 @@
                  else (there is a selection)
                     Make the toolbar match the format of the selected text
         -->
-        <method event="onfocus" reference="_field"><![CDATA[
+        <method event="onfocus"><![CDATA[
             this._fieldhasfocus = true; 
             if (this._containsOnlyWhitespace()) {
                 this.clearText(true); 
@@ -157,9 +161,24 @@
                 this.inp.setDefaultFormat(this.currentformat); 
             }
             
-             if (this._shouldresettoolbar) {
-                // Let the caretmove method figure out how to make the formats match
-                this._caretmove(); 
+            // For when setSelection is called explicitly, for example in the
+            // linkdialog.
+            if (this._ignorenextfocus) {
+                this._ignorenextfocus = false;
+                return;
+            }
+
+            if (this._shouldresettoolbar) {
+                if (! this['_caretMoveDel']) {
+                    this._caretMoveDel = new LzDelegate(this, '_caretmove');
+                }
+                //------------------------------------------------------------
+                // Let the caretmove method figure out how to make the formats
+                // match. Need to wait an idle frame before calling 
+                // _caretmove() because caret focus hasn't been set in 
+                // richinput area yet.
+                //------------------------------------------------------------
+                LzIdle.callOnIdle(this._caretMoveDel);
                 
                 if ((! this.isHTML) && this._field.getSelectionSize() == -1)
                 {

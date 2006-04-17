@@ -56,7 +56,11 @@ A dialog to let the user set a hyperlink on the currently selected text.
             fmt.underline = true; 
             this.editor.setCurrentFormat(fmt); 
             var ncaratinsertpoint = this.editor.getAttribute("_esel");
+
+            // make sure that next onfocus, which will be triggered by doing setSelection here, is ignored by editor.
+            this.editor._ignorenextfocus = true;
             this.editor.setSelection(ncaratinsertpoint,ncaratinsertpoint);
+
             this.hide();
         </method>
     
