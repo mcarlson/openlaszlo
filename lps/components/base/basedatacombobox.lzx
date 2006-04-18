@@ -306,14 +306,13 @@
                     this._selectdel = new LzDelegate( this, "_flistselect" );
                 }
                 this._selectdel.register(cblist, 'onselect');
-    
-                if (! this.ismenu) {
-                    // Set the item for _cblist
-                    var item = _getItemAt(this._selectedIndex);
-                    cblist.select(item);
-                }
             }
             
+            if (! this.ismenu) {
+                // Set the item for _cblist
+                var item = _getItemAt(this._selectedIndex);
+                this._cblist.select(item);
+            }
             ]]>
         </method>
 
