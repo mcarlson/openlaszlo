@@ -49,8 +49,8 @@ declarations are equivalent:</p>
 </fixme>
 <p>You can only extend one class per class declaration, though the inheritance
 chain can be arbitrarily deep. Multiple inheritance is not supported; that is to say you cannot create a new class
-that extends more than one existing classes. Methods,
-variables, and views inside a class are inherited down through each level.</p>
+that extends more than one existing classes. Methods, handlers,
+attributes, and views inside a class are inherited down through each level.</p>
 
 <example title="Inheritance chain">
 &lt;canvas debug="true" height="125"&gt;
@@ -87,9 +87,9 @@ attributes:</p>
 <!--=================================== --> 
 <!-- Overriding methods and attributes  -->
 <!--=================================== --> 
-<h2>Overriding methods and attributes</h2>
+<h2>Overriding methods, handlers and attributes</h2>
 <p>A subclass can <dfn>override</dfn>, that is, provide a different implementation from, a
-superclass method. The overriding method can specify a different set of
+superclass method, but not for a handler. The overriding method can specify a different set of
 arguments from the superclass's method. For example, if your superclass's method
 has two arguments such as <code>method(arg1, arg2)</code>, you can choose to have a
 third argument for your subclass such as <code>method(arg1, arg2, arg3)</code>. 
@@ -100,9 +100,9 @@ LZX does not support
 The runtime only "cares about"
 the name of the calling method. You will receive a compilation warning if you
 define two or more methods with the same name in a class definition.</p>
-<fixme>
-explain behavior -- what happens if you overload
-</fixme>
+<p>
+You can, however, have more than one handler for an event, as described in <xref linkend="methods-events-attributes"/>
+</p>
 
 <p>You can modify inherited attributes by defining a new value using
 the <tagname link="true">attribute</tagname> tag or by declaring it as
@@ -158,48 +158,15 @@ overrides.  That is, a subclass's <method>myfunc</method> can only call <code>su
   &lt;bar/&gt;
 &lt;/canvas&gt;
 </example>
-<h3>Anonymous methods cannot be overridden</h3>
+<h3>Handlers cannot be overridden</h3>
 <p>
-In order to override an event handler, you must name the event. You do that by using the <code>name="" event=" "</code> attributes inside a <tagname link="true">method</tagname> tag. For example, let's say that you wanted to write a handler for the <code>onclick</code> event that you could override in an instance. In your class definition, you would use this syntax:</p>
+In order to override the behavior of an event handler, you would have the handler call a method, and then override the method in the subclass or instance. For example, let's say that you wanted to write a handler for the <code>onclick</code> event that you could override in an instance. In your class definition, you would use this syntax:</p>
 <pre>
-    &lt;method name="handleClick" event="onclick"&gt;
+    &lt;handler name="onclick" method="handleClick"&gt;
 </pre>
 <p>
-As described in <xref linkend="methods-events-attributes"/>, you can create event handlers without giving them names. However, when you do this events just stack up like delegates (which they are). When the event occurs, all event handlers associated with that event are executed&#8212; none of them are overridden.
+Then in the instance you would define <method>handleClick</method>.
 </p>
-<p>
-They key is that if you <i>don't</i> name the method that you connect to an event, it will get a unique name (assigned by the runtime) and you will not be able to override it in a subclass or instance (because you don't know its name).
-</p>
-<p>
-In the example below, we can see that unnamed event handlers that are defined using the <code>event=""</code> syntax do not behave the desired way when we try to override them.</p>
-<example title="named events">
-&lt;canvas debug="true" height="400"&gt;
-  &lt;debug y="200"/&gt;
-  &lt;class name="named_way" bgcolor="red" width="40" height="40"&gt;
-    &lt;method name="handleClick" event="onclick"&gt;
-        Debug.write('original click');
-     &lt;/method&gt;
-   &lt;/class&gt;
-
-  &lt;class name="annonymous_way" bgcolor="blue" width="40" height="40"&gt;
-    &lt;handler name="onclick"&gt;
-        Debug.write('original click');
-     &lt;/handler&gt;
-   &lt;/class&gt;
-
-   &lt;simplelayout/&gt;
-   &lt;named_way&gt;
-     &lt;method name="handleClick"&gt;
-         Debug.write('overridden method');
-     &lt;/method&gt;
-   &lt;/named_way&gt;
-   &lt;annonymous_way&gt;
-     &lt;handler name="onclick"&gt;
-         Debug.write('annonymous event handler');
-     &lt;/handler&gt;
-   &lt;/annonymous_way&gt;
-&lt;/canvas&gt;
-</example>
 
 <p>
 Remember, you can call the original click code in the new method by using the super method:
@@ -284,13 +251,13 @@ as a short-cut to refer to the root of outer classes.</p>
   &lt;!-- goo contains a boo --&gt;
   &lt;class name="goo"&gt;
     &lt;boo name="myboo"/&gt;
-    &lt;method event="oninit"&gt;
+    &lt;handler name="oninit"&gt;
       myboo.myfoo.doit();
       Debug.write("-----");
       Debug.write("goo: this is [" + this + "]");
       // warning will be displayed -- there is no classroot
       Debug.write("goo: classroot is [" + classroot + "]");
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
   
   &lt;!-- Make an instance of goo --&gt;
@@ -805,10 +772,10 @@ child was placed in. Its value will be the same as
   &lt;!-- is red, since that's where it's actually placed. --&gt;
   &lt;container name="top"&gt;
     &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
-      &lt;method event="oninit"&gt;
+      &lt;handler name="oninit"&gt;
         Debug.write('parent: ', this.parent);
         Debug.write('immediateparent: ', this.immediateparent);
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/view&gt;
   &lt;/container&gt;
 &lt;/canvas&gt;
@@ -913,10 +880,10 @@ same.</p>
 
   &lt;container name="top"&gt;
     &lt;view name="yellow" bgcolor="yellow" width="50" height="50"&gt;
-      &lt;method event="oninit"&gt;
+      &lt;handler name="oninit"&gt;
         Debug.write('parent: ', this.parent);
         Debug.write('immediateparent: ', this.immediateparent);
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/view&gt;
   &lt;/container&gt;
 &lt;/canvas&gt;
@@ -968,17 +935,17 @@ whereas initialization happens bottom-up (subviews to ancestor).</p>
     &lt;/method&gt;
 
     &lt;!-- The onconstruct event --&gt;
-    &lt;method event="onconstruct" args="v"&gt;
+    &lt;handler name="onconstruct" args="v"&gt;
       Debug.write("container onconstruct", v);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
     &lt;method name="init"&gt;
       Debug.write("container init");
     &lt;/method&gt;
 
-    &lt;method event="oninit"&gt;
+    &lt;handler name="oninit"&gt;
       Debug.write("container oninit");
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
 
   &lt;container&gt;
@@ -1011,9 +978,9 @@ properties:</p>
   &lt;debug height="160"/&gt;
 
   &lt;class name="container"&gt;
-    &lt;method event="onconstruct" args="v"&gt;
+    &lt;handler name="onconstruct" args="v"&gt;
       Debug.write("container onconstruct", v);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
     &lt;method name="createChildren" args="c"&gt;
       Debug.write("container createChildren", c);

@@ -147,14 +147,14 @@
       this.onstyle.sendEvent();
     </method>
     
-    <method name="setInset" event="onstyle" >
+    <handler name="onstyle" >
       this.leftinset = inset;
       this.rightinset = inset;
       if ( this.leftstyle  == "rectangle") this.leftinset = this.inset - 2;
       if ( this.rightstyle == "rectangle") this.rightinset = this.inset - 2;
       if ( this.leftstyle  == "sheer" )    this.leftinset = this.inset - 2;
       if ( this.rightstyle == "sheer" )    this.rightinset = this.inset - 2;
-    </method>
+    </handler>
     
     <method name="doMouseOver" >
       this.bkgnd.lft.setResourceNumber( this.overRsrcNumber );

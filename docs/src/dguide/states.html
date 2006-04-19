@@ -244,13 +244,13 @@ to solve common problems.</p>
 <example title="Dropshadow done using states">
 &lt;canvas height="200"&gt;
   &lt;class extends="dragstate" name="fadeDragger" pooling="true"&gt;
-    &lt;method event="onapply"&gt;
+    &lt;handler name="onapply"&gt;
       parent.bringToFront();
       parent.setAttribute('opacity', .5)
-    &lt;/method&gt;
-    &lt;method event="onremove"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onremove"&gt;
       parent.setAttribute('opacity', 1)
-    &lt;/method&gt;
+    &lt;/handler&gt;
     &lt;view name="hShadow" x="10" y="${parent.body.height}"
           width="${parent.body.width}" height="10"
           opacity=".2" bgcolor="black"/&gt;

@@ -26,9 +26,9 @@
 
     <view >
         <view initstage="early" resource="images/loadingclock_nofade.swf">
-            <method event="oninit" reference="canvas">
+            <handler name="oninit" reference="canvas">
                 this.destroy();
-            </method>
+            </handler>
         </view>
 
         <!-- SECONDTIMER: an object that sends out an 'onsecond' event -->
@@ -36,10 +36,10 @@
             <!-- trigger the initial animation on the oninit of the canvas.
                  this helps in the krank process so that the initial time that the app
                  get's is not stored in internal variables causing two animations to occur. -->
-            <method event="oninit" reference="canvas">
+            <handler name="oninit" reference="canvas">
                this.del = new LzDelegate ( this, "tick" );
                LzTimer.addTimer( this.del, 1000 );
-             </method>
+             </handler>
             <method name="tick" >
                this.onsecond.sendEvent();
                LzTimer.addTimer( this.del, 1000 );
@@ -100,9 +100,9 @@
                     <text fgcolor="0x394660" resize="true" align="center">San Francisco</text>
                 </view>
                 <clock>
-                    <method event="oninit" reference="canvas" >
+                    <handler name="oninit" reference="canvas" >
                         citySpotSF.syncclock( this )
-                    </method>
+                    </handler>
                 </clock>
             </view>
 
@@ -113,9 +113,9 @@
                     <text fgcolor="0x394660" resize="true" align="center">Boston</text>
                 </view>
                 <clock >
-                    <method event="oninit" reference="canvas" >
+                    <handler name="oninit" reference="canvas" >
                         citySpotBoston.syncclock( this )
-                    </method>
+                    </handler>
                 </clock>
             </view>
 
@@ -125,9 +125,9 @@
                     resize="true" align="center">London</text>
                 <clock id="myclock"  >
                     <attribute name="width" value="${this.unstretchedwidth*.6}" />
-                    <method event="oninit" reference="canvas" >
+                    <handler name="oninit" reference="canvas" >
                         citySpotLondon.activateclock( this )
-                    </method>
+                    </handler>
                 </clock>
             </view>
             <simplelayout axis="x" spacing="20" />
@@ -139,7 +139,7 @@
     </view>
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

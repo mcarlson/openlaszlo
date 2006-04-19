@@ -3,20 +3,20 @@
 <class name="colormenuitem"
       width="22" height="22" bgcolor="0x000000">
       <attribute name="mycolor"/>
-      <method event="onmousetrackover">
+      <handler name="onmousetrackover">
           setAttribute('bgcolor', 0xdedede); // hilite: gray
-      </method>
-      <method event="onmousetrackout">
+      </handler>
+      <handler name="onmousetrackout">
           setAttribute('bgcolor', 0x000000); // normal: black
-      </method>
+      </handler>
 </class>
 
 <class name="colorspot" extends="colormenuitem">
       <view name="spot" bgcolor="${parent.mycolor}"
           x="1" y="1" width="${parent.width-2}" height="${parent.height-2}"/>
-    <method event="onmousetrackup">
+    <handler name="onmousetrackup">
         parent.setnewcolor(this.spot.bgcolor);
-    </method>
+    </handler>
 
 </class>
 
@@ -56,16 +56,16 @@
             <text resize="true" align="center" valign="middle">null</text>
 
             </view>
-        <method event="onmousetrackup">
+        <handler name="onmousetrackup">
             parent.setnewcolor(null);
-        </method>
+        </handler>
 
     </colormenuitem>
 </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

@@ -81,7 +81,7 @@
         this.children.sendToBack();
     </handler>
 
-    <method event="ondata">
+    <handler name="ondata">
         this.setAttribute("isleaf", !this.datapath.p.hasChildNodes());
         if( !this['clonenumber'] || this.clonenumber == 0) {
             var mb = this.parent;
@@ -89,7 +89,7 @@
                 mb.dataBound();
             }
         }
-    </method> 
+    </handler> 
             
     <attribute name="deferOpen" value="false"/>
 

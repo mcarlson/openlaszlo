@@ -409,14 +409,14 @@ Here is a simple program that illustrates use of local datasets (the file tests/
         &lt;foo&gt;bar&lt;/foo&gt;
     &lt;/dataset&gt;
     &lt;text&gt;local dataset&lt;/text&gt;
-    &lt;method reference="lds" event="oninit"&gt;
+    &lt;handler reference="lds" name="oninit"&gt;
       &lt;![CDATA[
       Debug.write("somedata test data loaded", this);
       if (this.lds.serialize() != '&lt;lds&gt;&lt;foo&gt;bar&lt;/foo&gt;&lt;/lds&gt;') {
       Debug.error("somedata serialized data does not match expected value");
       }
       ]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/view&gt;
 
   &lt;view name="filedata" layout="axis: y" bgcolor="#cccccc"&gt;
@@ -425,14 +425,14 @@ Here is a simple program that illustrates use of local datasets (the file tests/
     &lt;/handler&gt;
     &lt;dataset name="lds" src="../testdata.xml"/&gt;
     &lt;text&gt;local dataset compiled in from external file&lt;/text&gt;
-    &lt;method reference="lds" event="oninit"&gt;
+    &lt;handler reference="lds" name="oninit"&gt;
       &lt;![CDATA[
       Debug.write("filedata test data loaded", this);
       if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address code="ML" id="1"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
       Debug.error("filedata serialized data does not match expected value");
       }
       ]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/view&gt;
 
   &lt;view name="remotedata" layout="axis: y" bgcolor="#cccccc"&gt;
@@ -442,14 +442,14 @@ Here is a simple program that illustrates use of local datasets (the file tests/
     &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
     &lt;text&gt;local dataset loaded at runtime&lt;/text&gt;
     &lt;text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
-    &lt;method reference="lds" event="ondata"&gt;
+    &lt;handle reference="lds" name="ondata"&gt;
       &lt;![CDATA[
       Debug.write("remotedata test data loaded", this);
       if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address id="1" code="ML"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
       Debug.error("remotedata serialized data does not match expected value");
       }
       ]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/view&gt;
 
   &lt;view name="remotedatarelative" layout="axis: y" bgcolor="#cccccc" datapath="local:lds:/persons/" visible="true"&gt;
@@ -1584,11 +1584,11 @@ As you click the "Make it bigger" button, you will see that more items from the 
 
   &lt;simplelayout spacing="10"/&gt;
   &lt;text width="200" oninit="checkSubviews()"&gt;
-    &lt;method name="checkSubviews"
-            event="onaddsubview" reference="replicationParent"&gt;
+    &lt;handler
+            name="onaddsubview" reference="replicationParent"&gt;
       this.setText('number of subviews: ' + 
                    replicationParent.subviews.length);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/text&gt;
 
   &lt;view <em>clip="true"</em> width="100" height="100" id="clipper" bgcolor="silver"&gt;

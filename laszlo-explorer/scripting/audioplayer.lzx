@@ -6,12 +6,17 @@
     <button onclick="player.setAttribute('play', false)">Pause</button>
     
     <button>Resume
-      <method event="onclick">
+      <handler name="onclick">
         player.setAttribute("play", true);
-      </method>
+      </handler>
     </button>
     <simplelayout axis="x" spacing="2"/>
   </view>
   
   <simplelayout axis="y" spacing="4"/>
 </canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@ 

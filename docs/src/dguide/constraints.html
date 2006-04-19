@@ -64,13 +64,13 @@ runtime. You'll see that the <code>setConstraint</code> method has the same effe
         y="${m.y}"/&gt;
 
   &lt;view x="300" width="20" height="20" bgcolor="blue"&gt;  
-    &lt;method name="setConstraint" event="oninit"&gt;
+    &lt;handler name="oninit"&gt;
       var f = function () {   
         this.setAttribute("y", m.y);       
       }
       var d = [m, "y"];
       this.applyConstraint("y", f, d);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/view&gt;
 
   &lt;window id="m" x="10" title="Drag me" width="160" height="20"/&gt;  

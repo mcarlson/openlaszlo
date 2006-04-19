@@ -775,10 +775,10 @@ It is sometimes helpful to take a step back and think about the real constraint 
     &lt;state name="scrubbing" onapply="parent.normal.remove()
            onremove="parent.normal.apply()"&gt;
       &lt;dragx/&gt;
-      &lt;method name="updateScrub" event="onx"&gt;
+      &lt;handler name="onx"&gt;
           //update media based on new x position 
           ...
-      &lt;/method&gt;
+      &lt;/handler &gt;
     &lt;/state&gt;
     &lt;state name="normal"&gt;
         &lt;attribute name="x" 
@@ -794,9 +794,9 @@ Coming back to the same component a few months later (and shaping it up for rele
           onmousedown="srubbing.apply()"
           onmouseup="srubbing.remove()"&gt;
     &lt;state name="scrubbing"&gt;
-      &lt;method name="updateMedia" event="onidle" refencence="LzIdle"&gt;
+      &lt;handler name="onidle" refencence="LzIdle"&gt;
           //update media's frame based on mouse xposition
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/state&gt;
     &lt;attribute name="x" 
                 value="${ ( media.frame/media.totalframes ) * parent.width}"/&gt; 

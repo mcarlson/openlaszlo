@@ -11,10 +11,10 @@
         <attribute name="obj" value="null" when="always"/>
 <!--        <attribute name="color" value="${obj == null ? null : obj.bgcolor}"/>-->
         <attribute name="color"/>
-        <method event="onobj">
+        <handler name="onobj">
             new LzDelegate(this, 'updatecolor', obj, 'onbgcolor');
             updatecolor();
-        </method>
+        </handler>
         <method name="updatecolor">
             setAttribute('color', this.obj.bgcolor);
         </method>
@@ -34,10 +34,10 @@
     <class name="toggletext" clickable='${!this.editing}'>
         <attribute name="text" type="text"/>
         <attribute name="editing" value="false"/>
-        <method event="onclick">
+        <handler name="onclick">
             setAttribute('editing', true);
             LzFocus.setFocus(editbox);
-        </method>
+        </handler>
         <text visible="${!parent.editing}" resize="true" name="t"
               y="$once{ parent.height /2 - this.height/2}"
               text="${parent.text}"/>
@@ -51,24 +51,24 @@
                                                           "checkMouse" );
                     super.init();
                 </method>
-                <method event="onfocus">
+                <handler name="onfocus">
                     this.globalMouseDel.register( LzGlobalMouse,
                                                   "onmousedown" );
-                </method>
-                <method event="onblur">
+                </handler>
+                <handler name="onblur">
                     parent.setAttribute( 'editing' , false );
-                </method>
+                </handler>
                 <method name="checkMouse" args="who">
                     if ( !this.containsPt( this.getMouse( 'x' ) ,
                                           this.getMouse( 'y' ) ) ){
                         parent.setAttribute( 'editing' ,false );
                     }
                 </method>
-                <method event="onkeyup" args="k">
+                <handler name="onkeyup" args="k">
                     if ( k == 13 ){
                         parent.setAttribute( "editing" , false );
                     }
-                </method>
+                </handler>
             </edittext>
         </state>
     </class>
@@ -77,12 +77,12 @@
         <attribute name="obj" value="null" when="once"/>
         <attribute name="prop" value="" type="string"/>
         <attribute name="isnumber" value="true"/>
-        <method event="onediting">
+        <handler name="onediting">
             if (this.editing == false) {
                 if (this.isnumber) this.obj.setAttribute(prop, Number(text));
                 else this.obj.setAttribute(prop, text);
             }
-        </method>
+        </handler>
     </class>
 
     <class name="item" x="10">
@@ -162,7 +162,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
