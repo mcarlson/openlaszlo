@@ -1,6 +1,7 @@
 <library>
 
     <include href="incubator/baseedittext.lzx" />
+    <include href="lz/vscrollbar.lzx"/>
 
     <!--- Implements visual baseedittext with scrollbar. -->
     <class name="scrolledittext" extends="baseedittext" 
