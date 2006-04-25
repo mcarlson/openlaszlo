@@ -2574,6 +2574,8 @@ public class CodeGenerator implements Translator {
     }
     // inner functions do not get scriptElement treatment
     options.putBoolean(Compiler.SCRIPT_ELEMENT, false);
+    // or the magic with(this) treatment
+    options.putBoolean(Compiler.WITH_THIS, false);
     // Now emit functions in the activation context
     if (scriptElement) {
       // create functions in global scope

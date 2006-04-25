@@ -1,0 +1,40 @@
+<!-- Copyright 2006 -->
+<canvas debug="true">
+
+    <handler name="oninit">
+        var f = function () {
+            global.xyzzy = 2;
+            Debug.write( "xyzzy is" , xyzzy );
+        }
+        Debug.write( "test 1:" );
+        f.call(this);
+    </handler>
+    
+    <handler name="oninit">
+        var f = function () {
+            global.xyzzy = 2;
+            _root.Debug.write( "xyzzy is" , xyzzy );
+        }
+        Debug.write( "test 2:" );
+        f.call(this);
+    </handler>
+    
+    <handler name="oninit">
+        var f = function () {
+            _root.xyzzy = 2;
+            _root.Debug.write( "xyzzy is" , xyzzy );
+        }
+        Debug.write( "test 3:" );
+        f.call(this);
+    </handler>
+    
+    <handler name="oninit">
+        var f = function () {
+            _root.xyzzy = 2;
+            _root.Debug.write( "xyzzy is" , _root.xyzzy );
+        }
+        Debug.write( "test 4 (only one that works) :" );
+        f();
+    </handler>
+
+</canvas>
