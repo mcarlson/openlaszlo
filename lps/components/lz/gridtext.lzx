@@ -7,6 +7,10 @@
               is displayed in the rows. -->
         <attribute name="datapath" 
                    setter="this.setAttribute( 'rowdp', datapath )"/>
+        <!--- type of content's alignment. Default: left
+              possible values are: left, center, right     -->
+        <attribute name="textalign" type="string" value="left"/>
+
         <!--- @keywords private -->
         <attribute name="rowdp" value="" type="string"/>
         <!--- If set to false, the field will not be editable. -->
@@ -17,7 +21,7 @@
         <attribute name="_texthilitecolor" value="null"/>
         <!--- @keywords private -->
         <attribute name="_textselectedcolor" value="null"/>
-
+        
         <!--- @keywords private -->
         <method name="_inferSortpath">
             return this.rowdp;
@@ -34,7 +38,8 @@
         <view height="24" clickable='${parent.editable}'
               onmouseover="immediateparent.domouseover()"
               onmouseout="immediateparent.domouseout()"
-              y="${immediateparent.height/2 - height/2}">
+              y="${immediateparent.height/2 - height/2}" 
+              clip="true" >
             <attribute name="editing" value="false"/>
             <attribute name="focusable" value="${!editing &amp;&amp; 
                                                   parent.editable}"/>
@@ -61,7 +66,43 @@
                                     (parent.immediateparent.highlighted ?
                                                 classroot._texthilitecolor:
                                                 classroot._textcolor)}"
-                  datapath="$once{parent.parent.rowdp}"/>
+                  datapath="$once{parent.parent.rowdp}">
+
+                <method event="oninit">
+                <![CDATA[
+                    var f = function() {
+                                this.setAttribute("x", this._calcX());
+                            }
+                    var d = [this, "width"];
+                    this.applyConstraint("x", f, d);
+                ]]>
+                </method>
+
+                <method event="ontext" args="val">
+                <![CDATA[
+                    this.setAttribute("x", this._calcX());
+                ]]>
+
+                </method>
+
+                <method name="_calcX">
+                <![CDATA[
+                    if (classroot.textalign == "center"){
+                        var x = ((this.width /2) - (this.getTextWidth() /2));
+                        if (x < 0) x = 0;
+                        return x;
+                    }
+                    else if (classroot.textalign == "right"){
+                        var x = ((this.width) - (this.getTextWidth() + 10));
+                        if (x < 0) x = 0;
+                        return x;
+                    }
+                    else{
+                        return 0;
+                    }
+                ]]>
+                </method>
+            </text>
 
             <state pooling="true" apply="${parent.editing}" 
                    onremove="parent.editbox.datapath.updateData()">
@@ -110,7 +151,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

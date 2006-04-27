@@ -3,7 +3,7 @@
 
     <include href="lz/grid.lzx"/>
     <dataset name="contactsLoad" queuerequests="true"
-           src="http://localhost:8080/lps/sample-apps/contacts/contactsdata.xml"
+           src="../../../demos/contacts/contactsdata.xml"
              ondata="contactsData.appendChild( this.getFirstChild() );"
              type="http" request="true"/>
 
@@ -32,17 +32,17 @@
                 <valignedText datapath="@firstname"/>
             </gridcolumn>
 
-            <gridtext editable="false" datapath="@lastname">Last
+            <gridtext editable="false" textalign="center" datapath="@lastname">Last
             </gridtext>
 
-            <gridtext datapath="@displayname">
+            <gridtext textalign="right" datapath="@displayname">
                 Fullname
             </gridtext>
 
             <gridcolumn resizable="false" sortable="false" width="130"> 
                 Default contact
                 <radiogroup xoffset="-10" text="$path{ '@title'}" 
-                            defaultSelection="0"
+                            defaultselection="0"
                             layout="axis:'x'">
                     <attribute name="y" 
                               value="$once{ immediateparent.height /2 
@@ -156,6 +156,6 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
