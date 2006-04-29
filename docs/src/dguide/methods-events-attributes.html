@@ -22,7 +22,7 @@ Because LZX allows you to add properties to instances, you can add attributes, e
 </p>
 <p>
 In LZX you use  attributes, events, and handlers to describe how your application responds to user input or other changes.
-In general, and to a first approximation, when an<em>attribute</em> changes value, it generates an <em>event </em>. You can additionally declare events with an <tagname link="true">event</tagname>  tag.
+In general, and to a first approximation, when an<em>attribute</em> changes value, it can generate an <em>event </em>. (See below for an qualification of when setting an attribute's value does and does not cause and event to be sent.) You can additionally declare events with an <tagname link="true">event</tagname>  tag.
 Your application's response to that event is determined by the associated<glossterm>event handler</glossterm>, which is
  defined in a <tagname link="true">handler</tagname> tag.
 </p>
@@ -41,6 +41,9 @@ A <tagname link="true">method</tagname> is an 'action', expressed in Javascript 
 Methods may be defined inside any <tagname>node</tagname> or <tagname>view</tagname> (or classes derived from them).   When defining a method, you must specify
 a value for the <attribute>name</attribute>attribute. The value of the 
 <attribute>name</attribute> attribute represents the name by which you will call this method in script. When you call the method, you use its name followed by open and close parentheses -- any arguments to the method would be placed within the parentheses.
+</p>
+<p>
+You cannot include a <tagname>method</tagname> within a dataset -- if you do it will be considered data, not an operation to be performed.
 </p>
 <p>
 In the following example, the <method link="false">myMethod</method> method is defined in the only node in the example.  It is called by the line in the script <code>myNode.myMethod()</code>. (By using the ID, the node can be referenced from anywhere in the program, including this script block). 
@@ -82,7 +85,7 @@ When you create a class by extending another one, the new class inherits all the
 The method attribute <attribute>'args'</attribute> is used to pass arguments to a method.  The value of the 'args' attribute is a 
 string containing variable names separated by commas. In the following example, two arguments
 'a' and 'b' are declared in the args attribute of the method named 'add'.  To call this method in
-script to add two numbers, you would write <code>myNode.add(1, 2);</code> 
+script to add the number 1 to the number 2, you would write <code>myNode.add(1, 2);</code> 
 </p>
 
 <example title="Defining a method with arguments">
@@ -148,7 +151,7 @@ associated "onheight" event that
 is generated whenever the view's height changes. These events are implicit in the sense that they are build into the system &#8212; you don't have to declare them or send them.
 </p>
 <p>
-The default behavior of the <method>setAttribute</method> method is to set the named property and send the event. 
+Said another way, the default behavior of the <method>setAttribute</method> method is to set the named property and send the event. 
 For instance, when a view changes its x position, it sends the event <event>onx</event> with the new
  value for its x property. 
 </p>
@@ -156,44 +159,49 @@ For instance, when a view changes its x position, it sends the event <event>onx<
 In addition to the implicit event associated with each named attribute, LFC classes have a variety of 
 additional
 events associated with them.  For example, the <tagname>view</tagname> tag has an <attribute>onclick</attribute> event
-that is generated whenever the user clicks the mouse while the cursor is positioned over the view.  See the <a href="${reference}">LZX Reference Manual</a> for a complete
+that is generated whenever the user clicks the mouse while the cursor is positioned over the view&#8212; even though there is no attribute named "click".  See the <a href="${reference}">LZX Reference Manual</a> for a complete
 list of events associated with LFC classes.
 </p>
 <h3>The event tag</h3>
 <p> 
 In addition to built-in and implicit events, you can explicitly declare events with the <tagname link="true">event</tagname> tag.
 </p>
-<h3>The sendEvent method</h3>
 <p>
+Note that in 3.n and earlier releases, you can send events that have not been explicitly declared.  However, this is not a good practice, and applications that rely on this will break with release 4.0. Therefore, it's good to get in the habit of declaring any events that you know you will send by calling <method>sendEvent</method>.
 </p>
 
-<h3>Event Handlers in class definitions</h3>
-<p>The <tagname link="true">handler</tagname> tag defines how an instance responds to an event.</p>
+<h4>Naming events</h4>
 <p>
-A handler can either specify the code to handle an event or it can specify a method that should be invoked to handle the event.  The reason for these two ways is that a handler is not overridable in a subclass, so you can add as many handlers as you like to an event and they will all fire. 
+As discussed in the section below on handlers, events and their associated handlers must have the same name.  Note: event names cannot start with a leading underscore.
+</p>
+<h3>LzEvent and the sendEvent method</h3>
+<p>
+When you create an event using the <tagname>event</tagname>, you are creating an instance of the class called <classname link="true">LzEvent</classname>. You can then call the <method>sendEvent</method> on this class to explicitly cause the event to be sent. 
+</p>
+<example extract="false" title="sendEvent">
+&lt;button name="framitzbutton" onclick="sendframitz()"&gt;
+     Send framitz event
+     &lt;event name="framitz"/&gt;
+     &lt;method name="sendframitz"&gt;
+      framitz.sendEvent()
+     &lt;/method&gt;
+ &lt;/button&gt;
+</example>
+<p>
+You shouldn't send an event for which no handler has been defined. That is to say, it is fine to <i>define</i> an event (using the <tagname>event</tagname> tag) for which no handler exists.  This is often useful to to in prototyping. But don't send it unless you know that there is a handler for it.  
 </p>
 <p>
-If you want a subclass to be able to override the handling of an event in a superclass, the superclass would associate a method with the event by:
+Note that there is virtually never any reason to create an event in script by creating a  new LzEvent.  Likewise, there is virtually never any reason for you to use any method on this event other than sendEvent.  Other methods are used internally within the Laszlo Foundation Classes; they are not intended for user code.
 </p>
-<pre>
-&lt;handler name="eventName" method="methodName" /&gt;
-</pre>
+<h2>Event Handlers</h2>
 <p>
-And the subclass would overrride <code>methodName</code>.
+An event handler is the code that is executed when an event is recieved. An event can have zero or more handlers.
 </p>
-<p>
-Recall that a method is an 'action' you can perform on an instance, and that you  can call it from any script.  You could call it from a handler.  For example, the usage above can be written longhand as:
-</p>
-<pre>
-&lt;handler name="eventName"&gt;
-  this.methodName();
-&lt;/handler&gt;
-</pre>
 <p>
 There are two syntaxes that you can use to define handlers:</p>
 <ul>
 <li>"onevent" in the node creation tag</li>
-<li>using the <tagname>method</tagname></li>
+<li>using the <tagname>handler</tagname> tag</li>
 </ul>
 <p>
 For convenience, you can use the onevent syntax for short handlers for some kinds of events, such as onclick, as explained below. For readability, however, the <tagname link="false">
@@ -215,7 +223,11 @@ the views's color from red to blue.
    &lt;view height="30" width="30" bgcolor="red" onclick="setAttribute('bgcolor', blue)"/&gt;
 &lt;/canvas&gt;
 </example>
-<h3>Handler syntax </h3>
+<h3>The &lt;handler&gt; tag</h3>
+<p>The <tagname link="true">handler</tagname> tag defines how an instance responds to an event. A handler can either specify the code to handle an event or it can specify a method that should be invoked to handle the event. Any event can have an unlimited number of handlers associated with it.
+</p>
+ 
+<h4>Handler tag "name" attribute</h4>
 <p>
 The <tagname>handler</tagname> tag defines code that is executed when an event that has the name of the handler is fired. The name of the handler is the same as the name of the event with which it is associated.  For example, the "onclick" event is handled by a handler also named "onclick".
 Event handlers defined in this way are executed whenever their associated <attribute>event</attribute> occurs.
@@ -256,7 +268,7 @@ An event can have associated with it any number of handlers. When that event is 
 </example>
 <h3>Handlers that call methods</h3>
 <p>
-A handler may include javascript code to be executed when the event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <attribute link="true">method</attribute> attribute of the <tagname>handler</tagname> tag.
+A handler may include javascript code to be executed when the event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <attribute link="true">method</attribute> attribute of the <tagname>handler</tagname> tag.</p>
 <example title="Calling a method from a handler">
 &lt;canvas debug="true"&gt;
    &lt;debug y="50"/&gt;
@@ -271,39 +283,27 @@ A handler may include javascript code to be executed when the event occurs, or i
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>
+<h3>Handlers in class definitions</h3>
+<p>
+A handler is not overridable in a subclass, so you can add as many handlers as you like to an event and they will all fire. 
 </p>
-
-<example name="Two syntaxes for sending events">
-&lt;canvas debug="true"&gt;
-     &lt;debug /&gt;
-
-    &lt;class name="myclass_with_handler"&gt;
-        &lt;event name="myevent"/&gt;
-        &lt;handler name="myevent" args="myargs"&gt;
-            Debug.write(this, 'handling myevent, myargs=', myargs);
-        &lt;/handler&gt;
-
-        &lt;attribute name="season" type="string" value="spring" /&gt;
-        &lt;event name="onseason" /&gt;
-        &lt;handler name="onseason" args="s"&gt;
-            Debug.write("got season of ", s, ", season is ", season);
-        &lt;/handler&gt;
-    &lt;/class&gt;
-
-  &lt;myclass_with_handler id="foo" /&gt;
-
-
-  &lt;button onclick="foo.myevent.sendEvent(12)" text="send the event" /&gt;
-  &lt;button onclick="foo.setAttribute('season', 'fall')" text="autumn" /&gt;
-
-  &lt;!-- Don't do this! Setting an attribute directly with '=' shortcuts around
-       the event system. This is not right; use setAttribute instead --&gt;
-  &lt;button onclick="foo.season='winter'" text="evil" /&gt;
-
-  &lt;simplelayout axis="x" spacing="5" /&gt;
-
-&lt;/canvas&gt;
-</example>
+<p>
+If you want a subclass to be able to override the handling of an event in a superclass, the superclass would associate a method with the event by:
+</p>
+<pre>
+&lt;handler name="eventName" method="methodName" /&gt;
+</pre>
+<p>
+And the subclass would overrride <code>methodName</code>.
+</p>
+<p>
+Recall that a method is an 'action' you can perform on an instance, and that you  can call it from any script.  You could call it from a handler.  For example, the usage above can be written longhand as:
+</p>
+<pre>
+&lt;handler name="eventName"&gt;
+  this.methodName();
+&lt;/handler&gt;
+</pre>
 <h3>Overriding handlers</h3>
 <p>
 If you want the superclass to define a handler that the subclass can override, you would have the handler point to a method, and in the subclass you just override the method. Let's repeat that to make it clear: when you want the subclass to have a different behavior than the superclass, don't attempt to override the handler in the subclass, and don't create a new handler in the subclass. Instead, have the handler in the superclass call a method, and then in the subclass, override that method.  Try this example, which hopefully makes all clear:</p>
@@ -400,6 +400,67 @@ Here's an example:</p>
 <p>
 Note that Mine handles a click on Yours.  Even though the handler is in Mine, it only runs when you click Yours. 
 </p>
+<h3>Comparing ways to send and handle events</h3>
+<p>
+As has been discussed above, you can cause an event to be sent explicitly, by defining the event and then calling the <method>sendEvent</method> on it.  Or, you can use the <method>setAttribute</method> method to implicitly define and send an event.  A third way of defining events, using delegates, is explained in <xref linkend="delegates"/>.
+</p>
+<example name="Two syntaxes for sending events">
+&lt;canvas debug="true"&gt;
+     &lt;debug /&gt;
+
+    &lt;class name="myclass_with_handler"&gt;
+        &lt;event name="myevent"/&gt;
+        &lt;handler name="myevent" args="myargs"&gt;
+            Debug.write(this, 'handling myevent, myargs=', myargs);
+        &lt;/handler&gt;
+
+        &lt;attribute name="season" type="string" value="spring" /&gt;
+        &lt;event name="onseason" /&gt;
+        &lt;handler name="onseason" args="s"&gt;
+            Debug.write("got season of ", s, ", season is ", season);
+        &lt;/handler&gt;
+    &lt;/class&gt;
+
+  &lt;myclass_with_handler id="foo" /&gt;
+
+
+  &lt;button onclick="foo.myevent.sendEvent(12)" text="send the event" /&gt;
+  &lt;button onclick="foo.setAttribute('season', 'fall')" text="autumn" /&gt;
+
+  &lt;!-- Don't do this! Setting an attribute directly with '=' shortcuts around
+       the event system. This is not right; use setAttribute instead --&gt;
+  &lt;button onclick="foo.season='winter'" text="evil" /&gt;
+
+  &lt;simplelayout axis="x" spacing="5" /&gt;
+
+&lt;/canvas&gt;
+</example>
+<h3>Testing for existence of events in "legacy" code</h3>
+<p>
+As is explained in <xref linkend="delegates"/>, an event doesn't really exist unless and until there is a delegate registered to recieve it. In code that was written before the <tagname>event</tagname> tag became part of the language,
+before sending an event it was necessary to test whether the receiving delegate existed; otherwise an error resulted. In order to create your own event, you needed to create an attribute like this:</p>
+<pre>
+&lt;attribute name="onsomeevent" value="null"/&gt;
+</pre>
+<p>
+Then, you had to check to see if it was a valid LzEvent before calling <method>sendEvent()</method> on it. Ways of making that test look like this:</p>
+<pre>
+    if ( onsomeevent instanceof LzEvent) {
+       onsomeevent.sendEvent();
+    }
+</pre>
+<p>
+or like this:
+</p>
+<pre>
+    if (classroot.onactivate) {
+       classroot.onactivate.sendEvent();
+    }
+</pre>
+<p>
+If you use the <tagname>event</tagname> and <tagname>handler</tagname> syntax, you  do not have to worry about such tests. (The delegates are handled for you by the runtime.)
+</p>
+
 <h2>Attributes</h2>
 <p>
 Attributes define properties of instances of classes.  For example, consider the <tagname link="true">view</tagname> element.  It has more than forty defined attributes, such as <attribute link="true">x</attribute>, <attribute link="true">y</attribute>,<attribute link="true">bgcolor</attribute>. Some of these attributes are defined on <tagname>view</tagname>, and others are inherited from <tagname link="true">node</tagname> from which it derives. These attributes are specified in the schema that defines the LZX tags. Each attribute has a type, for example: <code>number, boolean,</code> and <code>string</code>.
@@ -804,7 +865,7 @@ The two types are equivalent in LZX, but you must use the XML name in XML constr
 <h3>Accessing attribute values from JavaScript</h3>
 
 <p>
-    Attributes can normally be referred to in class methods and expressions by their name except when being initialized as above, 
+Attributes can normally be referred to in class methods and expressions by their name except when being initialized as above, 
 in which case they must be referred to using <code>this.</code>, in order to create the attribute in the element. 
 </p>
 <p>
