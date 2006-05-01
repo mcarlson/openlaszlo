@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -206,11 +206,13 @@ LzMediaLoader.prototype.testLoad = function (){
                       this.mc.lmc.getBytesTotal(), typeof(this.mc.lmc.getBytesTotal()),
                       this.mc.lmc._currentframe, this.mc.lmc._framesloaded, this.mc.lmc._totalframes);
 */
-
     if ( this.checkonce ){
-        this.owner.setAttribute( "loadratio" ,  
-                this.mc.lmc.getBytesLoaded() / this.mc.lmc.getBytesTotal() );
-
+        var lr = this.mc.lmc.getBytesLoaded() / this.mc.lmc.getBytesTotal();
+        if (lr != this.owner["loadratio"]) {
+            this.owner.setAttribute("loadratio" , lr);
+            //reset timeout for media which is streaming
+            this.mc.loadtime = getTimer();
+        }
     }
 
     if ( this.checkonce && this.mc.lmc.getBytesTotal == void 0 
