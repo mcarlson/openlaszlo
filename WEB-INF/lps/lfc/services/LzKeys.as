@@ -68,6 +68,21 @@ LzKeys.gotKeyDown = function ( kC, info ){
         // won'tdown || info != "extra") {
         // won't send repeated key events in player XXX ?
 
+        // Workaround for bug lpp-1830; we need to check if the shift
+        // key or control keys are stuck down, use Flash isDown
+        // routine vefify whether downKeysHash state is correct
+        if ($swf8) {
+            if (this.downKeysHash[ Key.SHIFT ] && !Key.isDown(Key.SHIFT) 
+                && kC != Key.SHIFT) {
+                this.gotKeyUp(Key.SHIFT);
+            }
+            if (this.downKeysHash[ Key.CONTROL ] && !Key.isDown(Key.CONTROL)
+                && kC != Key.CONTROL) {
+                 this.gotKeyUp(Key.CONTROL);
+            }  
+        }
+        
+
         // check for IME
         if (this.downKeysHash[229] != true) {
             this.onkeydown.sendEvent( kC );
@@ -118,6 +133,20 @@ LzKeys.gotKeyUp = function ( kC ){
         this.downKeysArray.push( k );
     }
     this.onkeyup.sendEvent( kC );
+
+        // Workaround for bug lpp-1830; we need to check if the shift
+        // key or control keys are stuck down, use Flash isDown
+        // routine vefify whether downKeysHash state is correct
+        if ($swf8) {
+            if (this.downKeysHash[ Key.SHIFT ] && !Key.isDown(Key.SHIFT) 
+                && kC != Key.SHIFT) {
+                this.gotKeyUp(Key.SHIFT);
+            }
+            if (this.downKeysHash[ Key.CONTROL ] && !Key.isDown(Key.CONTROL)
+                && kC != Key.CONTROL) {
+                 this.gotKeyUp(Key.CONTROL);
+            }  
+        }
  }
 
 //-----------------------------------------------------------------------------
@@ -133,6 +162,20 @@ LzKeys.getDownKeys = function (){
 // key names (e.g. ['shift', 'tab']
 //-----------------------------------------------------------------------------
 LzKeys.isKeyDown = function ( k ){
+    // Workaround for bug lpp-1830; we need to check if the shift
+    // key or control keys are stuck down, use Flash isDown
+    // routine vefify whether downKeysHash state is correct
+    if ($swf8) {
+        if (this.downKeysHash[ Key.SHIFT ] && !Key.isDown(Key.SHIFT) 
+            && kC != Key.SHIFT) {
+                this.gotKeyUp(Key.SHIFT);
+         }
+         if (this.downKeysHash[ Key.CONTROL ] && !Key.isDown(Key.CONTROL)
+            && kC != Key.CONTROL) {
+                 this.gotKeyUp(Key.CONTROL);
+         }  
+    }
+    
     if (typeof(k) == "string") {
         return (this.downKeysHash[ this.keyCodes[ k.toLowerCase() ] ] == true);
     } else {
