@@ -383,9 +383,6 @@
           <fileset dir="..${build.tools}/tools">
               <include name="jakarta-ant-1.5.1/**" />
               <include name="JavaCC2_1.class"/>
-              <include name="jikes/macosx-jikes-1.18.exe" />
-              <include name="jikes/unix-jikes-1.18.exe" />
-              <include name="jikes/windows-jikes-1.18.exe" />
               <include name="jython-21.class"/>
               <include name="Python-2.2.2.exe"/>
               <include name="PyXML-0.8.3.tar.gz"/>
@@ -421,14 +418,10 @@
               <include name="*/**"/>
               <exclude name="${builddir-dev}/server/${tomcat}/bin/*"/>
               <exclude name="${builddir-dev}/docs/src/**" />
-              <exclude name="tools/jikes/macosx-jikes-1.18.exe" />
-              <exclude name="tools/jikes/unix-jikes-1.18.exe" />
               <exclude name="tools/jakarta-ant-1.5.1/bin/ant" />
           </tarfileset>
           <tarfileset dir="${source-distro}" mode="755" prefix="${source-distro}">
               <include name="${buildir-dev>/server/${tomcat}/bin/*"/>
-              <include name="tools/jikes/macosx-jikes-1.18.exe" />
-              <include name="tools/jikes/unix-jikes-1.18.exe" />
               <include name="tools/jakarta-ant-1.5.1/bin/ant" />
           </tarfileset>
           <!-- credits source and binary-->
