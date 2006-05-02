@@ -1,0 +1,4 @@
+I am the foo.
+created by ben shine 5.2.06
+I exist to play with subversion update mechanism.
+Copyright 2006 Laszlo Systems
