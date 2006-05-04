@@ -47,11 +47,11 @@
             this.owner = parent;
 
             if ( typeof( args.name ) != 'undefined'  )  {
-                var nme = args.name; // save value of name arg
+                var flname = args.name; // save value of name arg
                 args.name = null;    // zero name field. doing 'delete args.name'
                                      // doesn't work in this case.
-                this.wouldbename = nme;
-                this.owner[nme] = this; // have parent point to me via owner attribute
+                this.wouldbename = flname;
+                this.owner[flname] = this; // have parent point to me via owner attribute
             }
 
             // construct this view on the canvas width a default name
@@ -75,6 +75,15 @@
 
         <!--- @keywords private -->
         <method name="destroy" args="recursiveCall">
+          // make sure owner and attachTarget don't know about us.
+          if (this.owner != null) {
+              if (this['wouldbename'] != null) {
+                this.owner[this.wouldbename] = null;
+              }
+              this.owner = null;
+          }
+          this.setAttachTarget(null);
+          
           // Have to remove ourselves from the canvas
           var svs = canvas.subviews;
           for (var i = svs.length -1; i >= 0; i--) {
@@ -280,6 +289,14 @@
             this.bringToFront();
         </handler>
         
+        <!-- recalculate position when width changes
+             @keywords private -->
+        <handler name="onwidth" method="updateAttachLocation"/>
+        
+        <!-- recalculate position when height changes
+             @keywords private -->
+        <handler name="onheight" method="updateAttachLocation"/>
+        
         <!--- @keywords private -->
         <method name="setVisible" args="v">
             if (v) {
@@ -290,7 +307,7 @@
         
         <!--- @keywords private -->
         <method name="toString">
-            return "floatinglist: wouldbename,owner = " + wouldbename + "," + this.owner;
+            return "floatinglist: wouldbename,owner = " + this.wouldbename + "," + this.owner;
         </method> 
         
         <!--- For focus control - next focus from here is relative to our owner.

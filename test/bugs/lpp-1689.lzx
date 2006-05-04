@@ -1,0 +1,30 @@
+<canvas debug="true">
+
+    <dataset name="mydset">
+        <item value="1">one</item>
+        <item value="2">two</item>
+        <item value="3">three</item>
+        <item value="4">four</item>
+    </dataset>
+
+    <simplelayout axis="y"/>
+    
+    <view x="200" y="200">
+        <datacombobox name="options" statictext="Options" width="100" selectfirst="false"
+                      listwidth="154" listattach="top" shownitems="6" ismenu="true"
+                      itemdatapath="mydset:/item" />
+    </view>
+
+    <view x="200" y="200">
+        <datacombobox name="options" statictext="Options" width="100" selectfirst="false"
+                      listwidth="154" listattach="top" shownitems="6" ismenu="true"
+                      itemdatapath="mydset:/item" />
+    </view>
+
+    <button onclick="">Change dataset</button>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->

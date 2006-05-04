@@ -24,8 +24,14 @@
             var target = parent.attachtarget;
             var t = this.datapath.xpathQuery(target.textdatapath);
             var v = this.datapath.xpathQuery(target.valuedatapath);
-            //Debug.write("cbitem", this, "setting text to", t);
-            //Debug.write("cbitem", this, "setting value to", v);
+            if ($debug) {
+                if (typeof t == "undefined") {
+                    Debug.warn("basedatacombobox_item textdatapath result is undefined");
+                }
+                if (typeof v == "undefined") {
+                    Debug.warn("basedatacombobox_item valuedatapath result is undefined");
+                }
+            }
             this.setAttribute('text', ( t == undefined ? '' : t ));
             this.setAttribute('value', ( v == undefined ? null : v ));
             
@@ -150,8 +156,7 @@
               @keywords private -->
         <attribute name="_cbtext" value="null" />
 
-        <!--- The floating list. There should be only one instance shared by all
-              comboboxes.
+        <!--- The floating list.
               @keywords private -->
         <attribute name="_cblist" value="null"/>
 
@@ -187,6 +192,7 @@
 
         <!--- @keywords private -->
         <handler name="ondata"> <![CDATA[
+            _teardowncblist();
             if (this.value == null && selectfirst) {
                 // set first to be the initvalue
                 _updateSelectionByIndex(0,false,true);
@@ -276,7 +282,7 @@
                         Debug.format("basedatacombobox floatinglist class (%w) is undefined", flcn);
                 }
                 
-                var cblist = new global[flcn](canvas,
+                var cblist = new global[flcn](this,
                                               { visible:false, 
                                                 attach: this.listattach, 
                                                 attachoffset: -2, 
@@ -297,7 +303,7 @@
 
                 var w = ( this.listwidth != null ? this.listwidth : this.width );
                 cblist.setWidth(w);
-                cblist.setAttachTarget(this)
+                cblist.setAttachTarget(this);
                 cblist.setAttribute('shownitems', this.shownitems);
                 cblist.item.setDatapath(this.itemdatapath);
 
@@ -316,6 +322,21 @@
             ]]>
         </method>
 
+        <!--- @keywords private -->
+        <method name="_teardowncblist">
+            //Debug.write("destroying _cblist");
+            if (this._selectdel != null) {
+                this._selectdel.unregisterAll();
+                delete this._selectdel;
+            }
+            if (this._cblist != null) {
+                var cbl = this._cblist;
+                this._cblist = null;
+                cbl.setVisible(false);
+                cbl.destroy();
+            }
+        </method>
+        
         <!--- Toggles the open/close state of the popup list. -->
         <method name="toggle">
             this.setOpen(!this.isopen)
@@ -408,13 +429,22 @@
               to the datacombobox.
               @keywords private -->
         <method name="_flistselect" args="item" > <![CDATA[
+            // Just return if item is undefined. baselist will do this sometimes
+            if ( typeof item == "undefined" ) {
+                return;
+            }
             // Clear selection and return if there is no item selected.
-            if (item == null ) {
+            if ( item == null ) {
                 this._cblist._selector.clearSelection();
                 return;
             }
 
             if ( item.isinited ) {
+                if ($debug) {
+                    if (item.value == null) {
+                        Debug.warn("null item value in _flistselect");
+                    }
+                }
                 this.setValue(item.value);
                 if ( item && this.statictext == null ) this._cbtext.setText(item.text);
             }
@@ -517,6 +547,28 @@
             ]]>
         </method>
 
+        <!--- Since we are not focusable, defer to the datacombobox's next selection,
+              so that when floatinglist is tabbed out of, we can provide a next
+              selection since we are it's owner
+              @keywords private -->
+        <method name="getNextSelection">
+            // must ensure the floatinglist is closed so that if it is being tabbed from,
+            // we can change the focus. (focus is normally not allowed to escape from
+            // a modal view).
+            this.setOpen(false);
+            return LzFocus.getNext(this);
+        </method>
+
+        <!--- since we are not focusable, this provides an api for asking what child to send focus
+              to, as is the case when floatinglist is shift-tabbed back to us.
+              @keywords private -->
+        <method name="resolveSelection">
+            // must ensure the floatinglist is closed so that if it is being tabbed from,
+            // we can change the focus. (focus is normally not allowed to escape from
+            // a modal view).
+            this.setOpen(false);
+            return this;
+        </method>
 
         <!-- ============================================================ -->
         <!-- focus kludge for combobox                                    -->
@@ -527,23 +579,30 @@
         <!--- The equivalent for onblur for combobox. -->
         <event name="oncomboblur" />
         <!--- @keywords private -->
-        <handler name="onfocus">
-            if (this.oncombofocus) {
-                // LzFocus.lastfocus is the blurred view
-                if ( LzFocus.lastfocus != this._cblist || 
-                     this._cblist.attachtarget != this ) {
+        <handler name="onfocus"><![CDATA[
+            //Debug.write("cb onfocus", this, LzFocus.lastfocus);
+            // LzFocus.lastfocus is the blurred view
+            if ( LzFocus.lastfocus != this._cblist || 
+                 (this._cblist != null && this._cblist.attachtarget != this) ) {
+                if (this.oncombofocus) {
                     this.oncombofocus.sendEvent(LzFocus.lastfocus);
                 }
             }
-        </handler>
+        ]]></handler>
         <!--- @keywords private -->
-        <handler name="onblur" args="focusview">
-            if (this.oncomboblur) {
-                if (focusview != this._cblist) {
+        <handler name="onblur" args="focusview"><![CDATA[
+            //Debug.write("cb onblur", this, focusview);
+            if (focusview != null && focusview != this._cblist) {
+                if (this.oncomboblur) {
                     this.oncomboblur.sendEvent(focusview);
                 }
+                // destroy floating list when we lose focus
+                if (this._cblist != null && 
+                    LzFocus.lastfocus != this) {
+                    this._teardowncblist();
+                }
             }
-        </handler>
+        ]]></handler>
 
     </class>
 

@@ -59,9 +59,6 @@
         </view>
         
         <text name="_text" x="8" y="0"
-              font="$once{parent.style.font}" 
-              fontsize="$once{parent.style.fontsize}" 
-              fgcolor="$once{parent.style.textcolor}"
               width="${ parent.width - 19 }" />
 
         <!--- @keywords private -->
@@ -77,7 +74,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
