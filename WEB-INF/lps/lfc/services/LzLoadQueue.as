@@ -94,7 +94,7 @@ LzLoadQueue.enqueueRequest = function( loadmc ){
 //==============================================================================
 LzLoadQueue.serverlessOnDataHandler = function (src) {
     if (src == undefined) {
-        _root.Debug.write("LzLoadQueue.serverlessOnDataHandler load failed from URL '" + this.url + "': no data received.");
+        _root.Debug.warn("LzLoadQueue.serverlessOnDataHandler load failed from URL '%s': no data received", this.url);
         _root.Debug.write("Failure to load data in serverless apps may be caused by Flash player security policies. Check your data server crossdomain.xml file");
         this.onload(false);
         this.dataset.onerror.sendEvent(this.dataset);
