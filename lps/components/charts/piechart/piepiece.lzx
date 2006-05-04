@@ -165,7 +165,7 @@
                 var mygradient = this.createRadialGradient(-radius, -radius, 0, radius, radius, 0);
                 
                 this.globalAlpha = 0;
-                mygradient.addColorStop(0, '0xffffff');
+                mygradient.addColorStop(0, 0xffffff);
                 this.globalAlpha = 1;
                 mygradient.addColorStop(1, this.style.region.color);
                 this.fillStyle = mygradient;
@@ -189,7 +189,7 @@
                 var mygradient = this.createLinearGradient(positionX, positionY, -positionX*0.05, -positionY*0.05);
                 
                 this.globalAlpha = 0;
-                mygradient.addColorStop(0, '0xffffff');
+                mygradient.addColorStop(0, 0xffffff);
                 this.globalAlpha = 1;
                 mygradient.addColorStop(1, this.style.region.color);
                 this.fillStyle = mygradient;
@@ -259,8 +259,14 @@
 
         // reduce the radius of the inner piece
         startRadius = offset / Math.sin(arc/2/180*Math.PI);
+
+        if (!isFinite(startRadius))
+            return;
+    
         miniRadius = this.radius - startRadius - offset;
 
+        if (miniRadius &lt; 0)
+            return;
 
         //New positions
         positionX = Math.cos(midAngle/180*Math.PI)*startRadius;
@@ -331,11 +337,8 @@
         
     </class>    
 </library> 
-<!-- * X_LZ_COPYRIGHT_BEGIN 
-***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
-* X_LZ_COPYRIGHT_END 
-****************************************************** -->
-<!-- @LZX_VERSION@                                                       
-   -->
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->
