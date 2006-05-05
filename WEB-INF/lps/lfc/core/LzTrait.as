@@ -20,7 +20,7 @@ LzTrait = Class( "LzTrait" , null , function ( traitdesc ){
     this["traitname"] = tname;
 
     var nta = new Object();
-    for (a in ta) {
+    for (var a in ta) {
         if (a != "name") nta[a] = ta[a];
     }
     this["attrs"] = nta;
@@ -37,8 +37,6 @@ LzTrait = Class( "LzTrait" , null , function ( traitdesc ){
 );
 
 LzTrait.traits = {};
-
-LzTrait.traitnum = 1;
 
 //------------------------------------------------------------------------------
 // @keywords private
@@ -79,8 +77,8 @@ LzTrait.makeInterstitial = function( trait, superclass )
     var interstitial = trait.interstitials[supername];
     
     if (interstitial == null) {
-        var interstitialname = "__LZtrait$" + trait.name + "$" + _root.LzTrait.traitnum++;
-        
+        var interstitialname = trait.traitname + "$" + supername;
+
         var initattrs = new Object();
         initattrs.__proto__ = trait.attrs;
         initattrs["trait"] = trait;
