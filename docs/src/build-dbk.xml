@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <project default="build">
@@ -14,7 +14,7 @@
   </xmlcatalog>
   
   <target name="init">
-    <property name="docbook-xsl" value="../../../tools/docbook-xsl-1.65.1"/>
+    <property name="docbook-xsl" value="${VENDOR_ROOT}/docbook-xsl-1.65.1"/>
     <property name="dguide.input.dir" value="dguide"/>
     <property name="dguide.build.dir" value="build/dguide"/>
     <property name="dguide.output.dir" value="../fast-dguide"/>
@@ -84,7 +84,7 @@
   </target>
   
   <target name="validate">
-    <jing rngfile="../../../tools/emacs/nxml-mode-20031031/schema/docbook.rnc"
+    <jing rngfile="${VENDOR_ROOT}/emacs/nxml-mode-20031031/schema/docbook.rnc"
           compactsyntax="true" checkid="true">
       <fileset dir="dbk" includes="*.dbk" excludes="**/index*.dbk"/>
     </jing>
