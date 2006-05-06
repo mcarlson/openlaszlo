@@ -39,6 +39,12 @@
         <!--- @keywords private -->
         <attribute name="defaultbuttongroup" value="true"/>
 
+    <!--- Attribute handles whether window can be dragged or not @keywords public -->
+
+       <attribute name="allowdrag"
+           value="true"
+           type="boolean" />
+
        <!--- Controls the datapath of this window. If true, the datapath
              associated with the window will cause the window to be invisible if
              it matches no data or visible if it does match data, overriding
@@ -186,7 +192,11 @@
               anywhere on the window. 
               @keywords private -->
         <method name="_startDrag">
-            this._windowDrag.apply();
+       <![CDATA[
+        if (this.allowdrag){
+            this._windowDrag.apply();}
+
+       ]]>
         </method>
 
         <!--- May be called by subclasses to control dragging of the window
