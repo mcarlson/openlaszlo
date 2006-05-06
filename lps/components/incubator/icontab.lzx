@@ -1,4 +1,4 @@
-<library>
+<library> 
 
     <resource name="icontab_left_rsc">
         <frame src="resources/tabs/tab_slct_lft.swf" />
@@ -17,7 +17,7 @@
     </resource>
 
     <!--- A tab item for use in sidebar.lzx - switches between listpanel views -->
-    <class name="icontab" extends="baselistitem" style="$once{tab_style}"
+    <class name="icontab" extends="baselistitem" 
            onmouseover="this.doMouseOver()" 
            onmouseout="this.doMouseOut()" >
 
@@ -49,6 +49,12 @@
             <view name="icon" resource="$once{classroot.iconname + '_icon_rsc'}" y="${classroot.icon_y}"/>
             <text name="label" resize="true" x="${parent.icon.x + parent.icon.width + 4}" text="${classroot.text}" y="${classroot.label_y}" />
         </view>
+        
+        <method event="oninit">
+            if (!this.selected) {
+                this.setFrame(2);
+            }
+        </method>    
 
         <!--- @keywords private -->
         <method name="setHilite" args="h">
@@ -79,8 +85,8 @@
             if (this.style != null) {
                 this.setTint(this.tabs, s.basecolor, 40);
                 this.content.label.setAttribute("fgcolor", s.textcolor);
-                this.content.label.setAttribute("font", s.font);
-                this.content.label.setAttribute("fontsize", s.fontsize);
+                if (s["font"]) this.content.label.setAttribute("font", s.font);
+                if (s["fontsize"]) this.content.label.setAttribute("fontsize", s.fontsize);
             }
         </method>
 
