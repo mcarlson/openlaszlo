@@ -189,13 +189,18 @@
             // Force the superclass to notice that the zeroth subview has some frames;
             // This is necessary to get up/over/down/disable to work.
             this.setResourceViewCount(middle.totalframes);
+            
+            if (! this.enabled && this.frame != this.disabledResourceNumber) {
+                this.setAttribute('frame', this.disabledResourceNumber);
+            }
+
         ]]> 
         </method>
         
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2005 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2005-2006 Laszlo Systems, Inc. All Rights Reserved.                    *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
