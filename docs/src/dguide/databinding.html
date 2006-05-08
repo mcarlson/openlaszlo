@@ -442,7 +442,7 @@ Here is a simple program that illustrates use of local datasets (the file tests/
     &lt;dataset name="lds" src="../testdata.xml" type="http" request="true"/&gt;
     &lt;text&gt;local dataset loaded at runtime&lt;/text&gt;
     &lt;text datapath="local:parent.lds:/persons/person/firstName/text()" onclick="Debug.write(this.datapath)"/&gt;
-    &lt;handle reference="lds" name="ondata"&gt;
+    &lt;handler reference="lds" name="ondata"&gt;
       &lt;![CDATA[
       Debug.write("remotedata test data loaded", this);
       if (this.lds.serialize() != '&lt;lds&gt;&lt;persons&gt;&lt;person id="1"&gt;&lt;firstName&gt;Dan&lt;/firstName&gt;&lt;lastName&gt;McGowan&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;address id="1" code="ML"&gt;&lt;line1&gt;2210 North 184th Street&lt;/line1&gt;&lt;line2/&gt;&lt;city&gt;Shoreline&lt;/city&gt;&lt;/address&gt;&lt;/person&gt;&lt;person id="2"&gt;&lt;firstName&gt;Barry&lt;/firstName&gt;&lt;lastName&gt;Bonds&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;person id="3"&gt;&lt;firstName&gt;Jeff&lt;/firstName&gt;&lt;lastName&gt;Beck&lt;/lastName&gt;&lt;modifyDate&gt;3/25/05&lt;/modifyDate&gt;&lt;/person&gt;&lt;/persons&gt;&lt;/lds&gt;') {
@@ -868,17 +868,18 @@ document.</p>
     &lt;edittext name="input"&gt;
       &lt;handler name="onkeyup" args="k"&gt;
         if ( k == 13 ) {
-          parent.bSend.handler();
+          parent.bSend.compute();
         }
       &lt;/handler&gt;
     &lt;/edittext&gt;
     &lt;button name="bSend" text="Add"&gt;
-      &lt;handler name="onclick" name="handler"&gt;
+      &lt;handler name="onclick" method="compute"/&gt;
+        &lt;method name="compute"&gt;
         top.addNode(parent.input.getText())
         var end = top.xpathQuery('*/last()')
         numptr.setXPath('numbers:/*[' + end + ']')
         parent.input.clearText()
-      &lt;/handler&gt;
+      &lt;/method&gt;
     &lt;/button&gt;
 &lt;/view&gt;
 &lt;view height="100" &gt;
