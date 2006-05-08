@@ -1,0 +1,654 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;9.&nbsp;Introduction aux Textes et Polices de caract&egrave;res</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="art_assets.html" title="Chapter&nbsp;8.&nbsp;Intoduction to Media and Art Assets">
+      <link rel="next" href="scripting-tutorial.html" title="Chapter&nbsp;10.&nbsp;Introduction to Scripting"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;9.&nbsp;Introduction aux Textes et Polices de caract&egrave;res</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="art_assets.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="scripting-tutorial.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="text-tutorial"></a>Chapter&nbsp;9.&nbsp;Introduction aux Textes et Polices de caract&egrave;res</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="text-tutorial.html#d0e3825">1. Introduction</a></span></dt>
+               <dt><span class="section"><a href="text-tutorial.html#text-tutorial.basics">2. La balise &lt;text&gt;</a></span></dt>
+               <dt><span class="section"><a href="text-tutorial.html#text-tutorial.multiline">3. Texte multilignes</a></span></dt>
+               <dt><span class="section"><a href="text-tutorial.html#d0e3942">4. Inclure des balises HTML dans les applications OpenLaszlo</a></span></dt>
+               <dt><span class="section"><a href="text-tutorial.html#text-tutorial.fonts">5. Polices de caract&egrave;res</a></span></dt>
+               <dt><span class="section"><a href="text-tutorial.html#text-tutorial.changing">6. Changer du texte</a></span></dt>
+               <dt><span class="section"><a href="text-tutorial.html#text-tutorial.input">7. Saisie de texte</a></span></dt>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e3825"></a>1.&nbsp;Introduction
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Ce tutorial montre comment travailler avec le texte et les polices de caract&egrave;res dans les applications OpenLaszlo.&nbsp;Les <a href="text.html" title="Chapter&nbsp;18.&nbsp;Text Views ">Chapitre&nbsp;18, <i>Vues de texte </i></a>et <a href="fonts.html" title="Chapter&nbsp;20.&nbsp;Fonts">Chapitre&nbsp;20, <i>Polices de caract&egrave;res</i></a> vous permettront d'approfondir davantage encore ces sujets.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="text-tutorial.basics"></a>2.&nbsp;La balise &lt;text&gt;</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Afficher du texte est facile avec la balise Entering text is easy with the <a class="indexterm" name="d0e3840"></a><a target="laszlo-reference" href="../reference/index.html?text.html"><tt class="sgmltag-element">&lt;text&gt;</tt></a> :</p>
+				<div class="example"><a name="d0e3847"></a><p class="title"><b>Exemple&nbsp;9.1.&nbsp;La balise &lt;text&gt; simple</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$1.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500" &gt;
+  &lt;text&gt;
+    Hello, World!
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Le texte &agrave; l'int&eacute;rieur de la balise <a class="indexterm" name="d0e3856"></a><tt class="sgmltag-element">&lt;text&gt;</tt> est normalis&eacute;, ce qui signifie que les espaces avant et apr&egrave;s sont ignor&eacute;s, ainsi que les multiples espaces entre les mots, c'est &agrave; dire que si vous mettez plusieurs espaces entre des mots, &agrave; la sortie vous aurez toujours un espace simple.&nbsp;Si vous mettez un saut de ligne dans du texte, il sera simplement affich&eacute; comme un espace simple, et les champs de texte seront &eacute;tir&eacute;s pour afficher leur contenu.&nbsp;</p>
+				<p>La police de caract&egrave;res par d&eacute;faut d'OpenLaszlo (LzTahoe) est utilis&eacute;e &agrave; sa taille par d&eacute;faut (10px).</p>
+				<p>La balise <a class="indexterm" name="d0e3866"></a><tt class="sgmltag-element">&lt;text&gt;</tt> est une vue, elle peut donc &ecirc;tre trait&eacute;e comme telle.&nbsp;On peut ainsi fixer tous les attributs des vues, tels que 'width', 'x', 'y' et ainsi de suite.</p>
+				<div class="example"><a name="d0e3872"></a><p class="title"><b>Exemple&nbsp;9.2.&nbsp;&lt;text&gt; est une &lt;view&gt;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$2.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+  &lt;text <span class="em">x="15" y="20" width="150"</span>&gt;
+    Hello, World!
+    We would like to welcome you to the launch of the OpenLaszlo 
+    Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Remarquez comment le texte a &eacute;t&eacute; coup&eacute; en ayant pr&eacute;cis&eacute; l'attribut width (largeur).&nbsp;</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="text-tutorial.multiline"></a>3.&nbsp;Texte multilignes</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Avoir des zones de texte multilignes est tr&egrave;s simple.&nbsp;Tout ce que nous avons &agrave; faire est de mettre &agrave; <tt class="literal">true</tt> l'attribut <a class="indexterm" name="d0e3890"></a><tt class="sgmltag-attribute">multiline</tt> :</p>
+				<div class="example"><a name="d0e3899"></a><p class="title"><b>Exemple&nbsp;9.3.&nbsp;Texte multilignes</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$3.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+  &lt;text x="15" y="20" width="150" <span class="em">multiline="true"</span>&gt;
+    Hello, World!
+    We would like to welcome you to the launch of the OpenLaszlo 
+    Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Le texte suit les m&ecirc;me r&egrave;gles, &agrave; savoir ici qu'il est limit&eacute; &agrave; 150px de largeur (car nous avons pr&eacute;cis&eacute; explicitement cette valeur dans la balise <a class="indexterm" name="d0e3911"></a><tt class="sgmltag-element">&lt;text&gt;</tt>) et qu'il s'&eacute;tire verticalement autant qu'il le faut.&nbsp;</p>
+				<p>Les s&eacute;parateurs de lignes sont toujours ignor&eacute;s, mais nous pouvons arranger cela en les ajoutant explicitement :</p>
+				<div class="example"><a name="d0e3919"></a><p class="title"><b>Exemple&nbsp;9.4.&nbsp;Ajouter des s&eacute;parateurs de lignes</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$4.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+   &lt;text x="15" y="20" width="150" multiline="true"&gt;
+      Hello, World!<span class="em">&lt;br /&gt;&lt;br /&gt;</span>
+      We would like to welcome you to the launch of the OpenLaszlo 
+      Server.
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$4.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>La balise The <a class="indexterm" name="d0e3931"></a><a target="laszlo-reference" href="../reference/index.html?br.html"><tt class="sgmltag-element">&lt;br&gt;</tt></a> est utilis&eacute;e pour marquer un simple saut de ligne.&nbsp;Vous avez peut-&ecirc;tre l'habitude de cela en HTML.&nbsp;Notez simplement que travaillant en XML, les balises vides doivent &ecirc;tre ferm&eacute;es avec un caract&egrave;re 'slash' final : <tt class="literal">&lt;br/&gt;</tt>. (La m&ecirc;me chose qu'en XHTML.)</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e3942"></a>4.&nbsp;Inclure des balises HTML dans les applications OpenLaszlo</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Si vous avez de l'exp&eacute;rience en HTML, vous vous demandez s&ucirc;rement si vous pouvez utiliser d'autres balises HTML.&nbsp;La r&eacute;ponse est oui.&nbsp;Les balises suivantes sont support&eacute;es :</p>
+				<div class="informaltable">
+               <table border="1">
+                  <colgroup>
+                     <col>
+                     <col>
+                  </colgroup>
+                  <thead>
+                     <tr>
+                        <th>Balise</th>
+                        <th>Signification</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td><a class="indexterm" name="d0e3963"></a><a target="laszlo-reference" href="../reference/index.html?a.html"><tt class="sgmltag-element">&lt;a&gt;</tt></a></td>
+                        <td>
+                           <p>Lien hypertexte</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a class="indexterm" name="d0e3974"></a><a target="laszlo-reference" href="../reference/index.html?b.html"><tt class="sgmltag-element">&lt;b&gt;</tt></a></td>
+                        <td>
+                           <p>Texte gras</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a class="indexterm" name="d0e3985"></a><a target="laszlo-reference" href="../reference/index.html?font.html"><tt class="sgmltag-element">&lt;font&gt;</tt></a></td>
+                        <td>
+                           <p>D&eacute;finit et impl&eacute;mente des polices de caract&egrave;res</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a class="indexterm" name="d0e3996"></a><a target="laszlo-reference" href="../reference/index.html?i.html"><tt class="sgmltag-element">&lt;i&gt;</tt></a></td>
+                        <td>
+                           <p>Texte italique</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a class="indexterm" name="d0e4007"></a><a target="laszlo-reference" href="../reference/index.html?p.html"><tt class="sgmltag-element">&lt;p&gt;</tt></a></td>
+                        <td>
+                           <p>Paragraphe</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a class="indexterm" name="d0e4018"></a><a target="laszlo-reference" href="../reference/index.html?u.html"><tt class="sgmltag-element">&lt;u&gt;</tt></a></td>
+                        <td>
+                           <p>Soulign&eacute;</p>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a class="indexterm" name="d0e4029"></a><a target="laszlo-reference" href="../reference/index.html?img.html"><tt class="sgmltag-element">&lt;img&gt;</tt></a></td>
+                        <td>
+                           <p>Image (lecteur Flash 7 et suivants)</p>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+				<div class="example"><a name="d0e4038"></a><p class="title"><b>Exemple&nbsp;9.5.&nbsp;Formater le texte</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$5.lzx?lzt=swf', width: width="500", height: height="150"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="150" width="500"&gt;
+  &lt;font name="default" style="bold" src="lztahoe8b.ttf"/&gt;
+  &lt;text x="15" y="20" width="150" multiline="true"&gt;
+    &lt;b&gt;Hello, <span class="em">&lt;font color="#ff0000"&gt;</span>World!<span class="em">&lt;/font&gt;</span>&lt;/b&gt;&lt;br /&gt;&lt;br /&gt;
+<span class="em">&lt;font size="16"&gt;</span>We<span class="em">&lt;/font&gt;</span> would like to welcome <span class="em">&lt;u&gt;</span>you<span class="em">&lt;/u&gt;</span> to the 
+      launch of the <span class="em">&lt;a href="http://www.openlaszlo.org/" target="_blank"&gt;</span>OpenLaszlo<span class="em">&lt;/a&gt; </span>
+      Server.
+  &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p></p>
+				<p>Le mot &quot;OpenLaszlo&quot; est devenu un lien hypertexte gr&acirc;ce &agrave; la balise  becomes a hyperlink because of the <a class="indexterm" name="d0e4071"></a><tt class="sgmltag-element">&lt;a&gt;</tt>. Il n'est pas soulign&eacute; comme g&eacute;n&eacute;ralement dans les navigateurs.&nbsp;Nous pouvons le faire nous-m&ecirc;mes en ajoutant une balise <a class="indexterm" name="d0e4077"></a><tt class="sgmltag-element">&lt;u&gt;</tt> &agrave; l'int&eacute;rieur. Cependant, il faut inclure les balises correctement l'une dans l'autre : </p>
+				<table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">&lt;a href="..."&gt;<span class="em">&lt;u&gt;</span>Link<span class="em">&lt;/u&gt;</span>&lt;/a&gt;</pre></td>
+               </tr>
+            </table>
+				<p>est correct, mais</p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">&lt;a href="..."&gt;<span class="em">&lt;u&gt;</span>Link&lt;/a&gt;<span class="em">&lt;/u&gt;</span></pre></td>
+               </tr>
+            </table>
+				<p>ne l'est pas car la balise <a class="indexterm" name="d0e4102"></a><tt class="sgmltag-element">&lt;a&gt;</tt> a &eacute;t&eacute; ferm&eacute;e avant la balise <a class="indexterm" name="d0e4108"></a><tt class="sgmltag-element">&lt;u&gt;</tt>.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="text-tutorial.fonts"></a>5.&nbsp;Polices de caract&egrave;res</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>OpenLaszlo peut travailler &agrave; la fois avec les polices embarqu&eacute;es, c'est &agrave; dire celles t&eacute;l&eacute;charg&eacute;es avec votre application, et les polices du poste client qui r&eacute;sident nativement sur les machines o&ugrave; fonctionnent votre application.&nbsp;Par d&eacute;faut, les polices du poste client sont utilis&eacute;es.&nbsp;Les polices du poste client ont quelques limitations; par exemple, elles ne peuvent pas &ecirc;tre tourn&eacute;es ou rendues transparentes (&agrave; cause d'une limitation du lecteur Flash).&nbsp;Voir le <a href="fonts.html" title="Chapter&nbsp;20.&nbsp;Fonts">Chapitre&nbsp;20, <i>Polices de caract&egrave;res</i></a>.
+               
+            </p>
+				<p>OpenLaszlo supporte les polices TrueType, et la fa&ccedil;on la plus simple de les utiliser est la suivante :</p>
+				<div class="example"><a name="d0e4130"></a><p class="title"><b>Exemple&nbsp;9.6.&nbsp;Nommer une police de caract&egrave;res</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$6.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, World!&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$6.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Nous avons appel&eacute; cette police serifFont, mais nous aurions pu lui donner n'importe quel nom, et c'est ce nom qui sera utilis&eacute; pour pr&eacute;ciser sont utilisation plus loin dans l'application. </p>
+				<p>Les fichiers TTF des polices de caract&egrave;res peuvent &ecirc;tre plac&eacute;s dans le dossier courant ou un autre et r&eacute;f&eacute;renc&eacute;s de fa&ccedil;on relative (<tt class="literal">src=&quot;../fonts/...&quot;</tt>). Sinon, ils sont plac&eacute;s dans le dossier d'installation de la webapp LPS  sous WEB-INF/lps/fonts. timonnsr est une police fournie avec le Serveur OpenLaszlo &agrave; cet endroit.&nbsp;</p>
+				<p>Un fichier TrueType est n&eacute;cessaire pour chaque type de police (italique, gras, normal), car c'est ainsi que les polices sont organis&eacute;es.&nbsp;Le code suivant ne fonctionnera donc pas :</p>
+				<div class="informalexample">
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas&gt;
+   &lt;!-- WARNING: Bad example! --&gt;
+   &lt;font name="serifFont" src="timmonsr.ttf"/&gt;
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, <span class="em">&lt;b&gt;</span>World!<span class="em">&lt;/b&gt;</span>&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+            </div>
+				<p>Pour le corriger, nous devons ajouter une ligne de code pour ajouter la police &quot;gras&quot; : </p>
+				<div class="example"><a name="d0e4163"></a><p class="title"><b>Exemple&nbsp;9.7.&nbsp;Inclure la police &quot;gras&quot;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$8.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+   <span class="em">&lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;</span>
+   &lt;text width="150" height="20"&gt;
+      &lt;font face="serifFont" size="14"&gt;Hello, &lt;b&gt;World!&lt;/b&gt;&lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$8.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Le style standard n'a pas besoin d'&ecirc;tre pr&eacute;cis&eacute; explicitement; <tt class="literal">style="plain"</tt> est implicite. Cette m&eacute;thode &agrave; base de balises n'est pas toujours la meilleure solution car elle oblige &agrave; &eacute;crire des balises <a class="indexterm" name="d0e4178"></a><tt class="sgmltag-element">&lt;font&gt;</tt>.</p>
+				<p>A la place, nous pouvons pr&eacute;ciser &agrave; la balise <a class="indexterm" name="d0e4186"></a><tt class="sgmltag-element">&lt;text&gt;</tt> quelle police et taille utiliser :</p>
+				<div class="example"><a name="d0e4192"></a><p class="title"><b>Exemple&nbsp;9.8.&nbsp;Pr&eacute;ciser une police &agrave; la balise &lt;text&gt;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$9.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+
+   &lt;text width="150" height="150"
+   <span class="em">font="serifFont" fontsize="15"</span> multiline="true"&gt;
+      Hello, &lt;b&gt;World!&lt;/b&gt;&lt;br /&gt;
+         Sometimes it is easier to avoid writing extra &lt;u&gt;font&lt;/u&gt; tags.
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$9.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>En fait, nous pouvons faire cela avec n'importe quelle vue (y compris la balise <a class="indexterm" name="d0e4204"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="sgmltag-element">&lt;window&gt;</tt></a> ), les vues filles h&eacute;ritant de la police :</p>
+				<div class="example"><a name="d0e4211"></a><p class="title"><b>Exemple&nbsp;9.9.&nbsp;Vues h&eacute;ritant de la police</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$10.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+   &lt;font name="serifFont"&gt;
+      &lt;face src="timmonsr.ttf"/&gt;
+      &lt;face src="timmonsb.ttf" style="bold"/&gt;
+   &lt;/font&gt;
+
+   &lt;view name="grandParent" <span class="em">font="serifFont" fontsize="15"</span>&gt;
+      &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
+         &lt;text&gt;Hello&lt;/text&gt;
+      &lt;/view&gt;
+      &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
+         &lt;text&gt;World&lt;/text&gt;
+      &lt;/view&gt;
+   &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$10.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>La police est pr&eacute;cis&eacute;e dans la vue 'grandParent', et les deux champs texte en h&eacute;ritent.&nbsp;</p>
+				<p>Bien s&ucirc;r, les informations de polices peuvent &ecirc;tre &eacute;cras&eacute;es plus bas dans la hi&eacute;rarchie, &agrave; la fois avec la balise <a class="indexterm" name="d0e4228"></a><tt class="sgmltag-element">&lt;font&gt;</tt>, et en pr&eacute;cisant la police dans des vues filles :</p>
+				<div class="example"><a name="d0e4234"></a><p class="title"><b>Exemple&nbsp;9.10.&nbsp;Ecrasement d'informations de polices</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$11.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+  &lt;font name="serifFont"&gt;
+    &lt;face src="timmonsr.ttf"/&gt;
+    &lt;face src="timmonsb.ttf" style="bold"/&gt;
+  &lt;/font&gt;
+  
+  <span class="em">&lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;</span>
+  
+  &lt;view name="grandParent" font="serifFont" fontsize="15"&gt;
+    &lt;view name="firstView" bgcolor="#FFCCCC" height="20"&gt;
+      &lt;text&gt;
+        <span class="em">&lt;font color="#CC6600" size="12"&gt;</span>Hello<span class="em">&lt;/font&gt;</span>
+      &lt;/text&gt;
+    &lt;/view&gt;
+    &lt;view x="80" name="secondView" bgcolor="#CCCCFF" height="20"&gt;
+      &lt;text <span class="em">font="sansSerifFont"</span>&gt;World&lt;/text&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$11.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Les deux champs texte ont ici &eacute;cras&eacute; certaines des informations de polices.&nbsp;Celles qui ne sont pas &eacute;cras&eacute;es (comme l'aspect dans l'exemple de gauche et la taille dans l'exemple de droite) sont h&eacute;rit&eacute;es.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="text-tutorial.changing"></a>6.&nbsp;Changer du texte</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>La balise <a class="indexterm" name="d0e4261"></a><tt class="sgmltag-element">&lt;text&gt;</tt> propose deux m&eacute;thodes pour r&eacute;cup&eacute;rer et d&eacute;finir son contenu :</p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p><a class="indexterm" name="d0e4270"></a><tt class="methodname">getText()</tt></p>
+                  </li>
+                  <li>
+                     <p><a class="indexterm" name="d0e4279"></a><tt class="methodname">setText()</tt></p>
+                  </li>
+               </ul>
+            </div>
+            <p>La m&eacute;thode <a class="indexterm" name="d0e4288"></a><tt class="methodname">getText()</tt> retourne le contenu du champ texte et la m&eacute;thode <a class="indexterm" name="d0e4296"></a><tt class="methodname">setText()</tt> prend en argument la cha&icirc;ne de texte &agrave; placer dans le champ texte :</p>
+            <div class="example"><a name="d0e4304"></a><p class="title"><b>Exemple&nbsp;9.11.&nbsp;R&eacute;cup&eacute;rer et d&eacute;finir le texte</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$12.lzx?lzt=swf', width: width="700", height: height="135"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="135" width="700" debug="true"&gt;
+   &lt;debug x="200"/&gt;
+   &lt;button x="15" y="15"
+      onclick="Debug.write(canvas.theField.getText());"&gt;
+      Get Text 
+   &lt;/button&gt;
+
+   &lt;button x="100" y="15"
+      onclick="canvas.theField.setText('Hello, Laszlo!');"&gt;
+         Set Text
+   &lt;/button&gt;
+
+   &lt;button x="180" y="115"
+      onclick="addText();"&gt;
+         Add Text
+   &lt;/button&gt;
+
+   &lt;script&gt;
+      function addText() {
+      var origText = canvas.theField.getText();
+      var newText = origText + " And on.";
+           canvas.theField.setText(newText);
+      }
+   &lt;/script&gt;
+
+   &lt;text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField"&gt;Some sample text.&lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$12.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>En utilisant ces deux m&eacute;thodes, il est possible de concat&eacute;ner du texte et de travailler avec en tant que cha&icirc;ne de caract&egrave;res.&nbsp;</p>
+				<p>Une chose importante &agrave; retenir quand on travaille avec du texte est que tout ce qui est plac&eacute; entre les balises <a class="indexterm" name="d0e4315"></a><tt class="sgmltag-element">&lt;text&gt;</tt> est renvoy&eacute; par <a class="indexterm" name="d0e4321"></a><tt class="methodname">getText()</tt>.
+            </p>
+				<div class="example"><a name="d0e4329"></a><p class="title"><b>Exemple&nbsp;9.12.&nbsp;Texte renvoy&eacute;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$13.lzx?lzt=swf', width: width="700", height: height="135"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="135" width="700" debug="true"&gt;
+    &lt;debug x="200"/&gt;
+   &lt;font name="sansSerifFont" src="helmetr.ttf" /&gt;
+
+   &lt;script&gt;
+      function writeOutBit() {
+      var myText = canvas.theField.getText();
+      <span class="em">Debug.write(myText);</span>
+   }
+   &lt;/script&gt;
+
+   &lt;button x="15" y="15"
+      onclick="writeOutBit();"&gt;
+         Write part of line
+   &lt;/button&gt;
+  
+   &lt;text x="45" y="60" width="150" height="75" multiline="true"
+      name="theField"&gt;
+      &lt;font face="sansSerifFont" size="12"&gt;Some lovely sample 
+      text.
+      &lt;/font&gt;
+   &lt;/text&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$13.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Ce peut &ecirc;tre &agrave; la fois pratique et p&eacute;nible.&nbsp;Si vous vouliez parcourir le texte retourn&eacute; par la m&eacute;thode <a class="indexterm" name="d0e4341"></a><tt class="methodname">getText()</tt>, vous devez tenir compte des balises.&nbsp;Pour les &eacute;viter, d&eacute;finissez la police dans la balise <a class="indexterm" name="d0e4349"></a><tt class="sgmltag-element">&lt;text&gt;</tt>.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="text-tutorial.input"></a>7.&nbsp;Saisie de texte</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>La fa&ccedil;on la plus simple de saisir du texte est d'utiliser la balise <a class="indexterm" name="d0e4361"></a><a target="laszlo-reference" href="../reference/index.html?inputtext.html"><tt class="sgmltag-element">&lt;inputtext&gt;</tt></a> :</p>
+				<div class="example"><a name="d0e4368"></a><p class="title"><b>Exemple&nbsp;9.13.&nbsp;Utilisation de &lt;inputtext&gt;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$14.lzx?lzt=swf', width: width="700", height: height="135"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="135" width="700" debug="true"&gt;
+    &lt;debug x="200"/&gt;
+   &lt;inputtext name="myText" x="10" y="15"&gt;Enter text here&lt;/inputtext&gt;
+   &lt;button x="45" y="45"
+      onclick="Debug.write(canvas.myText.getText());"&gt;
+         Write out text 
+   &lt;/button&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$14.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Le champ <a class="indexterm" name="d0e4377"></a><tt class="sgmltag-element">&lt;inputtext&gt;</tt> ne pr&eacute;cise pas si le texte peut &ecirc;tre s&eacute;lectionn&eacute; et &eacute;dit&eacute; autrement qu'avec un curseur d'insersion quand l'utilisateur passe au dessus.&nbsp;La balise <a class="indexterm" name="d0e4383"></a><tt class="sgmltag-element">&lt;inputtext&gt;</tt> accepte tous les attributs de la balise <a class="indexterm" name="d0e4389"></a><tt class="sgmltag-element">&lt;text&gt;</tt>, ainsi que les polices :</p>
+            <div class="example"><a name="d0e4395"></a><p class="title"><b>Exemple&nbsp;9.14.&nbsp;&lt;inputtext&gt; accepte les attributs de &lt;text&gt;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$15.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="100" width="500"&gt;
+  &lt;font name="Helmet" src="helmetr.ttf" /&gt;
+  &lt;inputtext name="myText" x="10" y="15"
+      font="Helmet" fontsize="12"
+      width="200" height="50" multiline="true"&gt;
+         Enter very large quantities of text here.
+  &lt;/inputtext&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$15.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Les m&eacute;thodes <tt class="literal">getText</tt> et <tt class="literal">setText</tt> fonctionnent &eacute;galement avec les champs <a class="indexterm" name="d0e4409"></a><tt class="sgmltag-element">&lt;inputtext&gt;</tt>.</p>
+            <p>Si vous avez besoin de champs de saisie qui doivent &ecirc;tre identifi&eacute;s, OpenLaszlo fournit la balise <a class="indexterm" name="d0e4417"></a><a target="laszlo-reference" href="../reference/index.html?lz-edittext.html"><tt class="sgmltag-element">&lt;edittext&gt;</tt></a> :</p>
+            <div class="example"><a name="d0e4424"></a><p class="title"><b>Exemple&nbsp;9.15.&nbsp;Utilisation de &lt;edittext&gt;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/text-tutorial-$16.lzx?lzt=swf', width: width="500", height: height="160"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="160" width="500"&gt;
+   &lt;edittext name="myText" x="10" y="15"&gt;Enter text here&lt;/edittext&gt;
+
+   &lt;edittext name="myBigText" x="10" y="45"
+      width="250" height="100" multiline="true"&gt;
+         Enter a lot more text here
+   &lt;/edittext&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/text-tutorial-$16.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>La balise <a class="indexterm" name="d0e4433"></a><tt class="sgmltag-element">&lt;edittext&gt;</tt> peut &ecirc;tre multilignes et sa taille peut &ecirc;tre modifi&eacute;e.</p>
+            <p></p>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="art_assets.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="scripting-tutorial.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;8.&nbsp;Intoduction aux &eacute;l&eacute;ments Multim&eacute;dias et Artistiques&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;10.&nbsp;Introduction &agrave; la programmation de scripts</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

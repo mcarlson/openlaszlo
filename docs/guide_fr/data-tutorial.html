@@ -1,0 +1,449 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;11.&nbsp;Introduction aux liaisons de donn&eacute;es</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="scripting-tutorial.html" title="Chapter&nbsp;10.&nbsp;Introduction to Scripting">
+      <link rel="next" href="classes-tutorial.html" title="Chapter&nbsp;12.&nbsp;Introduction to Classes and Object Oriented Programming"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+	<div class="navheader">
+	  <table width="100%" summary="Navigation header">
+		<tr>
+		  <th colspan="3" align="center">Chapitre&nbsp;11.&nbsp;Introduction aux liaisons de donn&eacute;es </th>
+		</tr>
+		<tr>
+		  <td width="20%" align="left"><a accesskey="p" href="scripting-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp; </td>
+		  <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+		  <td width="20%" align="right">&nbsp;<a accesskey="n" href="classes-tutorial.html">Suivant</a></td>
+		</tr>
+	  </table>
+	  <hr>
+	</div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="data-tutorial"></a>Chapitre&nbsp;11.&nbsp;Introduction aux liaisons de donn&eacute;es</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res </b></p>
+            <dl>
+               <dt><span class="section"><a href="data-tutorial.html#d0e5128">1. Introduction</a></span></dt>
+               <dt><span class="section"><a href="data-tutorial.html#d0e5135">2. Les bases</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="data-tutorial.html#d0e5247">2.1. Plusieurs lignes de donn&eacute;es</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="data-tutorial.html#data-tutorial.including">3. Fa&ccedil;ons d'inclure des donn&eacute;es</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="data-tutorial.html#data-tutorial.embedded">3.1. Donn&eacute;es embarqu&eacute;es</a></span></dt>
+                     <dt><span class="section"><a href="data-tutorial.html#data-tutorial.included">3.2. Donn&eacute;es incluses</a></span></dt>
+                     <dt><span class="section"><a href="data-tutorial.html#data-tutorial.http">3.3. Donn&eacute;es HTTP </a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="data-tutorial.html#data-tutorial.datapointers">4. Pointeurs de donn&eacute;es</a></span></dt>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5128"></a>1.&nbsp;Introduction
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Nous allons voir comment interagir avec les donn&eacute;es en LZX.</p>
+            <a name="data-tutorial.datapaths"></a><p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5135"></a>2.&nbsp;Les bases 
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>En ce qui concerne l'import des donn&eacute;es dans les applications LZX, nous travaillons toujours en XML. Une d&eacute;claration XML n'est pas n&eacute;cessaire, mais le XML doit avoir un seul noeud racine. Les donn&eacute;es sont contenues dans la balise  <a class="indexterm" name="d0e5140"></a><a target="laszlo-reference" href="../reference/index.html?dataset.html"><tt class="sgmltag-element">&lt;dataset&gt;</tt></a>.            </p>
+            <div class="example"><a name="d0e5147"></a>
+            <p class="title"><b>Exemple&nbsp;11.1.&nbsp;Ensemble de donn&eacute;es</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/data-tutorial-$1.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="80" width="500" &gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;
+  &lt;/dataset&gt;
+  
+  &lt;text datapath="myData:/myXML[1]/person[1]/firstName[1]/text()"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/data-tutorial-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Dans l'exemple pr&eacute;c&eacute;dent, le noeud racine unique est myXML. L'attribut <a class="indexterm" name="d0e5156"></a><tt class="sgmltag-attribute">datapath</tt> de la balise <a class="indexterm" name="d0e5162"></a><a target="laszlo-reference" href="../reference/index.html?text.html"><tt class="sgmltag-element">&lt;text&gt;</tt></a> cr&eacute;e la liaison avec les  donn&eacute;es.            </p>
+            <p>Les &quot;datapaths&quot; (chemins de donn&eacute;es) utilisent des attributs au format XPath pour naviguer &agrave; traver les donn&eacute;es XML. Le nom du groupe de donn&eacute;es (dataset) &agrave; utiliser se trouve avant les deux points dans l'expression <tt class="literal">myData:</tt>, suivi des noeuds s&eacute;par&eacute;s par le symbole '/'. Les crochets permettent de pr&eacute;ciser le noeud particulier recherch&eacute;. Par d&eacute;faut, la valeur est [1], donc l'exemple pr&eacute;c&eacute;dent pourrait &ecirc;tre r&eacute;&eacute;crit sans aucun &quot;[1]&quot;. </p>
+            <p>De fa&ccedil;on litt&eacute;rale, l'exemple pr&eacute;c&eacute;dent pourrait &ecirc;tre formul&eacute; ainsi : &quot;donne-moi le texte du premier noeud 'firstName', du premier noeud 'person' du premier noeud (il n'y en a qu'un) 'myXML'&quot;. L'appel &agrave; la m&eacute;thode text() renvoie le texte du noeud. </p>
+            <p>Pour obtenir le nom de 'Marge', nous pourrions r&eacute;&eacute;crire la balise <a class="indexterm" name="d0e5178"></a><tt class="sgmltag-element">&lt;text&gt;</tt> de la fa&ccedil;on suivante :            </p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">
+&lt;text datapath="myData:/myXML/person[2]/firstName/text()" /&gt; 
+</pre></td>
+               </tr>
+            </table>
+            <p>Nous avons ici omis les &quot;[1]&quot; car ils sont implicites. Pour obtenir l'attribut &quot;show&quot; de 'Montgomery', nous pourrions &eacute;crire : </p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">
+&lt;text datapath="myData:/myXML/person[3]/@show" /&gt; 
+</pre></td>
+               </tr>
+            </table>
+            <p>Le code  <tt class="literal">/text()</tt> est n&eacute;cessaire avec l'attribut <a class="indexterm" name="d0e5195"></a><tt class="sgmltag-attribute">datapath</tt>.            </p>
+            <p>Nous avons donc utilis&eacute; la balise <a class="indexterm" name="d0e5203"></a><tt class="sgmltag-element">&lt;text&gt;</tt> avec un chemin de donn&eacute;es simple. Si nous voulions pr&eacute;senter des donn&eacute;es sous forme de tableau, chaque &eacute;l&eacute;ment texte devrait avoir son propre chemin de donn&eacute;es, ce qui serait &agrave; la fois difficile et fastidieux &agrave; &eacute;crire. Au lieu de cela, construisons le tableau en associant un chemin de donn&eacute;es &agrave; une vue (<a class="indexterm" name="d0e5209"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>) :            </p>
+            <div class="example"><a name="d0e5216"></a>
+            <p class="title"><b>Exemple&nbsp;11.2.&nbsp;Affectation d'un chemin de donn&eacute;es &agrave; une vue </b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/data-tutorial-$2.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="80" width="500"&gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;
+  &lt;/dataset&gt;
+
+  &lt;view name="rowOfData" <span class="em">datapath="myData:/myXML[1]/person[1]"</span>&gt;
+    &lt;simplelayout axis="x" /&gt;
+    &lt;text <span class="em">datapath="firstName/text()"</span> /&gt; 
+    &lt;text <span class="em">datapath="lastName/text()"</span> /&gt; 
+    &lt;text <span class="em">datapath="@show"</span> /&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/data-tutorial-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Le chemin de donn&eacute;es de la vue '<tt class="varname">rowOfData</tt>' la fait pointer sur l'ensemble du noeud <tt class="varname">person</tt> correspondant &agrave; Homer. Les &eacute;l&eacute;ments fils de ' <tt class="varname">rowOfData</tt>' h&eacute;ritent de cela, leur chemin de donn&eacute;es pouvant alors &ecirc;tre d&eacute;fini de fa&ccedil;on relative.            </p>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e5247"></a>2.1.&nbsp;Plusieurs lignes de donn&eacute;es                     </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Dans l'exemple pr&eacute;c&eacute;dent, nous avons utilis&eacute; un noeud '<tt class="varname">rowOfData</tt>' simple. Maintenant nous pouvons parcourir un ensemble de noeuds :               </p>
+               <div class="example"><a name="d0e5255"></a>
+               <p class="title"><b>Exemple&nbsp;11.3.&nbsp;Ensemble de noeuds </b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/data-tutorial-$3.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="80" width="500" &gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Homer&lt;/firstName&gt;
+          &lt;lastName&gt;Simpson&lt;/lastName&gt;
+        &lt;/person&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Marge&lt;/firstName&gt;
+          &lt;lastName&gt;Simpson&lt;/lastName&gt;
+        &lt;/person&gt;
+        &lt;person show="simpsons"&gt;
+          &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+          &lt;lastName&gt;Burns&lt;/lastName&gt;
+        &lt;/person&gt;
+      &lt;/myXML&gt;
+  &lt;/dataset&gt;
+
+  &lt;view name="myTable"&gt;
+    &lt;simplelayout axis="y" /&gt;
+    &lt;view name="rowOfData" datapath="myData:/myXML[1]/person"&gt;
+      &lt;simplelayout axis="x" /&gt;
+      &lt;text datapath="firstName/text()" /&gt; 
+      &lt;text datapath="lastName/text()" /&gt; 
+      &lt;text datapath="@show" /&gt;
+    &lt;/view&gt;
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/data-tutorial-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Une balise qui contient l'attribut <a class="indexterm" name="d0e5264"></a><tt class="sgmltag-attribute">datapath</tt> sera r&eacute;p&eacute;t&eacute;e autant de fois que n&eacute;cessaire.               </p>
+               <p>Souvenez-vous que les chemins de donn&eacute;es sont li&eacute;s &agrave; des vues, et qu'ainsi, si les donn&eacute;es changent, les vues aussi. Nous reviendrons l&agrave;-dessus un peu plus tard. </p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="data-tutorial.including"></a>3.&nbsp;Fa&ccedil;ons d'inclure des donn&eacute;es</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Jusque l&agrave;, nous avons utilis&eacute; des donn&eacute;es embarqu&eacute;es, c'est &agrave; dire que les donn&eacute;es XML &eacute;taient contenues dans le document. C'est parfait pour un petit nombre de donn&eacute;es statiques, mais il y a d'autres m&eacute;thodes qui conviennent mieux aux grandes quantit&eacute;s de donn&eacute;es (et aux donn&eacute;es dynamiques). </p>
+            <div class="informaltable">
+               <table border="1">
+                  <colgroup>
+                     <col>
+                     <col>
+                     <col>
+                  </colgroup>
+                  <thead>
+                     <tr>
+                        <th>Type d'inclusion </th>
+                        <th>Quand sont-elles charg&eacute;es ? </th>
+                        <th>Syntaxe</th>
+                     </tr>
+                  </thead>
+                  <tbody>
+                     <tr>
+                        <td><a href="data-tutorial.html#data-tutorial.embedded" title="3.1.&nbsp;Embedded Data">Donn&eacute;es Embarqu&eacute;es</a></td>
+                        <td>A la compilation </td>
+                        <td>
+                           <div class="informalexample">
+                              <table border="0" bgcolor="#E0E0E0">
+                                 <tr>
+                                    <td><pre class="programlisting">
+&lt;dataset name="myData"&gt;
+  &lt;myXML&gt;
+     &lt;!-- ... other XML tags ... --&gt;
+  &lt;/myXML&gt;
+&lt;/dataset&gt;
+</pre></td>
+                                 </tr>
+                              </table>
+                           </div>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a href="data-tutorial.html#data-tutorial.included" title="3.2.&nbsp;Included Data">Donn&eacute;es incluses </a></td>
+                        <td>A la compilation </td>
+                        <td>
+                           <table border="0" bgcolor="#E0E0E0">
+                              <tr>
+                                 <td><pre class="programlisting">
+&lt;dataset name="myData" src="myXMLDoc.xml"/&gt;
+</pre></td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                     <tr>
+                        <td><a href="data-tutorial.html#data-tutorial.http" title="3.3.&nbsp;HTTP Data">Donn&eacute;es HTTP</a></td>
+                        <td>Pendant l'ex&eacute;cution </td>
+                        <td>
+                           <table border="0" bgcolor="#E0E0E0">
+                              <tr>
+                                 <td><pre class="programlisting">
+&lt;dataset name="myData" request="true" 
+         type="http" src="myXMLDoc.xml" /&gt;
+</pre></td>
+                              </tr>
+                           </table>
+                        </td>
+                     </tr>
+                  </tbody>
+               </table>
+            </div>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="data-tutorial.embedded"></a>3.1.&nbsp;Donn&eacute;es embarqu&eacute;es 
+                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Les donn&eacute;es sont embarqu&eacute;es sous forme de XML &agrave; l'int&eacute;rieur de balises <a class="indexterm" name="d0e5323"></a><tt class="sgmltag-element">&lt;dataset&gt;</tt>. Quand le Serveur OpenLaszlo compile l'application, les donn&eacute;es sont associ&eacute;es. Les donn&eacute;es peuvent &ecirc;tre chang&eacute;es apr&egrave;s le lancement de l'application. Les donn&eacute;es embarqu&eacute;es sont statiques.                </p>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="data-tutorial.included"></a>3.2.&nbsp;Donn&eacute;es incluses 
+                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Les donn&eacute;es incluses le sont de la m&ecirc;me fa&ccedil;on que les donn&eacute;es embarqu&eacute;es sauf que le XML contenant les donn&eacute;es est plac&eacute; dans un fichier s&eacute;par&eacute;. La dur&eacute;e du chargement initial sera la m&ecirc;me que pour des donn&eacute;es embarqu&eacute;es.</p>
+               <p>Le fichier est r&eacute;f&eacute;renc&eacute; localement dans le syst&egrave;me de fichiers, il peut donc &ecirc;tre plac&eacute; dans d'autres r&eacute;pertoires. Les donn&eacute;es incluses sont statiques. </p>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="data-tutorial.http"></a>3.3.&nbsp;Donn&eacute;es HTTP                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Les donn&eacute;es distantes sont transmises via HTTP, ce qui signifie qu'elles peuvent (mais pas obligatoirement) &ecirc;tre dynaniques. Si elles sont statiques, alors la seule diff&eacute;rence entre ce mode et le mode inclus ou embarqu&eacute;, c'est qu'elles sont t&eacute;l&eacute;charg&eacute;es apr&egrave;s le chargement de l'application. L'attribut <tt class="literal">type="http"</tt> pr&eacute;cise que c'est une requ&ecirc;te HTTP. Les requ&ecirc;tes peuvent &ecirc;tre &agrave; la fois de type GET et POST. </p>
+               <p>Le client peut demander les donn&eacute;es &agrave; diff&eacute;rents moments :</p>
+               <div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>Le client peut demander les donn&eacute;es d&egrave;s que l'application est charg&eacute;e si l'attribut <a class="indexterm" name="d0e5355"></a><tt class="sgmltag-attribute">request</tt> du groupe de donn&eacute;es (dataset) est positionn&eacute; &agrave; 'true'.                        </p>
+                     </li>
+                     <li>
+                        <p>Si l'attribut <a class="indexterm" name="d0e5364"></a><tt class="sgmltag-attribute">request</tt> vaut 'true', le client demandera aussi les donn&eacute;es &agrave; chaque fois que la cha&icirc;ne de requ&ecirc;te ou le chemin URL du groupe de donn&eacute;es changera (en utilisant respectivement les m&eacute;thodes <a class="indexterm" name="d0e5370"></a><tt class="methodname">setQueryString()</tt> et <a class="indexterm" name="d0e5378"></a><tt class="methodname">setSrc()</tt> de l'objet LzHTTPDataset).                        </p>
+                     </li>
+                     <li>
+                        <p>Quand la m&eacute;thode <a class="indexterm" name="d0e5389"></a><tt class="methodname">doRequest()</tt> du groupe de donn&eacute;es (dataset) est invoqu&eacute;e.                        </p>
+                     </li>
+                  </ul>
+              </div>
+               <p>Dans le tableau ci-dessus, nous avons r&eacute;f&eacute;renc&eacute; un fichier localement (myXMLDoc.xml), mais nous aurions pu le faire de fa&ccedil;on absolue ou nous aurions pu appeler un serveur distant (PHP, ASP, JSP ou un CGI) pour renvoyer un document XML. Nous pourrions ajouter la cha&icirc;ne de requ&ecirc;te &agrave; la balise <a class="indexterm" name="d0e5399"></a><tt class="sgmltag-element">&lt;dataset&gt;</tt> :               </p>
+               <div class="informalexample">
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;dataset name="myData"
+         <span class="em">src="http://www.myServer.com/cgi-bin/myXMLDoc.cgi?return=addresses"</span>/&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+               <p>L'attribut <tt class="literal">type="http"</tt> devient implicite quand l'attribut <a class="indexterm" name="d0e5416"></a><tt class="sgmltag-attribute">src</tt> contient "<tt class="literal">http://</tt>".               </p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="data-tutorial.datapointers"></a>4.&nbsp;Pointeurs de donn&eacute;es</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Les chemins de donn&eacute;es (datapaths) sont extr&ecirc;mement pratiques, mais si vous avez besoin de plus de contr&ocirc;le sur les donn&eacute;es, ils peuvent devenir fastidieux &agrave; utiliser. Les chemins de donn&eacute;es (datapaths) sont en fait des extensions des pointeurs de donn&eacute;es (datapointers), mais sont plus faciles &agrave; apprendre, c'est pourquoi nous les avons introduits en premier. Un pointeur de donn&eacute;es est un pointeur dans un groupe de donn&eacute;es (dataset), qui peut &ecirc;tre d&eacute;plac&eacute;. Il ne peut &ecirc;tre qu'&agrave; une position du groupe de donn&eacute;es en m&ecirc;me temps, mais vous pouvez avoir plusieurs pointeurs de donn&eacute;es, chacun pointant sur un endroit diff&eacute;rent du groupe de donn&eacute;es.</p>
+            <p>Les pointeurs de donn&eacute;es (datapointers) ne sont pas li&eacute;s &agrave; des vues comme les chemins de donn&eacute;es (datapaths), mais ils ont une position dans la hi&eacute;rarchie de vues (c'est &agrave; dire qu'ils connaissent parents et enfants). </p>
+            <p>Nous utiliserions un pointeur de donn&eacute;es si nous devions travailler sur les donn&eacute;es. Par exemple, en utilisant le m&ecirc;me format de donn&eacute;es que dans les exemples pr&eacute;c&eacute;dents, supposons que vous vouliez trouver toutes les personnes pr&eacute;sentes au 'South Park show' : </p>
+            <div class="example"><a name="d0e5435"></a>
+            <p class="title"><b>Exemple&nbsp;11.4.&nbsp;Utilisation des pointeurs de donn&eacute;es </b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/data-tutorial-$6.lzx?lzt=swf', width: width="500", height: height="180"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="180" width="500" debug="true"&gt;
+  &lt;dataset name="myData" src="../myShowData.xml" /&gt;
+  
+  &lt;datapointer xpath="myData:/" ondata="processData()"&gt;
+    &lt;method name="processData"&gt;
+      this.selectChild(2); 
+      do {
+        if (this.xpathQuery( '@show' ) == 'south park') {
+            Debug.write(this.xpathQuery('firstName/text()'));
+        }
+      } while (this.selectNext()); 
+    &lt;/method&gt;
+  &lt;/datapointer&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/data-tutorial-$6.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Pour limiter le code, nous avons &eacute;crit dans le d&eacute;bogueur, et avons r&eacute;cup&eacute;r&eacute; les donn&eacute;es dans un fichier local. Vous pouvez t&eacute;l&eacute;charger le fichier XML en haut de cette page. </p>
+            <p>L'appel &agrave; <tt class="literal">selectChild(2)</tt> commence par s&eacute;lectionner le premier noeud <a class="indexterm" name="d0e5452"></a><tt class="sgmltag-element">&lt;myXML&gt;</tt>, puis le noeud <a class="indexterm" name="d0e5458"></a><tt class="sgmltag-element">&lt;person&gt;</tt> correspondant &agrave; Homer. Il en parcourt 2 &agrave; cause de l'argument de profondeur &quot;2&quot; pass&eacute; en argument (la valeur par d&eacute;faut est 1). </p>
+            <p>L'appel &agrave; <tt class="literal">selectNext</tt> renvoie <tt class="literal">true</tt> tant qu'un noeud peut &ecirc;tre s&eacute;lectionn&eacute; (c'est &agrave; dire jusqu'&agrave; ce qu'il n'y en ait plus). Nous utilisons une boucle <tt class="literal">do <i class="replaceable"><tt>&#8230;</tt></i> while</tt> de fa&ccedil;on &agrave; parcourir  tous les noeuds  <a class="indexterm" name="d0e5478"></a><tt class="sgmltag-element">&lt;person&gt;</tt> dans la m&ecirc;me it&eacute;ration.            </p>
+            <p>Nous aurions aussi pu r&eacute;cup&eacute;rer les erreurs en d&eacute;finissant des gestionnaires d'&eacute;v&eacute;nements sur les &eacute;v&eacute;nements <a class="indexterm" name="d0e5493"></a><tt class="literal">onerror</tt> et <a class="indexterm" name="d0e5499"></a><tt class="literal">ontimeout</tt> de la balise <a class="indexterm" name="d0e5486"></a><a target="laszlo-reference" href="../reference/index.html?datapointer.html"><tt class="sgmltag-element">&lt;datapointer&gt;</tt></a>.            </p>
+            <p></p>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="scripting-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="classes-tutorial.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;10.&nbsp;Introduction &agrave; la programmation de scripts &nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;12.&nbsp;Introduction aux Classes et &agrave; la programmation orient&eacute;e objet </td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

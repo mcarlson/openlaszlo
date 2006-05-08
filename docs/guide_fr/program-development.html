@@ -1,0 +1,1035 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;4.&nbsp;Aper&ccedil;u du d&eacute;veloppement d'une application OpenLaszlo</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="overview.html" title="Part&nbsp;I.&nbsp;Overview">
+      <link rel="previous" href="designers.html" title="Chapter&nbsp;3.&nbsp;OpenLaszlo for Designers">
+      <link rel="next" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;4.&nbsp;Aper&ccedil;u du d&eacute;veloppement d'une application OpenLaszlo</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="designers.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">I.&nbsp;Aper&ccedil;u g&eacute;n&eacute;ral</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="tutorials.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="program-development"></a>Chapitre&nbsp;4.&nbsp;Aper&ccedil;u du d&eacute;veloppement d'une application OpenLaszlo</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="program-development.html#d0e1874">1. Le cycle de d&eacute;veloppement d'un programme en quelques mots</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="program-development.html#d0e1906">1.1. D&eacute;marrer le Serveur OpenLaszlo</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#d0e1912">1.2. Cr&eacute;er le fichier programme</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.where-to-put-files">1.3. Mettre le fichier dans le dossier appropri&eacute;</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#d0e1944">1.4. Compiler l'application</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#d0e2103">1.5. D&eacute;boguer et modifier le programme</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#d0e2127">1.6. It&eacute;rer</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#d0e2133">1.7. Optimiser</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#d0e2141">1.8. Deployer</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="program-development.html#d0e2149">2. De &quot;Hello, World&quot; &agrave; de vrais programmes</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="program-development.html#d0e2200">2.1. Structures principales</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.canvas">2.2. La toile (Canvas)</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.views">2.3. Les Vues (View)</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.data-binding">2.4. Liaison de donn&eacute;es</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.libraries-and-includes">2.5. Inclusions et biblioth&egrave;ques</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.comments">2.6. Commentaires</a></span></dt>
+                     <dt><span class="section"><a href="program-development.html#program-development.debugging">2.7. Debogage</a></span></dt>
+                  </dl>
+               </dd>
+            </dl>
+         </div>
+         <p>Ce chapitre r&eacute;sume la structure des applications OpenLaszlo ainsi que les m&eacute;canismes qu'un programmeur exp&eacute;riment&eacute; doit conna&icirc;tre pour commencer &agrave; jouer avec le code.&nbsp;</p>
+			<p>Cette discussion est n&eacute;cessairement succinte et incompl&egrave;te; le but est essentiellement de vous orienter. Quand vous commencerez &agrave; &eacute;crire des programmes LZX, vous devrez &eacute;galement parcourir les <a target="laszlo-dguide" href="../guide/">tutoriels</a>.
+         </p>
+			<p></p>
+			<div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1874"></a>1.&nbsp;Le cycle de d&eacute;veloppement d'un programme en quelques mots</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Le cycle de d&eacute;veloppement d'un programme diff&egrave;re suivant que vous d&eacute;ployez votre application en mode Proxy ou SOLO.&nbsp;D&eacute;velopper des applications Proxy est plus simple, c'est pourquoi nous allons commencer par l&agrave;.&nbsp;</p>
+				<p>Le processus de d&eacute;veloppement d'une application OpenLaszlo peut &ecirc;tre r&eacute;sum&eacute; ainsi :</p>
+				<div class="orderedlist">
+               <ol type="1" compact>
+                  <li>
+                     <p>d&eacute;marrer le serveur OpenLaszlo</p>
+                  </li>
+                  <li>
+                     <p>&agrave; l'aide d'un &eacute;diteur de texte, &eacute;crire le code du programme; sauver le fichier avec l'extension .lzx</p>
+                  </li>
+                  <li>
+                     <p>mettre le fichier dans le r&eacute;pertoire appropri&eacute;</p>
+                  </li>
+                  <li>
+                     <p>compiler l'application</p>
+                  </li>
+                  <li>
+                     <p>deboguer et modifier le programme</p>
+                  </li>
+                  <li>
+                     <p>r&eacute;p&eacute;ter les &eacute;tapes de 2 &agrave; 5 jusqu'&agrave; ce que le programme soit parfait</p>
+                  </li>
+                  <li>
+                     <p>d&eacute;ployer l'application</p>
+                  </li>
+               </ol>
+            </div>
+				<p>Chacune de ces &eacute;tapes est d&eacute;crite ci-dessous.</p>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1906"></a>1.1.&nbsp;D&eacute;marrer les Serveur OpenLaszlo</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>La fa&ccedil;on de d&eacute;marrer le Serveur OpenLaszlo (OLS) d&eacute;pend de la fa&ccedil;on avec laquelle il a &eacute;t&eacute; install&eacute; et du syst&egrave;me d'exploitation. Sur Windows, vous d&eacute;marrez OLS &agrave; partir du menu d&eacute;marrer; sur Mac OS&nbsp;X l'installation par d&eacute;faut place une ic&ocirc;ne de d&eacute;marrage sur le bureau. Si vous n'avez pas de Serveur OpenLaszlo install&eacute; sur votre machine, vous pouvez le t&eacute;l&eacute;charger &agrave; l'adresse <a href="(EmptyReference!)">http://www.laszlosystems.com/developers/</a></p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1912"></a>1.2.&nbsp;Cr&eacute;er le fichier programme</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Puisque les fichiers LZX&nbsp;sont des documents XML, vous pouvez utiliser n'importe quel &eacute;diteur de texte ou de XML pour modifier le code.&nbsp;Les noms de fichiers doivent se terminer par l'extension .lzx.&nbsp;Pendant l'&eacute;criture, vous pourrez avoir besoin de consulter le <a target="laszlo-reference" href="../reference/../reference/">Manuel de R&eacute;f&eacute;rence LZX</a>. Nous verrons plus bas comment utiliser efficacement ce document.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.where-to-put-files"></a>1.3.&nbsp; Mettre le fichier dans le dossier appropri&eacute;</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Pour pouvoir &ecirc;tre compil&eacute; par le Serveur OpenLaszlo, les fichiers doivent &ecirc;tre plac&eacute;s dans des sous-dossiers du dossier suivant : </p>
+					<p>[Windows]</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">c:\Program Files\Laszlo Presentation Server 3.2\jakarta-tomcat-5.0.24\webapps\lps-3.2\</pre></td>
+                  </tr>
+               </table>
+               <p>[MacOS]</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">Macintosh HD:/Applications/Laszlo Presentation Server 3.2/jakarta-tomcat-5.0.24/webapps/lps-3.2:</pre></td>
+                  </tr>
+               </table>
+					<p>Typiquement, vous allez cr&eacute;er un dossier avec un nom tel que <tt class="literal">mon-appli</tt> pour contenir les programmes en cours de d&eacute;veloppement.&nbsp;Vous pouvez aussi ajouter des sous-dossiers, par exemple : </p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">mon-appli/exercices/exemples</pre></td>
+                  </tr>
+               </table>
+					<p>tant qu'ils restent dans le bon dossier du Serveur OpenLaszlo.&nbsp;</p>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1944"></a>1.4.&nbsp;Compiler l'application</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Il y a deux fa&ccedil;ons diff&eacute;rentes de compiler une application : </p>
+					<div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>Vous pouvez la charger dans un navigateur internet, le Serveur OpenLaszlo le compile automatiquement lorsque le programme est charg&eacute; pour la premi&egrave;re fois et &agrave; chaque fois qu'il change; ou</p>
+                     </li>
+                     <li>
+                        <p>Vous pouvez invoquer le compilateur s&eacute;par&eacute;ment.</p>
+                     </li>
+                  </ul>
+               </div>
+					<p>La fa&ccedil;on la plus simple et la plus commode pour compiler les applications, surtout quand vous commencez &agrave; vous habituer &agrave; OpenLaszlo, est de laisser le Serveur OpenLaszlo s'en charger.&nbsp;Les deux fa&ccedil;ons sont d&eacute;crites ci-dessous.&nbsp;</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1959"></a>1.4.1.&nbsp;Compilation par chargement de l'application dans un navigateur internet</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Pour ex&eacute;cuter votre programme, chargez-le simplement dans votre navigateur.&nbsp;L'URL&nbsp;exacte d&eacute;pend de la configuration de votre serveur, mais devrait ressembler &agrave; quelque chose comme :</p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">http://localhost:8080/lps-3.2/chemin vers votre r&eacute;pertoire</pre></td>
+                     </tr>
+                  </table>
+						<p>Le Serveur OpenLaszlo v&eacute;rifie la syntaxe des fichiers source, les compile, met en cache les ex&eacute;cutables et rend l'application imm&eacute;diatement visible dans le navigateur :</p>
+						<div class="informalfigure">
+                     <div class="mediaobject"><img src="images/browser.png"></div>
+                  </div>
+						<p></p>
+               </div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1975"></a>1.4.2.&nbsp;Utilisation du compilateur lzc</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Le compilateur s&eacute;par&eacute; est appel&eacute; <tt class="literal">lzc</tt>. Il se situe dans le dossier <tt class="literal">$LPS_HOME/WEB-INF/lps/server/bin/lzc</tt>.
+                  </p>
+						<p>Voici les param&egrave;tres de compilation disponibles : </p>
+						<p><span class="b">Options:</span></p>
+						<div class="variablelist">
+                     <dl>
+                        <dt><span class="term">-D&lt;name&gt;=&lt;value&gt;</span></dt>
+                        <dd>
+                           <p>Assignation d'une valeur &agrave; un nom de variable/propri&eacute;t&eacute; (voir Compiler.getProperties).</p>
+                        </dd>
+                        <dt><span class="term">-D&lt;name&gt;</span></dt>
+                        <dd>
+                           <p>Abr&eacute;g&eacute; de -Dname=true.</p>
+                        </dd>
+                        <dt><span class="term">-v</span></dt>
+                        <dd>
+                           <p>Affichage des informations de progression sur la sortie standard.</p>
+                        </dd>
+                        <dt><span class="term">--mcache on|off</span></dt>
+                        <dd>
+                           <p>Marche (on) /arr&ecirc;t (off) de la mise en cache de m&eacute;dia. Arr&ecirc;t (off) par d&eacute;faut.</p>
+                        </dd>
+                        <dt><span class="term">--onerror [throw|warn]</span></dt>
+                        <dd>
+                           <p>Action en cas de probl&egrave;mes de compilation.&nbsp;Avertissement (warn) par d&eacute;faut.&nbsp;</p>
+                        </dd>
+                        <dt><span class="term">--help</span></dt>
+                        <dd>
+                           <p>Affiche la liste de toutes les options.</p>
+                        </dd>
+                        <dt><span class="term">--flush-script-cache</span></dt>
+                        <dd>
+                           <p>N'envoie pas le script en cache avant la compilation.</p>
+                        </dd>
+                     </dl>
+                  </div>
+						<p><span class="b">Options de sortie :</span></p>
+                  <div class="variablelist">
+                     <dl>
+                        <dt><span class="term">--runtime=[swf6|swf7|swf8]</span></dt>
+                        <dd>
+                           <p>Compile vers swf6, swf7, swf8.</p>
+                        </dd>
+                        <dt><span class="term">--dir outputdir</span></dt>
+                        <dd>
+                           <p>Dossier de sortie.</p>
+                        </dd>
+                        <dt><span class="term">-g | --debug</span></dt>
+                        <dd>
+                           <p>Ajoute des informations de d&eacute;bogage &agrave; l'objet r&eacute;sultant.</p>
+                        </dd>
+                        <dt><span class="term">-p | --profile</span></dt>
+                        <dd>
+                           <p>Ajoute des informations de suivi d&eacute;taill&eacute; &agrave; l'objet r&eacute;sultant.</p>
+                        </dd>
+                     </dl>
+                  </div>
+                  <p><span class="b">Options de Log :</span></p>
+                  <div class="variablelist">
+                     <dl>
+                        <dt><span class="term">-l&lt;loglevel&gt;</span></dt>
+                        <dd>
+                           <p>Niveau de log (voir org.apache.log4j.Level)</p>
+                        </dd>
+                        <dt><span class="term">-l&lt;loggerName&gt;=&lt;loglevel&gt;</span></dt>
+                        <dd>
+                           <p>Niveau de log (voir org.apache.log4j.Level)</p>
+                        </dd>
+                        <dt><span class="term">-lp file</span></dt>
+                        <dd>
+                           <p>Fichiers de propri&eacute;t&eacute;s Log4j</p>
+                        </dd>
+                        <dt><span class="term">--log logfile</span></dt>
+                        <dd>
+                           <p>Fichier de sortie sp&eacute;cifique (la sortie continue d'aller &eacute;galement vers la console)</p>
+                        </dd>
+                        <dt><span class="term">--schema</span></dt>
+                        <dd>
+                           <p>Ecritue du sch&eacute;ma sur la sortie standard.</p>
+                        </dd>
+                        <dt><span class="term">--script</span></dt>
+                        <dd>
+                           <p>Ecriture du JavaScript sur la sortie standard.</p>
+                        </dd>
+                     </dl>
+                  </div>
+                  <p></p>
+               </div>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e2103"></a>1.5.&nbsp;Deboguer et modifier le programme</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Si le serveur d&eacute;tecte des erreurs qui emp&egrave;chent la compilation, des messages d'erreurs sont affich&eacute;s dans le navigateur :</p>
+					<div class="informalfigure">
+                  <div class="mediaobject"><img src="images/compilation-errors.png"></div>
+               </div>
+					<p>Si le compilateur d&eacute;tecte des erreurs non critiques qui n'emp&egrave;chent pas la compilation, des messages d'avertissement sont affich&eacute;s dans le navigateur, sous l'application (vous devrez peut-&ecirc;tre faire descendre l'ascenseur vertical pour les voir) :</p>
+					<div class="informalfigure">
+                  <div class="mediaobject"><img src="images/compilation-warnings.png"></div>
+               </div>
+					<p>Les erreurs d'ex&eacute;cution s'affichent dans la fen&ecirc;tre de d&eacute;bogage (debugger), si elle est affich&eacute;e.</p>
+					<p>Voir See <a href="program-development.html#program-development.debugging" title="2.7.&nbsp;Debugging">Section&nbsp;2.7, &ldquo;D&eacute;bogage&rdquo;</a> pour une br&egrave;ve discussion sur la fen&ecirc;tre de d&eacute;bogage.&nbsp;Voir <a href="debugging.html" title="Chapter&nbsp;45.&nbsp;Debugging">Chapitre&nbsp;45, <i>D&eacute;boguer</i></a> pour une description compl&egrave;te.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e2127"></a>1.6.&nbsp;It&eacute;rer</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Apr&egrave;s avoir fait des changements dans votre code, appuyez simplement sur le bouton 'Actualiser' de votre navigateur.&nbsp;Le Serveur OpenLaszlo rev&eacute;rifie alors automatiquement la syntaxe du source, le recompile, le remet en cache et l'affiche de nouveau dans le navigateur.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e2133"></a>1.7.&nbsp;Optimiser</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Optimisez votre programment en utilisant les techniques d&eacute;crites au <a href="performance-tuning.html" title="Chapter&nbsp;37.&nbsp;Performance Monitoring and Tuning">Chapitre&nbsp;37, Suivi de la <i>Performance et Optimisation</i></a>.
+               </p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e2141"></a>1.8.&nbsp;D&eacute;ployer</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Voir le 
+                  See <a href="proxied.html" title="Chapter&nbsp;22.&nbsp;Proxied and SOLO Applications">Chapitre&nbsp;22, <i>Applications en mode Proxy et SOLO</i></a> pour plus d'informations sur comment rendre disponible votre application.</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e2149"></a>2.&nbsp;De &quot;Hello, World&quot; &agrave; de vrais programmes</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Le fameux programme &quot;Hello, World&quot; peut s'&eacute;crire de la fa&ccedil;on suivante avec LZX:</p>
+            <div class="example"><a name="d0e2154"></a><p class="title"><b>Exemple&nbsp;4.1.&nbsp;Hello, world</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$1.lzx?lzt=swf', width: 500, height: height="40"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="40"&gt; 
+  &lt;text&gt;Hello, World!&lt;/text&gt; 
+&lt;/canvas&gt; 
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Ce programme illustre trois fonctionnalit&eacute;s fondamentales de toute application Laszlo :</p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p>Les fichiers LZX sont des documents XML&nbsp;syntaxiquement corrects</p>
+                  </li>
+                  <li>
+                     <p><a class="indexterm" name="d0e2169"></a><a target="laszlo-reference" href="../reference/index.html?canvas.html"><tt class="sgmltag-element">&lt;canvas&gt;</tt></a> est la balise racine; les programmes commencent avec une balise <tt class="literal">&lt;canvas&gt;</tt> et finissent avec une balise <tt class="literal">&lt;/canvas&gt;</tt></p>
+                  </li>
+                  <li>
+                     <p>A&nbsp;l'int&eacute;rieur de la toile (canvas), des vues (views) sont affich&eacute;es. Comme nous le verrons, un &eacute;l&eacute;ment <a class="indexterm" name="d0e2184"></a><a target="laszlo-reference" href="../reference/index.html?text.html"><tt class="sgmltag-element">&lt;text&gt;</tt></a> est simplement un type particulier de vue.</p>
+                  </li>
+               </ul>
+            </div>
+				<p>La section suivante d&eacute;crit les ingr&eacute;dients principaux d'une application typique Laszlo.&nbsp;Vous pouvez aussi consulter les <a target="" href="../../examples/">exemples de programmes</a>, et les programmes offerts par la communaut&eacute; sur <a href="http://www.mylaszlo.com" target="_top">http://www.mylaszlo.com</a>, pour mieux comprendre la structure g&eacute;n&eacute;rale des applications LZX.</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e2200"></a>2.1.&nbsp;Structures pincipales</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Les applications Laszlo typiques contiennent les parties suivantes, d&eacute;taill&eacute;es dans les sections ci-dessous</p>
+               <div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>toile (canvas) (<a href="program-development.html#program-development.canvas" title="2.2.&nbsp;The Canvas">Section&nbsp;2.2, &ldquo;La&nbsp;Toile (Canvas)&rdquo;</a>)
+                        </p>
+                     </li>
+                     <li>
+                        <p>vues (<a href="program-development.html#program-development.views" title="2.3.&nbsp;Views">Section&nbsp;2.3, &ldquo;Les Vues (Views)&rdquo;</a>)
+                        </p>
+                     </li>
+                     <li>
+                        <p>donn&eacute;es (<a href="program-development.html#program-development.data-binding" title="2.4.&nbsp;Data Binding">Section&nbsp;2.4, &ldquo;Liaison de donn&eacute;es (Data Binding)&rdquo;</a>)
+                        </p>
+                     </li>
+                     <li>
+                        <p>biblioth&egrave;ques et inclusions (<a href="program-development.html#program-development.libraries-and-includes" title="2.5.&nbsp;Includes and libraries">Section&nbsp;2.5, &ldquo;Inclusions et biblioth&egrave;ques&rdquo;</a>)
+                        </p>
+                     </li>
+                     <li>
+                        <p>commentaires (<a href="program-development.html#program-development.comments" title="2.6.&nbsp;Comments">Section&nbsp;2.6, &ldquo;Commentaires&rdquo;</a>)
+                        </p>
+                     </li>
+                  </ul>
+               </div>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.canvas"></a>2.2.&nbsp;La toile (canvas)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le noeud racine de toute application Laszlo est <i class="glossterm">canvas</i>; il y a une balise canvas unique par application LZX. La balise 'canvas' est le conteneur logique de tous les autres noeuds du programme; visuellement, c'est un rectangle qui est affich&eacute; dans la zone de contenu du navigateur internet. Vous pouvez d&eacute;finir explicitement la hauteur et la largeur de la toile en pixels, en affectant des valeurs &agrave; des attributs dans la balise ouvrante :</p>
+               <div class="example"><a name="d0e2240"></a><p class="title"><b>Exemple&nbsp;4.2.&nbsp;canvas invisible</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="20" width="30&gt; 
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<p>Si vous ne sp&eacute;cifiez pas la hauteur et la largeur, la toile - comme d'autres vues - se redimensionne en fonction des vues qu'elle contient.&nbsp;Contrairement &agrave; d'autres vues, par d&eacute;faut, la toile a une largeur et une hauteur non nulles : elle prend la taille de la page HTML&nbsp;qui la contient.&nbsp;Du coup, l'application LZX&nbsp;vide suivante </p>
+					<div class="example"><a name="d0e2247"></a><p class="title"><b>Exemple&nbsp;4.3.&nbsp;toile vide</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas/&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<p>d&eacute;finit un objet invisible de la taille de la page.</p>
+					<p>En plus de la hauteur et de la largeur, la toile a plusieurs autres attributs.&nbsp;La couleur de fond, d&eacute;finie par l'attribut <a class="indexterm" name="d0e2256"></a><tt class="sgmltag-attribute">bgcolor</tt>, est tr&egrave;s utile pour apprendre la structure visuelle des applications LZX.</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2263"></a>2.2.1.&nbsp;La balise <a class="indexterm" name="d0e2266"></a><a target="laszlo-reference" href="../reference/index.html?script.html"><tt class="sgmltag-element">&lt;script&gt;</tt></a></h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>A l'int&eacute;rieur des applications LZX, vous pouvez inclure un nombre ind&eacute;fini de fonctions JavaScript en les pla&ccedil;ant dans la balise <a class="indexterm" name="d0e2275"></a><tt class="sgmltag-element">&lt;script&gt;</tt>. C'est tr&egrave;s utile pour d&eacute;finir des fonctions (globales) qui seront utilis&eacute;es par diff&eacute;rentes classes. La balise <a class="indexterm" name="d0e2281"></a><tt class="sgmltag-element">&lt;script&gt;</tt> doit &ecirc;tre une balise fille de <a class="indexterm" name="d0e2287"></a><tt class="sgmltag-element">&lt;canvas&gt;</tt>. C'est &agrave; dire que,</p>
+						<div class="example"><a name="d0e2293"></a><p class="title"><b>Exemple&nbsp;4.4.&nbsp;balise &lt;script&gt; au niveau de la balise &lt;canvas&gt;</b></p>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas&gt;
+  &lt;script&gt;
+    var Constant = 1;
+  &lt;/script&gt; 
+&lt;/canvas&gt;
+</pre></td>
+                        </tr>
+                     </table>
+                  </div>
+						<p>est autoris&eacute; alors que</p>
+                  <div class="example"><a name="d0e2300"></a><p class="title"><b>Exemple&nbsp;4.5.&nbsp;balise &lt;script&gt; non autoris&eacute;e &agrave; l'int&eacute;rieur de &lt;view&gt;</b></p>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas&gt; 
+  &lt;view&gt; 
+    &lt;script&gt; <a name="N101E7"></a><img src="images/callouts/1.png" alt="1" border="0">
+      var Constant = 1;
+    &lt;/script&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt;
+</pre></td>
+                        </tr>
+                     </table>
+                  </div>
+                  <div class="calloutlist">
+                     <table border="0" summary="Callout list">
+                        <tr>
+                           <td width="5%" valign="top" align="left"><a href="#N101E7"><img src="images/callouts/1.png" alt="1" border="0"></a> 
+                           </td>
+                           <td valign="top" align="left">
+                              <p>Interdit ! La balise <a class="indexterm" name="d0e2311"></a><tt class="sgmltag-element">&lt;script&gt;</tt> n'est pas autoris&eacute;e &agrave; l'int&eacute;rieur d'une vue !</p>
+                           </td>
+                        </tr>
+                     </table>
+                  </div>
+                  <p>est interdit.</p>
+                  <p></p>
+               </div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2320"></a>2.2.2.&nbsp;<a class="indexterm" name="d0e2322"></a><tt class="sgmltag-attribute">name</tt> ou <a class="indexterm" name="d0e2328"></a><tt class="sgmltag-attribute">id</tt></h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Avec LZX, l'attribut <a class="indexterm" name="d0e2335"></a><tt class="sgmltag-attribute">id</tt> d'un objet est un identifiant global qui est visible depuis l'ensemble du programme, tandis que <a class="indexterm" name="d0e2341"></a><tt class="sgmltag-attribute">name</tt> est un attribut comme un autre, l'objet devant alors &ecirc;tre appel&eacute; en utilisant le chemin complet (avec une exception pour les noeuds fils de canvas, comme pr&eacute;cis&eacute; ci-dessous).&nbsp;Consid&eacute;rons :</p>
+						<div class="example"><a name="d0e2347"></a><p class="title"><b>Exemple&nbsp;4.6.&nbsp;noms et ids</b></p>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas&gt; 
+  &lt;view id="v1" name="outer_view"&gt; 
+    &lt;view id="v2" name="inner_view" bgcolor="blue"/&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt;</pre></td>
+                        </tr>
+                     </table>
+                  </div>
+						<p>La valeur de la couleur de fond de la vue externe peut &ecirc;tre r&eacute;f&eacute;renc&eacute;e par <tt class="literal">v1.bgcolor</tt> ou <tt class="literal">outer_view.bgcolor</tt>. La couleur de fond de la vue interne peut &ecirc;tre r&eacute;f&eacute;renc&eacute;e par <tt class="literal">v2.bgcolor</tt> de n'importe o&ugrave; dans l'application.&nbsp;Pour utiliser le nom pour la r&eacute;f&eacute;rencer en dehors de <tt class="varname">inner_view</tt> il faut indiquer <tt class="literal">outer_view.inside_view.bgcolor</tt>.
+                  </p>
+						<p></p>
+					</div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2370"></a>2.2.3.&nbsp;Noeuds fils de canvas</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Les objets qui sont des noeuds fils de canvas peuvent &ecirc;tre appel&eacute;s simplement.&nbsp;Par exemple, dans :</p>
+						<div class="example"><a name="d0e2375"></a><p class="title"><b>Exemple&nbsp;4.7.&nbsp;r&eacute;f&eacute;rencer un noeud fils de canvas par son nom</b></p>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas&gt;
+  &lt;view name="artichoke"&gt;
+  &lt;!-- on peut rajouter du code --&gt;
+&lt;/canvas&gt;</pre></td>
+                        </tr>
+                     </table>
+                  </div>
+						<p>La vue <tt class="varname">artichoke</tt> peut &ecirc;tre r&eacute;f&eacute;renc&eacute;e de n'importe o&ugrave; dans l'application en tant que <tt class="literal">artichoke</tt>. C'est &agrave; dire qu'il n'est pas n&eacute;cessaire de la r&eacute;f&eacute;rencer comme <tt class="literal">canvas.artichoke</tt>.
+                  </p>
+						<p></p>
+					</div>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.views"></a>2.3.&nbsp;Vues</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>La vue est l'&eacute;l&eacute;ment visible basique des applications OpenLaszlo.&nbsp;Tout ce qui est affich&eacute; sur la toile (canvas) est une vue (ou un objet instance d'une classe h&eacute;ritant de view).&nbsp;</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2398"></a>2.3.1.&nbsp;Vues visibles et invisibles</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Une vue est seulement visible si elle a une couleur, du texte ou une image associ&eacute;e, et si la hauteur et la largeur de la vue sont sup&eacute;rieurs &agrave; z&eacute;ro.&nbsp;Par exemple, le code suivant n'affiche qu'une vue, m&ecirc;me si trois vues sont d&eacute;finies.&nbsp;La seconde et la troisi&egrave;me vue existent mais sont compl&egrave;tement invisibles.&nbsp;La seconde n'a pas de couleur et la troisi&egrave;me a une largeur de z&eacute;ro.&nbsp;Par contre, elle affectent toujours l'arrangement des autres.</p>
+						<div class="example"><a name="d0e2403"></a><p class="title"><b>Exemple&nbsp;4.8.&nbsp;vues visibles ou invisibles</b></p>
+                     <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$8.lzx?lzt=swf', width: 500, height: height="100"});
+            </script></div>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas height="100"&gt; 
+  &lt;!-- affiche un carr&eacute; rouge --&gt; 
+  &lt;view width=&quot;50&quot; height=&quot;50&quot; bgcolor=&quot;red&quot;/&gt;
+  &lt;!-- rien n'est affich&eacute;, mais la vue existe quand m&ecirc;me--&gt; 
+  &lt;view width=&quot;50&quot; height=&quot;50&quot;/&gt;
+  &lt;!-- rien n'est affich&eacute;, mais la vue existe quand m&ecirc;me --&gt; 
+  &lt;view width=&quot;0&quot; height=&quot;50&quot; bgcolor=&quot;blue&quot;/&gt;
+&lt;/canvas&gt; </pre></td>
+                        </tr>
+								<tr>
+									<td></td>
+								</tr>
+							</table>
+                     
+                     <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$8.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                     
+                  </div>
+						<p></p>
+               </div>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2411"></a>2.3.2.&nbsp;Vues conteneurs d'autres vues</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+                  <p>Des vues peuvent aussi contenir d'autres vues, ce qui vous permet de cr&eacute;er des effets visuels complexes.&nbsp;Chaque vue 'm&egrave;re' peut avoir un nombre ind&eacute;fini de filles.&nbsp;Par d&eacute;faut, chaque vue fille est positionn&eacute;e relativement au coin sup&eacute;rieur gauche de sa vue m&egrave;re.</p>
+						<p>Bien qu'il soit toujours possible de positionner la valeur horizontale (<a class="indexterm" name="d0e2418"></a><tt class="sgmltag-attribute">x</tt>) et verticale (<a class="indexterm" name="d0e2424"></a><tt class="sgmltag-attribute">y</tt>) de l'origine en pixels, relativement &agrave; sa m&egrave;re, il est souvent plus simple de laisser le syst&egrave;me positionner les &eacute;l&eacute;ments pour vous. Diff&eacute;rents types de gestionnaires de mise en page (layouts) sont inclus par d&eacute;faut dans le syst&egrave;me : <a class="indexterm" name="d0e2430"></a><a target="laszlo-reference" href="../reference/index.html?simplelayout.html"><tt class="sgmltag-element">&lt;simplelayout&gt;</tt></a>, <a class="indexterm" name="d0e2437"></a><a target="laszlo-reference" href="../reference/index.html?stableborderlayout.html"><tt class="sgmltag-element">&lt;stableborderlayout&gt;</tt></a>,
+                     <a class="indexterm" name="d0e2444"></a><a target="laszlo-reference" href="../reference/index.html?constantlayout.html"><tt class="sgmltag-element">&lt;constantlayout&gt;</tt></a>, <a class="indexterm" name="d0e2451"></a><a target="laszlo-reference" href="../reference/index.html?resizelayout.html"><tt class="sgmltag-element">&lt;resizelayout&gt;</tt></a> et <a class="indexterm" name="d0e2458"></a><a target="laszlo-reference" href="../reference/index.html?wrappinglayout.html"><tt class="sgmltag-element">&lt;wrappinglayout&gt;</tt></a>.
+                  </p>
+						<p></p>
+					</div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2466"></a>2.3.3.&nbsp;Dimensionnement des vues et d&eacute;coupage</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+                  <p>Soit l'applications suivante :</p>
+                  <div class="example"><a name="d0e2471"></a><p class="title"><b>Exemple&nbsp;4.9.&nbsp;Dimensions des parents et enfants</b></p>
+                     <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$9.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas height="200"&gt; 
+  &lt;view bgcolor="red" x="50" y="50" width="100" height="100"&gt; 
+    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"/&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt; </pre></td>
+                        </tr>
+                     </table>
+                     
+                     <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$9.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                     
+                  </div>
+                  <p>En faisant fonctionner l'exemple ci-dessus, on voit que la largeur et la hauteur d'une vue peuvent &ecirc;tre diff&eacute;rentes de la zone entourant les vues filles.&nbsp;Aucun d&eacute;coupage ne s'est effectu&eacute; pour la vue &quot;jaune&quot; (yellow), m&ecirc;me si elle sort de la zone d&eacute;finie par sa m&egrave;re.&nbsp;</p>
+						<p>Si aucune largeur ou hauteur n'est sp&eacute;cifi&eacute;e pour une vue, alors elle prendra pour valeur de largeur et hauteur celles de la zone entourant les vues filles. Si un d&eacute;coupage est souhait&eacute;, alors l'attribut <tt class="literal">clip="true"</tt> peut &ecirc;tre ajout&eacute; au parent, ce qui donnerait ceci :</p>
+						<div class="example"><a name="d0e2485"></a><p class="title"><b>Example&nbsp;4.10.&nbsp;clipping</b></p>
+                     <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$10.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas height="200"&gt;
+  &lt;view bgcolor="red" x="50" y="50" width="100" height="100" <span class="em">clip="true"</span>&gt; 
+    &lt;view bgcolor="yellow" x="50" y="50" width="60" height="105"/&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt; </pre></td>
+                        </tr>
+                     </table>
+                     
+                     <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$10.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                     
+                  </div>
+						<p></p>
+               </div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2496"></a>2.3.4.&nbsp;Images et autre ressources</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+                  <p>En plus d'afficher du texte et des couleurs, les vues peuvent &ecirc;tre utilis&eacute;es pour afficher ou jouer des m&eacute;dias dans diff&eacute;rents formats tels que .gif, .jpeg, .png, .swf et .mp3 par exemple.&nbsp;Ces ressources peuvent &ecirc;tre compil&eacute;es dans l'application ou import&eacute;es pendant l'ex&eacute;cution; elles peuvent &ecirc;tre sur le serveur OpenLaszlo ou sur un serveur distant, et peuvent &ecirc;tre r&eacute;f&eacute;renc&eacute;es en utilisant des chemins relatifs ou des ids absolus.</p>
+						<p></p>
+					</div>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.data-binding"></a>2.4.&nbsp;Liaison de donn&eacute;es</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>La puissance de LZX vient en grande partie de son impl&eacute;mentation unique des liaisons de donn&eacute;es, dans laquelle le contenu d'une vue est d&eacute;termin&eacute; par le contenu d'un ensemble de donn&eacute;es (dataset).&nbsp;Un ensemble de donn&eacute;es (dataset) est simplement une hi&eacute;rarchie nomm&eacute;e de donn&eacute;es XML qui poss&egrave;de un noeud racine unique.&nbsp;Toutes les donn&eacute;es des applications LZX sont contenues dans des ensembles de donn&eacute;es (datasets).</p>
+					<p>Le concept de liaison de donn&eacute;es va plus loin que la simple utilisation de vues pour afficher des donn&eacute;es XML; les donn&eacute;es elles-m&ecirc;mes peuvent d&eacute;terminer la taille, la couleur, la position, ...&nbsp;des vues et m&ecirc;me induire la cr&eacute;ation ou la suppression de vues.</p>
+					<p>Consid&eacute;rez le programme suivant :</p>
+					<div class="example"><a name="d0e2511"></a><p class="title"><b>Exemple&nbsp;4.11.&nbsp;simple liaison de donn&eacute;es</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$11.lzx?lzt=swf', width: 500, height: height="100"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="100"&gt; 
+  &lt;dataset name="ds"&gt; 
+    &lt;record x="10" y="20" name="first" color="332136432"/&gt; 
+    &lt;record x="5" y="5" name="second" color="56521236432"/&gt; 
+    &lt;record x="20" y="2" name="third" color="1565336432"/&gt; 
+  &lt;/dataset&gt; 
+  &lt;simplelayout axis="y"/&gt;
+  <span class="em">&lt;view datapath="ds:/record"&gt;</span> 
+    &lt;text datapath="@name" bgcolor="$path{'@color'}" x="$path{'@x'}"/&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt; </pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$11.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p>Dans l'exemple ci-dessus, la ligne </p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;view datapath="ds:/record"&gt; 
+</pre></td>
+                  </tr>
+               </table>
+					<p>commande la cr&eacute;ation de trois vues, et la ligne</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;text datapath="@name" bgcolor="$path{@color}" x="$path{@x}"/&gt;
+</pre></td>
+                  </tr>
+               </table>
+					<p>d&eacute;termine le texte de chaque vue, sa couleur d'arri&egrave;re plan et sa position <a class="indexterm" name="d0e2531"></a><tt class="sgmltag-attribute">x</tt> en fonction du contenu du groupe de donn&eacute;es.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.libraries-and-includes"></a>2.5.&nbsp;Inclusions et biblioth&egrave;ques</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le code source d'une application LZX peut &ecirc;tre contenu dans un seul fichier; de tels fichiers peuvent grossir &eacute;norm&eacute;ment et ainsi devenir difficiles &agrave; manipuler et maintenir.&nbsp;En divisant l'application en un certain nombre de plus petits fichiers, vous pouvez cependant am&eacute;liorer la maintenabilit&eacute; et faciliter la compr&eacute;hension de l'application.&nbsp;Vous pouvez m&ecirc;me d&eacute;couper des hi&eacute;rarchies de vues profondes en de multiples fichiers pour am&eacute;liorer la modularit&eacute;, la clart&eacute; et l'organisation du code source.&nbsp;</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2544"></a>2.5.1.&nbsp;La balise <a class="indexterm" name="d0e2547"></a><a target="laszlo-reference" href="../reference/index.html?include.html"><tt class="sgmltag-element">&lt;include&gt;</tt></a></h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+                  <p>Cette balise vous permet de sp&eacute;cifier le nom d'un fichier &agrave; inclure &agrave; n'importe quel endroit de votre application.&nbsp;Le fichier &agrave; inclure peut &ecirc;tre une biblioth&egrave;que, une vue ou du texte.&nbsp;</p>
+						<p>Quand la cible est un fichier biblioth&egrave;que (un fichier XML&nbsp;dont le noeud racine est <a class="indexterm" name="d0e2558"></a><a target="laszlo-reference" href="../reference/index.html?library.html"><tt class="sgmltag-element">&lt;library&gt;</tt></a>), le contenu du fichier biblioth&egrave;que est inclus dans l'application.&nbsp;Tout le contenu tel que les vues, scripts, polices de caract&egrave;res, ressources, fichiers sons, sources de donn&eacute;es, groupes de donn&eacute;es, d&eacute;finitions de classes, ... est inclus dans l'application.&nbsp;Un fichier biblioth&egrave;que peut aussi inclure d'autres biblioth&egrave;ques, mais une biblioth&egrave;que est incluse dans l'application une seule fois, quel que soit le nombre de balises <a class="indexterm" name="d0e2565"></a><tt class="sgmltag-element">&lt;include&gt;</tt> la r&eacute;f&eacute;ren&ccedil;ant. Par exemple,</p>
+						<div class="example"><a name="d0e2571"></a><p class="title"><b>Exemple&nbsp;4.12.&nbsp;app.lzx</b></p>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas&gt; 
+  &lt;include href="library.lzx"/&gt; 
+  &lt;mywindow/&gt; 
+&lt;/canvas&gt; 
+</pre></td>
+                        </tr>
+                     </table>
+                  </div>
+						<div class="example"><a name="d0e2576"></a><p class="title"><b>Exemple&nbsp;4.13.&nbsp;library.lzx</b></p>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;library&gt; 
+  &lt;class name="mywindow" extends"window" 
+         title=&quot;Mon Titre&quot;&gt; 
+    &lt;button&gt; Appuyez! &lt;/button&gt; 
+  &lt;/class&gt; 
+&lt;/library&gt; 
+</pre></td>
+                        </tr>
+                     </table>
+                  </div>
+                  <p>La s&eacute;mantique pour inclure des vues et du texte est analogue mais l&eacute;g&egrave;rement diff&eacute;rente.&nbsp;Contrairement aux biblioth&egrave;ques, &agrave; chaque fois que le fichier d&eacute;crivant le texte ou la vue est inclus, il est ajout&eacute;.</p>
+                  <p></p>
+               </div>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.comments"></a>2.6.&nbsp;Commentaires</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p></p>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2588"></a>2.6.1.&nbsp;Commentaires XML</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Ils s'&eacute;crivent </p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">&lt;!--  commentaire --&gt;</pre></td>
+                     </tr>
+                  </table>
+						<p>et peuvent appara&icirc;tre entre (mais pas &agrave; l'int&eacute;rieur) les balises XML.&nbsp;Le XML&nbsp;n'a pas de syntaxe particuli&egrave;re pour les lignes de commentaires, et ne permet pas de commentaires imbriqu&eacute;s.&nbsp;</p>
+						<p>Souvent pendant le d&eacute;bogage, vous devrez commenter des sections de code.&nbsp;Comme il est interdit d'imbriquer des commentaires XML&nbsp;&agrave; l'int&eacute;rieur de commentaires XML, cette technique ne fonctionne pas pour des zones d&eacute;j&agrave; comment&eacute;es de code LZX.&nbsp;Une bonne fa&ccedil;on de contourner ce probl&egrave;me est d'utiliser les instructions d'ex&eacute;cution XML de la forme :</p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;?ignore
+
+?&gt;
+</pre></td>
+                     </tr>
+                  </table>
+						<p>Ainsi, pour commenter les vues bleue et verte ci-dessous,</p>
+						<div class="example"><a name="d0e2603"></a><p class="title"><b>Exemple&nbsp;4.14.&nbsp;Commenter du code</b></p>
+                     <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$14.lzx?lzt=swf', width: 500, height: height="100"});
+            </script></div>
+                     <table border="0" bgcolor="#E0E0E0">
+                        <tr>
+                           <td><pre class="programlisting">
+&lt;canvas height="100"&gt;
+  &lt;simplelayout/&gt; 
+  &lt;!-- Voici une vue rouge --&gt; 
+  &lt;view bgcolor="red" width="100" height="20"/&gt; 
+  &lt;?ignore <a name="N102EB"></a><img src="images/callouts/1.png" alt="1" border="0">
+  &lt;!-- Voici une vue bleue --&gt; 
+  &lt;view bgcolor="blue" width="100" height="20"/&gt; 
+  &lt;!-- Voici une vue verte --&gt; 
+  &lt;view bgcolor="green" width="100" height="20"/&gt; 
+  ?&gt;       <a name="N102F5"></a><img src="images/callouts/2.png" alt="2" border="0">
+  &lt;!-- Voici une vue jaune --&gt; 
+  &lt;view bgcolor="yellow" width="100" height="20"/&gt; 
+&lt;/canvas&gt;  
+</pre></td>
+                        </tr>
+                     </table>
+                     
+                     <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$14.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                     
+                  </div>
+						<div class="calloutlist">
+                     <table border="0" summary="Callout list">
+                        <tr>
+                           <td width="5%" valign="top" align="left"><a href="#N102EB"><img src="images/callouts/1.png" alt="1" border="0"></a> 
+                           </td>
+                           <td valign="top" align="left">
+                              <p>Les lignes entre <tt class="literal">&lt;?ignore</tt> et <tt class="literal">?&gt;</tt> sont ignor&eacute;es</p>
+                           </td>
+                        </tr>
+                        <tr>
+                           <td width="5%" valign="top" align="left"><a href="#N102F5"><img src="images/callouts/2.png" alt="2" border="0"></a> 
+                           </td>
+                           <td valign="top" align="left">
+                              <p>Fin de la zone <i class="wordasword">ignor&eacute;e</i></p>
+                           </td>
+                        </tr>
+                     </table>
+                  </div>
+                  <p></p>
+               </div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2631"></a>2.6.2.&nbsp;Commentaires de Script</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Dans le script, les zones de commentaires sont de la forme</p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">/* commentaire */</pre></td>
+                     </tr>
+                  </table>
+						<p>Les lignes de commentaires commencent par <tt class="literal">//</tt> et continuent jusqu'&agrave; la fin de la ligne :</p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">// ligne de commentaire</pre></td>
+                     </tr>
+                  </table>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;script&gt; 
+  /* les commentaires de script ressemblent &agrave; cela */ 
+  some.method() // C'est un exemple de syntaxe de commentaire
+  &lt;!-- ERREUR!  ne pas inclure de commentaires XML&nbsp;dans le script ! --&gt; 
+&lt;/script&gt;  // ERREUR! Ne pas inclure de commentaires script dans le XML !</pre></td>
+                     </tr>
+                  </table>
+                  <p></p>
+               </div>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="program-development.debugging"></a>2.7.&nbsp;D&eacute;bogage</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le syst&egrave;me OpenLaszlo comprend un d&eacute;bogueur int&eacute;ractif qui peut &ecirc;tre inclus dans l'application.&nbsp;Le d&eacute;bogueur affiche les erreurs d'ex&eacute;cution et peut &ecirc;tre utilis&eacute; de fa&ccedil;on int&eacute;ractive pour inspecter ou modifier n'importe quel attribut de balise ou des champs JavaScript.</p>
+					<p>Vous pouvez utiliser la m&eacute;thode JavaScript <a class="indexterm" name="d0e2655"></a><tt class="methodname">Debug.write()</tt> pour commander l'affichage de messages dans le d&eacute;bogueur.&nbsp;Par exemple, </p>
+					<p><a name="d0e2663"></a></p>
+					<div class="example">
+						<p class="title"><b>Exemple&nbsp;4.15.&nbsp;utilisation du d&eacute;bogueur pour afficher des messages</b></p>
+						<div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$15.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="200" debug="true"&gt; 
+  &lt;script&gt; 
+    Debug.write(&quot;Alors, qu'en pensez-vous&nbsp;?&quot;) 
+  &lt;/script&gt; 
+&lt;/canvas&gt; 
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$15.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p>Pour invoquer le d&eacute;bogueur, pr&eacute;ciser l'attribut <tt class="literal">debug="true"</tt> dans la balise <a class="indexterm" name="d0e2675"></a><tt class="sgmltag-element">&lt;canvas&gt;</tt>. Vous pouvez modifier l'apparence et la position de la balise <a class="indexterm" name="d0e2681"></a><a target="laszlo-reference" href="../reference/index.html?debug.html"><tt class="sgmltag-element">&lt;debug&gt;</tt></a>. Remarquez cependant que cette balise n'invoque pas le d&eacute;bogueur.</p>
+					<p>Pour utiliser le d&eacute;bogueur de fa&ccedil;on int&eacute;ractive pour inspecter une valeur, taper une expression dans le panneau d'&eacute;valuation.&nbsp;Par exemple, </p>
+					<div class="example">
+						<a name="d0e2690"></a>
+						<p class="title"><b>Exemple&nbsp;4.16.&nbsp;d&eacute;finir des attributs avec le d&eacute;bogueur</b></p>
+						<div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/program-development-$16.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="200" bgcolor="red" debug="true"&gt; 
+  &lt;debug y="60"/&gt; 
+  &lt;view name="sam" bgcolor="blue" height="50" width="50"/&gt; 
+&lt;/canvas&gt; 
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/program-development-$16.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p>Dans le panneau d'&eacute;valution, tapez </p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">sam.setAttribute('x', 50)</pre></td>
+                  </tr>
+               </table>
+               <p>et validez. La vue appel&eacute;e <tt class="varname">sam</tt> (le carr&eacute; bleu) appara&icirc;t maintenant 50 pixels plus &agrave; droite.</p>
+               <p>Voir <a href="debugging.html" title="Chapter&nbsp;45.&nbsp;Debugging">Chapitre&nbsp;45, <i>D&eacute;bogage</i></a> pour une explication d&eacute;taill&eacute;e sur le d&eacute;bogage.</p>
+               <p></p>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e2711"></a>2.7.1.&nbsp;Le visualiseur de code OpenLaszlo</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Le Serveur OpenLaszlo contient un visualiseur de code que vous pouvez utiliser pour inspecter n'importe quel fichier XML&nbsp;du dossier lps, dont bien s&ucirc;r les fichiers source .lzx.&nbsp;Quand il affiche les fichiers .lzx, le visualiseur colorise le code en fonction de la syntaxe, et donne une liste des r&eacute;f&eacute;rences crois&eacute;es telles que les classes, les biblioth&egrave;ques et les &eacute;l&eacute;ments graphiques.&nbsp;Pour invoquer le visualiseur, taper dans un navigateur l'URL&nbsp;<tt class="literal">/lps-3.2/lps/utils/viewer/viewer.jsp</tt> en pr&eacute;cisant le nom du fichier &agrave; visualiser avec le param&egrave;tre <tt class="literal">file=</tt>, comme dans l'exemple suivant :</p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+http://localhost:8080/lps-3.2/lps/utils/lps/viewer.jsp?file=/my-apps/copy-of-hello.lzx
+</pre></td>
+                     </tr>
+                  </table>
+						<p></p>
+               </div>
+            </div>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="designers.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="overview.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="tutorials.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;3.&nbsp;OpenLaszlo pour les graphistes&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;II.&nbsp;Tutoriels d'Introduction</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

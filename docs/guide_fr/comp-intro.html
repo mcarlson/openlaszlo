@@ -1,0 +1,432 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;6.&nbsp;Introduction aux Composants</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="laszlo_basics.html" title="Chapter&nbsp;5.&nbsp;OpenLaszlo Basics">
+      <link rel="next" href="views-tutorial.html" title="Chapter&nbsp;7.&nbsp;Introduction to Views"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;6.&nbsp;Introduction aux Composants</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="laszlo_basics.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="views-tutorial.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="comp-intro"></a>Chapitre&nbsp;6.&nbsp;Introduction aux Composants</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="comp-intro.html#d0e2975">1. Aper&ccedil;u g&eacute;n&eacute;ral</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="comp-intro.html#d0e2983">1.1. Un exemple</a></span></dt>
+                     <dt><span class="section"><a href="comp-intro.html#d0e3007">1.2. Composants de formulaires et composants &quot;g&eacute;n&eacute;raux&quot;</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="comp-intro.html#d0e3046">2. Utiliser les Composants</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="comp-intro.html#d0e3064">2.1. Utilisation des balises</a></span></dt>
+                     <dt><span class="section"><a href="comp-intro.html#d0e3086">2.2. Cr&eacute;ation de composants en utiliisant les biblioth&egrave;ques JavaScript</a></span></dt>
+                     <dt><span class="section"><a href="comp-intro.html#d0e3126">2.3. Composants command&eacute;s par les donn&eacute;es</a></span></dt>
+                  </dl>
+               </dd>
+            </dl>
+         </div>
+			<p>Les composants OpenLaszlo sont des objets de haut niveau qui impl&eacute;mentent les fonctions classiques des interfaces graphiques.&nbsp;Cela va des objets simples comme les boutons (OpenLaszlo components are high-level objects that implement common user-interface functions. 
+            They range from relatively simple objects such as <a class="indexterm" name="d0e2948"></a><a target="laszlo-reference" href="../reference/index.html?lz-button.html"><tt class="sgmltag-element">&lt;button&gt;</tt></a>) aux objets complexes comme les formulaires (<a class="indexterm" name="d0e2955"></a><a target="laszlo-reference" href="../reference/index.html?lz-form.html"><tt class="sgmltag-element">&lt;form&gt;</tt></a>) et les tableaux (<a class="indexterm" name="d0e2962"></a><a target="laszlo-reference" href="../reference/index.html?lz-grid.html"><tt class="sgmltag-element">&lt;grid&gt;</tt></a>).</p>
+			<p>Les composants &eacute;crits par Laszlo Systems, Inc., et fournis avec le Serveur OpenLaszlo sont appel&eacute;s <i class="glossterm">composants LZ</i>. 
+            
+         </p>
+			<p></p>
+			<div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e2975"></a>1.&nbsp;Aper&ccedil;u g&eacute;n&eacute;ral</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Ce tutoriel d'introduction vous pr&eacute;sente l'ensemble des composants OpenLaszlo et comment utiliser leurs fonctionnalit&eacute;s de base.&nbsp;Nous verrons dans les chapitres suivants comment utiliser les fonctionnalit&eacute;s avanc&eacute;es des composants et cr&eacute;er vos propres composants.&nbsp;</p>
+				<p>La fa&ccedil;on la plus simple de construire une application OpenLaszlo est d'utiliser les composants LZ &quot;tels quels&quot; avec leurs comportements par d&eacute;faut.&nbsp;Ce chapitre presente de tels exemples.&nbsp;Il contient aussi quelques exemples qui utilisent des concepts non encore pr&eacute;sent&eacute;s.&nbsp;Ne vous inqui&eacute;tez pas si vous ne comprenez pas bien comment ils fonctionnent.&nbsp;L'id&eacute;e ici est de s'habituer aux applications OpenLaszlo construites avec les composants.&nbsp;Les tutoriels suivants vous pr&eacute;senteront les concepts qui vous manquent pour cr&eacute;er vos propres applications.&nbsp;</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e2983"></a>1.1.&nbsp;Un exemple</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Avant d'apprendre comment utiliser les composants dans une application OpenLaszlo, il est important de se faire une id&eacute;e de l'&eacute;tendue des composants disponibles dans OpenLaszlo.&nbsp; </p>
+					<p>L'exemple suivant pr&eacute;sente une bonne partie des composants.&nbsp;C'est une version abr&eacute;g&eacute;e de l'exemple inclus dans l'
+                  The example below shows a miscellaneous collection of components. It's an abreviated version of the sampler
+                  in the <a href="../../laszlo-explorer" target="_top">Explorateur OpenLaszlo</a>, qui fournit un panorama de tous les composants.&nbsp;Le code qui met en oeuvre ces composants peut para&icirc;tre intimidant si vous n'avez jamais travaill&eacute; avec ce type de langage, mais ne soyez pas rebut&eacute;.&nbsp;En fait, vous n'avez m&ecirc;me pas besoin de regarder le code pour l'instant.&nbsp;Votre objectif ici est de commencer &agrave; r&eacute;fl&eacute;chir aux choses que vous pouvez faire gr&acirc;ce &agrave; une application OpenLaszlo, et les composants sont la route la plus s&ucirc;re vers la productivit&eacute;.&nbsp;</p>
+					<p>La 
+                  The <a href="../reference" target="_top">R&eacute;f&eacute;rence LZX</a> d&eacute;crit toutes les balises, attributs et m&eacute;thodes associ&eacute;es &agrave; chaque composant.</p>
+					<div class="example"><a name="d0e2998"></a><p class="title"><b>Exemple&nbsp;6.1.&nbsp;Divers Composants</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/comp-intro-$1.lzx?lzt=swf', width: width="800", height: height="500"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="800" height="500"&gt;
+    &lt;silverstyle name="silvercolors"/&gt;
+    &lt;greenstyle name="greencolors"/&gt;
+    &lt;bluestyle name="bluecolors"/&gt;
+    &lt;view id="s1" x="20" y="20"&gt;
+        &lt;view layout="spacing:20"&gt;
+            &lt;text&gt;Choose a style to change colors...&lt;/text&gt;
+
+            &lt;view name="stylechooser" layout="axis:x; spacing:4"&gt;
+                &lt;text&gt;Style:&lt;/text&gt;
+                &lt;combobox width="120" editable="false"&gt;
+                    &lt;method event="onselect"&gt;
+                        var colorchoice = this.getText();
+                        canvas[colorchoice+'colors'].setAttribute("isdefault", true);
+                    &lt;/method&gt;
+
+                    &lt;textlistitem text="silver"/&gt;
+                    &lt;textlistitem text="green"/&gt;
+                    &lt;textlistitem text="blue" selected="true"/&gt;
+                &lt;/combobox&gt;
+
+            &lt;/view&gt;
+            &lt;tabslider width="250" height="200"&gt;
+                &lt;tabelement text="holiday cheer" selected="true"&gt;
+                    &lt;radiogroup&gt;
+                        &lt;radiobutton text="peace on earth"/&gt;
+                        &lt;radiobutton text="joy to the world"/&gt;
+                        &lt;radiobutton text="happy new year"/&gt;
+                    &lt;/radiogroup&gt;
+                &lt;/tabelement&gt;
+                &lt;tabelement text="housewares"&gt;
+                    &lt;simplelayout axis="y" spacing="10"/&gt;
+                    &lt;checkbox text="stainless steel"/&gt;
+                    &lt;checkbox text="glassware"/&gt;
+                &lt;/tabelement&gt;
+                &lt;tabelement text="isotope"&gt;
+                    &lt;text multiline="true" width="${immediateparent.width}"&gt;
+                        Atoms that have the same number of protons but a different number of neutrons. They are atoms of the same element that have different masses. The isotope number is the number of protons plus the number of neutrons.
+                    &lt;/text&gt;
+                &lt;/tabelement&gt;
+            &lt;/tabslider&gt;
+
+            &lt;tabs&gt;
+                &lt;tabpane&gt;Insecticides
+                    &lt;simplelayout spacing="10" inset="10"/&gt;
+                    &lt;radiogroup&gt;
+                        &lt;radiobutton&gt;Yes, I want to know more&lt;/radiobutton&gt;
+                        &lt;radiobutton&gt;No, I prefer to remain blissfully unaware&lt;/radiobutton&gt;
+                        &lt;radiobutton&gt;Please tell my neighbor, who may tell me&lt;/radiobutton&gt;
+                    &lt;/radiogroup&gt;
+                &lt;/tabpane&gt;
+                &lt;tabpane text="Subliminal"&gt;
+                    &lt;button height="22"&gt;Submit&lt;/button&gt;
+                &lt;/tabpane&gt;
+            &lt;/tabs&gt;
+        &lt;/view&gt;
+
+        &lt;window text="test window" width="250" height="250" x="410" y="180" resizable="true" id="fw" title="A Simple Window"&gt;
+            &lt;menubar name="mbar" placement="menubar"&gt;
+                 &lt;menu name="file" id="mfile" width="80"&gt;File
+                     &lt;menuitem text="item 1"/&gt;
+                     &lt;menuseparator/&gt;
+                     &lt;menuitem id="MWS" text="item 3"&gt;
+                         &lt;menu name="subedit"&gt;subedit
+                             &lt;menuitem text="subitem 1"/&gt;
+                             &lt;menuitem text="subitem 2"/&gt;
+                         &lt;/menu&gt;
+                     &lt;/menuitem&gt;
+                 &lt;/menu&gt;
+                 &lt;menu name="Options"&gt;Document
+                     &lt;menuitem text="option 1"/&gt;
+                     &lt;menuitem text="option 2"/&gt;
+                 &lt;/menu&gt;
+            &lt;/menubar&gt;
+            &lt;scrollbar/&gt;
+        &lt;/window&gt;
+
+        &lt;view layout="spacing:14"&gt;
+            &lt;button height="22"&gt;Submit&lt;/button&gt;
+            &lt;button height="22" enabled="false"&gt;disabled&lt;/button&gt;
+
+            &lt;combobox width="100"&gt;
+                &lt;textlistitem text="pistachio" selected="true"/&gt;
+                &lt;textlistitem text="chocolate chip"/&gt;
+            &lt;/combobox&gt;
+
+            &lt;radiogroup&gt;
+                &lt;radiobutton text="tension"/&gt;
+                &lt;radiobutton text="distance"/&gt;
+            &lt;/radiogroup&gt;
+        &lt;/view&gt;
+
+        &lt;view layout="spacing:20"&gt;
+            &lt;view layout="spacing:10"&gt;
+                &lt;checkbox text="I want to take a weekend flight"/&gt;
+                &lt;checkbox text="Also search airports within 70 miles"/&gt;
+            &lt;/view&gt;
+            &lt;view layout="spacing:5"&gt;
+                &lt;edittext width="200" text="text entry here"/&gt;
+                &lt;edittext width="200" text="disabled" enabled="false"/&gt;
+            &lt;/view&gt;
+        &lt;/view&gt;
+        &lt;simplelayout axis="x" spacing="20"/&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/comp-intro-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p></p>
+               <p></p>
+            </div>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e3007"></a>1.2.&nbsp;Composants de formulaires et composants &quot;g&eacute;n&eacute;raux&quot;</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Vous remarquerez que l'Explorateur OpenLaszlo regroupe les composants suivant les &quot;composants de formulaire&quot; et les &quot;composants g&eacute;n&eacute;raux&quot;.&nbsp;C'est un groupement principalement heuristique des composants qui apparaissent g&eacute;n&eacute;ralement ou non &agrave; l'int&eacute;rieur des balises <a class="indexterm" name="d0e3012"></a><a target="laszlo-reference" href="../reference/index.html?lz-form.html"><tt class="sgmltag-element">&lt;form&gt;</tt></a>. Il n'y a aucune diff&eacute;rence particuli&egrave;re; par exemple, la balise <a class="indexterm" name="d0e3019"></a><tt class="sgmltag-element">&lt;button&gt;</tt> peut &ecirc;tre contenue dans une vue (<a class="indexterm" name="d0e3025"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>) ou une fen&ecirc;tre <a class="indexterm" name="d0e3032"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="sgmltag-element">&lt;window&gt;</tt></a>&#151; elle n'a pas besoin d'&ecirc;tre incluse dans un formulaire (<a class="indexterm" name="d0e3039"></a><tt class="sgmltag-element">&lt;form&gt;</tt>).</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e3046"></a>2.&nbsp;Utiliser les Composants</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Dans cette partie, nous allons &eacute;tudier les diff&eacute;rentes fa&ccedil;ons d'utiliser des composants dans des applications OpenLaszlo :</p>
+				<div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p>utilisation des balises</p>
+                  </li>
+                  <li>
+                     <p>utilisation des biblioth&egrave;ques JavaScript</p>
+                  </li>
+                  <li>
+                     <p>utilisation de la liaison de donn&eacute;es</p>
+                  </li>
+               </ul>
+            </div>
+				<p>Comme pr&eacute;cis&eacute; pr&eacute;c&eacute;demment, l'utilisation de script et les liaisons de donn&eacute;es sera approfondie dans les chapitres suivants.&nbsp;Ne vous inqui&eacute;tez pas si vous n'&ecirc;tes pas tr&egrave;s &agrave; l'aise avec ces concepts.&nbsp;</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e3064"></a>2.1.&nbsp;Utilisation des balises</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Le plus simple pour utiliser les composants est de faire une application qui ne contienne que des balises - pas de script.&nbsp;L'exemple trivial suivant montre &agrave; quoi cela ressemble.&nbsp;</p>
+					<p></p>
+					<div class="example"><a name="d0e3069"></a><p class="title"><b>Exemple&nbsp;6.2.&nbsp;Exemple d'utilisation des Composants avec balises seulement </b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/comp-intro-$2.lzx?lzt=swf', width: 500, height: height="100"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="100"&gt;
+    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
+    &lt;list shownitems="4"&gt;
+        &lt;textlistitem&gt;judy&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;ann&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;betsy&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;sarah&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;carol&lt;/textlistitem&gt;
+        &lt;textlistitem&gt;danah&lt;/textlistitem&gt;
+    &lt;/list&gt;
+
+    &lt;radiogroup&gt;
+        &lt;radiobutton text="apple"/&gt;
+        &lt;radiobutton text="cherry"/&gt;
+        &lt;radiobutton text="key lime"/&gt;
+    &lt;/radiogroup&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/comp-intro-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p>Bien s&ucirc;r, de fa&ccedil;on pratique, vous aurez parfois besoin d'utiliser du script, que ce soit dans une m&eacute;thode ou moins fr&eacute;quemment, pour cr&eacute;er un composant &agrave; l'int&eacute;rieur d'une balise 
+                  As a practical matter, of course, you will usually need to use need to use some script, whether in a method, or, less
+                  frequently, to create a component within a <a class="indexterm" name="d0e3078"></a><a target="laszlo-reference" href="../reference/index.html?script.html"><tt class="sgmltag-element">&lt;script&gt;</tt></a>.</p>
+					<p></p>
+				</div>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e3086"></a>2.2.&nbsp;Cr&eacute;ation de composants en utilisant les biblioth&egrave;ques JavaScript</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>En plus de la d&eacute;claration de composants avec des balises, vous pouvez cr&eacute;er et manipuler les composants depuis JavaScript.&nbsp;</p>
+					<p>L'exemple suivant montre comment vous pouvez cr&eacute;er des boutons en utilisant balises et script.&nbsp;</p>
+					<p><a name="d0e3093"></a></p>
+					<div class="example">
+						<p class="title"><b>Exemple&nbsp;6.3.&nbsp;Cr&eacute;ation de composants avec du script</b></p>
+						<div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/comp-intro-$3.lzx?lzt=swf', width: 500, height: height="150"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="150"&gt;
+  &lt;simplelayout/&gt;
+  &lt;!-- Voici un bouton cr&eacute;&eacute; avec une balise --&gt;
+  &lt;button name="framitz" width="50"&gt;
+   hello
+  &lt;/button&gt;
+  &lt;script&gt;
+  // et voici un bouton cr&eacute;&eacute; en utilisant du scrip
+   var b = new button();
+   b.setattribute("width", 50);
+    b.setattribute("height", 50);
+   &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/comp-intro-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p>Dans l'exemple ci-dessous, la m&eacute;thode <tt class="literal">onclick</tt> ajoute de fa&ccedil;on proc&eacute;durale un &eacute;l&eacute;ment au composant <a class="indexterm" name="d0e3105"></a><tt class="sgmltag-element">&lt;list&gt;</tt>.</p>
+               <div class="example"><a name="d0e3115"></a><p class="title"><b>Exemple&nbsp;6.4.&nbsp;Biblioth&egrave;ques des Composants</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/comp-intro-$4.lzx?lzt=swf', width: 500, height: height="150"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="150"&gt;
+    &lt;simplelayout spacing="10"/&gt;
+    &lt;list id="mylist" height="82"&gt;     
+        &lt;textlistitem text="something"/&gt;
+    &lt;/list&gt;
+
+    &lt;view layout="axis:x;spacing:4" &gt;
+        &lt;edittext id="item" text="new item"/&gt;
+        &lt;button text="Add" isdefault="true"&gt;
+         <span class="em">   &lt;method event="onclick"&gt;
+               mylist.addItem(item.getText());
+            &lt;/method&gt;</span>
+        &lt;/button&gt;
+    &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/comp-intro-$4.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e3126"></a>2.3.&nbsp;Composants command&eacute;s par les donn&eacute;es</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Une troisi&egrave;me fa&ccedil;on de cr&eacute;er des composants est par la liaison de donn&eacute;es.&nbsp;Dans l'exemple ci-dessous, un nouveau composant 
+                  A third way to create components is through databinding.  In the example below, a new component <tt class="literal">textlistitem</tt> est cr&eacute;&eacute; pour tout noeud correspondant de l'ensemble de donn&eacute;es &quot;mydata&quot;.</p>
+					<div class="example"><a name="d0e3134"></a><p class="title"><b>Exemple&nbsp;6.5.&nbsp;Composants command&eacute;s par les donn&eacute;es</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/comp-intro-$5.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="200"&gt;
+    &lt;dataset name="mydata" src="../contacts.xml" request="true"/&gt;
+    &lt;simplelayout axis="x" spacing="10" inset="10"/&gt;
+    &lt;list id="a"&gt;
+        &lt;textlistitem datapath="mydata:/contacts/person"
+                      text="$path{'@firstname'}"/&gt;
+    &lt;/list&gt;
+
+    &lt;list id="b" shownitems="4"&gt;
+        &lt;textlistitem datapath="mydata:/contacts/person"
+                      text="$path{'@firstname'}"/&gt;
+    &lt;/list&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/comp-intro-$5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p></p>
+            </div>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="laszlo_basics.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="views-tutorial.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;5.&nbsp;Les bases d'OpenLaszlo&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;7.&nbsp;Introduction aux Vues</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,0 +1,232 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;3.&nbsp;OpenLaszlo pour les graphistes</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="overview.html" title="Part&nbsp;I.&nbsp;Overview">
+      <link rel="previous" href="language-preliminaries.html" title="Chapter&nbsp;2.&nbsp;Language Preliminaries">
+      <link rel="next" href="program-development.html" title="Chapter&nbsp;4.&nbsp;Overview of OpenLaszlo Application Development"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;3.&nbsp;OpenLaszlo pour les graphistes</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="language-preliminaries.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">I.&nbsp;Aper&ccedil;u g&eacute;n&eacute;ral</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="program-development.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="designers"></a>Chapitre&nbsp;3.&nbsp;OpenLaszlo pour les graphistes</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="designers.html#d0e1727">1. Aper&ccedil;u g&eacute;n&eacute;ral</a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1740">2. Interaction continue plut&ocirc;t que rafraichissement de page</a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1756">3. Processus de design</a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1804">4. Quelle apparence ? </a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1812">5. Utilisation de ressources</a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1824">6. Ressources Bitmap ou Vectorielles</a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1833">7. Polices de caract&egrave;res</a></span></dt>
+               <dt><span class="section"><a href="designers.html#d0e1854">8. Design des composants OpenLaszlo</a></span></dt>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1727"></a>1.&nbsp;Aper&ccedil;u g&eacute;n&eacute;ral</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Ce chapitre d&eacute;crit la plateforme OpenLaszlo du point de vue du graphiste.&nbsp;Nous verrons comment OpenLaszlo permet aux graphistes et ing&eacute;nieurs de construire des applications Internet innovantes.&nbsp;</p>
+				<p>Avec la technologie OpenLaszlo, les graphistes d'applications internet sont lib&eacute;r&eacute;s des habituelles limitations dues &agrave; l'encha&icirc;nement statique et lin&eacute;aire de pages.&nbsp;Votre vision d'interfaces dynamiques, dirig&eacute;es par les donn&eacute;es, concises et intelligentes peut devenir une r&eacute;alit&eacute;.&nbsp;Mais peut-&ecirc;tre devrez-vous changer un peu votre fa&ccedil;on de penser, car OpenLaszlo peut vous permettre de faire des choses qui ne le sont pas avec la plupart des autres technologies.&nbsp;Et m&ecirc;me s'il n'est pas n&eacute;cessaire pour vous d'apprendre &agrave; &eacute;crire du code pour devenir un designer efficace sur un projet OpenLaszlo, un peu de connaissances de la structure de base et les sp&eacute;cificit&eacute;s du langage vous aideront &agrave; comprendre comment appr&eacute;hender la t&acirc;che.&nbsp;C'est pourquoi nous vous recommandons d'au moins parcourir quelques-uns des <a target="laszlo-dguide" href="../guide/">tutoriels</a>.
+               
+            </p>
+				<p>Au moment d'aborder un projet, pensez &agrave; des applications clientes qui soient si intuitives et faciles &agrave; utiliser qu'elles ne n&eacute;cessitent aucun manuel.&nbsp;Rappelez-vous la superbe interface d'un site Flash et imaginez qu'elle devienne orient&eacute;e donn&eacute;es, qu'elle monte en charge et qu'elle puisse &ecirc;tre modifi&eacute;e facilement.&nbsp;Passez un peu de temps &agrave; approfondir la question.&nbsp;Pensez-y sous tous les angles.&nbsp;Coupez-la en petits morceaux, r&eacute;organisez les diff&eacute;remment et utilisez ces perceptions pour d&eacute;finir votre design.&nbsp;</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1740"></a>2.&nbsp;<i class="glossterm">Interaction continue</i> plut&ocirc;t que <i class="glossterm">rafraichissement de page</i></h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Consid&eacute;rez la ou les t&acirc;ches que l'utilisateur final doit faire, ainsi que l'enchainement jusqu'&agrave; la fin.&nbsp;L'un des avantages d'OpenLaszlo pour construire vos projets est sa capacit&eacute; &agrave; consolider l'information &agrave; travers les interactions et la pr&eacute;sentation.&nbsp;Un processus qui aurait pris 20&nbsp;pages html &agrave; un utilisateur tr&egrave;s patient, peut maintenant s'accomplir dans le cadre d'une seule &quot;page&quot; avec de petits morceaux d'information &eacute;l&eacute;gamment organis&eacute;s suivant les besoins.&nbsp;Cette capacit&eacute; de pr&eacute;senter les informations d'une fa&ccedil;on pratique, adapt&eacute;e au contexte, et quelle qu'en soit sa complexit&eacute;, est la base de toute application r&eacute;ussie.</p>
+				<p><a name="d0e1749"></a></p>
+				<div class="figure">
+					<p class="title"><b>Figure&nbsp;3.1.&nbsp;Interaction continue</b></p>
+					<div class="mediaobject"><img src="images/design_sec2_ill.jpg" alt="Continuous interaction"></div>
+            </div>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1756"></a>3.&nbsp;Processus de design</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Le processus de design est unique &agrave; une &eacute;quipe en fonction de son exp&eacute;rience et de sa culture. Le recoupement des comp&eacute;tences entre les graphistes qui &eacute;crivent du code et les ing&eacute;nieurs avec des sensibilit&eacute;s artistiques implique qu'il n'y a souvent pas de stricte division du travail.&nbsp;Toutes les &eacute;quipes ont besoin de passer du temps pour diss&eacute;quer le probl&egrave;me, faire du remue-m&eacute;ninges, et arriver &agrave; une compr&eacute;hension et un accord unanimes.</p>
+				<p>Voici quelques &eacute;tapes reconnues du processus :</p>
+				<div class="orderedlist">
+               <ol type="1" compact>
+                  <li>
+                     <p><a class="indexterm" name="d0e1766"></a><i class="glossterm">Vision sch&eacute;matique</i>. Des exemples de mises en page aident &agrave; visualiser l'ensemble des &eacute;l&eacute;ments ensemble.&nbsp;</p>Cela permet de d&eacute;finir l'organisation principale de l'interface; avec g&eacute;n&eacute;ralement la navigation, la publicit&eacute; et le contenu.</li>
+						<li>
+							<p><a class="indexterm" name="d0e1775"></a><i class="glossterm">Storyboards</i>. Une fois qu'une structure a &eacute;t&eacute; d&eacute;finie, le storyboard de l'enchainement g&eacute;n&eacute;ral et d&eacute;taill&eacute; aide &agrave; rafiner et communiquer la vision de l'interactivit&eacute;.&nbsp;Les storyboards peuvent commencer comme un simple diagramme de flux et &eacute;voluer jusqu'au dessin de chaque &eacute;tat de chaque &eacute;l&eacute;ment.&nbsp;La complexit&eacute; du probl&egrave;me et de sa solution d&eacute;termine le niveau de d&eacute;tails du storyboard.</p>
+						</li>
+						<li>
+                     <p><a class="indexterm" name="d0e1783"></a><i class="glossterm">Animations</i>. De petites animations simples et lin&eacute;aires des fonctionnalit&eacute;s et des processus peuvent aider &agrave; la fois les ing&eacute;nieurs et les graphistes &agrave; &eacute;valuer et prendre en main les &eacute;l&eacute;ments d'interactivit&eacute;.</p>
+                  </li>
+						<li>
+                     <p><a class="indexterm" name="d0e1791"></a><i class="glossterm">Prototypes</i>. Une fois qu'elle s'est mise d'accord sur tout (ou partie), l'&eacute;quipe peut commencer &agrave; d&eacute;finir le framework en utilisant les croquis et les primitives de base de LZX.</p>
+                  </li>
+               </ol>
+            </div>
+				<div class="figure"><a name="d0e1797"></a><p class="title"><b>Figure&nbsp;3.2.&nbsp;Processus de design</b></p>
+               <div class="mediaobject"><img src="images/design_sec3_ill.jpg" alt="Design process"></div>
+            </div>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1804"></a>4.&nbsp; Quelle apparence ?</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Pendant que l'&eacute;quipe technique d&eacute;veloppe l'infrastructure de l'application, les designers peuvent se concentrer sur l'apparence de l'application.&nbsp;Certains graphistes pr&eacute;f&egrave;rent que le design soit compl&egrave;tement fini avant que le d&eacute;veloppement ne commence, mais la r&eacute;alit&eacute; des &eacute;ch&eacute;ances et la probabilit&eacute; de changements au cours des it&eacute;rations n&eacute;cessitent que l'apparence et la r&eacute;alisation visuelle se fassent en parall&egrave;le du d&eacute;veloppement.&nbsp;Des &eacute;l&eacute;ments fondamentaux du design doivent cependant &ecirc;tre d&eacute;cid&eacute;s.&nbsp;Les utilisateurs seront-ils plus &agrave; l'aise avec des interfaces traditionnelles ou est-il possible d'essayer de nouvelles pr&eacute;sentations, int&eacute;ractions et affichages&nbsp;? L'apparence de l'application doit &ecirc;tre celle avec laquelle vous &ecirc;tes le plus &agrave; l'aise.</p>
+				<p>On peut utiliser aussi bien des outils bitmap que vectoriels pour produire des ressources dans les deux formats.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1812"></a>5.&nbsp; Utilisation de ressources</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Les ressources sont les &eacute;l&eacute;ments visuels utilis&eacute;s par le code LZX pour construire l'apparence d'une application.&nbsp;LZX supporte de nombreux formats d'images, aussi bien bitmap (GIF, JPEG, PNG) que vectoriels (SWF).&nbsp;Des animations et vid&eacute;os (sous forme de fichiers SWF) ainsi que des sons (fichiers MP3) peuvent aussi &ecirc;tre int&eacute;gr&eacute;s dans les applications.&nbsp;Les ressources sont souvent constitu&eacute;es de plusieurs parties assembl&eacute;es pour cr&eacute;er diff&eacute;rentes apparences d'interfaces et leurs &eacute;tats (relev&eacute;, enfonc&eacute;, s&eacute;lectionn&eacute;, ...).&nbsp;Pour permettre ces &eacute;tats, LZX autorise des ressources multi-images.&nbsp;Il est &eacute;galement possible d'utiliser une ressource simple et de modifier son apparence &agrave; l'aide de code (teinte, taille, position, ...).&nbsp;Dans le langage LZX, la couleur, la teinte, le contraste et l'opacit&eacute; des ressources peuvent &ecirc;tre modifi&eacute;s de fa&ccedil;on programmative.&nbsp;</p>
+				<p><a name="d0e1817"></a></p>
+				<div class="figure">
+					<p class="title"><b>Figure&nbsp;3.3.&nbsp;Utilisation de ressources</b></p>
+					<div class="mediaobject"><img src="images/design_sec5_ill.jpg" alt="Using resources"></div>
+            </div>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1824"></a>6.&nbsp; Ressource Bitmap ou Vectorielles</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>La d&eacute;cision de travailler avec des fichiers bitmaps ou vectoriels est dict&eacute;e par le design.&nbsp;S'il y a beaucoup d'objets complexes, de taille fixe, tels que des d&eacute;grad&eacute;s, des ombrages et/ou transparences, des ressources bitmap sont plus adapt&eacute;es.&nbsp;Les fichiers vectoriels, bien que g&eacute;n&eacute;ralement plus petits, demandent plus de traitements pour s'afficher.&nbsp;L'autre grande consid&eacute;ration est de savoir si le design implique le redimensionnement des ressources.&nbsp;Si une ressource doit changer d'&eacute;chelle, vous devriez utiliser des fichiers vectoriels, car il n'y aura alors aucune d&eacute;gradation.&nbsp;Redimensionner des fichier bitmap &agrave; une taille plus grande que leur taille d'origine va produire une interpolation et une d&eacute;gradation de l'image.&nbsp;En g&eacute;n&eacute;ral, les fichiers SWF sont les plus flexibles.&nbsp;Bien que l'outil de r&eacute;f&eacute;rence pour cr&eacute;er des fichiers SWF soit Macromedia Flash, de nombreuses applications vectorielles, comme Adobe Illustrator, permettent d'exporter vers ce format.&nbsp;Si l'option est disponible, les fichiers SWF doivent &ecirc;tre sauv&eacute;s en version 5.0.&nbsp;Le syst&egrave;me d'export de Illustrator 10 ne fournit pas cette option, mais utilise la version 5.0&nbsp;par d&eacute;faut.&nbsp;</p>
+				<p></p>
+				<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+               <table border="0" summary="Note">
+                  <tr>
+                     <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
+							<th align="left">Note</th>
+						</tr>
+                  <tr>
+                     <td colspan="2" align="left" valign="top">
+                        <p>A l'exception de la commande &quot;stop&quot;, aucun code ActionScript Flash ne doit pas &ecirc;tre inclus dans un fichier SWF.</p>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1833"></a>7.&nbsp; Polices de caract&egrave;res</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>OpenLaslo prend en charge toutes les polices au format True Type (TTF).&nbsp;Les polices embarqu&eacute;es permettent de garantir l'apparence du texte &agrave; l'int&eacute;rieur des applications, quel que soit le navigateur et le syst&egrave;me d'exploitation.&nbsp;</p>
+				<p>La police par d&eacute;faut dans les applications OpenLaszlo est la police ultra riche &quot;Verity&quot;.&nbsp;Le plugin Flash (responsable de l'affichage des fichiers LZX) affiche mal les polices de petite taille, c'est pourquoi les graphistes utilisent fr&eacute;quemment des polices bitmap &agrave; petite taille (g&eacute;n&eacute;ralement moins de 12 points).&nbsp;Les polices bitmap contournent le probl&egrave;me d'affichage en supprimant le lissage.&nbsp;Bien que pratiques, les polices bitmap traditionnelles perdent les nuances de la typographie traditionnelle.&nbsp;Les polices ultra riches utilisent un lissage constant, ce qui augmente la lisibilit&eacute; en gardant le lissage et la forme distincte des caract&egrave;res.&nbsp;Verity a &eacute;t&eacute; con&ccedil;u pour imiter les formes de la police &quot;Vera&quot; (&eacute;galement incluse dans le Serveur OpenLaszlo).</p>
+				<p><a name="d0e1840"></a></p>
+				<div class="figure">
+					<p class="title"><b>Figure&nbsp;3.4.&nbsp;Polices de caract&egrave;res</b></p>
+					<div class="mediaobject"><img src="images/design_sec7_ill.jpg" alt="Fonts"></div>
+            </div>
+				<p>A&nbsp;des tailles plus grandes, Vera peut &ecirc;tre utilis&eacute;e &agrave; la place de Verity.&nbsp;Les polices bitmap telles que Verity ne s'affichent correctement qu'&agrave; 8pt. Le fichier TTF Verity (9 ou 11pt) doit &ecirc;tre utilis&eacute; pour changer la taille.&nbsp;Certains caract&egrave;res de Verity ne sont pas accentu&eacute;s; si vous voulez le pack Windows Occidental Unicode, utilisez VerityPlus, qui contient les caract&egrave;res accentu&eacute;s europ&eacute;ens.&nbsp;La police Vera a &eacute;t&eacute; &eacute;dit&eacute;e en licence Open Source par le projet Gnome.&nbsp;La police ultra riche Verity a &eacute;t&eacute; con&ccedil;ue par Christopher Lowery en utilisant la technologie cr&eacute;&eacute;e par Truth in Design.&nbsp;</p>
+				<p>Pour en savoir plus sur les polices, voir le <a target="laszlo-dguide" href="../guide/fonts.html">Guide du D&eacute;veloppeur</a></p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1854"></a>8.&nbsp;Design des composants OpenLaszlo</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Pour plus d'informations, voir <a href="../component-design/index.html" target="_top">Design des composants OpenLaszlo</a>.
+               
+            </p>
+            <p></p>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="language-preliminaries.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="overview.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="program-development.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;2.&nbsp;Pr&eacute;liminaires&nbsp;sur le langage</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;4.&nbsp;Aper&ccedil;u du d&eacute;veloppement d'une application OpenLaszlo</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

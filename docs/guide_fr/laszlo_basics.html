@@ -1,0 +1,252 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;5.&nbsp;Les bases d'OpenLaszlo</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="next" href="comp-intro.html" title="Chapter&nbsp;6.&nbsp;Introduction to Components"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;5.&nbsp;Les bases d'OpenLaszlo</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="tutorials.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="comp-intro.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="laszlo_basics"></a>Chapter&nbsp;5.&nbsp;Les bases d'OpenLaszlo</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="laszlo_basics.html#d0e2752">1. Constuire une application OpenLaszlo simple</a></span></dt>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e2752"></a>1.&nbsp;Construire une application OpenLaszlo simple</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Le code source d'une application OpenLaszlo est un ensemble de fichiers XML et d'&eacute;l&eacute;ments multim&eacute;dia (tels que des images, du son et des polices de caract&egrave;res).&nbsp;Chaque application a un &quot;The source code to an OpenLaszlo application is a set of XML files, and
+               media asset files (such as image, sound, and font files).  Each
+               application has a <a class="indexterm" name="d0e2757"></a><i class="glossterm">fichier canvas</i>&quot;, qui est un fichier XML&nbsp;contenant la balise <a class="indexterm" name="d0e2763"></a><a target="laszlo-reference" href="../reference/index.html?canvas.html"><tt class="sgmltag-element">&lt;canvas&gt;</tt></a>.</p>
+				<p>Par convention, les fichires LZX se terminent avec l'extension By convention, LZX files end with the extension <tt class="literal">.lzx</tt>. Chaque fichier LZX est un fichier XML, donc si votre &eacute;diteur a un mode XML, configurez-le pour travailler avec les fichiers LZX.</p>
+				<p>La balise fermante de toute application OpenLaszlo est la balise The enclosing tag of every OpenLaszlo application is the <a class="indexterm" name="d0e2777"></a><tt class="sgmltag-element">&lt;canvas&gt;</tt>. La toile (canvas) est une vue (comme tous les autres &eacute;l&eacute;ments affichables &agrave; l'&eacute;cran) mais il poss&egrave;de quelques propri&eacute;t&eacute;s particuli&egrave;res.&nbsp;Par exemple, des ressources ne peuvent &ecirc;tre associ&eacute;es directement &agrave; la balise canvas. </p>
+				<p>Voici un fichier lzx simple :</p>
+				<div class="example"><a name="d0e2785"></a><p class="title"><b>Exemple&nbsp;5.1.&nbsp;Toile vide</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$1.lzx?lzt=swf', width: width="500", height: height="150"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="150" bgcolor="green"&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Dans cet exemple simple, nous avons d&eacute;fini la couleur d'arri&egrave;re plan &agrave; vert pour mettre en &eacute;vidence la zone. Si vous ne sp&eacute;cifiez pas de couleur pour la balise canvas, elle sera blanche par d&eacute;faut.&nbsp;(A travers le reste de ce tutoriel aucune couleur d'arri&egrave;re plan ne sera d&eacute;finie pour la toile).&nbsp;Maintenant, ajoutons une fen&ecirc;tre sur la toile blanche.</p>
+				<div class="example"><a name="d0e2794"></a><p class="title"><b>Exemple&nbsp;5.2.&nbsp;Simple fen&ecirc;tre</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$2.lzx?lzt=swf', width: width="500", height: height="150"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="150"&gt;
+  &lt;window/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Remarquez le format de la balise XML vide <a class="indexterm" name="d0e2803"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="sgmltag-element">&lt;window&gt;</tt></a>.
+            </p>
+				<p>En utilisant les attributs de la fen&ecirc;tre, param&eacute;trons-la un peu.&nbsp;Comme dans HTML, les balises Laszlo peuvent avoir des attributs :</p>
+				<div class="example"><a name="d0e2812"></a><p class="title"><b>Exemple&nbsp;5.3.&nbsp;D&eacute;finition de la largeur d'une fen&ecirc;tre</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$3.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="300"&gt;
+  &lt;window x="20" y="20" width="200" height="250"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Dans ces exemples simples, toutes les mesures sont en pixels.&nbsp;(Le In these simple examples, all measurements are in <span class="i">pixels</span>. (A later <a href="views.html" title="Chapter&nbsp;23.&nbsp;Views">Chapitre&nbsp;23, <i>Vues</i></a> explique comment on peut changer les unit&eacute;s de mesure dans les situations plus compliqu&eacute;es).</p>
+				<p>Remarquez comment la fen&ecirc;tre est maintenant plac&eacute;e de fa&ccedil;on absolue par rapport au coin sup&eacute;rieur gauche de votre navigateur.&nbsp;</p>
+				<div class="example"><a name="d0e2831"></a><p class="title"><b>Exemple&nbsp;5.4.&nbsp;Titre de la fen&ecirc;tre</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$4.lzx?lzt=swf', width: width="500", height: height="350"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="350"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title=&quot;Simple Window&quot; resizable=&quot;true&quot; /&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$4.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous avons maintenant une fen&ecirc;tre qui poss&egrave;de un titre et peut &ecirc;tre redimensionn&eacute;e.&nbsp;</p>
+				<p>Remarquez comment nous avons saut&eacute; des lignes pour garder le code lisible.&nbsp;</p>
+				<p>Pla&ccedil;ons quelque chose dans cette fen&ecirc;tre.</p>
+				<div class="example"><a name="d0e2844"></a><p class="title"><b>Exemple&nbsp;5.5.&nbsp;Texte de la fen&ecirc;tre</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$5.lzx?lzt=swf', width: width="500", height: height="350"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="350"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title=&quot;Simple Window&quot; resizable=&quot;true&quot;&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous avons plac&eacute; dans l'&eacute;l&eacute;ment We've given the <a class="indexterm" name="d0e2853"></a><tt class="sgmltag-element">&lt;window&gt;</tt> un &eacute;l&eacute;ment fils (<tt class="literal">text</tt>), qui contient le texte que nous voulons afficher.</p>
+				<p>Remarquez que le texte est plac&eacute; dans le coin sup&eacute;rieur gauche.</p>
+				<p>Supposons que nous voulions ajouter une nouvelle ligne de texte.&nbsp;Nous pourrions ajouter une autre balise text, comme dans l'exemple ci-dessous :</p>
+				<div class="example"><a name="d0e2866"></a><p class="title"><b>Exemple&nbsp;5.6.&nbsp;Des champs texte que se superposent</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$6.lzx?lzt=swf', width: width="500", height: height="350"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="350"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title=&quot;Simple Window&quot; resizable=&quot;true&quot;&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$6.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Zut! Les deux champs texte se superposent.&nbsp;C'est parce que la position par d&eacute;faut pour placer des &eacute;l&eacute;ments est le coin sup&eacute;rieur gauche.&nbsp;Pour corriger ceci, nous pourrions positionner les deux &eacute;l&eacute;ments text de fa&ccedil;on absolue, comme dans la fen&ecirc;tre suivante :</p>
+				<div class="example"><a name="d0e2878"></a><p class="title"><b>Exemple&nbsp;5.7.&nbsp;Positionnement manuel du texte</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$7.lzx?lzt=swf', width: width="500", height: height="250"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="250"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title=&quot;Simple Window&quot; resizable=&quot;true&quot;&gt;
+    &lt;text <span class="em">x="10" y="10"</span>&gt;Here is some text.&lt;/text&gt;
+    &lt;text <span class="em">x="10" y="50"</span>&gt;I could ramble for hours.&lt;/text&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$7.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Remarquez que le texte est maintenant positionn&eacute; de fa&ccedil;on relative par rapport &agrave; la balise m&egrave;re Notice how the text is now positioned <span class="i">relative to its parent element</span>, the <a class="indexterm" name="d0e2896"></a><tt class="sgmltag-element">&lt;window&gt;</tt>.
+            </p>
+				<p>Cela fonctionne correctement et s'av&egrave;re tr&egrave;s pratique pour positionner des &eacute;l&eacute;ments dans tout l'espace.&nbsp;Mais cela n'est pas tr&egrave;s joli compar&eacute; &agrave; des &eacute;l&eacute;ments qui glissent les uns par rapport aux autres.&nbsp;</p>
+				<p>OpenLaszlo fournit une solution pour cela :</p>
+				<div class="example"><a name="d0e2906"></a><p class="title"><b>Exemple&nbsp;5.8.&nbsp;Simplelayout</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/laszlo_basics-$8.lzx?lzt=swf', width: width="500", height: height="350"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="350"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title=&quot;Simple Window&quot; resizable=&quot;true&quot;&gt;
+    <span class="em">&lt;simplelayout axis="y" spacing="10" /&gt;</span>
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/laszlo_basics-$8.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Maintenant, le premier champ texte est positionn&eacute; en fonction du second.&nbsp;La balise Now the first text field is positioned relative to the second. The <a class="indexterm" name="d0e2918"></a><a target="laszlo-reference" href="../reference/index.html?simplelayout.html"><tt class="sgmltag-element">&lt;simplelayout&gt;</tt></a> dit &agrave; OpenLaszlo que tout ce que contient cette vue (dans ce cas la fen&ecirc;tre tag tells OpenLaszlo that everything in that <span class="i">view</span> (in this case the <a class="indexterm" name="d0e2928"></a><tt class="sgmltag-element">&lt;window&gt;</tt>) sera positionn&eacute; de fa&ccedil;on relative entre eux, et l'attribut Here, the <tt class="literal">axis</tt> property makes
+               everything align vertically, and the <tt class="literal">spacing</tt> d&eacute;finit l'espace entre les &eacute;l&eacute;ments.</p>
+				<p>Mais qu'est-ce qu'on appelle une vue ?&nbsp;Pour plus d'informations l&agrave;-dessus, rendez-vous dans le tutoriel &quot;Introduction aux vues'&quot;.</p>
+				<p></p>
+			</div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="tutorials.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="comp-intro.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">II.&nbsp;Tutoriels d'Introduction&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;6.&nbsp;Introduction aux Composants</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

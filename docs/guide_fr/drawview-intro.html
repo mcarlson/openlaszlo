@@ -1,0 +1,531 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;13.&nbsp;Introduction aux dessins</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="classes-tutorial.html" title="Chapter&nbsp;12.&nbsp;Introduction to Classes and Object Oriented Programming">
+      <link rel="next" href="building-apps.html" title="Part&nbsp;III.&nbsp;Fundamental Concepts"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;13.&nbsp;Introduction aux dessins </th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="classes-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="building-apps.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="drawview-intro"></a>Chapitre&nbsp;13.&nbsp;Introduction aux dessins </h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res </b></p>
+            <dl>
+               <dt><span class="section"><a href="drawview-intro.html#d0e5863">1. Les notions derri&egrave;re le syst&egrave;me de programmation</a></span></dt>
+               <dt><span class="section"><a href="drawview-intro.html#d0e5886">2. La zone de dessin (drawview) </a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="drawview-intro.html#d0e5931">2.1. Lignes, formes, remplissages </a></span></dt>
+                     <dt><span class="section"><a href="drawview-intro.html#d0e5993">2.2. Opacit&eacute; et D&eacute;grad&eacute;s </a></span></dt>
+                     <dt><span class="section"><a href="drawview-intro.html#d0e6080">2.3. Red&eacute;marrer</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="drawview-intro.html#d0e6113">3. Int&eacute;grer des zones de dessin dans des applications OpenLaszlo</a></span></dt>
+            </dl>
+         </div>
+         <p>OpenLaszlo permet de faire des dessins &agrave; deux dimensions. Cela se fait en utilisant du code proc&eacute;dural dans un &eacute;l&eacute;ment &lt;drawview&gt; pour dessiner des lignes et remplir des formes. Dans ce tutoriel nous verrons les points clef de la biblioth&egrave;que et montrerons quelques-uns des effets int&eacute;ressants qu'on peut obtenir avec quelques lignes de code. </p>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5863"></a>1.&nbsp;Les notions derri&egrave;re le syst&egrave;me de programmation </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>
+               Le groupe de travail sur la technologie hypertexte des applications web (<a href="http://www.whatwg.org/" target="_top">Web Hypertext Application Technology Working Group</a> ("WHATWG")) est une &quot;collaboration non officielle entre des concepteurs de navigateurs internet et des tiers qui souhaitaient d&eacute;velopper de nouvelles technologies pour permettre aux concepteurs d'&eacute;crire et de d&eacute;ployer des applications sur la toile mondiale&quot;. Ce groupe a r&eacute;cemment publi&eacute; une sp&eacute;cification pour la r&eacute;alisation de dessins (vous pouvez la trouver <a href="http://www.whatwg.org/specs/web-apps/current-work/#graphics" target="_top">ici)</a>.            </p>
+            <p>OpenLaszlo impl&eacute;mente une partie de cette biblioth&egrave;que de dessin du <tt class="literal">whatwg</tt>. Pour savoir en quoi quoi OpenLaszlo s'&eacute;carte de la sp&eacute;cification du <tt class="literal">whatwg</tt>, 
+            consultez le <a href="http://www.laszlosystems.com/lps-3.0/docs/reference?drawview.html" target="_top">Manuel de R&eacute;f&eacute;rence LZX</a>. </p>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5886"></a>2.&nbsp;La zone de dessin (drawview) </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>
+               La classe &lt;drawview&gt; &eacute;tend la classe &lt;view&gt;. Ainsi il h&eacute;rite des propri&eacute;t&eacute;s de &lt;view&gt;; une balise &lt;drawview&gt; cr&eacute;e une vue rectangulaire. A premi&egrave;re vue, une vue de dessin ressemble &agrave; n'importe quelle autre vue :</p>
+            <div class="example"><a name="d0e5891"></a>
+            <p class="title"><b>Exemple&nbsp;13.1. view et drawview</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$1.lzx?lzt=swf', width: 500, height: height="75"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+    &lt;canvas height="75" proxied="false"&gt;
+      &lt;simplelayout spacing="5" axis="x"/&gt;
+      &lt;view height="50" width="50" bgcolor="red"/&gt;
+      &lt;drawview height="50" width="50" bgcolor="blue"/&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>
+               Il n'y a quasiment pas d'autres attributs dans la classe <tt class="literal">drawview</tt> en plus de ceux h&eacute;rit&eacute;s de la classe <tt class="literal">view</tt>.  <tt class="literal">drawview</tt> a quatre autres attributs en plus : </p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p>fillStyle</p>
+                  </li>
+                  <li>
+                     <p>globalAlpha</p>
+                  </li>
+                  <li>
+                     <p>lineWidth</p>
+                  </li>
+                  <li>
+                     <p>strokeStyle</p>
+                  </li>
+               </ul>
+            </div>
+            <p>Ces attributs  peuvent &ecirc;tre modifi&eacute;s et manipul&eacute;s &agrave; partir de code proc&eacute;dural (script) dans des balises <tt class="literal">&lt;method&gt;</tt> d'&eacute;l&eacute;ments <tt class="literal">&lt;drawview&gt;</tt>. La classe drawview a dix m&eacute;thodes qui lui sont associ&eacute;es. Nous allons les voir plus bas, apr&egrave;s avoir expliqu&eacute; quelques concepts suppl&eacute;mentaires.            </p>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e5931"></a>2.1.&nbsp;Lignes, formes, remplissages </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Pour dessiner une ligne (ou un &quot;chemin&quot;), vous positionez un stylo logique &agrave; un point de d&eacute;part et vous le faites bouger vers des coordonn&eacute;es x et y en connectant les points par une ligne droite ou quadratique. La ligne reste invisible tant que vous ne lui donnez pas de l'&eacute;paisseur. Quand vous donnez de l'&eacute;paisseur &agrave; un chemin, vous d&eacute;finissez la largeur et le style de la ligne, la rendant ainsi visible. </p>
+               <p>Par exemple, le code suivant n'affiche rien de visible :               </p>
+               <div class="example"><a name="d0e5938"></a>
+               <p class="title"><b>Exemple&nbsp;13.2.&nbsp;Dessin invisble </b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+    &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100)
+         this.lineTo(200,100)
+         this.quadraticCurveTo(120, 200, 300, 100)
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+               <p>    
+                  Mais en ajoutant la ligne <tt class="literal">this.stroke()</tt> nous obtenons :</p>
+               <div class="example"><a name="d0e5948"></a>
+               <p class="title"><b>Exemple&nbsp;13.3.&nbsp;Ecriture de la ligne</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$3.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+    &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100)
+         this.lineTo(200,100)
+         this.quadraticCurveTo(120, 200, 300, 100)
+         <span class="em">this.stroke()</span>
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>
+                  La m&eacute;thode <a class="indexterm" name="d0e5960"></a><tt class="methodname">closePath()()</tt> dessine une ligne jusqu'au point de d&eacute;part du chemin courant :               </p>
+               <div class="example"><a name="d0e5968"></a>
+               <p class="title"><b>Example&nbsp;13.4.&nbsp;Fermeture de chemin </b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$4.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+  &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.closePath()
+         this.stroke()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$4.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>
+                  Maintenant que nous avons une forme ferm&eacute;e, nous pouvons la remplir.  Premi&egrave;rement nous d&eacute;finissions un style de remplissage avec <tt class="literal">fillStyle</tt>, puis nous remplissons la forme.               </p>
+               <div class="example"><a name="d0e5980"></a>
+               <p class="title"><b>Exemple&nbsp;13.5.&nbsp;Style de remplissage</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$5.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+  &lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         //fillSytles are hex numbers representing color. 
+         this.fillStyle = 0xff00ff
+         this.fill()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>
+                  Remarquez que si vous ne fermez pas le chemin mais appelez la m&eacute;thode <tt class="literal">fill()</tt>, le chemin sera ferm&eacute; automatiquement.  Consultez les pages de r&eacute;f&eacute;rence pour plus de d&eacute;tails.               </p>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e5993"></a>2.2.&nbsp;Opacit&eacute; et Gradients
+                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>
+                  L'attribut <tt class="literal">globalAlpha</tt> est utilis&eacute; pour d&eacute;finir l'opacit&eacute; de lignes et de remplissages. Il prend une valeur entre z&eacute;ro (transparent) et un (opaque).               </p>
+               <div class="example"><a name="d0e6001"></a>
+               <p class="title"><b>Exemple&nbsp;13.6.&nbsp;Utilisation de globalAlpha</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$6.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting"> 
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         this.fillStyle = 0xff00ff
+         this.globalAlpha= .3
+         this.fill()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$6.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Remarquez que le code est proc&eacute;dural, donc la valeur de alpha s'applique &agrave; la fois au <tt class="literal">fillStyles</tt> et au <tt class="literal">lineStyles</tt> qui sont d&eacute;finis avant l'appel &agrave; la m&eacute;thode <tt class="literal">stroke()</tt> ou <tt class="literal">fill()</tt>. 
+                  Dans l'exemple pr&eacute;c&eacute;dent, la valeur de <tt class="literal">globalAlpha</tt> vaut 1 (valeur par d&eacute;faut) quand on d&eacute;finit l'&eacute;paisseur de la ligne (stroke) et 0,3 au remplissage de la couleur.               </p>
+               <p>
+                  Un style de remplissage <tt class="literal">fillStyle</tt> peut &ecirc;tre un d&eacute;grad&eacute; de couleur, c'est &agrave; dire un m&eacute;lange de couleur dans une zone. Pour utiliser un d&eacute;grad&eacute;, il faut d'abord le cr&eacute;er en utilisant le constructeur de fonction appropri&eacute; (lin&eacute;aire ou radial), puis d&eacute;finir le style de remplissage <tt class="literal">fillStyle</tt> comme &eacute;tant le d&eacute;grad&eacute;.  Un d&eacute;grad&eacute; est un objet de type <a class="indexterm" name="d0e6033"></a><a target="laszlo-reference" href="../reference/index.html?lzcanvasgradient.html"><tt class="classname">LzCanvasGradient</tt></a>; vous d&eacute;finissez les param&egrave;tres du gradient en lui appliquant des m&eacute;thodes comme <a class="indexterm" name="d0e6040"></a><tt class="methodname">addColorStop()</tt>. <a class="indexterm" name="d0e6048"></a><tt class="methodname">addColorStop()()</tt> prend deux arguments : le num&eacute;ro de l'arr&ecirc;t et la couleur.               </p>
+               <div class="example"><a name="d0e6056"></a>
+               <p class="title"><b>Exemple&nbsp;13.7. Ajout d'un d&eacute;grad&eacute;</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$7.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">    
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         //the gradient starts at the x and y where the curved line starts
+         var g = this.createLinearGradient(200,100, 150, 300)
+         //opacity is 0 -- the fill is invisible
+         this.globalAlpha = 0;
+         //starting color is black
+         g.addColorStop(0, 0x000000);
+         //now the opacity is set to opaque
+         this.globalAlpha = 1;
+         //the gradient goes from black to purple
+         g.addColorStop(1, 0xff00ff);
+         this.fillStyle = g;
+         this.fill();
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$7.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>
+                  Pour avoir une id&eacute;e de ce &agrave; quoi ressemble un d&eacute;grad&eacute;, essayez de faire varier les coordonn&eacute;es x et y du dernier point.               </p>
+               <p>Souvenez-vous &eacute;galement que les zones de dessins <tt class="literal">drawview</tt> ont des couleurs d'arri&egrave;re plan. Vous pouvez les utiliser en plus des d&eacute;grad&eacute;s et des transparences :               </p>
+               <div class="example"><a name="d0e6070"></a>
+               <p class="title"><b>Exemple&nbsp;13.8. Arri&egrave;re-plans et d&eacute;grad&eacute;s</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$8.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">  
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview height="150" width="300"  bgcolor="blue"&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.stroke()
+         var g = this.createLinearGradient(200,100, 150, 300)
+         this.globalAlpha = 0;
+         g.addColorStop(0, 0xffffff);
+         this.globalAlpha = 1;
+         g.addColorStop(.3, 0xff00ff);
+         this.fillStyle = g;
+         this.fill();
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$8.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Le d&eacute;grad&eacute; peut &ecirc;tre lin&eacute;aire ou radial (pour plus de d&eacute;tails voir la R&eacute;f&eacute;rence).                </p>
+               <p>&nbsp;</p>
+           </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e6080"></a>2.3.&nbsp;Red&eacute;marrer                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Nous avons vu que dessiner  une ligne revient &agrave; faire bouger un stylo. Mais comment soul&egrave;ve-t-on le style pour le d&eacute;placer vers un autre point de la toile ? En utilisant la m&eacute;thode <a class="indexterm" name="d0e6085"></a><tt class="methodname">beginPath()()</tt>.               </p>
+               <div class="example"><a name="d0e6093"></a>
+               <p class="title"><b>Exemple&nbsp;13.9.&nbsp;Commencer un chemin </b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$9.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">  
+&lt;canvas height="200" proxied="false"&gt;
+      &lt;drawview&gt;
+        &lt;method event="oninit"&gt;
+         this.moveTo(100,100);
+         this.lineTo(200,100);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.closePath()
+         this.stroke()
+         this.beginPath()
+         this.moveTo(200,000);
+         this.lineTo(100,200);
+         this.quadraticCurveTo(120, 200, 300, 100)
+         this.closePath()
+         this.stroke()
+        &lt;/method&gt;
+      &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$9.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>
+                  La m&eacute;thode <tt class="literal">clear</tt> n&eacute;ttoie compl&egrave;tement l'espace.               </p>
+               <div class="example"><a name="d0e6105"></a>
+               <p class="title"><b>Exemple&nbsp;13.10.&nbsp;Nettoyer la vue </b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$10.lzx?lzt=swf', width: 500, height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">    
+&lt;canvas height="200" proxied="false"&gt;
+        &lt;drawview&gt;
+            &lt;method event="oninit"&gt;
+            this.moveTo(40,40)
+            this.lineTo(80,40)
+            this.lineTo(80, 80)
+            this.lineTo(40,90)
+            this.closePath()
+            this.stroke()
+    
+            this.fillStyle = 0xff00ff;
+            this.fill()
+            &lt;/method&gt;
+            &lt;button onclick="parent.clear()" text="clear"/&gt;
+       &lt;/drawview&gt;
+    &lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$10.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e6113"></a>3.&nbsp;Int&eacute;grer des zones de dessin dans des application OpenLaszlo</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Bien que la biblioth&egrave;que de <a class="indexterm" name="d0e6118"></a><a target="laszlo-reference" href="../reference/index.html?drawview.html"><tt class="sgmltag-element">&lt;drawview&gt;</tt></a> soit proc&eacute;durale, il est simple de m&eacute;langer le mode proc&eacute;dural des biblioth&egrave;ques de dessin avec le style LZX d&eacute;claratif. Le petit programme suivant illustre cela. L'attribut <tt class="literal">r</tt> est modifi&eacute; par un &eacute;l&eacute;ment <a class="indexterm" name="d0e6128"></a><a target="laszlo-reference" href="../reference/index.html?animator.html"><tt class="sgmltag-element">&lt;animator&gt;</tt></a>; quand <tt class="literal">r </tt>change, la m&eacute;thode <a class="indexterm" name="d0e6138"></a><tt class="methodname">redraw()()</tt>
+               est invoqu&eacute;e.            </p>
+            <div class="example"><a name="d0e6146"></a>
+            <p class="title"><b>Exemple&nbsp;13.11.&nbsp;Dessiner avec un animator</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/drawview-intro-$11.lzx?lzt=swf', width: width="300", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="300" height="300" debug="false" &gt;
+    &lt;class name="circle" extends="drawview" &gt;
+        &lt;attribute name="circlecolor" value="white"/&gt;
+        &lt;attribute name="r" value="100"/&gt;
+        &lt;method event="oninit"&gt;
+          this.redraw();
+        &lt;/method&gt;
+        &lt;method event="onr"&gt;
+          this.redraw();
+        &lt;/method&gt;
+        &lt;method name="redraw" &gt;&lt;![CDATA[
+            this.clear();
+            this.beginPath();
+            this.moveTo(x+r, y);
+            var a = Math.tan(22.5 * Math.PI/180);
+            for (var angle = 45; angle&lt;=360; angle += 45) {
+                // endpoint:
+                var endx = r*Math.cos(angle*Math.PI/180);
+                var endy = r*Math.sin(angle*Math.PI/180);
+                // control:
+                // (angle-90 is used to give the correct sign)
+                var cx =endx + r*a*Math.cos((angle-90)*Math.PI/180);
+                var cy =endy + r*a*Math.sin((angle-90)*Math.PI/180);
+                this.quadraticCurveTo(cx+x, cy+y, endx+x, endy+y);
+            }
+          
+            var g = this.createLinearGradient(0, 0, 8, x+r, y+r, 0)
+            this.globalAlpha = 1;
+            g.addColorStop(0, 0xffffff);
+            this.globalAlpha = 0;
+            g.addColorStop(1, this.circlecolor);
+            this.fillStyle = g;
+            this.fill()
+            this.globalAlpha = 1;
+            this.linewidth= 5;
+            this.stroke();
+        ]]&gt;
+        &lt;/method&gt;
+    &lt;/class&gt;
+
+    &lt;circle r="50" x="50" y="50" circlecolor="blue"/&gt;
+    &lt;circle   x="50" y="50" circlecolor="teal"&gt;
+       &lt;animatorgroup process="sequential" repeat="Infinity"&gt;
+        &lt;animator attribute="r" from="20" to="0" duration="3000"/&gt;
+        &lt;animator attribute="r" from="0" to="20" duration="3000"/&gt;
+      &lt;/animatorgroup&gt;
+    &lt;/circle&gt;
+     
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/drawview-intro-$11.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>
+            Les d&eacute;veloppeurs OpenLaszlo ont d&eacute;j&agrave; utilis&eacute; la biblioth&egrave;que de dessin pour cr&eacute;er un s&eacute;lecteur de couleurs et un programme de dessin. Voyez ce que vous pouvez en faire. Amusez-vous bien!</p>
+            <p></p>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="classes-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="building-apps.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;12.&nbsp;Introduction aux Classes et &agrave; la programmation orient&eacute;e objet &nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;III.&nbsp;Concepts fondamentaux</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

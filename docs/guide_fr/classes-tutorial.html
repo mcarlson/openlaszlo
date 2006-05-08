@@ -1,0 +1,373 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;12.&nbsp;Introduction aux Classes et &agrave; la programmation orient&eacute;e objet</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="data-tutorial.html" title="Chapter&nbsp;11.&nbsp;Introduction to Databinding">
+      <link rel="next" href="drawview-intro.html" title="Chapter&nbsp;13.&nbsp;Introduction to Drawing"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;12.&nbsp;Introduction aux Classes et &agrave; la programmation orient&eacute;e objet</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="data-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="drawview-intro.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="classes-tutorial"></a>Chapitre&nbsp;12.&nbsp;Introduction aux classes et &agrave; la programmation orient&eacute;e objet </h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res </b></p>
+            <dl>
+               <dt><span class="section"><a href="classes-tutorial.html#classes-tutorial.basics">1. Introduction</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="classes-tutorial.html#d0e5591">1.1. L'attribut id</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="classes-tutorial.html#classes-tutorial.inheritance">2. H&eacute;ritage</a></span></dt>
+               <dt><span class="section"><a href="classes-tutorial.html#classes-tutorial.attributes">3. Attributs</a></span></dt>
+               <dt><span class="section"><a href="classes-tutorial.html#d0e5743">4. Plus sur l'h&eacute;ritage</a></span></dt>
+               <dt><span class="section"><a href="classes-tutorial.html#classes-tutorial.placing">5. Placer des vues dans des classes</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="classes-tutorial.html#d0e5813">5.1. Placer des vues en utilisant l'attribut de placement</a></span></dt>
+                     <dt><span class="section"><a href="classes-tutorial.html#d0e5833">5.2. Placer des vues en utilisant l'attribut de placement par d&eacute;faut de la classe</a></span></dt>
+                  </dl>
+               </dd>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="classes-tutorial.basics"></a>1.&nbsp;Introduction
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>LZX est un langage orient&eacute; objet, bas&eacute; prototype, qui permet la cr&eacute;ation de classes personnalis&eacute;es et r&eacute;utilisables en un minimum de code.</p>
+            <p>Ce tutorial vous montre comment d&eacute;finir et instancier des classes, mais &eacute;galement comment les utiliser. La balise <a class="indexterm" name="d0e5522"></a><a target="laszlo-reference" href="../reference/index.html?class.html"><tt class="sgmltag-element">&lt;class&gt;</tt></a> est utilis&eacute;e pour d&eacute;finir des classes. Les classes sont instanci&eacute;es quand les balises sont utilis&eacute;es.            </p>
+            <div class="example"><a name="d0e5529"></a>
+            <p class="title"><b>Exemple&nbsp;12.1.&nbsp;Exemple de classe simple</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/classes-tutorial-$1.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="80"&gt;
+  &lt;class name="MyClass" width="80" height="25" bgcolor="#CFD9AB"&gt;
+    &lt;text align="center" valign="middle"&gt;Hello, World!&lt;/text&gt;
+  &lt;/class&gt;
+  
+  &lt;MyClass name="myFirstInstance"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/classes-tutorial-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>La classe est d&eacute;finie en utilisant la balise <a class="indexterm" name="d0e5538"></a><tt class="sgmltag-element">&lt;class&gt;</tt>, et la balise <a class="indexterm" name="d0e5544"></a><tt class="sgmltag-element">&lt;MyClass&gt;</tt> l'instancie. 
+               Tout ce qui est d&eacute;fini dans la d&eacute;finition de la classe est h&eacute;rit&eacute; par chaque instance cr&eacute;&eacute;e. Ainsi, l'instance de MyClass h&eacute;rite d'une largeur (width) de 80, d'une hauteur (height) de 25 , d'une couleur d'arri&egrave;re plan (bgcolor) ainsi que d'un texte. L'instance s'appelle &quot;myFirstInstance&quot;, de la m&ecirc;me fa&ccedil;on que nous pourrions nommer une vue (<a class="indexterm" name="d0e5556"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>) ou une fen&ecirc;tre (<a class="indexterm" name="d0e5563"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="sgmltag-element">&lt;window&gt;</tt></a>)</p>
+            <p>En fait, quand nous &eacute;crivons (<a class="indexterm" name="d0e5572"></a><tt class="sgmltag-element">&lt;window&gt;</tt>), nous instan&ccedil;ions en fait la classe window, qui est une classe pr&eacute;d&eacute;finie. </p>
+            <p>Dans cet exemple, il n'y a qu'un &eacute;l&eacute;ment dans la classe (l'&eacute;l&eacute;ment <a class="indexterm" name="d0e5583"></a><a target="laszlo-reference" href="../reference/index.html?text.html"><tt class="sgmltag-element">&lt;text&gt;</tt></a>). Mais les classes peuvent contenir de nombreaux objets; par exemple, les vues peuvent contenir beaucoup de sous-vues.             </p>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e5591"></a>1.1.&nbsp;L'attribut id </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Il est important de remarquer que vous ne devez pas d&eacute;finir un attribut <a class="indexterm" name="d0e5596"></a><tt class="sgmltag-attribute">id</tt> dans une d&eacute;finition de classe. Chaque id doit &ecirc;tre unique; les ids sont visibles globalement et si vous d&eacute;finissiez un id dans une d&eacute;finition de classe, cr&eacute;er plusieurs instances de cette classe reviendrait &agrave; cr&eacute;er plusieurs vues avec le m&ecirc;me id, entra&icirc;nant un comportement impr&eacute;visible.               </p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="classes-tutorial.inheritance"></a>2.&nbsp;H&eacute;ritage
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Comme nous l'avons vu pr&eacute;c&eacute;demment, les instances de <a class="indexterm" name="d0e5608"></a><tt class="sgmltag-element">&lt;MyClass&gt;</tt> vont en h&eacute;riter. Le fait de ne pas avoir sp&eacute;cifi&eacute; de coordonn&eacute;es <a class="indexterm" name="d0e5614"></a><tt class="sgmltag-attribute">x</tt> et <a class="indexterm" name="d0e5620"></a><tt class="sgmltag-attribute">y</tt> dans la d&eacute;finition de la classe ne signifie pas que nous ne pouvons pas les donner &agrave; ses instances.            </p>
+            <p>La balise <a class="indexterm" name="d0e5628"></a><tt class="sgmltag-element">&lt;class&gt;</tt> a permis de d&eacute;finir la classe, et la balise <a class="indexterm" name="d0e5634"></a><tt class="sgmltag-element">&lt;MyClass&gt;</tt> a permis de l'instancier. Tout ce qui &eacute;tait dans la d&eacute;finition de la classe est h&eacute;rit&eacute; par ses instances. C'est &agrave; dire que les instances de <a class="indexterm" name="d0e5646"></a><tt class="sgmltag-element">&lt;MyClass&gt;</tt> h&eacute;ritent d'une largeur (width) de 80, d'une hauteur (height) de 25, d'une couleur d'arri&egrave;re plan (bgcolor), ainsi que d'un texte. L'instance a pour nom "myFirstInstance",
+               de la m&ecirc;me fa&ccedil;on que nous pourrions nommer une vue (<a class="indexterm" name="d0e5556"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>) ou une fen&ecirc;tre (<a class="indexterm" name="d0e5652"></a><tt class="sgmltag-element">&lt;window&gt;</tt>).            </p>
+            <p>Les instances se comportent exactement comme les vues. En fait, c'est parce que nous &eacute;tendons la classe vue. Par d&eacute;faut, la balise <a class="indexterm" name="d0e5663"></a><tt class="sgmltag-element">&lt;class&gt;</tt> &eacute;tend la classe vue :            </p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">&lt;class name="MyClass"&gt;</pre></td>
+               </tr>
+            </table>
+            <p>est &eacute;quivalent &agrave; : </p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">&lt;class name="MyClass" <span class="em">extends="view"</span>&gt;</pre></td>
+               </tr>
+            </table>
+            <p>Ainsi vous pouvez &eacute;tendre n'importe quelle classe : </p>
+            <div class="example"><a name="d0e5680"></a>
+            <p class="title"><b>Exemple&nbsp;12.2.&nbsp;Etendre la classe 'button' </b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/classes-tutorial-$2.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="80"&gt;
+  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
+    &lt;method name="changeLabel"&gt;
+      this.setAttribute('text', 'Clicked! ');
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/classes-tutorial-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Comme la balise <a class="indexterm" name="d0e5689"></a><a target="laszlo-reference" href="../reference/index.html?lz-button.html"><tt class="sgmltag-element">&lt;button&gt;</tt></a> a un noeud fils de type text qui d&eacute;finit son texte ('text'), la classe <a class="indexterm" name="d0e5696"></a><tt class="sgmltag-element">&lt;SpecialButton&gt;</tt> qui l'&eacute;tend h&eacute;rite aussi de ce noeud 'text'. La m&eacute;thode  <a class="indexterm" name="d0e5702"></a><tt class="methodname">changeLabel()</tt> est &eacute;galement h&eacute;rit&eacute;e par l'instance.            </p>
+            <p>De la m&ecirc;me fa&ccedil;on qu'avec les attributs, les m&eacute;thodes peuvent &ecirc;tre surcharg&eacute;es dans les instances : </p>
+            <div class="example"><a name="d0e5712"></a>
+            <p class="title"><b>Exemple&nbsp;12.3.&nbsp;Surchargement de m&eacute;thodes </b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/classes-tutorial-$3.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="80"&gt;
+  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
+    &lt;method name="changeLabel"&gt;
+      this.setAttribute('text', 'Clicked!');
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;simplelayout axis="y" spacing="10"/&gt;
+  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
+  &lt;SpecialButton&gt;
+    Click Me Now
+    <span class="em">&lt;method name="changeLabel"&gt;
+      this.setAttribute('text', 'Smashing!');
+    &lt;/method&gt;</span>
+  &lt;/SpecialButton&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/classes-tutorial-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>La r&eacute;&eacute;criture de m&eacute;thodes peut &ecirc;tre tr&egrave;s pratique quand vous utilisez vos propres classes de composants ou celles pr&eacute;d&eacute;finies, mais s'av&egrave;re peu pratique quand vous avez une classe pour laquelle chaque instance a besoin d'un argument particulier. </p>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="classes-tutorial.attributes"></a>3.&nbsp;Attributs
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Nous avons d&eacute;j&agrave; utilis&eacute; des attributs (par exemple width=&quot;180&quot;), mais ils faisaient tous partie de la classe que nous &eacute;tendions. Comme pr&eacute;cis&eacute; pr&eacute;c&eacute;demment, il est pratique de faire passer &agrave; une instance de classe un argument au moment de sa cr&eacute;ation : </p>
+            <div class="example"><a name="d0e5730"></a>
+            <p class="title"><b>Exemple&nbsp;12.4. Passage d'arguments &agrave; des instances de classes</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/classes-tutorial-$4.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="80"&gt;
+  &lt;class name="SpecialButton" extends="button" onclick="changeLabel()"&gt;
+    &lt;attribute name="changeToLabel" value="Clicked!" type="string"/&gt;
+    &lt;method name="changeLabel"&gt;
+      var newLabel = this.getAttribute('changeToLabel');
+      this.setAttribute('text', newLabel);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;simplelayout axis="y" spacing="10"/&gt;
+  &lt;SpecialButton&gt;Not clicked&lt;/SpecialButton&gt;
+  &lt;SpecialButton <span class="em">changeToLabel="Thank You!"</span>&gt;Please click me!&lt;/SpecialButton&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/classes-tutorial-$4.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Si nous donnons une valeur &agrave; l'attribut, cela devient sa valeur par d&eacute;faut sans que nous n'ayons besoin de la d&eacute;finir explicitement. </p>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5743"></a>4.&nbsp;Plus sur l'h&eacute;ritage 
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Vous pouvez &eacute;tendre une classe plusieurs fois. Par exemple, une application pourrait avoir plusieurs types de boutons :</p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                 <li>Un bouton standard de couleur bleue qui devient vert quand on passe dessus. Ce bouton affiche le nom d'un animal de compagnie.</li>
+                  <li>
+                     <p>Un bouton sp&eacute;cial de couleur rouge qui devient &eacute;galement vert quand on passe dessus. Ce bouton affiche le nom d'un jour de la semaine. </p>
+                  </li>
+               </ul>
+            </div>
+            <div class="example"><a name="d0e5755"></a>
+            <p class="title"><b>Exemple&nbsp;12.5.&nbsp;Etendre une classe plusieurs fois</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/classes-tutorial-$5.lzx?lzt=swf', width: width="800", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="800" height="300" debug="true"&gt;
+  &lt;debug x="175"/&gt;
+  &lt;resource name="standardButton"&gt;
+    &lt;frame src="../resources/button_blue.gif"/&gt;
+    &lt;frame src="../resources/button_green.gif"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;resource name="specialButton"&gt;
+    &lt;frame src="../resources/button_blue.gif"/&gt;
+    &lt;frame src="../resources/button_red.gif"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;class name="MyButton" resource="standardButton" 
+         onclick="doAction()" onmouseover="doOver()" onmouseout="doOut()"&gt;
+    &lt;method name="doAction"&gt;
+      Debug.write('Dog');
+    &lt;/method&gt;
+    &lt;method name="doOver"&gt;
+      this.setResourceNumber(2);
+    &lt;/method&gt;
+    &lt;method name="doOut"&gt;
+      this.setResourceNumber(1);
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;class name="MySpecialButton" <span class="em">extends="MyButton"</span> resource="specialButton"&gt;
+    &lt;method name="doAction"&gt;
+      Debug.write('Monday');
+    &lt;/method&gt;
+  &lt;/class&gt;
+  
+  &lt;view name="buttons" x="125" y="5"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    <span class="em">&lt;MyButton/&gt;
+    &lt;MySpecialButton/&gt;</span>
+  &lt;/view&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/classes-tutorial-$5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Ici nous avons seulement chang&eacute; la m&eacute;thode <a class="indexterm" name="d0e5770"></a><tt class="methodname">doAction()</tt> et les ressources. Les m&eacute;thodes  <a class="indexterm" name="d0e5778"></a><tt class="methodname">doOver()</tt> et <a class="indexterm" name="d0e5786"></a><tt class="methodname">doOut()</tt> sont les m&ecirc;mes car il n'y avait pas besoin de les red&eacute;finir dans la d&eacute;finition de la classe MySpecialButton.            </p>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="classes-tutorial.placing"></a>5.&nbsp;Placer des vues dans des classes</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Comme nous &eacute;crivons souvent des classes qui &eacute;tendent des vues, &agrave; un moment ou un autre nous devrons placer une vue dans l'instance d'une classe que nous venons de cr&eacute;er. Par exemple, nous pourrions vouloir &eacute;crire une classe fen&ecirc;tre et mettre un champ texte dans sa barre des titres. Nous pourrions aussi vouloir placer un contenu au milieu de la fen&ecirc;tre. Il y a deux fa&ccedil;ons de faire cela : en d&eacute;finissant pour les vues filles l'attribut de placement ( <a class="indexterm" name="d0e5800"></a><tt class="sgmltag-attribute">placement</tt>), ou en d&eacute;finissant dans la classe un attribut de placement par d&eacute;faut ( <a class="indexterm" name="d0e5806"></a><tt class="sgmltag-attribute">defaultplacement</tt>).            </p>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e5813"></a>5.1.&nbsp;Placer des vues en utilisant l'attribut de placement</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Si vous aviez une vue et vouliez la placer &agrave; l'int&eacute;rieur d'une sous-vue particuli&egrave;re d'une classe, vous pouvez utiliser l'attribut de placement (<a class="indexterm" name="d0e5818"></a><tt class="sgmltag-attribute">placement</tt>) de cette vue.               </p>
+               <p>La barre des titres d'une fen&ecirc;tre est un exemple : il n'est pas courant de mettre des choses dans la barre des titres d'une fen&ecirc;tre, il est donc normal d'avoir &agrave; d&eacute;finir l'attribut <a class="indexterm" name="d0e5826"></a><tt class="sgmltag-attribute">placement</tt> pour la sous-vue que vous voulez mettre dans la barre des titres.               </p>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e5833"></a>5.2.&nbsp;Placer des vues en utilisant l'attribut de placement par d&eacute;faut de la classe</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Si vous voulez que toutes les sous-vues d'une classe soient plac&eacute;es au m&ecirc;me endroit, alors vous pouvez d&eacute;finir un attribut de placement par d&eacute;faut (defaultplacement).               </p>
+               <p>Par exemple le contenu de la classe window. Si vous deviez &eacute;crire votre propre classe fen&ecirc;tre (voir le tutoriel sur les fen&ecirc;tres), vous auriez probablement une zone d&eacute;finissant le contenu de la fen&ecirc;tre. Vous pourriez mettre de nombreuses sous-vues dans cette fen&ecirc;tre sans vouloir positionner chacune d'elles. </p>
+               <p>&nbsp;</p>
+           </div>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="data-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="drawview-intro.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;11.&nbsp;Introduction aux liaisons de donn&eacute;es &nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;13.&nbsp;Introduction aux dessins </td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

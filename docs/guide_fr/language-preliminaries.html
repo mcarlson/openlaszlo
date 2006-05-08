@@ -1,0 +1,967 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;2.&nbsp;Pr&eacute;liminaires sur le langage</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="overview.html" title="Part&nbsp;I.&nbsp;Overview">
+      <link rel="previous" href="architecture.html" title="Chapter&nbsp;1.&nbsp;OpenLaszlo Architecture">
+      <link rel="next" href="designers.html" title="Chapter&nbsp;3.&nbsp;OpenLaszlo for Designers"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;2.&nbsp;Pr&eacute;liminaires sur le langage</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="architecture.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">I.&nbsp;Aper&ccedil;u G&eacute;n&eacute;ral</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="designers.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="language-preliminaries"></a>Chapitre&nbsp;2.&nbsp;Pr&eacute;liminaires sur le langage</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="language-preliminaries.html#d0e540">1. Aper&ccedil;u sur la syntaxe et la s&eacute;mantique</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e559">1.1. XML</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#language-preliminaries.javascript">1.2. JavaScript</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e650">1.3. Syntaxe par &quot;point&quot; (&quot;dot&quot;)</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e705">1.4. Majuscules&nbsp;/&nbsp;Minuscules, sensibilit&eacute; &agrave; la casse</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e726">1.5. DTD et sch&eacute;ma de LZX</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="language-preliminaries.html#language-preliminaries.objects-and-attributes">2. Objets et Attributs</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e774">2.1. Objets</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e810">2.2. Attributs</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="language-preliminaries.html#d0e940">3. Ev&eacute;nements et M&eacute;thodes</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e944">3.1. Ev&eacute;nements</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1044">3.2. M&eacute;thodes</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="language-preliminaries.html#d0e1132">4. Contraintes</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1243">4.1. Hi&eacute;rarchies</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1279">4.2. Port&eacute;e</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="language-preliminaries.html#d0e1343">5. Acc&egrave;s aux donn&eacute;es, Manipulation et Liaison</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1353">5.1. Acc&egrave;s aux donn&eacute;es</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1384">5.2. Manipulation des donn&eacute;es</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1440">5.3. Liaison de donn&eacute;es</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="language-preliminaries.html#d0e1467">6. M&eacute;langer Balises et Script dans les programmes LZX</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1485">6.1. Comment m&eacute;langer balises et script</a></span></dt>
+                     <dt><span class="section"><a href="language-preliminaries.html#d0e1564">6.2. Quand utiliser les balises et quand utiliser du script</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="language-preliminaries.html#d0e1697">7. Compilation et Ex&eacute;cution</a></span></dt>
+            </dl>
+         </div>
+         <p>LZX est un langage orient&eacute; objet &agrave; base de balises, qui s'appuie sur la syntaxe du XML et de JavaScript pour cr&eacute;er la couche de pr&eacute;sentation des clients internet riches.&nbsp;Ces applications sont compil&eacute;es avec le compilateur OpenLaszlo.&nbsp;Elles peuvent &ecirc;tre d&eacute;ploy&eacute;es en tant que fichiers ind&eacute;pendants, ou peuvent &ecirc;tre mises &agrave; disposition par le serveur OpenLaszlo.&nbsp;Les sp&eacute;cifications du langage contiennent &agrave; la fois un ensemble de balises XML&nbsp;et un ensemble de biblioth&egrave;ques (APIs) Javascript.&nbsp;</p>
+			<p>Le langage LZX a &eacute;t&eacute; sp&eacute;cifi&eacute; en utilisant des syntaxes et des conventions de nommage courantes pour que les d&eacute;veloppeurs web exp&eacute;riment&eacute;s puissent l'apprendre facilement et l'int&eacute;grer &agrave; leur environnement de d&eacute;veloppement.&nbsp;En m&ecirc;me temps, LZX introduit de nouveaux concepts et possibilit&eacute;s; les interfaces graphiques des applications web deviennent plus fluides et interactives qu'avec n'importe quelle autre technologie.&nbsp;</p>
+			<p>Un programme LZX en fonctionnement se place dans un objet graphique appel&eacute; une toile ('canvas'), qui est globalement une zone d&eacute;limit&eacute;e de l'&eacute;cran.&nbsp;Sur la toile, des bo&icirc;tes autonomes appel&eacute;es vues ('view') int&eacute;ragissent.&nbsp;Ces vues peuvent &ecirc;tre plac&eacute;es les unes dans les autres, &agrave; la fois de fa&ccedil;on logique et graphique, et poss&egrave;dent des dizaines d'attributs programmables, dont la taille, la position, la couleur d'arri&egrave;re plan, l'opacit&eacute;, le fait d'&ecirc;tre cliquable ou non, le fait de pouvoir &ecirc;tre redimensionn&eacute;e, et ainsi de suite.&nbsp;Les vues peuvent contenir des ressources telles qu'une image ou une vid&eacute;o, et peuvent aussi &ecirc;tre li&eacute;es dynamiquement &agrave; n'importe quel ensemble de donn&eacute;es format&eacute;es en XML. Les attributs de n'importe quelle vue peuvent &ecirc;tre d&eacute;finis comme &eacute;tant fonction des attributs de n'importe quelles autres vues, et pratiquement n'importe quel attribut peut &ecirc;tre anim&eacute; - c'est &agrave; dire programm&eacute; pour avoir sa valeur qui varie dans le temps.&nbsp;</p>
+			<p>Le syst&egrave;me de vues de LZX est tr&egrave;s semblable aux autres syst&egrave;mes de vues, mais son impl&eacute;mentation de la liaison de donn&eacute;es, des contraintes sur attributs et des animations le distinguent de toutes les autres technologies pour interfaces graphiques.&nbsp;</p>
+			<p>Les programmes LZX contiennent g&eacute;n&eacute;ralement &agrave; la fois des structures d&eacute;claratives et proc&eacute;durales, et le langage suit de nombreuses conventions de nommage des CSS (Cascading Style Sheets).&nbsp;Les programmes &eacute;crits avec LZX sont ainsi similaires, de fa&ccedil;on g&eacute;n&eacute;rale, aux applications DHTML avec du code JavaScript embarqu&eacute;.&nbsp;Les programmes LZX sont cependant conceptuellement diff&eacute;rents des applications typiques DHTML/JavaScript qui sont interpr&eacute;t&eacute;es et affich&eacute;es, ou plut&ocirc;t &quot;rendues&quot; par le navigateur.&nbsp;Les programmes LZX sont eux compil&eacute;s sur le serveur et t&eacute;l&eacute;charg&eacute;s sous forme de bytecode pour un moteur de rendu cible.&nbsp;</p>
+			<p>Dans l'actuelle impl&eacute;mentation de la plateforme Laszlo, les programmes LZX&nbsp;sont compil&eacute;s sur le serveur OpenLaszlo et t&eacute;l&eacute;charg&eacute;s en tant que films Flash (fichiers .swf) pour &ecirc;tre ex&eacute;cut&eacute;s dans le lecteur Flash install&eacute; sous forme de plug-in dans le navigateur.&nbsp;Il est important de cependant noter que le lecteur Flash est utilis&eacute; seulement en tant que moteur de rendu/ex&eacute;cution du bytecode g&eacute;n&eacute;r&eacute;, et qu'il n'y a rien dans LZX qui ne le lie &agrave; Flash.&nbsp;En particulier, LZX n'utilise pas le mod&egrave;le objet de Flash.&nbsp;(NdT : au moment de la traduction, Laszlo&nbsp;Systems permet d&eacute;sormais de g&eacute;n&eacute;rer &eacute;galement les applications LZX en Ajax et de s'affranchir ainsi du lecteur Flash).&nbsp;</p>
+			<p>De fa&ccedil;on similaire, parce que les programmes LZX sont compil&eacute;s par le serveur OpenLaszlo, l'utilisation du JavaScript dans les programmes est l&eacute;g&egrave;rement diff&eacute;rente de son utilisation dans les applications web traditionnelles dans lesquelles JavaScript est utilis&eacute; pour faire des choses telles que communiquer avec le navigateur ou g&eacute;n&eacute;rer des pages HTML.&nbsp;Ces fonctions sont globalement inadapt&eacute;es dans les applications LZX.&nbsp;Ainsi, bien que l'utilisation du langage se fasse de fa&ccedil;on traditionnelle, la fa&ccedil;on de programmer est quant &agrave; elle nouvelle.&nbsp;</p>
+			<p>Ce chapitre r&eacute;sume les aspects traditionnels et innovants de LZX.&nbsp;C'est un aper&ccedil;u g&eacute;n&eacute;ral, non un tutoriel; apr&egrave;s l'avoir lu, vous serez plus &agrave; m&ecirc;me de d&eacute;cider comment apprendre le langage.&nbsp;Suivant vos connaissances et votre exp&eacute;rience, vous d&eacute;ciderez peut-&ecirc;tre d'approfondir XML ou les concepts de programmation orient&eacute;e objet.&nbsp;Mais si vous trouvez ces concepts compr&eacute;hensibles, vous choisirez peut-&ecirc;tre de plonger directement dans le code, auquel cas nous vous conseillons de commencer par le tutoriel <a target="laszlo-dguide" href="../guide/laszlo_basics.html">Les bases d'OpenLaszlo</a>.</p>
+			<p></p>
+			<div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e540"></a>1.&nbsp;Aper&ccedil;u sur la syntaxe et la s&eacute;mantique</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Dans LZX, les balises XML sont utilis&eacute;es pour cr&eacute;er des objets JavaScript, et JavaScript est utilis&eacute; &agrave; l'int&eacute;rieur des programmes LZX pour manipuler les objets cr&eacute;&eacute;s &agrave; l'aide de balises.&nbsp;La plupart du temps, tout ce qui peut &ecirc;tre fait avec une balise peut l'&ecirc;tre avec JavaScript et inversement.&nbsp;Cependant, cette &eacute;quivalence n'est pas universellement vraie, et en g&eacute;n&eacute;ral, une technique est bien sup&eacute;rieure &agrave; l'autre dans une situation donn&eacute;e.&nbsp;Apprendre LZX renvient donc &agrave; apprendre les balises et les APIs; ma&icirc;triser le langage consiste &agrave; d&eacute;velopper une compr&eacute;hension subtile des approches proc&eacute;durales et d&eacute;claratives en sachant quand et comment les utiliser.</p>
+				<p>LZX suit rigoureusement les syntaxes du XML&nbsp;et du JavaScript.&nbsp;</p>
+				<p></p>
+				<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+               <table border="0" summary="Note">
+                  <tr>
+                     <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
+							<th align="left">Note</th>
+						</tr>
+                  <tr>
+                     <td colspan="2" align="left" valign="top">
+                        <p>Dans des versions pass&eacute;es, LZX ne tenait pas compte de la casse dans le JavaScript.&nbsp;A partir de la version 3.0 de OpenLaszlo, LZX est un langage sensible &agrave; la casse.&nbsp;Voir les explications plus bas pour de plus amples informations.&nbsp;</p>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+				<p>Les chapitres qui suivent donnent une br&egrave;ve vision des deux types de syntaxe LZX.&nbsp;Voir plus bas pour une un d&eacute;veloppement de la fa&ccedil;on dont XML&nbsp;et JavaScript fonctionnent ensemble dans les programmes LZX.</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e559"></a>1.1.&nbsp;XML
+                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>XML, langage de balises extensible (eXtensible Markup Langage), est un standard du W3C pour d&eacute;crire les donn&eacute;es.&nbsp;Vous aurez besoin de bases sur les concepts de XML pour &eacute;crire des programmes en LZX pour deux raisons : d'abord, la plupart des fonctionnalit&eacute;s de LZX sont impl&eacute;ment&eacute;es sous forme d'un ensemble de balises XML.&nbsp;Les programmes LZX sont eux-m&ecirc;mes des documents XML&nbsp;valides; les programmes LZX qui ne sont pas en XML&nbsp;valide ne se compilent tout simplement pas.&nbsp;Ensuite, les programmes LZX ne fonctionnent qu'avec des donn&eacute;es encapsul&eacute;e en XML.</p>
+					<p>Si vous comprenez comment les balises et les attributs sont repr&eacute;sent&eacute;s en XML, &ecirc;tes &agrave; l'aise avec les concepts de racine et de noeud, et savez comment l'imbrication de balises fonctionne, vous en savez probablement assez pour vous lancer dans LZX.&nbsp;Pour de plus amples informations sur XML et des liens vers une s&eacute;rie de livres et tutoriels disponibles en ligne, rendez-vous sur le site du <a href="http://www.w3.org/XML/" target="_top">W3C</a>.</p>
+					<p>Une autre distinction entre XML et JavaScript r&eacute;side dans le fait qu'en XML, les noms des types sont en minuscule (&quot;string&quot;, &quot;number&quot;), alors qu'en JavaScript ils ont leur premi&egrave;re lettre en majuscule (&quot;String&quot;, &quot;Number&quot;).&nbsp;En XML, on utilise les noms de types pour &lt;attribute name=&quot;foo&quot; type=&quot;string&quot;/&gt;; Ils sont en minuscule pour une compatibilit&eacute; avec la description de la grammaire XML (XML Schema Description).</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e572"></a>1.1.1.&nbsp;XML et HTML</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Si vous avez de l'exp&eacute;rience HTML&nbsp;mais pas XML, vous trouverez beaucoup de ressemblances.&nbsp;Pour les personnes famili&egrave;res avec HTML, voici quelques notes sur les diff&eacute;rences entre XML et HTML.&nbsp;Elles s'appliquent &agrave; tout XML; elles peuvent particuli&egrave;rement attirer l'attention pour les balises de mise en forme, avec les balises (&lt;p&gt;, &lt;i&gt;, &lt;br&gt;) qui ont les m&ecirc;mes nom et signification que les balises HTML :</p>
+						<div class="itemizedlist">
+                     <ul type="disc" compact>
+                        <li>
+                           <p>La casse (majuscule/minuscule) est prise en compte.&nbsp;&lt;b&gt; est diff&eacute;rent de &lt;B&gt;.&nbsp;(&lt;b&gt; est une balise LZX pour mettre du texte en gras dans une balise &lt;text&gt;.&nbsp;La balise &lt;B&gt; n'existe pas).</p>
+                        </li>
+                        <li>
+                           <p>Les valeurs d'attributs doivent &ecirc;tre entour&eacute;es de guillemets, avec &quot; ou '.&nbsp;&lt;view width=100&gt; est non valide en XML; utilisez &lt;view width='100'&gt; ou &lt;view width=&quot;100&quot;&gt; &agrave; la place.</p>
+                        </li>
+                        <li>
+                           <p>Les balises vides doivent &ecirc;tre ferm&eacute;es.&nbsp;&lt;br&gt; est valide en HTML; en XML remplacez-le par &lt;br&gt;&lt;/br&gt; ou &lt;br/&gt;.</p>
+                        </li>
+                     </ul>
+                  </div>
+						<p></p>
+               </div>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e588"></a>1.1.2.&nbsp;Espaces de nommage (namespaces)</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+                  <p>Les applications Laszlo peuvent utiliser un espace de nommage :</p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+  &lt;canvas xlmns="http://www.laszlosystems.com/2003/05/lzx"&gt;...&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  <p>ou non :</p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+  &lt;canvas&gt;...&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  <p>S'il n'y a pas d'espace de nommage d&eacute;fini, le compilateur prendra par d&eacute;faut celui de LZX (<a href="http://www.laszlosystems.com/2003/05/lzx" target="_top">http://www.laszlosystems.com/2003/05/lzx"</a>).
+                     
+                  </p>
+                  <p></p>
+               </div>
+            </div>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="language-preliminaries.javascript"></a>1.2.&nbsp;JavaScript
+                        </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>JavaScript est un langage initialement &eacute;crit par Brendan Eich de Netscape pour son int&eacute;gration dans le navigateur Netscape 2.0.&nbsp;Ce fut tout de suite un succ&egrave;s avec son adoption par tous les autres navigateurs, et pour faire de cette valeur montante un standard, l'Association Europ&eacute;enne des Constructeurs Informatique (European Computer Manufacturer's Association - ECMA) entreprit de sp&eacute;cifier le langage en tant que ECMAScript et contr&ocirc;le maintenant son &eacute;volution.&nbsp;Bien qu'il puisse y avoir quelques subtiles diff&eacute;rences entre une impl&eacute;mentation de JavaScript et le langage sp&eacute;cifi&eacute; par l'organisme de standardisation, de fa&ccedil;on g&eacute;n&eacute;rale, les termes JavaScript et ECMAScript sont g&eacute;n&eacute;ralement interchangeables.&nbsp;Bien qu'il serait plus juste de dire que ECMAScirpt se r&eacute;f&egrave;re au langage pur alors que JavaScript signifie &agrave; la fois le langage et les biblioth&egrave;ques associ&eacute;es disponibles dans la plupart des navigateurs, dans ce livre nous suivrons l'usage courant sans faire cette distinction, le contexte permettant de comprendre de quoi nous parlons.&nbsp;Le terme &quot;script&quot; se r&eacute;f&egrave;re &agrave; n'importe quel code (proc&eacute;dural) &eacute;crit en JavaScript.&nbsp;</p>
+					<p>LZX impl&eacute;mente une partie de la sp&eacute;cification LZX <a href="http://www.ecma-international.org/publications/standards/Ecma-262.htm" target="_top">ECMA-262 Edition 3</a>.
+               </p>
+					<p>Pour &eacute;crire du code LZX vous devrez &ecirc;tre &agrave; l'aise avec les aspects suivants du langage JavaScript :</p>
+					<div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>les structures de contr&ocirc;le standard (<tt class="literal">for</tt>, <tt class="literal">while</tt>, etc.),</p>
+                     </li>
+                     <li>
+                        <p>le mod&egrave;le objet,</p>
+                     </li>
+                     <li>
+                        <p>le faible typage des donn&eacute;es,</p>
+                     </li>
+							<li>
+                        <p>la port&eacute;e avec les r&egrave;gles de nommage dans les programmes.</p>
+                     </li>
+						</ul>
+               </div>
+					<p>Suivant votre exp&eacute;rience, vous trouverez certains aspects de LZX familiers ou &eacute;trangers.&nbsp;Par exemple, si vous avez de l'exp&eacute;rience Java mais pas JavaScript, vous devrez apprendre les grosses diff&eacute;rences entre ces langages, et en particulier le typage des donn&eacute;es, le mod&egrave;le objet et la port&eacute;e ou r&egrave;gle de nommage des variables.</p>
+					<p>Comme d'autres langages dits de script tels que Perl et Python, Javascript est un langage faiblement typ&eacute; - vous pouvez d&eacute;clarer une variable sans pr&eacute;ciser son type.&nbsp;Cela permet un prototypage rapide et un code qu'on dit plus facile &agrave; lire, mais on risque de laisser passer des erreurs de type.</p>
+					<p>La programmation orient&eacute;e objet avec JavaScript manque de rigueur par rapport &agrave; Java.&nbsp;Il n'y a pas de packages ou d'interface par exemple, et il n'est pas non plus possible de rendre finales des classes.&nbsp;Enfin, le comportement de variables locales et globales en JavaScript est parfois surprenant pour des d&eacute;veloppeurs Java.</p>
+					<p>Inversement, si vous &ecirc;tes un d&eacute;veloppeurs JavaScript exp&eacute;riment&eacute;, vous devrez peut-&ecirc;tre &quot;oublier&quot; certaines pratiques, en particulier la disponibilit&eacute; de certaines biblioth&egrave;ques et fonctions, et aussi la prise en compte de la casse (majuscules/minuscules). Egalement, LZX poss&egrave;de un mod&egrave;le complet de programmation&nbsp;orient&eacute;e objet qui va plus loin que JavaScript.&nbsp;En effet, LZX a des classes et de l'h&eacute;ritage.&nbsp;</p>
+					<p>Si vous n'avez ni d'exp&eacute;rience Java ni JavaScript, vous aurez peut-&ecirc;tre besoin de parcourir au pr&eacute;alable un tutoriel JavaScript comme ceux disponibles sur <a href="http://www.w3schools.com/js/default.asp" target="_top">w3schools.com</a> avant de plonger plus avant dans LZX.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e650"></a>1.3.&nbsp;Syntaxe par &quot;point&quot; (&quot;dot&quot;)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>LZX utilise la syntaxe &agrave; base de &quot;point&quot; pour indiquer la relation entre les objets et leurs membres.&nbsp;Consid&eacute;rez l'expression suivante :</p>
+					<p><tt class="literal">this.that</tt></p>
+					<p>Interpr&eacute;t&eacute; en JavaScript, <tt class="literal">this</tt> se r&eacute;f&egrave;re &agrave; un objet, et <tt class="literal">that</tt> se r&eacute;f&egrave;re &agrave; une propri&eacute;t&eacute; de cet objet, une propri&eacute;t&eacute; pouvant &ecirc;tre une m&eacute;thode. Maintenant, consid&eacute;rez le fragment de code LZX suivant :</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;view name="beatles"&gt; 
+  &lt;view name="george"/&gt; 
+&lt;/view&gt;
+</pre></td>
+                  </tr>
+               </table>
+					<p>dans ce cas, il peut &ecirc;tre pratique de d&eacute;signer la vue int&eacute;rieure &quot;george&quot; comme </p>
+					<p><tt class="literal">beatles.george</tt></p>
+					<p><tt class="varname">george</tt> &eacute;tant un fils de <tt class="varname">beatles</tt> .
+               </p>
+					<p>Comme ce sera d&eacute;crit plus loin, LZX propose diff&eacute;rentes fa&ccedil;ons de d&eacute;signer des attributs ou des m&eacute;thodes d'objets ou de classes.&nbsp;Par exemple, les fragments de code suivants (cr&eacute;ant une vue appel&eacute;e <tt class="varname">myview</tt> et d&eacute;finissant sa couleur d'arri&egrave;re plan &agrave; rouge) sont &eacute;quivalents :</p>
+					<p>JavaScript:</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">myview = new LzView;</pre></td>
+                  </tr>
+               </table>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">myview.setAttribute (bgcolor, red);</pre></td>
+                  </tr>
+               </table>
+               <p>Balise XML :</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;view name="myview" bgcolor="red"/&gt;</pre></td>
+                  </tr>
+               </table>
+					<p>Dans les deux cas, la couleur d'arri&egrave;re plan de <tt class="literal">myview</tt> pourrait &ecirc;tre r&eacute;f&eacute;renc&eacute;e par le code <tt class="literal">myview.bgcolor</tt> . La convention de syntaxe par &quot;point&quot; fournit ainsi une fa&ccedil;on pratique de r&eacute;f&eacute;rencer des objets sans se soucier de comment ils ont &eacute;t&eacute; cr&eacute;&eacute;s - c'est &agrave; dire d'une fa&ccedil;on d&eacute;clarative par balise ou par code proc&eacute;dural.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e705"></a>1.4.&nbsp;Majuscules / Minuscules, sensibilit&eacute; &agrave; la casse</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>La sensibilit&eacute; &agrave; la casse avec LZX d&eacute;pend de la cible pour laquelle vous compilez.&nbsp;Avec la version 3.1 vous pouvez compiler en swf6, swf7, ou swf8. Les applications compil&eacute;es en swf6 ne sont pas sensibles &agrave; la casse.&nbsp;Vous ne pouvez pas utiliser la casse seulement pour distinguer les identifiants.&nbsp;Par exemple, si vous appelez une variable locale <tt class="literal">date</tt>, vous ne pourrez appeler le constructeur de la classe JavaScript <tt class="literal">Date</tt> en &eacute;crivant <tt class="literal">new Date()</tt>.
+                  
+               </p>
+					<p>swf7 est la cible par d&eacute;faut; les applications compil&eacute;es en swf7 et swf8 sont enti&egrave;rement sensibles &agrave; la casse.&nbsp;Cela signifie que quand vous utilisez une variable, elle doit s'&eacute;crire avec la m&ecirc;me casse que quand elle a &eacute;t&eacute; d&eacute;clar&eacute;e.&nbsp;</p>
+					<p>De ce fait, les applications qui fonctionnent avec swf6 peuvent ne pas fonctionner avec swf7 et vice versa.</p>
+					<p>Sans m&ecirc;me le probl&egrave;me de la version cible, avoir des variables qui ne diff&egrave;rent que par leur casse est source de confusion.&nbsp;C'est pourquoi c'est une bonne pratique que d'&eacute;viter d'utiliser des noms qui s'&eacute;crivent de la m&ecirc;me fa&ccedil;on mais diff&egrave;rent seulement par leur utilisation des majuscules et minuscules.&nbsp;</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e726"></a>1.5.&nbsp;DTD et Sch&eacute;ma de LZX</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Un sch&eacute;ma XML&nbsp;d&eacute;finit l'ensemble des balises XML&nbsp;disponibles et peut &ecirc;tre utilis&eacute; pour configurer un &eacute;diteur.&nbsp;La DTD est &eacute;galement disponible pour les curieux, bien que vous n'ayez pas besoin de la conna&icirc;tre pour programmer.&nbsp;</p>
+					<p>Le sch&eacute;ma LZX est utilis&eacute; par le compilateur OpenLaszlo pour s'assurer que les programmes LZX sont corrects.&nbsp;Par exemple, le sch&eacute;ma pr&eacute;cise quels sont les attributs qui peuvent &ecirc;tre inclus dans une balise ouvrante <a class="indexterm" name="d0e733"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>. Si un programme contient une balise <a class="indexterm" name="d0e740"></a><tt class="sgmltag-element">&lt;view&gt;</tt> qui inclut an attribut non d&eacute;fini dans le sch&eacute;ma, il lancera un avertissement &agrave; la compilation.</p>
+					<p>LZX&nbsp;permet de d&eacute;finir vos propres balises.&nbsp;Les balises d&eacute;finies par l'utilisateur ne viennent pas se placer dans le sch&eacute;ma disponible dans votre &eacute;diteur, bien qu'elles soient utilis&eacute;es dans le sch&eacute;ma interne utilis&eacute; par le compilateur pour tester la validit&eacute; du programme.</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="language-preliminaries.objects-and-attributes"></a>2.&nbsp;Objets et attributs</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>LZX utilise les concepts standards de la programmation orient&eacute;e objet tels que l'h&eacute;ritage, l'encapsulation et le polymorphisme.&nbsp;En g&eacute;n&eacute;ral, une balise dans un programme OpenLaszlo correspond &agrave; un objet ou instance d'une classe du m&ecirc;me nom.&nbsp;Par exemple, la balise <a class="indexterm" name="d0e754"></a><tt class="sgmltag-element">&lt;view&gt;</tt> correspond &agrave; un objet <a class="indexterm" name="d0e760"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="classname">LzView</tt></a>.</p>
+				<p>En premi&egrave;re approximation, il est donc possible de d&eacute;crire LZX comme un langage d&eacute;claratif &agrave; base de r&egrave;gles pour manipuler des objets visuels (JavaScript) appel&eacute;s vues (views), les r&egrave;gles &eacute;tant exprim&eacute;es sous forme de contraintes sur les valeurs des attributs de ces objets.</p>
+				<p>Les paragraphes qui suivent r&eacute;sument certains des concepts cl&eacute; de l'orient&eacute; objet avec le langage LZX.&nbsp;Ces id&eacute;es sont examin&eacute;es plus en d&eacute;tails plus loin dans le guide, particuli&egrave;rement au <a href="class-inheritance.html" title="Chapter&nbsp;30.&nbsp;Extending Classes">Chapitre&nbsp;30, <i>Etendre des classes</i></a>.
+            </p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e774"></a>2.1.&nbsp;Objets</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Un objet est un type de donn&eacute;es qui contient des sous-donn&eacute;es d&eacute;sign&eacute;es par un nom.&nbsp;Suivant le contexte, une sous-donn&eacute;e s'appelle une <em>propri&eacute;t&eacute;</em> ou un <em>attribut</em> de cet objet.&nbsp;Par exemple, chaque vue (<tt class="literal">view</tt>) a 49 attributs tels que la hauteur, la largeur, la position horizontale, la position verticale et ainsi de suite.&nbsp;Les valeurs sont g&eacute;n&eacute;ralement donn&eacute;es aux attributs des objets au moment de leur cr&eacute;ation; les attributs qui ne re&ccedil;oivent pas de valeur prennent la valeur par d&eacute;faut.&nbsp;</p>
+					<p>Vous pouvez cr&eacute;er d'autres types d'objets LZX en utilisant la balise <a class="indexterm" name="d0e790"></a><a target="laszlo-reference" href="../reference/index.html?class.html"><tt class="sgmltag-element">&lt;class&gt;</tt></a>. Chaque nouvelle classe que vous cr&eacute;ez doit recevoir un nom et le nom de la classe qu'elle &quot;&eacute;tend&quot;.&nbsp;Les objets cr&eacute;&eacute;s h&eacute;ritent alors de toutes propri&eacute;t&eacute;s de la classe que vous avez &eacute;tendue, plus les nouvelles propri&eacute;t&eacute;s que vous avez d&eacute;finies. Prenez l'exemple simple suivant :&nbsp;</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;class name="myview" extends="view"/&gt;</pre></td>
+                  </tr>
+               </table>
+					<p>Dans ce cas, vous avez d&eacute;fini un nouveau type d'objet appel&eacute; <tt class="varname">myview</tt> qui a toutes les propri&eacute;t&eacute;s de <tt class="literal">view</tt>. Dans l'<a href="initialization-and-instantiation.html" title="Appendix&nbsp;A.&nbsp;Understanding Instantiation">Appendix&nbsp;A, <i>Comprendre l'Instanciation</i></a> vous trouverez des explications d&eacute;taill&eacute;es sur comment les objets sont d&eacute;finis dans votre code et comment le compilateur les construit durant l'ex&eacute;cution.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e810"></a>2.2.&nbsp;Attributs</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>En LZX, le mot &quot;attribut&quot; a deux significations li&eacute;es mais tout de m&ecirc;me diff&eacute;rentes, l'une syntaxique et l'autre s&eacute;mantique. En XML, syntaxicalement parlant, un attribut est une valeur d&eacute;sign&eacute;e par un nom, attach&eacute; &agrave; un &eacute;l&eacute;ment et sp&eacute;cifi&eacute; dans la balise ouvrante de cet &eacute;l&eacute;ment.&nbsp;Ainsi, dans la balise XML</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;boss demeanor="friendly"/&gt;</pre></td>
+                  </tr>
+               </table>
+					<p><a class="indexterm" name="d0e818"></a><tt class="sgmltag-attribute">demeanor</tt> est un attribut de la balise <tt class="literal">boss</tt> . Cette d&eacute;finition de l'attribut s'applique dans le contexte d'une structure XML.&nbsp;Remarquez que la valeur de l'attribut est entour&eacute;e de guillemets.</p>
+					<p>Puisque les balises LZX correspondent &agrave; des classe LZX, le terme &quot;attribut&quot; s'enrichit d'une valeur s&eacute;mantique suppl&eacute;mentaire qui est la propri&eacute;t&eacute; d'un objet JavaScript.&nbsp;Ainsi, la balise LZX</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;view height="20" width="30"/&gt;</pre></td>
+                  </tr>
+               </table>
+					<p>induit la cr&eacute;ation d'un objet vue (view) avec les valeurs sp&eacute;cifi&eacute;es pour les attributs <a class="indexterm" name="d0e833"></a><tt class="sgmltag-attribute">height</tt> et <a class="indexterm" name="d0e839"></a><tt class="sgmltag-attribute">width</tt>.
+               </p>
+					<p>La balise <a class="indexterm" name="d0e847"></a><a target="laszlo-reference" href="../reference/index.html?attribute.html"><tt class="sgmltag-element">&lt;attribute&gt;</tt></a> peut &ecirc;tre utilis&eacute;e pour d&eacute;finir les attributs JavaScript d'objets.&nbsp;Par exemple, </p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting"> 
+&lt;view name="myview"&gt; 
+  &lt;attribute height="20"/&gt; 
+  &lt;attribute width="30"/&gt; 
+&lt;/view&gt;  
+</pre></td>
+                  </tr>
+               </table>
+					<p>est &eacute;quivalent en LZX, &agrave; la version pr&eacute;c&eacute;dente.&nbsp;Ainsi, <a class="indexterm" name="d0e858"></a><tt class="sgmltag-attribute">height</tt> est un attribut de la vue, au sens s&eacute;mantique du terme, bien qu'il ne le soit pas au sens XML puisqu'il n'est pas contenu dans la balise ouvrante.&nbsp;<a class="indexterm" name="d0e864"></a><tt class="sgmltag-attribute">height</tt> est &eacute;galement un attribut, au sens XML cette fois, de la premi&egrave;re balise <a class="indexterm" name="d0e870"></a><tt class="sgmltag-element">&lt;attribute&gt;</tt>. Sa valeur peut &ecirc;tre r&eacute;f&eacute;renc&eacute;e dans du script par <tt class="literal">myview.height</tt>.
+               </p>
+					<p>Vous pouvez aussi utiliser la balise <a class="indexterm" name="d0e881"></a><tt class="sgmltag-element">&lt;attribute&gt;</tt> pour ajouter d'autres attributs aux classes que vous cr&eacute;ez.&nbsp;Par exemple : </p>
+					<div class="informalexample">
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;class name="froboz" extends="view"&gt; 
+  &lt;attribute name="whatnot" value="17"&gt; 
+&lt;/class&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<p>d&eacute;finit un nouveau type d'objet vue, <tt class="literal">froboz</tt>, qui a 50 attributs : les 49&nbsp;qui sont h&eacute;rit&eacute;s de la balise vue (view), plus le nouvel attribut <a class="indexterm" name="d0e895"></a><tt class="sgmltag-attribute">whatnot</tt>.
+               </p>
+					<p>Nous avons vu que les attributs peuvent &ecirc;tre positionn&eacute;s, c'est &agrave; dire qu'on peut leur affecter des valeurs dans les balises LZX.&nbsp;Il est &eacute;galement possible de d&eacute;finir la valeur d'attributs dans du script en utilisant la m&eacute;thode <a class="indexterm" name="d0e903"></a><tt class="methodname">setAttribute()</tt>. En plus, les valeurs d'attributs peuvent &ecirc;tre lues ou &quot;r&eacute;cup&eacute;r&eacute;es&quot; dans du script (mais pas dans des balises) en utilisant la m&eacute;thode <a class="indexterm" name="d0e911"></a><tt class="methodname">getAttribute()</tt>. (Les m&eacute;thodes seront expliqu&eacute;es plus bas).</p>
+					<p>Supposons que nous ayons une vue appel&eacute;e <tt class="varname">johnny</tt>. Cette vue peut avoir &eacute;t&eacute; cr&eacute;&eacute;e en utilisant une balise ou du script; comment la vue a &eacute;t&eacute; cr&eacute;&eacute;e n'a aucune importance.</p>
+					<p>Le code JavaScript pour d&eacute;finir la hauteur de cette vue &agrave; 100 pixels serait :</p>
+					<p><tt class="literal">johnny.setAttribute("height", 100);</tt></p>
+               <p>et pour lire la valeur de la hauteur : </p>
+               <p><tt class="literal">johnny.getAttribute("height");</tt></p>
+               <p>A chaque fois qu'un attribut est positionn&eacute;, c'est &agrave; dire &agrave; chaque fois que la valeur d'un attribut change, un objet appel&eacute; <tt class="literal">event</tt> est g&eacute;n&eacute;r&eacute;. La section suivante pr&eacute;sente ce que sont les &eacute;v&eacute;nements (events) et comment ils fonctionnent dans les programmes LZX.</p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e940"></a>3.&nbsp;Ev&eacute;nements et M&eacute;thodes</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e944"></a>3.1.&nbsp;Ev&eacute;nements</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Les &eacute;venements (events) sont le m&eacute;canisme par lequel les objets communiquent ensemble quand quelque chose change.&nbsp;Par exemple, un &eacute;v&eacute;nement peut &ecirc;tre g&eacute;n&eacute;r&eacute; quand un bouton de souris est activ&eacute;, ou quand des donn&eacute;es arrivent d'un serveur, ou quand une vue a &eacute;t&eacute; construite.</p>
+					<p>Dans les programmes LZX, les &eacute;v&eacute;nements ne sont pas diffus&eacute;s, mais ils sont plut&ocirc;t communiqu&eacute;s dans un mod&egrave;le point-&agrave;-point en utilisant des <tt class="literal">delegates</tt> (d&eacute;l&eacute;gu&eacute;s) qui sont des pointeurs vers des fonctions r&eacute;f&eacute;renc&eacute;es en fonction des &eacute;v&eacute;nements qui surviennent.&nbsp;Cette impl&eacute;mentation augmente la flexibilit&eacute; et r&eacute;duit l'exc&eacute;s de complications dans l'utilisation des &eacute;v&eacute;nements.&nbsp;Cependant, dans le pr&eacute;sent chapitre, nous allons laisser sous silence les d&eacute;l&eacute;gu&eacute;s ('delegates') et parler des &eacute;v&eacute;nements d'une mani&egrave;re l&eacute;g&egrave;rement moins rigoureuse, en disant par exemple quand tel ou tel &eacute;v&eacute;nement arrive, mais laissant de c&ocirc;t&eacute; pour l'instant comment cela arrive. </p>
+					<p>Les vues ('view') ont approximativement deux douzaines d'&eacute;v&eacute;nements pr&eacute;d&eacute;finis, comme on peut le voir dans le Manuel de R&eacute;f&eacute;rence LZX pour l'entr&eacute;e <a class="indexterm" name="d0e965"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>. Beaucoup de ces &eacute;v&eacute;nements sont en rapport avec des actions utilisateurs, tels que <a class="indexterm" name="d0e972"></a><tt class="literal">onblur</tt>,
+                  <a class="indexterm" name="d0e978"></a><tt class="literal">onclick</tt>, <a class="indexterm" name="d0e984"></a><tt class="literal">onkeydown</tt>, ce qui devrait &ecirc;tre familier aux programmeurs JavaScript. D'autres types d'&eacute;v&eacute;nements, comme <a class="indexterm" name="d0e990"></a><tt class="literal">onheight</tt> et <a class="indexterm" name="d0e996"></a><tt class="literal">onopacity</tt>, sont li&eacute;s aux attributs de visibilit&eacute; des vues. Enfin, les &eacute;v&eacute;nements <a class="indexterm" name="d0e1002"></a><tt class="literal">oninit</tt> et <a class="indexterm" name="d0e1008"></a><tt class="literal">onconstruct</tt> sont li&eacute;s &agrave; la cr&eacute;ation des instances des objets vues.&nbsp;De fa&ccedil;on similaire, d'autres objets LZX d&eacute;finis par le syst&egrave;me, tels que les blocs de donn&eacute;es ('Datasets') (voir plus bas), ont des &eacute;v&eacute;n&eacute;ments associ&eacute;s.</p>
+					<p>Les &eacute;v&eacute;nements et attributs vont souvent ensemble et en fait, le comportement par d&eacute;faut de la m&eacute;thode setAttribute est de d&eacute;finir la propri&eacute;t&eacute; puis d'appeler la m&eacute;thode appel&eacute;e &quot;<tt class="literal">on</tt>&quot; + le nom de la propri&eacute;t&eacute;. Par exemple, quand une vue change sa position horizontale <a class="indexterm" name="d0e1019"></a><tt class="sgmltag-attribute">x</tt>, elle envoie l'&eacute;v&eacute;nement <a class="indexterm" name="d0e1025"></a><tt class="literal">onx</tt> avec la nouvelle valeur de sa propri&eacute;t&eacute; <a class="indexterm" name="d0e1031"></a><tt class="sgmltag-attribute">x</tt>. Cela signifie qu'en plus des &eacute;v&eacute;nements d&eacute;finis par le syst&egrave;me, il y a un &eacute;v&eacute;nement pour chaque attribut que vous d&eacute;finissez.&nbsp;</p>
+					<p>Quand un &eacute;v&eacute;nement se produit, le contr&ocirc;le est transf&eacute;r&eacute; &agrave; son gestionnaire d'&eacute;v&eacute;nement ('event-handler') (si on en a d&eacute;finit un).&nbsp;Les &eacute;v&eacute;nements peuvent &ecirc;tre envoy&eacute;s avec un seul argument qui contient g&eacute;n&eacute;ralement une information sur la propri&eacute;t&eacute; qui a chang&eacute;.&nbsp;</p>
+					<p>Plus loin dans ce guide, nous verrons comment les &eacute;v&eacute;nements sont impl&eacute;ment&eacute;s en LZX, et comment l'architecture des &eacute;v&eacute;nements est li&eacute;e au design des programmes.&nbsp;En particulier, le <a href="delegates.html" title="Chapter&nbsp;27.&nbsp;Delegates">Chapitre&nbsp;27, <i>D&eacute;l&eacute;gu&eacute;s</i></a> d&eacute;crit la relation entre les &eacute;v&eacute;nements et les d&eacute;l&eacute;gu&eacute;s.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1044"></a>3.2.&nbsp;M&eacute;thodes</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>En LZX, une m&eacute;thode est une fonction JavaScript associ&eacute;e &agrave; un type d'objet.&nbsp;Les m&eacute;thodes doivent soit avoir un nom particulier, soit &ecirc;tre associ&eacute;es &agrave; un type d'&eacute;v&eacute;nement particulier.&nbsp;</p>
+					<p>Si la m&eacute;thode a un attribut <a class="indexterm" name="d0e1051"></a><tt class="sgmltag-attribute">event</tt>, le script sera ex&eacute;cut&eacute; quand la vue r&eacute;f&eacute;renc&eacute;e recevra l'&eacute;v&eacute;nement de ce nom.&nbsp;(NdT, avec la sortie de la version 3.2, Laszlo&nbsp;Systems a introduit les nouvelles balises event et handler dans le langage et cette fa&ccedil;on de d&eacute;finir les m&eacute;thodes associ&eacute;es aux &eacute;v&eacute;nements et devenue d&eacute;pr&eacute;ci&eacute;e.&nbsp;Pour plus d'informations, rendez-vous sur le <a href="http://wiki.openlaszlo.org/Event_and_handler_tags">wiki</a> du site OpenLaszlo)</p>
+					<p>Par exemple,</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;view&gt; 
+  &lt;method event="onclick"&gt; 
+    &lt;!-- du code JavaScript ---&gt; 
+  &lt;/method&gt; 
+&lt;/view&gt;
+</pre></td>
+                  </tr>
+               </table>
+					<p>d&eacute;finit un fonction qui est ex&eacute;cut&eacute;e quand on clique sur la vue.</p>
+					<p>En JavaScript, les fonctions sont invoqu&eacute;es en utilisant l'op&eacute;rateur <tt class="literal">()</tt>. Ainsi,</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;view name="dog"&gt;   
+  &lt;method name="bark"&gt; 
+    &lt;!-- du code JavaScript ---&gt; 
+  &lt;/method&gt; 
+&lt;/view&gt;
+</pre></td>
+                  </tr>
+               </table>
+					<p>d&eacute;finit une fonction qui est ex&eacute;cut&eacute;e quand on invoque son nom de la fa&ccedil;on suivante :</p>
+               <p><tt class="literal">dog.bark();</tt></p>
+               <p>En JavaScript, le mot-cl&eacute; <tt class="literal">this</tt> est utilis&eacute; pour r&eacute;f&eacute;rencer l'objet qui a permis d'invoquer la fonction. Consid&eacute;rons le code suivant :</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting"> 
+&lt;view&gt; 
+  &lt;method name="bark"&gt; 
+    &lt;!-- du code JavaScript ---&gt; 
+  &lt;/method&gt; 
+  &lt;method name="handler" event="onclick"&gt; 
+    this.bark()  
+  &lt;/method&gt; 
+&lt;view&gt;
+</pre></td>
+                  </tr>
+               </table>
+               <p>Quand on clique sur la vue, l'&eacute;v&eacute;nement <a class="indexterm" name="d0e1082"></a><tt class="literal">onclick</tt> est d&eacute;clench&eacute;, ce qui lance l'ex&eacute;cution de la m&eacute;thode appel&eacute;e <a class="indexterm" name="d0e1088"></a><tt class="methodname">handler()</tt> qui a son tour invoque la m&eacute;thode nomm&eacute;e <a class="indexterm" name="d0e1096"></a><tt class="methodname">bark()</tt>. Les gestionnaires d'&eacute;v&eacute;nements ('Event handlers') sont souvent d&eacute;finis dans les balises ouvrantes, comme dans :</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;view onclick="clickHandler()"&gt; 
+  &lt;method name="clickHandler"&gt; 
+    &lt;!-- du code JavaScript --&gt; 
+  &lt;/method&gt; 
+&lt;/view&gt; 
+</pre></td>
+                  </tr>
+               </table>
+					<p>Il y a trois grandes cat&eacute;gories de m&eacute;thodes :</p>
+					<div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>&quot;On init&quot; : m&eacute;thodes invoqu&eacute;es quand l'objet parent est cr&eacute;&eacute;,</p>
+                     </li>
+                     <li>
+                        <p>&quot;On event&quot; : m&eacute;thodes invoqu&eacute;es quand leur objet parent re&ccedil;oit un &eacute;v&eacute;nement particulier,</p>
+                     </li>
+							<li>
+                        <p>m&eacute;thodes avec nom explicitement invoqu&eacute;es par d'autres m&eacute;thodes.</p>
+                     </li>
+						</ul>
+               </div>
+					<p>Remarquez que vous pouvez d&eacute;finir des m&eacute;thodes en utilisant la syntaxe JavaScript traditionnelle, mais qu'avec LZX, on pr&eacute;f&egrave;re utiliser la balise <a class="indexterm" name="d0e1120"></a><a target="laszlo-reference" href="../reference/index.html?method.html"><tt class="sgmltag-element">&lt;method&gt;</tt></a>.</p>
+					<p>Notez &eacute;galement qu'avec LZX, contrairement &agrave; beaucoup de syst&egrave;mes orient&eacute;s objet, vous pouvez surcharger une m&eacute;thode dans une instance d'un objet.&nbsp;Ce sujet est d&eacute;crit au <a href="class-inheritance.html" title="Chapter&nbsp;30.&nbsp;Extending Classes">Chapitre&nbsp;30, <i>Etendre des classes</i></a>.
+               </p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1132"></a>4.&nbsp;Contraintes</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>En LZX, une contrainte est un attribut dont la valeur est fonction de l'attribut d'autres valeurs.&nbsp;La syntaxe pour &eacute;crire une contrainte est la suivante :</p>
+				<table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">$<i class="replaceable"><tt>when</tt></i>{<i class="replaceable"><tt>expression</tt></i>}</pre></td>
+               </tr>
+            </table>
+				<p>o&ugrave; :</p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p><tt class="literal">$</tt> est le caract&egrave;re indiquant que c'est une contrainte</p>
+                  </li>
+                  <li>
+                     <p><tt class="literal"><i class="replaceable"><tt>when</tt></i></tt> est une directive de compilation optionnelle : <tt class="literal">immediately</tt>(immediatement), <tt class="literal">once</tt>(une seule fois) ou <tt class="literal">always</tt>(toujours). <tt class="literal">$always{<i class="replaceable"><tt>expression</tt></i>}</tt> peut &ecirc;tre abr&eacute;g&eacute; en <tt class="literal">${<i class="replaceable"><tt>expression</tt></i>}</tt> 
+                     </p>
+                  </li>
+                  <li>
+                     <p><tt class="literal">{</tt> et <tt class="literal">}</tt> sont les caract&egrave;res qui d&eacute;limitent l'expression &agrave; &eacute;valuer</p>
+                  </li>
+                  <li>
+                     <p><tt class="literal"><i class="replaceable"><tt>expression</tt></i></tt> est une expression JavaScript</p>
+                  </li>
+               </ul>
+            </div>
+				<p>Comme nous l'avons vu plus haut, quand la valeur d'un attribut change, son &eacute;v&eacute;nement <a class="indexterm" name="d0e1196"></a><tt class="literal">on</tt> est d&eacute;clench&eacute;. Parce qu'une contrainte est un attribut dont la valeur d&eacute;pend des valeurs d'un ou plusieurs attributs, la valeur de la contrainte est recalcul&eacute;e quand elle re&ccedil;oit l'&eacute;v&eacute;nement <a class="indexterm" name="d0e1202"></a><tt class="literal">on</tt> des attributs dont elle d&eacute;pend.</p>
+				<p>Consid&eacute;rons :</p>
+				<table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">
+&lt;view name="someView" 
+      width="${someAttribute + someOtherAttribute}" 
+ /&gt;
+</pre></td>
+               </tr>
+            </table>
+            <p>La valeur de <tt class="literal">someView.width</tt> est recalcul&eacute;e quand l'&eacute;v&eacute;nement <tt class="literal">onsomeAttribute</tt> ou <tt class="literal">onsomeOtherAttribute</tt> est d&eacute;clench&eacute;.</p>
+            <p>Dans l'exemple suivant :</p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">
+&lt;view name="beatles" width="${this.paul.width + 28}"&gt; 
+  &lt;view name="paul" onclick="clickhandler()" &gt; 
+    &lt;!-- m&eacute;thode de gestion des clics de souris pour augmenter la largeur de paul suivant l'endroit o&ugrave; a cliqu&eacute; l'utilisateur --&gt; 
+  &lt;/view&gt; 
+&lt;/view&gt;
+</pre></td>
+               </tr>
+            </table>
+            <p>la largeur de <tt class="literal">beatles</tt> va augmenter ou r&eacute;duire en fonction de la largeur de <tt class="literal">paul</tt>; l'expression <tt class="literal">this.paul.width + 28</tt> est une contrainte.</p>
+				<p>Ceci est bien s&ucirc;r un exemple trivial, mais il permet de comprendre qu'en d&eacute;clarant la structure de vos objets en LZX, vous d&eacute;clarez aussi les r&egrave;gles avec lesquelles ils sont li&eacute;s entre eux.&nbsp;Les contraintes sont un des concepts fondamentaux de la programmation avec LZX, et apprendre &agrave; &quot;penser LZX&quot; revient surtout &agrave; apprendre &agrave; mod&eacute;liser convenablement le comportement du syst&egrave;me en terme de contraintes de ses diff&eacute;rentes parties.&nbsp;Le <a href="constraints.html" title="Chapter&nbsp;24.&nbsp;Constraints">Chapitre&nbsp;24, <i>Contraintes</i></a> couvre en d&eacute;tails ce sujet.</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1243"></a>4.1.&nbsp;Hi&eacute;rarchies</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Une application LZX est une hi&eacute;rarchie d'objets, g&eacute;n&eacute;ralement des objets visuels, contenus dans un objet unique appel&eacute; Canvas.&nbsp;Rappelez-vous que les programmes LZX sont des documents XML dont canvas est la racine.&nbsp;Le programme LZX le plus simple est donc :</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;canvas/&gt;</pre></td>
+                  </tr>
+               </table>
+					<p>Ce programme se compile et s'ex&eacute;cute, mais n'a aucune sortie.&nbsp;Comme le plus simple des objets visuels est la vue ('view'), un programme LZX minimal ressemble &agrave; ceci :</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas&gt;
+  &lt;view&gt;
+    &lt;text&gt; Hello World!&lt;/text&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+					<p>Ce code d&eacute;finit clairement la hi&eacute;rarchie de trois objets.&nbsp;Nous pouvons rendre plus visible leur relation visuelle en donnant au canvas et &agrave; la vue une couleur de fond.</p>
+					<p>Dans cet exemple simple, la hi&eacute;rarchie lexicale dans le code correspond &agrave; la hi&eacute;rarchie visuelle dans le canvas.&nbsp;En fait, l'objet <tt class="literal">&lt;text&gt;</tt> est l'instance d'une classe d&eacute;riv&eacute;e de <tt class="literal">&lt;view&gt;</tt>. Typiquement, les programmes LZX r&eacute;p&egrave;tent cette s&eacute;quence &agrave; une plus grande &eacute;chelle : la toile contient des vues qui contiennent d'autres vues et ainsi de suite.&nbsp;Les classes sont utilis&eacute;es pour reproduire des groupements de vues; des composants comme des boutons, des fen&ecirc;tres, des champs de saisie ou des s&eacute;lecteurs de valeurs sont quelques exemples de classes construites &agrave; partir de vues.&nbsp;</p>
+					<p>LZX permet un grand nombre de fa&ccedil;on de simplifier les relations entre vues.&nbsp;Par exemple, il y a plusieurs possibilit&eacute;s de mises en page ('layouts') pour g&eacute;rer le placement des vues les unes par rapport aux autres.&nbsp;Elles sont d&eacute;crites au <a href="layout-and-design.html" title="Chapter&nbsp;16.&nbsp;Layout and Design">Chapitre&nbsp;16, <i>Mise en page et Design</i></a>.
+               </p>
+					<p>Cependant, la relation entre la hi&eacute;rarchie textuelle du code et la hi&eacute;rarchie visuelle dans la toile n'est pas toujours aussi directe que dans l'exemple ci-dessus.&nbsp;En particulier, la puissante s&eacute;mantique des liaisons de donn&eacute;es de LZX permet &agrave; une simple balise <tt class="literal">&lt;view&gt;</tt> de g&eacute;n&eacute;rer la cr&eacute;ation d'un nombre al&eacute;atoire d'instances de l'objet <tt class="literal">view</tt>. Dans de tels cas, il est tr&egrave;s important de d&eacute;crire pr&eacute;cis&eacute;ment les relations complexes entre objets.&nbsp;Le <a href="views.html" title="Chapter&nbsp;23.&nbsp;Views">Chapitre&nbsp;23, <i>Views</i></a> couvre en d&eacute;tail ce sujet.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1279"></a>4.2.&nbsp;Port&eacute;e</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Avec LZX, les concepts de port&eacute;e locale ou globale sont les m&ecirc;mes qu'avec JavaScript. Ceci dit, il faut noter que les r&egrave;gles en JavaScript peuvent surprendre un programmeur Java.</p>
+               <p>En JavaScript, toutes les variables sont globales, sauf si elles sont pr&eacute;c&eacute;d&eacute;es du mot-cl&eacute; <tt class="literal">var</tt>.
+               </p>
+               <p>Ainsi</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">a= 7; // definit une variable globale a</pre></td>
+                  </tr>
+               </table>
+               <p>et</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">var a = 7 // definit une variable locale a</pre></td>
+                  </tr>
+               </table>
+					<p>Cette syntaxe implique par exemple que lors de l'assignation d'une variable dans une fonction, on peut modifier l'instance d'une variable globale.&nbsp;Ainsi : </p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">for (a = 0; a &lt;n; a++);</pre></td>
+                  </tr>
+               </table>
+					<p>cr&eacute;e une variable globale appel&eacute;e <tt class="varname">a</tt>, ou change la valeur de cette valeur si elle existe d&eacute;j&agrave;.&nbsp;Ce que le programmeur voulait en fait &eacute;crire &eacute;tait :</p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">for (var a = 0; a &lt;n; a++);</pre></td>
+                  </tr>
+               </table>
+               <p>En LZX, l'attribut <a class="indexterm" name="d0e1310"></a><tt class="sgmltag-attribute">name</tt> est local et l'attribut <a class="indexterm" name="d0e1316"></a><tt class="sgmltag-attribute">id</tt> est global. Ainsi</p>
+               <div class="informalexample">
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas&gt; 
+  &lt;view name="john" id="grandfather"&gt; 
+    &lt;view name="john" id="father"&gt; 
+      &lt;view name="john" id="son"/&gt; 
+    &lt;/view&gt; 
+  &lt;/view&gt; 
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+               <p>est valide. La vue la plus basse peut &ecirc;tre r&eacute;f&eacute;renc&eacute;e <tt class="literal">Canvas.john.john.john</tt> ou simplement <tt class="literal">son</tt>.
+               </p>
+               <p>Comme nous allons le voir, les fonctions cr&eacute;&eacute;es en utilisant la balise <a class="indexterm" name="d0e1335"></a><a target="laszlo-reference" href="../reference/index.html?script.html"><tt class="sgmltag-element">&lt;script&gt;</tt></a> peuvent &ecirc;tre appel&eacute;es de n'importe o&ugrave; dans le programme.&nbsp;</p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1343"></a>5.&nbsp;Acc&egrave;s aux donn&eacute;es, Manipulation et Liaison</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>LZX est con&ccedil;u pour &eacute;crire des applications command&eacute;es par des donn&eacute;es dans lesquelles les valeurs des sources de donn&eacute;es d&eacute;finissent l'apparence et les actions du programme.&nbsp;Cela est rendu possible gr&acirc;ce &agrave; des balises et des biblioth&egrave;ques (APIs) qui permettent d'acc&eacute;der aux donn&eacute;es via http, de manipuler les donn&eacute;es XML&nbsp;en m&eacute;moire puis, et c'est &agrave; noter, de lier la hi&eacute;rarchie de donn&eacute;es &agrave; la hi&eacute;rarchie de vues.&nbsp;</p>
+				<p>Les paragraphes suivants r&eacute;sument les &eacute;l&eacute;ments cl&eacute; de l'architecture orient&eacute;e donn&eacute;es de LZX. </p>
+				<p>R&eacute;f&eacute;rez-vous au <a href="data.html" title="Part&nbsp;V.&nbsp;Data and Databinding">V, Donn&eacute;es et Liaison de donn&eacute;es</a> pour approfondir ce sujet.</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1353"></a>5.1.&nbsp;Acc&egrave;s aux donn&eacute;es</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Les programmes LZX manipulent des donn&eacute;es format&eacute;es en XML qui peuvent &ecirc;tre :</p>
+					<div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>embarqu&eacute;es dans le code du programme,</p>
+                     </li>
+                     <li>
+                        <p>lues &agrave; partir d'une source quand le programme est compil&eacute;, </p>
+                     </li>
+                     <li>
+                        <p>lues &agrave; partir d'une source quand le programme est en cours d'ex&eacute;cution.</p>
+                     </li>
+                  </ul>
+               </div>
+					<p>Les sources XML sont format&eacute;es sous forme d'objets appel&eacute;s 'datasets'.&nbsp;La balise <a class="indexterm" name="d0e1370"></a><a target="laszlo-reference" href="../reference/index.html?dataset.html"><tt class="sgmltag-element">&lt;dataset&gt;</tt></a> poss&egrave;de des attributs qui vous permettent par exemple de contr&ocirc;ler la mise en cache sur le client ou le serveur, d'inclure ou d'exclure des ent&ecirc;tes http, de g&eacute;rer une file d'attente, et ainsi de suite.&nbsp;Les objets cr&eacute;&eacute;s avec la balise <a class="indexterm" name="d0e1377"></a><tt class="sgmltag-element">&lt;dataset&gt;</tt> sont de type LzDatasets. Les m&eacute;thodes de l'objet LzDatasets vous permettent par exemple de r&eacute;cup&eacute;rer ou mettre &agrave; jour des donn&eacute;es, des param&egrave;tres et ainsi de suite.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1384"></a>5.2.&nbsp; Manipulation des donn&eacute;es</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>LZX utilise des pointeurs de donn&eacute;es (Datapointers), des objets qui repr&eacute;sentent des pointeurs sur des noeuds de sources de donn&eacute;es (datasets), pour se positionner et manipuler les donn&eacute;es.&nbsp;Les pointeurs de donn&eacute;es utilisent une partie de la norme XPath, une sp&eacute;cification standard du W3C pour d&eacute;crire des chemins dans des documents XML, ou dans le cas de LZX, dans des sources de donn&eacute;es.&nbsp;XPath utilise une notation similaire au syst&egrave;me de fichiers Unix pour r&eacute;f&eacute;rencer des noeuds dans une source de donn&eacute;es.&nbsp;Les pointeurs de donn&eacute;es peuvent &ecirc;tre repositionn&eacute;s &agrave; la fois en utilisant des appels proc&eacute;duraux tels que <a class="indexterm" name="d0e1389"></a><tt class="methodname">selectNext()</tt> ou en d&eacute;finissant un chemin XPath avec <a class="indexterm" name="d0e1397"></a><tt class="methodname">setXPath()</tt>.
+               </p>
+					<p>Gr&acirc;ce &agrave; son syst&egrave;me tr&egrave;s sophistiqu&eacute; de reconnaissance des cha&icirc;nes, la notation XPath est extr&ecirc;ment concise et puissante.&nbsp;Une simple expression XPath peut repr&eacute;senter un nombre al&eacute;atoire d'&eacute;l&eacute;ments XML.&nbsp;En utilisant des m&eacute;thodes telles que <a class="indexterm" name="d0e1407"></a><tt class="methodname">addNode()</tt>, <a class="indexterm" name="d0e1415"></a><tt class="methodname">setNodeName()</tt>, <a class="indexterm" name="d0e1423"></a><tt class="methodname">setXpath()</tt>, et <a class="indexterm" name="d0e1431"></a><tt class="methodname">selectParent()</tt>, vous pouvez construire et manipuler des structures XML.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1440"></a>5.3.&nbsp;Liaison de donn&eacute;es</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>LZX offre un moyen unique pour combiner un nombre al&eacute;toire de hi&eacute;rarchies de donn&eacute;es dans n'importe quelle hi&eacute;rarchie d'affichage; cette fonctionnalit&eacute; est appel&eacute;e liaison de donn&eacute;es.&nbsp;Elle est impl&eacute;ment&eacute;e de telle fa&ccedil;on que le contexte de donn&eacute;es d'un noeud fils dans la hi&eacute;rarchie d'affichage soit implicitement le m&ecirc;me que celui de son p&egrave;re.&nbsp;Il est m&ecirc;me possible de demander au syst&egrave;me de cr&eacute;er un nombre quelconque d'&eacute;lements dans une hi&eacute;rarchie d'affichage pour repr&eacute;senter chaque &eacute;l&eacute;ment des donn&eacute;es s&eacute;lectionn&eacute;es.&nbsp;</p>
+					<p>On r&eacute;alise cela en liant des vues &agrave; des pointeurs de donn&eacute;es.&nbsp;Un <tt class="literal">datapath</tt> est un type particulier de pointeur de donn&eacute;es qui r&eacute;alise explicitement le lien entre la hi&eacute;rarchie de donn&eacute;es et la hi&eacute;rarchie d'affichage.&nbsp;Ainsi :</p>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;view name="bob" datapath="testdata:/*"&gt;</pre></td>
+                  </tr>
+               </table>
+					<p>o&ugrave; where <tt class="varname">testdata</tt> se r&eacute;f&egrave;re &agrave; une source de donn&eacute;es d&eacute;finie plus t&ocirc;t dans le programme.</p>
+					<p>C'est normal pour l'instant que cela paraisse un peu abstrait. Nous nous en tiendrons &agrave; cette courte description ici, une plus ample explication &eacute;tant donn&eacute;e au <a href="data.html" title="Part&nbsp;V.&nbsp;Data and Databinding">V, Donn&eacute;es et Liaison de donn&eacute;es</a>; vous pouvez aussi &eacute;tudier les exemples sur <a href="http://www.laszlosystems.com/demos" target="_top">http://www.laszlosystems.com/demos</a> pour bien comprendre ce qui peut &ecirc;tre fait quand les applications sont vraiment command&eacute;es par les donn&eacute;es.</p>
+					<p>Le point cl&eacute; &agrave; comprendre est que si certains langages et technologies ont impl&eacute;ment&eacute; des algorithmes de liaison qui peuvent sembler similaires en premi&egrave;re lecture, ce syst&egrave;me de liaison est nouveau en ce qu'il permet la cr&eacute;ation d'objets qui gardent une connexion active avec les entit&eacute;s de la source de donn&eacute;es.</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1467"></a>6.&nbsp;M&eacute;langer Balises et Script dans les programmes LZX</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Comme nous l'avons d&eacute;j&agrave; dit, presque tous les programmes LZX non triviaux contiennent &agrave; la fois des balises (XML) et du script.&nbsp;Les balises sont utilis&eacute;es de fa&ccedil;on d&eacute;clarative, elles permettent de d&eacute;clarer des objets et leurs attributs.&nbsp;Le script est utilis&eacute; de fa&ccedil;on proc&eacute;durale, pour d&eacute;finir explicitement une s&eacute;rie d'&eacute;tapes.&nbsp;Bien que ces deux fa&ccedil;ons de faire puissent &ecirc;tre imbriqu&eacute;es avec LZX - par exemple, du script peut &ecirc;tre plac&eacute; dans des balises - chaque syntaxe est responsable de son int&eacute;grit&eacute; locale.&nbsp;</p>
+				<p>Par exemple, &agrave; l'int&eacute;rieur de code d&eacute;claratif LZX, les commentaires apparaissent comme ceci :</p>
+				<table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">&lt;!-- commentaire XML --&gt;</pre></td>
+               </tr>
+            </table>
+				<p>alors que dans du code JavaScript, ils apparaissent comme ceci :</p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">// commentaire JavaScript</pre></td>
+               </tr>
+            </table>
+            <p>Ainsi, LZX est comme un alliage de deux m&eacute;taux qui ne se combineraient pas chimiquement.&nbsp;</p>
+				<p>Comme les parties d&eacute;claratives et proc&eacute;durales d'un programme peuvent &ecirc;tre ainsi m&eacute;lang&eacute;es, ce peut &ecirc;tre un peu hardu au d&eacute;but de les reconna&icirc;tre &agrave; l'int&eacute;rieur d'un programme.&nbsp;Cependant, avec l'exp&eacute;rience, on finit par saisir la logique qui se cache derri&egrave;re LZX et par ne plus faire attention aux changements de syntaxe.&nbsp;Les paragraphes qui suivent expliquent comment et pourquoi l'une ou l'autre des formes dans LZX.&nbsp;R&eacute;f&eacute;rez-vous &agrave; la documentation de votre IDE ou &eacute;diteur de texte pour apprendre comment le faire utiliser la DTD ou le sch&eacute;ma de LZX afin qu'il identifie visuellement les parties du programme qui utilisent l'une ou l'autre des syntaxes.&nbsp;</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1485"></a>6.1.&nbsp;Comment m&eacute;langer balises et script</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Commen&ccedil;ons par voir ce qui est syntaxiquement correct et ce qui a une signification.</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1491"></a>6.1.1.&nbsp;Ce qui est correct</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Souvenez-vous que tous les programmes LZX sont des fichiers XML&nbsp;corrects.&nbsp;Cela implique que toutes les parties du programme, y compris le JavaScript embarqu&eacute;, doivent se conformer aux r&egrave;gles du XML.&nbsp;Du coup, quand JavaScript utilise des caract&egrave;res qui ont un sens en XML, comme le caract&egrave;re inf&eacute;rieur &lt;, vous devez vous assurer que ce caract&egrave;re ne perturbe pas le parseur XML.&nbsp;Vous pouvez le faire de deux fa&ccedil;ons :</p>
+						<div class="itemizedlist">
+                     <ul type="disc" compact>
+                        <li>
+                           <p>en <a class="indexterm" name="d0e1500"></a><i class="glossterm">rempla&ccedil;ant</i> explicitement les caract&egrave;res d&eacute;limitateurs par une <a class="indexterm" name="d0e1506"></a><i class="glossterm">entit&eacute; de r&eacute;f&eacute;rence</i>. (L'entit&eacute; de r&eacute;f&eacute;rence pour le caract&egrave;re inf&eacute;rieur est <tt class="literal">&amp;lt;</tt>).
+                           </p>
+                        </li>
+                        <li>
+                           <p>en utilisant le constructeur XML <tt class="literal">CDATA</tt> pour d&eacute;finir un bloc de <a class="indexterm" name="d0e1521"></a><i class="glossterm">caract&egrave;res bruts</i>.
+                           </p>
+                        </li>
+                     </ul>
+                  </div>
+						<p>C'est l'ensemble des r&egrave;gles qui permettent de s'assurer que le XML&nbsp;n'interf&egrave;re pas avec le JavaScript.</p>
+						<p></p>
+					</div>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1530"></a>6.1.2.&nbsp;Ce qui a une signification</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Bien que le m&eacute;lange de deux ensembles de r&egrave;gles de langage puisse produire une certaine confusion, il est relativement simple de reconna&icirc;tre comment les programmes LZX sont structur&eacute;s, et savoir o&ugrave; mettre quel type de code.&nbsp;Il y n'a que quelques situations dans lesquelles du script puisse appara&icirc;tre dans des programmes LZX.&nbsp;Apr&egrave;s avoir appris &agrave; reconna&icirc;tre ces situations, vous saurez quelle syntaxe utiliser.&nbsp;JavaScript est utilis&eacute; :</p>
+						<div class="itemizedlist">
+                     <ul type="disc" compact>
+                        <li>
+                           <p>entre des balises ouvrante et fermante <tt class="literal">&lt;script&gt;</tt> et <tt class="literal">&lt;/script&gt;</tt>,</p>
+                        </li>
+                        <li>
+                           <p>entre des balises ouvrante et fermante <tt class="literal">&lt;method&gt;</tt> et <tt class="literal">&lt;/method&gt;</tt>,</p>
+                        </li>
+                        <li>
+                           <p>entre des guillemets, sur la partie droite d'une affectation &agrave; l'int&eacute;rieur de certaines balises, comme pour <tt class="literal">oninit="<i class="replaceable"><tt>script expression</tt></i>"</tt>.</p>
+                        </li>
+                     </ul>
+                  </div>
+						<p></p>
+               </div>
+            </div>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e1564"></a>6.2.&nbsp;Quand utiliser les balises et quand utiliser du script</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Comme nous l'avons vu pr&eacute;c&eacute;demment, la plupart de choses que vous pouvez faire avec LZX peuvent l'&ecirc;tre soit avec des balises XML soit avec les biblioth&egrave;ques JavaScript, et ma&icirc;triser LZX revient &agrave; d&eacute;velopper une subtile compr&eacute;hension de comment et quand utiliser chaque m&eacute;thode.&nbsp;Vous trouverez en g&eacute;n&eacute;ral, que les balises sont plus appropri&eacute;es pour les traitements qui peuvent &ecirc;tre fait au moment de la compilation - comme organiser la mise en page de la toile - et que le script est plus adapt&eacute; &agrave; ce qui a trait au fonctionnement, comme prendre en compte des actions utilisateurs.&nbsp;Mais pour pouvoir utiliser cette information, encore faut-il comprendre ce qui est fait au moment de la compilation et ce qui est fait lors de l'ex&eacute;cution, sachant que cela peut-&ecirc;tre adapt&eacute; en grande partie au probl&egrave;me que vous essayez de r&eacute;soudre.&nbsp;</p>
+					<p>En d'autres termes, il n'y a pas de r&egrave;gles simples qui d&eacute;finissent quand utiliser des balises ou quand utiliser du script.&nbsp;Mais il y a malgr&eacute; tout des r&egrave;gles de bonne pratique qui s'appliquent &agrave; tous les programmes LZX bien con&ccedil;us.&nbsp;</p>
+					<p>Souvenez-vous que LZX est avant tout un langage pour manipuler des objets graphiques appel&eacute;s vues (views).&nbsp;Donc la question de savoir quand utiliser des balises ou du script se pose g&eacute;n&eacute;ralement dans le cadre de la <span class="em">creation de vues et la manipulation de leurs attributs</span>. Le script peut &ecirc;tre utilis&eacute; &agrave; d'autres fins, comme pour des fonctions globales, mais dans ce cas, la n&eacute;cessit&eacute; d'&eacute;crire du code proc&eacute;dural (c'est &agrave; dire du script) est sans ambigu&iuml;t&eacute;.&nbsp;La partie subtile est li&eacute;e &agrave; la manipulation des vues et de leurs attributs.</p>
+					<p>Par exemple, une simple contrainte de deux mots peut exprimer une relation entre des vues qui aurait demand&eacute; trente lignes de code.&nbsp;La plupart du temps, les contraintes sont la meilleure solution, mais pas toujours.&nbsp;</p>
+					<p>Bien qu'il n'y ait rien d'absolu, il y a des principes g&eacute;n&eacute;raux qui d&eacute;crivent la philosophie de d&eacute;veloppement avec LZX :</p>
+					<div class="itemizedlist">
+                  <ul type="disc" compact>
+                     <li>
+                        <p>Utiliser des balises quand c'est la seule solution.</p>
+                     </li>
+                     <li>
+                        <p>Utiliser JavaScript quand c'est la seule solution.</p>
+                     </li>
+                     <li>
+                        <p>Si quelque chose peut-&ecirc;tre fait soit &agrave; l'aide de balises soit &agrave; l'aide de script, utilisez les balises (&agrave; moins qu'il n'y ait de bonnes raisons de ne pas le faire).</p>
+                     </li>
+                  </ul>
+               </div>
+					<p>Chacune de ces options est d&eacute;crite bri&egrave;vement ci-dessous.</p>
+					<p></p>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1601"></a>6.2.1.&nbsp;Utiliser des balises quand c'est la seule solution</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Il y a quelques balises qui r&eacute;alisent des fonctions qui ne peuvent pas &ecirc;tre appel&eacute;es par du script.&nbsp;Par exemple, le noeud racine (et sa balise fermante) de tout programme LZX est <a class="indexterm" name="d0e1606"></a><a target="laszlo-reference" href="../reference/index.html?canvas.html"><tt class="sgmltag-element">&lt;canvas&gt;</tt></a>. Tout programme LZX commence donc par <tt class="literal">&lt;canvas&gt;</tt> et finit par <tt class="literal">&lt;/canvas&gt;</tt>; il n'y a aucune structure alternative &agrave; base de script.&nbsp;De la m&ecirc;me fa&ccedil;on, il n'y a pas de script &eacute;quivalent pour les balises <a class="indexterm" name="d0e1619"></a><a target="laszlo-reference" href="../reference/index.html?splash.html"><tt class="sgmltag-element">&lt;splash&gt;</tt></a>, <a class="indexterm" name="d0e1626"></a><tt class="sgmltag-element">&lt;method&gt;</tt>, <a class="indexterm" name="d0e1632"></a><tt class="sgmltag-element">&lt;attribute&gt;</tt>, <a class="indexterm" name="d0e1638"></a><a target="laszlo-reference" href="../reference/index.html?resource.html"><tt class="sgmltag-element">&lt;resource&gt;</tt></a>, <a class="indexterm" name="d0e1645"></a><a target="laszlo-reference" href="../reference/index.html?font.html"><tt class="sgmltag-element">&lt;font&gt;</tt></a>, et quelques autres balises encore. Egalement, avec certaines balises il y a quelques attributs qui ne peuvent &ecirc;tre mis &agrave; jour que dans la balise elle-m&ecirc;me.</p>
+						<p></p>
+					</div>
+					<div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1653"></a>6.2.2.&nbsp;Utiliser JavaScript quand c'est la seule solution</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Il y a quelques biblioth&egrave;ques JavaScript qui permettent d'ex&eacute;cuter des fonctions non accessibles aux balises.&nbsp;Par exemple, <tt class="literal">LzDelegate, LzEvent, LzParam</tt> et d'autres biblioth&egrave;ques similaires ne sont pas accessibles aux balises. De la m&ecirc;me fa&ccedil;on, il y a quelques attributs d'objets qui peuvent seulement &ecirc;tre r&eacute;f&eacute;renc&eacute;s par du script, m&ecirc;me si les objets ont &eacute;t&eacute; cr&eacute;&eacute;s en utilisant des balises.&nbsp;Par exemple :</p>
+						<p><tt class="literal">&lt;view name="franklin"&gt;</tt></p>
+						<p>Il y a un attribut, <tt class="literal">franklin.subviews</tt>, qui n'est accessible que depuis du script; il n'est pas possible d'acc&eacute;der ou de modifier cet attribut avec une balise.</p>
+                  <p></p>
+               </div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1670"></a>6.2.3.&nbsp;Si quelque chose peut-&ecirc;tre fait soit &agrave; l'aide de balises soit &agrave; l'aide de script, utilisez les balises</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+                  <p>Dans la grande majorit&eacute; des cas o&ugrave; il est possible de faire quelque chose en utilisant soit des balises soit du script, il vaut g&eacute;n&eacute;ralement mieux utiliser les balises.&nbsp;Par exemple, vous pouvez cr&eacute;er une nouvelle vue appel&eacute;e &quot;sam&quot; en utilisant des balises </p>
+                  <p><tt class="literal">&lt;view name="sam"&gt;</tt></p>
+                  <p>ou du script</p>
+                  <p><tt class="literal">sam = new LzView();</tt></p>
+                  <p>Quand vous utilisez la syntaxe des balises vous pouvez assez naturellement cr&eacute;er une hi&eacute;rarchie de vues imbriqu&eacute;es, d&eacute;finir des attributs comme des contraintes, et organiser votre code pour vous aider &agrave; conceptualiser l'organisation des vues dans le canvas.&nbsp;Obtenir ce r&eacute;sultat en pur JavaScript serait terriblement difficile et reviendrait &agrave; se priver des avantages du langage.&nbsp;Apprendre &agrave; penser LZX implique d'apprendre &agrave; penser en terme de vues qui fonctionnent de fa&ccedil;on autonome en fonction des contraintes fix&eacute;es &agrave; leur cr&eacute;ation.&nbsp;</p>
+						<p></p>
+					</div>
+               <div class="section" lang="en">
+                  <div class="titlepage">
+                     <div>
+                        <div>
+                           <h4 class="title"><a name="d0e1686"></a>6.2.4.&nbsp;A moins qu'il n'y ait de bonnes raisons de ne pas le faire</h4>
+                        </div>
+                     </div>
+                     <div></div>
+                  </div>
+						<p>Parfois, il vaut mieux &eacute;crire du code pr&eacute;c&eacute;dural que d&eacute;claratif.&nbsp;Cela peut devenir n&eacute;cessaire, par exemple, pour optimiser les performances : de multiples syst&egrave;mes &agrave; base de contraintes peuvent &ecirc;tre gourmands en CPU. D'autres fois, du code proc&eacute;dural peut rendre le comportement de votre programme plus facile &agrave; comprendre : des syst&egrave;mes complexes &agrave; bases de contraintes peuvent parfois devenir tr&egrave;s difficiles &agrave; comprendre.&nbsp;</p>
+						<p></p>
+					</div>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e1697"></a>7.&nbsp;Compilation et Execution</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Les programmes LZX&nbsp;sont compil&eacute;s par le compilateur OpenLaszlo, t&eacute;l&eacute;charg&eacute;s sous forme de byte-code, et ex&eacute;cut&eacute;s sur le poste client.&nbsp;Lors de l'&eacute;criture de vos programmes, vous pouvez choisir de faire des compromis entre les gains de performance par compilation, le temps de chargement et de lancement, et les performances de fonctionnement.</p>
+				<p>Comme dans d'autres langages de scripts comme Perl et Python, les programmes LZX s'ex&eacute;cutent de fa&ccedil;on pratiquement lin&eacute;aire.&nbsp;C'est &agrave; dire que si vous &eacute;crivez :</p>
+				<table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">
+&lt;view name="outside"&gt; 
+  &lt;view name="inside"/&gt; 
+&lt;/view&gt;
+</pre></td>
+               </tr>
+            </table>
+				<p>alors <tt class="varname">inside</tt> sera construit avant <tt class="varname">outside</tt>. Cependant, vous aurez souvent besoin de contr&ocirc;ler l'ordre dans lequel les objets sont construits ou initialis&eacute;s.&nbsp;LZX vous donne un contr&ocirc;le fin sur l'initialisation et l'instanciation des vues.&nbsp;</p>
+            <p>La balise <a class="indexterm" name="d0e1716"></a><tt class="sgmltag-element">&lt;splash&gt;</tt> vous permet d'utiliser la toile pour l'affichage d'informations pendant que le programme s'initialise.</p>
+            <p></p>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="architecture.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="overview.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="designers.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;1.&nbsp;Architecture de OpenLaszlo </td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;3.&nbsp;OpenLaszlo pour les  graphistes</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

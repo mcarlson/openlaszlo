@@ -1,0 +1,494 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;7.&nbsp;Introduction aux Vues</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="comp-intro.html" title="Chapter&nbsp;6.&nbsp;Introduction to Components">
+      <link rel="next" href="art_assets.html" title="Chapter&nbsp;8.&nbsp;Intoduction to Media and Art Assets"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;7.&nbsp;Introduction aux Vues</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="comp-intro.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="art_assets.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="views-tutorial"></a>Chapitre&nbsp;7.&nbsp;Introduction aux Vues</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="views-tutorial.html#d0e3146">1. Introduction</a></span></dt>
+               <dt><span class="section"><a href="views-tutorial.html#views-tutorial.constraints">2. Constraintes et Modificateurs</a></span></dt>
+               <dt><span class="section"><a href="views-tutorial.html#d0e3296">3. Gestionnaires de mise en page et vues conteneurs</a></span></dt>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e3146"></a>1.&nbsp;Introduction
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Les vues sont l'&eacute;l&eacute;ment visuel basique des applications OpenLaszlo.&nbsp;Elles permettent de pr&eacute;ciser comment les &eacute;l&eacute;ments doivent int&eacute;ragir les uns par rapport aux autres.&nbsp;Dans le tutoriel sur les Bases d'OpenLaszlo, nous avons vu comment pr&eacute;ciser une organisation de haut en bas des &eacute;l&eacute;ments de texte.&nbsp;Dans ce tutoriel, vous allez apprendre comment cr&eacute;er des interactions plus complexes et plus puissantes entre les &eacute;l&eacute;ments visuels.&nbsp; </p>
+				<p>Voici le code du tutoriel pr&eacute;c&eacute;dent :</p>
+				<div class="example"><a name="d0e3153"></a><p class="title"><b>Exemple&nbsp;7.1.&nbsp;Simple fen&ecirc;tre</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$1.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+    &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+        &lt;simplelayout axis="y" spacing="10"/&gt;
+        &lt;text&gt;Here is some text.&lt;/text&gt;
+        &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+        &lt;button&gt;My Button&lt;/button&gt;
+    &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous avons ajout&eacute; un bouton (My Button) juste pour se rappeler comment <a class="indexterm" name="d0e3162"></a><a target="laszlo-reference" href="../reference/index.html?simplelayout.html"><tt class="sgmltag-element">&lt;simplelayout&gt;</tt></a> affecte les &eacute;l&eacute;ments.</p>
+				<p>Ce bouton serait mieux s'il &eacute;tait centr&eacute;.&nbsp;Il y a un attribut que nous pourrions utiliser pour faire cela, mais juste pour mieux comprendre comment fonctionne lZX, centrons le bouton de fa&ccedil;on programmative.&nbsp;Cela vous donnera un bon aper&ccedil;u de la fa&ccedil;on dont fonctionnent les contraintes et les modificateurs et vous permettra de concevoir des programmes plus complexes.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="views-tutorial.constraints"></a>2.&nbsp;Constraintes et Modificateurs</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Une contrainte est un objet qui s'occupe de garder la propri&eacute;t&eacute; d'un vue fix&eacute;e &agrave; une certaine valeur.&nbsp;Suivant le type de contrainte, la valeur peut &ecirc;tre la 'position x de la souris' ou 'la largeur de la vue m&egrave;re' ou bien d'autres choses.&nbsp;Dans ce cas, nous allons cr&eacute;er une contrainte entre une propri&eacute;t&eacute; et la largeur de la vue m&egrave;re.&nbsp;</p>
+				<div class="example"><a name="d0e3183"></a><p class="title"><b>Exemple&nbsp;7.2.&nbsp;Contrainte entre la position du bouton et la fen&ecirc;tre</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$2.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button <span class="em">x="${immediateparent.width / 2}" </span>&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Ce que nous avons demand&eacute; ici est &quot;lier la position x du bouton avec la moiti&eacute; de son parent&quot;.&nbsp;En fait, nous avons m&ecirc;me pr&eacute;cis&eacute; &quot;parent imm&eacute;diat&quot; (&quot;<tt class="literal">immediateparent</tt>&quot;), ce qui est g&eacute;n&eacute;ralement ce qu'on entend par parent (vous devez simplement ajouter ces 9&nbsp;caract&egrave;res suppl&eacute;mentaires).&nbsp;Dans ce cas, le parent imm&eacute;diat (<tt class="literal">immediateparent</tt>) est le contenu de la fen&ecirc;tre (la zone blanche).&nbsp;En r&eacute;sum&eacute;, nous avons ici d&ucirc; utiliser is the window's content area (the white bit). In short we had to use <tt class="literal">immediateparent</tt> parce que la fen&ecirc;tre (<a class="indexterm" name="d0e3218"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="sgmltag-element">&lt;window&gt;</tt></a>) est une classe, et que quand vous l'instanciez et ajoutez du contenu &agrave; l'int&eacute;rieur, vous devez utiliser la r&eacute;f&eacute;rence <tt class="literal">immediateparent</tt> depuis les &eacute;l&eacute;ments contenus pour la r&eacute;f&eacute;rencer.</p>
+				<p>Le modificateur ici est l'op&eacute;rateur &quot;divise par deux&quot;.&nbsp;</p>
+				<p>Remarquez que ce code ne centre pas le bouton.&nbsp;Cependant, il contraint la position du bouton sur le milieu de la fen&ecirc;tre.&nbsp;Le probl&egrave;me est que la position d'une vue est d&eacute;termin&eacute;e par son coin sup&eacute;rieur gauche.&nbsp;Pour centrer le bouton, nous devons le d&eacute;placer de la moiti&eacute; de sa largeur.&nbsp;Une fa&ccedil;on de faire cela serait de donner au bouton une largeur d&eacute;termin&eacute;e, et de d&eacute;caler la contrainte de la moiti&eacute;.&nbsp;</p>
+				<div class="example"><a name="d0e3235"></a><p class="title"><b>Exemple&nbsp;7.3.&nbsp;Centrage du bouton</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$3.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+        title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button <span class="em">width="160"</span> x="${immediateparent.width / 2 - 80}"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Cela fonctionne mais n'est pas une solution g&eacute;n&eacute;rique.&nbsp;Nous voulons que le bouton soit toujours au milieu de la fen&ecirc;tre m&ecirc;me si sa largeur varie.&nbsp;Voici comment faire :</p>
+				<div class="example"><a name="d0e3247"></a><p class="title"><b>Exemple&nbsp;7.4.&nbsp;Un bouton qui reste centr&eacute;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$4.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="<span class="em">${(immediateparent.width / 2) 
+                       - (this.width / 2)}</span>"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$4.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Cela va centrer le bouton quelle que soit sa taille.&nbsp;Les parenth&egrave;ses ont &eacute;t&eacute; ajout&eacute;es pour clarifier la s&eacute;quence d'ex&eacute;cution du code.&nbsp;</p>
+				<p>Pour prouver cela, nous allons ajouter un script 'onclick' au bouton.</p>
+				<p>Pour l'instant, vous n'avez pas besoin de comprendre comment cela fonctionne.&nbsp;Observez simplement que quand vous cliquez sur le bouton, sa taille augmente.&nbsp;Nous reverrons ce sujet dans le tutoriel d'introduction &agrave; la programmation de scripts.&nbsp;</p>
+				<div class="example"><a name="d0e3261"></a><p class="title"><b>Exemple&nbsp;7.5.&nbsp;Bouton qui grossit</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$5.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) 
+                         - (this.width / 2)}"
+      <span class="em">onclick="this.setAttribute('width', this.getAttribute('width') + 10);" </span>&gt;
+        My Button
+      &lt;/button&gt;
+   &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Remarquez que pendant que le bouton grossit, il reste centr&eacute;.&nbsp;</p>
+				<p>Dans l'exemple pr&eacute;c&eacute;dent, nous utilisons deux m&eacute;thodes pour r&eacute;f&eacute;rencer les propri&eacute;t&eacute;s d'une vue.&nbsp;Par exemple, nous utilisons  <tt class="literal">this.getAttribute('width')</tt> et <tt class="literal">this.width</tt>. Elles <span class="em">sont</span> diff&eacute;rentes, et il y a des situations particuli&egrave;res dans lesquelles vous pourrez ou ne pourrez pas utiliser la syntaxe <tt class="literal">this.width</tt>. De fa&ccedil;on sommaire, <tt class="literal">this.width</tt> peut seulement &ecirc;tre utilis&eacute; dans des expressions de contraintes.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e3296"></a>3.&nbsp;Gestionnaires de mise en page et vues conteneurs</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Maintenant comment faire pour d&eacute;finir une rang&eacute;e de boutons en haut de notre fen&ecirc;tre&nbsp;?&nbsp;Nous pouvons essayer d'ajouter quelques boutons en haut : </p>
+				<div class="example"><a name="d0e3301"></a><p class="title"><b>Exemple&nbsp;7.6.&nbsp;Boutons align&eacute;es verticalement</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$6.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    <span class="em">&lt;button&gt;1&lt;/button&gt;
+    &lt;button&gt;2&lt;/button&gt;
+    &lt;button&gt;3&lt;/button&gt;</span>
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) 
+                       - (this.width / 2)}"
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$6.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous ne pouvons pas changer la balise We can't change the <a class="indexterm" name="d0e3313"></a><tt class="sgmltag-element">&lt;simplelayout&gt;</tt>, car cela d&eacute;sorganiserait les autres &eacute;l&eacute;ments de la fen&ecirc;tre.&nbsp;A la place, nous pouvons ajouter les trois boutons &agrave; leur propre vue, la vue devenant alors un seul &eacute;l&eacute;ment pour la fen&ecirc;tre. </p>
+				<p>Nous pouvons alors d&eacute;finir le type de mise en page&nbsp;/&nbsp;positionnement que nous voulons &agrave; la vue des boutons : </p>
+				<div class="example"><a name="d0e3324"></a><p class="title"><b>Exemple&nbsp;7.7.&nbsp;Regroupement des boutons dans une vue</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$7.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+      <span class="em">&lt;view bgcolor="#ff0000"&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;</span>
+      &lt;button&gt;1&lt;/button&gt;
+      &lt;button&gt;2&lt;/button&gt;
+      &lt;button&gt;3&lt;/button&gt;
+    <span class="em">&lt;/view&gt;</span>
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2)
+                       - (this.width / 2)}"
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$7.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>C'est mieux. En utilisant l'attribut That's better.  By using the attribute<tt class="literal">bgcolor</tt> (couleur d'arri&egrave;re plan) nous pouvons voir la taille de la vue; elle est juste de la taille n&eacute;cessaire. Nous n'avons pr&eacute;cis&eacute; ni la hauteur ni la largeur, elle est juste assez large pour afficher les boutons.&nbsp;</p>
+				<p>Et si nous voulions que la rang&eacute;e ressemble aux barres d'outils en haut des navigateurs - une couleur uniforme, qui s'&eacute;tire de part en part&nbsp;?&nbsp;</p>
+				<p>Nous pourrions contraindre la largeur de la vue rouge sur la largeur de son parent.&nbsp;</p>
+				<div class="example"><a name="d0e3351"></a><p class="title"><b>Exemple&nbsp;7.8.&nbsp;Contrainte d'une largeur &agrave; la largeur du parent</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$8.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="#ff0000"
+          <span class="em">width="${parent.width}"</span>&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      &lt;button&gt;1&lt;/button&gt;
+      &lt;button&gt;2&lt;/button&gt;
+      &lt;button&gt;3&lt;/button&gt;
+    &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}"
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$8.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Maintenant la vue s'&eacute;tire sur toute la largeur mais si vous regardez les barres d'outils, vous remarquerez qu'elles sont un peu plus hautes que les boutons qu'elles contiennent.&nbsp;Pour donner la m&ecirc;me apparence, nous pourrions d&eacute;finir une hauteur absolue, mais rendons-la d&eacute;pendante de l'un des boutons :</p>
+            <div class="example"><a name="d0e3363"></a><p class="title"><b>Exemple&nbsp;7.9.&nbsp;Contrainte d'une vue par rapport &agrave; la hauteur d'un fils</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$9.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+            title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="#ff0000"
+                  width="${parent.width}"
+                  <span class="em">height="${this.refButton.height + 8}"</span>&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      &lt;button <span class="em">name="refButton"</span>&gt;1&lt;/button&gt;
+      &lt;button&gt;2&lt;/button&gt;
+      &lt;button&gt;3&lt;/button&gt;
+    &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$9.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Pour &ecirc;tre capable de r&eacute;f&eacute;rencer un bouton particulier, nous devons lui donner un nom avec l'attribut <a class="indexterm" name="d0e3378"></a><tt class="sgmltag-attribute">name</tt>.</p>
+            <p>Maintenant les boutons sont align&eacute;s en haut - ils devraient &ecirc;tre centr&eacute;s au milieu de la barre rouge.&nbsp;Vous rappelez-vous ce que nous avons dit plus haut, &agrave; savoir qu'il existait un attribut pour aligner les &eacute;l&eacute;ments au centre ?&nbsp;Nous allons l'utiliser :</p>
+				<p><a name="d0e3386"></a></p>
+				<div class="example">
+					<p class="title"><b>Exemple&nbsp;7.10.&nbsp;Utilisation de l'attribut 'valign'</b></p>
+					<div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$10.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;view bgcolor="#ff0000"
+            width="${parent.width}"
+            height="${this.refButton.height + 8}"&gt;
+        &lt;simplelayout axis="x" spacing="5"/&gt;
+        &lt;button name="refButton" <span class="em">valign="middle"</span>&gt;
+          1
+        &lt;/button&gt;
+        &lt;button&gt;2&lt;/button&gt;
+        &lt;button&gt;3&lt;/button&gt;
+      &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$10.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>L'attribut <a class="indexterm" name="d0e3398"></a><tt class="sgmltag-attribute">valign</tt> centre la vue par rapport &agrave; la hauteur de la vue m&egrave;re. Il peut seulement prendre les valeurs <tt class="literal">top</tt>(haut), <tt class="literal">center</tt>(centre) ou <tt class="literal">bottom</tt>(bas).&nbsp;Il y a de m&ecirc;me un attribut <a class="indexterm" name="d0e3413"></a><tt class="sgmltag-attribute">align</tt> pour aligner des vues suivant l'axe x. Le seul probl&egrave;me l&agrave; dedans est que nous devrions pr&eacute;ciser pour chaque bouton un attribut <a class="indexterm" name="d0e3419"></a><tt class="sgmltag-attribute">align</tt>.</p>
+            <p>La solution est d'encapsuler tous les boutons dans une vue.&nbsp;Alors nous pouvons appliquer l'attribut <a class="indexterm" name="d0e3427"></a><tt class="sgmltag-attribute">valign</tt> &agrave; l'ensemble.</p>
+            <div class="example"><a name="d0e3433"></a><p class="title"><b>Example&nbsp;7.11.&nbsp;Applying 'valign' to container view</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$11.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="#ff0000"
+          width="${parent.width}"
+          height="<span class="em">${this.buttons.refButton.height</span> + 8}"&gt;
+      &lt;simplelayout axis="x" spacing="5"/&gt;
+      <span class="em">&lt;view name="buttons" valign="middle"&gt;</span>
+        &lt;button name="refButton"&gt;1&lt;/button&gt;
+        &lt;button&gt;2&lt;/button&gt;
+        &lt;button&gt;3&lt;/button&gt;
+      <span class="em">&lt;/view&gt;</span>
+    &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$11.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Bien, il semble que nous ayons perdu les boutons un et deux, nous reviendrons l&agrave;-dessus.&nbsp;Vous remarquerez que nous avons donn&eacute; &agrave; la nouvelle vue un nom : &quot;buttons&quot;.&nbsp;Nous avons aussi d&ucirc; changer la r&eacute;f&eacute;rence sur la hauteur du bouton de OK, we seem to have lost buttons one and two, but let's come back
+               to that. You'll notice that we gave the new view a name: "buttons". We
+               also had to change the address to the button's height from
+               <tt class="literal">this.refButton.height</tt> &agrave;  <tt class="literal">this.buttons.refButton.height</tt>. C'&eacute;tait n&eacute;cessaire car <tt class="varname">refButton</tt> est maintenant &agrave; l'int&eacute;rieur de <tt class="varname">buttons</tt>, lui-m&ecirc;me &agrave; l'int&eacute;rieur de la vue rouge.</p>
+				<p>Maintenant faisons revenir les boutons un et deux ! Dans la vue &quot;buttons&quot;, il n'y a rien qui pr&eacute;cise &agrave; l'environnement d'ex&eacute;cution d'OpenLaszlo comment il doit espacer les boutons.&nbsp;Pourquoi ?&nbsp;Parce que nous avons oubli&eacute; de transf&eacute;rer la balise Now to get buttons one and two back! In the "buttons" view, there is nothing to tell the OpenLaszlo Runtime that it should
+               space them out.
+                Why not? Because we forgot to transfer the <a class="indexterm" name="d0e3470"></a><tt class="sgmltag-element">&lt;simplelayout&gt;</tt> dans la vue <tt class="varname">buttons</tt>.</p>
+				<div class="example"><a name="d0e3479"></a><p class="title"><b>Example&nbsp;7.12.&nbsp;Using &lt;simplelayout&gt; to align buttons</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/views-tutorial-$12.lzx?lzt=swf', width: width="500", height: height="300"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="300" width="500"&gt;
+  &lt;window x="20" y="20" width="200" height="250" 
+          title="Simple Window" resizable="true"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+      &lt;view <span class="em">bgcolor="#bdbdbd"</span>
+            width="${parent.width}"
+            height="${this.buttons.refButton.height + 8}"&gt;
+        &lt;view name="buttons" valign="middle"&gt;
+          <span class="em">&lt;simplelayout axis="x" spacing="5"/&gt;</span>
+          &lt;button name="refButton"&gt;1&lt;/button&gt;
+          &lt;button&gt;2&lt;/button&gt;
+          &lt;button&gt;3&lt;/button&gt;
+        &lt;/view&gt;
+      &lt;/view&gt;
+    &lt;text&gt;Here is some text.&lt;/text&gt;
+    &lt;text&gt;I could ramble for hours.&lt;/text&gt;
+    &lt;button x="${(immediateparent.width / 2) - (this.width / 2)}" 
+            onclick="this.setAttribute('width', this.getAttribute('width') + 10);"&gt;
+      My Button 
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/views-tutorial-$12.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous avons chang&eacute; la couleur de la vue pour lui donner une meilleure apparence.</p>
+				<p></p>
+			</div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="comp-intro.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="art_assets.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;6.&nbsp;Introduction aux Composants&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;8.&nbsp;Intoduction aux &eacute;l&eacute;ments Multim&eacute;dias et Artistiques</td>
+            </tr>
+         </table>
+			&#x25CB;</div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

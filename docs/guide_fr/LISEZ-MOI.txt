@@ -1,0 +1,36 @@
+-----------------------------------------------------------------------------------------------------
+---------------------   Guide du développeur d’applications OpenLaszlo  -----------------------------
+---------------------               Traduction française version 0.2    -----------------------------
+-----------------------------------------------------------------------------------------------------
+
+Version d'origine
+-----------------
+Cette traduction s'appuie sur la version anglaise de la documentation livrée avec la version 3.2 d'OpenLaszlo. 
+
+
+Installation
+------------
+Pour obtenir la traduction française du guide et écraser la version anglaise :
+- Remplacez les pages HTML du dossier 'OpenLaszlo Server 3.x/Server/lps-3.x/docs/guide' par les fichiers HTML ci-joints. 
+- Accédez au guide du développeur à partir de laszlo-explorer ou en tapant l'URL : 'http://127.0.0.1:8080/lps-3.2/docs/guide/'.
+
+Pour obtenir la traduction française du guide sans écraser la version anglaise :
+- Faites une copie du dossier 'OpenLaszlo Server 3.x/Server/lps-3.x/docs' en 'OpenLaszlo Server 3.x/Server/lps-3.x/docs_fr',
+- Remplacez le contenu du dossier 'OpenLaszlo Server 3.x /Server/lps-3.x/docs_fr/guide' par les fichiers HTML ci-joints. 
+- Accédez au guide du développeur traduit en français en tapant l’URL : 'http://127.0.0.1:8080/lps-3.2/docs_fr/guide/'
+
+A propos du traducteur
+----------------------
+Dans le cadre de sa participation à des projets OpenSource, la traduction a été faite par le groupe de sociétés françaises excilys proposant notamment des
+services autour de la création de client riches.
+Pour plus d'informations, contactez M. Morgan Duchène : mduchene@excilys.com
+
+Révisions
+---------
+Version 0.2
+Cette version contient la traduction de la Préface et des parties I (Aperçu généra) et II (Tutoriels d’introduction) du guide du développeur.  
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

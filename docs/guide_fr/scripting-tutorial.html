@@ -1,0 +1,825 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;10.&nbsp;Introduction &agrave; la programmation de scripts</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="text-tutorial.html" title="Chapter&nbsp;9.&nbsp;Introduction to Text and Fonts">
+      <link rel="next" href="data-tutorial.html" title="Chapter&nbsp;11.&nbsp;Introduction to Databinding"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;10.&nbsp;Introduction &agrave; la programmation de scripts</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="text-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="data-tutorial.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="scripting-tutorial"></a>Chapitre&nbsp;10.&nbsp;Introduction &agrave; la programmation de scripts</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e4444">1. Introduction</a></span></dt>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e4464">2. La balise &lt;script&gt;</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="scripting-tutorial.html#d0e4512">2.1. Sp&eacute;cificit&eacute;s de Javascript</a></span></dt>
+                     <dt><span class="section"><a href="scripting-tutorial.html#d0e4538">2.2. Caract&egrave;res XML dans du script</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e4597">3. Fonctions</a></span></dt>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e4621">4. M&eacute;thodes</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="scripting-tutorial.html#d0e4754">4.1. Utilisation de Script pour manipuler les attributs</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e4886">5. Adressage</a></span></dt>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e5005">6. M&eacute;thodes et param&egrave;tres</a></span></dt>
+               <dt><span class="section"><a href="scripting-tutorial.html#d0e5062">7. Utilisation des attributs pour r&eacute;duire la complexit&eacute;</a></span></dt>
+            </dl>
+         </div>
+         <p></p>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e4444"></a>1.&nbsp;Introduction
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Les applications LZX peuvent contenir du code proc&eacute;dural, comme d&eacute;crit au  
+               <a href="language-preliminaries.html" title="Chapter&nbsp;2.&nbsp;Language Preliminaries">Chapitre&nbsp;2, <i>Pr&eacute;liminaires sur le language</i></a>, ainsi que du code d&eacute;claratif sous forme de balises XML.</p>
+				<p>A l'int&eacute;rieur d'un programme LZX, du script peut &ecirc;tre ajout&eacute; : </p>
+				<div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p>entre les balises &lt;script&gt;</p>
+                  </li>
+                  <li>
+                     <p>entre les balises &lt;method&gt;</p>
+                  </li>
+                  <li>
+                     <p>entre guillemets en tant que valeur d'un attribut</p>
+                  </li>
+               </ul>
+            </div>
+				<p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e4464"></a>2.&nbsp;La balise &lt;script&gt;</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>La fa&ccedil;on la plus rapide pour inclure du script est d'utiliser la balise <a class="indexterm" name="d0e4469"></a><a target="laszlo-reference" href="../reference/index.html?script.html"><tt class="sgmltag-element">&lt;script&gt;</tt></a>. Le code plac&eacute; entre les balises script est ex&eacute;cut&eacute; imm&eacute;diatement. La balise <a class="indexterm" name="d0e4476"></a><tt class="sgmltag-element">&lt;script&gt;</tt> peut seulement &ecirc;tre ajout&eacute;e &agrave; la balise <a class="indexterm" name="d0e4482"></a><a target="laszlo-reference" href="../reference/index.html?canvas.html"><tt class="sgmltag-element">&lt;canvas&gt;</tt></a>. 
+            </p>
+            <div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+               <table border="0" summary="Note">
+                  <tr>
+                     <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
+							<th align="left">Note</th>
+						</tr>
+                  <tr>
+                     <td colspan="2" align="left" valign="top">
+                        <p>Dans le programme ci-dessous, remarquez l'attribut <tt class="literal">debug="true"</tt>, qui lance le d&eacute;bogueur OpenLaszlo.&nbsp;Dans ce tutorial nous allons utiliser la sortie du d&eacute;bogueur pour illustrer certains concepts de l'&eacute;criture de scripts.</p>
+                     </td>
+                  </tr>
+               </table>
+            </div>
+            <div class="example"><a name="d0e4495"></a><p class="title"><b>Exemple&nbsp;10.1.&nbsp;Utilisation du d&eacute;bogueur</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$1.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200" debug="true"&gt;
+  &lt;script&gt;
+    Debug.write("Hello, World!");
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous pouvons maintenant faire appel &agrave; nos connaissances JavaScript :</p>
+				<div class="example"><a name="d0e4504"></a><p class="title"><b>Exemple&nbsp;10.2.&nbsp;Ajout de code JavaScript</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$2.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200" debug="true"&gt;
+  &lt;script&gt;
+    // some random scripting
+    //
+    var someStr = "Hello, World!";
+    Debug.write(someStr);
+    var first = 4;
+    var second = 3;
+    var result = first + second;
+    Debug.write(result);
+   &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e4512"></a>2.1.&nbsp;Particularit&eacute;s de Javascript</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Si nous n'avez jamais travaill&eacute; avec JavaScript, vous pourriez &ecirc;tre surpris par certaines sp&eacute;cificit&eacute;s du langage.&nbsp;Par exemple, consid&eacute;rez cette petite extension du programme pr&eacute;c&eacute;dent : </p>
+					<div class="example"><a name="d0e4517"></a><p class="title"><b>Exemple&nbsp;10.3.&nbsp;Subtilit&eacute;s de JavaScript</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$3.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="200" debug="true"&gt;
+  &lt;script&gt;
+    // some random scripting
+    //
+    var someStr = "Hello, World!";
+    Debug.write(someStr);
+    var first = 4;
+    var second = 3;
+    var result = first + second;
+    Debug.write(result);<span class="em">
+    Debug.write(first + " plus " + second + " is " + first + second);
+    var two = 2;
+    if (2 == two) {
+      Debug.write("2 is two");
+    }</span>
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$3.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+					<p>Tout est parfait, sauf pour la ligne &quot;<tt class="literal">4 plus 3 is 43</tt>&quot;. Quatre plus trois devrait valoir 7, comme dans la ligne juste au dessus, non ?&nbsp;Ce qui s'est pass&eacute; est que nous avons concat&eacute;n&eacute; des chiffres avec des cha&icirc;nes (<tt class="literal">4 + " plus " + 3</tt>), et qu'ainsi les nombres ont &eacute;t&eacute; convertis en cha&icirc;nes.&nbsp;</p>
+					<p>La documentation Laszlo n'a pas pour vocation d'&ecirc;tre une &eacute;tude d&eacute;taill&eacute;e du langage JavaScript.&nbsp;Certains chapitres suivants abordent des notions avanc&eacute;es, mais nous vous recommandons de garder sous la main une r&eacute;f&eacute;rence JavaScript.&nbsp;</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e4538"></a>2.2.&nbsp;Caract&egrave;res XML dans du script</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Prenons une simple boucle &quot;for&quot; :</p>
+               <div class="example"><a name="d0e4543"></a><p class="title"><b>Exemple&nbsp;10.4.&nbsp;Les caract&egrave;res XML g&eacute;n&egrave;rent des erreurs</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="80" width="500" debug="true"&gt;
+  &lt;-- the following code will not compile because of the angle bracket --&gt;
+  &lt;script&gt;
+    for (var i = 0; i &lt; 11; i++) {
+      Debug.write(i);
+    }
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+               <p>Zut !</p>
+					<p>Comme LZX est un langage XML, il y a des r&egrave;gles sur ce qu'on peut placer entre les balises (particuli&egrave;rement entre les balises <a class="indexterm" name="d0e4552"></a><tt class="sgmltag-element">&lt;script&gt;</tt>). Le caract&egrave;re &quot;<tt class="literal">&lt;</tt>&quot; dans la boucle <tt class="literal">for</tt> g&eacute;n&egrave;re une erreur.&nbsp;Il n'est pas possible d'utiliser les caract&egrave;res &quot;<tt class="literal">&lt;</tt>&quot; et &quot;<tt class="literal">&gt;</tt>&quot; entre les balises LZX.</p>
+					<p>Heureusement, il y a des solutions pour contourner le probl&egrave;me.&nbsp;</p>
+					<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+                  <table border="0" summary="Note">
+                     <tr>
+                        <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="images/note.png"></td>
+								<th align="left">Note</th>
+							</tr>
+                     <tr>
+                        <td colspan="2" align="left" valign="top">
+                           <p>Les deux exemples qui suivent ne sont pas interactifs, mais sont des programmes LZX corrects</p>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+					<div class="example"><a name="d0e4575"></a><p class="title"><b>Exemple&nbsp;10.5.&nbsp;Encodage des caract&egrave;res XML</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="120"&gt;
+   &lt;script&gt;
+     for (var i = 0; i <span class="em">&amp;lt;</span> 11; i++) {
+       Debug.write(i);
+     }
+   &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+               <div class="example"><a name="d0e4583"></a><p class="title"><b>Exemple&nbsp;10.6.&nbsp;Utilisation de CDATA</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas height="120"&gt;
+   lt;script&gt;
+     <span class="em">&lt;![CDATA[</span>
+     for (var i = 0; i &lt; 11; i++) {
+       Debug.write(i);
+     }
+     <span class="em">]]&gt;</span>
+   &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<p>Les deux solutions ci-dessus fonctionnent.&nbsp;C'est vous qui choisissez celle que vous pr&eacute;f&eacute;rez.&nbsp;La m&eacute;thode CDATA est probablement la plus pratique pour les grands blocs de code.</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e4597"></a>3.&nbsp;Fonctions</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Vous pouvez d&eacute;finir des fonctions entre les balises <a class="indexterm" name="d0e4602"></a><tt class="sgmltag-element">&lt;script&gt;</tt>.</p>
+            <div class="example"><a name="d0e4608"></a><p class="title"><b>Exemple&nbsp;10.7.&nbsp;Fonctions Javascript</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$7.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="200" width="500" debug="true"&gt;
+  &lt;script&gt;
+    &lt;![CDATA[
+    // write a word to the debugger
+    //
+    <span class="em">function writeAWord(someWord) {
+      Debug.write(someWord);
+    }
+    
+    writeAWord("HELLO!");</span>
+    ]]&gt;
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$7.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Les fonctions sont globales pour tout le document LZX et suivent les m&ecirc;mes r&egrave;gles de port&eacute;e qu'avec JavaScript.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e4621"></a>4.&nbsp;M&eacute;thodes</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Les m&eacute;thodes sont assez similaires aux fonctions. Elles contiennent des blocs de code entre les balises <a class="indexterm" name="d0e4626"></a><a target="laszlo-reference" href="../reference/index.html?method.html"><tt class="sgmltag-element">&lt;method&gt;</tt></a>, et sont associ&eacute;es &agrave; des classes particuli&egrave;res. 
+               Au <a href="art_assets.html" title="Chapter&nbsp;8.&nbsp;Intoduction to Media and Art Assets">Chapitre&nbsp;8, <i>Intoduction aux &eacute;l&eacute;ments Multim&eacute;dias et Artistiques</i></a>, nous avons vu quelques m&eacute;thodes de la classes <a class="indexterm" name="d0e4635"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="classname">LzView</tt></a> pour commander des ressources :            </p>
+				<div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p><a class="indexterm" name="d0e4645"></a><tt class="methodname">play()</tt></p>
+                  </li>
+                  <li>
+                     <p><a class="indexterm" name="d0e4654"></a><tt class="methodname">stop()</tt></p>
+                  </li>
+                  <li>
+                     <p><a class="indexterm" name="d0e4663"></a><tt class="methodname">getOffset()</tt></p>
+                  </li>
+                  <li>
+                     <p><a class="indexterm" name="d0e4672"></a><tt class="methodname">getMaxOffset()</tt></p>
+                  </li>
+               </ul>
+            </div>
+			<p>Approfondissons le concept de m&eacute;thodes &agrave; travers l'exemple d'une fen&ecirc;tre. L'&eacute;l&eacute;ment fen&ecirc;tre ( <a class="indexterm" name="d0e4681"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="sgmltag-element">&lt;window&gt;</tt></a>) est en fait une vue, comme nous l'avons remarqu&eacute; pr&eacute;c&eacute;demment. Les vues poss&egrave;dent des m&eacute;thodes. Comme la classe <a class="indexterm" name="d0e4688"></a><a target="laszlo-reference" href="../reference/index.html?lz-window.html"><tt class="classname">window</tt></a><i class="glossterm"> &eacute;tend</i>
+              la classe <a class="indexterm" name="d0e4698"></a><tt class="classname">LzView</tt>, cela implique que les fen&ecirc;tres <i class="glossterm">h&eacute;ritent</i> de tous les attributs et m&eacute;thodes des vues.            </p>
+				<div class="example"><a name="scripting-5"></a>
+				<p class="title"><b>Exemple&nbsp;10.8.&nbsp;Une m&eacute;thode simple </b></p>
+                <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-5.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas height="200" width="500"&gt;
+  &lt;window x="20" y="20" width="150"
+          title="Simple Window" resizable="true"&gt;
+    &lt;button text="My button" 
+            onclick="this.parent.setAttribute('title', 'You clicked it');"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-5.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>D&eacute;composons le code :</p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">    onclick="this.parent.setTitle('You clicked it');"</pre></td>
+               </tr>
+            </table>
+            <p>D'abord, nous avons : </p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">    onclick=</pre></td>
+               </tr>
+            </table>
+            <p>Comme tous les attributs on[&eacute;v&eacute;nement], celui-ci re&ccedil;oit une expression JavaScript qui sera ex&eacute;cut&eacute;e dans le contexte de l'objet quand l'&eacute;v&eacute;nement sera re&ccedil;u. </p>
+            <p>La partie suivante : </p>
+            <table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">    this.parent</pre></td>
+               </tr>
+            </table>
+            <p>est une r&eacute;f&eacute;rence &agrave; un objet. En JavaScript, la port&eacute;e est g&eacute;n&eacute;ralement globale &agrave; moins que vous ne le pr&eacute;cisiez. Cela signifie que toute classe, variable et m&eacute;thode d'instance doivent &ecirc;tre pr&eacute;c&eacute;d&eacute;es du mot-cl&eacute; <tt class="literal">this</tt>. En ce qui concerne 'parent', disons pour commencer que le syst&egrave;me de gestion des vues de lzx affecte &agrave; chaque vue une variable 'parent' qui pointe sur le p&egrave;re de la vue dans la hi&eacute;rarchie. Les hi&eacute;rarchies de vues sont d&eacute;crites en d&eacute;tails au <a href="views.html" title="Chapter&nbsp;23.&nbsp;Views">Chapitre&nbsp;23, <i>Vues</i></a>. </p>
+            <p>Maintenant, nous allons appeler une m&eacute;thode. A tr&egrave;s peu d'exceptions pr&egrave;s, les balises d'un fichier lzx correspondent aux objets du syst&egrave;me de vues pendant l'ex&eacute;cution. En utilisant XML, nous pouvons configurer ces objets en affectant des attributs et en pla&ccedil;ant des noeuds fils. En utilisant du script, nous pouvons appeler leurs biblioth&egrave;ques. D'apr&egrave;s la documentation, nous voyons que <a class="indexterm" name="d0e4737"></a><tt class="sgmltag-element">&lt;window&gt;</tt> poss&egrave;de une m&eacute;thode <a class="indexterm" name="d0e4743"></a><tt class="methodname">setTitle()</tt> pour changer le titre de la fen&ecirc;tre avec le texte pass&eacute; en argument. </p>
+            <p>La derni&egrave;re chose &agrave; noter est l'utilisation de cotes simples &agrave; l'int&eacute;rieur des appels de fonctions. </p>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e4754"></a>4.1.&nbsp;Utilisation de Script pour manipuler les attributs                    </h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Souvenez-vous que <a class="indexterm" name="d0e4759"></a><tt class="classname">window</tt> h&eacute;rite de la classe <a class="indexterm" name="d0e4765"></a><tt class="classname">LzView</tt>. Cela signifie que chaque fen&ecirc;tre poss&egrave;de tous les attributs de  <a class="indexterm" name="d0e4771"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>.  Voici un exemple de script pour manipuler quelques-uns des attributs.               </p>
+               <div class="example"><a name="d0e4778"></a>
+               <p class="title"><b>Exemple&nbsp;10.9. Manipulation des attributs de &lt;view&gt;</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$9.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="30" 
+          title="Window 2" name="windowTwo"&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="150"
+          title="Simple Window"&gt;
+    &lt;button text="My button" 
+            onclick="this.parent.parent.windowTwo.setAttribute('x', 200)"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$9.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Nous partons ici de l'exemple pr&eacute;c&eacute;dent. Plut&ocirc;t que de remonter au parent du bouton, nous remontons de deux niveaux, puis redescendons d'un. <tt class="literal">this.parent.parent</tt> r&eacute;f&eacute;rence la toile, et nous pointons sur 'Window 2' en utilisant son nom (<a class="indexterm" name="d0e4790"></a><tt class="sgmltag-attribute">name</tt>).               </p>
+               <p>Nous utilisons &eacute;galement la m&eacute;thode <a class="indexterm" name="d0e4798"></a><tt class="methodname">setAttribute()</tt> qui prend deux arguments : l'attribut &agrave; modifier et la valeur &agrave; lui donner.               </p>
+               <p>Maintenant, cherchons un moyen de faire bouger la fen&ecirc;tre 'Window 2' de fa&ccedil;on &agrave; voir ce qu'il y a derri&egrave;re, mais sans la d&eacute;placer &agrave; la souris. Appuyer sur le bouton deux fois ne sert &agrave; rien car il se contente de r&eacute;initialiser l'attribut x &agrave; une valeur fixe (200px). </p>
+               <p>A la place, nous avons besoin de r&eacute;cup&eacute;rer o&ugrave; se trouve la seconde fen&ecirc;tre, puis de faire incr&eacute;menter sa position &agrave; chaque fois qu'on clique sur le bouton. En regardant de nouveau le contenu de la classe <a class="indexterm" name="d0e4810"></a><tt class="classname">LzView</tt>, nous remarquons une m&eacute;thode <a class="indexterm" name="d0e4816"></a><tt class="methodname">getAttribute()</tt> avec laquelle nous pouvons r&eacute;cup&eacute;rer la valeur de l'attribut <a class="indexterm" name="d0e4824"></a><tt class="sgmltag-attribute">x</tt>.               </p>
+               <p>Nous pouvons donc &eacute;crire :</p>
+               <div class="example"><a name="d0e4832"></a>
+               <p class="title"><b>Exemple&nbsp;10.10. R&eacute;cup&eacute;rer des attributs </b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$10.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="30" 
+          title="Window 2" name="windowTwo"&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="150"
+          title="Simple Window"&gt;
+    &lt;button text="My button" 
+            onclick="this.parent.parent.windowTwo.setAttribute('x',
+            this.parent.parent.windowTwo.getAttribute('x') + 20)"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$10.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Cela fonctionne, mais le code devient compliqu&eacute;. Il vaudrait mieux regrouper le code dans un bloc que nous appellerions quand on clique sur le bouton. Pour faire cela, nous pourrions &eacute;crire une fonction : </p>
+               <div class="example"><a name="d0e4841"></a>
+               <p class="title"><b>Exemple&nbsp;10.11.&nbsp;D&eacute;placement de fen&ecirc;tre par appel de fonction</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$11.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;script&gt;
+    <span class="em">// Moves the second window twenty pixels to the right
+    //
+    function moveWindow() {
+      var increment = 20;
+      var originalX = canvas.windowTwo.getAttribute('x');
+      var newX = originalX + increment;
+      canvas.windowTwo.setAttribute('x', newX);
+    }</span>
+  &lt;/script&gt;
+  &lt;window x="100" y="30" 
+          title="Window 2" name="windowTwo"&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="150"
+          title="Simple Window"&gt;
+    &lt;button text="My button" 
+              onclick="<span class="em">moveWindow();</span>"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$11.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Remarquez la syntaxe "<tt class="literal">canvas.</tt>" pour pointer sur la seconde fen&ecirc;tre. Nous devons r&eacute;f&eacute;rencer la vue de fa&ccedil;on <span class="em">absolue</span>. 
+                  Ce code est beaucoup plus facile &agrave; comprendre car nous pouvons le s&eacute;parer en plusieurs lignes, le commenter et utiliser des variables avec des noms explicites.               </p>
+               <p>Cependant, la fonction est vraiment s&eacute;par&eacute;e du bouton. Une fa&ccedil;on plus &eacute;l&eacute;gante de faire serait d'&eacute;crire une m&eacute;thode <span class="em">du bouton</span>.               </p>
+               <div class="example"><a name="d0e4867"></a>
+               <p class="title"><b>Exemple&nbsp;10.12.&nbsp;D'une fonction &agrave; une m&eacute;thode</b></p>
+                  <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$12.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="30" 
+          title="Window 2" name="windowTwo"&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="200"
+          title="Simple Window"&gt;
+    &lt;button text="My button" onclick="<span class="em">this.moveWindow()</span>"&gt;
+      <span class="em">&lt;!-- Moves the second window twenty pixels 
+           to the right --&gt;
+      &lt;method name="moveWindow"&gt;
+        var increment = 20;
+        var originalX = this.parent.parent.windowTwo.getAttribute('x');
+        var newX = originalX + increment;
+        this.parent.parent.windowTwo.setAttribute('x', newX);
+      &lt;/method&gt;</span>
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+                  
+                  <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$12.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+                  
+               </div>
+               <p>Comme les m&eacute;thodes ne sont pas globales, nous devons les r&eacute;f&eacute;rencer de fa&ccedil;on relative. Dans le cas du bouton, nous avons utilis&eacute; <tt class="literal">this.moveWindow()</tt>. 
+                  
+                  En th&eacute;orie, nous pourrions avoir un second bouton qui une fois d&eacute;clench&eacute; appellerait une m&eacute;thode du premier bouton. La seule diff&eacute;rence serait l'adressage. Avant d'aller plus loin avec les m&eacute;thodes, voyons de plus pr&egrave;s l'adressage.               </p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e4886"></a>5.&nbsp;Adressage
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Avec LZX, les objets peuvent avoir un nom (<a class="indexterm" name="d0e4891"></a><tt class="sgmltag-attribute">name</tt>) et/ou un identifiant (<a class="indexterm" name="d0e4897"></a><tt class="sgmltag-attribute">id</tt>) avec lequel ils peuvent &ecirc;tre r&eacute;f&eacute;renc&eacute;s. Un nom (<tt class="sgmltag-attribute">name</tt>) doit &ecirc;tre r&eacute;f&eacute;renc&eacute; de fa&ccedil;on locale, il peut donc y avoir plusieurs vues avec le m&ecirc;me nom dans un fichier (ils ne doivent simplement pas avoir le m&ecirc;me p&egrave;re). Un identifiant (<a class="indexterm" name="d0e4909"></a><tt class="sgmltag-attribute">id</tt>) est global, donc il ne peut pas y avoir deux vues avec le m&ecirc;me identifiant (<a class="indexterm" name="d0e4915"></a><tt class="sgmltag-attribute">id</tt>) dans un fichier LZX.            </p>
+            <p>Pour revenir &agrave; notre bouton qui doit appeler la m&eacute;thode d'un autre bouton : </p>
+            <div class="example"><a name="d0e4923"></a>
+            <p class="title"><b>Exemple&nbsp;10.13.&nbsp;Un bouton qui appelle une m&eacute;thode d'un autre bouton</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$13.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="60" 
+          title="Window 2" name="windowTwo"&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="210"
+          title="Simple Window"&gt;
+    <span class="em">&lt;simplelayout axis="x" spacing="4"/&gt;</span>
+    &lt;button text="My button" <span class="em">name="button1"</span> 
+            onclick="this.moveWindow()"&gt;
+      &lt;!-- Moves the second window twenty pixels 
+           to the right --&gt;
+      &lt;method name="moveWindow"&gt;
+        var increment = 20;
+        var originalX = this.parent.parent.windowTwo.getAttribute('x');
+        var newX = originalX + increment;
+        this.parent.parent.windowTwo.setAttribute('x', newX);
+      &lt;/method&gt;
+    &lt;/button&gt;
+    <span class="em">&lt;button text="Bigger Button" 
+            onclick="this.parent.button1.moveWindow()"/&gt;</span>
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$13.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Les deux boutons produisent maintenant un d&eacute;placement de la fen&ecirc;tre. Cependant, c'est source de confusion que d'avoir un bouton appelant une m&eacute;thode d'un autre bouton. Puisque la fen&ecirc;tre 'Window2' est celle qui bouge, pourquoi ne pas faire de la m&eacute;thode une m&eacute;thode de la fen&ecirc;tre, et avoir les deux boutons pointer dessus ? Plut&ocirc;t que d'utiliser la syntaxe <tt class="literal">this.parent&#8230;</tt>, nous pouvons lui donner un identifiant <a class="indexterm" name="d0e4944"></a><tt class="sgmltag-attribute">id</tt>, pour la r&eacute;f&eacute;rencer et y acc&eacute;der de fa&ccedil;on globale :            </p>
+            <div class="example"><a name="d0e4950"></a>
+            <p class="title"><b>Exemple&nbsp;10.14.&nbsp;Utilisation de la balise &lt;ID&gt;</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$14.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="60" 
+          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
+    &lt;!-- Moves the second window twenty pixels 
+         to the right --&gt;
+    <span class="em">&lt;method name="moveWindow"&gt;
+      var increment = 20;
+      var originalX = this.getAttribute('x');
+      var newX = originalX + increment;
+      this.setAttribute('x', newX);
+    &lt;/method&gt;</span>
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="210"
+      title="Simple Window"&gt;
+    &lt;simplelayout axis="x" spacing="4"/&gt;
+    &lt;button text="My button" name="button1" 
+            onclick="<span class="em">windowTwoId.moveWindow()</span>"/&gt;
+    &lt;button text="Bigger Button" 
+            onclick="<span class="em">this.parent.parent.windowTwo.moveWindow()</span>"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$14.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Juste pour illustrer l'utilisatoin de <a class="indexterm" name="d0e4968"></a><tt class="sgmltag-attribute">id</tt> et  <a class="indexterm" name="d0e4974"></a><tt class="sgmltag-attribute">name</tt>, un bouton r&eacute;f&eacute;rence la fen&ecirc;tre de fa&ccedil;on relative en utilisant <a class="indexterm" name="d0e4980"></a><tt class="sgmltag-attribute">name</tt>, et l'autre de fa&ccedil;on globale en utilisant <a class="indexterm" name="d0e4986"></a><tt class="sgmltag-attribute">id</tt>. 
+               Remarquez que les noms de <a class="indexterm" name="d0e4992"></a><tt class="sgmltag-attribute">id</tt> et <a class="indexterm" name="d0e4998"></a><tt class="sgmltag-attribute">name</tt> auraient pu &ecirc;tre les m&ecirc;mes, mais nous avons choisi de les diff&eacute;rencier dans cet exemple.            </p>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5005"></a>6.&nbsp;M&eacute;thodes et arguments
+                     </h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Dans l'exemple pr&eacute;c&eacute;dent, nous avons deux boutons qui font la m&ecirc;me chose. Pourquoi ne pas leur faire faire des choses diff&eacute;rentes ? D&eacute;placer la fen&ecirc;tre vers la droite ou vers la gauche par exemple. Nous pourrions &eacute;crire une nouvelle m&eacute;thode pour d&eacute;placer la fen&ecirc;tre vers la gauche, mais il serait plus &eacute;l&eacute;gant d'utiliser la m&ecirc;me m&eacute;thode pour les deux directions. De la m&ecirc;me fa&ccedil;on qu'avec les fonctions, nous pouvons passer des arguments aux m&eacute;thodes. </p>
+            <p>Voici une solution possible :</p>
+            <div class="example"><a name="d0e5012"></a>
+            <p class="title"><b>Exemple&nbsp;10.15.&nbsp;M&eacute;thodes et arguments</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$15.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="60" 
+          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
+    &lt;!-- Moves the second window twenty pixels 
+         in specified direction --&gt;
+    &lt;method name="moveWindow" <span class="em">args="direction"</span>&gt;
+      // decide which direction to go
+      <span class="em">if (direction == "left") {
+       var increment = -20;
+      } else if (direction == "right") {
+        var increment = 20;
+      }</span>
+      var originalX = this.getAttribute('x');
+      var newX = originalX + increment;
+      this.setAttribute('x', newX);
+    &lt;/method&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="210"
+      title="Simple Window"&gt;
+    &lt;simplelayout axis="x" spacing="4"/&gt;
+    &lt;button text="Move Left" name="button1" 
+            onclick="<span class="em">windowTwoId.moveWindow('left')</span>"/&gt;
+    &lt;button text="Move Right" 
+            onclick="<span class="em">windowTwoId.moveWindow('right')</span>"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$15.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Nous pouvons passer plus d'un argument &agrave; une m&eacute;thode, comme pour les fonctions :</p>
+            <div class="example"><a name="d0e5033"></a><p class="title"><b>Example&nbsp;10.16.&nbsp;Passing multiple arguments to a method</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$16.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="60"
+          title="Window 2" name="windowTwo" id="windowTwoId"&gt;
+    &lt;!-- Moves the second window twenty pixels 
+         in specified direction --&gt;
+    &lt;method name="moveWindow" args="direction<span class="em">, distance</span>"&gt;
+      // decide which direction to go
+      if (direction == "left") {
+        <span class="em">var increment = -1 * distance;</span>
+      } else if (direction == "right") {
+        <span class="em">var increment = distance;</span>
+      }
+      var originalX = this.getAttribute('x');
+      var newX = originalX + increment;
+      this.setAttribute('x', newX);
+    &lt;/method&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="300"
+      title="Simple Window"&gt;
+      &lt;simplelayout axis="x" spacing="4"/&gt;
+      &lt;button text="Left 2" name="button1" 
+              onclick="windowTwoId.<span class="em">moveWindow('left', 2)</span>"/&gt;
+      &lt;button text="Left 20" name="button2" 
+              onclick="windowTwoId.<span class="em">moveWindow('left', 20)</span>"/&gt;
+      &lt;button text="Right 20" 
+              onclick="windowTwoId.<span class="em">moveWindow('right', 20)</span>"/&gt;
+      &lt;button text="Right 2" 
+              onclick="windowTwoId.<span class="em">moveWindow('right', 2)</span>"/&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$16.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e5062"></a>7.&nbsp;Utilisation d'attributs pour r&eacute;duire la complexit&eacute;</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>A partir du m&ecirc;me exemple, voyons comment r&eacute;duire le nombre d'arguments pass&eacute;s. 
+               Ici, nous pla&ccedil;ons la fonctionnalit&eacute; dans le bouton lui-m&ecirc;me :            </p>
+            <div class="example"><a name="d0e5067"></a>
+            <p class="title"><b>Exemple&nbsp;10.17.&nbsp;Compl&eacute;ment sur les attributs </b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/scripting-tutorial-$17.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;window x="100" y="60"
+        title="Window 2" name="windowTwo" id="windowTwoId"&gt;
+    &lt;!-- Moves the second window specified number of pixels 
+         in specified direction --&gt;
+    <span class="em">&lt;method name="moveWindow" args="buttonObj"&gt;
+      direction = buttonObj.getAttribute("direction");
+      distance = parseInt(buttonObj.getAttribute("distance"));</span>
+      // decide which direction to go
+      if (direction == "left") {
+       var increment = -1 * distance;
+      } else if (direction == "right") {
+        var increment = distance;
+      }
+      var originalX = this.getAttribute('x');
+      var newX = originalX + increment;
+      this.setAttribute('x', newX);
+    &lt;/method&gt;
+    &lt;text&gt;This is the second window.&lt;/text&gt;
+  &lt;/window&gt;
+  &lt;window x="20" y="20" width="300"
+      title="Simple Window"&gt;
+    &lt;simplelayout axis="x" spacing="4"/&gt;
+    &lt;button onclick="windowTwoId.moveWindow(<span class="em">this</span>)"&gt;Left 2
+      <span class="em">&lt;attribute name="direction" value="'left'"/&gt;
+      &lt;attribute name="distance" value="'2'"/&gt;</span>
+    &lt;/button&gt;
+    &lt;button onclick="windowTwoId.moveWindow(<span class="em">this</span>)"&gt;Left 20
+      <span class="em">&lt;attribute name="direction" value="'left'"/&gt;
+      &lt;attribute name="distance" value="'20'"/&gt;</span>
+    &lt;/button&gt;
+    &lt;button onclick="windowTwoId.moveWindow(<span class="em">this</span>)"&gt;Right 20
+      <span class="em">&lt;attribute name="direction" value="'right'"/&gt;
+      &lt;attribute name="distance" value="'20'"/&gt;</span>
+    &lt;/button&gt;
+    &lt;button onclick="windowTwoId.moveWindow(<span class="em">this</span>)"&gt;Right 2
+      <span class="em">&lt;attribute name="direction" value="right" type="string"/&gt;
+      &lt;attribute name="distance" value="'2'"/&gt;</span>
+    &lt;/button&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/scripting-tutorial-$17.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+            <p>Les boutons ont des attributs que nous avons appel&eacute;s "distance" et "direction". 
+               Les valeurs de ces attributs doivent &ecirc;tre entour&eacute;es de guillemets pour &ecirc;tre des expressions JavaScript et non une cha&icirc;ne de caract&egrave;res ou un nombre. C'est pouquoi nous avons <tt class="literal">value="''"</tt>.            </p>
+            <p>Nous aurions aussi pu pr&eacute;ciser <tt class="literal">type="string"</tt> pour la balise <a class="indexterm" name="d0e5111"></a><a target="laszlo-reference" href="../reference/index.html?attribute.html"><tt class="sgmltag-element">&lt;attribute&gt;</tt></a>, comme pour le bouton "right 2". Dans ce cas, le mot "right" n'a pas besoin de cotes simples suppl&eacute;mentaires. </p>
+            <p>Cet exemple est en fait plus long que le pr&eacute;c&eacute;dent, mais il d&eacute;montre la puissance de la programmation orient&eacute;e objet avec LZX. Si le nombre d'attributs devait augmenter, et si les diff&eacute;rents boutons avaient des attributs diff&eacute;rents, le code continuerait de rester tr&egrave;s clair. </p>
+            <p></p>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="text-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="data-tutorial.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;9.&nbsp;Introduction aux Textes et Polices de caract&egrave;re&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;11.&nbsp;Introduction aux liaisons de donn&eacute;es</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

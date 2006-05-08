@@ -1,0 +1,405 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre&nbsp;8.&nbsp;Intoduction aux &eacute;l&eacute;ments Multim&eacute;dias et Artistiques</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="tutorials.html" title="Part&nbsp;II.&nbsp;Tutorial Introduction">
+      <link rel="previous" href="views-tutorial.html" title="Chapter&nbsp;7.&nbsp;Introduction to Views">
+      <link rel="next" href="text-tutorial.html" title="Chapter&nbsp;9.&nbsp;Introduction to Text and Fonts"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;8.&nbsp;Intoduction aux &eacute;l&eacute;ments Multim&eacute;dias et Artistiques</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="views-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">II.&nbsp;Tutoriels d'Introduction</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="text-tutorial.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="art_assets"></a>Chapitre&nbsp;8.&nbsp;Introduction aux &eacute;l&eacute;ments Multimedia et Artistiques</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="art_assets.html#art_assets.basics">1. Ressources</a></span></dt>
+               <dt><span class="section"><a href="art_assets.html#art_assets.including">2. Fa&ccedil;ons d'inclure des ressources</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="art_assets.html#d0e3581">2.1. Chargement des ressources au moment de la compilation</a></span></dt>
+                     <dt><span class="section"><a href="art_assets.html#d0e3605">2.2. Chargement des ressources pendant l'ex&eacute;cution</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="art_assets.html#art_assets.types">3. Types de fichiers</a></span></dt>
+               <dt><span class="section"><a href="art_assets.html#art_assets.multiframe">4. Ressources multi-images</a></span></dt>
+               <dt><span class="section"><a href="art_assets.html#art_assets.swfs">5. Travailler avec les fichiers SWF</a></span></dt>
+            </dl>
+         </div>
+			<p>Ce tutoriel fournit une description de l'utilisation des ressources multim&eacute;dias telles que les images, la vid&eacute;o et l'audio dans les applications OpenLaszlo.&nbsp;Ce sujet sera approfondi au <a href="media-resources.html" title="Chapter&nbsp;17.&nbsp;Media Resources">Chapitre&nbsp;17, <i>Ressources Multim&eacute;dias</i></a>.
+         </p>
+			<p>Il y a deux fa&ccedil;ons d'importer une image dans une application OpenLaszlo : </p>
+			<div class="itemizedlist">
+            <ul type="disc" compact>
+               <li>
+                  <p>en tant que ressource multim&eacute;dia attach&eacute;e &agrave; une vue,</p>
+               </li>
+               <li>
+                  <p>en tant qu'image ins&eacute;r&eacute;e dans du code HTML</p>
+               </li>
+            </ul>
+         </div>
+			<p>Dans ce tutoriel, nous verrons comment utiliser des ressources attach&eacute;es &agrave; des vues, ce qui est le m&eacute;canisme le plus g&eacute;n&eacute;ral.&nbsp;Cette technique vous permet d'importer non seulement des images, mais aussi de l'audio, de la vid&eacute;o avec chargement progressif et autres m&eacute;dias complexes, dont diff&eacute;rents formats non support&eacute;s nativement par le lecteur Flash (quand vous fonctionnez en mode proxy, o&ugrave; le Serveur OpenLaszlo traduit les formats).&nbsp;</p>
+			<p>Par opposition, quand vous ins&eacute;rez une image dans du code HTML, elle doit n&eacute;cessairement &ecirc;tre dans l'un des formats support&eacute;s nativement par le lecteur Flash cible.&nbsp;Pour plus de d&eacute;tail sur l'utilisation de la balise <a class="indexterm" name="d0e3516"></a><a target="laszlo-reference" href="../reference/index.html?img.html"><tt class="sgmltag-element">&lt;img&gt;</tt></a> &agrave; l'int&eacute;rieur de code HTML, voir le <a href="text.html" title="Chapter&nbsp;18.&nbsp;Text Views ">Chapitre&nbsp;18, <i>Vues de texte </i></a>.
+            
+         </p>
+			<p>La capacit&eacute; d'importer des &eacute;l&eacute;ments artistiques ne se r&eacute;duit pas aux images - vous pouvez cr&eacute;er vos propres syst&egrave;mes d'affichage aussi.&nbsp;</p>
+			<p></p>
+			<div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="art_assets.basics"></a>1.&nbsp;Ressources</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Dans les applications OpenLaszlo, les vues (<a class="indexterm" name="d0e3533"></a><a target="laszlo-reference" href="../reference/index.html?view.html"><tt class="sgmltag-element">&lt;view&gt;</tt></a>) sont l'&eacute;l&eacute;ment visible fondamental, et les ressources sont les &eacute;l&eacute;ments multim&eacute;dias externes &agrave; inclure.&nbsp;Les ressources sont rendues disponibles en &eacute;tant attach&eacute;es &agrave; des vues.&nbsp;Ainsi avec OpenLaszlo, vous n'ins&eacute;rez pas une image dans une vue, mais vous ins&eacute;rez une vue dont la ressource est une image.&nbsp;</p>
+				<p>Etudions la fa&ccedil;on la plus simple d'inclure un &eacute;l&eacute;ment artistique (ressource).&nbsp;Dans ce cas, c'est une image GIF :</p>
+				<div class="chapter" lang="en">
+					<div class="section" lang="en">
+						<div class="section" lang="en">
+							<p>Les quatre methodes peuvent donner les m&ecirc;mes r&eacute;sultats &agrave; l'&eacute;cran :</p>
+							<div class="example">
+								<a name="d0e3588"></a></div>
+						</div>
+					</div>
+				</div>
+				<div class="example">
+					<p class="title"><b>Exemple&nbsp;8.1.&nbsp;Utilisation de 'resource'</b></p>
+					<div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/art_assets-$1.lzx?lzt=swf', width: width="500", height: height="80"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="80"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/art_assets-$1.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Cette petite application OpenLaszlo charge une image appel&eacute;e <tt class="literal">smiley.gif</tt> (disponible ici dans le dossier <tt class="literal">resources</tt>, un sous-dossier de celui qui contient l'application).</p>
+				<p>Pour positionner une image, positionnez la vue qui contient l'image en tant que ressource : </p>
+				<div class="chapter" lang="en">
+					<div class="section" lang="en">
+						<div class="section" lang="en">
+							<p>Les quatre methodes peuvent donner les m&ecirc;mes r&eacute;sultats &agrave; l'&eacute;cran :</p>
+							<div class="example">
+								<a name="d0e3588"></a></div>
+						</div>
+					</div>
+				</div>
+				<div class="example">
+					<p class="title"><b>Exemple&nbsp;8.2.&nbsp;Positionnement d'images</b></p>
+					<div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/art_assets-$2.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+					<table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+ &lt;canvas width="500" height="100"&gt;
+   &lt;view resource="../resources/smiley.gif"/&gt;
+   &lt;view <span class="em">x="50" y="50"</span> resource="../resources/smiley.gif"/&gt;
+ &lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/art_assets-$2.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Nous verrons comment changer la taille de l'image plus tard.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="art_assets.including"></a>2.&nbsp;Fa&ccedil;ons d'inclure des ressources</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Dans les exemples pr&eacute;c&eacute;dents, nous avons inclus une image venant d'un dossier local au moment de la compilation.&nbsp;Ce peut adapt&eacute; ou non suivant les applications, c'est pourquoi LZX propose quatre fa&ccedil;on de charger des images :</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e3581"></a>2.1.&nbsp;Chargement des ressources au moment de la compilation</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>La ressource est ajout&eacute;e au reste de l'application quand elle est compil&eacute;e par le serveur, ce qui augmente le chargement initial, mais permet aux images d'&ecirc;tre affich&eacute;es instantan&eacute;ment.&nbsp;</p>
+					<p>Les quatre m&eacute;thodes peuvent donner les m&ecirc;mes r&eacute;sultats &agrave; l'&eacute;cran :</p>
+					<div class="example">
+						<a name="d0e3588"></a>
+						<p class="title"><b>Exemple&nbsp;8.3.&nbsp;Dossier Local</b></p>
+						<table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="100"&gt;
+  &lt;view resource="../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<div class="example"><a name="d0e3593"></a><p class="title"><b>Exemple&nbsp;8.4.&nbsp;Utilisation d'un identifiant global de ressource</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas width="500" height="100"&gt;
+  <span class="em">&lt;resource name="smileyFaceImg" src="../resources/smiley.gif"/&gt;</span>
+  &lt;view resource="<span class="em">smileyFaceImg</span>"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+               <p></p>
+            </div>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e3605"></a>2.2.&nbsp;Chargement des ressources au moment de l'ex&eacute;cution</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>La ressource n'est pas charg&eacute;e tant que la vue n'est pas initialis&eacute;e, le reste de l'application sera donc charg&eacute; et il peut y avoir une attente au moment de l'affichage.&nbsp;Le chargement initial sera plus petit puisque les images ne sont pas incluses.&nbsp;Le serveur charg&eacute; de la compilation demande l'image (si elle est plac&eacute;e sur un autre serveur) et la redirige vers l'application qui s'ex&eacute;cute d&eacute;j&agrave; sur le poste client.&nbsp;</p>
+					<div class="example"><a name="d0e3610"></a><p class="title"><b>Exemple&nbsp;8.5.&nbsp;R&eacute;f&eacute;rencement absolu</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas&gt;
+  &lt;view resource="<span class="em">http://www.laszlosystems.com/images/smiley.gif</span>"&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<div class="example"><a name="d0e3618"></a><p class="title"><b>Exemple&nbsp;8.6.R&eacute;f&eacute;rencement local</b></p>
+                  <table border="0" bgcolor="#E0E0E0">
+                     <tr>
+                        <td><pre class="programlisting">
+&lt;canvas&gt;
+  &lt;view resource="<span class="em">http:</span>../resources/smiley.gif"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                     </tr>
+                  </table>
+               </div>
+					<p>La meilleure fa&ccedil;on d'inclure des ressources est g&eacute;n&eacute;ralement d'utiliser un identifiant global (en utilisant la balise <a class="indexterm" name="d0e3628"></a><a target="laszlo-reference" href="../reference/index.html?resource.html"><tt class="sgmltag-element">&lt;resource&gt;</tt></a>). De cette fa&ccedil;on toutes les ressources peuvent &ecirc;tre plac&eacute;es en un seul endroit, et si vous avez besoin de changer l'origine d'une ressource ou la ressource elle-m&ecirc;me, vous n'avez besoin de le faire qu'une fois.&nbsp;(Dans les chapitres suivants, nous verrons ce qui peut amener &agrave; inclure des ressources autrement).&nbsp;</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="art_assets.types"></a>3.&nbsp;Types de fichiers</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <div class="example"><a name="d0e3639"></a><p class="title"><b>Exemple&nbsp;8.7.&nbsp;Etirer des ressources</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/art_assets-$7.lzx?lzt=swf', width: width="500", height: height="200"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="200"&gt;
+  &lt;resource name="sourFace" src="<span class="em">../resources/sourface.png</span>"/&gt;
+  &lt;resource name="smileyFace" src="../resources/smiley.gif"/&gt;
+  
+  &lt;view resource="smileyFace" x="10" y="10"/&gt;
+  &lt;view resource="sourFace" x="50" y="10"/&gt;
+  
+  &lt;view x="10" y="50" width="363" height="242" 
+  <span class="em">stretches="both"</span> resource="../resources/sunset.jpg"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/art_assets-$7.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>OpenLaszlo supporte les fichiers GIF, JPEG et PNG. Ils peuvent &ecirc;tre redimensionn&eacute;s en positionnant l'attribut <a class="indexterm" name="d0e3654"></a><tt class="sgmltag-attribute">stretches</tt> de la vue portant la ressource &agrave; <tt class="literal">both</tt>, <tt class="literal">width</tt> ou <tt class="literal">height</tt>.
+            </p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="art_assets.multiframe"></a>4.&nbsp;Ressources multi-images</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Les ressources peuvent &ecirc;tre multi-images, ce qui signifie qu'une ressource est en fait compos&eacute;e de plusieurs ressources, chacune d'elle pouvant &ecirc;tre affich&eacute;e &agrave; une moment donn&eacute;.&nbsp;</p>
+				<p>La syntaxe pour faire cela est la suivante :</p>
+				<div class="example"><a name="d0e3677"></a><p class="title"><b>Exemple&nbsp;8.8.&nbsp;Ressources multi-images</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/art_assets-$8.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="100"&gt;
+  &lt;resource name="face"&gt;
+    &lt;frame src="../resources/sourface.png"/&gt;
+    &lt;frame src="../resources/smiley.gif"/&gt;
+  &lt;/resource&gt;
+  
+  &lt;view x="150" y="50" resource="face"
+         onclick="this.setResourceNumber(2);"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/art_assets-$8.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Les ressources incluses &agrave; l'int&eacute;rieur de la balise 'resource' sont num&eacute;rot&eacute;es en commen&ccedil;ant &agrave; 1.&nbsp;</p>
+				<p>Comme vous pouvez le voir, OpenLaszlo supporte les formats GIF, JPEG and PNG. Ils peuvent tous &ecirc;tre redimensionn&eacute;s en positionnant l'attribut <a class="indexterm" name="d0e3688"></a><tt class="sgmltag-attribute">stretches</tt> de la vue de la ressource &agrave; <tt class="literal">both</tt>, <tt class="literal">width</tt> ou <tt class="literal">height</tt>.
+            </p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="art_assets.swfs"></a>5.&nbsp;Travailler avec les fichiers SWF</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>Vous pouvez utiliser les fichiers SWF comme n'importe quelle ressource, qu'ils soient anim&eacute;s ou non :</p>
+				<div class="example"><a name="d0e3709"></a><p class="title"><b>Exemple&nbsp;8.9.&nbsp;Utiliser des fichiers swf</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/art_assets-$9.lzx?lzt=swf', width: width="500", height: height="100"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="100"&gt;
+  &lt;view resource="../resources/still_swf.swf"/&gt;
+  &lt;view x="150" y="20" resource="../resources/anim_swf.swf"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/art_assets-$9.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>Par d&eacute;faut, toute animation s'ex&eacute;cutera ind&eacute;finiment.&nbsp;Vous pouvez contr&ocirc;ler l'animation d'un fichier SWF &agrave; partir du script de votre application.&nbsp;Par exemple, pour l'emp&eacute;cher de s'ex&eacute;cuter, nous pouvons lui demander de s'arr&ecirc;ter quand la vue s'initialise :&nbsp;</p>
+				<table border="0" bgcolor="#E0E0E0">
+               <tr>
+                  <td><pre class="programlisting">&lt;view x="150" y="20" resource="anim_swf.swf" <span class="em">oninit="this.stop();"</span>/&gt;</pre></td>
+               </tr>
+            </table>
+				<div class="example"><a name="d0e3726"></a><p class="title"><b>Exemple&nbsp;8.10.&nbsp;Arr&ecirc;ter des animations swf</b></p>
+               <div class="embedded-canvas"><script language="JavaScript" type="text/javascript">lzEmbed({url: 'programs/art_assets-$10.lzx?lzt=swf', width: width="500", height: height="150"});
+            </script></div>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">
+&lt;canvas width="500" height="150"&gt;
+  &lt;view name="spinningClock" resource="../resources/clock.swf" 
+        onclick="this.stop();"
+        clickable="true"/&gt;
+&lt;/canvas&gt;
+</pre></td>
+                  </tr>
+               </table>
+               
+               <div class="edit-button"><a href="../../laszlo-explorer/editor.jsp?src=docs/guide/programs/art_assets-$10.lzx" target="lzview"><img border="0" alt="" height="18" width="42" src="../../docs/includes/d_t_editbutton.gif"></a></div>
+               
+            </div>
+				<p>L'animation s'arr&ecirc;te ici quand on appuie sur le bouton. Le gestionnaire d'&eacute;v&eacute;nements <a class="indexterm" name="d0e3735"></a><tt class="literal">onclick</tt> sera d&eacute;crit dans le tutoriel sur l'&eacute;criture de script.</p>
+				<p>Au lieu de simplement utiliser <a class="indexterm" name="d0e3743"></a><tt class="methodname">stop()</tt>, nous aurions pu faire passer en argument de la m&eacute;thode <a class="indexterm" name="d0e3751"></a><tt class="methodname">stop()</tt> le num&eacute;ro de l''image' (frame) o&ugrave; elle doit s'arr&ecirc;ter.&nbsp;De plus, nous aurions pu utiliser la m&eacute;thode <a class="indexterm" name="d0e3759"></a><tt class="methodname">play()</tt> (&agrave; qui on peut aussi faire passer un argument 'frame') pour jouer &agrave; partir d'une certaine 'image' (frame).</p>
+				<p>Nous ne pouvons pas vraiment aller plus loin sans &eacute;tudier l'&eacute;criture de script, mais voici quelques uns des attributs et m&eacute;thodes de la balise <a class="indexterm" name="d0e3769"></a><tt class="sgmltag-element">&lt;view&gt;</tt> associ&eacute;s &agrave; la gestion des ressources :</p>
+				<div class="variablelist">
+               <dl>
+                  <dt><span class="term"><a class="indexterm" name="d0e3778"></a><tt class="sgmltag-attribute">view.playing</tt></span></dt>
+                  <dd>
+                     <p>Un attribut qui est vrai quand le SWF fonctionne; faux quand il est arr&ecirc;t&eacute;.</p>
+                  </dd>
+                  <dt><span class="term"><a class="indexterm" name="d0e3788"></a><tt class="sgmltag-attribute">view.frame</tt></span></dt>
+                  <dd>
+                     <p>Le num&eacute;ro de l'image courante.</p>
+                  </dd>
+                  <dt><span class="term"><a class="indexterm" name="d0e3798"></a><tt class="sgmltag-attribute">view.totalframes</tt></span></dt>
+                  <dd>
+                     <p>Le nombre total d'images dans le fichier SWF.</p>
+                  </dd>
+                  <dt><span class="term"><tt class="literal">view.seek(n)</tt></span></dt>
+                  <dd>
+                     <p>Avance ou recule de n secondes dans le fichier SWF.</p>
+                  </dd>
+               </dl>
+            </div>
+				<p>Ces m&eacute;thodes et d'autres biblioth&egrave;qes sont d&eacute;crites plus pr&eacute;cis&eacute;ment au <a href="media-resources.html" title="Chapter&nbsp;17.&nbsp;Media Resources">Chapitre&nbsp;17, <i>Ressources Multim&eacute;dias</i></a>.
+            </p>
+				<p></p>
+			</div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="views-tutorial.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="tutorials.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="text-tutorial.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">Chapitre&nbsp;7.&nbsp;Introduction aux Vues&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;9.&nbsp;Introduction aux Textes et Polices de caract&egrave;res</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

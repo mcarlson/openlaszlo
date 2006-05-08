@@ -1,0 +1,386 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Chapitre 1. Architecture de OpenLaszlo</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="up" href="overview.html" title="Part&nbsp;I.&nbsp;Overview">
+      <link rel="previous" href="overview.html" title="Part&nbsp;I.&nbsp;Overview">
+      <link rel="next" href="language-preliminaries.html" title="Chapter&nbsp;2.&nbsp;Language Preliminaries"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Chapitre&nbsp;1.&nbsp;Architecture de OpenLaszlo</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left"><a accesskey="p" href="overview.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <th width="60%" align="center">I.&nbsp;Aper&ccedil;u G&eacute;n&eacute;ral</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="language-preliminaries.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="chapter" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h2 class="title"><a name="architecture"></a>Chapitre&nbsp;1.&nbsp;Architecture de OpenLaszlo</h2>
+               </div>
+            </div>
+            <div></div>
+         </div>
+         <div class="toc">
+            <p><b>Table des mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="section"><a href="architecture.html#d0e237">1. Modes de d&eacute;ploiement</a></span></dt>
+               <dt><span class="section"><a href="architecture.html#d0e283">2. Client et Server : synopsis</a></span></dt>
+               <dt><span class="section"><a href="architecture.html#d0e320">3. Architecture de Laszlo c&ocirc;t&eacute; Serveur</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="architecture.html#d0e365">3.1. Compilateur d'interface (Interface Compiler)</a></span></dt>
+                     <dt><span class="section"><a href="architecture.html#d0e389">3.2. Gestionnaire de donn&eacute;es (Data Manager)</a></span></dt>
+                     <dt><span class="section"><a href="architecture.html#d0e395">3.3. Gestionnaire de connection permanente (Persistent Connection Manager)</a></span></dt>
+                     <dt><span class="section"><a href="architecture.html#d0e404">3.4. Cache</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="architecture.html#d0e410">4. Architecture du Client Laszlo</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="section"><a href="architecture.html#d0e431">4.1. Syst&egrave;me d'&eacute;v&eacute;nements (Event Manager)</a></span></dt>
+                     <dt><span class="section"><a href="architecture.html#d0e437">4.2. Chargeur/Connecteur de donn&eacute;es (Data Loader/Binder)</a></span></dt>
+                     <dt><span class="section"><a href="architecture.html#d0e443">4.3. Syst&egrave;me de mise en page et d'animation (Layout and Animation System)</a></span></dt>
+                     <dt><span class="section"><a href="architecture.html#d0e455">4.4. Services syst&egrave;me (OpenLaszlo Services System)</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="section"><a href="architecture.html#d0e461">5. Flux de donn&eacute;es des applications OpenLaszlo avec proxy</a></span></dt>
+               <dt><span class="section"><a href="architecture.html#d0e480">6. Mod&egrave;le de S&eacute;curit&eacute;</a></span></dt>
+               <dt><span class="section"><a href="architecture.html#d0e488">7. Disponibilit&eacute; sur plusieurs types d'appareils</a></span></dt>
+               <dt><span class="section"><a href="architecture.html#d0e496">8. Accessibilit&eacute;</a></span></dt>
+            </dl>
+         </div>
+         <p>OpenLaszlo est une platforme de cr&eacute;ation de clients Internet riches &agrave; la fois faciles &agrave; d&eacute;velopper et &agrave; d&eacute;ployer. L'architecture du syst&egrave;me OpenLaszlo m&eacute;lange la puissance et la facilit&eacute; d'utilisation de l'architecture client/serveur avec les avantages en administration et en r&eacute;duction des co&ucirc;ts des applications web.&nbsp;</p>
+			<p></p>
+			<div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e237"></a>1.&nbsp;Modes de d&eacute;ploiement</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Les applications OpenLaszlo peuvent &ecirc;tre mises &agrave; disposition sur le web de deux fa&ccedil;ons : </p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p><span class="em">Proxy.</span> Le Serveur OpenLaszlo tourne sur votre machine et :</p>
+							<div class="itemizedlist">
+                        <ul type="circle" compact>
+                           <li>
+                              <p>Compile les programmes sources quand n&eacute;cessaire et envoie les binaires &agrave; ex&eacute;cuter sur le poste client,</p>
+                           </li>
+                           <li>
+                              <p>Sert de proxy entre le poste client et d'autres serveurs sur Internet, avec &eacute;ventuelle manipulation de donn&eacute;es.</p>
+                           </li>
+                        </ul>
+                     </div>
+						</li>
+						<li>
+							<p><span class="em">SOLO. </span>Le compilateur OpenLaszlo est utilis&eacute; pour &quot;pr&eacute;compiler&quot; les programmes.&nbsp;Les binaires r&eacute;sultant sont plac&eacute;s sur le serveur.&nbsp;Quand le client ex&eacute;cute l'application, celle-ci contacte d'autres serveurs directement sans utiliser le serveur OpenLaszlo en tant que m&eacute;diateur.&nbsp;On appelle ce mode de d&eacute;ploiement &quot;sans serveur&quot;, ou &quot;standalone&quot;.&nbsp;</p>
+						</li>
+					</ul>
+            </div>
+            <p>Les chapitres suivants expliquent en d&eacute;tail la diff&eacute;rence entre les mode Proxy et Solo.&nbsp;De fa&ccedil;on g&eacute;n&eacute;rale : </p>
+            <div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p><span class="em">Les applications de type Proxy </span>peuvent faire un certain nombre de choses suppl&eacute;mentaires par rapport aux applications Solo.&nbsp;Par contre, elles sont plus difficiles &agrave; d&eacute;ployer et r&eacute;agissent parfois plus lentement.&nbsp;</p>
+                  </li>
+                  <li>
+                     <p><span class="em">Les applications de type SOLO</span> sont plus faciles &agrave; d&eacute;ployer et ont parfois de meilleures performances.</p>
+                  </li>
+               </ul>
+            </div>
+            <p>La plupart du temps, vous n'avez pas besoin de d&eacute;cider du mode de d&eacute;ploiement jusqu'&agrave; ce que vous soyez pr&ecirc;t &agrave; d&eacute;ployer, et le mode par d&eacute;faut est g&eacute;n&eacute;ralement sans proxy (solo).&nbsp;En lisant les explications qui suivent, gardez &agrave; l'esprit que quand vous d&eacute;ployez vos applications de fa&ccedil;on statique (solo), les fonctionnalit&eacute;s propres au Serveur OpenLaszlo (comme le d&eacute;codage de m&eacute;dias ou le gestionnaires de connections permanentes) ne sont pas disponibles&nbsp;. </p>
+            <p></p>
+         </div>
+			<div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e283"></a>2.&nbsp;Client et Serveur : synopsis</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Le Serveur OpenLaszlo est une application Java qui s'ex&eacute;cute dans un conteneur de servlets J2EE.&nbsp;Le Serveur OpenLaszlo peut communiquer avec d'autres serveurs et sources de donn&eacute;es en utilisant un grand nombre de protocoles.&nbsp;Les applications OpenLaszlo &eacute;crites en LZX sont compil&eacute;es par le Serveur OpenLaszlo et rendues disponibles en tant que bytecode pour le plug-in qui fonctionne dans le navigateur du poste client.&nbsp;Cela constitue le &quot;front end&quot;.&nbsp;L'environnement d'ex&eacute;cution actuellement support&eacute;, le plug-in Flash 5 ou plus, fonctionne de fa&ccedil;on similaire et fiable sur un grand nombre de syst&egrave;mes d'exploitation et de mat&eacute;riels, dont Windows, Pocket PC, Mac OS, Linux, Solaris et un grand nombre d'appareils mobiles ou tout int&eacute;gr&eacute;s.&nbsp;Le Serveur OpenLaszlo g&eacute;n&egrave;re du bytecode au format SWF reconnu par le lecteur Flash de Macromedia (version 6 ou plus).&nbsp;Rien dans l'architecture OpenLaszlo n'est cependant li&eacute;e &agrave; Flash. Dans le futur, OpenLaszlo pourrait utiliser d'autres clients d'ex&eacute;cution. (NdT Au moment o&ugrave; ce document a &eacute;t&eacute; traduit, OpenLaszlo venait juste de rendre possible la g&eacute;n&eacute;ration pour clients Ajax en plus de la g&eacute;n&eacute;ration pour clients Flash).&nbsp;&nbsp;</p>
+				<p>Dans l'environnement OpenLaszlo, le <a class="indexterm" name="d0e299"></a><i class="glossterm">client</i> d&eacute;signe l'application LZX qui s'ex&eacute;cute dans le navigateur de l'utilisateur, et le <a class="indexterm" name="d0e305"></a><i class="glossterm">serveur</i> d&eacute;signe le Serveur OpenLaszlo  (qui peut lui-m&ecirc;me communiquer avec d'autres serveurs).&nbsp;Le client LZX et le Serveur OpenLaszlo communiquent en utilisant HTTP; le Serveur OpenLaszlo envoie du bytecode et l'application LZX envoie du XML.&nbsp;</p>
+				<p>Toutes les fonctionnalit&eacute;s suppl&eacute;mentaires de la plateforme OpenLaszlo, dont le streaming de m&eacute;dias et la mise &agrave; jour, s'appuient sur HTTP et HTTPS.&nbsp;Les applications qui s'appuient sur OpenLaszlo peuvent ainsi rester compatibles avec les pare-feux d'entreprise.&nbsp;C'est une fonctionnalit&eacute; critique pour les applications Internet publiques.&nbsp;</p>
+				<p><a name="d0e313"></a></p>
+				<div class="figure">
+					<p class="title"><b>Figure&nbsp;1.1.&nbsp;Architecture Client-Server de Laszlo</b></p>
+					<div class="mediaobject"><img src="images/architecture-1.gif" alt="Laszlo Client-Server Architecture"></div>
+            </div>
+            <p></p>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e320"></a>3.&nbsp;Architecture de Laszlo c&ocirc;t&eacute; Serveur</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Le Serveur OpenLaszlo s'ex&eacute;cute dans un serveur d'applications standard J2EE ou un conteneur de servlets Java avec JRE&nbsp;1.3&nbsp;ou sup&eacute;rieur.&nbsp;Ces environnements montent tr&egrave;s bien en charge ainsi que le Serveur OpenLaszlo lui-m&ecirc;me.&nbsp;Les applications OpenLaszlo fonctionnent sur tous les syst&egrave;mes d'exploitations qui prennent en charge ces produits.&nbsp;OpenLaszlo supporte Windows, Solaris, Linux et Mac OS&nbsp;X.</p>
+				<p>Le Serveur OpenLaszlo est compos&eacute; de cinq sous-syst&egrave;mes principaux :</p>
+				<div class="itemizedlist">
+               <ul type="disc" compact>
+                  <li>
+                     <p>le <em>Compilateur d'interface</em> (<i class="glossterm">Interface Compiler)</i></p>
+                  </li>
+                  <li>
+                     <p>le <em>Transcodeur de m&eacute;dias</em> (<i class="glossterm">Media Transcoder)</i></p>
+                  </li>
+                  <li>
+                     <p>le <em>Gestionnaire de donn&eacute;es</em> (<i class="glossterm">Data Manager)</i></p>
+                  </li>
+                  <li>
+                     <p>le <em>Gestionnaire de connection permanente</em> (<i class="glossterm">Persistent Connection Manager)</i></p>
+                  </li>
+                  <li>
+                     <p>le <i class="glossterm">Cache</i></p>
+                  </li>
+               </ul>
+            </div>
+				<div class="figure"><a name="d0e353"></a><p class="title"><b>Figure&nbsp;1.2.&nbsp;Laszlo Server Architecture</b></p>
+               <div class="mediaobject"><img src="images/architecture-2.gif" alt="Laszlo Server Architecture"></div>
+            </div>
+            <p></p>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e365"></a>3.1.&nbsp;Compilateur d'Interface (Interface Compiler)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le <em>Compilateur d'interface</em> est constitu&eacute; d'un <em>compilateur de balises LZX</em> et d'un <em>compilateur de Script</em>. Le compilateur d'interface peut aussi faire appel au compilateur de m&eacute;dias ou au gestionnaire de donn&eacute;es pour compiler des m&eacute;dias ou des donn&eacute;es qui sont embarqu&eacute;es dans l'applications.</p>
+					<p>Les compilateurs de balises LZX et de script transforment la description d'applications par balises et code JavaScript en bytecode ex&eacute;cutable (swf pour Flash) sur le poste client.&nbsp;Ce code est plac&eacute; dans le cache, d'o&ugrave; il est envoy&eacute; au client.&nbsp;Suivant l'application qui est invoqu&eacute;e, il est envoy&eacute; soit en tant que fichier .swf, soit en tant que page HTML avec un objet .swf embarqu&eacute;.&nbsp;</p>
+					<p>Le Transcodeur de m&eacute;dia convertit tout un ensemble de types de m&eacute;dias en un format unique qui puisse &ecirc;tre interpr&eacute;t&eacute; par le syst&egrave;me d'affichage du client.&nbsp;Cela permet aux applications OpenLaszlo d'afficher les types de m&eacute;dias support&eacute;s d'une fa&ccedil;on unique dans une fen&ecirc;tre commune, sans faire appel &agrave; des applications externes ou interpr&eacute;teurs suppl&eacute;mentaires.&nbsp;</p>
+					<p>Le Transcodeur de m&eacute;dia convertit automatiquement les types de donn&eacute;es suivants : JPEG, GIF, PNG, MP3, TrueType, et SWF (dessins et animations seulement).</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e389"></a>3.2.&nbsp;Gestionnaire de Donn&eacute;es (Data Manager)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+					<p>Le Gestionaire de donn&eacute;es est constitu&eacute; d'un compilateur de donn&eacute;es qui convertit toutes les donn&eacute;es en un format de donn&eacute;es binaire compress&eacute;, lisible par les applications OpenLaszlo, et d'un ensemble de connecteurs qui permettent aux applications OpenLaszlo de r&eacute;cup&eacute;rer des donn&eacute;es via XML/HTTP.&nbsp;Les applications OpenLaszlo peuvent ainsi s'interfacer sur le r&eacute;seau avec des bases de donn&eacute;es, des services web XML, et des fichiers ou ex&eacute;cutables sur des serveurs web.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e395"></a>3.3.&nbsp;Gestionnaire de Connection Permanente (Persistent Connection Manager)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le Gestionnaire de Connection Permanente g&egrave;re les authentifications et un syst&egrave;me de messages temps r&eacute;el pour les applications qui en ont besoin.&nbsp;Il fournit un syst&egrave;me de messagerie et d'avertissement temps-r&eacute;el, par envoi de donn&eacute;es avec HTTP.&nbsp;</p>
+               <div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+                  <table border="0" summary="Warning">
+                     <tr>
+                        <td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="images/warning.png"></td>
+								<th align="left">Attention</th>
+							</tr>
+                     <tr>
+                        <td colspan="2" align="left" valign="top">
+                           <p>Cette fonctionnalit&eacute; est provisoire.&nbsp;Elle fonctionne avec une capacit&eacute; limit&eacute;e et si elle peut &ecirc;tre utilis&eacute;e pour le d&eacute;veloppement, nous recommandons de ne pas l'utiliser en production (sauf peut-&ecirc;tre en cas de faible charge et pour des besoins non critiques). Prenez contact directement avec Laszlo Systems si vous avez des questions sur la robustesse d'une application qui utiliserait cette version du gestionnaire de connections.</p>
+                        </td>
+                     </tr>
+                  </table>
+               </div>
+               <p></p>
+            </div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e404"></a>3.4.&nbsp;Cache</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le Cache contient les versions r&eacute;cemment compil&eacute;es des applications.&nbsp;La premi&egrave;re fois qu'une application OpenLaszlo est appel&eacute;e, elle est compil&eacute;e et le fichier SWF r&eacute;sultant est envoy&eacute; au client.&nbsp;Une copie est &eacute;galement mise en cache sur le serveur, pour que des demandes suivantes n'aient pas besoin d'attendre la compilation.</p>
+					<p></p>
+				</div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e410"></a>4.&nbsp;Architecture du Client Laszlo</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>L'architecture du client Laszlo est constitu&eacute;e de la Biblioth&egrave;que OpenLaszlo Temps-R&eacute;el (OpenLaszlo Runtime Library : ORL), une biblioth&egrave;que incluse dans toute application OpenLaszlo qui fournit des services temps-r&eacute;el (comme par exemple une horloge ou une fonction d'attente) et un syst&egrave;me de rendu pour visualiser les graphismes 2D et faire entendre les sons.&nbsp;Aucune de ces classes ne repose sur des services Flash ou n'utilise le mod&egrave;le objet de Flash.&nbsp;Le lecteur Flash est seulement utilis&eacute; comme un syst&egrave;me de visualisation.&nbsp;</p>
+				<p><a name="d0e415"></a></p>
+				<div class="figure">
+					<p class="title"><b>Figure&nbsp;1.3.&nbsp;Architecture du Client Laszlo</b></p>
+					<div class="mediaobject"><img src="images/architecture-3.gif" alt="Laszlo Client Architecture"></div>
+            </div>
+            <div class="example"><a name="d0e421"></a><p class="title"><b>Exemple&nbsp;1.1.&nbsp;Application Vide</b></p>
+               <table border="0" bgcolor="#E0E0E0">
+                  <tr>
+                     <td><pre class="programlisting">&lt;canvas/&gt;</pre></td>
+                  </tr>
+               </table>
+            </div>
+            <p>Quand cette application fonctionne, m&ecirc;me si elle ne &quot;fait rien&quot;, elle maintient n&eacute;anmoins une connection avec le serveur, et toutes les fonctionnalit&eacute;s n&eacute;cessaires pour faire fonctionner une application LZX ont d&eacute;j&agrave; &eacute;t&eacute; charg&eacute;es.&nbsp;</p>
+            <p>Il y a principalement quatre composants dans la Biblioth&egrave;que OpenLaszlo Temps-R&eacute;el (ORL) : le Syst&egrave;me d'&eacute;v&eacute;nements, le Chargeur/Connecteur de donn&eacute;es, le syst&egrave;me de mise en page et d'animation et un ensemble de Services Syst&egrave;me.&nbsp;</p>
+				<p></p>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e431"></a>4.1.&nbsp;Syst&egrave;me d'&eacute;v&eacute;nements (Event System)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le Syst&egrave;me d'&eacute;v&eacute;nements reconna&icirc;t et prend en charge les &eacute;v&eacute;n&eacute;ments tels que les clics de boutons de souris ou les envois de donn&eacute;es par le serveur.&nbsp;Ce composant permet une programmation standard d'&eacute;v&eacute;nements sur le client.&nbsp;Par rapport aux applications Internet classiques, les applications OpenLaszlo r&eacute;duisent la charge des serveurs en permettant aux applications clientes de trier, traiter et valider avec un affichage dynamique suivant l'&eacute;tat de l'application.</p>
+					<p></p>
+				</div>
+				<div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e437"></a>4.2.&nbsp;Chargeur/Connecteur de donn&eacute;es (Data Loader/Binder)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le Chargeur de donn&eacute;es se place en contr&ocirc;leur de donn&eacute;es, en acceptant les flux de donn&eacute;es r&eacute;seau sur Serveur OpenLaszlo et en les connectant aux &eacute;l&eacute;ments graphiques d'affichage tels que les champs de texte, les formulaires et les &eacute;l&eacute;ments de menus.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e443"></a>4.3.&nbsp;Syst&egrave;me de mise en page et d'animation (Layout and Animation System)</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le Syst&egrave;me de mise en page et d'animation fournit aux applications OpenLaszlo un syst&egrave;me de mise en page bas&eacute; sur des contraintes entre les &eacute;l&eacute;ments graphiques ainsi qu'un syst&egrave;me d'animations des changements d'&eacute;tats dans l'interface.&nbsp;Ce composant vous permet de construire une interface dynamique avec tr&egrave;s peu de programmation.&nbsp;Cela vous permet de positionner un nombre variables d'&eacute;l&eacute;ments graphiques en utilisant un positonnement relatif ou absolu par pixels.&nbsp;Quand les animations fonctionnent, les mises &agrave; jour de l'interface se font d'une fa&ccedil;on continue, laissant bien appara&icirc;tre &agrave; l'utilisateur les changements.</p>
+					<p></p>
+				</div>
+            <div class="section" lang="en">
+               <div class="titlepage">
+                  <div>
+                     <div>
+                        <h3 class="title"><a name="d0e455"></a>4.4.&nbsp;Services Syst&egrave;me OpenLaszlo</h3>
+                     </div>
+                  </div>
+                  <div></div>
+               </div>
+               <p>Le Syst&egrave;me temps-r&eacute;el OpenLaszlo inclut le support d'horloges (timers), de son et de fen&ecirc;tres modales.&nbsp;</p>
+               <p></p>
+            </div>
+         </div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e461"></a>5.&nbsp;Flux de donn&eacute;es des applications OpenLaszlo avec proxy</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>Cet exemple utilise une applications OpenLaszlo du serveur appel&eacute;e <tt class="literal">weather.lzx</tt>. Le diagramme qui suit illustre comment cette application s'ex&eacute;cute sur le serveur OpenLaszlo.</p>
+            <div class="figure"><a name="d0e469"></a><p class="title"><b>Figure&nbsp;1.4.&nbsp;Flux de donn&eacute;es de l'application Laszlo &quot;Weather&quot;</b></p>
+               <div class="mediaobject"><img src="images/architecture-5.gif" alt="Laszlo Application Data Flow diagram for the Weather Application"></div>
+            </div>
+            <p>Commen&ccedil;ant par l'utilisateur validant l'adresse URL de l'application Weather, ce diagramme illustre la s&eacute;quence d'&eacute;changes de donn&eacute;es entre le client et le serveur, avec mise &agrave; disposition des donn&eacute;es par un Service Web XML, et renvoi au client.&nbsp;</p>
+				<p>Dans les applications OpenLaszlo, la couche de pr&eacute;sentation s'ex&eacute;cute sur le poste client et reste s&eacute;par&eacute;e de la couche m&eacute;tier.&nbsp;Le Serveur OpenLaszlo envoie les donn&eacute;es dans un format binaire compress&eacute; plut&ocirc;t que dans un format texte, ce qui permet de r&eacute;duire les &eacute;changes par rapport aux applications HTML ou autres applications Web.&nbsp;Le syst&egrave;me de cache &agrave; la fois sur le serveur et le client permet de r&eacute;duire les ex&eacute;cutions de code et les transmissions.</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e480"></a>6.&nbsp;Mod&egrave;le de S&eacute;curit&eacute;</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+            <p>La plateforme OpenLaszlo supporte le protocole s&eacute;curis&eacute; SSL.&nbsp;Les transmissions de donn&eacute;es &agrave; travers Internet peuvent &ecirc;tre crypt&eacute;es en utilisant SSL et HTTPS.&nbsp;Les applications OpenLaszlo s'ex&eacute;cutent sur le poste client dans le bac &agrave; sable (sandbox) du lecteur Flash, et ne peuvent pas &eacute;crire sur le syst&egrave;me local de fichiers ou acc&eacute;der &agrave; l'environnement du poste client.&nbsp;</p>
+				<p>Les services web et bases de donn&eacute;es utilis&eacute;es par une application OpenLaszlo sont aussi s&eacute;curis&eacute;es en utilisant un mod&egrave;le d'authentificaiton par utilisateur.&nbsp;Ce m&eacute;canisme permet d'&eacute;viter l'utilisation du Serveur OpenLaszlo comme d'un proxy ou passerelle vers des services ou donn&eacute;es non s&eacute;curis&eacute;es.&nbsp;</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e488"></a>7.&nbsp;Disponibilit&eacute;s sur plusieurs types d'appareils</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>L'architecture OpenLaszlo est con&ccedil;ue pour &ecirc;tre disponibles sur plusieurs types d'appareils.&nbsp;Son syst&egrave;me de mise en page dynamique permet &agrave; la plateforme de faire des modifications intelligentes comme la taille totale de l'affichage. Cela facilite le travail n&eacute;cessaire pour adapter une application &agrave; diff&eacute;rents types de mat&eacute;riels et tailles d'&eacute;crans.</p>
+				<p>Tous les affichages dans les applications OpenLaszlo utilisent des animations bas&eacute;es sur le temps et non sur un nombre d'images, ce qui permet ainsi de s'adapter de fa&ccedil;on transparente aux diff&eacute;rences de rapidit&eacute; des processeurs suivant les mat&eacute;riels.&nbsp;Une transition d'interface d&eacute;finie comme devant durer 500 millisecondes durera 500 millisecondes, ind&eacute;pendamment du nombre d'images affich&eacute;es - les animations sur processeurs rapides auront plus d'images et seront plus fluides mais garderont la m&ecirc;me dur&eacute;e de transition.&nbsp;</p>
+				<p></p>
+			</div>
+         <div class="section" lang="en">
+            <div class="titlepage">
+               <div>
+                  <div>
+                     <h2 class="title" style="clear: both"><a name="d0e496"></a>8.&nbsp;Accessibilit&eacute;</h2>
+                  </div>
+               </div>
+               <div></div>
+            </div>
+				<p>OpenLaszlo supporte en partie la sp&eacute;cification <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msaa/msaastart_9w2t.asp" target="_top">Microsoft Active Accessibilty</a> qui dit : &quot;en utilisant 'Active Accessibility' et en suivant des r&egrave;gles de graphisme accessible, les d&eacute;veloppeurs peuvent rendre les applications fonctionnant sous Windows plus accessibles &agrave; beaucoup de personnes ayant des capacit&eacute;s visuelles, auditives ou motrices r&eacute;duites.&quot; Pour aller plus loin, lisez le <a href="program-structure.html" title="Chapter&nbsp;14.&nbsp;Program Structure">Chapitre&nbsp;14, <em>Structure des programmes</em></a>. Ce support implique l'installation de logiciels tiers sur la machine cliente, et ne s'adresse qu'aux personnes affichant les applications Laszlo avec le lecteur Flash sous Internet Explorer.&nbsp;</p>
+				<p></p>
+			</div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left"><a accesskey="p" href="overview.html">Pr&eacute;c&eacute;dent</a>&nbsp;
+               </td>
+               <td width="20%" align="center"><a accesskey="u" href="overview.html">Haut</a></td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="language-preliminaries.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">I.&nbsp;Aper&ccedil;u G&eacute;n&eacute;ral&nbsp;</td>
+               <td width="20%" align="center"><a accesskey="h" href="index.html">Sommaire</a></td>
+               <td width="40%" align="right" valign="top">&nbsp;Chapitre&nbsp;2.&nbsp;Pr&eacute;liminaires sur le langage</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

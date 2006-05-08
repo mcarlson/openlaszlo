@@ -1,0 +1,191 @@
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+   
+      <title>Guide du d&eacute;veloppeur d'Applications OpenLaszlo</title>
+      <link rel="stylesheet" href="../includes/docbook.css" type="text/css">
+      <meta name="generator" content="DocBook XSL Stylesheets V1.65.1">
+      <link rel="home" href="index.html" title="Software Engineer's Guide to Developing OpenLaszlo Applications">
+      <link rel="next" href="preface.html" title="Preface"><script type="text/javascript" language="JavaScript" src="../../lps/includes/embed.js"></script><script type="text/javascript" language="JavaScript" src="../../docs/includes/docs.js"></script></head>
+   <body class="docbook-tutorial">
+      <div class="navheader">
+         <table width="100%" summary="Navigation header">
+            <tr>
+               <th colspan="3" align="center">Guide du d&eacute;veloppeur d'Applications OpenLaszlo</th>
+            </tr>
+            <tr>
+               <td width="20%" align="left">&nbsp;</td>
+               <th width="60%" align="center">&nbsp;</th>
+               <td width="20%" align="right">&nbsp;<a accesskey="n" href="preface.html">Suivant</a></td>
+            </tr>
+         </table>
+         <hr>
+      </div>
+      <div class="book" lang="en">
+         <div class="titlepage">
+            <div>
+               <div>
+                  <h1 class="title"><a name="d0e3"></a>Guide du d&eacute;veloppeur d'Applications OpenLaszlo</h1>
+               </div>
+               <div>
+                  <h3 class="corpauthor">Laszlo Systems, Inc.</h3>
+               </div>
+               <div>
+                  <p class="copyright">Copyright &copy; 2001-2006 Laszlo Systems, Inc.</p>
+               </div>
+               <div>
+                  <div class="legalnotice">
+                     <p>
+                                All Rights Reserved. Use is subject to license terms.
+                     </p>
+                     <p>Flash&#153; and Macromedia Flash&#153; are trademarks of Macromedia, Inc.</p>
+                     <p>Laszlo&reg; is a registered tradmark, and OpenLaszlo&#153;, LZX&#153; and OpenLaszlo Explorer&#153; are
+                         trademarks of Laszlo Systems, Inc.
+                        
+                     </p>
+                  </div>
+               </div>
+               <div>
+                  <p class="pubdate">F&eacute;vrier 2006</p>
+               </div>
+            </div>
+            <div></div>
+            <hr>
+         </div>
+         <div class="toc">
+            <p><b>Table des Mati&egrave;res</b></p>
+            <dl>
+               <dt><span class="preface"><a href="preface.html">Pr&eacute;face</a></span></dt>
+               <dt><span class="part"><a href="overview.html">I. Aper&ccedil;u g&eacute;n&eacute;ral</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="architecture.html">1. Architecture de OpenLaszlo</a></span></dt>
+                     <dt><span class="chapter"><a href="language-preliminaries.html">2. Pr&eacute;liminaires sur le langage</a></span></dt>
+                     <dt><span class="chapter"><a href="designers.html">3. OpenLaszlo pour les graphistes</a></span></dt>
+                     <dt><span class="chapter"><a href="program-development.html">4. Aper&ccedil;u du d&eacute;veloppement d'une application OpenLaszlo</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="tutorials.html">II. Tutoriels d'Introduction</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="laszlo_basics.html">5. Les bases d'OpenLaszlo</a></span></dt>
+                     <dt><span class="chapter"><a href="comp-intro.html">6. Introduction aux Composants</a></span></dt>
+                     <dt><span class="chapter"><a href="views-tutorial.html">7. Introduction aux Vues</a></span></dt>
+                     <dt><span class="chapter"><a href="art_assets.html">8. Intoduction aux &eacute;l&eacute;ments Multim&eacute;dias et Artistiques</a></span></dt>
+                     <dt><span class="chapter"><a href="text-tutorial.html">9. Introduction aux Textes et Polices de caract&egrave;res</a></span></dt>
+                     <dt><span class="chapter"><a href="scripting-tutorial.html">10. Introduction &agrave; la programmation de scripts</a></span></dt>
+                     <dt><span class="chapter"><a href="data-tutorial.html">11. Introduction aux liaisons de donn&eacute;es</a></span></dt>
+                     <dt><span class="chapter"><a href="classes-tutorial.html">12. Introduction aux Classes et &agrave; la programmation orient&eacute;e objet</a></span></dt>
+                     <dt><span class="chapter"><a href="drawview-intro.html">13. Introduction aux dessins</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="building-apps.html">III. Concepts fondamentaux</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="program-structure.html">14. Structure des programmes</a></span></dt>
+                     <dt><span class="chapter"><a href="comp-overview.html">15. Aller plus loin avec les Composants</a></span></dt>
+                     <dt><span class="chapter"><a href="layout-and-design.html">16. Mise en page et design</a></span></dt>
+                     <dt><span class="chapter"><a href="media-resources.html">17. Ressources Multim&eacute;dias</a></span></dt>
+                     <dt><span class="chapter"><a href="text.html">18. Vues de texte</a></span></dt>
+                     <dt><span class="chapter"><a href="richtext.html">19. Texte avanc&eacute;</a></span></dt>
+                     <dt><span class="chapter"><a href="fonts.html">20. Polices de caract&egrave;res</a></span></dt>
+                     <dt><span class="chapter"><a href="animation.html">21. Animations</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="power.html">IV. Approfondissements</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="proxied.html">22. Applications avec Proxy ou SOLO</a></span></dt>
+                     <dt><span class="chapter"><a href="views.html">23. Vues</a></span></dt>
+                     <dt><span class="chapter"><a href="constraints.html">24. Contraintes</a></span></dt>
+                     <dt><span class="chapter"><a href="introductory-classes.html">25. Classes</a></span></dt>
+                     <dt><span class="chapter"><a href="methods-events-attributes.html">26. M&eacute;thodes, Ev&eacute;nements et Attributs</a></span></dt>
+                     <dt><span class="chapter"><a href="delegates.html">27. D&eacute;l&eacute;gu&eacute;s</a></span></dt>
+                     <dt><span class="chapter"><a href="input-devices.html">28. Int&eacute;ractions avec l'utilisateur</a></span></dt>
+                     <dt><span class="chapter"><a href="states.html">29. Etats</a></span></dt>
+                     <dt><span class="chapter"><a href="class-inheritance.html">30. Extension de Classes</a></span></dt>
+                     <dt><span class="chapter"><a href="custom-components.html">31. Conception de Composants personnalis&eacute;s</a></span></dt>
+                     <dt><span class="chapter"><a href="browser-integration.html">32. Int&eacute;gration dans le navigateur internet</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="data.html">V. Donn&eacute;es et Liaison de donn&eacute;es</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="data-structures.html">33. Donn&eacute;es, XML, et XPath</a></span></dt>
+                     <dt><span class="chapter"><a href="databinding.html">34. Acc&egrave;s aux donn&eacute;es et liaisons</a></span></dt>
+                     <dt><span class="chapter"><a href="data_app.html">35. Construction d'applications dirig&eacute;es par les donn&eacute;es</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="application.html">VI. Examen des Applications</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="survey-chapter.html">36. Une applications bas&eacute;es sur des composants</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="performance.html">VII. Performance, Suivi et Mont&eacute;e en charge</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="performance-tuning.html">37. Performance, Suivi et Mont&eacute;e en charge</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="server-integration.html">VIII. Int&eacute;gration sur le Serveur</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="cookies.html">38. Cookies et Sessions</a></span></dt>
+                     <dt><span class="chapter"><a href="persistent_connection.html">39. La connection permanente</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="laszlorpc.html">IX. OpenLaszlo RPC</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="rpc.html">40. OpenLaszlo RPC</a></span></dt>
+                     <dt><span class="chapter"><a href="rpc-javarpc.html">41. JavaRPC</a></span></dt>
+                     <dt><span class="chapter"><a href="rpc-soap.html">42. SOAP</a></span></dt>
+                     <dt><span class="chapter"><a href="rpc-xmlrpc.html">43. XML-RPC</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="methodology.html">X. M&eacute;thodologie de d&eacute;veloppement</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="chapter"><a href="editing-lzx.html">44. Edition</a></span></dt>
+                     <dt><span class="chapter"><a href="debugging.html">45. Debuggage</a></span></dt>
+                     <dt><span class="chapter"><a href="lzunit.html">46. Tests unitaires</a></span></dt>
+                  </dl>
+               </dd>
+               <dt><span class="part"><a href="appendices.html">XI. Appendices</a></span></dt>
+               <dd>
+                  <dl>
+                     <dt><span class="appendix"><a href="initialization-and-instantiation.html">A. Comprendre l'instantiation</a></span></dt>
+                     <dt><span class="appendix"><a href="ecmascript-and-lzx.html">B. ECMAScript</a></span></dt>
+                  </dl>
+               </dd>
+            </dl>
+         </div>
+      </div>
+      <hr>
+      <p class="copyright">Copyright &copy; 2002-2005 <a target="_top" href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+         All Rights Reserved. Unauthorized use, duplication or
+         distribution is strictly prohibited. This is the proprietary
+         information of Laszlo Systems, Inc. Use is subject to license terms.
+      </p>
+      <div class="navfooter">
+         <hr>
+         <table width="100%" summary="Navigation footer">
+            <tr>
+               <td width="40%" align="left">&nbsp;</td>
+               <td width="20%" align="center">&nbsp;</td>
+               <td width="40%" align="right">&nbsp;<a accesskey="n" href="preface.html">Suivant</a></td>
+            </tr>
+            <tr>
+               <td width="40%" align="left" valign="top">&nbsp;</td>
+               <td width="20%" align="center">&nbsp;</td>
+               <td width="40%" align="right" valign="top">&nbsp;Pr&eacute;face</td>
+            </tr>
+         </table>
+      </div>
+   </body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
