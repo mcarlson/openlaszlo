@@ -16,12 +16,12 @@
     </then></if>
     <basename property="lps.branch" file="${LPS_HOME}"/>
 
-    <!-- make sure we have a working VENDOR_ROOT -->
-    <if><isset property="env.VENDOR_ROOT" /><then>
-        <property name="VENDOR_ROOT" value="${env.VENDOR_ROOT}" />
+    <!-- make sure we have a working LZ_VENDOR_ROOT -->
+    <if><isset property="env.LZ_VENDOR_ROOT" /><then>
+        <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
     </then></if>
-    <if><not><isset property="VENDOR_ROOT" /></not><then>
-        <property name="VENDOR_ROOT" value="${LPS_HOME}/../tools" />
+    <if><not><isset property="LZ_VENDOR_ROOT" /></not><then>
+        <property name="LZ_VENDOR_ROOT" value="${LPS_HOME}/../tools" />
     </then></if>
 
     <property name="build.tools" value="" />

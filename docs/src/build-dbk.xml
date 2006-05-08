@@ -14,7 +14,7 @@
   </xmlcatalog>
   
   <target name="init">
-    <property name="docbook-xsl" value="${VENDOR_ROOT}/docbook-xsl-1.65.1"/>
+    <property name="docbook-xsl" value="${LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
     <property name="dguide.input.dir" value="dguide"/>
     <property name="dguide.build.dir" value="build/dguide"/>
     <property name="dguide.output.dir" value="../fast-dguide"/>
@@ -84,7 +84,7 @@
   </target>
   
   <target name="validate">
-    <jing rngfile="${VENDOR_ROOT}/emacs/nxml-mode-20031031/schema/docbook.rnc"
+    <jing rngfile="${LZ_VENDOR_ROOT}/emacs/nxml-mode-20031031/schema/docbook.rnc"
           compactsyntax="true" checkid="true">
       <fileset dir="dbk" includes="*.dbk" excludes="**/index*.dbk"/>
     </jing>

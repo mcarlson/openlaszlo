@@ -59,7 +59,7 @@
       <property file="${LPS_HOME}/build.properties"/>
       
       <!-- doc build properties -->
-      <property name="docbook-xsl" value="${VENDOR_ROOT}/docbook-xsl-1.65.1"/>
+      <property name="docbook-xsl" value="${LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
       <property name="docs.output.dir" value="${LPS_HOME}/docs" />
       <if><equals arg1="${release}" arg2="Production" casesensitive="true"/>
       <then>
