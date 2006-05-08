@@ -28,24 +28,33 @@ example:</p>
 &lt;canvas&gt;
 </example>
 
-<p>The <tagname>splash</tagname> element may contain
-<a href="splash-view.html">view</a> elements, to define the position and
-behavior of resources that are displayed during the load process; however,
-these <a href="splash-view.html">view</a> elements have a limited feature set.
-For example, the following program positions an image on the canvas, which
-is removed once the application is loaded.  Multiple images can be
-positioned, and the <attribute>persistent</attribute> attribute can be
-used to leave the views containing these images on the canvas once the
-load process is complete.</p>
+<p>The <tagname link="true">splash</tagname> element may contain
+<a href="splash-view.html">"splash view"</a> elements to define the position and
+behavior of resources that are displayed during the load process. However,
+these <a href="splash-view.html">"splash view"</a> elements, although they are declared with a "view" tag, have a limited feature set. That is to say, when you place a <a href="splash-view.html">view</a> tag inside a <tagname link="true">splash</tagname> element, you are not getting the same object that you do when you place a <tagname link="true">view</tagname> tag elsewhere on the canvas.
+</p>
+<p>
+For example, the following program positions an image on the canvas during the "splash" loading portion of the program's execution and removes it once the application has loaded. The examnple below executes too quickly to be demonsrate the splash view; try it in a larger application to see how it works.</p>
 
-<example extract="false">
-&lt;canvas&gt;
+<example extract="false" title="using 'splash view' tag">
+&lt;canvas height="100"&gt;
   &lt;splash&gt;
     &lt;view resource="images/logo.png"/&gt;
   &lt;/splash&gt;
 &lt;/canvas&gt;
 </example>
-
+<p>
+You can position more than one image by specifying its coordinates. The <attribute>persistent</attribute> attribute  on <tagname>splash</tagname> tag causes the "splash" views contained within the spash element to remain on the canvas once the
+load process is complete.</p>
+<example title="persisting splash views">
+&lt;canvas height="100"&gt;
+  &lt;splash persistent="true"&gt;
+    &lt;view x="5" resource="images/logo.png" /&gt;
+    &lt;view x="50" resource="images/logo.png" /&gt;
+    &lt;view x="150" resource="images/logo.png" /&gt;
+  &lt;/splash&gt;
+&lt;/canvas&gt;
+</example>
 
 <p>Also see the <a href="${demos}contacts/contacts.lzx">contacts</a> example.</p>
 
