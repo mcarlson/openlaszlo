@@ -99,7 +99,7 @@ element canvas {
   & ## The lpsversion of this lzx application.
     [a:defaultValue="1.1"] attribute version {string}?
   & ## Specifies if this application is intended to be accessible
-    [a:defaultValue="false"] attribute accessible {booleanLiteral}
+    [a:defaultValue="false"] attribute accessible {booleanLiteral}?
 }
 
 library =
@@ -1062,7 +1062,7 @@ trait =
      attribute name {token} &
      ## Any attribute can occur
      ## We need to handle this in a preprocessing step.
-     attribute * - (name|extends|traits) {string}*
+     attribute * - (name) {string}*
    & viewContentElements
   }
 
