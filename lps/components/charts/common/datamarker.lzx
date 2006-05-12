@@ -79,7 +79,7 @@
                 mygradient = this.createLinearGradient(0,0,this.pointrepresentation.width,this.pointrepresentation.height);
             }
 
-            mygradient.addColorStop(0, '0xffffff');
+            mygradient.addColorStop(0, 0xffffff);
             this.globalAlpha = 1;
             mygradient.addColorStop(1, this.style.point.color);                
             this.fillStyle = mygradient;
@@ -94,7 +94,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->
