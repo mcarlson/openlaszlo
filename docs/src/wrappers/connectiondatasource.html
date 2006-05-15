@@ -77,7 +77,7 @@ of connected users.</p>
     &lt;handler name="ondata" args="d"&gt;
       Debug.write("d", d);
     &lt;/method&gt;
-    &lt;method event="onerror" args="dset"&gt;
+    &lt;handler name="onerror" args="dset"&gt;
         Debug.write("error sending XML: " + dset.errorstring);
     &lt;/handler&gt;
   &lt;/datapointer&gt;

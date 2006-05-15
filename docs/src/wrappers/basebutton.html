@@ -80,12 +80,12 @@ clicked, and these approaches are shown below.</p>
   &lt;/basebutton&gt;
   
   
-  &lt;!-- APPROACH 3: have the method respond to the onclick event directly --&gt;
+  &lt;!-- APPROACH 3: have the handler respond to the onclick event directly --&gt;
   &lt;basebutton resource="mybutton_rsrc"&gt;
-    &lt;method <em>event</em>="onclick"&gt;
+    &lt;handler<em>name</em>="onclick"&gt;
       this.animate('x', 100, 1000, true, {motion: 'easeout'}); 
       this.animate('x', -100, 1000, true, {motion: 'easein'}); 
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/basebutton&gt;
   
   &lt;simplelayout axis="y" spacing="20"/&gt;
