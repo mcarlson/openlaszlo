@@ -220,15 +220,15 @@
       &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
       &lt;button width="80" x="200" y="10"&gt;Update
         &lt;!-- 2a --&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
       &lt;button width="80" x="200" y="40"&gt;Delete
         &lt;!-- 2b --&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             parent.parent.datapath.deleteNode();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
       &lt;!-- 3 --&gt;
     &lt;/view&gt;
@@ -276,9 +276,9 @@
       &lt;text y="85"&gt;Email:&lt;/text&gt;
       &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
       &lt;button width="80" x="200" y="10"&gt;Add
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/view&gt;
     &lt;!-- 3 --&gt;
@@ -303,14 +303,14 @@
       &lt;text y="85"&gt;Email:&lt;/text&gt;
       &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
       &lt;button width="80" x="200" y="10"&gt;Update
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
       &lt;button width="80" x="200" y="40"&gt;Delete
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.deleteNode();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/view&gt;
   &lt;/view&gt;
@@ -329,15 +329,15 @@
 
 <p>Let's modify the event handler of the Add button with the code required to add the new contact node to the dset dataset:</p>
 
-<pre class="code">
-&lt;method event="onclick"&gt;
+<example extract="false" title="Adding a node to a dataset">
+&lt;handler name="onclick"&gt;
   parent.datapath.updateData();
   var dp=canvas.datasets.dset.getPointer();   // 1
   dp.selectChild();                           // 2
   dp.addNodeFromPointer(parent.datapath);     // 3
   parent.setDatapath("new:/contact");         // 4
-&lt;/method&gt;
-</pre>
+&lt;/handler&gt;
+</example>
 
 <table>
   <tr>
@@ -386,13 +386,13 @@
       &lt;text y="85"&gt;Email:&lt;/text&gt;
       &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
       &lt;button width="80" x="200" y="10"&gt;Add<em>
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
            parent.datapath.updateData();
            var dp=canvas.datasets.dset.getPointer();   
            dp.selectChild();                           
            dp.addNodeFromPointer(parent.datapath);     
            parent.setDatapath("new:/contact");         
-         &lt;/method&gt;</em>
+         &lt;/handler&gt;</em>
       &lt;/button&gt;
     &lt;/view&gt;
     &lt;!-- 3 --&gt;
@@ -417,14 +417,14 @@
       &lt;text y="85"&gt;Email:&lt;/text&gt;
       &lt;edittext name="email" datapath="@email" x="80" y="85"/&gt;
       &lt;button width="80" x="200" y="10"&gt;Update
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
       &lt;button width="80" x="200" y="40"&gt;Delete
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.deleteNode();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/view&gt;
   &lt;/view&gt;
@@ -471,14 +471,14 @@
     &lt;text onclick="parent.newContact.setVisible(!parent.newContact.visible);"&gt;New Entry...&lt;/text&gt;
     &lt;contactview name="newContact" datapath="new:/contact"&gt;
       &lt;button width="80" x="200" y="10"&gt;Add
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.datapath.updateData();
           var dp=canvas.datasets.dset.getPointer();
           dp.selectChild();
           dp.addNodeFromPointer( parent.datapath );
           parent.setVisible(false);
           parent.setDatapath("new:/contact");
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/contactview&gt;
   &lt;/view&gt;
@@ -493,14 +493,14 @@
     &lt;/view&gt;
     &lt;contactview name="updateContact"&gt;
       &lt;button width="80" x="200" y="10"&gt;Update
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
       &lt;button width="80" x="200" y="40"&gt;Delete
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.parent.datapath.deleteNode();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/contactview&gt;
   &lt;/view&gt;
@@ -772,7 +772,7 @@
     &lt;text onclick="parent.newContact.setVisible(!parent.newContact.visible);"&gt;New Entry...&lt;/text&gt;
     &lt;contactview name="newContact" datapath="new:/contact"&gt;
       &lt;button width="80" x="200" y="10"&gt;Add
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.sendData("insert");                         // 5
           parent.datapath.updateData();
           var dp=canvas.datasets.dset.getPointer();
@@ -780,7 +780,7 @@
           dp.addNodeFromPointer( parent.datapath );
           parent.setVisible(false);
           parent.setDatapath("new:/contact");
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/contactview&gt;
   &lt;/view&gt;
@@ -795,16 +795,16 @@
     &lt;/view&gt;
     &lt;contactview name="updateContact"&gt;
       &lt;button width="80" x="200" y="10"&gt;Update
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.sendData("update");                      // 6
           parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
       &lt;button width="80" x="200" y="40"&gt;Delete
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
           parent.sendData("delete");                      // 7
           parent.parent.datapath.deleteNode();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/button&gt;
     &lt;/contactview&gt;
   &lt;/view&gt;
@@ -884,17 +884,17 @@ d.setQueryString( { action: "action",
 
 <p><code>contactmgr.jsp</code> returns a simple <code>success</code> xml document if the requested operation succeeded and <code>failure</code> if the operation failed. To check for the success or failure of the operation in the client application, you can define an event handler for the ondata event of the dsSendData dataset. In this event handler you use a datapointer to check for the value of the <code>tag</code>.</p>
 
-<pre class="code">
+<example extract="false" title="using ondata handler to check for success">
 &lt;datapointer xpath="dsSendData:/"&gt;
-  &lt;method event="ondata"&gt;
+  &lt;handler name="ondata"&gt;
     if (this.xpathQuery("result/text()") == "success") {
       Debug.write("Operation succeeded");
     } else {
       Debug.write("Operation failed");
     }
-  &lt;/method&gt;
+  &lt;/handler&gt;
 &lt;/datapointer&gt; 
-</pre>
+</example>
 
 </body>
 </html>

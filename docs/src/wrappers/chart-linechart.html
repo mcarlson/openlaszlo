@@ -27,15 +27,15 @@
     
     
     &lt;button&gt;undo
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             chart1.undo(500);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
     &lt;button x="100"&gt; show all points
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             chart1.changeBound(chart1.defaultminx, chart1.defaultminy, 
                  chart1.defaultmaxx,chart1.defaultmaxy, 1000, true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
     &lt;view name="title" x="${chart1.width/2}" y="30" &gt;
         &lt;text font="serif" fontsize="15" fontstyle="bold" fgcolor="0x0000FF"&gt;
@@ -51,13 +51,13 @@
                 x="600"
                 y="350"
                 direction="vertical"&gt;
-          &lt;method event="onitemmouseclick" args="item"&gt;
+          &lt;handler name="onitemmouseclick" args="item"&gt;
               var topseries = this.getChartInstance().getDataSeries();
 
               topseries.getDataSeries(item.identifier).enabled = item.linevisible;
               this.getChartInstance().renderPlotArea();
               item.linevisible = !item.linevisible;
-          &lt;/method&gt; 
+          &lt;/handler&gt; 
         &lt;/legend&gt;
 
     &lt;linechart id="chart1" y="60" width="600" height="500" style="chartstyle01" 
@@ -106,3 +106,7 @@
 </example>
 </body>
 </html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

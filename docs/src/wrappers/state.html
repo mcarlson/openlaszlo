@@ -56,11 +56,11 @@ When a state is removed, any children or constraints created when the state was 
     &lt;/state&gt;
     &lt;button placement="title_area" align="right" height="16"&gt; Toggle
       &lt;attribute name="isMax" value="true"/&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         if (this.isMax) { parent.max.remove(); parent.min.apply(); }
         else { parent.max.apply(); parent.min.remove(); }
         this.isMax = !this.isMax;
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/window&gt;
 &lt;/canvas&gt;

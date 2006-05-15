@@ -61,18 +61,18 @@ in view hierarchy.</p>
     &lt;attribute name="trackgroup" type="string" value="${parent.trackgroup}"/&gt;
     &lt;view name="spot" bgcolor="${parent.mycolor}"
         x="2" y="2" width="18" height="18"/&gt;
-    &lt;method event="oninit"&gt;
+&lt;handler name="oninit"&gt;
         LzTrack.register(this, this.trackgroup);
-    &lt;/method&gt;
-    &lt;method event="onmousetrackover"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmousetrackover"&gt;
         setAttribute('bgcolor', 0xdedede); // hilite: gray
-    &lt;/method&gt;
-    &lt;method event="onmousetrackout"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmousetrackout"&gt;
         setAttribute('bgcolor', 0x000000); // normal: black
-    &lt;/method&gt;
-    &lt;method event="onmousetrackup"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmousetrackup"&gt;
         parent.onnewcolor.sendEvent(this.spot.bgcolor);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/class&gt;
 
   &lt;view bgcolor="0x0000ff" width="20" height="20"
@@ -80,9 +80,9 @@ in view hierarchy.</p>
       onmouseup="this.colorpicker.setVisible(false); LzTrack.deactivate('mymenu');"&gt;
     &lt;view name="colorpicker" visible="false" x="10" y="10"&gt;
       &lt;attribute name="trackgroup" value="mymenu" type="string"/&gt;
-      &lt;method event="onnewcolor" args="newcolor"&gt;
+      &lt;handler name="onnewcolor" args="newcolor"&gt;
           parent.setAttribute('bgcolor', newcolor);
-      &lt;/method&gt;
+      &lt;/handler&gt;
 
       &lt;simplelayout axis="x"/&gt;
       &lt;colorspot mycolor="0x0000ff"/&gt;

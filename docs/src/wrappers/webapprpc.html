@@ -54,27 +54,27 @@ documentation for details.</p>
 
     &lt;webapprpc id="webapp" autoload="false"&gt;
 
-        &lt;method event="oninit"&gt;
+        &lt;handler name="oninit"&gt;
             Debug.write('loading webapp object...');
             this.load();
-        &lt;/method&gt;        
+        &lt;/handler&gt;        
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('webapp object loaded');
             canvas.buttons.setAttribute('visible', true);
-        &lt;/method&gt;        
+        &lt;/handler&gt;        
 
-        &lt;method event="ondata" args="data"&gt;
+        &lt;handler name="ondata" args="data"&gt;
             if (data == LzRPC.t_void) {
                 Debug.write("default ondata: void");
             } else {
                 Debug.write("default ondata:", data);
             }
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write("default onerror:", error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall funcname="getMajorVersion" /&gt;
 
@@ -145,9 +145,9 @@ documentation for details.</p>
 
             &lt;attribute name="myDel" value="null" type="expression" /&gt;
 
-            &lt;method event="oninit"&gt;
+            &lt;handler name="oninit"&gt;
                 this.myDel = new LzDelegate(this, 'myhandler');
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
             &lt;method name="myhandler" args="data"&gt;
                 Debug.write('myhandler:', data);
@@ -166,9 +166,9 @@ documentation for details.</p>
             &lt;button text="getmyattr (w/params)" onclick="webapp.getmyattr.invoke(['myattr'])" /&gt;
 
             &lt;button text="getmyattr (w/params and delegate)"&gt;
-                &lt;method event="onclick"&gt;
+                &lt;handler name="onclick"&gt;
                     webapp.getmyattr.invoke(['myattr'], parent.mydel);
-                &lt;/method&gt;
+                &lt;/handler&gt;
             &lt;/button&gt;
 
             &lt;button text="removemyattr" onclick="webapp.removemyattr.invoke()" /&gt;

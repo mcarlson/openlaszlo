@@ -59,12 +59,12 @@ a load error.</p>
         source. --&gt;
     &lt;javarpc name="ce" scope="session" classname="examples.ConstructExample"
              createargs="[1]" autoload="false"&gt;
-        &lt;method event="onerror" args="err"&gt;
+        &lt;handler name="onerror" args="err"&gt;
             Debug.write("onerror:", err)
-        &lt;/method&gt;
-        &lt;method event="onload"&gt;
+        &lt;/handler&gt;
+        &lt;handler name="onload"&gt;
             Debug.write("proxy loaded:", this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/javarpc&gt;
 
     &lt;!-- See $LPS_HOME/WEB-INF/classes/examples/TypesExample.java for java
@@ -72,12 +72,12 @@ a load error.</p>
          pattern--&gt;
     &lt;javarpc name="te" scope="session" classname="examples.TypesExample"
              autoload="false"&gt;
-        &lt;method event="onerror" args="err"&gt;
+        &lt;handler name="onerror" args="err"&gt;
             Debug.write("onerror:", err)
-        &lt;/method&gt;
-        &lt;method event="onload"&gt;
+        &lt;/handler&gt;
+        &lt;handler name="onload"&gt;
             Debug.write("proxy loaded:", this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/javarpc&gt;
     
     &lt;view x="10" y="10" layout="axis: x; spacing: 5"&gt;

@@ -3,7 +3,7 @@
 <!--                                                                       -->
 <!-- library classes for the 'cityspot' class used in world clocks map     -->
 <!--                                                                       -->
-<!-- Copyright 2002-2004 Laszlo Systems, Inc.  All Rights Reserved.        -->
+<!-- Copyright 2002-2006 Laszlo Systems, Inc.  All Rights Reserved.        -->
 <!-- Unauthorized use, duplication or distribution is strictly prohibited. -->
 <!-- This software is the proprietary information of Laszlo Systems, Inc.  -->
 <!-- Use is subject to license terms.                                      -->
@@ -67,7 +67,7 @@
         </method>
 
         <!-- Data has been received so process it -->
-        <method  event="ondata">
+        <handler name="ondata">
             <![CDATA[
 
             // First, position the dot for the city
@@ -98,7 +98,7 @@
 
             this.title.setLabelPosition()
             ]]>
-        </method>
+        </handler>
 
         <!-- sync clock to a specific timezone of a city -->
         <method name="syncclock" args="clockObj">

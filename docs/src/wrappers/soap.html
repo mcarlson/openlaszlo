@@ -34,17 +34,17 @@ service based on a WSDL. The name and wsdl attributes are required.</p>
     &lt;soap name="amazon" 
              wsdl="http://soap.amazon.com/schemas3/AmazonWebServices.wsdl"&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('Amazon soap service loaded');
             Debug.write('Compare proxy stubs with WSDL SOAP operations.');
             Debug.write('Amazon WSDL at ' + this.wsdl);            
             Debug.write('proxy:');
             Debug.inspect(this.proxy);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -79,20 +79,20 @@ passed into the operation must match the XML schema as defined in the WSDL.</p>
         ]]&gt;
         &lt;/method&gt;
        
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             // make buttons visible once SOAP object is loaded
             canvas.buttons.setAttribute('visible', true);            
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ontimeout" args="error"&gt;
+        &lt;handler name="ontimeout" args="error"&gt;
             Debug.write('timeout:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ondata" args="value"&gt;
+        &lt;handler name="ondata" args="value"&gt;
             Debug.write(value);
             result.setText(value);
         &lt;/method&gt;
@@ -220,13 +220,13 @@ is described in the WSDL's XML schema.</p>
     &lt;dataset name="googleDset" /&gt;
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service loaded');
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;!-- See RPC chapter for details on remotecall and how dataobject is
              used to data bind to RPC operation results. --&gt; 
@@ -244,9 +244,9 @@ is described in the WSDL's XML schema.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('search result:\n', value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         &lt;/remotecall&gt;
     &lt;/soap&gt;

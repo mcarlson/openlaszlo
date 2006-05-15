@@ -32,12 +32,12 @@ of connected users.</p>
   &lt;debug y="60"/&gt;
 
   &lt;connection authenticator="anonymous"&gt;
-    &lt;method event="onconnect"&gt;
+    &lt;handler name="onconnect"&gt;
       Debug.write("persistent connection established");
-    &lt;/method&gt;
-    &lt;method event="ondisconnect"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="ondisconnect"&gt;
       Debug.write("persistent connection closed");
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/connection&gt;
 
   &lt;connectiondatasource name="mycd"&gt;
@@ -47,39 +47,39 @@ of connected users.</p>
 
   &lt;!-- Datapointer to listen for persistent connection messages --&gt;
   &lt;datapointer xpath="mycd:dsetMessage:/*[1]"&gt;
-    &lt;method event="ondata"&gt;
+    &lt;handler name="ondata"&gt;
       var from = this.xpathQuery('/from[0]/@name');
       var mesg = this.xpathQuery('/text()');
       Debug.write("got message (from " + from + "): '"+ mesg + "'");
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   &lt;!-- Datapointer to listen for persistent connection XML messages --&gt;
   &lt;datapointer xpath="mycd:dsetXML:/*[1]"&gt;
-    &lt;method event="ondata"&gt;
+    &lt;handler name="ondata"&gt;
       var mesg = this.xpathQuery('/myxml/text()');
       Debug.write("got xml mesg: '" + mesg + "'");
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   &lt;!-- Datapointer to listen for result of sendMessage call. --&gt;
   &lt;datapointer xpath="mycd:sendMessageDset:/*[1]"&gt;
-    &lt;method event="ondata" args="d"&gt;
+    &lt;handler name="ondata" args="d"&gt;
       Debug.write("d", d);
-    &lt;/method&gt;
-    &lt;method event="onerror" args="dset"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onerror" args="dset"&gt;
       Debug.write("error sending message: " + dset.errorstring);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   &lt;!-- Datapointer to listen for result of sendXML call. --&gt;
   &lt;datapointer xpath="mycd:sendXMLDset:/*[1]"&gt;
-    &lt;method event="ondata" args="d"&gt;
+    &lt;handler name="ondata" args="d"&gt;
       Debug.write("d", d);
     &lt;/method&gt;
     &lt;method event="onerror" args="dset"&gt;
         Debug.write("error sending XML: " + dset.errorstring);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
   
   &lt;view x="10" y="10" layout="class: simplelayout; axis: x; spacing: 10"&gt;
@@ -87,17 +87,17 @@ of connected users.</p>
     &lt;button onclick="connection.disconnect()" text="disconnect" /&gt;
 
     &lt;button&gt;send hello
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         mycd.sendMessage("*", "hello, world", "dsetMessage");
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
 
     &lt;button&gt;send XML
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
       &lt;![CDATA[
           mycd.sendXML("*", "&lt;myxml&gt;hello, xml&lt;/myxml&gt;", "dsetXML");
       ]]&gt;
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;

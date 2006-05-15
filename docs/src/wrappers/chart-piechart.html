@@ -37,15 +37,15 @@ Here is a piechart that uses series data.</p>
                
         &lt;strokestyle name="pieslicestyle" strokeColor="0x000000" strokeWidth="2"  strokeType="dotted" /&gt;
         &lt;legend name="legendbox" legendFontsize="14" initstage="late" legendborder="false"&gt;
-            &lt;method event="onitemmouseover" args="item"&gt;
+            &lt;handler name="onitemmouseover" args="item"&gt;
                 var piepiece = parent.plotarea.arrPiePieces[item.identifier];
                 piepiece.renderInnerWedge();
-            &lt;/method&gt;
+            &lt;/handler&gt;
             
-            &lt;method event="onitemmouseout" args="item"&gt;
+            &lt;handler name="onitemmouseout" args="item"&gt;
                 var piepiece = parent.plotarea.arrPiePieces[item.identifier];
                 piepiece.renderWedge();
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/legend&gt;
         
     &lt;/piechart&gt;
@@ -53,7 +53,7 @@ Here is a piechart that uses series data.</p>
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

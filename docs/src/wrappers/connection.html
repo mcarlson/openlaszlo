@@ -26,25 +26,25 @@ persistent connection and <method>disconnect</method> to close it down.</p>
 &lt;canvas debug="true" height="200"&gt;
   &lt;debug y="60"/&gt;
   &lt;connection authenticator="anonymous"&gt;
-    &lt;method event="onconnect"&gt;
+    &lt;handler name="onconnect"&gt;
       Debug.write('connected');
-    &lt;/method&gt;
-    &lt;method event="ondisconnect"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="ondisconnect"&gt;
       Debug.write('client disconnected');
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/connection&gt;
 
   &lt;view&gt;
     &lt;simplelayout axis="x" spacing="5"/&gt;
     &lt;button&gt;connect
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         canvas.connection.connect();
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
     &lt;button&gt;disconnect
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         canvas.connection.disconnect();
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;
@@ -75,62 +75,62 @@ logging in.</p>
   &lt;debug y="60"/&gt;
 
   &lt;connection&gt;
-    &lt;method event="onconnect"&gt;
+    &lt;handler name="onconnect"&gt;
       Debug.write('connected as ' + connection.getUsername()); 
-    &lt;/method&gt;
-    &lt;method event="ondisconnect"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="ondisconnect"&gt;
       Debug.write('client disconnected');
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/connection&gt;
 
   &lt;datapointer xpath="connection:loginDset:/login[1]/authentication[1]/response[1]/status[1]"&gt;
-    &lt;method event="ondata"&gt;
+    &lt;handler name="ondata"&gt;
       var statusMessage = this.xpathQuery('@msg');
       Debug.write('login: ' + statusMessage);
-    &lt;/method&gt;
-    &lt;method event="onerror"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onerror"&gt;
       Debug.write('login resulted in error');
-    &lt;/method&gt;
-    &lt;method event="ontimeout"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout"&gt;
       Debug.write('login timed out');
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   &lt;datapointer xpath="connection:logoutDset:/logout[1]/authentication[1]/response[1]/status[1]"&gt;
-    &lt;method event="ondata"&gt;
+    &lt;handler name="ondata"&gt;
       var statusMessage = this.xpathQuery('@msg');
       Debug.write('logout: ' + statusMessage);
-    &lt;/method&gt;
-    &lt;method event="onerror"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onerror"&gt;
       Debug.write('logout resulted in error');
-    &lt;/method&gt;
-    &lt;method event="ontimeout"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="ontimeout"&gt;
       Debug.write('logout timed out');
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/datapointer&gt;
 
   &lt;view&gt;
     &lt;simplelayout axis="x" spacing="5"/&gt;
     &lt;button&gt;login
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         canvas.connection.login('adam', 'adam');
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
     &lt;button&gt;logout
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         canvas.connection.logout();
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
     &lt;simplelayout axis="x" spacing="5"/&gt;
     &lt;button&gt;connect
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         canvas.connection.connect();
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
     &lt;button&gt;disconnect
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
           canvas.connection.disconnect();
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/view&gt;
 &lt;/canvas&gt;

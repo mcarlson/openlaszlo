@@ -29,11 +29,11 @@
                                            : (   classroot.focused 
                                                ? classroot.style['texthilitecolor']
                                                : classroot.style['textcolor'] ) }">
-          <method event="onclick">
+          <handler name="onclick">
               LzBrowser.loadURL(classroot.datapath.xpathQuery('@href'), target);
               classroot.setAttribute('selected', true);
               classroot.changeFocus(classroot);
-          </method>
+          </handler>
       </text>
   </class>
 
@@ -44,9 +44,9 @@
       <view name="search" width="${parent.width}">
         <simplelayout axis="x"/>
         <edittext name="token" width="120" >
-            <method event="onkeydown" args="k">
+            <handler name="onkeydown" args="k">
                 if ( k == 13 ) parent.find.doClick();
-            </method>
+            </handler>
         </edittext>
         <button height="${parent.token.height}" name="find">
             Find
@@ -140,6 +140,6 @@
   
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

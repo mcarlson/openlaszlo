@@ -40,9 +40,9 @@ grid.</p>
     &lt;gridcolumn sortable="false"&gt; Home
       &lt;checkbox value="$path{'@home_default'}"
                 xoffset="${10-parent.width/2}"&gt;
-        &lt;method event="onvalue"&gt;
+        &lt;handler name="onvalue"&gt;
           this.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/checkbox&gt;
     &lt;/gridcolumn&gt;
   &lt;/grid&gt;

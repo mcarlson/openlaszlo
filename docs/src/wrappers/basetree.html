@@ -41,12 +41,12 @@ purposes.</p>
           bgcolor="${classroot.selected
                     ? classroot.style.selectedcolor 
                     : classroot.parent.bgcolor}"&gt;
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         classroot.changeFocus();
         if (! classroot.isleaf) {
           classroot.setAttribute("open", ! classroot.open);
         }
-      &lt;/method&gt;
+      &lt;/handler&gt;
       &lt;text text="${classroot.text}" resize="true" /&gt;
       &lt;text text="${classroot.text}" resize="true" /&gt;
     &lt;/view&gt;

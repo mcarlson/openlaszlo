@@ -48,13 +48,13 @@ empty array.</p>
             this.load();
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('temperature service loaded!');
             Debug.write('---');
 
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setVisible(true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -63,11 +63,11 @@ empty array.</p>
         &lt;attribute name="myDel" 
                    value="$once{new LzDelegate(this, 'myhandler')}" /&gt;
 
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             var f = 100;
             <em>canvas.temperature.proxy.FtoC([ f ], this.myDel)</em>
             Debug.write('Invoking FtoC...');
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;method name="myhandler" args="data"&gt;
             Debug.write('got data:', data);
@@ -96,33 +96,33 @@ Developer's Guide for more information.</p>
             this.load();
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('temperature service loaded!');
             Debug.write('---');
 
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setVisible(true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         <em>&lt;remotecall funcname="FtoC"&gt;</em>
             <em>&lt;param value="100" /&gt;</em>
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('got data:', value);
-            &lt;/method&gt;
-            &lt;method event="onerror" args="errmsg"&gt;
+            &lt;/handler&gt;
+            &lt;handler name="onerror" args="errmsg"&gt;
                 Debug.write('error:', errmsg);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         <em>&lt;/remotecall&gt;</em>
 
     &lt;/soap&gt;
 
     &lt;button name="convert" text="convert" x="10" y="10" visible="false"&gt;
-        &lt;method event="onclick"&gt;
+        &lt;handler name="onclick"&gt;
             <em>canvas.temperature.FtoC.invoke();</em>
             Debug.write('Invoking FtoC...');
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/button&gt;
 
 &lt;/canvas&gt;

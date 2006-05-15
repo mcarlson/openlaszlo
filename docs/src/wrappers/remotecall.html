@@ -43,17 +43,17 @@ the remote function expects.</p>
             this.load();
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('temperature service loaded!');
             Debug.write('---');
 
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setVisible(true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ondata" args="value"&gt;
+        &lt;handler name="ondata" args="value"&gt;
             Debug.write('soap object parent ondata:', value);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall <em>name="ftoc1" funcname="FtoC"</em>&gt;
             &lt;param value="100" /&gt;
@@ -61,9 +61,9 @@ the remote function expects.</p>
 
         &lt;remotecall <em>name="ftoc2" funcname="FtoC"</em>&gt;
             &lt;param value="200" /&gt;
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('ftoc ondata:', value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/remotecall&gt;
 
     &lt;/soap&gt;
@@ -71,16 +71,16 @@ the remote function expects.</p>
     &lt;view name="convert" x="10" y="10" visible="false" 
           layout="axis: x; spacing: 5"&gt;
         &lt;button text="convert 100F to C"&gt;
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 canvas.temperature.ftoc1.invoke()
                 Debug.write('Invoking FtoC 1...');
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/button&gt;
         &lt;button text="convert 200F to C"&gt;
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 canvas.temperature.ftoc2.invoke()
                 Debug.write('Invoking FtoC 2...');
-            &lt;/method&gt;
+            &lt;/handler&gt;
         &lt;/button&gt;
     &lt;/view&gt;
 
@@ -108,21 +108,21 @@ method.</p>
             this.load();
         &lt;/method&gt;
 
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('temperature service loaded!');
             Debug.write('---');
 
             // don't allow others to call RPC object until proxy is loaded.
             canvas.convert.setVisible(true);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="ondata" args="value"&gt;
+        &lt;handler name="ondata" args="value"&gt;
             Debug.write('soap object ondata:', value);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="errmsg"&gt;
+        &lt;handler name="onerror" args="errmsg"&gt;
             Debug.write('error:', errmsg);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
     &lt;/soap&gt;
 
@@ -131,10 +131,10 @@ method.</p>
 
         &lt;button text="convert 100F to C"&gt;
 
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 this.FtoC.invoke()
                 Debug.write('Converting 100F to Celsius...');
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
             &lt;remotecall funcname="FtoC" 
                         <em>remotecontext="$once{canvas.temperature}"&gt;</em>
@@ -145,17 +145,17 @@ method.</p>
 
         &lt;button text="convert 200F to C"&gt;
 
-            &lt;method event="onclick"&gt;
+            &lt;handler name="onclick"&gt;
                 this.FtoC.invoke()
                 Debug.write('Converting 200F to Celsius...');
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
             &lt;remotecall funcname="FtoC"
                         <em>remotecontext="$once{canvas.temperature}"&gt;</em>
                 &lt;param value="200" /&gt;
-                &lt;method event="ondata" args="value"&gt;
+                &lt;handler name="ondata" args="value"&gt;
                     Debug.write('200F in Celsius is', value);
-                &lt;/method&gt;
+                &lt;/handler&gt;
             &lt;/remotecall&gt;
         &lt;/button&gt;
     &lt;/view&gt;
@@ -186,13 +186,13 @@ href="${dguide}rpc.html">RPC chapter</a>.</p>
     &lt;dataset name="googleDset" /&gt;
 
     &lt;soap name="google" wsdl="http://api.google.com/GoogleSearch.wsdl"&gt;
-        &lt;method event="onload"&gt;
+        &lt;handler name="onload"&gt;
             Debug.write('google soap service stub loaded');
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
-        &lt;method event="onerror" args="error"&gt;
+        &lt;handler name="onerror" args="error"&gt;
             Debug.write('error:', error);
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;remotecall name="search" funcname="doGoogleSearch" 
                     dataobject="googleDset"&gt;
@@ -208,10 +208,10 @@ href="${dguide}rpc.html">RPC chapter</a>.</p>
             &lt;param value="''" /&gt;
             &lt;param value="''" /&gt;
 
-            &lt;method event="ondata" args="value"&gt;
+            &lt;handler name="ondata" args="value"&gt;
                 Debug.write('got result');
                 Debug.inspect(value);
-            &lt;/method&gt;
+            &lt;/handler&gt;
 
         &lt;/remotecall&gt;
     &lt;/soap&gt;

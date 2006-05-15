@@ -29,7 +29,7 @@
 <example class="code">
 &lt;canvas&gt;
     &lt;drawview width="200" height="200"&gt;
-        &lt;method event="oninit"&gt;
+        &lt;handler name="oninit"&gt;
             this.moveTo(100, 100);
             this.lineTo(100, 200);
             this.quadraticCurveTo(150, 250, 200, 200);
@@ -69,7 +69,7 @@
             g.addColorStop(1, 0xffffff);
             this.fillStyle = g;
             this.fill();
-        &lt;/method&gt;
+        &lt;/handler&gt;
     &lt;/drawview&gt;
 &lt;/canvas&gt;
 </example>

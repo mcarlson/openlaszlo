@@ -34,9 +34,9 @@ involved in maintaining a selection within a dataset.</p>
       &lt;text placement="header"&gt;Check 'em off&lt;/text&gt;
       &lt;checkbox text="$path{ '@displayname'}" 
                 value="$path{'@checked'}"&gt;
-        &lt;method event="onvalue"&gt;
+        &lt;handler name="onvalue"&gt;
           this.parent.parent.datapath.updateData();
-        &lt;/method&gt;
+        &lt;/handler&gt;
       &lt;/checkbox&gt;
     &lt;/basegridcolumn&gt;
     &lt;scrollbar placement="content"/&gt;

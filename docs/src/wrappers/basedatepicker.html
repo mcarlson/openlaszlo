@@ -32,13 +32,13 @@
            bgcolor="green"
            width="20"
            height="20"&gt;
-        &lt;method event="onclick"&gt; 
+        &lt;handler name="onclick"&gt; 
         &lt;![CDATA[
             if( !this.disabled  ) {
                 this.setAttribute('selected', true);    
             } 
         ]]&gt;
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;text text="${parent.daynum}"
               visible="${!parent.disabled}" 
@@ -63,7 +63,7 @@
             this.display.year.setText( year );
         &lt;/method&gt;
 
-        &lt;method event="onselecteddate"&gt;
+        &lt;handler name="onselecteddate"&gt;
             if( this.selecteddate != null ) {
                 this.selected.year.setText( this.selecteddate.getFullYear() );
                 this.selected.month.datapath.setXPath(
@@ -71,7 +71,7 @@
                         this.selecteddate.getMonth() + "']/@full" ); 
                 this.selected.date.setText( this.selecteddate.getDate() );
             }
-        &lt;/method&gt;
+        &lt;/handler&gt;
 
         &lt;view options="ignorelayout"&gt;
             &lt;text width="20" height="20" bgcolor="red" text="S"/&gt;

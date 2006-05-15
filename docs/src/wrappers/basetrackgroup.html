@@ -36,17 +36,17 @@ dragging across the other squares.</p>
 &lt;canvas height="200"&gt;
     &lt;include href="/base/basetrackgroup.lzx"/&gt;
     &lt;class name="testview"  bgcolor="red" width="100%" height="30" clickable="true"&gt;
-    &lt;method event="onmousetrackover"&gt;
+    &lt;handler name="onmousetrackover"&gt;
       this.setHilite(true);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
-    &lt;method event="onmousetrackout"&gt;
+    &lt;handler name="onmousetrackout"&gt;
       this.setHilite(false);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
-    &lt;method event="onmousetrackup"&gt;
+    &lt;handler name="onmousetrackup"&gt;
       this.setSelect(true);
-    &lt;/method&gt;
+    &lt;/handler&gt;
 
     &lt;method name="setHilite" args="ishilite"&gt;
      if (ishilite ) this.setBGColor(0x00FF00);

@@ -59,19 +59,19 @@ features of datapaths to retrieve data from a dataset.</p>
     &lt;simplelayout/&gt;
     <em>&lt;datapointer id="mydp" xpath="mydata:/record[1]"/&gt;</em>
     &lt;button&gt; Move forward with select
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
         if (mydp.selectNext()) var s = <em>mydp.getNodeText();</em>
         else var s = "hit last record; reset with xpath";
         output.setText(s);
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
     &lt;button&gt; Set with XPath
-      &lt;method event="onclick"&gt;
+      &lt;handler name="onclick"&gt;
           if (mydp.getNodeName() == "record")
             var xp = <em>"mydata:/record[1]/deeper/deeprecord[1]";</em>
           else var xp = <em>"mydata:/record[1]";</em>
           <em>mydp.setXPath( xp );</em> output.setText(<em>mydp.getNodeText()</em>);
-      &lt;/method&gt;
+      &lt;/handler&gt;
     &lt;/button&gt;
   &lt;/view&gt;
 

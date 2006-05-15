@@ -26,7 +26,7 @@ that represent OpenLaszlo's hierarchical data format.</p>
   &lt;button&gt;Make some data
     &lt;attribute name="currentstep" value="0"/&gt;
 
-    &lt;method event="onclick"&gt;
+    &lt;handler name="onclick"&gt;
       &lt;![CDATA[ 
       switch(currentstep ++){
         case 0:
@@ -53,7 +53,7 @@ that represent OpenLaszlo's hierarchical data format.</p>
       }
       display.setText(display.escapeText(n.serialize()));
       ]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
 </example>

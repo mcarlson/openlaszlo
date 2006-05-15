@@ -24,7 +24,7 @@ Datepicker is a simple component that makes it easy for users to select dates.
                  earliestdate="new Date( 2003, 9, 5)" 
                  latestdate="new Date( 2005, 1, 5)"
                  selecteddate="new Date( 2006, 3, 20)"&gt;
-        &lt;method event="onselecteddate"&gt;
+        &lt;handler name="onselecteddate"&gt;
             if( this.selecteddate != null ) {
                 display.year.setText( this.selecteddate.getFullYear() );
                 display.month.datapath.setXPath(
@@ -32,7 +32,7 @@ Datepicker is a simple component that makes it easy for users to select dates.
                         this.selecteddate.getMonth() + "']/@full" ); 
                 display.date.setText( this.selecteddate.getDate() );
             } 
-        &lt;/method&gt;
+        &lt;/handler&gt;
      &lt;/datepicker&gt; 
 
      &lt;view id="display"&gt;

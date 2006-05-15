@@ -15,11 +15,10 @@
 </lzelement>
 
 <p>Attaches a method to the object that contains this element.  The
-method must have either a <attribute>name</attribute> or
-<attribute>event</attribute> attribute.</p>
+method must have a <attribute>name</attribute>.</p>
 
-<p>If the method has a <attribute>name</attribute> attribute, it
-defines a method that can be invoked from JavaScript with this name.
+<p>The <attribute>name</attribute> attribute
+allows the method to be invoked from JavaScript with this name.
 For example, if a method is defined via:</p>
 
 <example extract="false">
@@ -35,20 +34,7 @@ then script code
 can invoke <code>obj.f(1, 2)</code> to add two
 numbers.</p>
 
-<p>If the method has an <attribute>event</attribute> attribute, the
-script will be executed when the referenced view receives an event
-with this name.  For example, </p>
 
-<example extract="false">
-&lt;view&gt;
-  &lt;method event="onclick"&gt;
-    f(this);
-  &lt;/method&gt;
-&lt;/view&gt;
-</example> 
-
-<p>defines code that applies the function <code>f</code> to the view
-object, when the view is clicked on.</p>
 
 </body>
 </html>

@@ -24,12 +24,12 @@ The LzGlobalMouse service sends events any time the mouse button state changes, 
   &lt;simplelayout inset="10" spacing="10"/&gt;
 
   &lt;checkbox&gt;Lock mouse events
-    &lt;method event="onvalue"&gt;
+    &lt;handler name="onvalue"&gt;
       if (this.value){
         <em>LzModeManager.globalLockMouseEvents();</em>
       } 
-    &lt;/method&gt;
-    &lt;method event="onclick" reference="LzGlobalMouse" args="who"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onclick" reference="LzGlobalMouse" args="who"&gt;
       &lt;![CDATA[ 
       //need to use LzGlobalMouse, since we don't get clicks if we're
       //checked. NB that LzGlobalMouse sends its events before the view
@@ -39,7 +39,7 @@ The LzGlobalMouse service sends events any time the mouse button state changes, 
         <em>LzModeManager.globalUnlockMouseEvents();</em>
       }
       ]]&gt;
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/checkbox&gt;
 
   &lt;button&gt;click me!&lt;/button&gt;
@@ -48,21 +48,21 @@ The LzGlobalMouse service sends events any time the mouse button state changes, 
     &lt;method name="showEvent" args="what, who"&gt;
       this.setText(what +": " + who);
     &lt;/method&gt;
-    &lt;method event="onmouseover" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+    &lt;handler name="onmouseover" reference="<em>LzGlobalMouse</em>" args="who"&gt;
       this.showEvent("mouseover" , who);
-    &lt;/method&gt;
-    &lt;method event="onmouseout" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmouseout" reference="<em>LzGlobalMouse</em>" args="who"&gt;
       this.showEvent("mouseout" , who);
-    &lt;/method&gt;
-    &lt;method event="onmousedown" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmousedown" reference="<em>LzGlobalMouse</em>" args="who"&gt;
       this.showEvent("mousedown" , who);
-    &lt;/method&gt;
-    &lt;method event="onmouseup" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onmouseup" reference="<em>LzGlobalMouse</em>" args="who"&gt;
       this.showEvent("mouseup" , who);
-    &lt;/method&gt;
-    &lt;method event="onclick" reference="<em>LzGlobalMouse</em>" args="who"&gt;
+    &lt;/handler&gt;
+    &lt;handler name="onclick" reference="<em>LzGlobalMouse</em>" args="who"&gt;
       this.showEvent("mouseclick" , who);
-    &lt;/method&gt;
+    &lt;/handler&gt;
   &lt;/text&gt;
 &lt;/canvas&gt;
 </example>

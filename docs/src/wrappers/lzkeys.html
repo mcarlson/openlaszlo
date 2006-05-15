@@ -21,19 +21,19 @@
 
 <example title="LzKeys">
 &lt;canvas height="140" debug="true"&gt;
-  &lt;method event="onkeydown" reference="LzKeys" args="k"&gt;
+  &lt;handler name="onkeydown" reference="LzKeys" args="k"&gt;
     Debug.write("key " + k + " down");
-  &lt;/method&gt;
-  &lt;method event="onkeyup" reference="LzKeys" args="k"&gt;
+  &lt;/handler&gt;
+  &lt;handler name="onkeyup" reference="LzKeys" args="k"&gt;
     Debug.write("key " + k + " up");
-  &lt;/method&gt;
+  &lt;/handler&gt;
   &lt;method name="pressA"&gt;
     Debug.write("A pressed");
   &lt;/method&gt;
-  &lt;method event="oninit"&gt;
+  &lt;handler name="oninit"&gt;
     del = new LzDelegate(this, "pressA");
     LzKeys.callOnKeyCombo(del, ["A"]);
-  &lt;/method&gt; 
+  &lt;/handler&gt; 
 &lt;/canvas&gt;
 </example>
 
