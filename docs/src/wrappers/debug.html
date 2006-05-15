@@ -25,9 +25,10 @@ the <tagname>canvas</tagname> tag, or adding the
 <example class="program" id="debug-1"
          title="debug tag">
 &lt;canvas debug="true" height="120"&gt;
-  &lt;debug width="100" height="50" x="5" y="5" fontsize="8"/&gt;
+  &lt;debug width="300" height="50" x="5" y="5" fontsize="8"/&gt;
   &lt;script&gt;
     Debug.write("Hello world!");
+    Debug.warn('This is a hotlink: %w', {a: 1, b: 2});
   &lt;/script&gt;
 &lt;/canvas&gt;
 </example>
