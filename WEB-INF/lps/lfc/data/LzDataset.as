@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -51,6 +51,10 @@ LzDataset.prototype.__proto__ = cheesyMultipleInheritance(
 // response) and client (decoding the response) in trade for lower 
 // network bandwidth usage.
 LzDataset.prototype.acceptencodings = false;
+
+// @field Boolean nsprefix: When true, the server will preserve namespace prefixes
+// on data node names and attribute names
+LzDataset.prototype.nsprefix = true;
 
 // @field Boolean getresponseheaders: When true, the server will encode and 
 // send the HTTP response headers along with the data (defaults to false). 

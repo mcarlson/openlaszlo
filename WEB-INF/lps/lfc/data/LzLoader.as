@@ -581,19 +581,19 @@ LzLoader.prototype.maxLoopTime = 2000; // 2 seconds
 //==============================================================================
 LzLoader.prototype.queuedCopyFlashXML_internal = function () {
     var ptr = this.copyQueue.ptr;
-    //    _root.Debug.write("enter queuedCopyFlashXML_internal", ptr);
+    //    Debug.write("enter queuedCopyFlashXML_internal", ptr);
     var q = this.copyQueue.q;
     var iter = 0;
     var maxiter = this.copyLoopsPerFrame;
     var loopstart = (new Date).getTime();
-    //    _root.Debug.write("entering queuedCopyFlashXML_internal (ptr, q.len)", ptr, q.length );
+    var oproto = Object.prototype;
     while (ptr < q.length && iter++ < maxiter) {
 
         // check time once every 100 iterations
         if ((iter % 100) == 0) {
             var elapsed = (new Date).getTime() - loopstart;
             if (elapsed > this.maxLoopTime) {
-                //_root.Debug.write("too much time in queuedCopyFlashXML_internal, break");
+                //Debug.write("too much time in queuedCopyFlashXML_internal, break");
                 break;
             }
         }
@@ -616,18 +616,16 @@ LzLoader.prototype.queuedCopyFlashXML_internal = function () {
             // and see if GC still works.
 
             var stripnsprefix = !this.nsprefix;
+            var nattrs = node.attributes;
             var cattrs;
-
-            if (stripnsprefix) { 
-                // this is an expensive operation
+            if (stripnsprefix) {
+                // this is slow, we iterate over every attribute name
                 cattrs = {};
                 for (var key in nattrs) {
                     var nkey = key;
-                    if (stripnsprefix) {
-                        var colpos = key.indexOf(':');
-                        if (colpos >= 0) {
-                            nkey = key.substring(colpos+1);
-                        }
+                    var colpos = key.indexOf(':');
+                    if (colpos >= 0) {
+                        nkey = key.substring(colpos+1);
                     }
                     cattrs[nkey] = nattrs[key];
                 }
@@ -637,7 +635,7 @@ LzLoader.prototype.queuedCopyFlashXML_internal = function () {
                 cattrs.__proto__ = oproto;
                 cattrs.constructor = Object;
                 ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
-            }
+             }
 
             //lfcnode = new LzDataElement(node.nodeName, cattrs);
 
@@ -677,15 +675,15 @@ LzLoader.prototype.queuedCopyFlashXML_internal = function () {
         }
     }
     this.copyQueue.ptr = ptr;
-    //_root.Debug.write("leaving queuedCopyFlashXML_internal main loop", ptr, iter);
+    //Debug.write("leaving queuedCopyFlashXML_internal main loop", ptr, iter);
     if (ptr >= q.length) {
-        //_root.Debug.write("entering queuedCopyFlashXML_internal post-copy cleanup", ptr, q.length);
+        //Debug.write("entering queuedCopyFlashXML_internal post-copy cleanup", ptr, q.length);
         // If we get here, we're finished with the tree copy.
         // Unregister the idle loop handler
         var xmlobj = this.copyQueue.xmlobj;
         this.removeCopyTask();
         // Proceed with getting this dataset returned to the customer
-        //_root.Debug.write("calling loader.returnData root node");
+        //Debug.write("calling loader.returnData root node");
         xmlobj.loader.returnData(xmlobj, this.lfcrootnode.childNodes[0]);
     }
 }
