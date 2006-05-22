@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -479,7 +479,7 @@ LzLoader.prototype._dbg_name = function () {
 //==============================================================================
 // @keywords private
 //==============================================================================
-LzLoader.prototype.copyFlashXML = function (node, lfcparent, trimwhitespace) {
+LzLoader.prototype.copyFlashXML = function (node, trimwhitespace, stripnsprefix) {
     var nv = node.nodeValue;
     var lfcnode = null;
     // text node?
@@ -493,15 +493,30 @@ LzLoader.prototype.copyFlashXML = function (node, lfcparent, trimwhitespace) {
         var nattrs = node.attributes;
         var cattrs = {};
         for (var key in nattrs) {
-            cattrs[key] = nattrs[key];
+            var nkey = key;
+            if (stripnsprefix) {
+                var colpos = key.indexOf(':');
+                if (colpos >= 0) {
+                    nkey = key.substring(colpos+1);
+                }
+            }
+            cattrs[nkey] = nattrs[key];
         }
 
-        lfcnode = new LzDataElement(node.nodeName, cattrs);
+        var nname = node.nodeName;
+        if (nname && stripnsprefix) {
+            var npos = nname.indexOf(':');
+            if (npos >= 0) {
+                nname = nname.substring(npos+1);
+            }
+        }
+
+        lfcnode = new LzDataElement(nname, cattrs);
         var children = node.childNodes;
         var newchildren = [];
         for (var i  = 0; i < children.length; i++ ) {
             var child = children[i];
-            var lfcchild = LzLoader.prototype.copyFlashXML(child, lfcnode, trimwhitespace);
+            var lfcchild = LzLoader.prototype.copyFlashXML(child, trimwhitespace, stripnsprefix);
             newchildren[i] = lfcchild;
         }
         lfcnode.setChildNodes(newchildren);
@@ -543,11 +558,13 @@ LzLoader.prototype.queuedCopyFlashXML = function(xmlnode) {
     this.lfcrootnode = rootnode;
     rootnode.ownerDocument = rootnode;
     xmlnode._lfcparent = rootnode;
-    var trimwhitespace = xmlnode.trimwhitespace;
     var queue = [xmlnode];
     // set up the work queue
     this.copyQueue = {ptr: 0, q: queue, xmlobj: xmlnode};
     this.trimwhitespace = xmlnode.trimwhitespace;
+    var dset = xmlnode.dataset;
+    //Debug.write("dset.nsprefix=", dset.nsprefix, "queuedCopyFlashXML, dataset = ", dset);
+    this.nsprefix = dset.nsprefix; // preserve namespace prefix
     this.queuedCopyFlashXML_internal();
     this.startCopyTask();
 }
@@ -598,24 +615,44 @@ LzLoader.prototype.queuedCopyFlashXML_internal = function () {
             // After this works, try bashing the __proto__
             // and see if GC still works.
 
-            var cattrs = node.attributes;
+            var stripnsprefix = !this.nsprefix;
+            var cattrs;
 
-            cattrs.__proto__ = oproto;
-            cattrs.constructor = Object;
-            ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
-
-            /*
-            var nattrs = node.attributes;
-            var cattrs = {};
-            for (var key in nattrs) {
-                cattrs[key] = nattrs[key];
+            if (stripnsprefix) { 
+                // this is an expensive operation
+                cattrs = {};
+                for (var key in nattrs) {
+                    var nkey = key;
+                    if (stripnsprefix) {
+                        var colpos = key.indexOf(':');
+                        if (colpos >= 0) {
+                            nkey = key.substring(colpos+1);
+                        }
+                    }
+                    cattrs[nkey] = nattrs[key];
+                }
+            } else {
+                // this is the fast path 
+                cattrs = node.attributes;
+                cattrs.__proto__ = oproto;
+                cattrs.constructor = Object;
+                ASSetPropFlags(cattrs, ['__proto__', 'constructor'], 1, 7);
             }
-            */
+
             //lfcnode = new LzDataElement(node.nodeName, cattrs);
 
             ////////
+
+            var nodename = node.nodeName;
+            if (nodename && !this.nsprefix) {
+                var npos = nodename.indexOf(':');
+                if (npos >= 0) {
+                    nodename = nodename.substring(npos+1);
+                }
+            }
+
             lfcnode = { __proto__: LzDataElement.prototype,
-                        nodeName: node.nodeName,
+                        nodeName: nodename,
                         attributes: cattrs,
                         ownerDocument: lfcparent.ownerDocument,
                         parentNode: lfcparent};

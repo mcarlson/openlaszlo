@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -143,12 +143,12 @@ LzDataNode.prototype.__LZunlockFromUpdate = function ( locker ){
 // @return LzDataElement: An LzDataElement which is the top of the hierarchy
 // generated from the string
 //-----------------------------------------------------------------------------
-LzDataNode.stringToLzData = function( str, trimwhitespace ) {
+LzDataNode.stringToLzData = function( str, trimwhitespace, stripnsprefix ) {
     var xmlobj = new XML();
     xmlobj.ignoreWhite = true;
     xmlobj.parseXML( str );
     if ( xmlobj.childNodes.length != 1 ) return null;
-    var lfcnode = LzLoader.prototype.copyFlashXML(xmlobj, trimwhitespace);
+    var lfcnode = LzLoader.prototype.copyFlashXML(xmlobj, trimwhitespace, stripnsprefix);
     var fc = lfcnode.removeChild( lfcnode.getFirstChild() );  
     if ( fc instanceof LzDataText ) return null;
     return fc;
