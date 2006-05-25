@@ -8,27 +8,32 @@
     <property environment="env"/>
 
     <!-- make sure we have a working LPS_HOME -->
-    <if><isset property="env.LPS_HOME" /><then>
-        <property name="LPS_HOME" value="${env.LPS_HOME}" />
-    </then></if>
-    <if><not><isset property="LPS_HOME" /></not><then>
-        <fail message="LPS_HOME not set" />
-    </then></if>
+    <property name="LPS_HOME" value="${env.LPS_HOME}" />
+    <fail unless="LPS_HOME" message="LPS_HOME is not set."/>
+    
     <basename property="lps.branch" file="${LPS_HOME}"/>
 
     <!-- make sure we have a working LZ_VENDOR_ROOT -->
-    <if><isset property="env.LZ_VENDOR_ROOT" /><then>
-        <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
-    </then></if>
-    <if><not><isset property="LZ_VENDOR_ROOT" /></not><then>
-        <property name="LZ_VENDOR_ROOT" value="${LPS_HOME}/../tools" />
-    </then></if>
+    <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
+    <fail unless="LZ_VENDOR_ROOT" message="LZ_VENDOR_ROOT is not set"/>
 
+    <property name="LZ_TOOLS_ROOT" value="${env.LZ_TOOLS_ROOT}" />
+    <fail unless="LZ_TOOLS_ROOT" message="LZ_TOOLS_ROOT is not set"/>        
+    
     <property name="build.tools" value="" />
     <property name="build.qa" value="" />
-    <if><not><equals arg1="${user.name}" arg2="builder" /></not><then>
-        <property name="build.id" value="INTERNAL" />
-    </then></if>
+    
+    <!-- We usually don't want an official build id. Just use "INTERNAL"
+        unless the current user is "laszlo" --> 
+    <condition property="build.id" value="x.x.x.x" else="INTERNAL">
+        <not>
+            <equals arg1="${user.name}" arg2="laszlo" />
+        </not>
+    </condition>
+    
+    <condition property="isautomatedbuild">
+         <equals arg1="${user.name}" arg2="laszlo" />
+    </condition>
 
     <!-- Determine value of platform -->
     <condition property="build.platform" value="windows" >
@@ -62,6 +67,13 @@
     <condition property="sh" value="sh" >
          <os family="unix" />
     </condition>
-
+    
+    <!-- TODO: we're turning this stuff off while we get the guts of
+     the distro process working again. [bshine 5.17.06] --> 
+    <property name="skip.prefetch" value="true" />
+    <property name="skip.doc" value="true" />    
+    <property name="skip.wrappertest" value="true" />
+    <property name="skip.runlzunit" value="true" />
+    
     <property name="done.build-opt" value="true" />
 </target>

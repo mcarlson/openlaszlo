@@ -7,6 +7,7 @@
 
   <description>
       This is the build file for the LPS schema.
+      It currently does not try to build the docs. [bshine 5.24.06]
   </description>
 
   <!-- Define contrib tasks -->
@@ -25,35 +26,42 @@
     <property name="html" value="lzx-reference.html"/>
     <property name="python.exec" value="python" />
     <mkdir dir="build"/>
+    
+    <uptodate property="rng.uptodate" value="false" targetfile="build/lzx.direct.rng">
+        <srcfiles dir=".">
+            <include name="strip-docs.xsl,strip-private.xsl"/>
+            <include name="lzx.rnc"/>
+        </srcfiles>
+    </uptodate>
+
+    <uptodate property="dtd.uptodate" value="false" srcfile="${rng}" targetfile="${dtd}">
+    </uptodate>
+    
+    <uptodate property="xsd.uptodate" value="false" srcfile="${rnc}" targetfile="${xsd}"/>
+    
   </target>
 
-  <target name="rng" depends="init"
-          description="Generate RNG schema file">
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="." includes="${rnc},strip-docs.xsl,strip-private.xsl"/>
-      </sourcefiles>
-      <targetfiles path="build/lzx.direct.rng"/>
+  <target name="rng" depends="init" unless="rng.uptodate"
+          description="Generate RNG schema file">  
       <sequential>
         <java fork="true"
-              classname="com.thaiopensource.relaxng.output.Driver">
+              jar="${env.LZ_VENDOR_ROOT}/trang.jar">
           <classpath>
-            <pathelement location="${ANT_HOME}/lib/trang.jar"/>
             <pathelement path="${java.class.path}"/>
           </classpath>
           <arg value="${rnc}"/>
           <arg value="build/lzx.direct.rng"/>
         </java>
       </sequential>
-    </outofdate>
+
     <style in="build/lzx.direct.rng" out="${rng}" style="strip-docs.xsl"/>
     <style in="build/lzx.direct.rng" out="${docrng}" style="strip-private.xsl"/>
     <!-- this depends on a newer version of jing -->
     <!--java fork="true"
 	  classname="com.thaiopensource.relaxng.output.Driver">
       <classpath>
-        <pathelement location="${ANT_HOME}/lib/trang.jar"/>
-	<pathelement path="${java.class.path}"/>
+        <pathelement location="${LZ_VENDOR_ROOT}/trang.jar" />
+        <pathelement path="${java.class.path}"/>
       </classpath>
       <arg value="${docrng}"/>
       <arg value="build/lzx.rnc"/>
@@ -61,18 +69,14 @@
   </target>
 
   <target name="dtd" 
-          description="Generate DTD" depends="rng">
-    <if><not>
-      <uptodate srcfile="${rng}" targetfile="${dtd}"/>
-    </not>
-    <then>
+          description="Generate DTD" depends="rng"
+          unless="dtd.uptodate">
       <exec executable="${python.exec}" taskname="rng2dtd" failonerror="true" >
         <arg value="rng2dtd.py"/>
         <arg value="${rng}"/>
         <arg value="-o"/>
         <arg value="${dtd}"/>
       </exec>
-    </then></if>
   </target>
 
   <target name="clean" 
@@ -88,16 +92,14 @@
     </delete>
   </target>
 
+    
   <target name="build" 
-          description="Build generated schema files" depends="rng,dtd">
-      <if>
-        <not><uptodate srcfile="${rnc}" targetfile="${xsd}"/></not>
-        <then>
+          description="Build generated schema files" depends="rng,dtd"
+          unless="xsd.uptodate">
           <java fork="true" failonerror="true"
-                classname="com.thaiopensource.relaxng.output.Driver"
-                output="log.trang">
+            jar="${env.LZ_VENDOR_ROOT}/trang.jar"
+            output="log.trang">
                <classpath>
-                   <pathelement location="${ANT_HOME}/lib/trang.jar"/>
                    <pathelement path="${java.class.path}"/>
                 </classpath>
               <arg value="${rnc}"/>
@@ -108,7 +110,6 @@
             <arg line="-v 'Warning.*cannot \(be \)\?represent.*approximating' log.trang"/>
           </exec>
           <delete file="log.trang"/>
-        </then></if>
   </target>
 
   <target name="doc"
@@ -118,6 +119,6 @@
           description="Run schema related tests (none)"/>
 
   <target name="all" 
-          description="Clean, build, doc, and test" 
-          depends="clean,build,doc,test"/>
+          description="Clean, build, NO doc, and test" 
+          depends="clean,build,test"/>
 </project>

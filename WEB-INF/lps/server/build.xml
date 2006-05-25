@@ -15,9 +15,6 @@
 
   &build_opt;
 
-  <!-- Define contrib tasks -->
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-
   <property name="packages" value="org.openlaszlo.*.*" />
 
   <!-- Source Directories -->
@@ -44,14 +41,10 @@
   <property name="compilerapi" value="./doc/compiler/api" />
   <property name="jgendoc" value="./jgendoc" />
 
-  <!-- comment -->
-  <property name="EDITING-COMMENT" 
-       value="THIS IS A GENERATED FILE.  DO NOT EDIT.  EDIT .proto instead" />
-
   <!-- Source file directories -->
   <property name="sc.src.java" value="./sc/src/org/openlaszlo/sc"/>
   <property name="sc.src.py"   value="./sc" />
-
+  
   <!-- Build file directories -->
   <property name="sc.build.java"
            value="${build.java}/org/openlaszlo/sc" />
@@ -67,13 +60,14 @@
 
   <property name="build.debug" value="off"/>
 
-  <property name="JAVA_HOME"   value="${env.JAVA_HOME}"/>
-  <property name="JAVACC_HOME" value="${env.JAVACC_HOME}"/>
-  <property name="JYTHON_HOME" value="${env.JYTHON_HOME}"/>
-  <property name="ANT_HOME"    value="${env.ANT_HOME}"/>
+  <property name="JAVA_HOME"      value="${env.JAVA_HOME}"/>
+  <property name="JAVACC_HOME"    value="${env.JAVACC_HOME}"/>
+  <property name="JYTHON_HOME"    value="${env.JYTHON_HOME}"/>
+  <property name="ANT_HOME"       value="${env.ANT_HOME}"/>
+  <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
 
-  <property name="ANT_JAR"     value="${ANT_HOME}/lib/ant.jar"/>
-  <property name="JUNIT_JAR"   value="${ANT_HOME}/lib/junit.jar"/>
+  <property name="ANT_JAR"        value="${ANT_HOME}/lib/ant.jar"/>
+  <property name="JUNIT_JAR"      value="${LZ_VENDOR_ROOT}/junit.jar"/>
 
   <property name="properties.file" value="${LPS_HOME}/build.properties" />
   <property file="${properties.file}" />
@@ -120,6 +114,33 @@
        </fileset>
        <fileset dir="${LPS_HOME}/3rd-party/jars/dev" />
    </path>
+   
+   <!-- Determine whether the css parser needs to be updated --> 
+   <uptodate property="css-parser.uptodate"
+       targetfile="${build.java}/org/openlaszlo/css/CSSParser.java"
+       srcfile="${src}/org/openlaszlo/css/CSSParser.jj"/>
+   
+   <condition property="sc-parser.uptodate">
+      <and>
+          <uptodate targetfile="${sc.build.java}/parser/Parser.jj">
+              <srcfiles dir="${sc.src.java}" includes="Parser.jjt"/>
+          </uptodate>
+          <uptodate targetfile="${sc.build.java}/parser/Parser.java">
+              <srcfiles dir="${sc.build.java}/parser" includes="Parser.jj"/>
+          </uptodate>
+      </and>
+  </condition>
+  
+  <uptodate property="sc-compiler.uptodate"
+       targetfile="${sc.build.java}/LFCCompiler.java">
+         <srcfiles dir="${sc.src.py}" includes="*.py" 
+                   excludes="test*.py,jsdoc2xml.py,xmldocutils.py"/>
+  </uptodate>      
+  
+  <uptodate property="server-javadoc.uptodate" targetfile="${javadoc}/index.html">
+          <srcfiles dir="${src}" />
+  </uptodate>
+      
 
     <property name="done.server.init" value="true" />
   </target>
@@ -163,42 +184,30 @@
     <delete dir="${jgendoc}" />
   </target>
 
+
   <!--==============  Target [css-parser]  ===================-->
   <target name="css-parser" depends="init"
-          description="Run JavaCC to create the css-parser *.java files.">
+      unless="css-parser.needs-update"   
+      description="Run JavaCC to create the css-parser *.java files.">
     <mkdir dir="${build.java}/org/openlaszlo/css/parser"/>
-    <if>
-        <not> 
-            <uptodate 
-              targetfile="${build.java}/org/openlaszlo/css/CSSParser.java"
-              srcfile="${src}/org/openlaszlo/css/CSSParser.jj"/>
-        </not>
-        <then>
-            <javacc target="${src}/org/openlaszlo/css/CSSParser.jj"
-                    outputdirectory="${build.java}/org/openlaszlo/css/"
-                    javacchome="${JAVACC_HOME}" />
-       </then>
-    </if>
+    <javacc target="${src}/org/openlaszlo/css/CSSParser.jj"
+                outputdirectory="${build.java}/org/openlaszlo/css/"
+                javacchome="${JAVACC_HOME}" />
   </target>
 
+
   <!--==============  Target [sc-parser]  ===================-->
-  <target name="sc-parser" depends="init"
-      description="Run JavaCC to create the parser *.java files.">
+  <target name="sc-parser" depends="sc-parser-jjt,sc-parser-custom" />
+  
+  <!--==============  Target [sc-parser-jjt]  ===================-->
+  <target name="sc-parser-jjt" depends="init"
+      description="Run JavaCC to create the parser *.java files."
+      unless="sc-parser.uptodate"
+      >
 
     <mkdir dir="${sc.build.java}"/>
     <mkdir dir="${sc.build.java}/parser"/>
 
-    <if>
-      <not> <and>
-        <uptodate targetfile="${sc.build.java}/parser/Parser.jj">
-          <srcfiles dir="${sc.src.java}" includes="Parser.jjt"/>
-        </uptodate>
-        <uptodate targetfile="${sc.build.java}/parser/Parser.java">
-          <srcfiles dir="${sc.build.java}/parser" includes="Parser.jj"/>
-        </uptodate>
-      </and> </not>
-
-      <then>
         <jjtree target="${sc.src.java}/Parser.jjt"
                 outputdirectory="${sc.build.java}/parser"
                 javacchome="${JAVACC_HOME}"
@@ -207,41 +216,22 @@
                 outputdirectory="${sc.build.java}/parser"
                 javacchome="${JAVACC_HOME}"
                 />
+    </target>
+  
+    <!--==============  Target [sc-parser-custom]  ===================-->
+    <target name="sc-parser-custom" depends="init">
         <!-- replace generated classes with our custom -->
         <copy flatten="true" todir="${sc.build.java}/parser" overwrite="true">
           <fileset dir="${sc.src.java}/parser" includes="*.java"/>
         </copy>
-      </then>
-    </if>
-    <!-- ensure custom classes are up to date, even when Parser has not changed -->
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="${sc.src.java}/parser" includes="*.java"/>
-      </sourcefiles>
-      <mapper type="glob" dir="${sc.src.java}/parser"
-              from="*" to="${sc.build.java}/parser/*"/>
-      <sequential>
-        <copy flatten="true" todir="${sc.build.java}/parser" overwrite="true">
-          <fileset dir="${sc.src.java}/parser" includes="*.java"/>
-        </copy>
-      </sequential>
-    </outofdate>
-
   </target>
 
+  
   <!--==============  Target [sc-compiler]  ===================-->
-  <target name="sc-compiler" depends="init" unless="options.sc.skip"
+  <target name="sc-compiler" depends="init" unless="options.sc.skip,sc-compiler.uptodate"
       description="Run jythonc to create *.java files.">
 
     <mkdir dir="${sc.build.java}"/>
-    <if>
-        <not> 
-            <uptodate targetfile="${sc.build.java}/LFCCompiler.java">
-               <srcfiles dir="${sc.src.py}" includes="*.py" 
-                         excludes="test*.py,jsdoc2xml.py,xmldocutils.py"/>
-            </uptodate>
-        </not>
-        <then>
             <exec executable="${jython}" dir="${sc.src.py}" failonerror="true" >
               <arg value="${LPS_HOME}/3rd-party/tools/jythonc/jythonc.py"/>
               <arg line="--package org.openlaszlo.sc"/>
@@ -252,8 +242,6 @@
               <arg value="LFCCompiler"/>
               <arg value="Regenerator"/>
             </exec>
-        </then>
-      </if>
   </target>
 
   <target name="skip-sc" depends="init"
@@ -275,7 +263,7 @@
   <!--==============  Target [lps-xml]  ===================-->
   <target name="lps-xml" depends="init" unless="done-lps-xml"
           description="Create the lps.xml file" >
-
+    <echo message="LPS_HOME is ${LPS_HOME}." />
     <!-- Create LPS.xml based on timestamp -->
     <tstamp>
         <format property="BUILDDATE" 
@@ -381,20 +369,13 @@
   <!--=================  Target [doc]  ==================-->
   <!-- Really depends on css-parser but that will usually be done -->
   <target name="doc" depends="init" 
-      description="Create documentation from ${src} into ${javadoc}">
+      description="Create documentation from ${src} into ${javadoc}"
+      unless="server-javadoc.uptodate">
     <mkdir dir="${javadoc}" />
     <property name="xtraparams" value=""/>
     <condition property="xtraparams" value="-quiet -breakiterator">
         <equals arg1="${ant.java.version}" arg2="1.4"/>
     </condition>
-    <if>
-      <not>
-        <uptodate targetfile="${javadoc}/index.html" >
-            <srcfiles dir="${src}" />
-        </uptodate>
-      </not>
-
-      <then>
         <echo message="JAVA VERSION ${ant.java.version}"  />
         <!-- build from ${javasrcs}, not ${srcs}, because the automatically
         generated sources generally contain constructs that cause javadoc
@@ -445,9 +426,6 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
 <!-- * H_LZ_COPYRIGHT_END ************************************************* -->
             ]]></bottom>
         </javadoc>
-    </then>
-  </if>
-    
   </target>
 
   <!--=================  Target [jgendoc]  ==================-->

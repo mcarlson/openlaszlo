@@ -18,32 +18,22 @@
   &build_opt;
 
 
-  <!-- Define contrib tasks -->
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-
-
   <target name="init" depends="build-opt">
     <tstamp/>
 
-    <property file="${LPS_HOME}/build.properties"/>
-    <if><equals arg1="${build.debug}" arg2="off" />
-    <then>
-      <property name="JAVA_DEBUG" value="" />
-    </then>
-    <else>
-      <property name="JAVA_DEBUG" value="-ea" />
-    </else>
-    </if>
-    <if><isset property="env.JAVA_OPTS" />
-    <then>
-      <property name="JAVA_OPTS" value="${env.JAVA_OPTS} ${JAVA_DEBUG}" />
-    </then>
-    <else>
-      <property name="JAVA_OPTS" value="${JAVA_DEBUG}" />
-    </else>
-    </if>
     <echo message="JAVA_OPTS=${JAVA_OPTS}" />
+
+    <property file="${LPS_HOME}/build.properties"/>
+    <condition property="JAVA_DEBUG" value="" else="-ea">
+        <equals arg1="${build.debug}" arg2="off" />
+    </condition>
+    
+    <condition property="JAVA_OPTS" value="${env.JAVA_OPTS}" else="">
+        <isset property="env.JAVA_OPTS"/>
+    </condition>
     <property name="sc.dir"     value="${LPS_HOME}/WEB-INF/lps/server/sc"/>
+
+    <echo message="JAVA_OPTS=${JAVA_OPTS}" />
   </target>
 
   <target name="clean" depends="init">
@@ -52,158 +42,87 @@
           <fileset dir="." includes="*.lzl" />
       </delete>
   </target>
-
-  <target name="build" depends="init">
-
-    <!-- lzsc requires the server jar -->
-
-    <ant dir="${LPS_HOME}/WEB-INF/lps/server" target="build"/>
-
-    <if> <isset property="build.lfc.runtime.swf5" />
-      <then>
-        <ant target="lfc"> <property name="version" value="5" /> </ant>
-      </then>
-      <else>
-        <echo message="WARNING Skipping LFC5"/>
-      </else>
-    </if>
-
-    <if> <isset property="build.lfc.runtime.swf6" />
-      <then>
-        <ant target="lfc"> <property name="version" value="6" /> </ant>
-        </then>
-        <else>
-          <echo message="WARNING Skipping LFC6"/>
-        </else>
-    </if>
-
-    <if> <isset property="build.lfc.runtime.swf7" />
-      <then>
-        <ant target="lfc"> <property name="version" value="7" /> </ant>
-      </then>
-      <else>
-        <echo message="WARNING Skipping LFC7"/>
-      </else>
-    </if>
-
-    <if> <isset property="build.lfc.runtime.swf8" />
-      <then>
-        <ant target="lfc"> <property name="version" value="8" /> </ant>
-      </then>
-      <else>
-        <echo message="WARNING Skipping LFC8"/>
-      </else>
-    </if>
-
-
-
-    <ant target="lzl" >
-        <property name="library" value="lzpreloader" />
-        <property name="args"    value="--runtime=swf6"/>
-        <property name="source"  value="lzpreloader.as" />
-    </ant>
-
-  </target>
-
-  <target name="lfc" description="Build lfc lzls" depends="init" >
-    <property name="runtime" value="swf${version}" />
+  
+    <!-- Expects the $library, $args, $source, and $excludes properties to be set from outside -->
+    <target name="lzl" description="Build a .lzl library from source" >
+        <!-- TODO: add a check for uptodate [bshine 5.14.06] --> 
+        <!-- Oh my, this should be done by directly invoking java. 
+        Doing it through exec'ing bash is very very old school, and
+        slow. We don't need to launch another JVM here. 
+        [bshine 5.14.06] -->
+        <echo message="Compiling ${library}"/>
+        <exec executable="bash" failonerror="true">
+            <env key="JAVA_OPTS" value="${JAVA_OPTS}" />
+            <arg line="${sc.dir}/bin/lfcbuilder ${args} -o ${library}.lzl ${source}"/>
+        </exec>
+    </target>
+  
+  
+<!-- We want to build the cross-product of [swf6, swf7, swf8] with [ regular, debug, profile ] -->
+<target name="build" description="Build all the lfc versions requested in build.properties"
+    depends="init">
     <dependset>
       <targetfileset dir="build/cache"/>
       <srcfileset dir="${sc.dir}" includes="*.py"/>
     </dependset>
-    <ant target="lzl" >
-        <property name="library" value="LFC${version}" />
-        <property name="args"    value="--runtime=${runtime}" />
-        <property name="source"  value="LaszloLibrary.as" />
-        <property name="excludes"  value="lzpreloader.as" />
-    </ant>
-    <if> <isset property="build.lfc.runtime.debug" />
-      <then>
-        <ant target="lzl" >
-            <property name="library" value="LFC${version}-debug" />
-            <property name="args"    value="--runtime=${runtime} --option nameFunctions '-D$debug=true'"/>
-            <property name="source"  value="LaszloLibrary.as" />
-            <property name="excludes"  value="lzpreloader.as" />
-        </ant>
-      </then>
-      <else>
-        <echo message="WARNING Skipping LFC${version}-debug"/>
-      </else>
-    </if>
-    <if> <isset property="build.lfc.runtime.profile" />
-      <then>
-        <ant target="lzl" >
-            <property name="library" value="LFC${version}-profile" />
-            <property name="args"    value="--runtime=${runtime} -p"/>
-            <property name="source"  value="LaszloLibrary.as" />
-            <property name="excludes"  value="lzpreloader.as" />
-        </ant>
-      </then>
-      <else>
-        <echo message="WARNING Skipping LFC${version}-profile"/>
-      </else>
-    </if>
-    <if> <isset property="build.lfc.runtime.krank" />
-      <then>
-        <ant target="lzl" >
-            <property name="library" value="LFC${version}-krank" />
-            <property name="args"    value="--runtime=${runtime} -k"/>
-            <property name="source"  value="LaszloLibrary.as" />
-            <property name="excludes"  value="lzpreloader.as" />
-        </ant>
-      </then>
-      <else>
-        <echo message="WARNING Skipping LFC${version}-krank"/>
-      </else>
-    </if>
-    <if> <isset property="build.lfc.runtime.krank" />
-      <then>
-        <if> <isset property="build.lfc.runtime.debug" />
-          <then>
-            <ant target="lzl" >
-                <property name="library" value="LFC${version}-krank-debug" />
-                <property name="args"    value="--runtime=${runtime} -k --option nameFunctions '-D$debug=true'"/>
-                <property name="source"  value="LaszloLibrary.as" />
-                <property name="excludes"  value="lzpreloader.as" />
-            </ant>
-          </then>
-          <else>
-            <echo message="WARNING Skipping LFC${version}-krank-debug"/>
-          </else>
-        </if>
-      </then>
-    </if>
-  </target>
 
-  <!-- Expects the $library, $args, $source, and $excludes properties to be set from outside -->
-  <target name="lzl" description="Build a .lzl library from source" >
-    <if>
-      <not>
-        <uptodate targetfile="${library}.lzl">
-          <srcfiles dir="." includes="*.as,**/*.as" excludes="${excludes}" />
-          <srcfiles dir="${sc.dir}" includes="*.py"/>
-          <!-- Although lzsc requires the server jar, it only needs
-               the parser, which practically never changes, so don't
-               bother checking whether it's up to date - server/build
-               will have done that anyway. -->
-        </uptodate>
-      </not>
-      <then>
-        <echo message="Compiling ${library}"/>
-        <exec executable="bash" failonerror="true">
-          <env key="JAVA_OPTS" value="${JAVA_OPTS}" />
-          <arg line="${sc.dir}/bin/lfcbuilder ${args} -o ${library}.lzl ${source}"/>
-        </exec>
-      </then>
-    </if>
-  </target>
+    <script language="javascript"><![CDATA[
+        var swfruntimes = [5, 6, 7, 8];
+        
+        var myant = lfc.createTask("ant");
+        myant.setTarget("lzl");
+        var libprop = myant.createProperty();
+        libprop.setName("library");
+        var argsprop = myant.createProperty();
+        argsprop.setName("args"); 
+        argsprop.setValue(""); 
+        var sourceprop = myant.createProperty();
+        sourceprop.setName("source");
+        sourceprop.setValue("LaszloLibrary.as");        
+        var runtimeprop = myant.createProperty(); 
+        runtimeprop.setName("runtime"); 
+        var excludesprop = myant.createProperty();
+        excludesprop.setName("excludes");
+        excludesprop.setValue("lzpreloader.as"); 
+        
+        var warningTask = lfc.createTask("echo");
+        var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
+        var buildProfile = lfc.getProperty("build.lfc.runtime.profile");
 
+        for (var s in swfruntimes) {
+            var v = swfruntimes[s]; 
+            
+            // Check whether the options tell us to build this runtime at all
+            var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
+            if (buildThisRuntime != null) {            
+                libprop.setValue("LFC" + v );
+                runtimeprop.setValue("--runtime=swf" + v);
+                myant.execute();
+                
+                if (buildDebug) {
+                    libprop.setValue("LFC" + v + "-debug");
+                    runtimeprop.setValue("--runtime=swf" + v + " --option nameFunctions '-D$debug=true'");
+                    myant.execute();                    
+                }
+                
+                if (buildProfile) {
+                    libprop.setValue("LFC" + v + "-profile");
+                    runtimeprop.setValue("--runtime=swf" + v + " -p");
+                    myant.execute();                    
+                }
+                
+            } else {
+                warningTask.setMessage("WARNING: Skipping LFC" + v);        
+                warningTask.execute();
+            }
+        }
+    ]]> </script>
+</target>
+  
   <target name="doc">
-  <!-- TODO: [11/27/02 ows] Should this build the docs, and lps/build.xml
-       build this target instead of the one in docs? -->
   </target>
 
   <target name="all"
-          description="Clean, build, and doc"
-          depends="clean,build,doc"/>
+          description="Clean, build, (no doc here)"
+          depends="clean,build"/>
 </project>

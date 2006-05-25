@@ -27,7 +27,6 @@ import org.apache.log4j.xml.*;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.servlet.http.HttpServlet;
-import org.apache.xml.utils.*;
 
 public final class ResponderLOGCONFIG extends ResponderAdmin
 {

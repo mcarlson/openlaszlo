@@ -9,7 +9,6 @@
 
 <project name="reference" default="build">
   &build_opt;
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
   <taskdef name="jing" classname="com.thaiopensource.relaxng.util.JingTask"/>
   
   <!-- Local locations for public DTDs, so that the build doesn't
@@ -61,26 +60,17 @@
       <!-- doc build properties -->
       <property name="docbook-xsl" value="${LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
       <property name="docs.output.dir" value="${LPS_HOME}/docs" />
-      <if><equals arg1="${release}" arg2="Production" casesensitive="true"/>
-      <then>
-        <property name="draft.mode" value="no"/>
-        <property name="show.comments" value="0"/>
-        <property name="show.fixmes" value="0"/>
-      </then>
-      <else>
-        <property name="draft.mode" value="yes"/>
-        <property name="show.comments" value="1"/>
-        <if><equals arg1="${release}" arg2="Internal" casesensitive="true"/>
-        <then>
-          <property name="show.fixmes" value="1"/>
-        </then>
-        <else>
-          <property name="show.fixmes" value="0"/>
-        </else>
-        </if>
-      </else>
-      </if>
       
+      <condition property="draft.mode" value="no" else="yes">
+        <equals arg1="${release}" arg2="Production" casesensitive="true"/>
+      </condition>
+      <condition property="show.comments" value="0" else="1">
+        <equals arg1="${release}" arg2="Production" casesensitive="true"/>
+      </condition>
+      <condition property="show.fixmes" value="1" else="0">
+        <equals arg1="${release}" arg2="Internal" casesensitive="true"/>
+      </condition>
+
       <!-- reference properties -->
       <property name="schema.dir" value="${LPS_HOME}/WEB-INF/lps/schema" />
       <property name="components.dir" value="${LPS_HOME}/lps/components"/>
@@ -142,6 +132,70 @@
       <property name="tutorials.old.build.dir" value="build/old-tutorials"/>
       <property name="tutorials.old.output.dir" value="${docs.output.dir}/old-tutorials"/>
       
+      <!-- check whether the xml api is up to date -->       
+      <uptodate property="api-xml.uptodate" targetfile="${jsdocs.dir}/api-lzview.xml">
+        <srcfiles dir="${lfc.dir}" includes="**/*.as" />
+        <srcfiles dir="${sc.dir}" includes="*.py" />
+      </uptodate>
+      
+      
+      <uptodate property="tag-xml.uptodate" targetfile="${tagdocs.dir}/tag-view.xml">
+        <srcfiles dir="${schema.dir}" includes="lzx.rnc"/>
+        <srcfiles dir="${schema.dir}" includes="*.py"/>
+        <srcfiles dir="${components.dir}" includes="**/*.lzx"/>
+      </uptodate>
+
+      <uptodate property="combined-xml.uptodate" targetfile="${reference.build.xml.dir}/view.xml">
+        <srcfiles dir="${tagdocs.dir}" includes="**/*"/>
+        <srcfiles dir="${reference.input.wrappers.dir}" includes="**/*"/>
+        <srcfiles dir="." includes="*.py"/>
+      </uptodate>      
+      
+      
+      <uptodate property="raw-html.uptodate">
+        <srcfiles dir="." includes="*.py"/>
+        <srcfiles dir="wrappers" includes="**/*"/>
+        <globmapper 
+              from="wrappers/*.xml" to="wrappers/${reference.build.html.dir}/*.html"/>     
+      </uptodate>
+      
+      <available property="target.db.available" file="${reference.build.dir}/target.db" />
+      
+      <property name="reference.html.uptodate" value="false" />
+      <!-- If the stylesheets have changed more recently than the html
+         output files, force the latter to rebuild by deleting
+         them. -->
+         <!-- 
+         [bshine 5.15.06 I can't get this dependency to work right. ]
+      <uptodate property="reference.html.uptodate">
+        <srcfiles dir="xsl" includes="format.xsl"/>
+        <mergemapper to="${reference.output.dir}/**/*.html"/>    
+      </uptodate>
+      -->
+      
+      <available property="reference.dir.exists" 
+        file="${reference.output.dir}"
+      />
+      
+      <condition property="reference.output.uptodate">
+        <and>
+          <istrue value="${reference.dir.exists}" />
+          <uptodate>
+            <srcfiles dir="${reference.output.dir}" includes="toc.xml,tags.xml,classes.xml"/>
+            <mergemapper to="${reference.output.dir}/nav.html,${reference.output.dir}/html-nav.html" />
+          </uptodate>
+        </and>
+      </condition>
+      
+      <uptodate property="tutorials.docbook.uptodate">
+        <srcfiles dir="${LPS_HOME}" includes="build.properties"/>
+        <srcfiles dir="xsl" includes="common-html.xsl"/>
+        <srcfiles dir="xsl" includes="parameters.xsl"/>
+        <srcfiles dir="xsl" includes="tutorials.xsl"/>
+        <srcfiles dir="${tutorials.build.dir}" includes="*"/>
+        <mergemapper to="${tutorials.output.dir}/*.html"/>
+    </uptodate>
+      
       <property name="docs.src.done.init" value="true" />
   </target>
 
@@ -173,14 +227,10 @@
     </delete>
   </target>
   
+  
   <target name="api-xml" description="Build the API doc XML files"
-          depends="init">
-      <if><not>
-        <uptodate targetfile="${jsdocs.dir}/api-lzview.xml">
-           <srcfiles dir="${lfc.dir}" includes="**/*.as" />
-           <srcfiles dir="${sc.dir}" includes="*.py" />
-        </uptodate></not>
-      <then>
+          depends="init"
+          unless="api-xml.uptodate">
         <mkdir dir="${jsdocs.dir}" />
         <delete>
           <fileset dir="${jsdocs.dir}" includes="api-*.xml"/>
@@ -189,7 +239,6 @@
         <exec executable="bash" dir="${sc.dir}" failonerror="${build.docs.error.fail}">
           <arg line="-c &quot;./sci jsdoc2xml.py&quot;"/>
         </exec>
-      </then></if>
       <!-- Copy the files -->
       <copy todir="${reference.input.wrappers.dir}">
         <fileset dir="${jsdocs.dir}" includes="*.xml" excludes="schemas.xml">
@@ -199,13 +248,8 @@
   </target>
   
   <target name="tag-xml" description="Build the tag doc XML files" 
-          depends="init">
-      <if><not><uptodate targetfile="${tagdocs.dir}/tag-view.xml">
-            <srcfiles dir="${schema.dir}" includes="lzx.rnc"/>
-            <srcfiles dir="${schema.dir}" includes="*.py"/>
-            <srcfiles dir="${components.dir}" includes="**/*.lzx"/>
-        </uptodate></not>
-      <then>
+          depends="init"
+          unless="tag-xml.uptodate">
           <mkdir dir="${tagdocs.dir}"/>
           <delete>
             <fileset dir="${tagdocs.dir}" includes="tag-*.xml"/>
@@ -214,7 +258,6 @@
           <exec executable="python" dir="${schema.dir}" failonerror="${build.docs.error.fail}">
              <arg line="rng2xml.py"/>
           </exec>
-      </then></if>
       <!-- Copy the files -->
       <copy todir="${reference.input.wrappers.dir}">
         <fileset dir="${tagdocs.dir}" includes="**/*.xml">
@@ -223,13 +266,9 @@
       </copy>
   </target>
 
-  <target name="combined-xml" depends="init,tag-xml,api-xml"> <!-- ,validate -->
-      <if><not><uptodate targetfile="${reference.build.xml.dir}/view.xml">
-            <srcfiles dir="${tagdocs.dir}" includes="**/*"/>
-            <srcfiles dir="${reference.input.wrappers.dir}" includes="**/*"/>
-            <srcfiles dir="." includes="*.py"/>
-        </uptodate></not>
-      <then>
+  <target name="combined-xml" depends="init,tag-xml,api-xml"
+    unless="combined-xml.uptodate"
+    > <!-- ,validate -->
         <mkdir dir="${reference.build.html.dir}"/>
         <mkdir dir="${reference.build.xml.dir}"/>
         <exec executable="python" failonerror="${build.docs.error.fail}">
@@ -238,7 +277,6 @@
           <arg line="--indexdir ${reference.build.html.dir}"/>
           <arg line="-q"/>
         </exec>
-    </then></if>
     <copy todir="${reference.build.xml.dir}">
       <fileset dir="${reference.redmond.input.tags}" includes="*.xml"/>
     </copy>
@@ -246,15 +284,8 @@
   
   <!-- Build the HTML files and place them in build/html.  They still
        need to be run through the stylesheet. -->
-  <target name="raw-html" depends="init,combined-xml">
+  <target name="raw-html" depends="init,combined-xml" unless="raw-html.uptodate">
     <mkdir dir="${reference.build.dir}"/>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="." includes="*.py"/>
-        <fileset dir="wrappers" includes="**/*"/>
-      </sourcefiles>
-      <mapper type="glob" dir="wrappers"
-              from="*.xml" to="${reference.build.html.dir}/*.html"/>
       <sequential>
         <exec executable="python" failonerror="${build.docs.error.fail}">
 	  <arg line="makeHTML.py"/>
@@ -263,7 +294,6 @@
 	  <arg line="-q"/>
         </exec>
       </sequential>
-    </outofdate>
   </target>
   
   <target name="reference.target.db" depends="init,raw-html">
@@ -278,34 +308,18 @@
   <!-- This assures that the target db exists, but not that it's up to
        date.  It's a much faster alternative to reference.target.db
        for use in incremental guide and tutorial builds. -->
-  <target name="reference.target.db.exists" depends="init">
-    <if>
-      <not><available file="${reference.build.dir}/target.db"/></not>
-      <then>
-        <ant target="reference.target.db"/>
-      </then>
-    </if>
+  <target name="reference.target.db.exists" depends="init" unless="target.db.available">
+     <ant target="reference.target.db"/>
   </target>
   
   <target name="reference.html"
-          depends="init,raw-html,reference.target.db">
+          depends="init,raw-html,reference.target.db"
+          unless="reference.html.uptodate">
+    <delete>
+      <fileset dir="${reference.output.dir}" includes="**/*.html"/>
+    </delete>
+          
     <mkdir dir="${reference.output.dir}"/>
-    <!-- If the stylesheets have changed more recently than the html
-         output files, force the latter to rebuild by deleting
-         them. -->
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="xsl" includes="format.xsl"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${reference.output.dir}" includes="**/*.html"/>
-      </targetfiles>
-      <sequential>
-        <delete>
-          <fileset dir="${reference.output.dir}" includes="**/*.html"/>
-        </delete>
-      </sequential>
-    </outofdate>
     <style style="xsl/redmond-components.xsl"
            in="${reference.build.html.dir}/index-alphabetical.html"
            out="${reference.build.html.dir}/redmond-components.html">
@@ -330,7 +344,8 @@
   </target>
   
   <target name="reference" description="Build the reference"
-          depends="init,reference.html">
+          depends="init,reference.html"
+          unless="reference.output.uptodate">
     <!-- Copy non-html pages from hardpages -->
     <copy todir="${reference.output.dir}">
       <fileset dir="${reference.input.dir}" excludes="*.html,schemas.xml">
@@ -371,19 +386,11 @@
            out="${reference.output.dir}/classes.xml">
       <param name="class" expression="api"/>
     </style>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="${reference.output.dir}" includes="toc.xml,tags.xml,classes.xml"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${reference.output.dir}" includes="nav.html,html-nav.html"/>
-      </targetfiles>
-      <sequential>
+
         <delete>
           <fileset dir="${reference.output.dir}" includes="nav.html,html-nav.html"/>
         </delete>
-      </sequential>
-    </outofdate>
+        
     <style style="xsl/reference-nav.xsl"
            basedir="${reference.input.dir}"
            destdir="${reference.output.dir}"
@@ -483,20 +490,9 @@
     </foreach>
   </target>
   
-  <target name="tutorials.docbook" depends="init,tutorials.preprocess">
+  <target name="tutorials.docbook" depends="init,tutorials.preprocess"
+    unless="tutorials.docbook.uptodate">
     <mkdir dir="${tutorials.output.dir}/programs"/>
-    <outofdate>
-      <sourcefiles>
-        <fileset dir="${LPS_HOME}" includes="build.properties"/>
-        <fileset dir="xsl" includes="common-html.xsl"/>
-        <fileset dir="xsl" includes="parameters.xsl"/>
-        <fileset dir="xsl" includes="tutorials.xsl"/>
-        <fileset dir="${tutorials.build.dir}" includes="*"/>
-      </sourcefiles>
-      <targetfiles>
-        <fileset dir="${tutorials.output.dir}" includes="*.html"/>
-        <pathelement path="${tutorials.output.dir}/${tutorials.output.index}"/>
-      </targetfiles>
       <sequential>
         <java classname="com.icl.saxon.StyleSheet"
               fork="yes" 
@@ -516,7 +512,6 @@
           <arg line="show.fixmes=${show.fixmes}"/>
         </java>
       </sequential>
-    </outofdate>
   </target>
   
   <target name="tutorials.resources" depends="init">
@@ -948,8 +943,9 @@
     targets relating to both ref and tutorial docs:
   -->
 
-  <target name="build" description="Make the documentation"
-          depends="reference,dguide,deployers,designers"/>
+  <target name="build" description="TEMPORARY: DO NOTHING [bshine 5.17.06]"
+        unless="skip.doc"
+          depends=""/>
 
   <target name="clean" depends="clean-reference,clean-dguide,clean-deployers,clean-designers,clean-tutorials"
       description="clean up generated files">
