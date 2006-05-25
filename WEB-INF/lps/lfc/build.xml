@@ -67,23 +67,30 @@
     </dependset>
 
     <script language="javascript"><![CDATA[
-        var swfruntimes = [5, 6, 7, 8];
+        var dobuild = function(v, flavor, args) {
+            var myant = lfc.createTask("ant");
+            myant.setTarget("lzl");
+
+            var libprop = myant.createProperty();
+            libprop.setName("library");
+            libprop.setValue("LFC" + v + flavor);
+
+            var argsprop = myant.createProperty();
+            argsprop.setName("args"); 
+            argsprop.setValue("--runtime=swf" + v + " " + args);
+
+            var sourceprop = myant.createProperty();
+            sourceprop.setName("source");
+            sourceprop.setValue("LaszloLibrary.as");        
+
+            var excludesprop = myant.createProperty();
+            excludesprop.setName("excludes");
+            excludesprop.setValue("lzpreloader.as"); 
+            
+            myant.execute();
+        }
         
-        var myant = lfc.createTask("ant");
-        myant.setTarget("lzl");
-        var libprop = myant.createProperty();
-        libprop.setName("library");
-        var argsprop = myant.createProperty();
-        argsprop.setName("args"); 
-        argsprop.setValue(""); 
-        var sourceprop = myant.createProperty();
-        sourceprop.setName("source");
-        sourceprop.setValue("LaszloLibrary.as");        
-        var runtimeprop = myant.createProperty(); 
-        runtimeprop.setName("runtime"); 
-        var excludesprop = myant.createProperty();
-        excludesprop.setName("excludes");
-        excludesprop.setValue("lzpreloader.as"); 
+        var swfruntimes = [5, 6, 7, 8];
         
         var warningTask = lfc.createTask("echo");
         var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
@@ -94,21 +101,16 @@
             
             // Check whether the options tell us to build this runtime at all
             var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
-            if (buildThisRuntime != null) {            
-                libprop.setValue("LFC" + v );
-                runtimeprop.setValue("--runtime=swf" + v);
-                myant.execute();
+            if (buildThisRuntime != null) { 
+            
+                dobuild(v, "", "");
                 
                 if (buildDebug) {
-                    libprop.setValue("LFC" + v + "-debug");
-                    runtimeprop.setValue("--runtime=swf" + v + " --option nameFunctions '-D$debug=true'");
-                    myant.execute();                    
+                    dobuild(v, "-debug", "--option nameFunctions '-D$debug=true'");
                 }
                 
                 if (buildProfile) {
-                    libprop.setValue("LFC" + v + "-profile");
-                    runtimeprop.setValue("--runtime=swf" + v + " -p");
-                    myant.execute();                    
+                    dobuild(v, "-profile", "-p");
                 }
                 
             } else {
