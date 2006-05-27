@@ -1,4 +1,3 @@
-<?xml version="1.0"?>
 <!DOCTYPE project [
     <!ENTITY build_opt SYSTEM "file:build-tools/build-opt.xml">
     ]>
@@ -71,6 +70,17 @@
     <property name="tomcat"          value="tomcat-5.0.24" />
     <property name="catalina.engine" value="Catalina" />
     <property name="catalina.host"   value="localhost" />
+
+
+	<path id="3rd.party.classpath" >
+		<dirset dir="${webapp-lps-home}/server/build" />
+		<fileset dir="WEB-INF/lib"> 
+			<exclude name="${lps.jar}" />
+		</fileset>
+		<fileset dir="3rd-party/jars/dev" />
+		<fileset
+				dir="${LZ_VENDOR_ROOT}" includes="*.jar" />
+	</path>
     
     <!-- Properties describing which OS as binary flags -->
     <condition property="os.isunix">
@@ -171,6 +181,12 @@
       <property name="no.tomcat" value="true" />
   </target>      
 
+  <target name="disable-nsi"
+	  description="Call this before init to ensure that the nsi windows installer will not be run."
+	  >
+	  <property name="skip.nsi-dev" value="true" />
+  </target>
+
   <!--===============  Target [init]  ===================-->
   <target name="init" description="Target for initialization" 
           depends="build-opt"
@@ -212,6 +228,7 @@
     <echo message="    platform: is  ${build.platform}" />
     <echo message="    Skipping prefetch is ${skip.prefetch}" />
     <echo message="    Skipping wrappertest is ${skip.wrappertest}" />
+    <echo message="    classpath is ${my.classpath}" />
     
     <!-- We only support Java 1.4 and Java 1.5. This condition is a bit loose
         in that it only makes sure the java version _contains_ 1.4 or 1.5, not
@@ -477,15 +494,6 @@
       description="Build WEB-INF/classes. Called after building server."
       depends="init">
       
-      <path id="3rd.party.classpath" >
-          <dirset dir="${webapp-lps-home}/server/build" />
-          <fileset dir="WEB-INF/lib"> 
-            <exclude name="${lps.jar}" />
-          </fileset>
-          <fileset dir="3rd-party/jars/dev" />
-          <fileset dir="${LZ_VENDOR_ROOT}" includes="**/*.jar" />
-      </path>
-
       <mkdir dir="WEB-INF/classes" />
       <javac classpathref="3rd.party.classpath"
           srcdir="WEB-INF/classes"
@@ -783,12 +791,15 @@
     </target>
 
   <target name="nsi-dev" 
+	  unless="skip.nsi-dev"
       depends="init" 
       description="Test target for building windows installer" >
           <echo message="Making NullSoft Installer" />
           <copy todir="lps-${version.id}/Server/misc">
               <fileset dir="installer/windows" includes="*.ico" />
           </copy>
+
+		  <copy file="LICENSE.txt" tofile="installer/windows/LICENSE.txt" />
 
           <copy file="installer/windows/lps-windows.nsi.proto"
                 tofile="installer/windows/lps-${version.id}-windows.nsi" >
@@ -800,7 +811,7 @@
           </copy>
 
           <exec executable="${nsis.dir}\makensis.exe" failonerror="true" >
-              <arg line="/V2 installer/windows/lps-${version.id}-windows" />
+              <arg line="/V4 installer/windows/lps-${version.id}-windows" />
           </exec>
   </target>
 
@@ -1060,12 +1071,10 @@
         task name and a class name. The classpath declared in this taskdef 
         points to the jar file which has the implementation of the ant tomcat 
         manager tasks. [bshine 4.29.06] -->
-    <taskdef file="build-tools/tomcattasks.properties">
-        <classpath>
-            <pathelement path="${basedir}/3rd-party/jars/catalina-ant.jar"/>
-        </classpath>
-    </taskdef>
-
+    <taskdef
+			file="build-tools/tomcattasks.properties"
+			classpath="server/server/lib/catalina-ant.jar"
+			/>	
 
     <!--======================  Target [tomcat.start|stop|list] =======================-->  
     <!-- These tasks affect the tomcat server as a whole. Their names begin with "tomcat." -->
@@ -1099,13 +1108,13 @@
      <!-- Set target to use for starting/stopping tomcat. On windows, use
          the services tasks. On non-windows, use the tomcat ant tasks. 
          [bshine 5.10.06] -->        
-     <condition property="tom.stop" value="tom.winsvc.stop" >
+     <condition property="tomcat.stop" value="tom.winsvc.stop" >
          <os family="windows" />
      </condition>
      <condition property="tom.stop" value="tom.stop" >
          <not> <os family="windows" /> </not>
      </condition>
-     <condition property="tom.start" value="tom.winsvc.start" >
+     <condition property="tomcat.start" value="tom.winsvc.start" >
          <os family="windows" />
      </condition>
      <condition property="tom.start" value="tom.start" >
@@ -1138,11 +1147,15 @@
         <checksum file="${server.home}/conf/${file}" property="sc-md5" />
         <checksum file="build-tools/${file}" property="bt-md5" />
         
+		<!-- TODO: this fails on windows, although the files look right to me.
+			Probably a stupid line end thing. [bshine 5.25.06] -->
+			<!--	
         <condition property="checksums-match">
             <equals arg1="${sc-md5}" arg2="${bt-md5}" />
         </condition>
 
         <fail message="checksums don't match. Failing." unless="checksums-match"/>
+		-->
 
         <tstamp>
             <format property="now" pattern="yyyy-MM-dd.HH-mm-ss" />

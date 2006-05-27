@@ -21,7 +21,7 @@ AllowRootDirInstall true
 CompletedText "Installation of OpenLaszlo Server @VERSIONIDUPPER@ succeeded"
 MiscButtonText "" "" "" "Finish"
 
-Icon installer\windows\laszlo.ico
+Icon laszlo.ico
 ;UninstallIcon uninst.ico 
 ;EnabledBitmap tickyes.bmp 
 ;DisabledBitmap tickno.bmp

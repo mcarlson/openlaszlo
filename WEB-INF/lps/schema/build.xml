@@ -105,10 +105,6 @@
               <arg value="${rnc}"/>
               <arg value="${xsd}"/>
           </java>
-          <exec executable="grep">
-            <!-- Remove expected warnings. -->
-            <arg line="-v 'Warning.*cannot \(be \)\?represent.*approximating' log.trang"/>
-          </exec>
           <delete file="log.trang"/>
   </target>
 

@@ -14,12 +14,13 @@
     <basename property="lps.branch" file="${LPS_HOME}"/>
 
     <!-- make sure we have a working LZ_VENDOR_ROOT -->
+    <available property="have_LZ_VENDOR_ROOT" file="${env.LZ_VENDOR_ROOT}" />
+    <fail unless="have_LZ_VENDOR_ROOT" message="LZ_VENDOR_ROOT is not available (${env.LZ_VENDOR_ROOT})"/>
     <property name="LZ_VENDOR_ROOT" value="${env.LZ_VENDOR_ROOT}" />
-    <fail unless="LZ_VENDOR_ROOT" message="LZ_VENDOR_ROOT is not set"/>
 
-    <property name="LZ_TOOLS_ROOT" value="${env.LZ_TOOLS_ROOT}" />
-    <fail unless="LZ_TOOLS_ROOT" message="LZ_TOOLS_ROOT is not set"/>        
-    
+    <available property="have_LZ_TOOLS_ROOT" file="${env.LZ_TOOLS_ROOT}" />
+    <fail unless="have_LZ_TOOLS_ROOT" message="LZ_TOOLS_ROOT is not set"/> 
+
     <property name="build.tools" value="" />
     <property name="build.qa" value="" />
     

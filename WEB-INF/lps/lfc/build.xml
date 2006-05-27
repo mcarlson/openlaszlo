@@ -18,8 +18,17 @@
   &build_opt;
 
 
+	<available property="has_sc.Main" 
+		classname="org.openlaszlo.sc.Main"
+	    classpathref="lfctosc.classpath"	/>
+
   <target name="init" depends="build-opt">
     <tstamp/>
+
+	<path id="lfctosc.classpath">
+		<fileset dir="${env.LPS_HOME}/3rd-party" includes="**/*.jar" />
+		<fileset dir="${env.LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
+	</path>
 
     <echo message="JAVA_OPTS=${JAVA_OPTS}" />
 
@@ -43,21 +52,23 @@
       </delete>
   </target>
   
-    <!-- Expects the $library, $args, $source, and $excludes properties to be set from outside -->
-    <target name="lzl" description="Build a .lzl library from source" >
+  
+<target name="lzl" description="Build a .lzl library from source" >
         <!-- TODO: add a check for uptodate [bshine 5.14.06] --> 
-        <!-- Oh my, this should be done by directly invoking java. 
-        Doing it through exec'ing bash is very very old school, and
-        slow. We don't need to launch another JVM here. 
-        [bshine 5.14.06] -->
-        <echo message="Compiling ${library}"/>
-        <exec executable="bash" failonerror="true">
-            <env key="JAVA_OPTS" value="${JAVA_OPTS}" />
-            <arg line="${sc.dir}/bin/lfcbuilder ${args} -o ${library}.lzl ${source}"/>
-        </exec>
+	<fail unless="has_sc.Main" message="Can't find org.openlaszlo.sc.Main in classpath." />
+	<echo message="Compiling ${library}"/>
+	<java classname="org.openlaszlo.sc.Main" 
+		fork="true"
+		classpathref="lfctosc.classpath"
+		failonerror="true">
+		<sysproperty key="LPS_HOME" value="${LPS_HOME}" />
+		<arg value="${args}" />
+		<arg value="--runtime=${runtime}" />
+		<arg value="-o ${library}.lzl" />
+		<arg value="${source}" />
+		<jvmarg value="${JAVA_OPTS}" />
+	</java>
     </target>
-  
-  
 <!-- We want to build the cross-product of [swf6, swf7, swf8] with [ regular, debug, profile ] -->
 <target name="build" description="Build all the lfc versions requested in build.properties"
     depends="init">
@@ -77,7 +88,11 @@
 
             var argsprop = myant.createProperty();
             argsprop.setName("args"); 
-            argsprop.setValue("--runtime=swf" + v + " " + args);
+	    argsprop.setValue(args);
+
+	    var runtimeprop = myant.createProperty();
+	    runtimeprop.setName("runtime");
+            runtimeprop.setValue("swf" + v);
 
             var sourceprop = myant.createProperty();
             sourceprop.setName("source");
@@ -90,7 +105,7 @@
             myant.execute();
         }
         
-        var swfruntimes = [5, 6, 7, 8];
+        var swfruntimes = [6, 7, 8];
         
         var warningTask = lfc.createTask("echo");
         var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
@@ -106,7 +121,7 @@
                 dobuild(v, "", "");
                 
                 if (buildDebug) {
-                    dobuild(v, "-debug", "--option nameFunctions '-D$debug=true'");
+		    dobuild(v, "-debug", ""); // jgrandy thinks this should be here but bshine doesn't get it [bshine 5.26.06] "--option nameFunctions --debug");
                 }
                 
                 if (buildProfile) {
