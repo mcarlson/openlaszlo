@@ -70,7 +70,7 @@
 
   <target name="dtd" 
           description="Generate DTD" depends="rng"
-          unless="dtd.uptodate">
+          unless="skip.dtd">
       <exec executable="${python.exec}" taskname="rng2dtd" failonerror="true" >
         <arg value="rng2dtd.py"/>
         <arg value="${rng}"/>

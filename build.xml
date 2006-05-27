@@ -187,6 +187,11 @@
 	  <property name="skip.nsi-dev" value="true" />
   </target>
 
+  <target name="disable-dtd"
+	description="Don't want the endless dtd task to run? Just run this target first.">
+	<property name="skip.dtd" value="true" />
+  </target>
+
   <!--===============  Target [init]  ===================-->
   <target name="init" description="Target for initialization" 
           depends="build-opt"
@@ -472,7 +477,7 @@
       <ant dir="${webapp-lps-home}/schema"  target="build" />
       <!-- Copy pieces of schema stuff to tools -->
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.rnc" />
-      <copy todir="tools" file="${webapp-lps-home}/schema/lzx.dtd" />
+      <!-- i hate the dtd [bshine 5.26.06 ] <copy todir="tools" file="${webapp-lps-home}/schema/lzx.dtd" /> -->
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.el" />
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.rng" />
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.xsd" />
