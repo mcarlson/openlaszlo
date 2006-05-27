@@ -187,7 +187,6 @@
 
   <!--==============  Target [css-parser]  ===================-->
   <target name="css-parser" depends="init"
-      unless="css-parser.needs-update"   
       description="Run JavaCC to create the css-parser *.java files.">
     <mkdir dir="${build.java}/org/openlaszlo/css/parser"/>
     <javacc target="${src}/org/openlaszlo/css/CSSParser.jj"
@@ -202,7 +201,6 @@
   <!--==============  Target [sc-parser-jjt]  ===================-->
   <target name="sc-parser-jjt" depends="init"
       description="Run JavaCC to create the parser *.java files."
-      unless="sc-parser.uptodate"
       >
 
     <mkdir dir="${sc.build.java}"/>
@@ -228,7 +226,7 @@
 
   
   <!--==============  Target [sc-compiler]  ===================-->
-  <target name="sc-compiler" depends="init" unless="options.sc.skip,sc-compiler.uptodate"
+  <target name="sc-compiler" depends="init" unless="options.sc.skip"
       description="Run jythonc to create *.java files.">
 
     <mkdir dir="${sc.build.java}"/>

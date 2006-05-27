@@ -18,10 +18,6 @@
   &build_opt;
 
 
-	<available property="has_sc.Main" 
-		classname="org.openlaszlo.sc.Main"
-	    classpathref="lfctosc.classpath"	/>
-
   <target name="init" depends="build-opt">
     <tstamp/>
 
@@ -29,6 +25,12 @@
 		<fileset dir="${env.LPS_HOME}/3rd-party" includes="**/*.jar" />
 		<fileset dir="${env.LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
 	</path>
+
+	<available property="has_sc.Main" 
+		classname="org.openlaszlo.sc.Main"
+	    classpathref="lfctosc.classpath"	/>
+        
+    <echo message="Do we have sc.Main? ${has_sc.Main} in classpath ${lfctosc.classpath}"/>
 
     <echo message="JAVA_OPTS=${JAVA_OPTS}" />
 
@@ -58,15 +60,14 @@
 	<fail unless="has_sc.Main" message="Can't find org.openlaszlo.sc.Main in classpath." />
 	<echo message="Compiling ${library}"/>
 	<java classname="org.openlaszlo.sc.Main" 
-		fork="true"
 		classpathref="lfctosc.classpath"
+		fork="true"
 		failonerror="true">
 		<sysproperty key="LPS_HOME" value="${LPS_HOME}" />
-		<arg value="${args}" />
+		<!-- <arg value="${args}" /> --> 
 		<arg value="--runtime=${runtime}" />
-		<arg value="-o ${library}.lzl" />
+		<arg value="-o${library}.lzl" />
 		<arg value="${source}" />
-		<jvmarg value="${JAVA_OPTS}" />
 	</java>
     </target>
 <!-- We want to build the cross-product of [swf6, swf7, swf8] with [ regular, debug, profile ] -->
@@ -88,10 +89,10 @@
 
             var argsprop = myant.createProperty();
             argsprop.setName("args"); 
-	    argsprop.setValue(args);
+    	    argsprop.setValue(args);
 
-	    var runtimeprop = myant.createProperty();
-	    runtimeprop.setName("runtime");
+    	    var runtimeprop = myant.createProperty();
+    	    runtimeprop.setName("runtime");
             runtimeprop.setValue("swf" + v);
 
             var sourceprop = myant.createProperty();
