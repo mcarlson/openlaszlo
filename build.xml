@@ -448,6 +448,7 @@
   <!--================  Target [build] ==============-->
   <target name="build"
       description="Build software"
+      unless="build.done"
       depends="init">
 
       <ant target="quick-index" />
@@ -467,7 +468,8 @@
            anyway and this way errors in the server build are reported
            more directly. -->
       <ant dir="${webapp-lps-home}/lfc" target="build"/>
-
+      
+      <property name="build.done" value="true" />
   </target>
 
   <!--================  Target [build-classes] ==============-->
@@ -870,7 +872,8 @@
   <!--================  Target [build-dist-dir-core] ==============-->
   <target name="build-dist-dir-core" 
       description="Build lps core distribution directory for tgz (w/out precache)"
-      depends="disable-tomcat,init,build,doc" >
+      depends="disable-tomcat,init,build,doc" 
+      unless="build-dist-dir-core.done">
 
       <property name="webapp"    value="${builddir}/lps-${version.id}" />
       <property name="webinf"    value="${webapp}/WEB-INF" />
@@ -999,6 +1002,8 @@
       <exec executable="python" failonerror="true" dir="${builddir}">
           <arg value="${LPS_HOME}/build-tools/checkfortabs.py" />
       </exec>
+      
+      <property name="build-dist-dir-core.done" value="true" />
 
   </target>
 
@@ -1009,6 +1014,7 @@
 
       <ant target="clean-dist" />
       <ant target="build-dist-dir-core" />
+      <property name="done.build.core" value="true" />
   </target>
 
   <target name="dist-core"
