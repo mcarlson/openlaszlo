@@ -228,6 +228,9 @@
     <echo message="    JAVA_HOME: ${env.JAVA_HOME}"/>
     <echo message="    LPS Version: ${version.id} ${release}"/>
     <echo message="    LPS_HOME: ${LPS_HOME}"/>
+    <echo message="    LZ_VENDOR_ROOT: ${env.LZ_VENDOR_ROOT}" />
+    <echo message="    LZ_TOOLS_ROOT: ${env.LZ_TOOLS_ROOT}" />
+    <echo message="    LZ_INSTALLS_ROOT: ${env.LZ_INSTALLS_ROOT}" />
     <echo message="    server.home: ${server.home}" />
     <echo message="    lps.branch:  ${lps.branch}" />
     <echo message="    platform: is  ${build.platform}" />
@@ -1349,5 +1352,8 @@
            </fileset>
        </delete>
    </target>
+
+   <target name="simple" depends="disable-tomcat,disable-dtd,build" 
+    description="Just do a simple build, without tomcat or a dtd or doc." />
 
 </project>
