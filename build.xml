@@ -329,6 +329,7 @@
       <ant dir="demos"          target="clean" />
       <ant dir="examples"             target="clean" />
       <ant dir="${webapp-lps-home}/lfc/docs" target="clean" />
+      <ant dir="${env.LZ_TOOLS_ROOT}/build-tools/install-libs" target="clean" />
       <delete includeEmptyDirs="true" >
           <fileset dir="." >
               <include name="*.tar"/>
