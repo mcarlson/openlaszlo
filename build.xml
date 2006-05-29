@@ -264,6 +264,10 @@
         <not><equals arg1="${python.version.check.code}" arg2="0" /></not>
     </condition>
     <fail if="python.version.bad" message="Failed python version check" />
+    
+    <!-- Copy various jars from distribution directories into ANT_HOME, where
+        ant can find them -->
+    <ant dir="${env.LZ_TOOLS_ROOT}/build-tools/install-libs" target="install" />
 
     <!-- Set target to use for starting/stopping tomcat -->
     <condition property="tom.stop" value="tom.winsvc.stop" >
@@ -303,7 +307,7 @@
         value="openlaszlo-${version.id}-${build.platform}.tar.gz" />
 
     <property name="source-distro-gzfile" value="openlaszlo-${version.id}-src.tar.gz" />
-
+    
     <property name="done.init" value="true" />
 
   </target>
