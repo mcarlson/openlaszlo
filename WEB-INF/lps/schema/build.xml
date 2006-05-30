@@ -45,10 +45,7 @@
           description="Generate RNG schema file">  
       <sequential>
         <java fork="true"
-              jar="${env.LZ_VENDOR_ROOT}/trang.jar">
-          <classpath>
-            <pathelement path="${java.class.path}"/>
-          </classpath>
+              jar="${env.ANT_HOME}/lib/trang.jar">
           <arg value="${rnc}"/>
           <arg value="build/lzx.direct.rng"/>
         </java>
@@ -56,16 +53,6 @@
 
     <style in="build/lzx.direct.rng" out="${rng}" style="strip-docs.xsl"/>
     <style in="build/lzx.direct.rng" out="${docrng}" style="strip-private.xsl"/>
-    <!-- this depends on a newer version of jing -->
-    <!--java fork="true"
-	  classname="com.thaiopensource.relaxng.output.Driver">
-      <classpath>
-        <pathelement location="${LZ_VENDOR_ROOT}/trang.jar" />
-        <pathelement path="${java.class.path}"/>
-      </classpath>
-      <arg value="${docrng}"/>
-      <arg value="build/lzx.rnc"/>
-    </java-->
   </target>
 
   <target name="dtd" 
@@ -97,7 +84,7 @@
           description="Build generated schema files" depends="rng,dtd"
           unless="xsd.uptodate">
           <java fork="true" failonerror="true"
-            jar="${env.LZ_VENDOR_ROOT}/trang.jar"
+            jar="${env.ANT_HOME}/lib/trang.jar"
             output="log.trang">
                <classpath>
                    <pathelement path="${java.class.path}"/>
