@@ -102,7 +102,7 @@
             var excludesprop = myant.createProperty();
             excludesprop.setName("excludes");
             excludesprop.setValue("lzpreloader.as"); 
-            
+            myant.setInheritAll(true);
             myant.execute();
         }
         
