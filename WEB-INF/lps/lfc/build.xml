@@ -21,9 +21,10 @@
   <target name="init" depends="build-opt">
     <tstamp/>
 
+    <echo message="LPS_HOME is ${LPS_HOME}" />
 	<path id="lfctosc.classpath">
-		<fileset dir="${env.LPS_HOME}/3rd-party" includes="**/*.jar" />
-		<fileset dir="${env.LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
+		<fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
+		<fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
 	</path>
 
 	<available property="has_sc.Main" 
