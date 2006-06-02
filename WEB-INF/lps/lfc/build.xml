@@ -79,6 +79,12 @@
       <srcfileset dir="${sc.dir}" includes="*.py"/>
     </dependset>
 
+    <ant target="lzl">
+        <property name="library" value="lzpreloader" />
+        <property name="runtime" value="swf6" />
+        <property name="source" value="lzpreloader.as" />
+    </ant>
+    
     <script language="javascript"><![CDATA[
         var dobuild = function(v, flavor, args) {
             var myant = lfc.createTask("ant");
@@ -112,7 +118,7 @@
         var warningTask = lfc.createTask("echo");
         var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
         var buildProfile = lfc.getProperty("build.lfc.runtime.profile");
-
+        
         for (var s in swfruntimes) {
             var v = swfruntimes[s]; 
             
