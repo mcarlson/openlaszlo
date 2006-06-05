@@ -5,7 +5,7 @@
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <html>
 <head>
-  <title>OpenLaszlo 3.1 Change Log</title>
+  <title>OpenLaszlo 3.3.1 Change Log</title>
   <meta http-equiv="Content-Type"
  content="text/html; charset=iso-8859-1">
   <link rel="stylesheet" href="../lps/includes/explore.css" type="text/css">
@@ -14,12 +14,14 @@
 </head>
 <body class="release-notes">
 <h1><b>
-Change Log for OpenLaszlo 3.1</b> </h1>
+Change Log for OpenLaszlo 3.3.1</b> </h1>
 <p class="bodytext">
-This document describes the past version changes in the OpenLaszlo Server (or Laszlo Presentation Server, "LPS"). Please see the  <a href="release-notes.html">release notes</a> for information regarding the current release.</p>
+This document describes the past version changes for OpenLaszlo (or Laszlo Presentation Server, "LPS"). Please see the  <a href="release-notes.html">release notes</a> for information regarding the current release.</p>
 <ul>
   <li>Changes in:
     <ul>
+      <li><a href="#Changes3.3.1">3.3.1</a></li>
+      <li><a href="#Changes3.3">3.3</a></li>
       <li><a href="#Changes3.2">3.2</a></li>
       <li><a href="#Changes3.1">3.1</a></li>
       <li><a href="#Changes3.0.1">3.0.2</a></li>
@@ -41,6 +43,8 @@ This document describes the past version changes in the OpenLaszlo Server (or La
   </li>
   <li>Defects fixed in:
     <ul>
+       <li><a href="#Defects3.3.1">3.3.1</a></li>
+       <li><a href="#Defects3.3">3.3</a></li>
        <li><a href="#Defects3.2">3.2</a></li>
        <li><a href="#Defects3.1">3.1</a></li>
 	  <li><a href="#Defects3.0.1">3.0.2</a></li>
@@ -59,6 +63,30 @@ This document describes the past version changes in the OpenLaszlo Server (or La
 	</ul>
       </li>
     </ul>
+
+ <h1><a name="Changes3.3.1">Changes in 3.3.1</h1>
+<p>OpenLaszlo 3.3.1 addresses one issue. There was a single regression, which is that the behavior of <code>simplelayout</code> was inadvertantly broken in OpenLaszlo 3.3. In this release, the behavior of <code>simplelayout</code> has been corrected such that it applies only to a single axis. </p>
+
+
+ <h1><a name="Changes3.3">Changes in 3.3</h1>
+<p>
+Since the 3.2 release, there have been many notable bug fixes, as well as the addition of the new features, which are summarized below.
+</p>
+<ul>
+<li>New alignment attribute for grid text</li>
+<li>Drag improvements for basewindow</li>
+<li>Compiler support for streaming video</li>
+<li>French translation of the documentation</li>
+<li>Numerous bug fixes to datacombobox</li>
+<li>The <code>lzc.bat</code> file has been fixed for the Windows distribution</li>
+
+<li>The default value for the <code>trimwhitespace</code> property was
+changed (in 3.2 actually) to <code>false</code> to match defaults for
+XML loading in DHTMl and SWF. Use &lt;<code>dataset
+trimwhitespace="true"</code>&gt; to get the old behavior.
+</ul>
+
+
  <h1><a name="Changes3.2">Changes in 3.2</h1>
 <p>
 Since the 3.1 release, the Krank feature has been removed, scores of bugs have been fixed, and the new features listed below have been added.
@@ -74,10 +102,10 @@ Since the 3.1 release, the Krank feature has been removed, scores of bugs have b
 
 </ul>
 </a></h1> 
-<a name="key-features">New Features since OpenLaszlo 3.1</a></h1> 
+
  <h1><a name="Changes3.1">Changes in 3.1<br>
 </a></h1> 
-<a name="key-features">New Features since OpenLaszlo 3.0.2</a></h1> 
+<a name="key-features">New Features since OpenLaszlo 3.0.2 include:</a></h1> 
 <ul>
 	<li>Charting and Graphing Components</li>
 	<li>Flash 8 file generation</li>
@@ -777,8 +805,8 @@ syntax for expressions, old syntax is deprecated and warnings are given</li>
     <li>the recommended way to test for undefined attributes is to
 declare them in your class with an initial value of null. For example, <br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>&lt;attribute
-name="foo" value="null
-/&gt;</code><br>
+name="foo" value="null" &gt;</code><br>
+
 then later you can write:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<code>if (this.foo) ....</code><br>
 This is faster and easier to read than: <code>if (typeof(this.foo) ==
@@ -973,6 +1001,15 @@ readable.</li>
   <li>Server statistics request</li>
 </ul>
 <hr/>
+
+<h1><a name="Defects3.3.1">Defects fixed in 3.3.1</a></h1>
+<p>OpenLaszlo 3.3.1 addresses two issues. First, there was a single regression, which is that the behavior of <code>simplelayout</code> was inadvertantly broken in OpenLaszlo 3.3. In this release, the behavior of <code>simplelayout</code> has been corrected such that it applies only to a single axis. </p>
+
+<p>Secondly, the <code>lzc</code> and <code>lzc.bat</code> files do not run in the standard Windows XP configuration. The installer places file into a "OpenLaszlo 3.3" directory inside the "Program Files" directory, and the spaces in the names cause a problem. This has been corrected. </p>
+
+<h1><a name="Defects3.3">Defects fixed in 3.3</a></h1>
+<p>Consult <a href="http://www.openlaszlo.org/jira/secure/ReleaseNote.jspa?projectId=10020&styleName=Html&version=10182">JIRA</a> for complete information on the bugs, tasks, improvements, and features included in 3.3. </p>
+
 <h1><a name="Defects3.2">Defects fixed in 3.2</a></h1>
 <p>
 Nearly a hundred bugs have been fixed since the 3.1 release.  Consult <a href="http://www.openlaszlo.org/jira/secure/ReleaseNote.jspa?version=10120&styleName=Html&projectId=10020&Create=Create">JIRA</a> for complete information. Note that the 3.2 release is code-named "Sage".
