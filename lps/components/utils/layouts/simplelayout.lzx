@@ -21,7 +21,9 @@
         if (this['axis'] == null || this.axis != a) {
             this.axis = a;
             this.sizeAxis = a == "x" ? "width" : "height"
-            this.update();
+
+            if( this.subviews.length ) this.update();
+            if (this['onaxis']) this.onaxis.sendEvent(this.axis);
         }
     </method>
 
@@ -48,12 +50,10 @@
         if ( this.locked ) return;
         var l = this.subviews.length;
         var c = this.inset;
-        var o = this.axis == "x" ? "y" : "x"; 
 
         for(var i=0; i < l; i++) {
             var s = this.subviews[i]; 
             if ( !s.visible ) continue;
-            s.setAttribute( o , 0 ); // reset opposite axis
             if ( s[ this.axis ] != c ){
                 s.setAttribute( this.axis , c );
             }
