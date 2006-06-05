@@ -19,11 +19,11 @@ OpenLaszlo applications can be made available on the web, or <i>deployed</i> in 
 <ul>
    <li><em>Proxied.</em> The OpenLaszlo Server runs on your machine and 
      <ul>
-      <li>Compiles source programs as necessary and sends the resultant binary to be executed on the client;</li>
+      <li>Compiles source programs as necessary and sends the resultant binary to be executed on the client; and</li>
       <li>Proxies interactions between the client and other servers on the Internet, performing data manipulation as necessary</li>
      </ul>
    </li>
-   <li><em>SOLO</em>You use the OpenLaszlo compiler to "precompile" programs and make the binary available on your sever. When executed on the
+   <li><em>SOLO</em> You use the OpenLaszlo compiler to "precompile" programs and make the binary available on your sever. When executed on the
         client, the application contacts other servers directly, without mediation by the OpenLaszlo Server. This is called serverless, or
 <i>Standalon OpenLaszlo Output</i> deployment.</li>
 </ul>
@@ -37,11 +37,11 @@ Later chapters explain in detail the differences between proxied and SOLO OpenLa
 	<li><em>SOLO</em> applications are easier to deploy and sometimes better-performing.</li>
 </ul>
 <p>
-In many cases you don't need to decide which deployment mode to use until you're ready to deploy, and the default choice is usually nonproxied. In reading the discussions below,
-keep in mind that when you deploy your applictions statically, the run-time capabilities of OpenLaszlo Server (such as media transcoding and
+In many cases you don't need to decide which deployment mode to use until you're ready to deploy, and the default choice is usually non-proxied. In reading the discussions below,
+keep in mind that when you deploy your applications statically, the run-time capabilities of OpenLaszlo Server (such as media transcoding and
 the persistent connection manager) will not be available.
 </p>
-<h2>Client and Server:synopsis</h2>
+<h2>Client and Server: Synopsis</h2>
 <p>        
 OpenLaszlo Server is a Java application that executes in a J2EE servlet
 container. The OpenLaszlo Server may communicate with <glossterm>back end</glossterm>
@@ -49,18 +49,18 @@ servers and data sources using a variety of protocols. OpenLaszlo
 applications written in LZX are compiled by the OpenLaszlo Server and served as bytecode
 to a plug in that runs in the client's web browser.  This constitutes
 the <dfn>front end</dfn>.  The currently supported run-time
-environment, the Flash 5 or higher plug-in, executes consistently and
+environment, the Flash 7 or higher plug-in, executes consistently and
 reliably on a variety of operating systems and device types, including
 Windows, Pocket PC, Mac OS, Linux, and Solaris, and a variety of
 mobile and set-top box platforms. The OpenLaszlo Server outputs bytecode in the SWF file
-format recognized by the Macromedia Flash player (version 6.0 and
+format recognized by the Macromedia Flash player (version 7 and
 higher). Nothing in the OpenLaszlo architecture binds it to Flash,
 however.  In the future, OpenLaszlo may support other run time clients as
 they become widely available.</p>
 
 <p>
 In the OpenLaszlo context, <dfn>client</dfn> means LZX application executing in user's web browser, and <dfn>server</dfn> means
- OpenLaszlo Server (which may, in turn, communicate with other servers).  The LZX client and OpenLaszlo Server server communicate over HTTP; the OpenLaszlo Server sends byte code
+ OpenLaszlo Server (which may, in turn, communicate with other servers).  The LZX client and OpenLaszlo Server server communicate over HTTP; the OpenLaszlo Server sends bytecode
  and the LZX application sends XML.</p>
 
 <p>All OpenLaszlo platform features, including streaming media and notification, are delivered over HTTP or HTTPS. OpenLaszlo-based applications 
@@ -72,7 +72,7 @@ thus maintain compatibility with standard corporate firewalls. This is a critica
 <h2>Laszlo Server Architecture</h2>
 
 <p>
-The OpenLaszlo Server executes within a standard J2EE application server or Java servlet container running JRE 1.3 or higher. 
+The OpenLaszlo Server executes within a standard J2EE application server or Java servlet container running JRE 1.4 or higher. 
 These application server environments scale well, as does the OpenLaszlo Server itself. OpenLaszlo applications can run on any OS 
 supported by these server products. OpenLaszlo supports Windows, Solaris, Linux and Mac OS X server environments.</p>
 
@@ -243,7 +243,7 @@ processors result in more frames and smoother animation, but the same
 duration of transition.</p>
 <h2>Accessibility</h2>
 <p>
-OpenLaszlo provides partial support for the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msaa/msaastart_9w2t.asp">Microsoft Active Accessibilty</a> specification, which states, "[b]y using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities."  For a discussion of this feature, see <xref linkend="program-structure"/>.
+OpenLaszlo provides partial support for the <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/msaa/msaastart_9w2t.asp">Microsoft Active Accessibility</a> specification, which states, "[b]y using Active Accessibility and following accessible design practices, developers can make applications running on Windows more accessible to many people with vision, hearing, or motion disabilities."  For a discussion of this feature, see <xref linkend="program-structure"/>.
 This support requires installation of third party software on the client machine, and is only available in the OpenLaszlo targets that run the Flash Player under Internet Explorer.
 </p>
 
