@@ -388,9 +388,9 @@
   <!--================  Target [build-source-distro] ==============-->
   <target name="build-source-distro"
       description="Build source distribution"
-      if="os.isunix"
       depends="disable-tomcat,init,clean-nocache" unless="done.build-source-distro">
 
+      <echo message="Building source distro in ${source-distro}/${builddir-dev}" />
       <!-- Cleanup up old source dir if it exists -->
       <delete>
           <fileset dir="." includes="${source-distro}/**" />
@@ -418,40 +418,7 @@
 
   <target name="package-source-distro" 
       description="Turn source dirs into packages"  depends="disable-tomcat,init">
-
-      <!-- add in the tools, 3rdparty, and 3rdPartyCredits directories -->
-      <copy todir="${source-distro}/tools">
-          <fileset dir="..${build.tools}/tools">
-              <include name="jakarta-ant-1.5.1/**" />
-              <include name="JavaCC2_1.class"/>
-              <include name="jython-21.class"/>
-              <include name="Python-2.2.2.exe"/>
-              <include name="PyXML-0.8.3.tar.gz"/>
-              <include name="PyXML-0.8.win32-py2.2.exe"/>
-              <include name="ant-contrib/**"/>
-          </fileset>
-      </copy>
-      <copy todir="${source-distro}/3rdparty">
-          <fileset dir="..${build.tools}/3rdparty">
-              <include name="commons-httpclient*/**" />
-              <include name="commons-logging/**" />
-              <include name="jakarta-tomcat-5.0.24.exe" />
-              <include name="jakarta-tomcat-5.0.24.tar.gz" />
-              <include name="javamail-*/**" />
-              <include name="jing-*/**" />
-              <include name="saxon*/**" />
-              <include name="xml-batik/**" />
-              <include name="xpp*/**" />
-          </fileset>
-      </copy>
-      <copy todir="${source-distro}/3rdPartyCredits">
-          <fileset dir="./credits">
-              <include name="**"/>
-          </fileset>
-          <fileset dir="./credits-source">
-              <include name="**"/>
-          </fileset>
-      </copy>
+      <echo message="packaging source distro into ${source-distro-gzfile}" />
 
       <!-- Create tar gz -->
       <tar tarfile="${source-distro-gzfile}" longfile="gnu" compression="gzip" >
