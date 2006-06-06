@@ -312,9 +312,18 @@
 
   </target>
 
+
   <!--================  Target [everything] ==============-->
   <target name="everything" depends="init,clean-nocache,build,doc,dist-one,test"
       description="Clean, Build, Doc, Build all distribution files, Scrutinize, and Test" />
+
+  <!--================  Target [all-dist-flavors] ==============-->
+  <target name="all-dist-flavors" depends="init">
+	<ant target="dist-core" />
+	<ant target="dist-dev" />
+        <ant target="dist-one-no-doc" />
+        <ant target="build-source-distro" />
+  </target>
 
   <!--================  Target [clean] ==============-->
   <target name="clean-nocache" description="Remove all build generated files"
@@ -452,7 +461,7 @@
       <ant dir="${webapp-lps-home}/schema"  target="build" />
       <!-- Copy pieces of schema stuff to tools -->
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.rnc" />
-      <!-- i hate the dtd [bshine 5.26.06 ] <copy todir="tools" file="${webapp-lps-home}/schema/lzx.dtd" /> -->
+      <copy todir="tools" file="${webapp-lps-home}/schema/lzx.dtd" />
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.el" />
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.rng" />
       <copy todir="tools" file="${webapp-lps-home}/schema/lzx.xsd" />
@@ -1010,7 +1019,6 @@
 
   <target name="dist-core"
           description="Build 'core' distributions including prefetch" 
-          if="os.isunix"
           depends="disable-tomcat,init,dist-dev" unless="done.dist.core" >
 
       <!-- Copy work dir bits -->
