@@ -65,10 +65,10 @@
 		fork="true"
 		failonerror="true">
 		<sysproperty key="LPS_HOME" value="${LPS_HOME}" />
-		<!-- <arg value="${args}" /> --> 
+		<arg line="${options}" />
 		<arg value="--runtime=${runtime}" />
 		<arg value="-o${library}.lzl" />
-		<arg value="${source}" />
+		<arg value="--default=${source}" />
 	</java>
     </target>
 <!-- We want to build the cross-product of [swf6, swf7, swf8] with [ regular, debug, profile ] -->
@@ -83,10 +83,11 @@
         <property name="library" value="lzpreloader" />
         <property name="runtime" value="swf6" />
         <property name="source" value="lzpreloader.as" />
+        <property name="options" value="" />
     </ant>
     
     <script language="javascript"><![CDATA[
-        var dobuild = function(v, flavor, args) {
+        var dobuild = function(v, flavor, options) {
             var myant = lfc.createTask("ant");
             myant.setTarget("lzl");
 
@@ -94,9 +95,9 @@
             libprop.setName("library");
             libprop.setValue("LFC" + v + flavor);
 
-            var argsprop = myant.createProperty();
-            argsprop.setName("args"); 
-    	    argsprop.setValue(args);
+            var optionsprop = myant.createProperty();
+            optionsprop.setName("options"); 
+    	    optionsprop.setValue(options);
 
     	    var runtimeprop = myant.createProperty();
     	    runtimeprop.setName("runtime");
@@ -129,11 +130,13 @@
                 dobuild(v, "", "");
                 
                 if (buildDebug) {
-		    dobuild(v, "-debug", ""); // jgrandy thinks this should be here but bshine doesn't get it [bshine 5.26.06] "--option nameFunctions --debug");
+                    // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+                    // warnings, the options can be changed to simply --debug
+		    dobuild(v, "-debug", "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
                 }
                 
                 if (buildProfile) {
-                    dobuild(v, "-profile", "-p");
+                    dobuild(v, "-profile", "--profile");
                 }
                 
             } else {
