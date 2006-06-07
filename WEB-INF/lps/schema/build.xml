@@ -26,9 +26,23 @@
     <property name="html" value="lzx-reference.html"/>
     <property name="python.exec" value="python" />
     <mkdir dir="build"/>
-  </target>
+    <condition property="schemas.uptodate">
+        <and>
+            <uptodate property="rng.uptodate" targetfile="build/lzx.direct.rng">
+                <srcfiles dir=".">
+                    <include name="strip-docs.xsl,strip-private.xsl"/>
+                    <include name="lzx.rnc"/>
+                </srcfiles>
+            </uptodate>
+            <uptodate property="dtd.uptodate" value="false" srcfile="${rng}" targetfile="${dtd}">
+            </uptodate>
+            <uptodate property="xsd.uptodate" value="false" srcfile="${rnc}" targetfile="${xsd}"/>
+        </and>
+    </condition>
+</target>
 
   <target name="rng" depends="init"
+        unless="schemas.uptodate"
           description="Generate RNG schema file">  
       <sequential>
         <java fork="true"
@@ -44,7 +58,7 @@
 
   <target name="dtd" 
           description="Generate DTD" depends="rng"
-          unless="skip.dtd">
+          unless="schemas.uptodate" >
       <exec executable="${python.exec}" taskname="rng2dtd" failonerror="true" >
         <arg value="rng2dtd.py"/>
         <arg value="${rng}"/>
@@ -69,7 +83,7 @@
     
   <target name="build" 
           description="Build generated schema files" depends="rng,dtd"
-          unless="xsd.uptodate">
+          unless="schemas.uptodate">
           <java fork="true" failonerror="true"
             jar="${env.ANT_HOME}/lib/trang.jar"
             output="log.trang">
