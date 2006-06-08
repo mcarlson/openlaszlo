@@ -10,9 +10,6 @@
       It currently does not try to build the docs. [bshine 5.24.06]
   </description>
 
-  <!-- Define contrib tasks -->
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-
   <property environment="env"/>
 
   <target name="init">

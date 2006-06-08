@@ -15,16 +15,9 @@
   <property name="LPS_HOME" value="${env.LPS_HOME}"/>
   <property file="${LPS_HOME}/build.properties"/>
 
-  <taskdef resource="net/sf/antcontrib/antcontrib.properties"/>
-
   <!--================  Target [init] ==============-->
   <target name="init" >
-
-      <if> 
-          <not> <isset property="env.LPS_HOME"/> </not>
-          <then> <fail message="LPS_HOME not set" /> </then>
-      </if>
-
+    <fail message="LPS_HOME not set" unless="env.LPS_HOME"/>
   </target>
 
   <!--================  Target [build] ==============-->
