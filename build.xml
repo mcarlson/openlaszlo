@@ -1172,11 +1172,17 @@
 
      <target name="webapp.undeploy" description="Undeploy LPS from tomcat" unless="no.tomcat"
          depends="init">
-         <undeploy url="${tom.url}"
-             username="${tom.username}"
-             password="${tom.password}"
-             path="/${build.branch}"
-             />
+         <script language="javascript">
+             // We use javascript here because that's the only way to get to the
+             // setFailOnError field. 
+             var undeployTask = lps.createTask("undeploy");
+             undeployTask.setUrl( lps.getProperty("tom.url"));
+             undeployTask.setUsername( lps.getProperty("tom.username"));
+             undeployTask.setPassword( lps.getProperty("tom.password"));
+             undeployTask.setPath( "/" + lps.getProperty("build.branch"));
+             undeployTask.setFailOnError(false);
+             undeployTask.execute();
+         </script>
      </target>
  
      <target name="webapp.install" unless="no.tomcat"
