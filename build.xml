@@ -435,11 +435,9 @@
               <include name="*/**"/>
               <exclude name="${builddir-dev}/server/${tomcat}/bin/*"/>
               <exclude name="${builddir-dev}/docs/src/**" />
-              <exclude name="tools/jakarta-ant-1.5.1/bin/ant" />
           </tarfileset>
           <tarfileset dir="${source-distro}" mode="755" prefix="${source-distro}">
               <include name="${buildir-dev>/server/${tomcat}/bin/*"/>
-              <include name="tools/jakarta-ant-1.5.1/bin/ant" />
           </tarfileset>
           <!-- credits source and binary-->
           <tarfileset dir="." prefix="${source-distro}">
