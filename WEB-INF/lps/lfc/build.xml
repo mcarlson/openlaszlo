@@ -21,7 +21,6 @@
   <target name="init" depends="build-opt">
     <tstamp/>
 
-    <echo message="LPS_HOME is ${LPS_HOME}" />
 	<path id="lfctosc.classpath">
 		<fileset dir="${LPS_HOME}/3rd-party" includes="**/*.jar" />
 		<fileset dir="${LPS_HOME}/WEB-INF/lib" includes="**/*.jar" />
@@ -31,10 +30,6 @@
 		classname="org.openlaszlo.sc.Main"
 	    classpathref="lfctosc.classpath"	/>
         
-    <echo message="Do we have sc.Main? ${has_sc.Main} in classpath ${lfctosc.classpath}"/>
-
-    <echo message="JAVA_OPTS=${JAVA_OPTS}" />
-
     <property file="${LPS_HOME}/build.properties"/>
     <condition property="JAVA_DEBUG" value="" else="-ea">
         <equals arg1="${build.debug}" arg2="off" />
@@ -43,9 +38,54 @@
     <condition property="JAVA_OPTS" value="${env.JAVA_OPTS}" else="">
         <isset property="env.JAVA_OPTS"/>
     </condition>
+    
     <property name="sc.dir"     value="${LPS_HOME}/WEB-INF/lps/server/sc"/>
 
-    <echo message="JAVA_OPTS=${JAVA_OPTS}" />
+    <!-- Whether the debug lfc's are up to date -->
+    <uptodate property="lfc-debug.uptodate" >
+        <srcfiles dir="." includes="**/*.lzs,**/*.as,**/*.lzx,**/*.js" /> 
+        <compositemapper>
+            <mergemapper to="LFC6-debug.lzl" />    
+            <mergemapper to="LFC7-debug.lzl" />                
+            <mergemapper to="LFC8-debug.lzl" />                        
+        </compositemapper>
+    </uptodate>
+
+    <!-- Whether the plain lfc's are up to date -->
+    <uptodate property="lfc-plain.uptodate" >
+        <srcfiles dir="." includes="**/*.lzs,**/*.as,**/*.lzx,**/*.js" /> 
+        <compositemapper>
+            <mergemapper to="LFC6.lzl" />    
+            <mergemapper to="LFC7.lzl" />                
+            <mergemapper to="LFC8.lzl" />                        
+        </compositemapper>
+    </uptodate>
+
+    <!-- Whether the profile lfc's are up to date --> 
+    <uptodate property="lfc-profile.uptodate" >
+        <srcfiles dir="." includes="**/*.lzs,**/*.as,**/*.lzx,**/*.js" /> 
+        <compositemapper>
+            <mergemapper to="LFC6-profile.lzl" />    
+            <mergemapper to="LFC7-profile.lzl" />                
+            <mergemapper to="LFC8-profile.lzl" />                        
+        </compositemapper>
+    </uptodate>
+    
+    <!-- Whether all variants of the lfc are up to date -->
+    <condition property="lfc.uptodate.all">
+        <and>
+            <isset property="lfc-debug.uptodate" />
+            <isset property="lfc-plain.uptodate" />
+            <isset property="lfc-profile.uptodate" />
+       <!--     <isset property="lfc-compiler.uptodate" /> -->
+        </and>            
+    </condition>
+
+    <echo message="Is plain vanilla lfc up to date? ${lfc-plain.uptodate}" />    
+    <echo message="Is debug lfc up to date? ${lfc-debug.uptodate}" />    
+    <echo message="Is profile lfc up to date? ${lfc-profile.uptodate}" /> 
+    <echo message="Are lfc's newer than compiler jars? ${lfc-compiler.uptodate}" />
+    
   </target>
 
   <target name="clean" depends="init">
@@ -57,7 +97,6 @@
   
   
 <target name="lzl" description="Build a .lzl library from source" >
-        <!-- TODO: add a check for uptodate [bshine 5.14.06] --> 
 	<fail unless="has_sc.Main" message="Can't find org.openlaszlo.sc.Main in classpath." />
 	<echo message="Compiling ${library}"/>
 	<java classname="org.openlaszlo.sc.Main" 
@@ -72,8 +111,9 @@
 	</java>
     </target>
 <!-- We want to build the cross-product of [swf6, swf7, swf8] with [ regular, debug, profile ] -->
-<target name="build" description="Build all the lfc versions requested in build.properties"
-    depends="init">
+<target name="build" description="Build all the lfc versions requested in build.properties, unless they're already up to date"
+    depends="init"
+    unless="lfc.uptodate.all">
     <dependset>
       <targetfileset dir="build/cache"/>
       <srcfileset dir="${sc.dir}" includes="*.py"/>
@@ -120,6 +160,10 @@
         var buildDebug = lfc.getProperty("build.lfc.runtime.debug");
         var buildProfile = lfc.getProperty("build.lfc.runtime.profile");
         
+        var debugUptodate = lfc.getProperty("lfc-debug.uptodate");
+        var plainUptodate = lfc.getProperty("lfc-plain.uptodate");        
+        var profileUptodate = lfc.getProperty("lfc-profile.uptodate"); 
+        
         for (var s in swfruntimes) {
             var v = swfruntimes[s]; 
             
@@ -127,16 +171,31 @@
             var buildThisRuntime = lfc.getProperty("build.lfc.runtime.swf" + v);
             if (buildThisRuntime != null) { 
             
-                dobuild(v, "", "");
+                if (!plainUptodate) {
+                    dobuild(v, "", "");
+                } else {
+                    warningTask.setMessage("Skipping LFC" + v + " because it's up to date.");
+                    warningTask.execute();
+                }
                 
                 if (buildDebug) {
-                    // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
-                    // warnings, the options can be changed to simply --debug
-		    dobuild(v, "-debug", "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                    if (!debugUptodate) {
+                        // TODO: [2006-06-07 ptw] (LPP-2034) When the LFC is 'clean' of
+                        // warnings, the options can be changed to simply --debug
+                        dobuild(v, "-debug", "--option nameFunctions --option warnGlobalAssignments '-D$debug=true'");
+                    } else {
+                        warningTask.setMessage("Skipping LFC" + v + "-debug because it's up to date.");
+                        warningTask.execute();
+                    }
                 }
                 
                 if (buildProfile) {
-                    dobuild(v, "-profile", "--profile");
+                    if (!profileUptodate) {
+                        dobuild(v, "-profile", "--profile");
+                    } else {
+                        warningTask.setMessage("Skipping LFC" + v + "-profile because it's up to date"); 
+                        warningTask.execute(); 
+                    }
                 }
                 
             } else {
