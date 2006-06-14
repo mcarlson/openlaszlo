@@ -50,6 +50,7 @@ LzMediaLoader.prototype.LOADERDEPTH = 9;
 LzMediaLoader.prototype.removeLoadChecker = function() {
     // Remove loadChecker delegate
     this.loadChecker.unregisterAll();
+    this.removeLoadCheckerDel.unregisterAll();
 }
 
 //==============================================================================

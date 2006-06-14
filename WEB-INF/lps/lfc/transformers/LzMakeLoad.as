@@ -88,6 +88,9 @@ LzMakeLoad.createLoader = function (){
 // @param String headers: Headers to send with the request (if any.)
 //=============================================================================
 LzMakeLoad.setSource = function ( newSrc , cache , headers ){
+    if (this.loader.mc.loading == true) {
+        this.loader.unload(this.loader.mc);
+    }
     this.stopTrackPlay();
     this.isloaded = false;
     if ( this.queuedplayaction == null ){

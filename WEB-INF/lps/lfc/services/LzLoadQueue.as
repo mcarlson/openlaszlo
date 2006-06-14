@@ -202,7 +202,7 @@ LzLoadQueue.addToQueue = function( loadmc ){
     for ( var i = this.queueSorters.length - 1; i>=0 ; i-- ){
         prior = this.queueSorters[i]( loadmc , prior );
     }
-
+    
     if ( this.listofqs[ prior ] ) {
         this.listofqs[ prior ].push( loadmc );
     } else{
@@ -274,6 +274,11 @@ LzLoadQueue.addPriorityFunction( LzLoadQueue.defaultPriorityAssignment );
 
 LzLoadQueue.makeRequest = function( loadobj ){
     if ( !loadobj.valid ) return;
+
+    if (loadobj.loading || loadobj.loaded) {
+        //Debug.warn('duplicate request', loadobj);
+        return;
+    }
 
     loadobj.loading = true;
     loadobj.loadtime = getTimer();
