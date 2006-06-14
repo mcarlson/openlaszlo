@@ -1,0 +1,14 @@
+<canvas debug="true" proxied="false">
+    <class name="tortureload" width="150" height="200" stretches="both">
+        <attribute name="data" value="images/67-H-774_t.jpg" type="string"/>
+        <method event="oninit">
+            this.setSource(this.data);
+            this.setSource(this.data);
+        </method>
+    </class>
+    <simplelayout axis="x"/>
+    <tortureload/>
+    <tortureload data="images/68-H-1037_t.jpg"/>
+    <tortureload data="images/68-H-1057_t.jpg"/>
+ 
+</canvas>

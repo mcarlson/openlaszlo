@@ -1,0 +1,18 @@
+<canvas debug="true" proxied="false">
+    <dataset name="ds" src="photos.xml" type="http"
+             request="true" />
+
+    <view width="500" height="250" clip="true">
+        <view height="100%">
+            <view id="imgRepMan" width="150" height="200" stretches="both">
+                <datapath xpath="ds:/images/image/@href" 
+                        replication="lazy"
+                        axis="x" spacing="10" />
+                <method name="applyData">
+                    this.setSource(this.data);
+                </method>
+            </view>
+        </view>
+        <hscrollbar />
+    </view>
+</canvas>
