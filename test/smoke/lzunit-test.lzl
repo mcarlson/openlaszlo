@@ -289,9 +289,9 @@
 
       assertSame(true, true, "true === true");
 
-      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.22
+      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
       var flashVersion = LzBrowser.getVersion();
-      if (flashVersion < 8 || flashVersion > 8.22) {
+      if ((! flashVersion) || flashVersion < 8 || flashVersion > 8.24) {
           assertNotSame(NaN, NaN, "NaN !== NaN");
       }
 
@@ -485,10 +485,10 @@
       assertEquals(27, expectedFailures, "Total number of expected failures");
       expectedFailure = ef;
 
-      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.22
+      // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
       var flashVersion = LzBrowser.getVersion();
       var nexp = 27;
-      if (flashVersion < 8 || flashVersion > 8.22) {
+      if ((! flashVersion) || flashVersion < 8 || flashVersion > 8.24) {
           nexp++;
           assertSame(NaN, NaN, "Expected");
       }
