@@ -1,122 +1,0 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<html>
-<head>
-  <title>lps-regress-test-page</title>
-                                                
-  <meta http-equiv="content-type"
- content="text/html; charset=ISO-8859-1">
-                     
-  <script language="javascript" type="text/javascript">
-<!--
-function temp(server, jdk)
-{
-  var url = "http://"+server+'/cgi-bin/tc_restart.cgi?jdk='+jdk+'&cache=flush';
-  document.forms.myForm.DegC.value = url;
-  window.location=url;
-	
-}
--->
-  </script> 
-                
-  <script language="javascript" type="text/javascript">
-  </script>
-</head>
-  <body>
-        
-<div align="center"><b><big><big><u>Laszlo Regression &nbsp;Test Page</u></big></big></b><br>
- </div>
-     <br>
- 1. Deploy latest build 
-<ul>
-   <li><a href="http://192.168.1.18/%7Emdavis/cgi-bin/latest.cgi">On Linux</a></li>
- 
-</ul>
- 
-<hr width="100%" size="2">2. Make sure tomcat is up and running <br>
-                       
-<table border="1">
-          <tbody>
-            <tr bgcolor="#ccffff">
-              <td><b>&nbsp; Computer Name</b><br>
-              </td>
-          <td><b>IP Address</b> &nbsp; &nbsp; &nbsp;&nbsp;</td>
-          <td valign="top"><b>OS</b>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
-  &nbsp;  &nbsp; &nbsp;<br>
-              </td>
-              <td><b>Test</b> (webserver)</td>
-             <td valign="top"><b>Remarks &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 
- &nbsp;   &nbsp; &nbsp;</b><br>
-             </td>
-         </tr>
-                      <tr>
-              <td valign="top">       QA - Linux<br>
-              </td>
-              <td valign="top">192.168.1.18<br>
-              </td>
-              <td valign="top">RH Linux 7.2<br>
-              </td>
-              <td valign="top"><a href="http://192.168.1.18/">http://192.168.1.18/</a><br>
-              </td>
-             <td valign="top"><br>
-             </td>
-            </tr>
-                               
-  </tbody>        
-</table>
-    <br>
-       
-<hr width="100%" size="2">3. &nbsp;Stop tomcat (If running), set &nbsp;JAVA 
-&nbsp;environment and restart &nbsp;tomcat <!-- JAVA SCRIPT TO CREATE DROP DOWN LIST OS -->
-           
-<form name="myForm">                
-  <select name="mySelect">
-  <option value="192.168.1.18/~mdavis">Linux </option>
-<!-- <option value="192.168.1.152">WinXP </option>--><!-- <option value="192.168.1.156">Win2000 </option>-->
-  </select>
-      <!-- JAVA SCRIPT TO CREATE DROP DOWN LIST JDK -->                
-  <select name="mySelect2">
-  <option value="j2sdk1.4.0">j2sdk1.4.0 </option>
-  <option value="j2sdk1.4.0_01">j2sdk1.4.0_01 </option>
-  <option value="j2sdk1.4.0_02">j2sdk1.4.0_02 </option>
-  <option value="j2sdk1.4.1">j2sdk1.4.1 </option>
-  <option value="jdk1.3">jdk1.3 </option>
-  <option value="jdk1.3.0_01">jdk1.3.0_01 </option>
-  <option value="jdk1.3.0_01">jdk1.3.0_02 </option>
-  <option value="jdk1.3.0_01">jdk1.3.0_03 </option>
-  <option value="jdk1.3.0_01">jdk1.3.0_04 </option>
-  <option value="jdk1.3.1">jdk1.3.1 </option>
-  <option value="jdk1.3.1_01">jdk1.3.1_01 </option>
-  <option value="jdk1.3.1_02">jdk1.3.1_02 </option>
-  <option value="jdk1.3.1_03">jdk1.3.1_03 </option>
-  <option value="jdk1.3.1_04">jdk1.3.1_04 </option>
-  <option value="jdk1.3.1_05">jdk1.3.1_05 </option>
-  </select>
-       <input type="button" value="Swap JVM on Client Machine"
- onclick="temp(this.form.mySelect.value, this.form.mySelect2.value);"> <br>
-       <br>
-       URL:  <input name="DegC" readonly="readonly" size="80" value=""> </form>
-      <!-- JAVA SCRIPT ENDS HERE  -->  <!-- <a href="http://192.168.1.156:8080/lps-b1/">Test Page</A>--> 
-     
-<hr width="100%" size="2">3. Start tests here<b><a href="../"><br>
-     <br>
-    </a>Test Cases<a href="../"><br>
-    </a></b><a href="test_examples.html"> Behaviour test page (Laszlo Examples)</a><b><br>
-    </a><br>
-    Other Test Cases<a href="../"><br>
-     </a></b><a href="test_lzunit.html">lzunit</a><br>
-     </a><a href="test_text.html">text</a><br>
-     <a href="test_baseline.html">baseline</a><br>
-     <a href="test_xhtml.html">xhtml</a><br>
-     </a><a href="test_lfc.html">lfc</a><br>
-     <a href="test_lfc_data_examples.html">lfc/data/examples</a> <br>
-     <a href="test_bugs.html">bugs</a><br>
-     <a href="test_compiler_errors.html">compiler_errors</a> <br>
-    <br>
-    <b>Link Checker Tests<br>
-     </b><a href="http://localhost/cgi-bin/XENU.exe">Run link check on LPS</a><br>
-</body>
-</html>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
