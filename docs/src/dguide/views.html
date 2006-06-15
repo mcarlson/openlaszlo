@@ -149,7 +149,7 @@ views is used extensively in the sample applications. The code below
 shows what happens when <code>bgcolor="red"</code> is removed from the
 outermost view.</p>
 
-<example class="program" id="view-5">
+<example title="blank view">
 &lt;canvas height="200" width="500"&gt;
   &lt;view x="50" y="50" width="100" height="100"&gt;
     &lt;view bgcolor="blue" width="50" height="50"/&gt;
@@ -562,7 +562,7 @@ but not to contain the red and silver squares, which have negative x and y value
 </example> 
 <h2>View Hierarchy</h2>
 <p>Each view has a position in the <i>view hierarchy</i>, that is, the tree structure of objects in which each view has
-a parent, and, optionally, children and or sibling views. In simple cases such as the following the relationship of 
+a parent, and, optionally, children and/or sibling views. In simple cases such as the following the relationship of 
 parents and children is obvious from their position in the code.</p>
 <example title="simple view hierarchy">
 &lt;canvas height="100"&gt;
@@ -678,15 +678,14 @@ more examples, in <xref linkend="class-inheritance"/>.</p>
 <p>In LZX, the fundamental objects are called nodes. Nodes are abstract entities and as such they have no visual representation. Views are the most common kind of node, and in most cases
 you when you need a container object, you should use a view even though a node would work. In fact, although 
 you can use <tagname>node</tagname>s for most of the abstract
-infrastructure (dataset manipulation, content management, polling, etc.)
-but currently, the compiler complains when putting datapointers and
+infrastructure (dataset manipulation, content management, polling, etc.), the compiler complains when putting datapointers and
 datasets in nodes.  
 Nodes are only created
 through script; there is no tag for creating them.</p>
 <p> 
 As discussed in later chapters, in situations when you are trying to squeeze out the last bit of performance, you may want to
-examine how much overhead is there in using a view versus a node (when there's no
-presentation associated with the element)</p>
+examine how much overhead there is in using a view versus a node (when there's no
+presentation associated with the element).</p>
 
 
 

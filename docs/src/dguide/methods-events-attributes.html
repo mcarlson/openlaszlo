@@ -148,7 +148,7 @@ Any defined attribute has an associated event called
  "on" plus the name of the attribute. Whenever the value of any
 attribute is updated using the <method>setAttribute</method>, its associated "on" event is generated. For example, the "height" attribute of a view has an 
 associated "onheight" event that
-is generated whenever the view's height changes. These events are implicit in the sense that they are build into the system &#8212; you don't have to declare them or send them.
+is generated whenever the view's height changes. These events are implicit in the sense that they are built into the system &#8212; you don't have to declare them or send them.
 </p>
 <p>
 Said another way, the default behavior of the <method>setAttribute</method> method is to set the named property and send the event. 
@@ -233,7 +233,7 @@ The <tagname>handler</tagname> tag defines code that is executed when an event t
 Event handlers defined in this way are executed whenever their associated <attribute>event</attribute> occurs.
 </p>
 <p>
-The following example shows how you might handle a user's clicking a button with the mouse: 
+The following example shows how you might handle a button click: 
 </p>
 
 <example title="A simple handler">
@@ -268,7 +268,7 @@ An event can have associated with it any number of handlers. When that event is 
 </example>
 <h3>Handlers that call methods</h3>
 <p>
-A handler may include javascript code to be executed when the event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <attribute link="true">method</attribute> attribute of the <tagname>handler</tagname> tag.</p>
+A handler may include javascript code to be executed when the associated event occurs, or it may reference a method that contains the code to be executed.  To reference another method, use the <attribute link="true">method</attribute> attribute of the <tagname>handler</tagname> tag.</p>
 <example title="Calling a method from a handler">
 &lt;canvas debug="true"&gt;
    &lt;debug y="50"/&gt;
@@ -998,7 +998,7 @@ button.  The <method>init</method> method for <classname>button</classname> subs
 &lt;canvas height="40"&gt;
   &lt;button&gt;
     &lt;method name="init"&gt;
-      super.init(); //best practice to always call super.innt() when declaring 
+      super.init(); //best practice to always call super.init() when declaring 
                     //an init method
       //do some init code here
     &lt;/method&gt;

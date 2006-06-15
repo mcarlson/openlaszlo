@@ -12,7 +12,7 @@ OpenLaszlo compiler. They may be deployed as standalone files, or they may be
 served by the OpenLaszlo Server. 
 The specification of the language includes both a set of XML tags and a set of JavaScript APIs.</p>
 
-<p>The LZX language was designed to use familiar syntaxes and naming conventions so that experienced web developers would find it easy to learn and to incorporate into their programming environments. At the same time LZX introduces new concepts and capabilities that make possible more fluid and responsive user interfaces to web applications than are possible with any other technology.</p>
+<p>The LZX language was designed to use familiar syntaxes and naming conventions so that experienced web developers would find it easy to learn and incorporate into their programming environments. At the same time LZX introduces new concepts and capabilities that make possible more fluid and responsive user interfaces to web applications than are possible with any other technology.</p>
 
 <p>A running LZX program takes place on a visual object called a canvas, which is basically a bit of screen real estate. On the canvas, autonomous boxes called views interact. These views may be nested logically and visually, and have dozens of programmable attributes, including size, position, background color, opacity, clickability, stretchability, and so forth. Views may be used to contain resources, such as, for example, an image or a video, and may also be dynamically bound to any set of XML-formatted data. The attributes of any view can be set to be a function of the attributes of any other view or views, and virtually any attribute of a view can be animated &#x2014; that is, set to vary over time.</p>
 
@@ -35,7 +35,7 @@ different from its use in traditional web applications in which JavaScript is us
 or generate HTML pages. Those functions are basically irrelevant in LZX applications. Thus although the language design is 
 rather traditional, the programming paradigm is fundamentally new.</p>
 
-<p>This chapter summarizes the traditional and innovative aspects of LZX. It's an overview, not a tutorial; after reading it you will be better able to decide how to go about learning the language. Depending on your background and experience, you may determine that you need to go learn some more about XML or object oriented programming before addressing LZX. On the other hand if you find these concepts accessible you may want to jump right in and begin coding, in which case we suggest starting with the <a href="${tutorials}laszlo_basics.html">Laszlo Basics</a> tutorial.</p>
+<p>This chapter summarizes the traditional and innovative aspects of LZX. It's an overview, not a tutorial; after reading it you will be better able to decide how to go about learning the language. Depending on your background and experience, you may determine that you need to go learn some more about XML or object oriented programming before addressing LZX. On the other hand, if you find these concepts accessible you may want to jump right in and begin coding, in which case we suggest starting with the <a href="${tutorials}laszlo_basics.html">Laszlo Basics</a> tutorial.</p>
 
 <h2>Overview of Syntax and Semantics</h2>
 
@@ -43,7 +43,7 @@ rather traditional, the programming paradigm is fundamentally new.</p>
  manipulate objects created by tags. In most cases, anything that can be done with a tag can be accomplished in 
 JavaScript, and vice versa. However, this equivalence is not universally true, and moreover one technique is 
 virtually always vastly superior to another in any situation. <em>Learning</em> LZX basically comes down to 
-learning the tags and APIs; <em>mastering</em> the language requires a developing subtle understanding of how 
+learning the tags and APIs; <em>mastering</em> the language requires developing a subtle understanding of how 
 the procedural and declarative approaches differ, and learning how and when to use each.</p>
 
 <p>LZX strictly adheres to XML and JavaScript syntax</p>
@@ -141,9 +141,9 @@ etc.);</li>
 
 <p><code>beatles.george</code></p> 
 
-<p>which case <varname>george</varname> is a "child" of <varname>beatles</varname> .</p> 
+<p>in which case <varname>george</varname> is a "child" of <varname>beatles</varname> .</p> 
 
-<p>As will be discussed further below, LZX affords various was to define attributes of, and methods on, objects or classes. For example, the following code samples (which create a view named <varname>myview</varname> and set its background color to red) are equivalent:</p> 
+<p>As will be discussed further below, LZX affords various ways to define attributes of, and methods on, objects or classes. For example, the following code samples (which create a view named <varname>myview</varname> and set its background color to red) are equivalent:</p> 
 
 <p>JavaScript:</p> 
 
@@ -205,7 +205,7 @@ to test that program's validity.</p>
 
 <pre>&lt;class name="myview" extends="view"/&gt;</pre>
 
-<p>In this case you have defined a new kind of object called a <varname>myview</varname> that has all the properties of a <code>view</code>. <xref linkend="initialization-and-instantiation">Later chapters</xref> discusses in depth when and how objects are defined in your code and built by the compiler and runtime.</p> 
+<p>In this case you have defined a new kind of object called a <varname>myview</varname> that has all the properties of a <code>view</code>. <xref linkend="initialization-and-instantiation">Later chapters</xref> discusses in depth when and how objects are defined in your code and built by the compiler at runtime.</p> 
 
 <h3>Attributes</h3> 
 
@@ -253,7 +253,7 @@ to test that program's validity.</p>
 
 <p><code>johnny.getAttribute("height");</code></p> 
 
-<p>Every time that an attribute is set, that is, every time the value of an attribute changes, an object called an <code>event</code> is generated. The next section discusses what events are, and how they work in running LZX programs.</p> 
+<p>Every time that an attribute is set, that is, every time the value of an attribute changes, an object called an <code>event</code> is generated. The next section discusses what events are, and how they work in LZX programs.</p> 
 
 <h2>Events and Methods</h2> 
 
@@ -264,7 +264,8 @@ to test that program's validity.</p>
 <p>In LZX programs, events are not broadcast, but rather they are communicated in a point-to-point fashion using <code>delegates</code>, which are basically function pointers that are referenced when events happen. This implementation increases flexibility and reduces the overhead of using events. However, for the purposes of the discussion in this chapter we're going to ignore delegates and speak of events in a slightly less rigorous manner, saying, for example when such-and-such an event <em>occurs</em>, thus and such <em>happens,</em> leaving aside for now an explanation of <em>how</em> it happens.</p> 
 
 <p>Views have approximately two dozen defined events, as listed 
-on the entry for <tagname link="true">view</tagname> in the LZX Reference Manual. Many of these
+on the entry for <tagname link="true">view</tagname> in the <a
+href="${reference}">LZX Reference Manual</a>. Many of these
 events that deal with user input, such as <event>onblur</event>,
 <event>onclick</event>, <event>onkeydown</event>, will be familiar to
 JavaScript programmers. Other events, such as <event>onheight</event>
@@ -309,10 +310,10 @@ operator. Thus,</p>
 
 <p><code>dog.bark();</code></p> 
 
-<p>In JavaScript, the <code>this</code> keyword is used to refers to the object though which the function was invoked. </p>
+<p>In JavaScript, the <code>this</code> keyword is used to refer to the object through which the function was invoked. </p>
 <h3>Handlers</h3>
 <p>
-A handler is like a method. But whereas a method is invoked by its name, a hander msut be associated with a particular event. The handler
+A handler is like a method. But whereas a method is invoked by its name, a hander must be associated with a particular event. The handler
 script will be executed when the referenced view receives an event
 with this name. For example,</p>
 
@@ -411,6 +412,8 @@ attributes on which it depends.</p>
 
 <p>The width of <code>beatles</code> will increase or decrease as a function of <code>paul</code>'s width; the expression <code>this.paul.width + 28</code> is a constraint.</p> 
 
+<p>When the user clicks on the <code>paul</code> view, the clickhandler will adjust the size of the <code>paul</code> view.  This change will be reported to the <code>${this.paul.width + 28}</code> constraint, which will then adjust the <code>beatles</code> view to the width of the <code>paul</code> view plus an additional 28 pixels.  All of these steps are invisible to the user because they occur instantly.</p>
+
 <p>This, of course is a trivial example, but it serves to make the
 point that in declaring the structure of your objects in LZX you also
 declare the rules by which they will relate to each other. Constraints
@@ -452,13 +455,13 @@ constituent parts. <xref linkend="constraints">Chapter
 
 <p>Thus</p> 
 
-<pre>a= 7; // defines a global variable a</pre>
+<pre>a = 7; // defines a global variable a</pre>
 
 <p>and</p> 
 
 <pre>var a = 7 // defines a local variable a</pre>
 
-<p>This syntax means, for example, that an assignment in a method definition can set an instance of global variable:</p> 
+<p>This syntax means, for example, that an assignment in a method definition can set an instance of a global variable:</p> 
 
 <pre>for (a = 0; a &lt;n; a++);</pre>
  
@@ -524,7 +527,7 @@ program.</p>
 
 <h2>Combining Tags and Script in LZX Programs</h2> 
 
-<p>As mentioned earlier, virtually all nontrivial LZX programs contain both (XML) tags and script. Tags are used declaratively, that is, to define objects and their attributes. Script is used procedurally, that is, to explicitly define series of steps. Although the two kinds of code are liberally intermixed within LZX &#x2014; for example, script can appear within tags &#x2014; each syntax locally maintains its integrity.</p> 
+<p>As mentioned earlier, virtually all nontrivial LZX programs contain both (XML) tags and script. Tags are used declaratively, that is, to define objects and their attributes. Script is used procedurally, that is, to explicitly define a series of steps. Although the two kinds of code are liberally intermixed within LZX &#x2014; for example, script can appear within tags &#x2014; each syntax locally maintains its integrity.</p> 
 
 <p>So for example, within declarative LZX code, comments are denoted</p> 
 <pre>&lt;!-- XML comment --&gt;</pre>
@@ -544,7 +547,7 @@ program.</p>
 
 <ul>
   <li>by explicitly <dfn>escaping</dfn> delimiter characters with an
-  <dfn>entity reference</dfn>. (The entity reference for the left
+  <dfn>entity reference</dfn>. (For example, the entity reference for the left
   angle bracket is <code>&amp;lt;</code>).</li>
   <li>by using the XML <code>CDATA</code> construct to define a block
   of <dfn>character data</dfn>.</li>
@@ -565,7 +568,7 @@ program.</p>
 
 <h3>When to Use Tags and When to Use Script</h3> 
 
-<p>As we said earlier, most things that you can do in LZX can be done either with XML tags or JavaScript APIs, and mastering LZX requires a developing subtle understanding of how and when to use each. You will find, in general, that tags are best for computations that can be done at compile-time &#x2014; such as laying out the canvas &#x2014; and script is best for run-time things, such as responding to user input. But in order for you to make any use of that information you need to understand what is done at compile time and what is done at run time, and much of that is under your control, and dependant on the problem you're trying to solve.</p> 
+<p>As we said earlier, most things that you can do in LZX can be done either with XML tags or JavaScript APIs, and mastering LZX requires developing a subtle understanding of how and when to use each. You will find, in general, that tags are best for computations that can be done at compile-time &#x2014; such as laying out the canvas &#x2014; and script is best for run-time things, such as responding to user input. But in order for you to make any use of that information you need to understand what is done at compile time and what is done at run time, and much of that is under your control, and dependant on the problem you're trying to solve.</p> 
 
 <p>In other words, there is no simple set of unambiguous rules that tell you when to use tags versus when to use script. But there are, however, design patterns common to all well-made LZX programs.</p> 
 
@@ -573,7 +576,7 @@ program.</p>
 
 <p>For example, a simple two-word constraint might express a relationship between views that would require thirty lines of code to express. Most of the time the constraint is the better programming solution. But not always.</p> 
 
-<p>Although there are no absolutes, there are some general principles that inform the philosophy of development in LZX:</p> 
+<p>Although there are no absolutes, there are some general principles that define best practice in LZX development:</p> 
 <ul> 
 <li>   Use tags when that is the only option.</li> 
 <li>   Use JavaScript when that is the only option.</li> 

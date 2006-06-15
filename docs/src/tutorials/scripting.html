@@ -1,3 +1,4 @@
+
 <html id="scripting-tutorial" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Introduction to Scripting</title>
@@ -82,8 +83,8 @@ For example, consider this slight expansion of the preceding program:</p>
 &lt;/canvas&gt;
 </example>
 
-<p>Everthing there is fine, except the "<code>4 plus 3 is &#x2026;</code>" line. Four plus three should be 7, as in 
-the line immediately above it, right? What happened there is that we concatenated numbers to strings 
+<p>Everything there is fine, except the "<code>4 plus 3 is &#x2026;</code>" line. Four plus three should be 7, as in 
+the line immediately above it, right? What happened is that we concatenated numbers to strings 
 earlier on (<code>4 + " plus " + 3</code>), and that operation converted the numbers to strings.</p>
 <p>
 Laszlo documentation is not intended to provide a complete reference for Javascript. Later chapters do explain some
@@ -125,7 +126,7 @@ tags (in particular, <tagname>script</tagname> tags). The "<code>&lt;</code>" ch
 
 <example   title="Using CDATA" extract="false">
 &lt;canvas height="120"&gt;
-   lt;script&gt;
+   &lt;script&gt;
      <em>&lt;![CDATA[</em>
      for (var i = 0; i &lt; 11; i++) {
        Debug.write(i);
@@ -243,7 +244,7 @@ all the attributes of a <tagname>view</tagname>.  Here's an example of how to us
 
 <p>We are also using the <method>setAttribute</method> method, which takes two arguments: the attribute to set, and what to set it to.</p>
 
-<p>Next, let's find a way to move Window 2 over so that we can see what's behind i, without dragging it. Clicking the button
+<p>Next, let's find a way to move Window 2 over so that we can see what's behind it, without dragging it. Clicking the button
  twice doesn't help, because all that does is reset the x attribute to a constant amount (150px).</p>
 
 <p>Instead, we need to figure out where the second window is, and then add an increment to it each time the button is clicked. 
@@ -529,7 +530,7 @@ not a string or a number. That's the reason for the <code>value="''"</code>.
 attribute <code>type="string"</code>, as shown in the "right 2" button. In this case
 the word "right" does not need to be single-quoted.</p>
 
-<p>This example is actually more lengthy than the previous one, but it demonstrates the power of object oriented programming in LZX```. 
+<p>This example is actually more lengthy than the previous one, but it demonstrates the power of object oriented programming in LZX. 
 If the number of attributes were to grow, and if various buttons had different attributes, the code would still remain very clear.</p>
 
 </body>

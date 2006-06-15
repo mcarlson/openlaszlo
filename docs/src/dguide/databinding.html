@@ -175,7 +175,7 @@ the colon <code>myData:</code>, followed by the nodes, separated by forward slas
 without any "[1]"s.</p>
 <?ignore
 <p>In plain English, the above example says: "get me the text from the first firstName node, of the first person 
-node of the first (and of course, only) myXML node." The text() method call returns that nodes text.</p>
+node of the first (and of course, only) myXML node." The text() method call returns that node's text.</p>
 
 <p>To get Marge's name, we could rewrite the <tagname>text</tagname> tag as follows:</p>
 
@@ -231,7 +231,7 @@ The child elements of <varname>rowOfData</varname> inherit this, so their datapa
 
 <h4>Multiple rows of data</h4>
 
-<p>In the above example we used a single <varname>rowOfData</varname> node. Next, we shall use a range of nodes:</p>
+<p>In the above example we used a single <varname>rowOfData</varname> node. Next, we shall use a range of all of the nodes:</p>
 
 <example class="code" title="Range of nodes">
 &lt;canvas height="80" width="500" &gt;
@@ -331,7 +331,7 @@ The table below highlights ways of categorizing datasets according to where the 
 <h3><a name="http"/>HTTP Data</h3>
 <p>Remote data goes over HTTP, which means it can (but doesn't have to) be dynamic. If it is static, then the only difference between it and included or embedded data is that it is downloaded after the application loads. The <code>type="http"</code> attribute tells the OpenLaszlo Server that this is an HTTP request. The requests can be either GET or POST. </p>
 
-<p>There are several points at which the client requests for the data:</p>
+<p>There are several points at which the client makes requests for the data:</p>
 
 <ul>
 	<li>The client will request the data as soon as the app loads if the the dataset's  <attribute>request</attribute> attribute is true. </li>
@@ -339,7 +339,7 @@ The table below highlights ways of categorizing datasets according to where the 
 	<li>When the dataset's <method>doRequest</method> method gets called.</li>
 </ul>
 
-<p>In the table above, we referenced a file locally (myXMLDoc.xml), but we could have done it absolutely, or we could have hit a server-side (PHP, ASP, JSP or some CGI) that returned an XML document. We could add the query string to the <tagname>dataset</tagname> tag:</p>
+<p>In the table above, we referenced a file locally (myXMLDoc.xml), but we could have done it absolutely, or we could have hit a server-side script (PHP, ASP, JSP or some CGI) that returned an XML document. We could add the query string to the <tagname>dataset</tagname> tag:</p>
 
 <example class="code" extract="false">
 &lt;dataset name="myData"
@@ -619,7 +619,7 @@ Also, in SOLO deployed applications, the <classname>XMLHTTPRequest</classname> c
 
 <p>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy&#8212;that is, they "know about" parents and children.</p>
 
-<p>You would use a datapointer when you needed to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</p>
+<p>You will use a datapointer when you need to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</p>
 
 
 <example class="code" title="Manipulating datapointers">
@@ -641,7 +641,7 @@ Also, in SOLO deployed applications, the <classname>XMLHTTPRequest</classname> c
 
 <p>For brevity's sake, we are writing to the debugger, and we are including the data from a local file.</p>
 
-<p>The first <code>selectNext(2)</code> method call selects first the <tagname link="false">myXML</tagname> node, then Homer's <tagname link="false">person</tagname> node. It selects two because of the depth argument "2" we pass it (otherwise it would default to 1.</p>
+<p>The first <code>selectNext(2)</code> method call selects first the <tagname link="false">myXML</tagname> node, then the South Park <tagname link="false">person</tagname> node. It selects two because of the depth argument "2" we pass it (otherwise it would default to 1.</p>
 
 <p>The other <code>selectNext</code> method call returns <code>true</code> as long as an XML node was successfully selected (i.e. until there aren't any more). We exploit this by using it in a <code>do <i>&#x2026;</i> while</code> loop, so that the same iteration occurs for every <tagname>person</tagname> node.</p>
 

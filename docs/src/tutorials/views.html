@@ -32,7 +32,7 @@ In this tutorial you'll learn how to do more complex and powerful interactions a
 
 <p>That button would look better if it were centered. There is an attribute that we could use to do this, but just to see better how LZX works, let's
 center the button programatically. This will give you a good look at how <i>constraints</i> and <i>modifiers</i> work, 
-which will help you build more complex programs.</p>
+which will help you build more complex views.</p>
 
 
 <h2><a name="constraints"></a>Constraints and Modifiers</h2>
@@ -105,7 +105,7 @@ Here's how we do that:</p>
 </example>
 
 <p>This will center the button regardless of its size. Parenthesis have been added to clarify the execution order of the code.
-To prove that, we'll add an onclick script to the button.</p>
+To prove that the button will remain centered, we'll add an onclick script to the button that will resize it.</p>
 <p>
 For now, you don't need to understand how this works. Simply observe that when you click the button, its width grows. 
 We'll revisit this topic in the "Scripting" tutorial.</p>
@@ -187,10 +187,10 @@ their <i>own</i> view, and that view will then become a single element in the wi
 &lt;/canvas&gt;
 </example>
 <todo>
-mention property that we're illustrating here-- views grow to accommodate
+mention property that we're illustrating here--views grow to accommodate
 </todo>
 <p>That's better.  By using the attribute<code>bgcolor</code> (background
-color) attribute we can see how big the view is; It's 
+color) attribute we can see how big the view is; it's 
 only as big as it needs to be. We haven't specified either a height or width, so it is just large
 enough to accommodate the buttons.</p>
 
@@ -277,7 +277,7 @@ color, that stretches from end to end?</p>
 
 <p>The <attribute>valign</attribute> attribute aligns the view to the center of its parent's height. It can take a value of <code>top</code>, <code>center</code> or <code>bottom</code>. There is an <attribute>align</attribute> attribute that aligns views to the x-axis. The only problem with using that here is that we'd have to give each button an <attribute>align</attribute> attribute.</p>
 
-<p>The solution is to wrap all of our buttons in a view. Then we could apply a <attribute>valign</attribute> attribute to the lot of them.</p>
+<p>The solution is to wrap all of our buttons in a view. Then we could apply a <attribute>valign</attribute> attribute to all of them at once.</p>
 
 <example title="Applying 'valign' to container view">
 &lt;canvas height="300" width="500"&gt;

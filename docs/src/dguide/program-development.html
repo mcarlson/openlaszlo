@@ -45,7 +45,7 @@ Each of these steps is described in turn below.</p>
 <h3>Start up the OpenLaszlo Server</h3>
 
 <p>
-The way to start the OpenLaszlo Server (OLS) depends on the operating system and how it was installed. On Windows, typically you start OLS from the Start menu; on Mac OS X the default installation places the OpenLaszlo launch icon on your desktop. If you don't have the OpenLaszlo Server installed on your machine, you can download it from http://www.laszlosystems.com/developers/</p>
+The way to start the OpenLaszlo Server (OLS) depends on the operating system and how it was installed. On Windows, typically you start OLS from the Start menu; on Mac OS X the default installation places the OpenLaszlo launch icon on your desktop. If you don't have the OpenLaszlo Server installed on your machine, you can download it from <a href="http://www.openlaszlo.org/oldownload">http://www.openlaszlo.org/oldownload</a>.</p>
 
 
 <h3>Create a program file</h3>
@@ -163,7 +163,7 @@ If the Sever detects errors that prevent compilation, error messages are display
 
 <p>Runtime errors are displayed in the debugger, if the debugger is running.</p>
 
-<p>See <xref linkend="program-development.debugging"/> for a brief discussion of the debugger.  See <xref linkend="debugging"/> for a full dicussion.</p>
+<p>See <xref linkend="program-development.debugging"/> for a brief discussion of the debugger.  See <xref linkend="debugging"/> for a full discussion.</p>
 
 <h3>Iterate</h3>
 
@@ -202,9 +202,7 @@ applications:</p>
 </ul>
 
 <p>The next section discusses the ingredients of a typical Laszlo
-application. See also the <a href="${examples}">example programs</a>,
-and the user-contributed programs at <a
-href="http://www.mylaszlo.com">http://www.mylaszlo.com</a>, to get a
+application. See also the <a href="${examples}">example programs</a> to get a
 feel for the general structure of LZX applications.</p>
 
 <h3>Essential Structures</h3>
@@ -303,7 +301,7 @@ below). Consider</p>
 background color of the inner view can be referenced as
 <code>v2.bgcolor</code> from anywhere within the application. To
 reference it by name from outside of <varname>inner_view</varname> you would
-specify <code>outer_view.inside_view.bgcolor</code>.</p>
+specify <code>outer_view.inner_view.bgcolor</code>.</p>
 
 <h4>Named children of the canvas</h4>
 
@@ -335,7 +333,7 @@ than zero. For example, the following code would display only two
 images even though four views are defined.  The second and third views
 exist but they are completely invisible. The second has no color
 assigned to it and the third has zero height. They still, however,
-effect the arrangement of the other two views.</p>
+affect the arrangement of the other two views.</p>
 
 <example title="nested views">
 &lt;canvas height="100"&gt; 
@@ -579,7 +577,7 @@ the veiwer, in a browser window enter the URL to <code>/lps-@VERSIONID@/lps/util
 supply the name of the file you want to view as a <code>file=</code> request type, for example:</p>
 
 <code>
-http://localhost:8080/lps-@VERSIONID@/lps/utils/lps/viewer.jsp?file=/my-apps/copy-of-hello.lzx
+http://localhost:8080/lps-@VERSIONID@/lps/utils/viewer/viewer.jsp?file=/my-apps/copy-of-hello.lzx
 </code>
 
 <fixme>Say something about running various LPS's at the same time during development?  Also, about cache clearing?

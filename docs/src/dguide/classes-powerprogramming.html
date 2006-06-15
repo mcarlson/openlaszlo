@@ -74,7 +74,7 @@ attributes, and views inside a class are inherited down through each level.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>Class definitions can include default values for attributes. For example, a class that a class that <i>extends</i> view can have default
+<p>Class definitions can include default values for attributes. For example, a class that <i>extends</i> view can have default
 <attribute>width</attribute> and <attribute>height</attribute>
 attributes:</p>
 
@@ -185,9 +185,9 @@ Remember, you can call the original click code in the new method by using the su
 <h2>Classroot</h2>
 
 <p>The <code>classroot</code> property is a convenient short-hand that
-refers to the root node of a class instance. It's often used by an
+refers to the root node of a class instance. It's often used by a
 deeply nested view or method that needs access to something near the
-root of the class. Though you can equivalently use to
+root of the class. Though you can equivalently use
 <code>parent</code>, <code>parent.parent</code>,
 <code>parent.parent.parent</code>, etc. (depending on how deep the
 view that contains the reference is nested), using classroot is
@@ -666,7 +666,7 @@ should always be declared in an attribute with
 &lt;/canvas&gt;
 </example>
 
-<p>Elements declared in a class are not consider for placement, but children in
+<p>Elements declared in a class are not considered for placement, but children in
 subclasses or class instances will be.</p>
 
 <example title="Defaultplacement">
@@ -857,7 +857,7 @@ returns <varname>this</varname>. The code essentially looks like:</p>
 
 <p>A subclass might implement this method to cause the
 <varname>placement</varname> parameter to have a different behavior or
-additional affects. For instance, a subnode could have
+additional effects. For instance, a subnode could have
 <field>parent</field> and <field>immediateparent</field> be the
 same.</p>
 
@@ -899,7 +899,7 @@ same.</p>
 are constructed and initialized is essential. Several steps are
 involved before a class instance is fully initialized. Describing this
 process is out of the scope of this chapter, but important methods and
-events that are involved and the sequence in which they are invoked in
+events that are involved, and the sequence in which they are invoked,
 will be discussed. See <xref
 linkend="initialization-and-instantiation"/>.</p>
 

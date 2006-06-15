@@ -22,7 +22,7 @@ Instead of specifying each view's coordinates (either through a
 constraint or absolutely), you can declare a layout that decides how
 sibling views position themselves relative to one another. The
 simplest layout is <classname>simplelayout</classname>, which
-positions sibling elements one beneath (or to the right of) the other:
+positions sibling elements beneath (or to the right of) each other:
 </p>
 
 <example title="simple layout">
@@ -270,14 +270,14 @@ The <tagname link="true">constantlayout</tagname> tag is a way of defining a mar
 <p>Here <tagname>constantlayout</tagname> and
 <tagname>simplelayout</tagname> are combined so that the
 <tagname>constantlayout</tagname> controls the left, whereas
-the<tagname>simplelayout</tagname> dictates the spacing between the
+the<tagname>simplelayout</tagname> dictates the vertical spacing between the
 siblings.
 </p>
 
 
 <h2><a name="designconsiderations"></a>Design considerations in LZX programs</h2>
 <p>
-This chapter 
+This section 
 discusses <code>layouts</code>, which are constructs that allow you to focus on larger design issues by freeing you from the 
 tedium of positioning views. Layouts are implemented with <code>constraints</code>, which are described in 
 <xref linkend="constraints"/>.
@@ -289,7 +289,7 @@ For more on designing the "look and feel" of OpenLaszlo applications, please see
 <h3>The view hierarchy</h3>
 <p>
 Views can be nested inside one another, and they can reference other parts of the view hierarchy using 
-dot syntax and/or ids. 
+dot syntax and/or IDs. 
 The view hierarchy helps you define how the various elements of your application relate to one another. 
 It is helpful to break your application into various elements. Consider a photo-viewing application that has a list of images in 
 a right-hand column, and a main stage area for displaying the images to the left. There is also a trash area that we'll cover later. 
@@ -335,7 +335,7 @@ Frequently in drag-and-drop environments, the original item that was dragged is 
 </p>
 
 <p>
-To get around this problem, you could use a floating view to be the draggable view. A floating view is one that floats on top of the rest of your application, and only appears when dragging:
+To get around this problem, you could use a floating view as the draggable view. A floating view is one that floats on top of the rest of your application, and only appears when dragging:
 </p>
 <ol>
     <li>User clicks and holds on a view.</li>
@@ -414,7 +414,7 @@ To position the floating view over the clicked view, you can use the <method>get
 <p>
 This code is not easy to read, although conceptually it's fairly simple &#x2014; 
 "create a new view when the mouse button is depressed, and drag it until the mouse button is released". 
-Note also that you have to listen out for the global <event>onmouseup</event> event instead of the <event>onmouseup</event> on the dynamically created view. Because it was positioned under the cursor after the mouse was down, the event system does not get notified when the mouse goes up over it.</p>
+Note also that you have to listen for the global <event>onmouseup</event> event instead of the <event>onmouseup</event> on the dynamically created view. Because it was positioned under the cursor after the mouse was down, the event system does not get notified when the mouse goes up over it.</p>
 <p>
 This approach is fairly laborious &#x2014; you have to copy all of the attributes of the original view to the new one. If you wanted to have the text field appear in the dragged view, you would have to create a new text field to match it at run-time. As the dragged view becomes more complex, it will take longer to instantiate when the user depresses the mouse button, since view instantiation is fairly processor-expensive.</p>
 <p>

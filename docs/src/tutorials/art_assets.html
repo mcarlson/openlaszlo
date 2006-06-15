@@ -5,7 +5,7 @@
 
 <body>
 
-<h1>Intoduction to Media and Art Assets</h1>
+<h1>Introduction to Media and Art Assets</h1>
 <p>This tutorial provides an informal overview of how to use media resources such
 as images, video and audio in OpenLaszlo applications. These topics are covered in greater depth in
 <xref linkend="media-resources"/>.</p>
@@ -21,7 +21,7 @@ In this tutorial we'll be talking about using resources attached to views, which
 <p>
  By contrast, when you insert an image into HTML text, you can only include images in the formats natively supported by the targeted version of the Flash Player. For a discussion of how to use the <tagname link="true">img</tagname> tag within HTML text, see <xref linkend="text"/>.
 </p>
-<p>Being able to bring in art assets is not just for pictures - you can create your own custom viewsystem too.</p>
+<p>Being able to bring in art assets is not just for pictures - you can create your own custom view system too.</p>
 
 
 <h2><a name="basics"/>Resources</h2>
@@ -117,7 +117,7 @@ need to change it once. (Reasons to use other ways of including resources are de
 &lt;/canvas&gt;
 </example>
 
-<p> OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to <code>both</code>, <code>width</code> or <code>height</code>.</p>
+<p> OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that contains the resource to <code>both</code>, <code>width</code> or <code>height</code>.</p>
 
 <h2><a name="multiframe"/>Multi-frame Resources</h2>
 
@@ -138,7 +138,7 @@ need to change it once. (Reasons to use other ways of including resources are de
 </example>
 
 <p>The resources nested within the resource tag are numbered starting with 1.</p>
-<p>As you can see, OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that is the resource to either <code>both</code>, <code>width</code> or <code>height</code>.</p>
+<p>As you can see, OpenLaszlo supports GIFs, JPEGs and PNGs. They can all be resized by setting the <attribute>stretches</attribute> attribute of the view that contains the resource to either <code>both</code>, <code>width</code> or <code>height</code>.</p>
 
 <h2><a name="swfs"/>Working with SWFs</h2>
 
@@ -165,7 +165,7 @@ need to change it once. (Reasons to use other ways of including resources are de
 
 <p>Clicking on the image will cause the animation to stop. The <event>onclick</event> event handler will be covered in the "Scripting" tutorial.</p>
 
-<p>Instead of just using <method>stop</method>, we could have passed the <method>stop</method> method an argument of which frame to stop at.
+<p>Instead of just using <method>stop</method>, we could have passed the <method>stop</method> method an argument instructing it at which frame to stop.
  In addition, we could have used the <method>play</method> method (also with optional frame argument) to play from a given frame.</p>
 
 <p>We can't really progress beyond this point without covering scripting, but here is a preview of some of 

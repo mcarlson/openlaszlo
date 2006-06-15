@@ -16,7 +16,7 @@ function of other attribute values.</p>
 <p>Constraints help you quickly create dependencies without writing a
 lot of code. You can specify that certain views are the same size or
 positioned relative to one another. Specific elements can appear only
-under certain condition; and those conditions may be declared with a
+under certain conditions; and those conditions may be declared with a
 simple expression. Constraints may be used for non-visual attributes
 as well.</p>
 
@@ -292,7 +292,7 @@ That above explanation is pretty lame.
 <h2>Performance Considerations</h2> 
 
 <p>
-Constraints are an effective way to write user interface code and in some case to manage non-visual
+Constraints are an effective way to write user interface code and in some cases to manage non-visual
 application state.  As with any code, you will want to understand the performance implications, as well as
 when it is best to use constraints as opposed to alternate methods of achieving similar effects.
 </p>
@@ -301,7 +301,7 @@ when it is best to use constraints as opposed to alternate methods of achieving 
 
 <p>
 Often you will want to use constraint expressions to create the initial state of your application, but 
-you don't need attributes to update dynamically while the application is in use.  In the case, you
+you don't need attributes to update dynamically while the application is in use.  In this case, you
 can improve startup time performance by declaring <code>when</code> the expression should be evaluated.
 </p>
 
@@ -348,7 +348,7 @@ There are quite a few layouts available in the Openlaszlo platform, and furtherm
 on this subject.
 </p>
 
-<h3>When to events and methods instead of constraints</h3> 
+<h3>When to use events and methods instead of constraints</h3> 
 
 <p>Generally, if you have a lot of different things that need to be updated based on a single dependency, it
 is optimal to write a setter for the dependent attribute and in that setter take appropriate actions.</p>

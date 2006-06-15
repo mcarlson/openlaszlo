@@ -9,7 +9,7 @@
  
 <p>A component is a reusable class that is typically simple and easy to
 use. Examples of a few components that ship with OpenLaszlo are <classname>button</classname>, <classname>window</classname>, and
-<classname>tabslider</classname>. The standard shipping components can be found in the
+<classname>tabslider</classname>. The standard OpenLaszlo components can be found in the
 <code>lps/components</code> directory.</p>
 
 <p>This chapter assumes you know how to use the OpenLaszlo components, have a good
@@ -33,7 +33,7 @@ particular look and feel.</p>
 
 <p>An lz component should be subclassed if the look and feel matches the custom
 component desired. Minor changes to methods and adding new views should be
-straightforward. For example: you would sublass lz classes, if you want a class
+straightforward. For example: you would subclass lz classes, if you want a class
   for a frequently used icon button or a specific kind of listitem. Subclass
   a base
   component
@@ -133,7 +133,7 @@ be accessed in a <classname>form</classname>. Examples of
 <classname>radiogroup</classname>, <classname>combobox</classname> and <tagname link="true">datacombobox</tagname>.
 Note that <classname>radiobutton</classname> is a
 <classname>basevalueitem</classname> not a
-<classname>baseformitem</classname>, because it contributes its vaue
+<classname>baseformitem</classname>, because it contributes its value
 to a <classname>radiogroup</classname>, rather than to a
 <classname>form</classname>.</p>
 
@@ -192,7 +192,7 @@ extend <classname>basevaluecomponent</classname>, since a slider contains a valu
 </example>
 
 <h5>Attributes</h5>
-<p>Attribute for the size of the track and thumb will be needed.</p>
+<p>An attribute for the size of the track and thumb will be needed.</p>
 
 <example title="Basic baseslider attributes" extract="false">
 &lt;class name="baseslider" extends="basevaluecomponent" <b>width="200"</b>&gt;

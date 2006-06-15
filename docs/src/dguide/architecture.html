@@ -59,7 +59,7 @@ however.  In the future, OpenLaszlo may support other run time clients as
 they become widely available.</p>
 
 <p>
-In the OpenLaszlo context, <dfn>client</dfn> means LZX application executing in user's web browser, and <dfn>server</dfn> means
+In the OpenLaszlo context, <dfn>client</dfn> means an LZX application executing in user's web browser, and <dfn>server</dfn> means
  OpenLaszlo Server (which may, in turn, communicate with other servers).  The LZX client and OpenLaszlo Server server communicate over HTTP; the OpenLaszlo Server sends bytecode
  and the LZX application sends XML.</p>
 
@@ -156,7 +156,7 @@ player is used solely as a rendering engine.</p>
 <example title="Empty Application" extract="false">&lt;canvas/&gt;</example>
 
 <p>        
-When this application is running, even though it isn't &quot;doing anything,&quot; nevertheless it is maintaining a connection 
+When this application is running, even though it isn't &quot;doing anything,&quot; it is maintaining a connection 
 with the server, and all the capabilities necessary for running an LZX application have actually been downloaded.</p>
 <p>
 There are four primary components within the OpenLaszlo Runtime Library: the Event System, the Data Loader/Binder, the Layout &amp; 
@@ -180,7 +180,7 @@ menu items.</p>
 
 <h3>The Layout and Animation System</h3>
 
-<p>The layout and animation system provides OpenLaszlo applications with
+<p>The layout and animation system provides OpenLaszlo applications with a
 <glossterm>constraint-based</glossterm> screen layout of interface
 elements and <glossterm>algorithmic animation</glossterm> of interface
 state changes. This component enables you to build a dynamic
@@ -206,7 +206,7 @@ illustrates how this application would be executed by the OpenLaszlo Server.</p>
 <img class="illustration" src="images/architecture-5.gif"
      title="Laszlo Application Data Flow diagram for the Weather Application"/>
 
-<p>Starting with a user's entering a URL that requests the Weather application, this diagram illustrates the data flow
+<p>Starting with a user entering a URL that requests the Weather application, this diagram illustrates the data flow
  sequence from client to server, integrating data from an XML Web service, and sending the result back to the client.</p>
 
 <p>

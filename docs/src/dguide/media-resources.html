@@ -33,7 +33,7 @@ OpenLaszlo 3.1 and above support the following media types:</p>
   </dd>
   <dt>PNG</dt>
   <dd>All Portable Network Graphics files (<a target="_blank" href="http://www.w3.org/Graphics/PNG/">PNG details at W3C information</a>)
-  are supported.  This includes PNGs with alpha channels.</dd>
+  are supported.  This includes PNGs with alpha channels (transparency).</dd>
   <dt>MP3</dt>
   <dd>Support limited to audio MP3 files with <i>sample</i>-rates of 44.1 kHz, 22.050 kHz, 11.025 kHz, 8.000 kHz and 5.512 kHz</dd>
   <dt>SWF</dt>
@@ -64,7 +64,7 @@ goes over topics covered in that tutorial and then goes into greater depth.</p>
   &lt;view resource="../resources/logo.gif"/&gt;
 &lt;/canvas&gt;
 </example>
-<p>Or they may be declared externally as first-class objects themselves as: </p>
+<p>Or they may be declared externally as first-class objects themselves: </p>
 <example title="Declaring a resource">
 &lt;canvas height="110"&gt;
   &lt;resource name="myname" src="../resources/logo.gif"/&gt;
@@ -73,9 +73,9 @@ goes over topics covered in that tutorial and then goes into greater depth.</p>
 </example>
 <h3>Resources are not views</h3>
 <p>
-Note that a<tagname link="true">resource</tagname>is <i>not</i> itself a view.
- Resources do no have x and y positions, or background color,
-or an of the forty-nine or so attributes that views have. A resource that is not attached to a view is essentially invisible to the
+Note that a <tagname link="true">resource</tagname>is <i>not</i> itself a view.
+ Resources do not have x and y positions, or background color,
+or any of the 49 or so attributes that views have. A resource that is not attached to a view is essentially invisible to the
 application. As explained below, in order to manipulate a resource, you perform actions on the view to which the resource is attached.
 </p>
 <h3>Summary of APIs that act on resources</h3>
@@ -182,7 +182,7 @@ an example of declaring a multi-frame resource:
 &lt;/canvas&gt;
 </example>
 <p>
-You can use a multi-frame resource to construct up an animation that
+You can use a multi-frame resource to construct an animation that
 moves between frames when you call the 
 <api link="true">LzView.play()</api> method.  Conversely,
 when you import a resource that contains an animation, each frame of the 
@@ -240,7 +240,7 @@ rate.  This frame rate is fixed at 30 frames per
 second. </p>
 <h4>Audio rates</h4>
 <p>
-  Animations that include an audio sound track are played
+  Animations that include an audio soundtrack are played
 at a rate that maintains the original audio/video synchronization in
 the incoming animation.</p>
 
@@ -248,7 +248,7 @@ the incoming animation.</p>
 <p>In the examples above, we've declaratively tied resources to view.
 But we haven't expressed anything about when or how the application
 should pull in the needed resource.  We call this <dfn>resource
-loading</dfn> and LZX provides a variety of control over how and when
+loading</dfn> and LZX provides flexibility over how and when
 the application loads resources.  The most important choice is whether
 a resource should be loaded at <glossterm>compile time</glossterm> or
 <glossterm>run time</glossterm>.</p>
@@ -302,7 +302,7 @@ relative to the application.</note>
 the loading of the resource.  Using this method, you can:</p>
 <ul>
     <li>choose whether or not the server and/or client should cache the resource;</li>
-    <li>specify an URL that instructs the server to use a specific protocol to
+    <li>specify a URL that instructs the server to use a specific protocol to
     fetch the resource;</li>
     <li>specify HTTP request headers that should be used when fetching the resource
     over HTTP.</li>
@@ -336,7 +336,7 @@ By default, in proxied applications, media that is accessed at runtime is cached
 server <em>and</em> in the client browser.  The OpenLaszlo Server uses the standard
 HTTP If-Modified-Since/Last-Modified caching mechanism specified in the <a
 href="http://www.w3.org/Protocols/rfc2616/rfc2616.html">HTTP 1.1
-spec</a>.</p>
+specification</a>.</p>
 
 <p>
 The OpenLaszlo Server actually maintains two media caches.  One cache is used

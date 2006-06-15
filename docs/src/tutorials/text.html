@@ -23,9 +23,9 @@ explain more advanced topics.</p>
 &lt;/canvas&gt;
 </example>
 
-<p>Text that is between the <tagname>text</tagname> tags is normalized, meaning that preceding and trailing whitespace is ignored, as are multiple whitespace elements between words. i.e. if you put several spaces between words, it the output will still be a single space. If you put a line break in the text, it will be rendered as a single whitespace element (i.e. a space), and text fields will stretch to fit their contents.</p>
+<p>Text that is between the <tagname>text</tagname> tags is normalized, meaning that preceding and trailing whitespace is ignored, as are multiple whitespace elements between words. i.e. if you put several spaces between words, the output will still be a single space. If you put a line break in the text, it will be rendered as a single whitespace element (i.e. a space), and text fields will stretch to fit their contents.</p>
 
-<p>The default OpenLaszlo font is used (LzTahoe), at its default size (10px).</p>
+<p>The default OpenLaszlo font is used (LzTahoe), at its default size (10pt).</p>
 
 <p>The <tagname>text</tagname> tag is a view, so it can be treated as one. It can be given all the default view attributes, such as width, x, y and so forth.</p>
 
@@ -255,7 +255,7 @@ OpenLaszlo supports both <i>embedded </i>fonts, which are downloaded with your a
 
 <p>The font here is specified in the <i>grandParent</i> view, and it is inherited by both text fields.</p>
 
-<p>Of course font specifications can be overridden further down the hierarchy, both through the use of <tagname>font</tagname> tags, and by defining fonts specifications of child views:</p>
+<p>Of course font specifications can be overridden further down the hierarchy, both through the use of <tagname>font</tagname> tags, and by defining font specifications of child views:</p>
 
 <example class="code" title="Overwriting font specifications">
 &lt;canvas height="100" width="500"&gt;

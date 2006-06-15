@@ -43,7 +43,7 @@
 
 <p>Datapaths use XPath attributes to navigate through the XML data. So the name of the dataset to use goes before the colon <code>myData:</code>, followed by the nodes, separated by forward slashes (/). The square brackets provide a (one-based) space to enter which sibling node we want. [1] is implied, so the above example could be rewritten without any "[1]"s.</p>
 
-<p>In plain English, the above example says: "get me the text from the first firstName node, of the first person node of the first (and of course, only) myXML node." The text() method call returns that nodes text.</p>
+<p>In plain English, the above example says: "get me the text from the first firstName node, of the first person node of the first (and of course, only) myXML node." The text() method call returns that node's text.</p>
 
 <p>To get Marge's name, we could rewrite the <tagname>text</tagname> tag as follows:</p>
 
@@ -246,7 +246,7 @@
 <h3><a name="http"/>HTTP Data</h3>
 <p>Remote data goes over HTTP, which means it can (but doesn't have to) be dynamic. If it is static, then the only difference between it and included or embedded data is that it is downloaded <i>after</i> the application loads. The <code>type="http"</code> attribute indicates that this is an HTTP request. The requests can be either GET or POST. </p>
 
-<p>There are several points at which the client requests for the data:</p>
+<p>There are several points at which the client requests the data:</p>
 
 <ul>
 	<li>The client will request the data as soon as the app loads if the dataset's  <attribute>request</attribute> attribute is true. </li>
@@ -270,7 +270,7 @@
 
 <p>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy (i.e. they know about parents and children).</p>
 
-<p>You would use a datapointer when you needed to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</p>
+<p>You will use a datapointer when you need to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</p>
 
 
 <example class="code" title="Manipulating datapointers">
@@ -292,7 +292,7 @@
 
 <p>For brevity's sake, we are writing to the debugger, and we are including the data from a local file. <i>You can download that XML file at the top of this page</i>.</p>
 
-<p>The first <code>selectNext(2)</code> method call selects first the <tagname link="false">myXML</tagname> node, then Homer's <tagname link="false">person</tagname> node. It selects two because of the depth argument "2" we pass it (otherwise it would default to 1.</p>
+<p>The first <code>selectNext(2)</code> method call selects first the <tagname link="false">myXML</tagname> node, then the South Park <tagname link="false">person</tagname> node. It selects two because of the depth argument "2" we pass it (otherwise it would default to 1.</p>
 
 <p>The other <code>selectNext</code> method call returns <code>true</code> as long as an XML node was successfully selected (i.e. until there aren't any more). We exploit this by using it in a <code>do <i>&#x2026;</i> while</code> loop, so that the same iteration occurs for every <tagname>person</tagname> node.</p>
 

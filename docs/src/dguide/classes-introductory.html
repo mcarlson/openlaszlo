@@ -298,8 +298,8 @@ This will also improve readability.
 <p>LZX is designed to be a declarative language, so instantiating
 views from script is not the recommended method for creating Laszlo
 applications. Of course, from time to time you need to create views
-on-the-fly, and that's why it is supported.  You want to know how to
-pass pointers to views around in LZX.  There's a couple of ways you
+on-the-fly -- that's why it is supported -- so you need to know how to
+pass pointers to views in LZX.  There's a couple of ways you
 could do that in this scenario:</p>
 
 <ol>
@@ -446,7 +446,7 @@ the level of the specific instance.  <em>It&#8217;s easier to generalize from tw
 Prototypes simply cut out the middleman, reducing the line count, the abstraction, and the indirection that is necessary during development. 
  This is particularly useful during user interface programming, where there may be a number of one-off visual objects.  
 Using a singleton class for each of these can increase the size of a program (and therefore the development time) substantially, 
-but you want the freedom to rapidly refactor any these into classes.  Prototypes in a language that also supports classes lets you seamlessly
+but you want the freedom to rapidly refactor these into classes.  Prototypes in a language that also supports classes lets you seamlessly
  move between these representations.</p>
 
 <p>Instance-first development is similar to test-driven development, but is orthogonal to it. 
