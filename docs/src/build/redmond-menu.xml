@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element category="Menu and Command" extends="view.xml" filename="menu.html" tier="Redmond Component" title="Menu">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<desc>A Redmond pull-down menu.</desc><longdescription>
+&lt;p&gt;
+Note: Redmond components are deprecated.  Please consider using LZ Components.
+If you use this component, you must explicitly include the redmond library: &lt;br/&gt;
+&amp;lt;include href="redmond"/&amp;gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+	&lt;b&gt;Arguments:&lt;/b&gt;&lt;br/&gt;
+	&lt;TT&gt;hasbutton&lt;/TT&gt;&lt;br/&gt;
+	default: &lt;TT&gt;FALSE&lt;/TT&gt;&lt;br/&gt;
+	Set &lt;tt&gt;hasbutton&lt;/tt&gt; to &lt;TT&gt;TRUE&lt;/TT&gt; to show the menu's simple gray button.&lt;br/&gt;
+	&lt;br/&gt;
+	&lt;TT&gt;label&lt;/TT&gt;&lt;br/&gt;
+	default: &lt;TT&gt;undefined&lt;/TT&gt;&lt;br/&gt;
+	A string specifying the text to be displayed inside the menu's button.&lt;br/&gt;
+	&lt;br/&gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Description:&lt;/b&gt;&lt;br/&gt;
+	The &lt;tt&gt;menu&lt;/tt&gt; tag provides a simple menu button within the &lt;tt&gt;menubar&lt;/tt&gt;. The &lt;tt&gt;menu&lt;/tt&gt; tag must be within an instance of &lt;tt&gt;menubar&lt;/tt&gt;.
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Example:&lt;/b&gt;&lt;br/&gt;
+	&lt;pre&gt;
+&amp;lt;canvas height="160"&amp;gt;
+    &amp;lt;include href="redmond"/&amp;gt;
+
+    &amp;lt;menubar width="200" height="25"&amp;gt;
+        &amp;lt;menu label="Menu 1" hasbutton="true" width="100"&amp;gt;
+            &amp;lt;menuitem label="Item 1" onclick="canvas.whichOne(this);"/&amp;gt;
+            &amp;lt;menuitem label="Item 2" onclick="canvas.whichOne(this);"/&amp;gt;
+            &amp;lt;menuitem label="Item 3" onclick="canvas.whichOne(this);"/&amp;gt;
+            &amp;lt;menuseparator/&amp;gt;
+            &amp;lt;menuitem label="Item 4" onclick="canvas.whichOne(this);"/&amp;gt;   
+        &amp;lt;/menu&amp;gt;
+        &amp;lt;menu label="Menu 2" hasbutton="true" width="100"&amp;gt;
+            &amp;lt;menuitem label="More items..." onclick="canvas.whichOne(this);"/&amp;gt;  
+        &amp;lt;/menu&amp;gt;
+    &amp;lt;/menubar&amp;gt;
+
+    &amp;lt;method name="whichOne" args="vThis"&amp;gt;
+        Debug.write(vThis.parent.label+" - "+vThis.label);
+    &amp;lt;/method&amp;gt;
+&amp;lt;/canvas&amp;gt;
+	&lt;/pre&gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;See also:&lt;/b&gt;&lt;br/&gt;
+	&lt;TT&gt;command, menuitem, menubar, menuseparator&lt;/TT&gt;
+&lt;/p&gt;
+</longdescription><attributes><attribute category="setter" isvalidintag="true" name="hasbutton" tagtype="booleanLiteral" type="booleanLiteral"/><attribute category="setter" isvalidintag="true" name="label" tagtype="string" type="string"/></attributes><tag name="menu" src="tag-menu.xml"/></element>

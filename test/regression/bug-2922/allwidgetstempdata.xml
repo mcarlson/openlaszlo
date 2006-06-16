@@ -1,0 +1,14 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <widgets>
+        <widget_class default_xml="http://www.mylaszlo.com/projects/widgets/blogbox/default_opml.xml" img_url="http://www.mylaszlo.com/projects/widgets/blogbox/blogbox_screenshot.png" title="Blogbox" id="1">
+            <short_desc>This is a short description describing how great this thing is.</short_desc>
+            <widget_instance default_xml="http://www.mylaszlo.com/projects/widgets/blogbox/default_opml.xml" image_url="http://www.mylaszlo.com/projects/widgets/blogbox/blogbox_screenshot.png" opml_url="http://www.antunkarlovac.com/opml.xml" site_url="www.antunkarlovac.com" site_name="Antun&apos;s Site" widget_id="1" id="1"/>
+            <widget_instance default_xml="http://www.mylaszlo.com/projects/widgets/blogbox/default_opml.xml" image_url="http://www.mylaszlo.com/projects/widgets/blogbox/blogbox_screenshot.png" opml_url="http://www.antunkarlovac.com/opml.xml" site_url="www.antunkarlovac.com" site_name="Antun&apos;s Other Site" widget_id="1" id="3"/>
+            <new_instance opml_url=""
+                          site_name="My Site Name"
+                          site_url="" /> 
+        </widget_class>
+    </widgets>

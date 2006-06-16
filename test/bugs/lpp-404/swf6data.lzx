@@ -1,0 +1,21 @@
+<canvas width="1400" height="600"  >
+  <debug width="400" height="300" fontsize="12" x="400" oninit="this.setWrapLines(true)"/>
+  <script>
+    var lstart = null;
+  </script>
+
+<dataset name="myds" request='true' src="http:small-contacts.xml"/>
+
+<simplelayout/>
+
+<view layout="axis:y; spacing:2" id="foo" width="200" height="300" bgcolor="#cccccc">
+  <view   datapath="myds:/contacts/contact">
+    <view layout="axis:x; spacing:4">
+      <text width="120" datapath="summary/@firstname"/>
+      <text width="120" datapath="summary/@lastname"/>
+    </view>
+  </view>
+</view>
+
+
+</canvas>

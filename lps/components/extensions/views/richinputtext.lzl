@@ -1,0 +1,279 @@
+<library>
+<!-- this is the Flash-specific implementation of richinputtext -->
+<script>
+<![CDATA[     
+
+//-----------------------------------------------------------------------------
+// Set the contents of the richinputtext to the string passed in. Pass in 
+// null or an empty string to clear the component's contents. 
+// For best results, follow calls to setText with calls to setTextFormat. 
+// 
+// @param String t: the string to which to set the text
+//-----------------------------------------------------------------------------
+richinputtext.prototype.setText = function ( t ){
+
+    if (typeof(t) == 'undefined' || t == null) {
+        t = "";
+    } else if (typeof(t) != "string") {
+        t = t.toString();
+    }
+
+ 
+    this.text =  t; 
+
+    var mc = this.__LZtextclip;
+    mc.htmlText = t;
+
+    if (this.resize && (this.multiline == false)) {
+        // single line resizable fields adjust their width to match the text
+        this.setWidth(this.getTextWidth());
+    }
+
+    //multiline resizable fields adjust their height
+    if (this.multiline && this.sizeToHeight) {
+        this.setHeight(mc._height);
+    }
+
+    if (this.multiline && this.scroll == 0 ) {
+        var scrolldel = new LzDelegate(this, "__LZforceScrollAttrs");
+        _root.LzIdle.callOnIdle(scrolldel);
+    }
+
+    // @event ontext: Sent whenever the text in the field changes.
+    if (this['ontext']) this.ontext.sendEvent();
+
+}
+
+//-----------------------------------------------------------------------------
+// When using databinding... (I don't understand this)
+// 
+// @return: The string in the text field, with html formatting. 
+//-----------------------------------------------------------------------------
+richinputtext.prototype.updateData = function (){
+    return this.__LZtextclip.htmlText;
+}
+
+
+//-----------------------------------------------------------------------------
+// Sets the default format to apply to added text. This roughly corresponds
+// to Flash's TextField.setNewTextFormat, although flash only sometimes 
+// respects that setting.
+// For best results, follow calls to setText with calls to setTextFormat
+//
+// @param LzTextFormat fmt: the  default format
+//-----------------------------------------------------------------------------
+richinputtext.prototype.setDefaultFormat = function ( fmt ){
+
+    this.defaultformat = fmt; 
+	var flashformat = new TextFormat(); 
+	for (var i in fmt) {
+		flashformat[i] = fmt[i]; 
+	}
+    this.__LZtextclip.setNewTextFormat(flashformat); 
+}
+
+//-----------------------------------------------------------------------------
+// Push the default format currently set on this object in this.defaultformat
+// into the Flash TextField. This is just like setDefaultFormat except that it
+// doesn't require a new default format to be passed in. 
+//
+// @keywords private
+//-----------------------------------------------------------------------------
+richinputtext.prototype._forceResetDefaultFormat = function ( ){
+	var flashformat = new TextFormat(); 
+	for (var i in this.defaultformat) {
+		flashformat[i] = this.defaultformat[i]; 
+	}
+    this.__LZtextclip.setNewTextFormat(flashformat); 
+}
+
+
+//-----------------------------------------------------------------------------
+// Sets the string in the text field to be the html text passed in.
+// If there's no formatting information in the html text passed in, 
+// apply the default text format to it.
+// This trick relies on the nestedness of html formatting. Innermost
+// formats win over outer formats. 
+// 
+// @param t: the new contents of the text field
+//-----------------------------------------------------------------------------
+richinputtext.prototype.setHTMLText = function ( t ){
+
+    if (this['defaultformat']) {
+         t = this['defaultformat'].toHTML() + t + "</font>";
+    }
+ 
+    this.__LZtextclip.htmlText = t; 
+}
+
+//-----------------------------------------------------------------------------
+// Returns the string represented in the text field.
+// Substitutes \r's with \n's because otherwise flash loses line breaks on
+// setText(getText()).
+// 
+// @return: The string in the text field
+//-----------------------------------------------------------------------------
+richinputtext.prototype.getText = function ( ){
+    var rawtext = this.__LZtextclip.text;
+    return rawtext.split("\r").join("\n");
+}
+
+//-----------------------------------------------------------------------------
+// Returns HTML of the formatted string in the text field
+// 
+// @return: HTML of the formatted string in the text field
+//-----------------------------------------------------------------------------
+richinputtext.prototype.getHTMLText = function ( ){
+    return this.__LZtextclip.htmlText;
+}
+
+//------------------------------------------------------------------------------
+// @keywords private
+//------------------------------------------------------------------------------
+richinputtext.prototype.getText.dependencies = function ( who , self){
+      return [ self , "htmlText" ];
+}
+
+
+//------------------------------------------------------------------------------
+// Apply the specified format change to the substring indicated. 
+// For example:
+// foo.applyTextFormat("bold", true, start, end) == makes the text bold no matter what 
+// foo.applyTextFormat("bold", false, start, end) == makes the text un-bold no matter what
+// foo.applyTextFormat("size", 32, start, end); 
+// foo.applyTextFormat("font", "Euphoria", start, end);  
+// 
+// @param String attr: the name of the attribute to change, One of bold, italic, underline, size, 
+// face, color, url, align, indent, leading, bullet
+// @param color|boolean|number|string val: the value to which to set the specified attribute to
+// @param integer beginIndex: index of the beginning of the selection
+// @param integer endIndex: index of the end of the selection. 
+//------------------------------------------------------------------------------
+richinputtext.prototype.applyTextAttr = function (attr, val, beginIndex, endIndex){
+    // Start with a TextFormat object with no attributes set
+    var format = new TextFormat(); 
+    
+    // Change the text format based on the format passed in.
+    format[attr] = val; 
+    this.__LZtextclip.setTextFormat(beginIndex, endIndex, format); 
+}
+
+//------------------------------------------------------------------------------
+// Append the specified string to the contents of the field
+// @param str the string to append
+// @param toHTML whether to put the appended text into the HTMLText or the plaintext? 
+// if toHTML is not specified, append the text to the plaintext. 
+//------------------------------------------------------------------------------
+richinputtext.prototype.appendText = function(str, toHTML) {
+    if (toHTML) {
+        this.__LZtextclip.htmlText = this.__LZtextclip.htmlText + str; 
+    } else {
+        this.__LZtextclip.text = this.__LZtextclip.text + str;
+    }
+     
+ }
+
+//------------------------------------------------------------------------------
+// Gets the format of the specified range of characters. Attributes will be 
+// undefined unless they are common to the entire range of characters. 
+// 
+// @param integer beginIndex: index of the beginning character of the range
+// @param integer endIndex: index of the last character of the range
+//------------------------------------------------------------------------------
+
+richinputtext.prototype.getTextFormat = function(beginindex, endindex) {
+	var flashformat = this.__LZtextclip.getTextFormat(beginindex, endindex);
+	var fmt = new LzTextFormat(this);
+
+	for (var i in flashformat) {
+		fmt[i] = flashformat[i]; 
+	}
+  	
+	return fmt; 
+}
+
+//------------------------------------------------------------------------------
+// Sets the format of the specified range of characters.
+// @param LzTextFormat fmt: the new format. attributes to leave alone should be undefined.  
+// 
+// @param integer beginIndex: index of the beginning character of the range
+// @param integer endIndex: index of the last character of the range
+//------------------------------------------------------------------------------
+richinputtext.prototype.setTextFormat = function(fmt, beginindex, endindex) {
+	var flashformat = new TextFormat(); 
+
+	for (var i in fmt) {
+		flashformat[i] = fmt[i]; 
+	}
+	if (beginindex || (beginindex == 0)) {
+		this.__LZtextclip.setTextFormat(beginindex, endindex, flashformat); 
+	} else {
+		this.__LZtextclip.setTextFormat(flashformat); 
+	}
+	
+	
+}
+
+//------------------------------------------------------------------------------
+// Bold, italic, and underline make sense to toggle, so here's a special
+// toggling API.
+//
+// @param String attr: One of "bold", "italic", or "underline"
+// @param integer beginIndex: index of the beginning character of the range
+// @param integer endIndex: index of the last character of the range
+//------------------------------------------------------------------------------
+richinputtext.prototype.toggleFormat = function(attr, beginindex, endindex) {
+    // Due to what seems to be a bug in flash, we create a new, all-undefined
+    // TextFormat object, and *only* set the particular attribute we are 
+    // toggling. Otherwise, the font may change unpredictably. 
+	var format = this.__LZtextclip.getTextFormat(beginindex, endindex);
+	var newFormat = new TextFormat(); 
+    switch (attr) {
+        case "bold":
+            newFormat.bold =  !format.bold;
+            break;
+        case "italic":
+            newFormat.italic =  !format.italic;
+            break;
+        case "underline":
+            newFormat.underline =  !format.underline;
+            break;         
+		default: 
+	}
+
+   this.__LZtextclip.setTextFormat(beginindex, endindex, newFormat); 
+   
+}
+
+//------------------------------------------------------------------------------
+// Replace the current selection with the string specified. The current selection
+// is the range of characters which Flash thinks is selected. This range is 
+// (-1, -1) unless this component has the focus. 
+//
+// @keywords deprecated
+// @param String: str string to put where the current selection is in the string
+//------------------------------------------------------------------------------
+richinputtext.prototype.replaceSel = function (str) {
+    this.__LZtextclip.replaceSel(str);
+}
+
+//------------------------------------------------------------------------------
+// Replace text between start and end, without changing that text's format.
+// 
+// @param Number s: the start of the range to replace
+// @param Number e: the end of the range to replace
+// @param String txt: the text to put in the string instead of what's currently
+// there
+//------------------------------------------------------------------------------
+richinputtext.prototype.replaceText = function (s, e, txt) {
+    this.__LZtextclip.replaceText(s,e,txt);
+}
+
+]]>
+</script>
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->      

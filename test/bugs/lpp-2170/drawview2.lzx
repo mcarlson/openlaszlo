@@ -1,0 +1,19 @@
+<canvas>
+<include href="incubator/inspector/inspector.lzx"/>
+<drawview width="500" height="500" stretches="both" >
+    <method event="onconstruct">
+            this.moveTo(100, 100);
+            this.lineTo(100, 200);
+            this.quadraticCurveTo(150, 250, 200, 200);
+            this.closePath();
+
+            this.fillStyle = 0x0000ff;
+            this.clip();
+    </method>
+    <view name="thatIWantClipped" resource="photo.jpg" 
+        onmousedown="dragger.apply()" onmouseup="dragger.remove()">
+        <dragstate name="dragger"/>
+    </view>
+</drawview>
+
+</canvas>

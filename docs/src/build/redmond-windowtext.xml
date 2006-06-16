@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element category="View" extends="view.xml" filename="windowtext.html" tier="Redmond Component" title="Windowtext">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<desc>A Redmond beveled text input field.</desc><longdescription>
+&lt;p&gt;
+Note: Redmond components are deprecated.  Please consider using LZ Components.
+If you use this component, you must explicitly include the redmond library: &lt;br/&gt;
+&amp;lt;include href="redmond"/&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Arguments:&lt;/b&gt;&lt;br/&gt;
+	&lt;TT&gt;password&lt;/TT&gt;&lt;br/&gt;
+	default: &lt;TT&gt;FALSE&lt;/TT&gt;&lt;br/&gt;
+	When &lt;TT&gt;password&lt;/TT&gt; is &lt;TT&gt;TRUE&lt;/TT&gt;, characters are replaced with asterisks (*).&lt;br/&gt;
+	&lt;br/&gt;
+	&lt;TT&gt;multiline&lt;/TT&gt;&lt;br/&gt;
+	default: &lt;TT&gt;FALSE&lt;/TT&gt;&lt;br/&gt;
+	When &lt;TT&gt;multiline&lt;/TT&gt; is &lt;TT&gt;TRUE&lt;/TT&gt;, the text field will allow more than 1 line of text.&lt;br/&gt;
+	&lt;br/&gt;
+	&lt;TT&gt;resizeable&lt;/TT&gt;&lt;br/&gt;
+	default: &lt;TT&gt;FALSE&lt;/TT&gt;&lt;br/&gt;
+	When &lt;TT&gt;resizeable&lt;/TT&gt; is &lt;TT&gt;TRUE&lt;/TT&gt;, the field's &lt;TT&gt;height&lt;/TT&gt; and &lt;TT&gt;width&lt;/TT&gt; can be changed at run time.&lt;br/&gt;
+	&lt;br/&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+	&lt;b&gt;Description:&lt;/b&gt;&lt;br/&gt;
+	The &lt;TT&gt;windowtext&lt;/TT&gt; tag provides a standard beveled text input area. This is similar to inputtext. This tag is one in a set of compatible window elements are also available for building Redmond windows.
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Example:&lt;/b&gt;&lt;br/&gt;
+	See &lt;TT&gt;window&lt;/TT&gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;See also:&lt;/b&gt;&lt;br/&gt;
+	&lt;TT&gt;tabpanelview, tabview, window, windowframe, inputtext&lt;/TT&gt;
+&lt;/p&gt;
+
+</longdescription><attributes><attribute category="final" default="false" isvalidintag="true" name="multiline" tagtype="booleanLiteral" type="booleanLiteral"><desc>If true, the lines of text are wrapped to fit within the text
+width.  (The name &lt;span class='code'&gt;multiline&lt;/span&gt; is a misnomer.  Unwrapped text
+can be multiple lines if it contains a &lt;span class='code'&gt;&amp;lt;br /&gt;&lt;/span&gt; or &lt;span class='code'&gt;&amp;lt;p&gt;&lt;/span&gt;
+element, or a line break within a &lt;span class='code'&gt;&amp;lt;pre&gt;&lt;/span&gt; element.
+
+This attribute defaults to true if width and height are
+explicitly specified.
+
+If you set multiline=true, you probably want to explicitly a
+width for the text also; if multiline=true and you do not specify
+a width, the system will pick an arbitrary width (100 pixels at
+the moment).
+
+When multiline=true, the text is automatially re-wrapped whenever
+the content is modified by calls to &lt;span class='code'&gt;setText()&lt;/span&gt;, or whenever the
+width of the text view is modified.</desc></attribute><attribute category="setter" default="false" isvalidintag="true" name="resize" tagtype="booleanLiteral" type="booleanLiteral"><desc>If true, the width of the text field will be recomputed each time
+setText() is called, so that the text view is exactly as wide as
+the width of the widest line.</desc></attribute><attribute category="setter" default="false" isvalidintag="true" name="selectable" tagtype="booleanLiteral" type="booleanLiteral"><desc>If true, the text is selectable</desc></attribute><attribute category="setter" isvalidintag="true" name="label" tagtype="string" type="string"/><attribute category="setter" default="false" isvalidintag="true" name="password" tagtype="booleanLiteral" type="booleanLiteral"><desc>If true, the input text field acts like a password input
+field; any text typed in appears as "****" characters in the
+current font.</desc></attribute><attribute category="setter" isvalidintag="true" name="text" tagtype="string" type="string"/></attributes><tag name="windowtext" src="tag-windowtext.xml"><desc>An editable text field with a border.  See the documentation
+for the &lt;span class='code'&gt;text&lt;/span&gt; tag for a description of the &lt;span class='code'&gt;width&lt;/span&gt; and &lt;span class='code'&gt;height&lt;/span&gt;
+attributes, and of scrolling.</desc></tag></element>

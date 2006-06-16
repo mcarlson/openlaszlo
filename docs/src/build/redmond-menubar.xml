@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<element category="Menu and Command" extends="view.xml" filename="menubar.html" tier="Redmond Component" title="Menubar">
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<desc>A simple gray horizontal menu bar.</desc><longdescription>
+&lt;p&gt;
+Note: Redmond components are deprecated.  Please consider using LZ Components.
+If you use this component, you must explicitly include the redmond library: &lt;br/&gt;
+&amp;lt;include href="redmond"/&amp;gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Description:&lt;/b&gt;&lt;br/&gt;
+	The &lt;tt&gt;menubar&lt;/tt&gt; tag provides a base view for instances of &lt;tt&gt;menu&lt;/tt&gt; tag. The height is currently fixed at 24 pixels ( for the redmond look ) and the width is constrained to the width of its immediateparent.
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;Example:&lt;/b&gt;&lt;br/&gt;
+	See &lt;A href="redmond-menu.html"&gt;menu&lt;/A&gt;
+&lt;/p&gt;
+&lt;p&gt;
+	&lt;b&gt;See also:&lt;/b&gt;&lt;br/&gt;
+	&lt;TT&gt;command, menu, menuitem, menuseparator&lt;/TT&gt;
+&lt;/p&gt;
+</longdescription><tag name="menubar" src="tag-menubar.xml"/></element>

@@ -1,0 +1,30 @@
+<canvas debug="true">
+  <class name="box" extends="view"
+	height="100"
+	width="100" />
+  
+  <view id="cont">
+  <simplelayout id="george" axis="y" />
+  <box name="redbox" bgcolor="red"/>
+  <box name="blubox" bgcolor="blue">
+
+	<button onclick="this.change()">
+	 Move George
+
+	<method name="change">
+	   george.setAttribute("axis", george.axis == "y" ? "x" : "y");
+	   //cont.blubox.setAttribute("y",0);
+	</method>
+
+	</button>
+  </box>
+  </view>
+
+<button onclick="new box('cont',{bgcolor:green})">foo</button>
+</canvas>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->

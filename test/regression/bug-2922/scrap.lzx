@@ -1,0 +1,27 @@
+<canvas debug="true" width="800">
+    <include href="classlib.lzx" />
+
+    <dataset name="allWidgets_ds">
+        <widget_classes>
+            <widget_class id="1"
+                          title="Blogbox"
+                          img_url="http://www.mylaszlo.com/projects/widgets/blogbox/blogbox_screenshot.png"
+                          default_xml="http://www.mylaszlo.com/projects/widgets/blogbox/default_opml.xml">
+                <short_desc>This is a short description describing how great this thing is.  </short_desc>
+            </widget_class>
+            <widget_class id="2"
+                          title="MP3 Player"
+                          img_url="http://www.mylaszlo.com/projects/widgets/mp3player/mp3_player_screenshot.png"
+                          default_xml="http://www.mylaszlo.com/projects/mp3player/mp3player/default_opml.xml">
+                <short_desc>This is a short description describing how great this thing is.  </short_desc>
+            </widget_class>
+        </widget_classes>
+    </dataset>
+
+    <simplelayout axis="x" spacing="65" />
+    <widget datapath="allWidgets:/widget_classes[1]/widget_class"/>
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
