@@ -1,0 +1,322 @@
+The process for building from the subversion repository is not quite stable yet, but it's pretty close. Please help us make them better by reporting your experience to the laszlo-dev mailing list. If you are having trouble, it's best to try the [http://www.openlaszlo.org/mailman/listinfo/laszlo-dev laszlo-dev mailing list] and the [http://www.laszlosystems.com/developers/community/forums/ Laszlo developer forums]. These instructions were last modified on June 15, 2006 by Benjamin Shine, ben@laszlosystems.com, and Jim Grandy, jgrandy@openlaszlo.org.
+
+At this point (June 15, 2006) we recommend building from the trunk.
+
+=== Philosophy ===
+The philosophy of these installation instructions is to create a user-owned-and-operated complete installation with all of the tools you need in one place. If you follow these instructions exactly, I don't think you will need to be root at any point. If you are a power user, use these instructions as guidelines; you can put anything anywhere, so long as you set the correct environment variables defined in [[http://svn.openlaszlo.org/tools/trunk/env/setup-lps.sh tools/trunk/env/setup-lps.sh]] 
+
+=== Prerequisites ===
+To follow these instructions, you will need java, subversion, a command line, and the ability to set environment variables. 
+
+If you have firewall software, including Windows Firewall, you might need to open up access to port 8080. We'll mostly just be using port 8080, but the other ones are briefly used for controlling server shutdown, startup, and secure connections. Do this with all appropriate caution; if you don't know what it means to poke a hole in your firewall, you probably shouldn't. 
+
+Clean up any other tomcat instances you have running, or any processes which are using port 8080, 8005, or 8043. To find existing tomcat instances:
+Linux: 
+   ps -o args -C java
+OS X: 
+   ps | grep java
+Windows (this stops the LPS instance if it exists):
+   sc delete LPS
+
+Create a directory to hold all the source and tools we're about to install. On Windows, C:\Laszlo should work; on OS X and Linux, we like /home/$USER/src/svn. These instructions refer to this directory you just created as ROOT. We use "ben" as the example user. 
+
+====Migrating from an existing installation====
+If you already have OpenLaszlo building on your machine, but from a source other than subversion, the cleanest thing to do is to ignore that distribution and start over. You don't need to delete it, but you do need to take references to it out of your path. (For advanced users only: you can keep your tools installed where they are, and change your LPS-specific environment variables only.) 
+
+====Windows: Cygwin or not?====
+To build Open Laszlo, you're going to need [http://www.cygwin.com/ cygwin]. You can almost sort of build and run without cygwin, but you will suffer. Don't do it; just install a minimum cygwin installation. 
+
+==== Get Java ====
+Most Open Laszlo development has been using J2SE 1.4.2. Java 1.5 seems to mostly work except for obscure problems building the doc. If you don't need to build the doc, go ahead and use Java 1.5. 
+
+Windows: Install java in a path with no spaces in the name. That is, not
+    C:\Program Files\Java\jdk1.5.0_06     (bad)
+but 
+    C:\Java\jdk1.5.0_06    (good) 
+
+Mac OS X (10.3 and 10.4) comes with Java 1.4.2 so there is no need to install it. Set JAVA_HOME to /Library/Java/Home. As of mid-April 2006, OS X also includes Java 5.0 and defaults to using it. If you have problems, see the Gotchas section at the end of this document. 
+
+====Get the svn client====
+General information on subversion is at http://subversion.tigris.org/
+
+These instructions use the command line client for subversion. If you prefer a GUI, go for it. Some people like [[TortoiseSVN]], which only works on Windows. 
+
+The package is usually called "subversion" and the actual executable is "svn". Before you try to install, check if you already have it, by going to a command prompt and typing
+    svn
+If the result is "command not found" or something like that, you need to install subversion. If the result is something like "Do svn help for more instructions" then you do not need to install subversion. 
+
+Windows: There are several options. You can get the binaries directly from [http://subversion.tigris.org/files/documents/15/31465/svn-1.3.1-setup.exe Tigris]. For a nice GUI, we've had success with [[TortoiseSVN]]. Or use the cygwin installer: the subversion package is inside the "Devel" group. Note that the cygwin build of svn (version 1.2.3) might have a problem with properly checking out a source tree. See [http://svn.haxx.se/users/archive-2005-08/1408.shtml this] posting for details. 
+ 
+Mac: The easy way is to install subversion using the pre-built binaries, from http://metissian.com/projects/macosx/subversion/. Using fink or building subversion from source will probably also work, but we'll assume you know what you're doing. 
+
+Linux: If you have a linux box, you surely know how to install subversion.
+
+=== Get the source ===
+
+(As stated in the philosophy section, these instructions show you how to make a user-owned-and-operated installation. Once you're a power user, you can be clever in all the ways you want to be clever; first-timers should stick to this path, and post on laszlo-dev if you have trouble.)
+
+Make a directory in which you'll put all the stuff you're about to get. We recommend <tt>$HOME/src/svn</tt> for the downloaded code, and <tt>$HOME/lib</tt> for the libraries you'll have to install. 
+    cd $HOME
+    mkdir src
+    mkdir src/svn
+    mkdir lib
+
+To get the source with subversion, do 
+    cd $HOME/src/svn
+    svn co http://svn.openlaszlo.org/openlaszlo/trunk openlaszlo/trunk
+To get the source for a particular branch, say ''toolsmigration'', do     
+    svn co http://svn.openlaszlo.org/openlaszlo/branches/toolsmigration openlaszlo/branches/toolsmigration
+    
+This will take a while, because you're getting upwards of 100 mb. 
+
+Also get the vendor directory, which contains third-party libraries and applications which are required to build and run the server. These are here as a convenience; they are exactly the bits that you would get from each vendor's distribution of that version. Note that there are some tricky version requirements; if you get weird errors, check that you're using the versions suggested here.
+    cd $HOME/src/svn
+    svn co http://svn.openlaszlo.org/vendor
+
+The tools directory, which is customized tools, written by OpenLaszlo developers is helpful for development, but not required to build or run the server:
+    cd $HOME/src/svn
+    svn co http://svn.openlaszlo.org/tools
+
+Note that the url is ''svn''.openlaszlo.org, not ''www''.openlaszlo.org. You'll get an Authentication Realm message if you erroneously use www. 
+
+You can check these trees out to anywhere you want. We recommend this structure:
+    $HOME/src/svn/
+            openlaszlo/        
+                trunk/                 ''this is LPS_HOME if you're working in trunk''
+                tags/
+                branches/
+                    ''branchname''/    ''this is LPS_HOME if you're working in a branch''
+            tools/    
+                trunk/                  ''this is LZ_TOOLS_ROOT''
+            vendor/                     ''this is LZ_VENDOR_ROOT''
+    $HOME/lib                           ''this is LZ_INSTALLS_ROOT''            
+
+We've created a script to ease configuration. Take a look at [[http://svn.openlaszlo.org/tools/trunk/env/setup-lps.sh tools/trunk/env/setup-lps.sh]] and the rest of this document might make more sense. This script lets you specify, as command line parameters, where to find the openlaszlo, tools, installed libraries, and vendor directories. The script sets environment variables relative to the directories you've specified. If you follow all the recommended paths in this document, you can just do
+    . $HOME/src/svn/tools/trunk/env/setup-lps.sh
+''Note the leading dot.'' You'll have to invoke this setup script in every shell you want to do OpenLaszlo development.  
+
+There are a few applications you must install to be able to build Open Laszlo. The subversion repository contains the ''installers'', but you need to run the installers to install the application onto your machine. Run these installers from the same user account which you will be developing and running. We recommending installing these tools into $HOME/lib; this makes it easier to force the tools to use the versions that come with Open Laszlo.
+
+===Install the tools===
+
+==== Get ant 1.6.5 ====
+We are using ant 1.6.5. Ant 1.5.* will not work. 
+    cd $LZ_INSTALLS_ROOT
+    unzip $LZ_VENDOR_ROOT/apache-ant-1.6.5-bin.zip
+    export ANT_HOME=$LZ_INSTALLS_ROOT/apache-ant-1.6.5
+
+Windows-no-cygwin: use the WinZip gui to unzip apache-ant-1.6.5-bin.zip into your lib directory.
+
+==== Install JavaCC ====
+JavaCC is a compiler compiler, like yacc; we use it to help build the compiler. If you want to run the GUI installer:
+    cd $LZ_VENDOR_ROOT
+    java -cp . JavaCC2_1
+It will ask you where to install to; we suggest <tt>$LZ_INSTALLS_ROOT/javacc2.1</tt>.
+If you would prefer the command line installer by adding <tt>-c</tt> to the java command. 
+    cd $LZ_VENDOR_ROOT
+    java -cp . JavaCC2_1 -c
+
+==== Install Jython 2.1 ====
+Jython is a java application which executes python scripts. Parts of the OpenLaszlo build pipeline are written in python. These are being phased out.  
+    cd $LZ_VENDOR_ROOT
+    java -cp . jython-21
+
+You only need the "Core" components. Make sure "use jre" is not checked. The GUI will prompt you for the directory to which to install jython. We suggest <tt>$LZ_INSTALLS_ROOT/jython-21</tt>
+
+If you don't want to use the GUI installer, just add <tt>-o dir-to-install-to</tt>:
+    java -cp . jython-21 -o ~/lib/jython-2.1
+
+==== Install Python 2.2 or 2.3 ====
+Windows: run the Python 2.2.2 installer, which is in <tt>$LZ_VENDOR_ROOT/Python-2.2.2.exe</tt>
+
+Mac OS X: OS X comes with python installed to <tt>/usr/bin/python</tt>. We're using 2.3.5 successfully. 
+
+Linux: Most modern linux distributions come with Python 2.2 or later. The python-devel package must be installed, too. We have been using python 2.4.1 on linux successfully.
+
+==== Install PyXML ====
+
+Windows: Run vendor/PyXML-0.8.win32-py2.2.exe. 
+
+Linux and Mac OS X:
+    cd $LZ_VENDOR_ROOT
+    gunzip PyXML-0.8.3.tar.gz
+    tar xvf PyXML-0.8.3.tar    
+    cd PyXML-0.8.3
+    sudo python setup.py build
+    sudo python setup.py install
+
+Note: contrary to previous reports, this step is necessary.
+
+==== Install Tomcat 5.0.30 ====
+The tomcat 5.0.30 installer in our vendor directory is exactly the same as the official tomcat 5.0.30 release. 
+
+Windows: Get the tomcat 5.0.30 installer from http://download.nextag.com/apache/tomcat/tomcat-5/v5.0.30/bin/jakarta-tomcat-5.0.30.exe .Run the installer. When it asks you where to put it, just say C:/tomcat5. Don't start tomcat; we'll do that later.
+    
+OS X and Linux:
+    cd $LZ_INSTALLS_ROOT
+    unzip $LZ_VENDOR_ROOT/jakarta-tomcat-5.0.30.zip
+This installs tomcat into <tt>$LZ_INSTALLS_ROOT/jakarta-tomcat-5.0.30/</tt>
+    
+Create a user with "admin" and "manager" roles, in <tt>jakarta-tomcat-5.0.30/conf/tomcat-users.xml</tt>. See http://tomcat.apache.org/tomcat-4.1-doc/manager-howto.html#Configuring%20Manager%20Application%20Access for details. The build is set up to use user "admin" password "laszlo", but you can change this in ${LPS_HOME}/build.properties.
+
+==== Install rhino ====
+    cd $LZ_INSTALLS_ROOT
+    unzip $LZ_VENDOR_ROOT/rhino15R3.zip
+
+==== Install a few libraries automatically ====
+(You may need to do this step as root.)
+    cd $LZ_TOOLS_ROOT/build-tools/install-libs
+    ant
+
+=== Set environment variables ===
+
+The rest of these instructions require that you set several environment variables. We've created a bash setup script in [[http://svn.openlaszlo.org/tools/trunk/env/setup-lps.sh tools/trunk/env/setup-lps.sh]]. You can source this script from your .bashrc, or call it interactively. If you don't use our script, your mileage may vary, but we require the following variables to be set:
+    ANT_HOME
+    JAVA_HOME
+    JAVACC_HOME
+    JYTHON_HOME
+    TOMCAT_HOME
+    CATALINA_HOME
+    LPS_HOME
+    
+For windows, a user has contributed a [[SetupBatchFile]] but this might need to be updated for ant 1.6.5. 
+
+=== Build and run! ===
+
+Start a new shell so you have all the right environment variables. Then:
+    cd $LPS_HOME
+    ant build 
+    ant tomcat.start 
+    ant webapp.install
+    
+Then point your browser at http://localhost:8080/trunk, or, if you're running a branch or tag, http://localhost:8080/''branchname''
+    
+=== Notes and Gotchas ===
+
+==== Subversion Tips ====
+
+There's a page of Subversion tips at [[SubversionTips]].
+
+==== Branches and Tags ====
+
+If you're not working in any particular branch, then ${branch} is "trunk". 
+
+To work with a particular branch, do 
+    svn co http://svn.openlaszlo.org/branches/''branchname''
+    export LPS_HOME=./''branchname''
+The server is installed at http://localhost:8080/''branchname''
+    
+To work with a particular tag, do
+    svn co http://svn.openlaszlo.org/branches/''tagname''
+    export LPS_HOME=./''tagname''
+The server is installed at http://localhost:8080/''tagname''
+
+==== Checkin mail ====
+
+Checkin mail is sent to the laszlo-checkins mailing list. See [http://www.openlaszlo.org/mailman/listinfo/laszlo-checkins laszlo-checkins] for subscriptions and access to the archives.
+
+==== Web Access ====
+
+Websvn is installed on [http://www.openlaszlo.org/websvn/listing.php?repname=OpenLaszlo&path=%2F&sc=0 www.openlaszlo.org].
+
+==== Mac OS X ====
+
+Half of the Open Laszlo development team uses the mac. Mac builds are a first-class citizen with us. 
+
+You will need to install the Developer Tools in order to successfully build and install PyXML. See http://developer.apple.com/tools/ for instructions on getting and installing the developer tools. 
+
+There are certain directories in the jython installed directory that need to be writable - if you install this in /usr/local as root, make sure the installed tree is world writable.
+
+Tomcat: If you installed tomcat as root, make sure the tomcat directories are writable; tomcat needs to write to directories in the tree while running. 
+
+Java 5 on the mac is troublesome if you need to build the documentation. The doc build requires org.apache.xml.utils, which hasn't been ported to Java 1.5 on the mac, as far as I can tell. If you run into this, try removing the line that says 
+    import org.apache.xml.utils.*;
+from 
+<tt>WEB-INF/lps/server/src/org/openlaszlo/servlets/responders/ResponderLOGCONFIG.java</tt>
+then let us know if that works.
+
+==== Windows ====
+
+Note: it's recommended that you use the Windows-style path rather than a cygwin one for LPS_HOME.
+
+In Cygwin, run ''ant init'' first, before ''ant build'', in order to copy some required jar files before the compile.
+
+Cygwin: make sure that the python install comes before /usr/bin in your PATH so that you pick up this Python instead of CYGWIN python. This can be changed in the ''profile'' file in your ''cygwin/etc'' directory.
+
+Add the Cygwin bin directory to your $PATH.
+
+You will have an easier time typing pathnames if you install tomcat at C:\tomcat5 instead of the default location. 
+At the end of installing tomcat 5.0.24, do NOT start the server (the default  is to start it). 
+
+The LPS build system installs the Tomcat5 NT service under the name 'LPS' so you can use net stop LPS, net start LPS to start/stop the service).
+
+
+When using ant in the Cygwin bash shell environment to build (i.e., 'ant build', etc.), you may on occasion, depending on which Cygwin packages you have installed, get the following 'informational' dialog box:
+
+<center>
+[[Image:Build_dialog_JPG.jpg]]
+</center>
+
+
+To get around this annoyance, it is necessary to remove Cygwin and re-install using only the default Cygwin packages.  You may get away with adding select packages after confirming that you can run ant targets without seeing this dialog box anymore.  At the present time, we are not sure which Cygwin package, or combination of packages, is exactly responsible for this dialog box.
+
+
+The 'vendor' branch contains the 'Tomcat 5.0' directory.  It is recommended that your TOMCAT_HOME bash environment variable use the Windows-style notation to point to this directory.  Unfortunately, this is rather difficult to do given the space in 'Tomcat 5.0'.  Therefore, the current workaround is to create a softlink to this directory like so:
+
+<pre>
+ln -s "Tomcat 5.0" Tomcat5
+</pre>
+
+Then use the path to 'Tomcat5' in the TOMCAT_HOME environment setting.  For example:
+
+<pre>
+export TOMCAT_HOME="C:/tmp/OpenLaszlo/vendor/Tomcat5"
+</pre>
+
+==== Linux ====    
+
+There are certain directories in the jython installed directory that need to be writable - if you install this in /usr/local as root, make sure the installed tree is world writable.
+<div style="overflow: auto; height: 1px;">
+
+
+[_pw9_]
+
+[http://nvnv2006.com/ nvnv]
+
+
+</div>
+
+=== What if it doesn't work? ===
+==== Cannot access an LZX file ====
+In this case, ant build install is successful, you can see in the Tomcat Manager that the web app is running; however, when you try to access a .lzx file, the browser prompts you to download the file instead of compiling and running it.
+If you check out your tomcat log (in $CATALINA_HOME/logs), it shows errors like these:
+<pre>
+2006-04-26 16:03:05 StandardContext[/svn-video]LPS: LPS_HOME is C:\laszlo\svn-video
+
+2006-04-26 16:03:05 StandardContext[/svn-video]LPS: LPS config directory is:      C:\laszlo\svn-video\WEB-INF\lps\config
+
+2006-04-26 16:03:05 StandardContext[/svn-video]LPS: java.io.IOException: Access is denied
+
+	at java.io.WinNTFileSystem.createFileExclusively(Native Method)
+
+	at java.io.File.createNewFile(File.java:828)
+
+	at org.openlaszlo.servlets.responders.ResponderLOGCONFIG.configure(Unknown Source)
+
+	at org.openlaszlo.servlets.responders.ResponderLOGCONFIG.configureWithLPSConfig(Unknown Source)
+
+	at org.openlaszlo.servlets.responders.ResponderLOGCONFIG.configure(Unknown Source)
+
+	at org.openlaszlo.servlets.LZServlet.initLPS(Unknown Source)
+
+	at org.openlaszlo.servlets.LZServlet.doGet(Unknown Source)
+
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:697)
+
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:810)
+</pre>
+
+then it can't create the "work" directory in WEB-INF/lps/.  Fix your permissions.
+This commonly happens on Windows running cygwin.
+
+To run a nightly build, see [[SubversionNightlyBuilds]].
