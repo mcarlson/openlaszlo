@@ -35,11 +35,7 @@
         <method event="oninit">
             myTooltipManager.register(this);
         </method>   
-        
-        
-        
-        
-        
+
         <view   resource="$once{parent.icon}" 
                 width="$once{parent.start_size}"
                 height="$once{parent.start_size}"

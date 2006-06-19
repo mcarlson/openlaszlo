@@ -86,9 +86,9 @@
             }
         </method>
          <method name="month2value" args="enmonth">
-	          <![CDATA[
-	         
-	             switch(enmonth){
+              <![CDATA[
+             
+                 switch(enmonth){
                        case "January":
                        return '01';
                        break;
@@ -137,19 +137,19 @@
                        return  '12';
                        break; 
                      }
-	          ]]>
-	        </method>
-	        <method name="judgeday" args="datavalue">
-	        <![CDATA[
+              ]]>
+            </method>
+            <method name="judgeday" args="datavalue">
+            <![CDATA[
                var datanum = Number(datavalue);
                if(datanum<10){
                     var newdata = "0"+datavalue;
                     return newdata;             
                }else{
                     return datavalue;               
-               }	 
+               }     
                ]]>       
-	        </method>
+            </method>
         <view options="ignorelayout">
             <text width="20" height="20" bgcolor="#6495ED" text="Su"/>
             <text width="20" height="20" bgcolor="#6699CC" text="Mo"/>
