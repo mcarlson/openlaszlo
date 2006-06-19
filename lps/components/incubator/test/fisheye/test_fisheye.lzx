@@ -1,0 +1,37 @@
+<canvas width="100%" height="100%">
+    <include href="incubator/fisheye_lib.lzx" />
+
+    <resource name="csv"        src="upload_csv.png"        />
+    <resource name="db"         src="upload_db.png"         />
+    <resource name="buckets"    src="configure_buckets.png" />
+
+    <view width="100%" height="50" bgcolor="#aaaaaa" y="200">
+    
+        <fisheye width="100%" height="100%">
+            <fisheye_item icon="csv">
+                Tooltip1
+                <method event="onclick">
+                    Debug.write("Clicked CSV");
+                </method>
+            </fisheye_item>
+            
+            <fisheye_item icon="db">
+                tooltip2
+                <method event="onclick">
+                    Debug.write("Clicked DB");
+                </method>
+            </fisheye_item>
+            
+            
+            <fisheye_item icon="buckets">
+                tooltip3
+                <method event="onclick">
+                    Debug.write("Clicked Buckets");
+                </method>
+            </fisheye_item>
+            
+        </fisheye>
+    
+    </view>
+
+</canvas>
