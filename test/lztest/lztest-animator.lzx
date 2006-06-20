@@ -29,27 +29,27 @@
       <method event="onstart">
         n_onstart++;
 
-	var now = new Date();
-	t_start = now.getTime();
+        var now = new Date();
+        t_start = now.getTime();
       </method>
 
       <method event="onstop">
       <![CDATA[
         n_onstop++;
 
-	var now = new Date();
-	t_elapsed = now.getTime() - t_start;
-	// Debug.write ("elapsed = " + t_elapsed);
+        var now = new Date();
+        t_elapsed = now.getTime() - t_start;
+        // Debug.write ("elapsed = " + t_elapsed);
 
-	LzTestManager.assertEquals (1, n_onstart, "view1 onstart count failure");
-	LzTestManager.assertEquals (1, n_onstop, "view1 onstop count failure");
-	LzTestManager.assertEquals (0, n_onrepeat, "view1 onrelease count failure");
+        LzTestManager.assertEquals (1, n_onstart, "view1 onstart count failure");
+        LzTestManager.assertEquals (1, n_onstop, "view1 onstop count failure");
+        LzTestManager.assertEquals (0, n_onrepeat, "view1 onrelease count failure");
 
-	// Allow 10% variation on animation
-	LzTestManager.assertWithin (this.duration, t_elapsed, this.duration * 0.1, "Animation too short or too long");
+        // Allow 10% variation on animation
+        LzTestManager.assertWithin (this.duration, t_elapsed, this.duration * 0.1, "Animation too short or too long");
 
-	var xerror = 400 - view1.x;
-	LzTestManager.assertEquals (400, view1.x, "view1.x final failure error=" + xerror + " ");
+        var xerror = 400 - view1.x;
+        LzTestManager.assertEquals (400, view1.x, "view1.x final failure error=" + xerror + " ");
       ]]>
       </method>
 
@@ -79,11 +79,11 @@
       <![CDATA[
         n_onstop++;
 
-	LzTestManager.assertEquals (3, n_onstart, "view2 onstart count failure");
-	LzTestManager.assertEquals (1, n_onstop, "view2 onstop count failure");
-	LzTestManager.assertEquals (2, n_onrepeat, "view2 onrepeat count failure");
-	var xerror = 100 - view2.x;
-	LzTestManager.assertEquals (100, view2.x, "view2.x final failure error=" + xerror + " ");
+        LzTestManager.assertEquals (3, n_onstart, "view2 onstart count failure");
+        LzTestManager.assertEquals (1, n_onstop, "view2 onstop count failure");
+        LzTestManager.assertEquals (2, n_onrepeat, "view2 onrepeat count failure");
+        var xerror = 100 - view2.x;
+        LzTestManager.assertEquals (100, view2.x, "LPP-1973: view2.x final failure error=" + xerror + " ");
       ]]>
       </method>
 
@@ -165,20 +165,18 @@ suite.test2 = function() {
   LzTestManager.assertEquals (100, a1.beginPoleDelta, "beginPoleDelta (3) failure");
   LzTestManager.assertEquals (15, a1.endPoleDelta, "endPoleDelta (3) failure");
 
-// This is broken
   a1.setAttribute('motion', 'easeboth');
-  Debug.write ("The next 3 tests fail because of a problem with LzAnimator");
-  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "beginPoleDelta (4) failure");
-  LzTestManager.assertEquals (0.25, a1.endPoleDelta, "endPoleDelta (4) failure");
+  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "LPP-2224: beginPoleDelta (4) failure");
+  LzTestManager.assertEquals (0.25, a1.endPoleDelta, "LPP-2224: endPoleDelta (4) failure");
 
   // This test fails because the previous test fails
   a1.setAttribute('motion', 'easein');
-  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "beginPoleDelta (5) failure");
+  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "LPP-2224: beginPoleDelta (5) failure");
   LzTestManager.assertEquals (15, a1.endPoleDelta, "endPoleDelta (5) failure");
 
 
   // There are two method setters
-	
+        
   // You can't read the motion so this doesn't work
 //*  var motion = a1.getAttribute ('motion');
 //*  a1.setAttribute ('motion', 'easein');

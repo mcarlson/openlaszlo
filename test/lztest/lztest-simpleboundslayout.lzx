@@ -2,12 +2,13 @@
   <include href="../../lps/utils/lztestmanager.lzx" /> 
 
 <!-- simpleboundslayout. x layout, with spacing -->
+  <simplelayout axis="x" spacing="5"/>
   <view name="view1" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
     <simpleboundslayout name="sl1" axis="x" spacing="5"/>
-    <view name="v1" bgcolor="red" width="50" height="30"/>
-    <view name="v2" bgcolor="red" width="50" height="30" rotation="90"/>
-    <view name="v3" bgcolor="red" width="50" height="30" rotation="-90"/>
-    <view name="v4" bgcolor="red" width="50" height="30"/>
+    <view name="v1" bgcolor="0xff0000" width="50" height="30"/>
+    <view name="v2" bgcolor="0xa00000" width="50" height="30" rotation="90"/>
+    <view name="v3" bgcolor="0x800000" width="50" height="30" rotation="-90"/>
+    <view name="v4" bgcolor="0x400000" width="50" height="30"/>
   </view>
 
 <!-- X layout, with ability to toggle layout axis -->
@@ -40,7 +41,7 @@ var suite = new LzTestSuite("LzAnimator Test Suite");
 
 // test1:  simpleboundslayout
 suite.test1 = function() {
-  LzTestManager.assertEquals (10, view1.x, "view1.x failure");
+  LzTestManager.assertEquals (0, view1.x, "view1.x failure");
   LzTestManager.assertEquals (10, view1.y, "view1.y failure");
 
   LzTestManager.assertEquals (0, view1.v1.x, "view1.v1.x failure");
@@ -48,14 +49,14 @@ suite.test1 = function() {
 // I haven't figured out what view1.v2.x means
 //  LzTestManager.assertEquals (55, view1.v2.x, "view1.v2.x failure");
   LzTestManager.assertEquals (0, view1.v2.y, "view1.v2.y failure");
-  LzTestManager.assertEquals (110, view1.v3.x, "view1.v3.x failure");
+  LzTestManager.assertEquals (90, view1.v3.x, "view1.v3.x failure");
   LzTestManager.assertEquals (0, view1.v3.y, "view1.v3.y failure");
-  LzTestManager.assertEquals (165, view1.v4.x, "view1.v4.x failure");
+  LzTestManager.assertEquals (125, view1.v4.x, "view1.v4.x failure");
   LzTestManager.assertEquals (0, view1.v4.y, "view1.v4.y failure");
 }
 
 suite.test2 = function() {
-  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (215, view2.x, "view2.x failure");
   LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
   LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
   LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
@@ -76,7 +77,7 @@ suite.test2 = function() {
 //  Debug.write ("onaxis not called automatically on lps-legals");
 //  LzTestManager.assertEquals (1, view2.n_onaxis, "view2.n_onaxis failure");
 
-  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (215, view2.x, "view2.x failure");
   LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
   LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
   LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");

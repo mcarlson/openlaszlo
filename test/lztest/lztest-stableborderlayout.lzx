@@ -2,6 +2,7 @@
   <include href="../../lps/utils/lztestmanager.lzx" /> 
 
 <!-- stableborderlayout. x layout -->
+  <simplelayout axis="x" spacing="5"/>
   <view name="view1" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
     <stableborderlayout name="sl1" axis="x"/>
     <view name="v1" bgcolor="blue" width="50" height="30"/>
@@ -47,7 +48,7 @@ var suite = new LzTestSuite("stableborderlayout Test Suite");
 
 // test1:  stableborderlayout
 suite.test1 = function() {
-  LzTestManager.assertEquals (10, view1.x, "view1.x failure");
+  LzTestManager.assertEquals (0, view1.x, "view1.x failure");
   LzTestManager.assertEquals (10, view1.y, "view1.y failure");_
   LzTestManager.assertEquals (0, view1.v1.x, "view1.v1.x failure");
   LzTestManager.assertEquals (0, view1.v1.y, "view1.v1.y failure");
@@ -64,7 +65,7 @@ suite.test1 = function() {
 
 // test2:  stableborderlayout
 suite.test2 = function() {
-  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (215, view2.x, "view2.x failure");
   LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
   LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
   LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
@@ -79,7 +80,7 @@ suite.test2 = function() {
 }
 
 suite.test3 = function() {
-  LzTestManager.assertEquals (10, view3.x, "view3.x failure");
+  LzTestManager.assertEquals (430, view3.x, "view3.x failure");
   LzTestManager.assertEquals (10, view3.y, "view3.y failure");_
   LzTestManager.assertEquals (0, view3.v1.x, "view3.v1.x failure");
   LzTestManager.assertEquals (0, view3.v1.y, "view3.v1.y failure");
@@ -102,12 +103,12 @@ suite.test3 = function() {
 //  Debug.write ("onaxis not called automatically on lps-legals");
 //  LzTestManager.assertEquals (1, view3.n_onaxis, "view3.n_onaxis failure");
 
-  LzTestManager.assertEquals (10, view3.x, "view3.x failure");
+  LzTestManager.assertEquals (430, view3.x, "view3.x failure");
   LzTestManager.assertEquals (10, view3.y, "view3.y failure");_
   LzTestManager.assertEquals (0, view3.v1.x, "view3.v1.x failure");
   LzTestManager.assertEquals (0, view3.v1.y, "view3.v1.y failure");
   LzTestManager.assertEquals (50, view3.v2.x, "view3.v2.x failure");
-  LzTestManager.assertEquals (30, view3.v2.y, "view3.v2.y failure");
+  LzTestManager.assertEquals (30, view3.v2.y, "LPP-2136: view3.v2.y failure");
   LzTestManager.assertEquals (160, view3.v3.x, "view3.v3.x failure");
   LzTestManager.assertEquals (180, view3.v3.y, "view3.v3.y failure");
 }
