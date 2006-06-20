@@ -41,7 +41,11 @@
 
         <!--- Width to give for scrollbar
               @keywords private -->
-        <attribute name="vscrollwidth" value="${(_vs &amp;&amp; _vs.visible) ? _vs.width : 0}"/>
+        <attribute name="vscrollwidth" value="0"/>
+        
+        <method name="setvscrollwidthfromvisibility" args="v">
+            this.setAttribute("vscrollwidth", (v ? this._vs.width : 0));
+        </method>
         
 <!--
         <vscrollbar name="_vs" axis="y" scrollattr="pos"
@@ -76,7 +80,7 @@
                     var p = this.parent;
                     // (_vs) x="${parent.width - this.width - parent.border + 1}" 
                     this.applyConstraint("x", 
-                        function() { this.setAttribute("x", this.parent.width - this.width - this.parent.border + 1); },
+                        function() { this.setAttribute("x", this.parent.width - this.width ); },
                         [p, "width", this, "width", p, "border"]);
                     
                     // (_vs) stepsize="${scrolltarget.lineheight}" 
@@ -104,6 +108,8 @@
         <method name="init">
             super.init();
             this.ensurevscrollbar();
+            setvscrollwidthfromvisibility(_vs.visible);
+            this.myDel = new LzDelegate(this, "setvscrollwidthfromvisibility", this._vs, "onvisible");
         </method>
 
     </class>
