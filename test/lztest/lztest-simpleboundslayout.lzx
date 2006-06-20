@@ -1,0 +1,105 @@
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+<!-- simpleboundslayout. x layout, with spacing -->
+  <view name="view1" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <simpleboundslayout name="sl1" axis="x" spacing="5"/>
+    <view name="v1" bgcolor="red" width="50" height="30"/>
+    <view name="v2" bgcolor="red" width="50" height="30" rotation="90"/>
+    <view name="v3" bgcolor="red" width="50" height="30" rotation="-90"/>
+    <view name="v4" bgcolor="red" width="50" height="30"/>
+  </view>
+
+<!-- X layout, with ability to toggle layout axis -->
+  <view name="view2" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <attribute name="n_onaxis" value="0"/>
+    <method name="toggleAxis">
+      sl1.setAttribute ('axis', (sl1.axis == "x") ? "y" : "x");
+<!-- The update call should be inside the object -->
+      sl1.update();
+    </method>
+    <simpleboundslayout id="sl1" axis="x" spacing="10">
+      <method event="onaxis" args="axis">
+        n_onaxis++;
+      </method>
+    </simpleboundslayout>
+    <view name="v1" bgcolor="blue" height="30" width="50"/>
+    <view name="v2" bgcolor="blue" height="30" width="50"/>
+    <view name="v3" bgcolor="blue" height="30" width="50"/>
+    <view name="v4" bgcolor="blue" height="30" width="50"/>
+  </view>
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("LzAnimator Test Suite"); 
+
+
+// 
+// simpleboundslayout
+// 
+
+// test1:  simpleboundslayout
+suite.test1 = function() {
+  LzTestManager.assertEquals (10, view1.x, "view1.x failure");
+  LzTestManager.assertEquals (10, view1.y, "view1.y failure");
+
+  LzTestManager.assertEquals (0, view1.v1.x, "view1.v1.x failure");
+  LzTestManager.assertEquals (0, view1.v1.y, "view1.v1.y failure");
+// I haven't figured out what view1.v2.x means
+//  LzTestManager.assertEquals (55, view1.v2.x, "view1.v2.x failure");
+  LzTestManager.assertEquals (0, view1.v2.y, "view1.v2.y failure");
+  LzTestManager.assertEquals (110, view1.v3.x, "view1.v3.x failure");
+  LzTestManager.assertEquals (0, view1.v3.y, "view1.v3.y failure");
+  LzTestManager.assertEquals (165, view1.v4.x, "view1.v4.x failure");
+  LzTestManager.assertEquals (0, view1.v4.y, "view1.v4.y failure");
+}
+
+suite.test2 = function() {
+  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
+  LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
+  LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
+  LzTestManager.assertEquals (60, view2.v2.x, "view2.v2.x failure");
+  LzTestManager.assertEquals (0, view2.v2.y, "view2.v2.y failure");
+  LzTestManager.assertEquals (120, view2.v3.x, "view2.v3.x failure");
+  LzTestManager.assertEquals (0, view2.v3.y, "view2.v3.y failure");
+  LzTestManager.assertEquals (180, view2.v4.x, "view2.v4.x failure");
+  LzTestManager.assertEquals (0, view2.v4.y, "view2.v4.y failure");
+
+  // Toggle the axis
+  view2.toggleAxis ();
+
+  // NOTE: The old axis is not returned to it's original location. It stays
+  // where it is. The user must fix it in the onaxis method.
+
+// No onaxis event is sent from this object
+//  Debug.write ("onaxis not called automatically on lps-legals");
+//  LzTestManager.assertEquals (1, view2.n_onaxis, "view2.n_onaxis failure");
+
+  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
+  LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
+  LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
+  LzTestManager.assertEquals (60, view2.v2.x, "view2.v2.x failure");
+  LzTestManager.assertEquals (40, view2.v2.y, "view2.v2.y failure");
+  LzTestManager.assertEquals (120, view2.v3.x, "view2.v3.x failure");
+  LzTestManager.assertEquals (80, view2.v3.y, "view2.v3.y failure");
+  LzTestManager.assertEquals (180, view2.v4.x, "view2.v4.x failure");
+  LzTestManager.assertEquals (120, view2.v4.y, "view2.v4.y failure");
+}
+
+// Run the tests in order (test1,test2,...)
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

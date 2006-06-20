@@ -1,0 +1,386 @@
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+  <simplelayout axis="x" spacing="5"/>
+
+<!-- text1: simple view -->
+  <text name="text1" x="10" y="20" width="50" height="30" label="label" bgcolor="0xaaaaaa" maxlength="10" multiline="true" pattern="[a-zA-Z]*" resize="true" selectable="true" text="text"></text>
+
+<!-- text2: simple view for manipulating text. -->
+  <view name="view2">
+    <simplelayout axis="x" spacing="0"/>
+    <text name="t1" width="50" height="30" bgcolor="0xaaaaaa" multiline="false" resize="true"/>
+    <text name="t2" width="50" height="30" bgcolor="0xcccccc" multiline="true" resize="true"/>
+  </view>
+
+<!-- text3: simple text for checking methods -->
+  <text name="text3" y="20" bgcolor="0xaaaaaa"/>
+
+<!-- text4: simple text for checking selection methods -->
+  <text name="text4" bgcolor="0xaaaaaa"/>
+
+<!-- text5: simple text for checking scroll methods -->
+  <view name="view5">
+    <simplelayout axis="x"/>
+    <text name="t1" y="20" width="50" height="40" bgcolor="0xaaaaaa">
+      1234567890abcdefghijklmnopqrstuvwxyz
+    </text>
+    <text name="t2" y="20" width="50" height="40" multiline="true" bgcolor="0xcccccc">
+      1234567890abcdefghijklmnopqrstuvwxyz
+    </text>
+  </view>
+
+<!-- view6: HTML Markup -->
+  <view name="view6">
+    <simplelayout axis="x"/>
+    <text name="t1" resize="true" bgcolor="0xaaaaaa" multiline="false"/>
+    <text name="t2" resize="true" bgcolor="0xcccccc" multiline="true"/>
+  </view>
+
+<!-- text7: Accessibility -->
+  <text name="text7" y="20" bgcolor="0xaaaaaa" aaactive="true">
+  openLaszlo
+  </text>
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("LzText Test Suite"); 
+
+
+//
+// Helper functions
+//
+
+// z-order (for test5)
+function ztest(msg,exp,act)
+{
+  LzTestManager.assertEquals (exp.length, act.length, msg + ": ztest length");
+  for (var i=0; i<exp.length; i++) {
+    LzTestManager.assertEquals (exp[i].name, act[i].name, msg + ": index " + i);
+  }
+}
+
+// Inspect [x,y,width,height] and compare with the specified view
+function loctest(msg,view,exp)
+{
+  LzTestManager.assertEquals (exp[0], view.x, msg + ": x failure");  
+  LzTestManager.assertEquals (exp[1], view.y, msg + ": y failure");  
+  LzTestManager.assertEquals (exp[2], view.width, msg + ": width failure");  
+  LzTestManager.assertEquals (exp[3], view.height, msg + ": height failure");  
+}
+
+
+// 
+// LzText
+// 
+
+// test1:  simple. Also tests some getters and setters
+suite.test1 = function() {
+  // Verify state
+  loctest("text1", text1, [0,20,50,30]);
+  LzTestManager.assertEquals (true, text1.resize, "text1.resize failure");
+  LzTestManager.assertEquals (10, text1.maxlength, "text1.maxlength failure");
+
+  // "label" overrides "text" setting, if any
+  LzTestManager.assertEquals ("label", text1.getAttribute('text'), "text1.text failure");
+  LzTestManager.assertEquals ("label", text1.getText(), "text1.getText failure");
+  // Change the length of the string
+  text1.setText('12345678901234567890');
+  LzTestManager.assertEquals ("1234567890", text1.getText(), "LPP-2208: text1 maxlength not working");  
+
+  // Use invalid characters (not in the pattern)
+  text1.setText('1abc23def4');
+  LzTestManager.assertEquals ("abcdef", text1.getText(), "LPP-2209: text1 pattern not working");  
+
+}
+
+// test2:  Tests multiline vs. non-multiline, as well as spacing
+suite.test2 = function() {
+  LzTestManager.assertEquals ('', view2.t1.getText(), "view2.t1.getText() failure");
+  LzTestManager.assertEquals ('', view2.t2.getText(), "view2.t1.getText() failure");
+
+
+  // Determine the spacing and make sure it is constant
+  var xspacing = 0;
+  var yspacing = 0;
+  var wlast = view2.t2.getTextWidth();
+  var hlast = view2.t2.getTextHeight();
+  var t = '';
+  for (var i=0; i<20; i++) {
+    t = t + '*';
+    view2.t1.addText ('*');
+    view2.t2.addText ('*');
+    LzTestManager.assertEquals (t, view2.t1.getText(), "view2.t1.getText() failure (2)");
+    LzTestManager.assertEquals (t, view2.t2.getText(), "view2.t1.getText() failure (2)");
+
+    // I guess this is a feature. getTextWidth() doesn't respect multiline
+    LzTestManager.assertEquals (view2.t1.getTextWidth(), view2.t2.getTextWidth(), "getTextWidth do not match");
+
+    // Make sure spacing is consistent
+    if (wlast != view2.t2.getTextWidth()) {
+      if (xspacing == 0)
+	xspacing = view2.t2.getTextWidth() - wlast;
+      LzTestManager.assertEquals (xspacing, (view2.t2.getTextWidth()-wlast), "xspacing error at character " + i);
+    }
+
+    if (hlast != view2.t2.getTextHeight()) {
+      if (yspacing == 0)
+	yspacing = view2.t2.getTextHeight() - hlast;
+      LzTestManager.assertEquals (yspacing, (view2.t2.getTextHeight()-hlast), "yspacing error at character " + i);
+    }
+
+    wlast = view2.t2.getTextWidth();
+    hlast = view2.t2.getTextHeight();
+  }
+
+
+  // Change the state of multiline and see what happens
+  LzTestManager.assertEquals (false, view2.t1.getAttribute('multiline'), "view2.t1.multiline failure");
+  LzTestManager.assertEquals (true, view2.t2.getAttribute('multiline'), "view2.t2.multiline failure");
+
+  var w1 = view2.t1.getTextWidth();
+  var h1 = view2.t1.getTextHeight();
+  var w2 = view2.t2.getTextWidth();
+  var h2 = view2.t2.getTextHeight();
+
+  view2.t1.setMultiline(true);
+  view2.t2.setMultiline(false);
+
+  var w3 = view2.t1.getTextWidth();
+  var h3 = view2.t1.getTextHeight();
+  var w4 = view2.t2.getTextWidth();
+  var h4 = view2.t2.getTextHeight();
+
+  LzTestManager.assertEquals (true, view2.t1.getAttribute('multiline'), "view2.t1.multiline failure (2)");
+  LzTestManager.assertEquals (false, view2.t2.getAttribute('multiline'), "view2.t2.multiline failure (2)");
+
+  // width should not change, but height should change
+  LzTestManager.assertEquals (w1, w3, "view2.t1.multiline switch width failure");
+  LzTestManager.assertEquals (w2, w4, "view2.t2.multiline switch width failure");
+  LzTestManager.assertEquals (h1, h3, "view2.t1.multiline switch height failure");
+  LzTestManager.assertEquals (h1, h4, "view2.t2.multiline switch height failure");
+
+
+  //Debug.format ("Before: %dx%d.  After:%dx%d\n", w1, h1, view2.t1.getTextWidth(), view2.t1.getTextHeight());
+  //Debug.format ("Before: %dx%d.  After:%dx%d\n", w2, h2, view2.t2.getTextWidth(), view2.t2.getTextHeight());
+
+  LzTestManager.assertEquals (true, view2.t1.getAttribute('multiline'), "view2.t1.multiline failure (2)");
+  LzTestManager.assertEquals (false, view2.t2.getAttribute('multiline'), "view2.t2.multiline failure (2)");
+
+}
+
+// test3:  Test methods
+suite.test3 = function() {
+  // setResize()
+  text3.setText ("1");
+  var w = text3.getWidth();
+  var h = text3.getHeight();
+
+  text3.setResize (false);
+  text3.addText ("2");
+  LzTestManager.assertEquals (w, text3.getWidth(), "text3.getTextWidth() failure");
+  LzTestManager.assertEquals (h, text3.getHeight(), "text3.getTextHeight() failure");
+  LzTestManager.assertTrue (text3.getTextWidth() != text3.getWidth());
+
+  text3.setResize (true);
+  text3.addText ("3");
+  LzTestManager.assertTrue (text3.getTextWidth() == text3.getWidth());
+
+  // clearText ()
+  LzTestManager.assertEquals ('123', text3.getText(),  "text3.getText() failure");  
+  text3.clearText();
+  LzTestManager.assertEquals ('', text3.getText(),  "text3.getText() failure (2)");  
+  LzTestManager.assertEquals (text3.PAD_TEXTWIDTH, text3.getTextWidth(),  "text3.getTextWidth() failure (2)");  
+  LzTestManager.assertEquals (0, text3.getTextHeight(),  "text3.getTextHeight() failure (2)");  
+
+  // setText () (special characters)
+  text3.setText ("<>");  // Works ok but not displayed
+  LzTestManager.assertEquals ("<>", text3.getText(),  "text3.getText() failure (3)");    
+  // escapeText ()
+  LzTestManager.assertEquals ('', text3.escapeText(''),  "text3.escapeText() failure");  
+  LzTestManager.assertEquals ('&', text3.escapeText('&'),  "text3.escapeText() & failure");  
+  LzTestManager.assertEquals ("\\", text3.escapeText("\\"),  'text3.escapeText() backslash failure');  
+  LzTestManager.assertEquals ("\"", text3.escapeText("\""),  'text3.escapeText() doublequote failure');  
+  LzTestManager.assertEquals ("123", text3.escapeText("123"),  'text3.escapeText() 123 failure');  
+  LzTestManager.assertEquals ('&lt;', text3.escapeText('<'),  "text3.escapeText() < failure");  
+  LzTestManager.assertEquals ('&gt;', text3.escapeText('>'),  "text3.escapeText() > failure");  
+  LzTestManager.assertEquals ('&gt;&lt;', text3.escapeText('><'),  "text3.escapeText() >< failure");  
+
+  text3.setText ("&\\\"<>");
+  LzTestManager.assertEquals ("&\\\"&lt;&gt;", text3.escapeText(),  "text3.escapeText() string failure");  
+}
+
+// test4:  Test selection methods
+suite.test4 = function() {
+  text4.setText (" 123 ");
+  LzTestManager.assertEquals (' 123 ', text4.getText(),  "text4.getText() failure");  
+
+  LzTestManager.assertEquals (-1, text4.getSelectionSize(),  "text4.getSelectionSize() failure");    
+  LzTestManager.assertEquals (-1, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure");    
+
+  text4.setSelection (0);  // No selection, just position
+  LzTestManager.assertEquals (0, text4.getSelectionSize(),  "text4.getSelectionSize() failure (2)");    
+  LzTestManager.assertEquals (0, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure (2");    
+
+  text4.setSelection (1);  // No selection, just position
+  LzTestManager.assertEquals (0, text4.getSelectionSize(),  "text4.getSelectionSize() failure (3)");    
+  LzTestManager.assertEquals (1, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure (3)");    
+
+  text4.setSelection (9999);  // No selection, just position
+  LzTestManager.assertEquals (0, text4.getSelectionSize(),  "text4.getSelectionSize() failure (4)");    
+  LzTestManager.assertEquals (text4.getText().length, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure (4)");    
+
+
+  text4.setSelection (0, 2);
+  LzTestManager.assertEquals (2, text4.getSelectionSize(),  "text4.getSelectionSize() failure (5)");    
+  LzTestManager.assertEquals (0, text4.getSelectionPosition(),  "text4.getSelectionPosition() failure (5)");    
+
+/*
+  text4.setText ("     ");  // Note: The user cannot select a string of spaces
+  text4.setSelection (0, 4);
+  text4.setSelectable(true);
+  text4.setText ("123");
+*/
+}
+
+// test5:  Test scroll methods
+suite.test5 = function() {
+
+  // Single line so scrolling doesn't do anything
+  LzTestManager.assertEquals (1, view5.t1.getScroll(),  "view5.t1.getScroll() failure");    
+  view5.t1.setScroll (2);
+  LzTestManager.assertEquals (1, view5.t1.getScroll(),  "view5.t1.getScroll() failure (2)");    
+
+  // Count the number of lines in t2
+  var txt = view5.t2.getText ();
+  
+  var lines = 0;
+  var yspacing = 0;
+  for (var i=0; i<txt.length; i++) {
+    view5.t2.setText (txt.substr(0, i+1));
+    var y = view5.t2.getTextHeight();
+    if (yspacing == 0)
+      yspacing = y;
+    if (y != yspacing) {
+      lines++;
+      yspacing = y;
+    }
+  }
+
+  LzTestManager.assertEquals (1, view5.t1.getMaxScroll(),  "view5.t1.getMaxScroll() failure");    
+  LzTestManager.assertEquals (lines, view5.t2.getMaxScroll(),  "view5.t2.getMaxScroll() failure");    
+
+  // Nothing else an automated test can verify
+  // There is no getXScroll, getyScroll methods
+  //view5.t1.setHScroll(10);
+  //view5.t2.setHScroll(10);
+  
+  //Debug.write(view5.t1.getMaxScroll() + " and " + view5.t2.getMaxScroll());
+}
+
+// test6:  HTML Markup
+suite.test6 = function() {
+  var s1 = '<a href="http://www.openlaszlo.org">Link</a>';
+  view6.t1.setText(s1);
+  view6.t2.setText(s1);
+  LzTestManager.assertEquals (s1, view6.t1.getText(),  "view6.t1.getText() failure");    
+  LzTestManager.assertEquals (s1, view6.t2.getText(),  "view6.t2.getText() failure");    
+  view6.t1.setText('openLaszlo');
+  var w = view6.t1.getTextWidth();
+  var h = view6.t1.getTextHeight();
+
+  var s2 = 'open<b>Laszlo</b>';
+  view6.t1.setText(s2);
+  view6.t2.setText(s2);
+  LzTestManager.assertEquals (s2, view6.t1.getText(),  "view6.t1.getText() failure (2)");    
+  LzTestManager.assertEquals (s2, view6.t2.getText(),  "view6.t2.getText() failure (2)");    
+  LzTestManager.assertTrue (view6.t1.getTextWidth()>w,  "view6.t1.getTextWidth() bold failure");     
+  LzTestManager.assertTrue (view6.t2.getTextWidth()>w,  "view6.t2.getTextWidth() bold failure");     
+
+  var s3 = 'open<i>Laszlo</i>';
+  view6.t1.setText(s3);
+  view6.t2.setText(s3);
+  LzTestManager.assertEquals (s3, view6.t1.getText(),  "view6.t1.getText() failure (3)");    
+  LzTestManager.assertEquals (s3, view6.t2.getText(),  "view6.t2.getText() failure (3)");    
+
+  LzTestManager.assertEquals (w, view6.t1.getTextWidth(),  "view6.t1.getTextWidth() italic failure");     
+  LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "view6.t2.getTextWidth() italic failure");     
+
+  var s4 = 'open<u>Laszlo</u>';
+  view6.t1.setText(s4);
+  view6.t2.setText(s4);
+  LzTestManager.assertEquals (s4, view6.t1.getText(),  "view6.t1.getText() failure (4)");    
+  LzTestManager.assertEquals (s4, view6.t2.getText(),  "view6.t2.getText() failure (4)");    
+
+  LzTestManager.assertEquals (w, view6.t1.getTextWidth(),  "view6.t1.getTextWidth() underline failure");
+  LzTestManager.assertEquals (h, view6.t1.getTextHeight(),  "view6.t1.getTextHeight() underline failure");
+  LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "view6.t2.getTextWidth() underline failure");
+  LzTestManager.assertEquals (h, view6.t2.getTextHeight(),  "view6.t2.getTextHeight() underline failure");
+
+  var s5 = 'open<p>Laszlo</p>';
+  view6.t1.setText(s5);
+  view6.t2.setText(s5);
+  LzTestManager.assertEquals (s5, view6.t1.getText(),  "view6.t1.getText() failure (5)");    
+  LzTestManager.assertEquals (s5, view6.t2.getText(),  "view6.t2.getText() failure (5)");    
+
+  LzTestManager.assertEquals (w, view6.t1.getTextWidth(),  "view6.t1.getTextWidth() <p> failure");
+  LzTestManager.assertEquals (h, view6.t1.getTextHeight(),  "view6.t1.getTextHeight() <p> failure");
+  LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "view6.t2.getTextWidth() <p> failure");
+  LzTestManager.assertTrue (view6.t2.getTextHeight() > h, "view6.t2.getTextHeight() <p> failure");
+
+
+  var s6 = 'open<br/><br/>Laszlo';
+  view6.t1.setText(s6);
+  view6.t2.setText(s6);
+  LzTestManager.assertEquals (s6, view6.t1.getText(),  "view6.t1.getText() failure (6)");    
+  LzTestManager.assertEquals (s6, view6.t2.getText(),  "view6.t2.getText() failure (6)");    
+
+  LzTestManager.assertEquals (w, view6.t1.getTextWidth(),  "view6.t1.getTextWidth() <br> failure");
+  LzTestManager.assertEquals (h, view6.t1.getTextHeight(),  "view6.t1.getTextHeight() <br> failure");
+  LzTestManager.assertEquals (w, view6.t2.getTextWidth(),  "LPP-2214: view6.t2.getTextWidth() <br> failure");
+  LzTestManager.assertEquals (h*3, view6.t2.getTextHeight(),  "view6.t2.getTextHeight() <br> failure");
+
+  var s7 = 'open<img src="10x10.gif"/>Laszlo';
+  view6.t1.setText(s7);
+  view6.t2.setText(s7);
+  LzTestManager.assertEquals (s7, view6.t1.getText(),  "view6.t1.getText() failure (7)");
+  LzTestManager.assertEquals (s7, view6.t2.getText(),  "view6.t2.getText() failure (7)");
+
+  LzTestManager.assertTrue (view6.t1.getTextWidth() > w, "view6.t1.getTextWidth() <img> failure");
+  LzTestManager.assertTrue (view6.t2.getTextWidth() > w, "view6.t2.getTextWidth() <img> failure");
+
+  //Debug.format ("tw=%d, th=%d w=%d, h=%d\n", view6.t2.getTextWidth(), view6.t2.getTextHeight(), view6.t2.getWidth(), view6.t2.getHeight());
+}
+
+// test7:  Accessibility
+suite.test7 = function() {
+  var w = text7.getTextWidth();
+
+  var s1 = 'open<img alt="alt tag" src="na"/>Laszlo';
+  text7.setWidth(s1);
+  LzTestManager.assertTrue (s1, text7.getText(), 'text7.getText() failure');
+
+  LzTestManager.assertFalse (w == text7.getTextWidth(), 'LPP-2215: alt tag appears to be ignored');
+}
+  
+suite.addTest(suite.test7);
+suite.addTest(suite.test6);
+suite.addTest(suite.test5);
+suite.addTest(suite.test4);
+suite.addTest(suite.test3);
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

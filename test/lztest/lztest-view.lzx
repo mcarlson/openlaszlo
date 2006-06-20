@@ -1,0 +1,402 @@
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+  <simplelayout axis="x" spacing="5"/>
+
+<!-- view1: simple view -->
+  <view name="view1" x="10" y="20" width="50" height="30" clip="true" bgcolor="yellow" fgcolor="blue" opacity="0.5">
+  </view>
+
+<!-- view2: simple, nested views -->
+  <view name="view2" bgcolor="yellow" resource="1x1.gif">
+    <view name="v1" bgcolor="green" width="10" height="30"/>
+    <view name="v2" bgcolor="red" x="90" y="100" width="10" height="20"/>
+  </view>
+
+<!-- view3: stretch -->
+  <view name="view3" width="50" height="80" bgcolor="yellow">
+    <view name="v1" bgcolor="green" width="10" height="20" resource="1x1.gif" stretches="both"/>
+  </view>
+
+<!-- view4: rotation -->
+  <view name="view4" bgcolor="yellow">
+    <view name="v1" bgcolor="green" width="20" height="10" rotation="0"/>
+    <view name="v2" bgcolor="green" width="20" height="10" rotation="45"/>
+    <view name="v3" bgcolor="green" width="20" height="10" rotation="90"/>
+    <simpleboundslayout name="layout" axis="x"/>
+  </view>
+
+<!-- view5: z-order -->
+  <view name="view5" bgcolor="yellow">
+    <view name="v1" bgcolor="green" x="0" y="0" width="20" height="10"/>
+    <view name="v2" bgcolor="red" x="5" y="5" width="20" height="10"/>
+    <view name="v3" bgcolor="blue" x="10" y="10" width="20" height="10"/>
+  </view>
+
+<!-- view6: sizing -->
+  <view name="view6" bgcolor="yellow">
+    <view name="v1" bgcolor="green" x="5" y="10" width="35" height="25"/>
+    <view name="v2" bgcolor="blue" width="35" height="25"/>
+  </view>
+
+<!-- view7: constraints -->
+  <view name="view7" bgcolor="yellow">
+    <attribute name="height" value="${width+1}"/>
+    <attribute name="rotation" value="${height+1}"/>
+
+    <view name="v1" bgcolor="green" x="5" y="10" width="35" height="25"/>
+  </view>
+
+<!-- view8: clip -->
+  <view name="view8" bgcolor="yellow" width="20" height="30" clip="true">
+    <view name="v1" bgcolor="green" x="5" y="10" width="35" height="25"/>
+  </view>
+
+<!-- view9: align -->
+  <view name="view9" bgcolor="yellow" width="20" height="30">
+    <view name="v1" bgcolor="green" width="10" height="15"/>
+  </view>
+
+<!-- view10: resource -->
+  <view name="view10" bgcolor="yellow">
+    <method event="onload"> 
+      var expwidth  = view10resources[view10index][0];
+      var expheight = view10resources[view10index][1];
+
+      LzTestManager.assertEquals (expwidth, view10.width, "view10.onload width failure");
+      LzTestManager.assertEquals (expheight, view10.height, "view10.onload height failure");
+      LzTestManager.assertEquals (expwidth, view10.resourcewidth, "view10.onload resourcewidth failure");
+      LzTestManager.assertEquals (expheight, view10.resourceheight, "view10.onload resourceheight failure");
+
+      if (view10index &lt; view10resources.length-1) {
+        // Setup the next resource to load. It gets setup in an idle loop
+        // to avoid a race condition
+        view10index = view10index + 1;
+        view10changed = true;
+      }
+    </method>
+
+    // Idle handler that will setup the next resource to load
+    <handler name="onidle" reference="LzIdle">
+      if (view10changed) {
+        view10changed = false;
+        view10.setSource (view10resources[view10index][2]);        
+      }
+    </handler>
+  </view>
+
+
+<!-- viewN: rotations, around the center -->
+<!-- leave for later
+  <view name="view5" bgcolor="yellow">
+    <view name="v1" bgcolor="green" width="20" height="10" xoffset="10" yoffset="5" rotation="45"/>
+    <simpleboundslayout name="layout" axis="x"/>
+  </view>
+-->
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("LzView Test Suite"); 
+
+
+//
+// Helper functions
+//
+
+// z-order (for test5)
+function ztest(msg,exp,act)
+{
+  LzTestManager.assertEquals (exp.length, act.length, msg + ": ztest length");
+  for (var i=0; i<exp.length; i++) {
+    LzTestManager.assertEquals (exp[i].name, act[i].name, msg + ": index " + i);
+  }
+}
+
+// Inspect [x,y,width,height] and compare with the specified view
+function loctest(msg,view,exp)
+{
+  LzTestManager.assertEquals (exp[0], view.x, msg + ": x failure");  
+  LzTestManager.assertEquals (exp[1], view.y, msg + ": y failure");  
+  LzTestManager.assertEquals (exp[2], view.width, msg + ": width failure");  
+  LzTestManager.assertEquals (exp[3], view.height, msg + ": height failure");  
+}
+
+
+// Wait for a specified condition
+function waitfordel()
+{
+
+}
+
+function waitfor(condition)
+{
+  var del = new LzDelegate (null,  condition, 'waitfordel');
+  LzTimer.addTimer (del, 100);  
+}
+
+
+// 
+// LzView
+// 
+
+// test1:  simple. Also tests some getters and setters
+suite.test1 = function() {
+  // This will report an error until lps 3.3.1 is merged to legals
+  loctest("view1", view1, [0,20,50,30]);
+  LzTestManager.assertEquals (0xffff00, view1.bgcolor, "view1.bgcolor failure");
+  LzTestManager.assertEquals (0x0000ff, view1.fgcolor, "view1.fgcolor failure");
+  LzTestManager.assertEquals (0.5, view1.opacity, "view1.opacity failure");  
+  LzTestManager.assertEquals (true, view1.hassetwidth, "view1.hassetwidth failure");  
+  LzTestManager.assertEquals (true, view1.hassetheight, "view1.hassetheight failure");  
+
+
+  // setAttributes
+  view1.setAttribute ('x', 10); // Won't stick since layout controls x
+  view1.setAttribute ('y', 30);
+  view1.setAttribute ('width', 60);
+  view1.setAttribute ('height', 40);
+  view1.setAttribute ('bgcolor', 0xff0000);
+  view1.setAttribute ('fgcolor', 0xffff00);
+
+  // This will report an error until lps 3.3.1 is merged to legals
+  loctest("view1 (2)", view1, [0,30,60,40]);
+  LzTestManager.assertEquals (0xff0000, view1.bgcolor, "view1.bgcolor failure (2)");
+  LzTestManager.assertEquals (0xffff00, view1.fgcolor, "view1.fgcolor failure (2)");
+
+
+  // Direct calls
+  view1.setX (20);
+  view1.setY (40);
+  view1.setWidth (70);
+  view1.setHeight (50);
+  view1.setBGColor (0x00ff00);
+  view1.setColor (0x0000ff);
+
+
+  // This will report an error until lps 3.3.1 is merged to legals
+  loctest("view1 (3)", view1, [0,40,70,50]);
+  LzTestManager.assertEquals (0x00ff00, view1.bgcolor, "view1.bgcolor failure (3)");
+  LzTestManager.assertEquals (0x0000ff, view1.fgcolor, "view1.fgcolor failure (3)");
+}
+
+// test2: simple, nested views
+suite.test2 = function() {
+  loctest("view2", view2, [75,0,100,120]);
+  loctest("view2.v1", view2.v1, [0,0,10,30]);
+  loctest("view2.v2", view2.v2, [90,100,10,20]);
+
+  LzTestManager.assertEquals (false, view2.hassetwidth, "view2.hassetwidth failure");  
+  LzTestManager.assertEquals (false, view2.hassetheight, "view2.hassetheight failure");  
+
+  // There is an image associated with this view
+  LzTestManager.assertEquals (0,  view2.getAttribute('frame'), 'view2.frame failure');
+  LzTestManager.assertEquals (1,  view2.getAttribute('totalframes'), 'view2.totalframes failure');
+
+  // Turn off the v1
+  view2.v1.setVisible (false);
+
+  loctest("view2 (2)", view2, [75,0,100,120]);
+  loctest("view2.v2 (2)", view2.v2, [90,100,10,20]);
+
+  // Now do v2 (all that is left is the embedded image)
+  view2.v2.setVisible (false);
+  loctest("view2 (3)", view2, [75,0,1,1]);
+
+  // Turn on v1
+  view2.v1.setVisible (true);
+  loctest("view2 (4)", view2, [75,0,10,30]);
+  loctest("view2.v1 (2)", view2.v1, [0,0,10,30]);
+}
+
+// test3: stretch
+suite.test3 = function() {
+  loctest("view3", view3, [90,0,50,80]);
+  LzTestManager.assertEquals (0, view3.unstretchedwidth, "view3.unstretchedwidth failure");
+  LzTestManager.assertEquals (0, view3.unstretchedheight, "view3.unstretchedheight failure");
+
+  LzTestManager.assertEquals (1, view3.v1.resourcewidth, "view3.v1.resourcewidth failure");
+  LzTestManager.assertEquals (1, view3.v1.resourceheight, "view3.v1.resourceheight failure");
+
+  loctest("view3.v1", view3.v1, [0,0,10,20]);
+  LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure");
+  LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure");
+
+  view3.v1.stretchResource ('x');
+  loctest("view3.v1 (2)", view3.v1, [0,0,10,20]);
+  LzTestManager.assertEquals (1, view3.v1.unstretchedwidth, "view3.v1.unstretchedwidth failure (2)");
+  LzTestManager.assertEquals (0, view3.v1.unstretchedheight, "(BUG: LPP-2161) view3.v1.unstretchedheight failure (2)");
+
+  view3.v1.stretchResource ('y');
+  loctest("view3.v1 (3)", view3.v1, [0,0,10,20]);
+  LzTestManager.assertEquals (0, view3.v1.unstretchedwidth, "(BUG: LPP-2161) view3.v1.unstretchedwidth failure (3)");
+  LzTestManager.assertEquals (1, view3.v1.unstretchedheight, "view3.v1.unstretchedheight failure (3)");
+}
+
+// test4: Rotation and bounding box
+suite.test4 = function() {
+  loctest("view4.v1", view4.v1, [0,0,20,10]);
+
+  LzTestManager.assertEquals (0.0, view4.v1.rotation, "view4.v1.rotation failure");  
+  LzTestManager.assertEquals (45.0, view4.v2.rotation, "view4.v2.rotation failure");  
+  LzTestManager.assertEquals (90.0, view4.v3.rotation, "view4.v3.rotation failure");  
+
+  // The width and height can be computed exactly
+  var expw = 20 + 10 + 30.0 / Math.sqrt(2.0);
+  var exph = 30.0 / Math.sqrt(2.0);
+  LzTestManager.assertWithin (expw, view4.width, 1.0e-10, "view4.width failure");
+  LzTestManager.assertWithin (exph, view4.height, 1.0e-10, "view4.width failure");
+}
+
+
+suite.test5 = function() {
+  ztest ("ztest", view5.getDepthList(), [view5.v1, view5.v2, view5.v3]);
+
+  view5.v2.bringToFront();
+  ztest ("ztest", [view5.v1, view5.v3, view5.v2], view5.getDepthList());
+ 
+  view5.v2.sendToBack();
+  ztest ("ztest", [view5.v2, view5.v1, view5.v3], view5.getDepthList());
+
+  view5.v3.sendBehind(view5.v1);
+  ztest ("ztest", [view5.v2, view5.v3, view5.v1], view5.getDepthList());
+
+  view5.v2.sendInFrontOf(view5.v3);
+  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+
+  view5.v3.sendBehind(view5.v3);  // nop
+  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+
+  view5.v1.sendInFrontOf(view5.v1); // nop
+  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+
+  view5.v3.sendToBack(); // nop
+  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+
+  view5.v1.bringToFront(); // nop
+  ztest ("ztest", [view5.v3, view5.v2, view5.v1], view5.getDepthList());
+}
+
+// sizing
+suite.test6 = function() {
+  LzTestManager.assertEquals (view6.measureWidth(), view6.width, "view6.width failure");  
+  LzTestManager.assertEquals (view6.measureHeight(), view6.height, "view6.height failure");  
+
+  LzTestManager.assertEquals (Math.max(view6.v1.x+view6.v1.width, view6.v2.x+view6.v1.height), view6.width, "view6.width failure (2)");  
+  LzTestManager.assertEquals (Math.max(view6.v1.y+view6.v1.height, view6.v2.y+view6.v1.height), view6.height, "view6.height failure (2)");  
+}
+
+// constraints
+suite.test7 = function() {
+  LzTestManager.assertEquals (view7.v1.x + view7.v1.width, view7.width, "view7.width failure");  
+  LzTestManager.assertEquals (view7.width+1, view7.height, "view7.height failure");  
+  LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure");  
+
+  // Alter the subview width
+  view7.v1.setWidth (40);
+  LzTestManager.assertEquals (view7.v1.x + view7.v1.width, view7.width, "view7.width failure (2)");
+  LzTestManager.assertEquals (view7.width+1, view7.height, "view7.height failure (2)");
+  LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure (2)");
+
+  // Alter the view width
+  view7.setWidth (42);
+  LzTestManager.assertEquals (42, view7.width, "view7.width failure (3)");
+  LzTestManager.assertEquals (view7.width+1, view7.height, "view7.height failure (3)");
+  LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure (3)");
+
+  // Change the constraint
+  var c1 = function () {
+    this.setAttribute('height', this.width+2);
+  }
+  var ref = [view7, 'height'];
+  view7.applyConstraint('height', c1, ref);
+  LzTestManager.assertEquals (42, view7.width, "view7.width failure (3)");
+  LzTestManager.assertEquals (view7.width+2, view7.height, "view7.height failure (3)");
+  LzTestManager.assertEquals (view7.height+1, view7.rotation, "view7.rotation failure (3)");
+
+}
+
+// clip (not much can be tested)
+suite.test8 = function() {
+  LzTestManager.assertEquals (20, view8.width, "view8.width failure");  
+  LzTestManager.assertEquals (30, view8.height, "view8.height failure");  
+
+  LzTestManager.assertEquals (view8.v1.x + view8.v1.width, view8.measureWidth(), "view8.measureWidth() failure");  
+  LzTestManager.assertEquals (view8.v1.y + view8.v1.height, view8.measureHeight(), "view8.measureHeight() failure");  
+}
+
+// align
+suite.test9 = function() {
+  loctest ('view9', view9.v1, [0,0,10,15]);
+
+  view9.v1.setAlign ('center');
+  loctest ('view9 (center)', view9.v1, [5,0,10,15]);
+
+  view9.v1.setAlign ('right');
+  loctest ('view9 (right)', view9.v1, [10,0,10,15]);
+
+  view9.v1.setAlign ('left');
+  loctest ('view9 (left)', view9.v1, [0,0,10,15]);
+
+  view9.v1.setValign ('middle');
+  loctest ('view9 (middle)', view9.v1, [0,7.5,10,15]);
+
+  view9.v1.setValign ('bottom');
+  loctest ('view9 (bottom)', view9.v1, [0,15,10,15]);
+
+  view9.v1.setValign ('top');
+  loctest ('view9 (top)', view9.v1, [0,0,10,15]);
+}
+
+// resource. Define the width, height, resources to load
+var view10index = 0;
+var view10changed = false;
+var view10resources=[
+[1, 1, '1x1.gif'],
+[10, 10, '10x10.gif'],
+[7, 7, 'http://www.laszlosystems.com/img/spacer.gif']
+];
+
+suite.test10 = function() {
+  LzTestManager.assertEquals (0, view10.width, "view10.width failure");
+  LzTestManager.assertEquals (0, view10.height, "view10.height failure");
+
+  // Set view10changed to true and the next resource (ie. the first) will be set
+  view10index = 0;
+  view10changed = true;
+}
+
+
+/* Leave for last
+suite.testN = function() {
+  var b = view5.v1.getBounds();
+  Debug.write (b.x + "," + b.y + "  " + b.width + "x" + b.height + " (" + b.xoffset + "," + b.yoffset + ")");
+}
+*/
+
+// Run the tests in order (test1,test2,...)
+suite.addTest(suite.test10);
+suite.addTest(suite.test9);
+suite.addTest(suite.test8);
+suite.addTest(suite.test7);
+suite.addTest(suite.test6);
+suite.addTest(suite.test5);
+suite.addTest(suite.test4);
+suite.addTest(suite.test3);
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+
+
+
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

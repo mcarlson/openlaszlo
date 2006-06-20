@@ -1,0 +1,325 @@
+<!--
+  This unit test is similar to lztest-animator.lzx
+-->
+
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+
+<!--
+  ag1 is a group that contains animators a1 and a2. a1 and a2 have different
+  durations
+-->
+  <view id="view1" bgcolor="red" x="50" y="75" width="50" height="50">
+    <animatorgroup id="ag1" process="simultaneous">
+
+        <!-- n_onstart  = Number of times onstart method called -->
+        <!-- n_onstart  = Number of times onstart method called -->
+        <!-- n_onstop   = Number of times onstop method called -->
+        <!-- n_onrepeat = Number of times onrepeat method called -->
+        <attribute name="n_onstart" value="0"/>
+        <attribute name="n_onstop" value="0"/>
+        <attribute name="n_onrepeat" value="0"/>
+
+        <!-- t_start = time animation started. -->
+        <!-- t_elapsed = total animation time. -->
+        <attribute name="t_start" value="0"/>
+        <attribute name="t_elapsed" value="0"/>
+
+        <method event="onrepeat">
+          n_onrepeat++;
+        </method>
+
+        <method event="onstart" args="v">
+          n_onstart++;
+
+  	  var now = new Date();
+	  t_start = now.getTime();
+        </method>
+
+        <method event="onstop">
+        <![CDATA[
+          n_onstop++;
+
+	  var now = new Date();
+	  t_elapsed = now.getTime() - t_start;
+	  //Debug.write ("elapsed = " + t_elapsed);
+
+	  LzTestManager.assertEquals (1, n_onstart, "ag1 onstart count failure");
+	  LzTestManager.assertEquals (1, n_onstop, "ag1 onstop count failure");
+	  LzTestManager.assertEquals (0, n_onrepeat, "ag1 onrepeat count failure");
+
+	  // Allow 20% variation on animation
+	  var expected = 1000;
+	  LzTestManager.assertWithin (expected, t_elapsed, expected * 0.2, "ag1 Animation too short or too long");
+
+          var errorx = 100 - view1.x;
+	  LzTestManager.assertEquals (100, view1.x, "view1.x final failure error=" + errorx);
+        ]]>
+        </method>
+
+      <animator id="ag1_a1" attribute="x" from="50" to="100" repeat="2" duration="500" start="false">
+
+        <!-- n_onstart  = Number of times onstart method called -->
+        <!-- n_onstop   = Number of times onstop method called -->
+        <!-- n_onrepeat = Number of times onrepeat method called -->
+        <attribute name="n_onstart" value="0"/>
+        <attribute name="n_onstop" value="0"/>
+        <attribute name="n_onrepeat" value="0"/>
+
+        <!-- t_start = time animation started. -->
+        <!-- t_elapsed = total animation time. -->
+        <attribute name="t_start" value="0"/>
+        <attribute name="t_elapsed" value="0"/>
+
+        <method event="onrepeat">
+          n_onrepeat++;
+        </method>
+
+        <method event="onstart">
+          n_onstart++;
+
+  	  var now = new Date();
+	  t_start = now.getTime();
+        </method>
+
+        <method event="onstop">
+        <![CDATA[
+          n_onstop++;
+
+	  var now = new Date();
+	  t_elapsed = now.getTime() - t_start;
+	  // Debug.write ("elapsed = " + t_elapsed);
+
+	  LzTestManager.assertEquals (2, n_onstart, "ag1_a1 onstart count failure");
+	  LzTestManager.assertEquals (1, n_onstop, "ag1_a1 onstop count failure");
+	  LzTestManager.assertEquals (1, n_onrepeat, "ag1_a1 onrelease count failure");
+
+	  // Allow 20% variation on animation
+	  LzTestManager.assertWithin (ag1_a1.duration, t_elapsed, ag1_a1.duration * 0.2, "ag1 Animation too short or too long");
+
+          var errorx = 100 - view1.x;
+	  LzTestManager.assertEquals (100, view1.x, "view1.x final failure error=" + errorx);
+        ]]>
+        </method>
+      </animator>
+
+
+      <animator id="ag1_a2" attribute="y" from="75" to="175" duration="1000" start="false">
+
+        <!-- n_onstart  = Number of times onstart method called -->
+        <!-- n_onstop   = Number of times onstop method called -->
+        <!-- n_onrepeat = Number of times onrepeat method called -->
+        <attribute name="n_onstart" value="0"/>
+        <attribute name="n_onstop" value="0"/>
+        <attribute name="n_onrepeat" value="0"/>
+
+        <!-- t_start = time animation started. -->
+        <!-- t_elapsed = total animation time. -->
+        <attribute name="t_start" value="0"/>
+        <attribute name="t_elapsed" value="0"/>
+
+        <method event="onrepeat">
+          n_onrepeat++;
+        </method>
+
+        <method event="onstart">
+          n_onstart++;
+
+  	  var now = new Date();
+	  t_start = now.getTime();
+        </method>
+
+        <method event="onstop">
+        <![CDATA[
+          n_onstop++;
+
+	  var now = new Date();
+	  t_elapsed = now.getTime() - t_start;
+	  //Debug.write ("elapsed = " + t_elapsed);
+
+	  LzTestManager.assertEquals (1, n_onstart, "ag1_a2 onstart count failure");
+	  LzTestManager.assertEquals (1, n_onstop, "ag1_a2 onstop count failure");
+	  LzTestManager.assertEquals (0, n_onrepeat, "ag1_a2 onrelease count failure");
+
+	  // Allow 20% variation on animation
+	  LzTestManager.assertWithin (this.duration, t_elapsed, this.duration * 0.2, "ag1_a2 Animation too short or too long");
+
+          var errory = 175 - view1.y;
+	  LzTestManager.assertEquals (175, view1.y, "view1.y final failure error=" + errory);
+        ]]>
+        </method>
+      </animator>
+
+    </animatorgroup>
+
+  </view>
+
+
+
+
+<!--
+  ag2 is a group that contains animators a1 and a2 in sequential mode
+  durations
+-->
+  <view id="view2" bgcolor="red" x="50" y="75" width="50" height="50">
+    <animatorgroup id="ag2" process="sequential">
+
+      <!-- n_onstart  = Number of times onstart method called -->
+      <!-- n_onstop   = Number of times onstop method called -->
+      <!-- n_onrepeat = Number of times onrepeat method called -->
+      <attribute name="n_onstart" value="0"/>
+      <attribute name="n_onstop" value="0"/>
+
+      <!-- t_start = time animation started. -->
+      <!-- t_elapsed = total animation time. -->
+      <attribute name="t_start" value="0"/>
+      <attribute name="t_elapsed" value="0"/>
+
+      <method event="onstart">
+        n_onstart++;
+
+  	var now = new Date();
+	t_start = now.getTime();
+      </method>
+
+      <method event="onstop">
+      <![CDATA[
+        n_onstop++;
+
+	var now = new Date();
+	t_elapsed = now.getTime() - t_start;
+	// Debug.write ("elapsed = " + t_elapsed);
+
+        //Debug.write ("ag finished running");
+	LzTestManager.assertEquals (1, n_onstart, "ag2 onstart count failure");
+	LzTestManager.assertEquals (1, n_onstop, "ag2 onstop count failure");
+
+	// Allow 20% variation on animation. Hard-wired duration since this
+	// includes the repeat. This seems to fail for me; probably because of
+	// the overhead of running/failing unit test checks that run by the
+	// onstop event.
+	var expected = 2000;
+	LzTestManager.assertWithin (expected, t_elapsed, expected*.2, "ag2 Animation too short or too long");
+
+	// The following test sometimes failed; especially if you rerun the
+	// test by reloading the browser page. The error is small (1e-14).
+        var errorx = 100 - view1.x;
+        var errory = 175 - view1.y;
+	LzTestManager.assertEquals (100, view2.x, "view2.x final failure error=" + errorx);
+	LzTestManager.assertEquals (175, view2.y, "view2.y final failure error=" + errory);
+      ]]>
+      </method>
+
+
+      <animator id="ag2_a1" attribute="x" from="50" to="100" repeat="2" duration="500" start="false"/>
+
+      <animator id="ag2_a2" attribute="y" from="75" to="175" duration="1000" start="false"/>
+
+    </animatorgroup>
+
+  </view>
+
+
+
+<!--
+  ag3 is a group that contains animators a1 and a2. The animators get their
+  properties from the animator group
+-->
+  <view id="view3" bgcolor="red" x="50" y="75" width="50" height="50">
+    <animatorgroup id="ag3" process="simultaneous" attribute="x" from="50" to="200" repeat="2" duration="500" start="false">
+
+      <method event="onstop">
+      <![CDATA[
+	// The following test sometimes failed; especially if you rerun the
+	// test by reloading the browser page. The error is small (1e-14).
+        var errorx = 100 - view1.x;
+        var errory = 175 - view1.y;
+	LzTestManager.assertEquals (200, view3.x, "view3.x final failure");
+	LzTestManager.assertEquals (250, view3.y, "view3.y final failure");
+
+      ]]>
+      </method>
+
+      <animator id="ag3_a1">
+        <method name="init">
+          super.init(); 
+
+          LzTestManager.assertEquals ("x", ag3_a1.attribute, "ag3_a1 attribute failure");
+	  LzTestManager.assertEquals (500, ag3_a1.duration, "ag3_a1 duration failure");
+	  LzTestManager.assertEquals (50, ag3_a1.from, "ag3_a1 from failure");
+	  //*  LzTestManager.assertEquals (0, ag3_a1.repeat, "ag3_a1 repeat failure");
+	  //*  LzTestManager.assertTrue (!ag3_a1.started, "ag3_a1 started failure");
+	  LzTestManager.assertEquals ("view1", ag3_a1.target.id, "ag3_a1 target failure");
+
+	  // Note: 'to' isn't available. the 'to' value is stored in 'origto'
+	  LzTestManager.assertEquals (100, Number(ag3_a1.getAttribute ('origto')), "ag3_a1 to failure");
+
+        </method>
+      </animator>
+
+      <animator id="ag3_a2" attribute="y" to="250">
+        <method name="init">
+          super.init(); 
+
+          LzTestManager.assertEquals ("y", ag3_a2.attribute, "ag3_a2 attribute failure");
+	  LzTestManager.assertEquals (500, ag3_a2.duration, "ag3_a2 duration failure");
+	  LzTestManager.assertEquals (50, ag3_a2.from, "ag3_a2 from failure");
+	  //*  LzTestManager.assertEquals (0, ag3_a2.repeat, "ag3_a2 repeat failure");
+	  //*  LzTestManager.assertTrue (!ag3_a2.started, "ag3_a2 started failure");
+	  LzTestManager.assertEquals ("view1", ag3_a2.target.id, "ag3_a2 target failure");
+
+	  // Note: 'to' isn't available. the 'to' value is stored in 'origto'
+	  LzTestManager.assertEquals (250, Number(ag3_a2.getAttribute ('origto')), "ag3_a2 to failure");
+
+        </method>
+      </animator>
+
+    </animatorgroup>
+
+  </view>
+
+
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("LzAnimatorGroup Test Suite"); 
+
+// test1:  Start the animation. Unit test functions are built into the
+//         event handlers. They look at the actual execution time as well
+//         as the final value.
+//         Any errors will be reported after the test ends
+suite.test1 = function() {
+  LzTestManager.assertEquals ("simultaneous", ag1.process, "process failure");
+  ag1.doStart();
+}
+
+// test2:  Start the animation using sequential animators.
+//         Any errors will be reported after the test ends
+suite.test2 = function() {
+  LzTestManager.assertEquals ("sequential", ag2.process, "process failure");
+  ag2.doStart();
+}
+
+
+// test3:  Test that animator group setting trickle down to the animators
+suite.test3 = function() {
+  ag3.doStart();
+}
+
+// Run the tests in order (test1,test2,...)
+suite.addTest(suite.test3);
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

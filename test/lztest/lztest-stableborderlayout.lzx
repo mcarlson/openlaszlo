@@ -1,0 +1,131 @@
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+<!-- stableborderlayout. x layout -->
+  <view name="view1" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <stableborderlayout name="sl1" axis="x"/>
+    <view name="v1" bgcolor="blue" width="50" height="30"/>
+    <view name="v2" bgcolor="red" width="50" height="30"/>
+    <view name="v3" bgcolor="blue" width="50" height="30"/>
+    <view name="v4" bgcolor="green" width="50" height="30"/>
+  </view>
+
+<!-- stableborderlayout. oversized middle view -->
+  <view name="view2" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <stableborderlayout name="sl1" axis="x"/>
+    <view name="v1" bgcolor="blue" width="50" height="30"/>
+    <view name="v2" bgcolor="red" height="30"/>
+    <view name="v3" bgcolor="blue" width="250" height="30"/>
+  </view>
+
+<!-- X layout, with ability to toggle layout axis -->
+  <view name="view3" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <attribute name="n_onaxis" value="0"/>
+    <method name="toggleAxis">
+      sl1.setAttribute ('axis', (sl1.axis == "x") ? "y" : "x");
+<!-- The update call should be inside the object -->
+      sl1.update();
+    </method>
+    <stableborderlayout id="sl1" axis="x">
+      <method event="onaxis" args="axis">
+        n_onaxis++;
+      </method>
+    </stableborderlayout>
+    <view name="v1" bgcolor="blue" height="30" width="50"/>
+    <view name="v2" bgcolor="red" height="30" width="50"/>
+    <view name="v3" bgcolor="blue" height="30" width="50"/>
+  </view>
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("stableborderlayout Test Suite"); 
+
+
+// 
+// stableborderlayout
+// 
+
+// test1:  stableborderlayout
+suite.test1 = function() {
+  LzTestManager.assertEquals (10, view1.x, "view1.x failure");
+  LzTestManager.assertEquals (10, view1.y, "view1.y failure");_
+  LzTestManager.assertEquals (0, view1.v1.x, "view1.v1.x failure");
+  LzTestManager.assertEquals (0, view1.v1.y, "view1.v1.y failure");
+  LzTestManager.assertEquals (50, view1.v1.width, "view1.v1.width failure");
+  LzTestManager.assertEquals (50, view1.v2.x, "view1.v2.x failure");
+  LzTestManager.assertEquals (0, view1.v2.y, "view1.v2.y failure");
+  LzTestManager.assertEquals (110, view1.v2.width, "view1.v2.width failure");
+  LzTestManager.assertEquals (160, view1.v3.x, "view1.v3.x failure");
+  LzTestManager.assertEquals (50, view1.v3.width, "view1.v3.width failure");
+  LzTestManager.assertEquals (0, view1.v3.y, "view1.v3.y failure");
+  LzTestManager.assertEquals (0, view1.v4.x, "view1.v4.x failure");
+  LzTestManager.assertEquals (0, view1.v4.y, "view1.v4.y failure");
+}
+
+// test2:  stableborderlayout
+suite.test2 = function() {
+  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
+  LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
+  LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
+  LzTestManager.assertEquals (50, view2.v1.width, "view2.v1.width failure");
+  LzTestManager.assertEquals (50, view2.v2.x, "view2.v2.x failure");
+  LzTestManager.assertEquals (0, view2.v2.y, "view2.v2.y failure");
+// This reports a negative width. I suspect that is true with all of Laszlo
+//  LzTestManager.assertEquals (0, view2.v2.width, "view2.v2.width failure");
+  LzTestManager.assertEquals (-40, view2.v3.x, "view2.v3.x failure");
+  LzTestManager.assertEquals (250, view2.v3.width, "view2.v3.width failure");
+  LzTestManager.assertEquals (0, view2.v3.y, "view2.v3.y failure");
+}
+
+suite.test3 = function() {
+  LzTestManager.assertEquals (10, view3.x, "view3.x failure");
+  LzTestManager.assertEquals (10, view3.y, "view3.y failure");_
+  LzTestManager.assertEquals (0, view3.v1.x, "view3.v1.x failure");
+  LzTestManager.assertEquals (0, view3.v1.y, "view3.v1.y failure");
+  LzTestManager.assertEquals (50, view3.v1.width, "view3.v1.width failure");
+  LzTestManager.assertEquals (50, view3.v2.x, "view3.v2.x failure");
+  LzTestManager.assertEquals (0, view3.v2.y, "view3.v2.y failure");
+  LzTestManager.assertEquals (110, view3.v2.width, "view3.v2.width failure");
+  LzTestManager.assertEquals (160, view3.v3.x, "view3.v3.x failure");
+  LzTestManager.assertEquals (50, view3.v3.width, "view3.v3.width failure");
+  LzTestManager.assertEquals (0, view3.v3.y, "view3.v3.y failure");
+
+
+  // Toggle the axis
+  view3.toggleAxis ();
+
+  // NOTE: The old axis is not returned to it's original location. It stays
+  // where it is. The user must fix it in the onaxis method.
+
+// No onaxis event is sent from this object
+//  Debug.write ("onaxis not called automatically on lps-legals");
+//  LzTestManager.assertEquals (1, view3.n_onaxis, "view3.n_onaxis failure");
+
+  LzTestManager.assertEquals (10, view3.x, "view3.x failure");
+  LzTestManager.assertEquals (10, view3.y, "view3.y failure");_
+  LzTestManager.assertEquals (0, view3.v1.x, "view3.v1.x failure");
+  LzTestManager.assertEquals (0, view3.v1.y, "view3.v1.y failure");
+  LzTestManager.assertEquals (50, view3.v2.x, "view3.v2.x failure");
+  LzTestManager.assertEquals (30, view3.v2.y, "view3.v2.y failure");
+  LzTestManager.assertEquals (160, view3.v3.x, "view3.v3.x failure");
+  LzTestManager.assertEquals (180, view3.v3.y, "view3.v3.y failure");
+}
+
+
+// Run the tests in order (test1,test2,...)
+suite.addTest(suite.test3);
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

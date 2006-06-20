@@ -1,0 +1,428 @@
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+<!-- No layout -->
+  <view name="view1" bgcolor="yellow" width="210" height="210" x="10" y="10">
+    <view name="v1" bgcolor="red" width="50" height="50"/>
+    <view name="v2" bgcolor="red" width="50" height="50"/>
+    <view name="v3" bgcolor="red" width="50" height="50"/>
+    <view name="v4" bgcolor="red" width="50" height="50"/>
+  </view>
+
+<!-- Simple x layout -->
+  <view name="view2" bgcolor="yellow" width="210" height="210" x="10" y="10">
+    <simplelayout name="sl1" axis="x"/>
+    <view name="v1" bgcolor="red" width="50" height="50"/>
+    <view name="v2" bgcolor="red" width="50" height="50"/>
+    <view name="v3" bgcolor="red" width="50" height="50"/>
+    <view name="v4" bgcolor="red" width="50" height="50"/>
+  </view>
+
+<!-- Simple y layout -->
+  <view name="view3" bgcolor="yellow" width="210" height="210" x="10" y="10">
+    <simplelayout name="sl1" axis="y"/>
+    <view name="v1" bgcolor="red" width="50" height="50"/>
+    <view name="v2" bgcolor="red" width="50" height="50"/>
+    <view name="v3" bgcolor="red" width="50" height="50"/>
+    <view name="v4" bgcolor="red" width="50" height="50"/>
+  </view>
+
+<!-- Simple x layout, with spacing -->
+  <view name="view4" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <simplelayout name="sl1" axis="x" spacing="5"/>
+    <view name="v1" bgcolor="red" width="50" height="50"/>
+    <view name="v2" bgcolor="red" width="50" height="50"/>
+    <view name="v3" bgcolor="red" width="50" height="50"/>
+    <view name="v4" bgcolor="red" width="50" height="50"/>
+  </view>
+
+<!-- X layout, with ability to toggle layout axis -->
+  <view name="view5" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <attribute name="n_onaxis" value="0"/>
+    <method name="toggleAxis">
+      sl5.setAttribute ('axis', (sl5.axis == "x") ? "y" : "x");
+    </method>
+    <simplelayout id="sl5" axis="x" spacing="10">
+      <method event="onaxis" args="axis">
+        n_onaxis++;
+      </method>
+    </simplelayout>
+    <view name="v1" bgcolor="blue" height="30" width="50"/>
+    <view name="v2" bgcolor="blue" height="30" width="50"/>
+    <view name="v3" bgcolor="blue" height="30" width="50"/>
+    <view name="v4" bgcolor="blue" height="30" width="50"/>
+  </view>
+
+<!-- Same as view4 but used for removal test -->
+  <view name="view6" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <simplelayout name="sl1" axis="x" spacing="5"/>
+    <view name="v1" bgcolor="red" width="50" height="50"/>
+    <view name="v2" bgcolor="red" width="50" height="50"/>
+    <view name="v3" bgcolor="red" width="50" height="50"/>
+    <view name="v4" bgcolor="red" width="50" height="50"/>
+  </view>
+
+<!-- Similar to view5 but used for testing other simplelayout -->
+  <view name="view7" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <simplelayout name="sl1" axis="x" spacing="10"/>
+    <view name="v1" bgcolor="red" width="50" height="30"/>
+    <view name="v2" bgcolor="red" width="50" height="30"/>
+    <view name="v3" bgcolor="red" width="50" height="30"/>
+    <view name="v4" bgcolor="red" width="50" height="30"/>
+  </view>
+
+<!-- Using 2 simplelayout -->
+  <view name="view8" bgcolor="yellow" width="210" height="210"  x="10" y="10" clip="true">
+    <simplelayout name="sl1" axis="x" spacing="10"/>
+    <simplelayout name="sl2" axis="y" spacing="20"/>
+    <view name="v1" bgcolor="red" width="50" height="30"/>
+    <view name="v2" bgcolor="red" width="50" height="30"/>
+    <view name="v3" bgcolor="red" width="50" height="30"/>
+    <view name="v4" bgcolor="red" width="50" height="30"/>
+  </view>
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("LaszloLayout/simplelayout Test Suite"); 
+
+
+// 
+// LzLayout and simplelayout tests
+// 
+
+
+// test1:  Test setup with no layouts
+suite.test1 = function() {
+  LzTestManager.assertEquals (10, view1.x, "view1.x failure");
+  LzTestManager.assertEquals (10, view1.y, "view1.y failure");_
+  LzTestManager.assertEquals (0, view1.v1.x, "view1.v1.x failure");
+  LzTestManager.assertEquals (0, view1.v1.y, "view1.v1.y failure");
+  LzTestManager.assertEquals (0, view1.v2.x, "view1.v2.x failure");
+  LzTestManager.assertEquals (0, view1.v2.y, "view1.v2.y failure");
+  LzTestManager.assertEquals (0, view1.v3.x, "view1.v3.x failure");
+  LzTestManager.assertEquals (0, view1.v3.y, "view1.v3.y failure");
+  LzTestManager.assertEquals (0, view1.v4.x, "view1.v4.x failure");
+  LzTestManager.assertEquals (0, view1.v4.y, "view1.v4.y failure");
+
+  // Verify subviews order
+  var expected = ['v1', 'v2', 'v3', 'v4'];
+  var views = view1.subviews;
+  LzTestManager.assertEquals (4, views.length, "views.length");
+  for (var i=0; i<views.length; i++) {
+    LzTestManager.assertEquals (expected[i], views[i].name, "views[" + i + "].name failure");    
+  }
+}
+
+// test2:  simple layout x-axis
+suite.test2 = function() {
+  LzTestManager.assertEquals (10, view2.x, "view2.x failure");
+  LzTestManager.assertEquals (10, view2.y, "view2.y failure");_
+  LzTestManager.assertEquals (0, view2.v1.x, "view2.v1.x failure");
+  LzTestManager.assertEquals (0, view2.v1.y, "view2.v1.y failure");
+  LzTestManager.assertEquals (50, view2.v2.x, "view2.v2.x failure");
+  LzTestManager.assertEquals (0, view2.v2.y, "view2.v2.y failure");
+  LzTestManager.assertEquals (100, view2.v3.x, "view2.v3.x failure");
+  LzTestManager.assertEquals (0, view2.v3.y, "view2.v3.y failure");
+  LzTestManager.assertEquals (150, view2.v4.x, "view2.v4.x failure");
+  LzTestManager.assertEquals (0, view2.v4.y, "view2.v4.y failure");
+
+  // Verify subviews order
+  var expected = ['v1', 'v2', 'v3', 'v4'];
+  var views = view2.subviews;
+  LzTestManager.assertEquals (4, views.length, "views.length");
+  for (var i=0; i<views.length; i++) {
+    LzTestManager.assertEquals (expected[i], views[i].name, "views[" + i + "].name failure");    
+  }
+}
+
+// test3:  simple layout y-axis
+suite.test3 = function() {
+  LzTestManager.assertEquals (10, view3.x, "view3.x failure");
+  LzTestManager.assertEquals (10, view3.y, "view3.y failure");_
+  LzTestManager.assertEquals (0, view3.v1.x, "view3.v1.x failure");
+  LzTestManager.assertEquals (0, view3.v1.y, "view3.v1.y failure");
+  LzTestManager.assertEquals (0, view3.v2.x, "view3.v2.x failure");
+  LzTestManager.assertEquals (50, view3.v2.y, "view3.v2.y failure");
+  LzTestManager.assertEquals (0, view3.v3.x, "view3.v3.x failure");
+  LzTestManager.assertEquals (100, view3.v3.y, "view3.v3.y failure");
+  LzTestManager.assertEquals (0, view3.v4.x, "view3.v4.x failure");
+  LzTestManager.assertEquals (150, view3.v4.y, "view3.v4.y failure");
+
+  // Verify subviews order
+  var expected = ['v1', 'v2', 'v3', 'v4'];
+  var views = view3.subviews;
+  LzTestManager.assertEquals (4, views.length, "views.length");
+  for (var i=0; i<views.length; i++) {
+    LzTestManager.assertEquals (expected[i], views[i].name, "views[" + i + "].name failure");    
+  }
+}
+
+// test4:  simple layout x-axis, with spacing
+suite.test4 = function() {
+  LzTestManager.assertEquals (10, view4.x, "view4.x failure");
+  LzTestManager.assertEquals (10, view4.y, "view4.y failure");_
+  LzTestManager.assertEquals (0, view4.v1.x, "view4.v1.x failure");
+  LzTestManager.assertEquals (0, view4.v1.y, "view4.v1.y failure");
+  LzTestManager.assertEquals (55, view4.v2.x, "view4.v2.x failure");
+  LzTestManager.assertEquals (0, view4.v2.y, "view4.v2.y failure");
+  LzTestManager.assertEquals (110, view4.v3.x, "view4.v3.x failure");
+  LzTestManager.assertEquals (0, view4.v3.y, "view4.v3.y failure");
+  LzTestManager.assertEquals (165, view4.v4.x, "view4.v4.x failure");
+  LzTestManager.assertEquals (0, view4.v4.y, "view4.v4.y failure");
+
+  // Verify subviews order
+  var expected = ['v1', 'v2', 'v3', 'v4'];
+  var views = view4.subviews;
+  LzTestManager.assertEquals (4, views.length, "views.length");
+  for (var i=0; i<views.length; i++) {
+    LzTestManager.assertEquals (expected[i], views[i].name, "views[" + i + "].name failure");    
+  }
+}
+
+
+// test5:  toggle axis
+suite.test5 = function() {
+  LzTestManager.assertEquals (10, view5.x, "view5.x failure");
+  LzTestManager.assertEquals (10, view5.y, "view5.y failure");_
+  LzTestManager.assertEquals (0, view5.v1.x, "view5.v1.x failure");
+  LzTestManager.assertEquals (0, view5.v1.y, "view5.v1.y failure");
+  LzTestManager.assertEquals (60, view5.v2.x, "view5.v2.x failure");
+  LzTestManager.assertEquals (0, view5.v2.y, "view5.v2.y failure");
+  LzTestManager.assertEquals (120, view5.v3.x, "view5.v3.x failure");
+  LzTestManager.assertEquals (0, view5.v3.y, "view5.v3.y failure");
+  LzTestManager.assertEquals (180, view5.v4.x, "view5.v4.x failure");
+  LzTestManager.assertEquals (0, view5.v4.y, "view5.v4.y failure");
+
+  // Toggle the axis
+  view5.toggleAxis ();
+
+  // NOTE: The old axis is not returned to it's original location. It stays
+  // where it is. The user must fix it in the onaxis method.
+
+  Debug.write ("onaxis not called automatically on lps-legals");
+  LzTestManager.assertEquals (1, view5.n_onaxis, "view5.n_onaxis failure");
+
+  LzTestManager.assertEquals (10, view5.x, "view5.x failure");
+  LzTestManager.assertEquals (10, view5.y, "view5.y failure");_
+  LzTestManager.assertEquals (0, view5.v1.x, "view5.v1.x failure");
+  LzTestManager.assertEquals (0, view5.v1.y, "view5.v1.y failure");
+  LzTestManager.assertEquals (60, view5.v2.x, "view5.v2.x failure");
+  LzTestManager.assertEquals (40, view5.v2.y, "view5.v2.y failure");
+  LzTestManager.assertEquals (120, view5.v3.x, "view5.v3.x failure");
+  LzTestManager.assertEquals (80, view5.v3.y, "view5.v3.y failure");
+  LzTestManager.assertEquals (180, view5.v4.x, "view5.v4.x failure");
+  LzTestManager.assertEquals (120, view5.v4.y, "view5.v4.y failure");
+
+  // Verify subviews order
+  var expected = ['v1', 'v2', 'v3', 'v4'];
+  var views = view5.subviews;
+  LzTestManager.assertEquals (4, views.length, "views.length");
+  for (var i=0; i<views.length; i++) {
+    LzTestManager.assertEquals (expected[i], views[i].name, "views[" + i + "].name failure");    
+  }
+}
+
+
+
+// test6:  Test re-ordering and other features in LzLayout
+suite.test6 = function() {
+  // Test view.layouts
+  LzTestManager.assertEquals (1, view4.layouts.length, "view4.layouts.length");
+  LzTestManager.assertEquals (view4.sl1, view4.layouts[0], "view4.layouts[0]");
+
+  // Test ignore
+  LzTestManager.assertEquals (10, view4.x, "view4.x failure");
+  LzTestManager.assertEquals (10, view4.y, "view4.y failure");_
+  LzTestManager.assertEquals (0, view4.v1.x, "view4.v1.x failure");
+  LzTestManager.assertEquals (0, view4.v1.y, "view4.v1.y failure");
+  LzTestManager.assertEquals (55, view4.v2.x, "view4.v2.x failure");
+  LzTestManager.assertEquals (0, view4.v2.y, "view4.v2.y failure");
+  LzTestManager.assertEquals (110, view4.v3.x, "view4.v3.x failure");
+  LzTestManager.assertEquals (0, view4.v3.y, "view4.v3.y failure");
+  LzTestManager.assertEquals (165, view4.v4.x, "view4.v4.x failure");
+  LzTestManager.assertEquals (0, view4.v4.y, "view4.v4.y failure");
+
+  view4.sl1.ignore (view4.v2);
+
+  LzTestManager.assertEquals (0, view4.v1.x, "view4.v1.x failure");
+  LzTestManager.assertEquals (0, view4.v1.y, "view4.v1.y failure");
+  LzTestManager.assertEquals (55, view4.v3.x, "view4.v3.x failure");
+  LzTestManager.assertEquals (0, view4.v3.y, "view4.v3.y failure");
+  LzTestManager.assertEquals (110, view4.v4.x, "view4.v4.x failure");
+  LzTestManager.assertEquals (0, view4.v4.y, "view4.v4.y failure");
+
+  view4.sl1.ignore (view4.v2);
+
+  // Test lock/unlock
+  LzTestManager.assertEquals (false, view4.sl1.locked, "view4.sl1.locked");
+  view4.sl1.lock ();
+  LzTestManager.assertEquals (true, view4.sl1.locked, "view4.sl1.locked");
+  LzTestManager.assertEquals ('x', view4.sl1.axis, "view4.sl1.axis");
+  view4.sl1.setAttribute ('axis', (view4.sl1.axis == "x") ? "y" : "x");
+  LzTestManager.assertEquals ('y', view4.sl1.axis, "view4.sl1.axis");
+
+  LzTestManager.assertEquals (55, view4.v3.x, "view4.v2.x failure");
+  LzTestManager.assertEquals (0, view4.v3.y, "view4.v2.y failure");
+
+  view4.sl1.unlock ();
+
+  LzTestManager.assertEquals (55, view4.v3.x, "view4.v2.x failure");
+  LzTestManager.assertEquals (55, view4.v3.y, "view4.v2.y failure");
+
+  var expected = ['v1', 'v3', 'v4'];
+  for (var i=0; i<view4.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view4.sl1.subviews[i].name, "view4.sl1.subviews[" + i + "].name failure (1)");    
+  }
+
+  // Swap v1 and v4
+  view4.sl1.swapSubviewOrder (view4.v1, view4.v4);
+
+  var expected = ['v4', 'v3', 'v1'];
+  for (var i=0; i<view4.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view4.sl1.subviews[i].name, "view4.sl1.subviews[" + i + "].name failure (2)");    
+  }
+
+  // Place v4 after v3
+  view4.sl1.setLayoutOrder (view4.v3, view4.v4);
+  var expected = ['v3', 'v4', 'v1'];
+  for (var i=0; i<view4.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view4.sl1.subviews[i].name, "view4.sl1.subviews[" + i + "].name failure (3)");    
+  }
+
+  // Place v4 last
+  view4.sl1.setLayoutOrder ('last', view4.v4);
+  view4.sl1.update();
+  var expected = ['v3', 'v1', 'v4'];
+  for (var i=0; i<view4.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view4.sl1.subviews[i].name, "view4.sl1.subviews[" + i + "].name failure (4)");    
+  }
+
+  // Place v1 first
+  view4.sl1.setLayoutOrder ('first', view4.v1);
+  var expected = ['v1', 'v3', 'v4'];
+  for (var i=0; i<view4.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view4.sl1.subviews[i].name, "view4.sl1.subviews[" + i + "].name failure (5)");
+  }
+
+
+  // Test removal
+  LzTestManager.assertEquals (10, view6.x, "view6.x failure");
+  LzTestManager.assertEquals (10, view6.y, "view6.y failure");_
+  LzTestManager.assertEquals (0, view6.v1.x, "view6.v1.x failure");
+  LzTestManager.assertEquals (0, view6.v1.y, "view6.v1.y failure");
+  LzTestManager.assertEquals (55, view6.v2.x, "view6.v2.x failure");
+  LzTestManager.assertEquals (0, view6.v2.y, "view6.v2.y failure");
+  LzTestManager.assertEquals (110, view6.v3.x, "view6.v3.x failure");
+  LzTestManager.assertEquals (0, view6.v3.y, "view6.v3.y failure");
+  LzTestManager.assertEquals (165, view6.v4.x, "view6.v4.x failure");
+  LzTestManager.assertEquals (0, view6.v4.y, "view6.v4.y failure");
+
+  // Remove in the middle
+  view6.sl1.removeSubview (view6.v3);
+
+  var expected = ['v1', 'v2', 'v4'];
+  LzTestManager.assertEquals (3, view6.sl1.subviews.length, "view6.sl1.subviews.length failure (1)");    
+  for (var i=0; i<view6.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view6.sl1.subviews[i].name, "view6.sl1.subviews[" + i + "].name failure (1)");    
+  }
+
+  LzTestManager.assertEquals (0, view6.v1.x, "view6.v1.x failure");
+  LzTestManager.assertEquals (0, view6.v1.y, "view6.v1.y failure");
+  LzTestManager.assertEquals (55, view6.v2.x, "view6.v2.x failure");
+  LzTestManager.assertEquals (0, view6.v2.y, "view6.v2.y failure");
+  LzTestManager.assertEquals (110, view6.v4.x, "view6.v4.x failure");
+  LzTestManager.assertEquals (0, view6.v4.y, "view6.v4.y failure");
+
+  // Remove at the end
+  view6.sl1.removeSubview (view6.v4);
+
+  var expected = ['v1', 'v2'];
+  LzTestManager.assertEquals (2, view6.sl1.subviews.length, "view6.sl1.subviews.length failure (2)");    
+  for (var i=0; i<view6.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view6.sl1.subviews[i].name, "view6.sl1.subviews[" + i + "].name failure (2)");    
+  }
+
+  LzTestManager.assertEquals (0, view6.v1.x, "view6.v1.x failure");
+  LzTestManager.assertEquals (0, view6.v1.y, "view6.v1.y failure");
+  LzTestManager.assertEquals (55, view6.v2.x, "view6.v2.x failure");
+  LzTestManager.assertEquals (0, view6.v2.y, "view6.v2.y failure");
+
+  // Remove from the front
+  view6.sl1.removeSubview (view6.v1);
+
+  var expected = ['v2'];
+  LzTestManager.assertEquals (1, view6.sl1.subviews.length, "view6.sl1.subviews.length failure (3)");    
+  for (var i=0; i<view6.sl1.subviews.length; i++) {
+    LzTestManager.assertEquals (expected[i], view6.sl1.subviews[i].name, "view6.sl1.subviews[" + i + "].name failure (3)");    
+  }
+
+  LzTestManager.assertEquals (0, view6.v2.x, "view6.v2.x failure");
+  LzTestManager.assertEquals (0, view6.v2.y, "view6.v2.y failure");
+}
+
+
+// test7:  Test other simplelayout
+suite.test7 = function() {
+  LzTestManager.assertEquals (10, view7.x, "view7.x failure");
+  LzTestManager.assertEquals (10, view7.y, "view7.y failure");_
+  LzTestManager.assertEquals (0, view7.v1.x, "view7.v1.x failure");
+  LzTestManager.assertEquals (0, view7.v1.y, "view7.v1.y failure");
+  LzTestManager.assertEquals (60, view7.v2.x, "view7.v2.x failure");
+  LzTestManager.assertEquals (0, view7.v2.y, "view7.v2.y failure");
+  LzTestManager.assertEquals (120, view7.v3.x, "view7.v3.x failure");
+  LzTestManager.assertEquals (0, view7.v3.y, "view7.v3.y failure");
+  LzTestManager.assertEquals (180, view7.v4.x, "view7.v4.x failure");
+  LzTestManager.assertEquals (0, view7.v4.y, "view7.v4.y failure");
+
+  LzTestManager.assertEquals (0, view7.sl1.inset, "view7.sl1.inset failure");
+  view7.sl1.setAttribute ('inset', 5);
+  LzTestManager.assertEquals (5, view7.sl1.inset, "view7.sl1.inset failure");
+
+  LzTestManager.assertEquals (10, view7.x, "view7.x failure");
+  LzTestManager.assertEquals (10, view7.y, "view7.y failure");_
+  LzTestManager.assertEquals (5, view7.v1.x, "view7.v1.x failure");
+  LzTestManager.assertEquals (0, view7.v1.y, "view7.v1.y failure");
+  LzTestManager.assertEquals (65, view7.v2.x, "view7.v2.x failure");
+  LzTestManager.assertEquals (0, view7.v2.y, "view7.v2.y failure");
+  LzTestManager.assertEquals (125, view7.v3.x, "view7.v3.x failure");
+  LzTestManager.assertEquals (0, view7.v3.y, "view7.v3.y failure");
+  LzTestManager.assertEquals (185, view7.v4.x, "view7.v4.x failure");
+  LzTestManager.assertEquals (0, view7.v4.y, "view7.v4.y failure");
+}
+
+// test8:  Test 2 simplelayout
+suite.test8 = function() {
+  LzTestManager.assertEquals (10, view8.x, "view8.x failure");
+  LzTestManager.assertEquals (10, view8.y, "view8.y failure");_
+  LzTestManager.assertEquals (0, view8.v1.x, "view8.v1.x failure");
+  LzTestManager.assertEquals (0, view8.v1.y, "view8.v1.y failure");
+  LzTestManager.assertEquals (60, view8.v2.x, "view8.v2.x failure");
+  LzTestManager.assertEquals (50, view8.v2.y, "view8.v2.y failure");
+  LzTestManager.assertEquals (120, view8.v3.x, "view8.v3.x failure");
+  LzTestManager.assertEquals (100, view8.v3.y, "view8.v3.y failure");
+  LzTestManager.assertEquals (180, view8.v4.x, "view8.v4.x failure");
+  LzTestManager.assertEquals (150, view8.v4.y, "view8.v4.y failure");
+}
+
+
+// Run the tests in order (test1,test2,...)
+suite.addTest(suite.test8);
+suite.addTest(suite.test7);
+suite.addTest(suite.test6);
+suite.addTest(suite.test5);
+suite.addTest(suite.test4);
+suite.addTest(suite.test3);
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->

@@ -1,0 +1,232 @@
+<canvas debug="true">
+  <include href="../../lps/utils/lztestmanager.lzx" /> 
+
+
+<!--
+  a1 is an animator that moves a box horizontally. The onstart and onstop
+  events are used to measure the elapsed time of the animation to make sure it
+  runs as expected
+-->
+  <view id="view1" bgcolor="red" width="50" height="50">
+    <animator id="a1" attribute="x" from="50" to="100" duration="500" start="false">
+
+      <!-- n_onstart  = Number of times onstart method called -->
+      <!-- n_onstop   = Number of times onstop method called -->
+      <!-- n_onrepeat = Number of times onrepeat method called -->
+      <attribute name="n_onstart" value="0"/>
+      <attribute name="n_onstop" value="0"/>
+      <attribute name="n_onrepeat" value="0"/>
+
+      <!-- t_start = time animation started. -->
+      <!-- t_elapsed = total animation time. -->
+      <attribute name="t_start" value="0"/>
+      <attribute name="t_elapsed" value="0"/>
+
+      <method event="onrepeat">
+        n_onrepeat++;
+      </method>
+
+      <method event="onstart">
+        n_onstart++;
+
+	var now = new Date();
+	t_start = now.getTime();
+      </method>
+
+      <method event="onstop">
+      <![CDATA[
+        n_onstop++;
+
+	var now = new Date();
+	t_elapsed = now.getTime() - t_start;
+	// Debug.write ("elapsed = " + t_elapsed);
+
+	LzTestManager.assertEquals (1, n_onstart, "view1 onstart count failure");
+	LzTestManager.assertEquals (1, n_onstop, "view1 onstop count failure");
+	LzTestManager.assertEquals (0, n_onrepeat, "view1 onrelease count failure");
+
+	// Allow 10% variation on animation
+	LzTestManager.assertWithin (this.duration, t_elapsed, this.duration * 0.1, "Animation too short or too long");
+
+	var xerror = 400 - view1.x;
+	LzTestManager.assertEquals (400, view1.x, "view1.x final failure error=" + xerror + " ");
+      ]]>
+      </method>
+
+    </animator>
+  </view>
+ 
+
+  <view id="view2" bgcolor="red" width="50" height="50">
+    <animator id="a2" attribute="x" from="50" to="100" repeat="3" duration="500" start="false">
+
+      <!-- n_onstart  = Number of times onstart method called -->
+      <!-- n_onstop   = Number of times onstop method called -->
+      <!-- n_onrepeat = Number of times onrepeat method called -->
+      <attribute name="n_onstart" value="0"/>
+      <attribute name="n_onstop" value="0"/>
+      <attribute name="n_onrepeat" value="0"/>
+
+      <method event="onrepeat">
+        n_onrepeat++;
+      </method>
+
+      <method event="onstart">
+        n_onstart++;
+      </method>
+
+      <method event="onstop">
+      <![CDATA[
+        n_onstop++;
+
+	LzTestManager.assertEquals (3, n_onstart, "view2 onstart count failure");
+	LzTestManager.assertEquals (1, n_onstop, "view2 onstop count failure");
+	LzTestManager.assertEquals (2, n_onrepeat, "view2 onrepeat count failure");
+	var xerror = 100 - view2.x;
+	LzTestManager.assertEquals (100, view2.x, "view2.x final failure error=" + xerror + " ");
+      ]]>
+      </method>
+
+    </animator>
+  </view>
+
+
+<script><![CDATA[
+
+var suite = new LzTestSuite("LzAnimator Test Suite"); 
+
+// test1:  Test initial values. 
+//         Comments with //* indicate that they can't run because there
+//         is no getter function.
+suite.test1 = function() {
+  LzTestManager.assertEquals (0, view1.x, "view1.x failure");  // Not set until animated
+  LzTestManager.assertEquals ("x", a1.attribute, "attribute failure");
+  LzTestManager.assertEquals (500, a1.duration, "duration failure");
+  LzTestManager.assertEquals (50, a1.from, "from failure");
+
+//*  LzTestManager.assertTrue (!a1.indirect, "indirect failure");
+//*  LzTestManager.assertEquals (a1.motion, "easeboth", "motion failure");
+//*  LzTestManager.assertTrue (!a1.paused, "paused failure");
+//*  LzTestManager.assertEquals ("simultaneous", a1.process, "process failure");
+//*  LzTestManager.assertTrue (a1.relative, "relative failure");
+//*  LzTestManager.assertEquals (0, a1.repeat, "repeat failure");
+//*  LzTestManager.assertTrue (!a1.start, "start failure");
+
+  LzTestManager.assertTrue (!a1.started, "started failure");
+  LzTestManager.assertEquals ("view1", a1.target.id, "target failure");
+
+  // Note: 'to' isn't available. the 'to' value is stored in 'origto'
+  LzTestManager.assertEquals (100, Number(a1.getAttribute ('origto')), "to failure");
+}
+
+
+// test2: Test the setters (and then return their values)
+suite.test2 = function() {
+  // attribute
+  LzTestManager.assertEquals ("x", a1.attribute, "attribute (1) failure");
+  var attr = a1.attribute;
+  a1.attribute = "y";
+  LzTestManager.assertEquals ("y", a1.attribute, "attribute (2) failure");
+  a1.attribute = attr;
+  LzTestManager.assertEquals ("x", a1.attribute, "attribute (3) failure");
+
+  // duration
+  LzTestManager.assertEquals (500, a1.duration, "duration (1) failure");
+  var dur = a1.duration;
+  a1.duration = 750;
+  LzTestManager.assertEquals (750, a1.duration, "duration (2) failure");
+  a1.duration = dur;
+  LzTestManager.assertEquals (500, a1.duration, "duration (3) failure");
+
+  // from
+  LzTestManager.assertEquals (50, a1.from, "from (1) failure");
+  var from = a1.from;
+  a1.setAttribute ('from', 60);
+  LzTestManager.assertEquals (60, a1.from, "from (2) failure");
+  a1.from = from;
+  LzTestManager.assertEquals (50, a1.from, "from (3) failure");
+
+  // to
+  LzTestManager.assertEquals (100, Number(a1.getAttribute ('origto')), "from (1) failure");
+  a1.setTo(150);
+  LzTestManager.assertEquals (150, Number(a1.getAttribute ('origto')), "from (1) failure");
+  a1.setTo(100);
+
+
+  // Test motion. The object starts in default conditions
+  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "beginPoleDelta (1) failure");
+  LzTestManager.assertEquals (0.25, a1.endPoleDelta, "endPoleDelta (1) failure");
+// Note: You can call setMotion() directly, but you can't set via motion
+  a1.setAttribute('motion', 'easein');
+  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "beginPoleDelta (2) failure");
+  LzTestManager.assertEquals (15, a1.endPoleDelta, "endPoleDelta (2) failure");
+
+  a1.setAttribute('motion', 'easeout');
+  LzTestManager.assertEquals (100, a1.beginPoleDelta, "beginPoleDelta (3) failure");
+  LzTestManager.assertEquals (15, a1.endPoleDelta, "endPoleDelta (3) failure");
+
+// This is broken
+  a1.setAttribute('motion', 'easeboth');
+  Debug.write ("The next 3 tests fail because of a problem with LzAnimator");
+  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "beginPoleDelta (4) failure");
+  LzTestManager.assertEquals (0.25, a1.endPoleDelta, "endPoleDelta (4) failure");
+
+  // This test fails because the previous test fails
+  a1.setAttribute('motion', 'easein');
+  LzTestManager.assertEquals (0.25, a1.beginPoleDelta, "beginPoleDelta (5) failure");
+  LzTestManager.assertEquals (15, a1.endPoleDelta, "endPoleDelta (5) failure");
+
+
+  // There are two method setters
+	
+  // You can't read the motion so this doesn't work
+//*  var motion = a1.getAttribute ('motion');
+//*  a1.setAttribute ('motion', 'easein');
+//*  LzTestManager.assertEquals ('easein', a1.getAttribute('motion'), "motion (1) failure");
+//*  a1.setAttribute ('motion', 'easeout');
+//*  LzTestManager.assertEquals ('easeout', a1.getAttribute('motion'), "motion (2) failure");
+//*  a1.setAttribute ('motion', motion);
+
+//  a1.setAttribute ('motion', 'linear');
+//  Debug.write ("beginPoleDelta = " + a1.beginPoleDelta + ", endPoleDelta = " + a1.endPoleDelta);
+//  a1.setAttribute ('motion', 'easein');
+//  Debug.write ("beginPoleDelta = " + a1.beginPoleDelta + ", endPoleDelta = " + a1.endPoleDelta);
+//  a1.setAttribute ('motion', 'easeboth');
+//  Debug.write ("beginPoleDelta = " + a1.beginPoleDelta + ", endPoleDelta = " + a1.endPoleDelta);
+}
+
+
+// test3:  Start the animation. Unit test functions are built into the
+//         event handlers. They look at the actual execution time as well
+//         as the final value.
+//         Any errors will be reported after the test ends
+suite.test3 = function() {
+  a1.from = 200;
+  a1.setTo(400);
+  a1.doStart();
+}
+
+// test4:  use another view to check repeat
+//         Any errors will be reported after the test ends
+suite.test4 = function() {
+  a2.doStart();
+}
+
+
+// Run the tests in order (test1,test2,...)
+suite.addTest(suite.test4);
+suite.addTest(suite.test3);
+suite.addTest(suite.test2);
+suite.addTest(suite.test1);
+
+]]>
+</script>
+
+
+</canvas>
+<!-- 
+/* X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.          *
+* Use is subject to license terms.                                        *
+* X_LZ_COPYRIGHT_END ******************************************************/
+-->
