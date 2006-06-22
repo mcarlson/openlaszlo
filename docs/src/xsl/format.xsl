@@ -48,6 +48,9 @@
   <xsl:param name="show.comments" select="0"/>
   <!-- Show fixmes if true -->
   <xsl:param name="show.fixmes" select="0"/>
+
+  <!-- this breaks the new ant 1.6.5 build stuff; it seems to want to use 
+    com.ibm.bsf BSF Manager, which it can't find. -bshine 6.22.06 
   
   <xalan:component prefix="my-ext" functions="lower getCanvasAttribute">
     <xalan:script lang="javascript"><![CDATA[
@@ -65,6 +68,7 @@
       }
     ]]></xalan:script>
   </xalan:component>
+    --> 
   
   <!-- Strip the namespace from XHTML elements -->
   <xsl:template match="xhtml:*">
@@ -520,7 +524,7 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
     
     <xsl:param name="query-parameters"><xsl:if test="@query-parameters">&amp;<xsl:value-of select="@query-parameters"></xsl:value-of></xsl:if></xsl:param>
     
-    <xsl:param name="js-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-parameters)"/>', width: <xsl:value-of select="my-ext:getCanvasAttribute(string($text), 'width', 500)"/>, height: <xsl:value-of select="my-ext:getCanvasAttribute(string($text), 'height', 400)"/>}</xsl:param>
+    <xsl:param name="js-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-parameters)"/>', width: 497, height: 403 }</xsl:param>
     
     <div class="liveExample">
       <a name="{generate-id(.)}"/>

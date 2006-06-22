@@ -523,9 +523,7 @@
       depends="init" unless="done.doc,skip.doc">
 
       <!-- Build the LZX reference -->
-      <!-- FIXME TEMPORARY [bshine 5.17.06] Skip the docs build entirely
       <ant dir="docs/src" target="build" />
-      -->
 
       <!-- Build the public javadocs -->
       <ant dir="WEB-INF/lps/server" target="javadoc-public" />

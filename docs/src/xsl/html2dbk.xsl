@@ -24,11 +24,16 @@ Convert html to docbook:
                 version="1.0">
   
   <xalan:component prefix="html2dbk" functions="max">
+  
+<!-- this breaks new build system -bshine 6.22.06
+Try using math:max instead
+see http://www.exslt.org/math/functions/max/
     <xalan:script lang="javascript"><![CDATA[
       function max(a, b) {
         return Math.max(a, b);
       }
     ]]></xalan:script>
+-->
   </xalan:component>
   
   <xsl:template match="h:html">
@@ -324,9 +329,11 @@ Convert html to docbook:
     <xsl:param name="n1" select="count(*[1]/following::h:p)"/>
     <xsl:param name="n2" select="count(text()[1]/following::h:p)"/>
     
+    
     <xsl:param name="n">
       <xsl:if test="$tested">
-        <xsl:value-of select="html2dbk:max($n1, $n2)"/>
+        <!-- tweaked to work without max function -bshine 6.22.06 -->
+        <xsl:value-of select="$n1"/>
       </xsl:if>
     </xsl:param>
     
@@ -408,9 +415,9 @@ Convert html to docbook:
             <xsl:with-param name="args" select="$args/count[position() &gt; 1]"/>
           </xsl:call-template>
         </xsl:variable>
-        <xsl:message><xsl:value-of select="concat('max(',
+        <xsl:message><xsl:value-of select="concat('math:max(',
         number($args/count[1]), ', ', number($max), ')')"/></xsl:message>
-        <value select="{html2dbk:max(number($args/count[1]), number(exslt:node-set($max)/value/@select))}"/>
+        <value select="{math:max(number($args/count[1]), number(exslt:node-set($max)/value/@select))}"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>

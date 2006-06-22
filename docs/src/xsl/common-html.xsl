@@ -8,7 +8,7 @@
                 exclude-result-prefixes="exslt"
                 version="1.0">
   
-  <xsl:import href="../../../../tools/docbook-xsl-1.65.1/html/chunk.xsl"/>
+  <xsl:import href="docbook/chunk.xsl"/>
   <xsl:import href="parameters.xsl"/>
   
   <!-- Address of the servlet relative to the generated file -->

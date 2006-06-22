@@ -315,7 +315,7 @@ Translate a Laszlo doc page to a docbook page:
   <!--
     live examples
   -->
-  
+  <!-- This breaks new ant 1.6.5 build system. -bshine 6.22.06  
   <xalan:component prefix="my-ext" functions="lower getCanvasAttribute">
     <xalan:script lang="javascript"><![CDATA[
       function lower(s) {
@@ -332,6 +332,7 @@ Translate a Laszlo doc page to a docbook page:
       }
     ]]></xalan:script>
   </xalan:component>
+  --> 
   
   <xsl:template match="h:example">
     <xsl:param name="fname">
@@ -375,7 +376,7 @@ Translate a Laszlo doc page to a docbook page:
       <xsl:if test="@query-parameters">&amp;<xsl:value-of select="@query-parameters"></xsl:value-of></xsl:if>
     </xsl:param>
     
-    <xsl:param name="js-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-parameters)"/>', width: <xsl:value-of select="my-ext:getCanvasAttribute(string($text), 'width', 500)"/>, height: <xsl:value-of select="my-ext:getCanvasAttribute(string($text), 'height', 400)"/>}</xsl:param>
+    <xsl:param name="js-embed-params">{url: '<xsl:value-of select="concat($lzxdir, $fname, '?lzt=swf', $query-parameters)"/>', width: 500, height: 400}</xsl:param>
     
     <xsl:element name="{$exampleclass}">
       <xsl:attribute name="role">live-example</xsl:attribute>
