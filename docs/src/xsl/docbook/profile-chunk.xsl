@@ -4,7 +4,7 @@
                 exclude-result-prefixes="exsl">
 
 <!-- ********************************************************************
-     $Id: chunk.xsl,v 1.30 2003/11/30 19:42:23 bobstayton Exp $
+     $Id: profile-chunk.xsl,v 1.2 2003/11/30 19:42:23 bobstayton Exp $
      ********************************************************************
 
      This file is part of the XSL DocBook Stylesheet distribution.
@@ -35,6 +35,6 @@ Voila! (Man I hope we can do this better in XSLT 2.0)
 
 -->
 
-<xsl:include href="chunk-code.xsl"/>
+<xsl:include href="profile-chunk-code.xsl"/>
 
 </xsl:stylesheet>

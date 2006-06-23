@@ -98,4 +98,3 @@
 </xsl:template>
 
 </xsl:stylesheet>
-<!-- Copyright 2006 --> 
