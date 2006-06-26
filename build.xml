@@ -1062,18 +1062,18 @@
      <!-- Start the tomcat server. I'm told this hangs under windows, must 
          investigate. [bshine 5.10.06] 
      -->
-     <target name="tomcat.start"  depends="tom.setup" unless="no.tomcat"
+     <target name="tomcat.start" unless="no.tomcat" depends="init"
          description="Start the tomcat server (not just a webapp, the server 
              itself) with the tomcat startup scripts">
-         <exec executable="${server.home}/bin/startup.${sh}">
+         <exec executable="${server.home}/bin/startup.sh">
             <env key="JAVA_OPTS" value="${tomcat.java.opts}" />
          </exec>
      </target>
 
-     <target name="tomcat.stop"  depends="tom.setup" unless="no.tomcat"
+     <target name="tomcat.stop"  unless="no.tomcat" depends="init"
          description="Stop the tomcat server (not just a webapp, the server 
              itself) with the tomcat shutdown scripts">
-         <exec executable="${server.home}/bin/shutdown.${sh}" failonerror="false">
+         <exec executable="${server.home}/bin/shutdown.sh" failonerror="false">
             <env key="JAVA_OPTS" value="${tomcat.java.opts}" />
          </exec>
      </target>
@@ -1101,7 +1101,7 @@
          <not> <os family="windows" /> </not>
      </condition>
      
-     <target name="tom.winsvc.start" depends="tom.setup" unless="no.tomcat"
+     <target name="tom.winsvc.start" unless="no.tomcat" depends="init"
         description="Install and start Windows LPS service (tomcat5)" >
         <exec dir="build-tools" executable="bash">
             <arg line="service.sh install &quot;${tomcat.java.opts}&quot;" />
@@ -1118,35 +1118,6 @@
     <!--=========  Target [webapp.deploy,undeploy,start,stop] =======================-->  
     <!-- These tasks affect the tomcat server as a whole. Their names begin with "tomcat." -->
     
-    <target name="tom.setup.check"  unless="no.tomcat"
-        description="helper target for tom.setup; must pass in file param">
-
-        <available file="${server.home}/conf/${file}" property="confexists" />
-        <fail message="No configuration file." unless="confexists" />
-        
-        <checksum file="${server.home}/conf/${file}" property="sc-md5" />
-        <checksum file="build-tools/${file}" property="bt-md5" />
-        
-		<!-- TODO: this fails on windows, although the files look right to me.
-			Probably a stupid line end thing. [bshine 5.25.06] -->
-			<!--	
-        <condition property="checksums-match">
-            <equals arg1="${sc-md5}" arg2="${bt-md5}" />
-        </condition>
-
-        <fail message="checksums don't match. Failing." unless="checksums-match"/>
-		-->
-
-        <tstamp>
-            <format property="now" pattern="yyyy-MM-dd.HH-mm-ss" />
-        </tstamp>
-
-        <copy tofile="${server.home}/conf/${file}.${now}" 
-              file="${server.home}/conf/${file}" verbose="true" />
-              
-        <copy todir="${server.home}/conf" file="build-tools/${file}" 
-            overwrite="true" verbose="true" />
-    </target>
     
     <!-- "install" is a deprecated term for Tomcat. "Deploy" is preferred now. 
     [bshine 4.29.06] -->
@@ -1202,17 +1173,7 @@
              password="${tom.password}"
              path="/${build.branch}" />
      </target>
- 
-     <target name="tom.setup" depends="init" unless="no.tomcat"
-         description="copy tomcat configuration files">
-         <antcall target="tom.setup.check">
-             <param name="file" value="server.xml" />
-         </antcall>
-         <antcall target="tom.setup.check">
-             <param name="file" value="lzkeystore" />
-         </antcall>
-     </target>
- 
+  
      <target name="start" depends="init" unless="no.tomcat"
          description="Start tomcat AND LPS webapp" >
          <mkdir dir="${server}/logs" />
@@ -1239,71 +1200,6 @@
          <antcall target="webapp.undeploy" />
          <antcall target="webapp.deploy" />
      </target>
-
-<!-- these are the "old" (tomcat 4) install tasks -->
-
-  <target name="t4-reinstall" depends="init,stop,t4-install"
-      description="ReInstall lps webapp into tomcat4 after a restart of tomcat">
-  </target>
-
-  <target name="t4-install" depends="init"  
-      description="Install lps webapp into tomcat4." >
-      <copy todir="${LPS_HOME}/WEB-INF/lib" file="${webapp-lps-home}/server/lib/${lps.jar}" />
-      <property name="tomcat.home" value="${env.TOMCAT_HOME}" />
-<!--
-      <copy todir="${tomcat.home}/common/endorsed" file="${LPS_HOME}/WEB-INF/lib/xalan.jar" />
--->
-      <trycatch>
-          <try> <antcall target="start" /> </try>
-          <!-- Allow this to fail for example if tomcat has already been started -->
-          <catch />
-      </trycatch>
-      <trycatch>
-          <try>
-              <echo message="The following may FAIL" />
-              <tom.install url="${tom.url}" username="${tom.username}" 
-                    password="${tom.password}" path="/${build.branch}" 
-                    war="file://${LPS_HOME}" />
-          </try>
-          <!-- Allow this to fail for example if the lps has already been installed -->
-          <catch>
-              <echo message="  " />
-              <echo message="Ignore the error above" />
-              <echo message="  " />
-          </catch>
-      </trycatch>
-  </target>
-
-  <target name="t4-reload"  depends="init,clean-cache"
-          description="Reload lps development tree as webapp into tomcat4">
-      <copy todir="WEB-INF/lib" file="${webapp-lps-home}/server/lib/${lps.jar}" />
-      <trycatch>
-          <try>
-              <tom.reload url="${tom.url}" username="${tom.username}" 
-                  password="${tom.password}" path="/${build.branch}" />
-          </try>
-          <catch>
-              <tom.install url="${tom.url}" username="${tom.username}" 
-                  password="${tom.password}" path="/${build.branch}"
-                  war="file://${LPS_HOME}" />
-          </catch>
-      </trycatch>
-  </target>
-
-  <target name="t4-uninstall"  depends="init"
-      description="Uninstall lps webapp from tomcat4">
-      <trycatch>
-          <try>
-              <tom.remove url="${tom.url}" username="${tom.username}" 
-                      password="${tom.password}" path="/${build.branch}" />
-          </try>
-          <!-- Allow this to fail, for example, if the webapp isn't installed -->
-          <catch/>
-          <finally>
-              <delete file="${LPS_HOME}/WEB-INF/lib/lps*.jar" />
-          </finally>
-      </trycatch>
-  </target>
 
    <target name="quick-index" depends="init" 
        description="Create quick index from laszlo explorer nax.xml file" >
