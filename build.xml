@@ -519,9 +519,10 @@
 
   <!--================  Target [doc] ==============-->
   <target name="doc" 
-      description="Build documentation"
+      description="Build documentation BUT DON'T RIGHT NOW"
       depends="init" unless="done.doc,skip.doc">
-
+      <echo message="Skipping doc build." />
+<?ignore
       <!-- Build the LZX reference -->
       <ant dir="docs/src" target="build" />
 
@@ -532,6 +533,7 @@
       <!--Uncommend when we know it works on all platforms
       <ant target="lzx-catalog" />
       -->
+?> 
 
       <property name="done.doc" value="true" />
   </target>
