@@ -39,6 +39,9 @@ class TmpFileManager implements HttpSessionBindingListener
     String src = request.getParameter("src");
     String title = request.getParameter("title");
     String fname = src;
+    src = src.replaceAll("[.][.]", "");
+    src = src.replaceAll("^[/\\\\]*", "");
+
     String sTmpFile = "TempFilePath";
     try {
         String formAction=request.getParameter("formAction");
