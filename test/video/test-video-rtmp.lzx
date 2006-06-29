@@ -1,0 +1,15 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>
+
+    <rtmpconnection id="rtc" autoconnect="true" debug="true"
+        src="rtmp://localhost/test/instance1"  />
+
+    <simplelayout/>
+    <rtmpstatus/>
+    <videoview id="v" url="carchase" type="rtmp"/>
+    <button text="play" onclick="v.stream.play()"/>
+
+</canvas>

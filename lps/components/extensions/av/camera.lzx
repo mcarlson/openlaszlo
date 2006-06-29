@@ -1,0 +1,113 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<library>
+
+<class name="camera" extends="node">
+    <!--- if true, show camera on parent videoview -->
+    <attribute name="show" value="false" setter="showCamera(show)"/>
+    
+    <!--- zero-based index of the camera -->
+    <attribute name="index" value="0" setter="setIndex(index)"/>
+    
+    <!--- reference to flash camera object -->
+    <attribute name="_cam" value="null"/>
+
+    <!--- @keywords private -->
+    <event name="onshow"/>
+
+    <!--- @keywords private -->
+    <event name="onindex"/>
+
+    <!--- @keywords private -->
+    <method name="init">
+        super.init();
+        this._cam = Camera.get(this.index);
+        parent.cam = this;
+    </method>
+
+    <!--- @keywords private -->
+    <method name="getCameraNames">
+        return Camera.names;
+    </method>
+
+    <!--- setter for index attribute (0-based) -->
+    <method name="setIndex" args="ind">
+        if (ind == this['index']) return;
+        this.index = ind;
+        if (!this.isinited) return;
+
+        this._cam = Camera.get(ind);
+        this.index = this._cam.index;
+        if (this.onindex) this.onindex.sendEvent();
+    </method>
+
+    <!--- setter for show attribute -->
+    <method name="showCamera" args="show">
+        if (! (parent instanceof videoview) ) {
+            if ($debug) {
+                Debug.write('camera, %w, expects to be child of videoview', this);
+            }
+            return;
+        }
+        if (show == undefined) show = true;
+        this.show = show;
+        this._showCamera(show);
+        if (this.onshow) this.onshow.sendEvent();
+    </method>
+
+
+    <!--- internal show camera, doesn't set attribute just shows
+          the camera on the parent video surface
+          @keywords private -->
+    <method name="_showCamera" args="show">
+        if (!parent._initcomplete) return;
+        var vid = parent.__LZmovieClipRef.__lzvideo;
+        if (show) {
+            vid.attachVideo(this._cam);
+        } else {
+            vid.attachVideo(null);
+            vid.clear();
+        }
+    </method>
+
+    <!--- 
+        setMode(width,height,fps) 
+        width,height,fps = number 
+        favorsize  A Boolean value that specifies how to manipulate the 
+        width, height, and frame rate if the camera does not have a native 
+        mode that meets the specified requirements. The default is true, 
+        which means that maintaining capture size is favored; using this 
+        parameter selects the mode that most closely matches width and height 
+        values, even if doing so adversely affects performance by reducing
+        the frame rate. To maximize frame rate at the expense of camera 
+        height and width, pass false for the favorSize parameter. This 
+        parameter is optional. 
+
+        TODO: should there be read-only class attributes for these?
+     --> 
+    <method name="setMode" args="width, height, fps, favorsize"> 
+        if (favorsize == undefined) favorsize = true;
+        this.camwidth = width; 
+        this.camheight  = height; 
+        this.fps = fps; 
+        this._cam.setMode(width, height, fps, favorsize); 
+    </method> 
+
+    <!--- 
+        setQuality(bandwidth,picturequality"); 
+        bandwidth = in Byte per second / defaultvalue:16384 
+        picturequality = Number from 0 - 100 / defaultvalue 
+        0 ... 0 means also that picturequality 
+        will be changed if bandwidth is concerned 
+        TODO: should there be read-only class attributes for these?
+     --> 
+    <method name="setQuality" args="bandwidth,picturequality">    
+        this._cam.setQuality(bandwidth,picturequality); 
+    </method> 
+</class>
+
+
+
+</library>

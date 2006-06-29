@@ -1,0 +1,39 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>
+
+
+<class name="camlistitem" extends="textlistitem">
+    <attribute name="index" value="null"/>
+    <method event="onclick">
+        gCamera.setIndex(this.index);
+        if (!gCamera.show) gCamera.setAttribute('show', true);
+    </method>
+</class>
+
+<class name="cameralist" extends="list" width="300">
+    <method event="oninit"> <![CDATA[   
+        var a = gCamera.getCameraNames();
+        Debug.write('camera name array: ', a, a.length);
+        for (i=0; i<a.length; i++) {
+            var cname = a[i];
+            Debug.write('camera name: ', cname);
+            var c = new camlistitem(this, {text:cname, index:i});
+            Debug.write(c);
+        }
+        ]]>
+    </method>
+</class>
+
+<simplelayout spacing="10"/>
+<text>list of available cameras (click to show):</text>
+<cameralist id="clist"/>
+
+<videoview id="v">
+    <camera id="gCamera" />
+</videoview>
+
+
+</canvas>

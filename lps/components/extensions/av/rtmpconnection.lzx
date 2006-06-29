@@ -1,0 +1,239 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<library>
+
+<class name="rtmpconnection" extends="node">
+
+    <!--- Connect automatically during init. If false, you need to explicitly
+          call connect(). Default is true. -->
+    <attribute name="autoconnect" value="true" type="boolean" />
+
+    <!--- string to indicate connection status -->
+    <attribute name="status" value="disconnected" type="string"/>
+
+    <!--- number to ind icate what stage of connection we're on
+        0: disconnected, 1: connecting, 2: connected-->
+    <attribute name="stage" value="0" type="number"/>
+   
+     <!--- a reference to the Flash NetConnection object
+        @keywords private -->
+    <attribute name="_nc" value="null" />
+    
+    <!--- application url
+        for example : rtmp:/appname or rtmp://myserver.com/myapp/  -->
+    <attribute name="src" value="" type="string"/>
+
+    <!--- turn on for verbose debugger output -->
+    <attribute name="debug" value="false"/>
+
+
+    <method name="init">
+        super.init();
+        this._nc = new NetConnection();
+
+        // if this is the first instance, define a default NetConnection
+        // for the class (used by other real-time objects, like videoview
+        if (this['_default'] == undefined) 
+            rtmpconnection.prototype._default = this;
+
+        if (this.debug) {
+
+            this._nc.onStatus = function(info){
+                t = this.t;
+                _root.Debug.write("######### nc.onStatus ",info);
+                t.onStatus(info);
+            }
+            // local reference to rtmpconnection
+            this._nc.t = this;          
+            // This is the way a function is called by the remote Interface has
+            // to be implemented ...
+            /**
+            this._nc.setId = function(id){
+                _root.Debug.write("########## Method called by rtmp Server");
+                _root.Debug.write("---------------> id: ",id);
+            }
+            **/
+        }
+        
+        /** the following code should work now, but it hasn't
+            been tested, so I'll leave it commented out -sa
+        var t = this;
+        this._nc.__resolve = function(name) {
+            //_root.Debug.write("__resolve " , name, typeof(this[name]));
+            //_root.Debug.write("  arguments.callee.name " , 
+            //                      arguments.callee.name);
+            if (typeof(t[name]) == "function") {
+                t[name].apply( arguments );
+            }
+        };
+        **/
+
+        
+        if (this.autoconnect) this.connect();
+    </method>
+
+    <method name="connect">
+        if (this.stage > 0) return; // already connected or connecting
+        if ($debug) {
+            if (this.src == "") {
+                Debug.write('no src url defined for ',this);
+                return;
+            }
+            if (typeof(src) != "string") {
+                Debug.write('src: ',this.src,' must be a string in',this);
+                return;
+            }
+        }
+        Debug.write('connect', src);
+        var ok = this._nc.connect(src == "null" ? null : src);
+        this.setAttribute('status', "connecting");
+        this.setAttribute('stage', 1);
+        if (!ok) {
+            Debug.warn('connection failed bad url');
+            this.setAttribute('status', "disconnected");
+            this.setAttribute('stage', 0);
+            return;
+        }
+        var t = this;
+        this._nc.onStatus = function(info) {
+            t = this.t;
+            //if (t.debug) {
+                _root.Debug.write('onStatus ', info.code);
+                _root.Debug.write('this (t) ', t, this);
+            //}
+            var msg = ""
+            var s = t.stage;
+            switch (info.code) {
+                case "NetConnection.Connect.AppShutdown":
+                    // The application has been shut down 
+                    // (for example, if the application is out of memory 
+                    // resources and must be shut down to prevent the 
+                    // server from crashing) or the server has been shut down.
+                    msg = "disconnected (error)";
+                    s = 0;
+                    break;
+                    
+                case "NetConnection.Connect.Closed":
+                    // The connection was successfully closed.
+                    msg = "disconnected";
+                    s = 0;
+                    break;
+
+                
+                case "NetConnection.Connect.Failed":
+                    // The connection attempt failed; 
+                    // for example, the server is not running.
+                    msg = "connection failed";
+                    s = 0;
+                    break;
+
+                case "NetConnection.Connect.Rejected":
+                    // The client does not have permission to connect 
+                    // to the application, or the application expected 
+                    // different parameters from those that were passed, 
+                    // or the application specifically rejected the client.
+                    msg = "connection rejected";
+                    s = 0;
+                    break;
+
+                case "NetConnection.Connect.Success":
+                    // The connection attempt succeeded.
+                    msg = "connected";
+                    s = 2;
+                    break;
+
+                default:
+                    msg = info.code;
+                
+            }
+            t.setAttribute('status', msg);
+            t.setAttribute('stage', s);
+            if (t.debug) {
+                if (s == 2) _root.Debug.write('connected to '+t.src);
+                else _root.Debug.write('connection failed to ',t.src,', ', msg);
+            }
+            if (s == 2) {
+                if (t['onconnect']) t.onconnect.sendEvent();
+            }
+        }
+        // local reference to rtmpconnection
+        // for some reason this cannot be done as a closure (in FP7)
+        // see bug lpp-2197
+        this._nc.t = this;
+    </method>
+
+    <!--- make a remote call to the rtmp server 
+        todo: we probably don't want to expost the Flash callback object-->
+    <method name="call" args="func, obj, params">
+        if (this.debug) Debug.write("call: func, obj, params",func,obj, params);
+        if (params.length != 0){
+            
+            this._nc.call.apply(arguments);
+            
+        } else {
+            this._nc.call(func, obj);
+        }
+    </method>
+</class>
+
+<class name="netremotecall" extends="node">
+
+    <!-- name of remote Function -->
+    <attribute name="funcname" value="$once{null}" type="string" />
+    
+    <!-- Data receiving -->
+    <attribute name="ondata" />
+    
+    <!-- Onerror Event -->
+    <attribute name="onerror" />
+
+    <method name="call" args="params">
+        if (this.funcname==null){
+            Debug.write("No funcname given");
+            if (this.onerror) this.onerror.sendEvent("No funcname given");
+            return;
+        }
+        
+        <![CDATA[
+        if (params == null) {
+            params = [];
+            if (this.subnodes != null) {
+                for (var i=0; i < this.subnodes.length; i++) {
+                    // if getValue method is declared in param, call that
+                    // instead to get value.
+                    var tsi = this.subnodes[i];
+                    if (tsi['getValue'] != null && tsi.getValue['prototype'] != null) {
+                        params[i] = tsi.getValue();
+                    } else {
+                        params[i] = tsi.value;
+                    }
+                }
+            }
+        } else if (params.__proto__ != Array.prototype) {
+            Debug.write(this.name, "error: first argument (params) is not an array");
+            return -1;
+        }
+        ]]>    
+        Debug.write('call', this, this.parent, this.parent.status);
+        if (this.parent.status=="connected"){
+            this.parent.call(this.funcname, this, params);
+        }
+    </method>
+    
+    <method name="onResult" args="value">
+        // Can be overriden
+        // Would be great if it can be used with dataobject
+        // but i don't know how to cast Array/primitive to LzDataset/LzDataPointer
+        Debug.write("onResult: ",value);
+    </method>
+
+</class>
+
+<!-- Element to use inside netremotecall. -->
+<class name="netparam" extends="node">
+    <attribute name="value" value="null" type="expression" />
+</class>
+
+</library>

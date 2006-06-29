@@ -3,9 +3,10 @@
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas width="100%" height="80%" >
-  <include href="video.lzx"/>
   
-  <class name="camview" extends="video" oninit="this.showCamera()"/>
+  <class name="camview" extends="videoview" >
+        <camera show="true"/>
+  </class>
   <simplelayout spacing="10" inset="10"/>
   <camview id="v"/>
   <camview id="v2"/>

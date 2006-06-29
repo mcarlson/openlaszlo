@@ -1,0 +1,99 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<library>
+<include href="stream.lzx"/>
+
+<class name="videoview"  width="160" height="120">
+    
+    <!--- the url of the stream, maybe be relative URL, 
+          for example: http://localhost/myvideo.flv, or simply myvideo.flv
+          when type="rtmp" the url is always relative the the rtmpconnection -->
+    <attribute name="url" value="" type="string" setter="setUrl(url)"/>
+
+    <!--- @keywords private -->
+    <event name="onurl"/>
+
+    <!--- if true Debug.write extra stuff (this may go away) -->
+    <attribute name="debug" value="false"/>
+
+    <!--- protocol "rtmp" or "http" (default: http)-->
+    <attribute name="type" value="http" type="string"/>
+
+    <!--- @keywords private -->
+    <attribute name="_clipinitdone" value="false"/>
+
+    <!--- if true, video will start playing as soon as url is set, 
+          default: false-->
+    <attribute name="autoplay" value="false"/>
+
+    <!--- -->
+    <attribute name="cam" value="null"/>
+
+    <!--- -->
+    <attribute name="stream" value="null"/>
+
+    <!--- @keywords private -->
+    <attribute name="_initcomplete" value="false"/>
+
+    <!--- @keywords private -->
+    <method name="init"> <![CDATA[
+        super.init();
+       // no other subviews should be allowed (todo: schema)
+        var mc = immediateparent.attachResourceToChildView ("__LZvideo", this);
+        this.setMovieClip(mc);
+        //Debug.write('setMovieClip', mc);
+        //Debug.write('this.__LZmovieClipRef', this.__LZmovieClipRef);
+        this.__LZmovieClipRef.__lzvideo._x=0;
+        this.__LZmovieClipRef.__lzvideo._y=0;
+        this.__LZmovieClipRef.__lzvideo._width = this.width;
+        this.__LZmovieClipRef.__lzvideo._height = this.height;
+        this._clipinitdone = true;
+        if (this.stream) {
+            this.stream.setAttribute('type', this.type);
+            this.stream.setUrl(this.url);
+        }
+        if (this.url != "" && this.autoplay) this.stream.play();
+        this._initcomplete = true;
+
+        // camera needs to be displayed after _initcomplete = true
+         if (this.cam && this.cam.show) this.cam.showCamera(true);
+        ]]>
+    </method>
+
+    <!--- @keywords private -->
+    <method name="setWidth" args="w">
+        if (!this._clipinitdone) { this.width = w; return; }
+        this.__LZmovieClipRef.__lzvideo._width = w;
+    </method>
+    
+    <!--- @keywords private -->
+    <method name="setHeight" args="h">
+        if (!this._clipinitdone) { this.height = h; return; }
+        this.__LZmovieClipRef.__lzvideo._height = h;
+    </method>
+
+   <method name="setUrl" args="newurl"> <![CDATA[  
+        this.url = newurl;
+        if (this.isinited && this.url != "") {   // changing the url
+            // TODO: if another URL is playing, maybe clear it?
+        }
+        if (!this.stream) {
+           this.stream = new global.stream(this, 
+                            {debug:this.debug}, null, true);
+        }
+        if (this.isinited) {
+            this.stream.setAttribute('type', this.type);
+            this.stream.setUrl(newurl);
+            if (this.autoplay) this.stream.play();
+        }
+        if (this.onurl) this.onurl.sendEvent(url);
+        ]]> 
+    </method>
+ 
+</class>
+
+
+
+</library>

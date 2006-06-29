@@ -3,18 +3,13 @@
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <canvas>
-    <include href="rtmpconnection.lzx"/>
-        <simplelayout/>
-    <rtmpconnection id="rtc" src="rtmp:/test"/>
-    <text text="${rtc.status}"/>
-    <view id="gStatus" bgcolor="red" width="20" height="20">
-        <method event="onstage" args="s" reference="rtc">
-            switch (s) {
-                case 0: setBGColor(red); break;
-                case 1: setBGColor(yellow); break;
-                case 2: setBGColor(green); break;
-            }
-        </method>
+     
+    <simplelayout inset="10" spacing="10"/>
+    <rtmpconnection id="rtc" src="rtmp://localhost/test" autoconnect="false"
+                    debug="true"/>
+    <view layout="axis:x;spacing:4">
+        <rtmpstatus/>
+        <text text="${rtc.status}"/>
     </view>
-    <button onclick="rtc.connect()"/>
+    <button onclick="rtc.connect()">Click to Connect</button>
 </canvas>

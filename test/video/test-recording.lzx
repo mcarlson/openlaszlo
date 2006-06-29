@@ -1,0 +1,40 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--
+    requures Flash Media Server (not tested with red5)
+    create applications directories: moonstone/streams/instance1
+    the recorded streams will be saved there
+-->
+<canvas width="100%" height="80%" debug="true">
+  <debug x="200"/>
+
+  <rtmpconnection id="rtc" src="rtmp:/moonstone/instance1" autoconnect="true"/>
+  <simplelayout inset="10" spacing="10"/>
+  <rtmpstatus/>
+  <text text="${rtc.status}"/>
+  <view bgcolor="black" width="168" height="138"
+    onmousedown="this.resizer.apply()" onmouseup="this.resizer.remove()">
+    <resizestate name="resizer"/> 
+    <videoview id="v" x="4" y="4" url="temp.flv" type="rtmp"
+        width="${parent.width-8}" height="${parent.height-18}">
+        <camera show="${gShow.value}"/>
+    </videoview>
+
+  </view>
+
+  <text text="${'recording: ' + v.stream.recordtime}"/>
+  <text text="${'playtime: ' + v.stream.playtime}"/>
+  <text text="${'totaltime: ' + v.stream.totaltime}"/>
+  
+  <checkbox id="gShow" text="show camera"/>
+  <view layout="axis:x; spacing:10">
+    <button onclick="v.stream.record()" text="record"/>
+    <button onclick="v.stream.stop()" text="stop"/>
+  </view>
+  <view layout="axis:x; spacing:10">
+    <button onclick="v.stream.play()" text="play"/>
+    <button onclick="v.stream.pause()" text="pause"/>
+  </view>
+</canvas>

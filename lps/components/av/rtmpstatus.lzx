@@ -1,0 +1,26 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<library>
+<resource name="light_rsc">
+    <frame src="resources/red-orb.swf"/>
+    <frame src="resources/yellow-orb.swf"/>
+    <frame src="resources/green-orb.swf"/>
+</resource>
+
+<class name="rtmpstatus" resource="light_rsc" 
+                    width="16" height="16" stretches="both">
+    <method event="oninit" reference="canvas">
+        this._rtmp = rtmpconnection.prototype._default;
+        if ($debug) {
+            if(!this['_rtmp']) 
+                Debug.write('rtmpconnection must be defined', this);
+        }
+        var _del = new LzDelegate(this, "updateStage", this._rtmp, "onstage");
+    </method>
+    <method name="updateStage">
+        this.setAttribute('frame', this._rtmp.stage+1);
+    </method>
+</class>
+</library>

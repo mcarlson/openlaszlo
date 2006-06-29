@@ -1,0 +1,135 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!---
+    represents a Microphone device
+    usage:
+    @START_CODE
+        <microphone/>
+    @END_CODE
+    Declaring a microphone with its default attributes will cause it
+    to be immediately useful, which means that a security dialog will
+    appear allowing the end user to allow or deny access to the microphone.
+    
+    To defer the display of the security dialog, start the microphone muted: 
+    @START_CODE
+        <microphone muted="false"/>
+    @END_CODE
+
+-->
+<library>
+<class name="microphone">
+    <!--- read only, 0-100, the amount of sound detected by this microphone -->
+    <attribute name="level" type="number" value="0"/>
+
+    <!--- unimplemented -->
+    <attribute name="gain" type="number"/>
+
+    <!--- turns mic on/off -->
+    <attribute name="mute" value="false" setter="setMute(mute)"/>
+
+    <!--- initially set to 'unknown' after the user is presented
+          with the security dialog, this is set to 'denied' or 'allowed' -->
+    <attribute name="access" value="unknown" type="string"/>
+
+    <!--- readonly, the name of the microphone -->
+    <attribute name="devicename" value="null"/>
+
+    <!--- the index of the microphone (0 is first)
+          @keywords final-->    
+    <attribute name="deviceindex" value="null"/>
+
+    <event name="onmute"/>
+    <event name="onlevel"/>
+    
+    <!--- internal flash microphone object
+          @keywords private --> 
+    <attribute name="_mic" value="null"/>
+    <!--- if true, mic is set up, security dialog has been shown
+          @keywords private --> 
+    <attribute name="_micinited" value="false"/>
+
+    <!---  @keywords private 
+       creation of internal _mic object best done after init
+       after constraint args are applied
+        -->
+    <method name="init">
+        super.init();
+        if (this.deviceindex == null) {
+            this._mic = Microphone.get();
+        } else { 
+            this._mic = Microphone.get(deviceindex);
+        }
+        // set up initial values for microphone properties
+        this.setAttribute('devicename', this._mic.name);
+        this.setAttribute('deviceindex', this._mic.index);
+        
+        if (!this.mute) this._initMic();
+    </method>
+
+    <!---  @keywords private --> 
+    <method name="_initMic"> <![CDATA[
+        if (this._micinited) return;
+        this._micinited = true;
+       
+        this._leveldel = new LzDelegate(this, "_updateLevel");
+
+  
+        this._mic.t = this;
+        this._mic.onStatus = function(info) {
+            var t = this.t;
+            switch (info.code) {
+                case 'Microphone.Unmuted':
+                    if (t.access != 'allowed')
+                        t.setAttribute('access', 'allowed');
+                    break;
+                case 'Microphone.Muted':
+                    if (t.access == 'unknown') {
+                        t.setAttribute('access', 'denied');
+                        t.setAttribute('mute', true);
+                    }
+                    break;
+                
+            }
+        }
+
+        this._mic.onActivity = function(active) {
+            var t = this.t;
+            if (active && t.onlevel) {
+                t._leveldel.register(LzIdle, 'onidle');
+            } else {
+                t._leveldel.unregisterAll();
+            }
+        }
+
+
+        this._mc = _root.createEmptyMovieClip("__LZmicMovieClip", 10000);
+
+        // attaching the audio invokes the security dialog
+        this._mc.attachAudio(this._mic);
+        ]]>
+    </method>
+    
+    <!--- setter for mute attribute, the first time mute is set to false
+        a security dialog will be displayed asking the end user to allow
+        or deny use of the Microphone
+    -->
+    <method name="setMute" args="isMuted"> <![CDATA[
+        //Debug.write('setMute', isMuted);
+        this.mute = isMuted;
+        if (!this.isinited) return;
+        if (!isMuted && !this._micinited) this._initMic();
+        if (!isMuted && this.access == 'denied') {  // try again
+            this._mc.attachAudio(false);
+            this._mc.attachAudio(this._mic);
+        }
+        if (this.onmute) this.onmute.sendEvent(isMuted);
+        ]]>
+    </method>
+
+    <method name="_updateLevel">
+        this.setAttribute('level', this._mic.activityLevel);
+    </method>
+</class>
+</library>

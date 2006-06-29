@@ -1,0 +1,22 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+<canvas>
+    <simplelayout inset="10" spacing="5"/>
+    <constantlayout axis="x" value="10"/>
+    <videoview>
+        <stream id ="s" 
+        url="http://localhost:8080/svn-video/test/video/videos/good-dog.flv"/>
+    </videoview>
+    <button text="play" onclick="s.play()"/>
+    <button text="pause" onclick="s.pause()"/>
+    <text text="${'playtime: ' + s.playtime}"/>
+    <text text="${'totaltime: ' + s.totaltime}"/>
+    <text width="300" multiline="true">
+        note: total time is only defined for flv's delivered over http
+        if they have "metaData" defined, and we don't know the stream
+        length until it starts playing
+    </text>
+
+</canvas>
