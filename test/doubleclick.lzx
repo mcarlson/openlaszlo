@@ -19,24 +19,24 @@
       this.clicks=0;
     </method>
     <method name="doClick">
-      debug.write('green click');
+      Debug.write('green click');
     </method>
     <method name="doDoubleClick">
-      debug.write('green double click');
+      Debug.write('green double click');
       this.clicks=0;
     </method>
   </view> 
 
   <view clickable="true" name="bclick" width="20" height="20" bgcolor="blue">
     <method event="onclick">
-      debug.write('blue click');
+      Debug.write('blue click');
     </method>
     <method event="ondblclick">
-      debug.write('blue double click');
+      Debug.write('blue double click');
     </method>
   </view>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 </canvas>

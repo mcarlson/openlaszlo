@@ -38,7 +38,11 @@ LzDelegate = function (context, functionName, eventSender, eventName) {
     }
     this.register( eventSender , eventName );
   }
+  
+  this.__delegateID = LzDelegate.__nextID++;
 }
+
+LzDelegate.__nextID = 1;
 
 LzDelegate.prototype.lastevent = 0;
 LzDelegate.prototype.enabled = true;
@@ -168,7 +172,7 @@ LzDelegate.prototype.enable = function (){
 // @keywords private
 //------------------------------------------------------------------------------
 LzDelegate.prototype.toString = function (){
-    return ("Delegate for " + this.c + " calls " + this.f );
+    return ("Delegate for " + this.c + " calls " + this.f + " " + this.__delegateID );
 }
 
 if ($debug) {

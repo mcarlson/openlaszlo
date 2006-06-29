@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -11,12 +11,20 @@
 // DEFINE OBJECT: LzTimer
 // The timer calls a given delegate in a specified number of miliseconds.
 //
+// Unfortunately the original semantics of LzTimer allows one to add more
+// than one timer to a single delegate, but only allows one to remove the
+// oldest timer from a delegate -- there's no way of specifying which one.
+// The logic below is faithful to the original while still attempting to be
+// efficient. In the common case of one timer per delegate, we simply
+// store the timer id in the delegate's timer list entry. If the program
+// attempts to store more than one timer with a single delegate, we shift
+// to storing an array of them in the timer list entry. This saves an
+// array allocation in the common single-timer case, at the cost of increased
+// code complexity.
 //=============================================================================
 LzTimer = new Object;
-//@field [LzTimer] timerList: The array of active timers
-LzTimer.timerList = new Array;
-LzTimer.updateDel = new LzDelegate( LzTimer , "checkTime" );
-
+//@keywords private
+LzTimer.timerList = new Object;
 
 //-----------------------------------------------------------------------------
 // Adds a timer. NB: The timer guarantees that the delegate will not be called
@@ -24,78 +32,95 @@ LzTimer.updateDel = new LzDelegate( LzTimer , "checkTime" );
 // it will be called at exactly that time.
 // 
 // @param LzDelegate d: The delegate to call when the timer expires
-// @param Number milisecs: The number of milisecs to wait before calling the delegate.
+// @param Number milisecs: The number of milisecs to wait before calling the 
+// delegate.
 //-----------------------------------------------------------------------------
 LzTimer.addTimer = function ( d , milisecs ){
-    var notinserted = true;
-    var i = 0;
-    var exptime = ( getTimer() + milisecs );
-
-    while ( notinserted ){
-        if ( i == this.timerList.length || 
-             ( exptime > this.timerList[ i ].time )){
-            this.timerList.splice ( i , 0 , { d : d , time : exptime } );
-            notinserted = false;
-        }
-        i++;
+    var p = { 'delegate' : d };
+    var f = function () {
+        // This closure captures 'p', and relies on the fact that p.id will 
+        // have been set by the time the closure is invoked.
+        
+        // User LzTimer explicitly below; "this" is not the outer function's
+        // this here.
+        LzTimer.removeTimerWithID(p.delegate, p.id); 
+        p.delegate.execute( (new Date()).getTime() );
     }
-
-    this.nextTime = this.timerList[ this.timerList.length -1 ].time;
-
-    if ( ! this.haveTimers ){
-        this.haveTimers = true;
-        this.updateDel.register ( _root.LzIdle , "onidle" );
+    var id = setInterval(f, milisecs);
+    if ($debug) {
+        // Debug.format("created timer %w for delegate %w\n", id, d);
+        if (id instanceof Array)
+            // we rely on the setInterval value being a non-array, otherwise
+            // our storage scheme won't work. Error if this happens -- should only
+            // occur when bootstrapping a new runtime.
+            Debug.error("setInterval result type is unexpected; LzTimer will fail");
     }
-}
-
-//-----------------------------------------------------------------------------
-// Checks the timerlist for expired timers.
-//
-// @keywords private
-//-----------------------------------------------------------------------------
-LzTimer.checkTime = function ( ){
-    if ( this.nextTime > getTimer() ) return;
-    var ct = getTimer();
-
-
-    while( this.nextTime <= ct && this.nextTime ){
-        this.timerList.pop().d.execute( getTimer() );
-        this.checkUpdate();
-    }
-}
-
-//-----------------------------------------------------------------------------
-// Called after timerlist changes to update nextTime a timer needs to be 
-// called, and if no timers are pending, to stop the timer from checking for
-// expired timers.
-//
-// @keywords private
-//-----------------------------------------------------------------------------
-LzTimer.checkUpdate = function ( ){
-    if ( this.timerList.length ){
-        this.nextTime = this.timerList[ this.timerList.length - 1 ].time;
+    p.id = id;
+    var tle = this.timerList[d];
+    if (tle == null) {
+        this.timerList[d] = id;
+    } else if (! (tle instanceof Array)) {
+        this.timerList[d] = [tle, id];
     } else {
-        this.nextTime = 0;
-        this.haveTimers = false;
-        this.updateDel.unregisterAll ( );
+        tle.push(id);
     }
+    return id;
 }
+
 //-----------------------------------------------------------------------------
 // Removes the first timer that calls the given delegate from the timerlist.
 //
-// @param LzDelegate d: The delegate called by the timer to be removed. If there are 
-// multiple timerList entries that call delegate d, removes the first in the
+// @param LzDelegate d: The delegate called by the timer to be removed. If there
+// are multiple timerList entries that call delegate d, removes the first in the
 // order received.
 //-----------------------------------------------------------------------------
 LzTimer.removeTimer = function ( d ){
-    for ( var i = this.timerList.length - 1; i >= 0 ; i-- ){
-        if ( this.timerList[ i ].d == d ){
-            this.timerList.splice( i , 1 );
-            break;
+    var tle = this.timerList[d];
+    var id = null;
+    if (tle != null) {
+        if (tle instanceof Array) {
+            id = tle.shift();
+            clearInterval(id);
+            if (tle.length == 0)
+                delete this.timerList[d];
+        } else {
+            id = tle;
+            clearInterval(id);
+            delete this.timerList[d];
+        }
+        // Debug.format("cleared timer %w for delegate %w (2)\n", id, d);
+    }
+    return id;
+}
+
+//-----------------------------------------------------------------------------
+// Removes the timer with the given id that calls the given delegate from the 
+// timerlist.
+//
+// @param LzDelegate d: The delegate called by the timer to be removed.
+// @param id: the id of the timer to remove.
+// @keywords private
+//-----------------------------------------------------------------------------
+LzTimer.removeTimerWithID = function ( d, id ){
+    var tle = this.timerList[d];
+    if (tle != null) {
+        if (tle instanceof Array) {
+            var i = 0;
+            for (i=0; i<tle.length; i++) {
+                var id2 = tle[i];
+                if (id2 == id) {
+                    clearInterval(id);
+                    tle.splice(i,1);
+                    break;
+                }
+            }
+            if (tle.length == 0)
+                delete this.timerList[d];
+        } else if (tle == id) {
+            clearInterval(id);
+            delete this.timerList[d];
         }
     }
-
-    this.checkUpdate();
 }
 
 //-----------------------------------------------------------------------------
@@ -110,5 +135,17 @@ LzTimer.removeTimer = function ( d ){
 //-----------------------------------------------------------------------------
 LzTimer.resetTimer = function ( d  , milisecs ){
     this.removeTimer( d );
-    this.addTimer( d , milisecs );
+    return this.addTimer( d , milisecs );
+}
+
+if ($debug) {
+  LzTimer.countTimers = function ( d ){
+    var tle = this.timerList[d];
+    if (tle == null)
+        return 0;
+    else if (tle instanceof Array)
+        return tle.length;
+    else
+        return 1;
+  }
 }
