@@ -313,14 +313,6 @@
   <target name="everything" depends="init,clean-nocache,build,doc,dist-one,test"
       description="Clean, Build, Doc, Build all distribution files, Scrutinize, and Test" />
 
-  <!--================  Target [all-dist-flavors] ==============-->
-  <target name="all-dist-flavors" depends="init">
-	<ant target="dist-core" />
-	<ant target="dist-dev" />
-        <ant target="dist-one-no-doc" />
-        <ant target="build-source-distro" />
-  </target>
-
   <!--================  Target [clean] ==============-->
   <target name="clean-nocache" description="Remove all build generated files"
       depends="init">
@@ -521,11 +513,14 @@
   <target name="doc" 
       description="Build documentation BUT DON'T RIGHT NOW"
       depends="init" unless="done.doc,skip.doc">
-      <echo message="Skipping doc build." />
-<?ignore
-      <!-- Build the LZX reference -->
-      <ant dir="docs/src" target="build" />
+      <echo message="Building the reference." />
 
+      <!-- Build the LZX reference -->
+      <ant dir="docs/src" target="reference" />
+      
+      <echo message="Skipping javadoc and lzx-catalog build [bshine 6.28.06]" />
+      <echo message="Skipping devguide. [bshine 6.28.06]" />
+<?ignore
       <!-- Build the public javadocs -->
       <ant dir="WEB-INF/lps/server" target="javadoc-public" />
 
@@ -707,14 +702,20 @@
 
   <!--================  Target [dist-one] ==============-->
   <target name="dist-one" 
-      description="Build distributions for a single platform"
-      depends="disable-tomcat,init,build-source-distro,build,doc,build-core,dist-dev,dist-core,runlzunit" >
+      description="*** Build all distributions for a single platform, including the doc."
+      depends="disable-tomcat,init,build-source-distro,build,doc,build-core,dist-dev,dist-core" >
   </target>
-
-  <target name="dist-one-no-doc" 
-      description="Build distributions for a single platform"
-      depends="disable-tomcat,init,build-source-distro,build,build-core,dist-dev,dist-core,runlzunit" >
+  
+  <target name="dist-platform-independent" 
+    description="*** Build all platform-independent distribution artifacts." 
+    depends="disable-tomcat,init,build-source-distro,build,doc,build-core,dist-core">
   </target>
+    
+  <target name="dist-platform-specific" 
+      description="*** Build ONLY the platform-specific installers appropriate for THIS platform." 
+      depends="disable-tomcat,init,dist-dev" >
+  </target>
+    
 
   <!--================  Target [dist-dev] ==============-->
   <target name="dist-dev" depends="disable-tomcat,init,build-core" unless="done.dist.dev"
@@ -1058,8 +1059,8 @@
 			classpath="server/server/lib/catalina-ant.jar"
 			/>	
 
-    <!--======================  Target [tomcat.start|stop|list] =======================-->  
-    <!-- These tasks affect the tomcat server as a whole. Their names begin with "tomcat." -->
+    <!-- These tasks set things up to run tomcat from ant on windows, where things
+        work differently than windows and linux. -->
    
      <!-- Start the tomcat server. I'm told this hangs under windows, must 
          investigate. [bshine 5.10.06] 
@@ -1090,20 +1091,20 @@
      <!-- Set target to use for starting/stopping tomcat. On windows, use
          the services tasks. On non-windows, use the tomcat ant tasks. 
          [bshine 5.10.06] -->        
-     <condition property="tomcat.stop" value="tom.winsvc.stop" >
+     <condition property="tomcat.stop" value="tomcat.winsvc.stop" >
          <os family="windows" />
      </condition>
-     <condition property="tom.stop" value="tom.stop" >
+     <condition property="tomcat.stop" value="tomcat.stop" >
          <not> <os family="windows" /> </not>
      </condition>
-     <condition property="tomcat.start" value="tom.winsvc.start" >
+     <condition property="tomcat.start" value="tomcat.winsvc.start" >
          <os family="windows" />
      </condition>
-     <condition property="tom.start" value="tom.start" >
+     <condition property="tomcat.start" value="tomcat.start" >
          <not> <os family="windows" /> </not>
      </condition>
      
-     <target name="tom.winsvc.start" unless="no.tomcat" depends="init"
+     <target name="tomcat.winsvc.start" unless="no.tomcat" depends="init"
         description="Install and start Windows LPS service (tomcat5)" >
         <exec dir="build-tools" executable="bash">
             <arg line="service.sh install &quot;${tomcat.java.opts}&quot;" />
@@ -1112,17 +1113,14 @@
         <exec executable="net"> <arg line="start LPS" /> </exec>
      </target>
   
-     <target name="tom.winsvc.stop"  depends="init" unless="no.tomcat"
+     <target name="tomcat.winsvc.stop"  depends="init" unless="no.tomcat"
          description="Stop windows LPS service (tomcat5)" >
          <exec executable="net"> <arg line="stop LPS" /> </exec>
      </target>
      
-    <!--=========  Target [webapp.deploy,undeploy,start,stop] =======================-->  
-    <!-- These tasks affect the tomcat server as a whole. Their names begin with "tomcat." -->
-    
-    
-    <!-- "install" is a deprecated term for Tomcat. "Deploy" is preferred now. 
-    [bshine 4.29.06] -->
+    <!--=========  Target [webapp.deploy, webapp.undeploy, webapp.install, webapp.uninstall] === -->
+    <!-- These targets affect the LPS webapp. The tomcat server must be started for these 
+        to be meaningful -->
     <target name="webapp.deploy" depends="init"  unless="no.tomcat"
         description="Deploy lps webapp into tomcat5." >
          <!-- Note that there must be a space after the  close-curly-brace 
@@ -1159,6 +1157,21 @@
          description="Synonym for 'undeploy'; removes application from tomcat.">
          <antcall target="webapp.undeploy" />
      </target>    
+  
+     <!-- "install" is a deprecated term for Tomcat. "Deploy" is preferred now. -->
+     <target name="install" depends="init" unless="no.tomcat"
+         description="Install lps (convenience alias for webapp.deploy). Note that 'install' is a deprecated tomcat term. 'deploy' is preferred." >
+         <antcall target="webapp.deploy" />
+     </target>
+
+     <target name="uninstall" depends="init" unless="no.tomcat"
+         description="unInstall lps (convenience alias for webapp.undeploy)" >
+         <antcall target="webapp.install" />
+     </target>
+
+
+    <!-- ============= Target [start,stop] =======================-->  
+    <!-- These tasks affect the tomcat server as a whole. Their names begin with "tomcat." -->
  
      <target name="webapp.start" description="Start LPS webapp" unless="no.tomcat"
          depends="init,webapp.deploy">
@@ -1177,22 +1190,21 @@
      </target>
   
      <target name="start" depends="init" unless="no.tomcat"
-         description="Start tomcat AND LPS webapp" >
-         <mkdir dir="${server}/logs" />
-         <mkdir dir="${server}/temp" />
+         description="Start tomcat but not lps (convenience alias for tomcat.start)" >
          <antcall target="tomcat.start" />
-         <antcall target="webapp.start" />
      </target>
      
      <target name="stop"  depends="init" unless="no.tomcat"
-         description="Stop tomcat" >
+         description="Stop tomcat (convenience alias for tomcat.stop)" >
          <antcall target="tomcat.stop" />
      </target>
-     
+ 
+     <!-- ============= Target [all] ===================== --> 
      <target name="all" depends="init,clean,build-source-distro,make,doc,test"
          description="build source distro, clean, build, install webapp, doc, and test." >
      </target>
-     
+
+     <!-- ============= Target [make] ===================== -->      
      <target name="make" depends="init,build,webapp.reload"
          description="Build and reload into tomcat5." >
      </target>
