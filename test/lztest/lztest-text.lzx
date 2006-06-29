@@ -1,4 +1,6 @@
 <canvas debug="true">
+  <font name="mono" src="../../lps/fonts/mono-7-bold-regular-s.ttf"/>
+
   <include href="../../lps/utils/lztestmanager.lzx" /> 
 
   <simplelayout axis="x" spacing="5"/>
@@ -42,9 +44,46 @@
   openLaszlo
   </text>
 
+
+<!-- text8: x-stacking of text/input text -->
+  <view name="view8">
+      <simplelayout axis="y"/>
+    <view name="v1">
+      <simplelayout axis="x"/>
+      <text name="t1" bgcolor="0xaaaaaa">Hello</text>
+      <text name="t2" bgcolor="0xcccccc">World</text>
+    </view>
+    <view name="v2">
+      <simplelayout axis="x"/>
+      <text name="t1" bgcolor="0xcccccc">Hello</text>
+      <inputtext name="t2" bgcolor="0xaaaaaa">World</inputtext>
+    </view>
+    <view name="v3">
+      <simplelayout axis="x"/>
+      <text name="t1" bgcolor="0xaaaaaa">HelloWorld</text>
+    </view>
+
+  </view>
+
+<!-- text9: font test and sizing -->
+  <view name="view9">
+    <simplelayout axis="y"/>
+    <text name="t1" font="mono" bgcolor="0xaaaaaa">&lt;&gt;&apos;&amp;&quot;</text>
+    <text name="t2" font="mono" bgcolor="0xcccccc">.....</text>
+    <text name="t3" font="mono" bgcolor="0xaaaaaa">*****</text>
+    <text name="t4" font="mono" bgcolor="0xcccccc" width="66" multiline="true">1234567890</text>
+  </view>
+
 <script><![CDATA[
 
 var suite = new LzTestSuite("LzText Test Suite"); 
+
+// NOTE:
+//
+// Future enhancements to LzView unit test:
+//   - Test event generation
+//   - Assume a specific font and check sizes
+//   - Other fonts
 
 
 //
@@ -119,13 +158,13 @@ suite.test2 = function() {
     // Make sure spacing is consistent
     if (wlast != view2.t2.getTextWidth()) {
       if (xspacing == 0)
-	xspacing = view2.t2.getTextWidth() - wlast;
+        xspacing = view2.t2.getTextWidth() - wlast;
       LzTestManager.assertEquals (xspacing, (view2.t2.getTextWidth()-wlast), "xspacing error at character " + i);
     }
 
     if (hlast != view2.t2.getTextHeight()) {
       if (yspacing == 0)
-	yspacing = view2.t2.getTextHeight() - hlast;
+        yspacing = view2.t2.getTextHeight() - hlast;
       LzTestManager.assertEquals (yspacing, (view2.t2.getTextHeight()-hlast), "yspacing error at character " + i);
     }
 
@@ -358,11 +397,58 @@ suite.test7 = function() {
 
   var s1 = 'open<img alt="alt tag" src="na"/>Laszlo';
   text7.setWidth(s1);
-  LzTestManager.assertTrue (s1, text7.getText(), 'text7.getText() failure');
+  LzTestManager.assertEquals ("openLaszlo", text7.getText(), 'text7.getText() failure');
 
   LzTestManager.assertFalse (w == text7.getTextWidth(), 'LPP-2215: alt tag appears to be ignored');
 }
+
+// test8: x-stacking of text/input text
+suite.test8 = function() {
+  LzTestManager.assertEquals (view8.v1.getWidth(), view8.v2.getWidth(),  "view8.v1.getWidth() failure");
+  LzTestManager.assertTrue (view8.v3.getWidth() < view8.v1.getWidth(), "view8.v3.getWidth() < view8.v1.getWidth() failure");
+
+  var w1 = view8.v1.t1.getTextWidth() + view8.v1.t2.getTextWidth();
+  var w2 = view8.v2.t1.getTextWidth() + view8.v2.t2.getTextWidth();
+  LzTestManager.assertEquals (w1, w2, "view8.v1, view8.v2 text width failure");
+  LzTestManager.assertTrue (view8.v3.t1.getTextWidth() < w1, "view8.v1, view8.v3 text width failure");
+
+  LzTestManager.assertEquals (view8.v1.t1.getTextHeight(), view8.v1.t2.getTextHeight(), "view8.v1 getTextHeight failure");
+  LzTestManager.assertEquals (view8.v2.t1.getTextHeight(), view8.v2.t2.getTextHeight(), "view8.v2 getTextHeight failure");
+  LzTestManager.assertEquals (view8.v1.t1.getTextHeight(), view8.v2.t1.getTextHeight(), "view8.v1, view8.v2 getTextHeight failure");
+  LzTestManager.assertEquals (view8.v1.t1.getTextHeight(), view8.v3.t1.getTextHeight(), "view8.v1, view8.v3 getTextHeight failure");
+
+}
+
   
+// test9: Font and size
+suite.test9 = function() {
+  LzTestManager.assertEquals (view9.t1.getWidth(), view9.t2.getWidth(), "view9 width failure");
+  LzTestManager.assertEquals (view9.t1.getWidth(), view9.t3.getWidth(), "view9 width failure (2)");
+  LzTestManager.assertEquals (view9.t1.getHeight(), view9.t2.getHeight(), "view9 height failure");
+  LzTestManager.assertEquals (view9.t1.getHeight(), view9.t3.getHeight(), "view9 height failure (2)");
+
+  LzTestManager.assertEquals (view9.t1.getTextWidth(), view9.t2.getTextWidth(), "view9 textwidth failure");
+  LzTestManager.assertEquals (view9.t1.getTextWidth(), view9.t3.getTextWidth(), "view9 textwidth failure (2)");
+  LzTestManager.assertEquals (view9.t1.getTextHeight(), view9.t2.getTextHeight(), "view9 textheight failure");
+  LzTestManager.assertEquals (view9.t1.getTextHeight(), view9.t3.getTextHeight(), "view9 textheight failure (2)");
+
+  //NOTE: These tests use hard-wired numbers based on the font (from trunk)
+  LzTestManager.assertEquals (65, view9.t1.getTextWidth(), "view9 font-specific textwidth failure");
+  LzTestManager.assertEquals (17, view9.t1.getTextHeight(), "view9 font-specific textheight failure");
+
+  LzTestManager.assertEquals (127, view9.t4.getTextWidth(), "view9.t4 font-specific textwidth failure");
+  LzTestManager.assertEquals (35, view9.t4.getTextHeight(), "view9.t4 font-specific textheight failure");
+
+//  view9.t4.clearText();
+//  for (var i=0; i<12; i++) {
+//    view9.t4.addText ('*');
+//    Debug.format ("%d: %d %d\n", i, view9.t4.getTextWidth(), view9.t4.getTextHeight());
+//  }
+}
+
+
+suite.addTest(suite.test9);
+suite.addTest(suite.test8);
 suite.addTest(suite.test7);
 suite.addTest(suite.test6);
 suite.addTest(suite.test5);

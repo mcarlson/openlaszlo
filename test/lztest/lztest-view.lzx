@@ -85,6 +85,57 @@
     </handler>
   </view>
 
+<!-- view11: invisible -->
+  <view name="view11" bgcolor="yellow">
+    <view name="v1" bgcolor="green" width="10" height="20"/>
+    <view name="v2" bgcolor="blue" x="90" y="80" width="10" height="20"/>
+  </view>
+
+<!-- view12: stretching view using animation -->
+  <view name="view12" bgcolor="yellow">
+    <view name="v1" bgcolor="green" width="10" height="20">
+
+      <animator name="a1" attribute="x" from="0" to="100" duration="500" start="false">
+        <method event="onstop">
+        <![CDATA[
+          LzTestManager.assertEquals (110, view12.width, "view12.width failure (onstop)");
+          LzTestManager.assertEquals (20, view12.height, "view12.height failure (onstop)");
+          loctest ('view12.v1 (onstop)', view12.v1, [100,0,10,20]);
+        ]]>
+        </method>
+
+      </animator>
+
+    </view>
+
+  </view>
+
+<!-- view13: Stretch/Clipping using a resource -->
+  <view name="view13" bgcolor="yellow">
+    <method event="onload">
+      LzTestManager.assertEquals (30, view13.width, "view13.width failure");
+      LzTestManager.assertEquals (40, view13.height, "view13.height failure");
+    </method>
+    <view name="v1" width="30" height="40" clip="true">
+      <method event="oninit">
+        this.setSource( "pict5.jpg" );
+      </method>
+      <method event="onload">
+        LzTestManager.assertEquals (30, view13.v1.width, "view13.v1.width failure");
+        LzTestManager.assertEquals (40, view13.v1.height, "view13.v1.height failure");
+      </method>
+    </view>
+    <view name="v2" width="30" height="40" stretches="both">
+      <method event="oninit">
+        this.setSource( "pict5.jpg" );
+      </method>
+      <method event="onload">
+        LzTestManager.assertEquals (30, view13.v2.width, "view13.v2.width failure");
+        LzTestManager.assertEquals (40, view13.v2.height, "view13.v2.height failure");
+      </method>
+    </view>
+  </view>
+
 
 <!-- viewN: rotations, around the center -->
 <!-- leave for later
@@ -94,9 +145,17 @@
   </view>
 -->
 
+
+
 <script><![CDATA[
 
 var suite = new LzTestSuite("LzView Test Suite"); 
+
+// NOTE:
+//
+// Future enhancements to LzView unit test:
+//   - Test event generation
+
 
 
 //
@@ -365,6 +424,34 @@ suite.test10 = function() {
   view10changed = true;
 }
 
+suite.test11 = function() {
+  LzTestManager.assertEquals (100, view11.width, "view11.width failure");
+  LzTestManager.assertEquals (100, view11.height, "view11.height failure");
+  LzTestManager.assertTrue (view11.v2.getAttribute('visible'), "view11.v2.visible");
+  loctest ('view11.v1', view11.v1, [0,0,10,20]);
+  loctest ('view11.v2', view11.v2, [90,80,10,20]);
+
+  view11.v2.setVisible (false);
+
+  LzTestManager.assertEquals (10, view11.width, "view11.width failure (2)");
+  LzTestManager.assertEquals (20, view11.height, "view11.height failure (2)");
+  LzTestManager.assertFalse (view11.v2.getAttribute('visible'), "view11.v2.visible (2)");
+  loctest ('view11.v1 (2)', view11.v1, [0,0,10,20]);
+  loctest ('view11.v2 (2)', view11.v2, [90,80,10,20]);
+}
+
+suite.test12 = function() {
+  LzTestManager.assertEquals (10, view12.width, "view12.width failure");
+  LzTestManager.assertEquals (20, view12.height, "view12.height failure");
+  loctest ('view12.v1', view12.v1, [0,0,10,20]);
+
+  view12.v1.a1.doStart();
+}
+
+
+suite.test13 = function() {
+  // Built-into object view14
+}
 
 /* Leave for last
 suite.testN = function() {
@@ -374,6 +461,9 @@ suite.testN = function() {
 */
 
 // Run the tests in order (test1,test2,...)
+suite.addTest(suite.test13);
+suite.addTest(suite.test12);
+suite.addTest(suite.test11);
 suite.addTest(suite.test10);
 suite.addTest(suite.test9);
 suite.addTest(suite.test8);
