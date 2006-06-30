@@ -9,7 +9,7 @@
           </chartbgstyle>
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
                     <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
                     <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
@@ -61,7 +61,7 @@
           </chartbgstyle>
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="12" height="12" image="../../images/master.gif"/>
+                    <pointstyle name="point" width="12" height="12" image="images/master.gif"/>
                     <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
                     <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
                     <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
@@ -109,11 +109,11 @@
           <plotstyle name="plot" linesize = "3" linecolor = "0x000000" fillcolor = "0xffeeff" opacity = "1"/>
           <chartbgstyle name="chartbgstyle">
               <linestyle name="line" size="3" color="0x800000"/>
-              <regionstyle name="region" image="../../images/background.gif"/>
+              <regionstyle name="region" image="images/background.gif"/>
           </chartbgstyle>
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
                     <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
                     <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
@@ -165,7 +165,7 @@
           </chartbgstyle>
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line" color="0x0000ff" size="3" opacity=".5"/>
                     <regionstyle name="region" color="0xFF00FF" opacity="1" gradient="radial"/>
                     <labelstyle name="label" font="myverity" fontsize="10" fontcolor="0x0000ff" 
@@ -212,7 +212,7 @@
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

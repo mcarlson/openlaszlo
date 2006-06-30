@@ -3,7 +3,7 @@
     <include href="charts/styles/chartstyle.lzx"/>
     <include href="chartstyle.lzx"/>
 
-    <dataset name="baseball" src="../../data/pie-data2.xml"/>
+    <dataset name="baseball" src="data/pie-data2.xml"/>
     <font name="myverity" src="verity/verityplus11.ttf"/>    
 
 
@@ -38,7 +38,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.
 * Use is subject to license terms.
 * X_LZ_COPYRIGHT_END
 ****************************************************** -->

@@ -3,7 +3,7 @@
     <include href="charts/addon/zoomarea.lzx"/>
     <include href="chartstyle.lzx"/>
     
-    <dataset name="baseball" src="../../data/redsox-data.xml"/> 
+    <dataset name="baseball" src="data/redsox-data.xml"/> 
     <font name="myverity" src="verity/verityplus11.ttf"/>    
     
     
@@ -87,7 +87,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

@@ -2,7 +2,7 @@
     <include href="charts/styles/chartstyle.lzx"/>
     <include href="chartstyle.lzx"/>
         
-    <dataset name="stock" src="../../data/ebay.xml"/> 
+    <dataset name="stock" src="data/ebay.xml"/> 
     
     <linechart id="chart1" width="500" height="500" style="chartstyle05" dataPointsEnabled="true">        
             <dataseries datapath="stock:/stock">
@@ -25,7 +25,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

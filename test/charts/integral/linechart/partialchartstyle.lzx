@@ -39,7 +39,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -47,7 +47,7 @@
           </valuepointstyle>          
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../test/images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line" color="0x0000ff" size="3" opacity="1"/>
                     <regionstyle name="region" color="0xff0000" opacity="0.8" gradient="radial"/>
                     <labelstyle name="label" font="serif" fontsize="9" fontcolor="0x000000" linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2" fontangle="90"/>
@@ -104,7 +104,7 @@
     </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

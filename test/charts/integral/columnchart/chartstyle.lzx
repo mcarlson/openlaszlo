@@ -39,7 +39,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -47,7 +47,7 @@
           </valuepointstyle>          
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../test/images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line" color="0x0000ff" size="2" opacity="1"/>
                     <regionstyle name="region" color="0x333399" opacity="0.8" gradient="radial"/>
                     <labelstyle name="label" font="serif" fontsize="12" fontcolor="0xffffff" linecolor="0x000000" fillcolor="0x66ccff" linesize="2" fontangle="90"/>
@@ -140,7 +140,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -148,7 +148,7 @@
           </valuepointstyle>          
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../test/images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line"/>
                     <regionstyle name="region" color="0xFF6600"/>
                     <labelstyle name="label" font="serif" fontsize="12" fontcolor="0xffffff" linecolor="0x000000" fillcolor="0xFF3399" linesize="3" fontangle="90"/>
@@ -241,7 +241,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -249,7 +249,7 @@
           </valuepointstyle>          
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../test/images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line" color="0x0033ff"/>
                     <regionstyle name="region" color="0x242424" opacity="0.3" gradient="linear"/>
                     <labelstyle name="label" font="serif" fontsize="12" fontcolor="0xffffff" linecolor="0x000000" fillcolor="0xFF3399" linesize="3" fontangle="90"/>
@@ -308,7 +308,7 @@
           <plotstyle name="plot" linesize = "3" fillcolor="0xC0C0C0" opacity="0.3"/>
           <chartbgstyle name="chartbgstyle">
               <linestyle name="line" size="2" color="0x000099" opacity="0.2"/>
-              <regionstyle name="region" image="../../images/beisbol.jpg"/>
+              <regionstyle name="region" image="images/beisbol.jpg"/>
           </chartbgstyle>
           <valueregionstyle name="valueregionstyle">
               <linestyle name="line" color="0x000000" size="1" opacity="1"/>
@@ -342,7 +342,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -352,7 +352,7 @@
                <datastyle>
                     <pointstyle name="point" width="10" height="10"/>
                     <linestyle name="line" color="0x0033ff"/>
-                    <regionstyle name="region" image="../../images/background.gif"/>
+                    <regionstyle name="region" image="images/background.gif"/>
                     <labelstyle name="label" font="serif" fontsize="12" fontcolor="0xffffff" linecolor="0x000000" fillcolor="0xFF3399" linesize="3" fontangle="90"/>
                     <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000" opacity="1"
                     linecolor="0x000000" fillcolor="0x99FFFF" linesize="1"/>
@@ -360,7 +360,7 @@
                <datastyle>
                     <pointstyle name="point" width="8" height="8" color="0x66B3FF" opacity="1" shape="square"/>
                     <linestyle name="line" color="0x000000" size="1" opacity="1" />
-                    <regionstyle name="region" image="../../images/background1.gif" />
+                    <regionstyle name="region" image="images/background.gif" />
                     <labelstyle name="label" font="serif" fontsize="9" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2" fontangle="45"/>
                     <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -443,7 +443,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -451,7 +451,7 @@
           </valuepointstyle>          
           <datastylelist name="datastyles">
                <datastyle>
-                    <pointstyle name="point" width="10" height="10" image="../../test/images/master.gif"/>
+                    <pointstyle name="point" width="10" height="10" image="images/master.gif"/>
                     <linestyle name="line"/>
                     <regionstyle name="region" color="0x00FF00" gradient="radial"/>
                     <labelstyle name="label" font="serif" fontsize="12" fontcolor="0xffffff" linecolor="0x000000" fillcolor="0xFF3399" linesize="3" fontangle="90"/>
@@ -540,7 +540,7 @@
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
           </valuelinestyle>
           <valuepointstyle name="valuepointstyle">
-                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="../../test/images/master.gif"/>
+                <pointstyle name="point" width="15" height="15" color="0x00ff00" opacity=".5" shape="triangle" image="images/master.gif"/>
                  <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"
                     linecolor="0x000000" fillcolor="0xFFFFC1" linesize="2"/>
                  <labelstyle name="tip" font="serif" fontsize="10" fontcolor="0x000000"
@@ -582,7 +582,7 @@
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->
