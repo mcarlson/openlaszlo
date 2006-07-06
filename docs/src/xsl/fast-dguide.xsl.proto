@@ -7,7 +7,7 @@
                 xmlns:xi="http://www.w3.org/2003/XInclude"
                 version="1.0">
   
-  <xsl:import href="../../../../tools/docbook-xsl-1.65.1/html/docbook.xsl"/>
+  <xsl:import href="@LZ_DOCBOOK_XSL_HOME@/html/docbook.xsl"/>
   <xsl:import href="common-html.xsl"/>
   
   <!-- override default dguide parameters -->

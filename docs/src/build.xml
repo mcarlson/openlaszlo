@@ -24,7 +24,10 @@
     <pathelement path="../../3rd-party/jars/dev/xercesImpl.jar"/>
     <pathelement path="${docbook-xsl}/extensions/saxon651.jar" />
   </path>
-  
+
+  <!-- Lets us get environment variables so we know where to look for docbook stuff. --> 
+  <property environment="env" /> 
+
   <!-- Format a single html file and extract its examples.  This is a
        helper target for the reference and tutorials builds. -->
   <target name="format-one" depends="init">
@@ -59,7 +62,7 @@
       <property file="${LPS_HOME}/build.properties"/>
       
       <!-- doc build properties -->
-      <property name="docbook-xsl" value="${LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
+      <property name="docbook-xsl" value="${env.LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
       <property name="docs.output.dir" value="${LPS_HOME}/docs" />
       <if><equals arg1="${release}" arg2="Production" casesensitive="true"/>
       <then>
@@ -145,6 +148,23 @@
       <property name="docs.src.done.init" value="true" />
   </target>
 
+  <!-- 
+      little tweak to refer to the location of docbook-xsl-1.65.1 relative to
+      ${docbook-xsl} based on environment variables defined in init task.
+  -->
+  <target name="fix-docbook-references" depends="init">
+      <copy todir="xsl">
+          <fileset dir="xsl" />
+          <!-- copy the offending files from .xsl.proto to .xsl -->           
+          <globmapper from="*.xsl.proto" to="*.xsl"/>
+          <!-- As we copy, replace the token @LZ_DOCBOOK_XSL_HOME@ with
+              the installation-dependent value for ${docbook-xsl} --> 
+          <filterset>
+            <filter token="LZ_DOCBOOK_XSL_HOME" value="${docbook-xsl}" />
+          </filterset>          
+      </copy>
+  </target>
+  
   <!--
     targets relating to the reference:
   -->
@@ -398,7 +418,7 @@
   -->
   
   <target name="dguide-or-tutorials" description="Build the tutorials"
-          depends="init">
+          depends="init,fix-docbook-references">
     <!-- Copy the input files to the build directory.  The stylesheet
          formats them and extracts the lzx programs as *.in files. -->
     <mkdir dir="${local.build.dir}"/>
@@ -555,7 +575,7 @@
   
   <!-- A parameterized target called by *.preprocess.  Inputs are
        local.input.dir, local.input.index, and local.build.dir -->
-  <target name="book.preprocess" depends="init,reference.target.db.exists">
+  <target name="book.preprocess" depends="init,reference.target.db.exists,fix-docbook-references">
     <mkdir dir="${local.build.dir}"/>
     <outofdate>
       <sourcefiles>
@@ -949,7 +969,7 @@
   -->
 
   <target name="build" description="Make the documentation"
-          depends="reference,dguide,deployers,designers"/>
+          depends="reference,dguide,deployers,designers"/> 
 
   <target name="clean" depends="clean-reference,clean-dguide,clean-deployers,clean-designers,clean-tutorials"
       description="clean up generated files">

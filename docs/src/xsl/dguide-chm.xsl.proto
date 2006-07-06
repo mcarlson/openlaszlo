@@ -9,7 +9,7 @@
                 exclude-result-prefixes="exslt"
                 version="1.0">
   
-  <xsl:import href="../../../../tools/docbook-xsl-1.65.1/htmlhelp/htmlhelp.xsl"/>
+  <xsl:import href="@LZ_DOCBOOK_XSL_HOME@/htmlhelp/htmlhelp.xsl"/>
 
   <xsl:import href="parameters.xsl"/>
 

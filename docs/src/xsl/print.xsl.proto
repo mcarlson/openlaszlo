@@ -9,7 +9,7 @@
                 exclude-result-prefixes="exslt"
                 version="1.0">
   
-  <xsl:import href="../../../../tools/docbook-xsl-1.65.1/fo/docbook.xsl"/>
+  <xsl:import href="@LZ_DOCBOOK_XSL_HOME@/fo/docbook.xsl"/>
 
   <!-- Show fixmes if true -->
   <!--xsl:param name="fixme" select="false()"/-->
@@ -28,12 +28,12 @@
   <xsl:param name="ulink.show" select="'1'"/>
   <!-- Pagination and General Styles -->
   <xsl:param name="draft.mode" select="'yes'"/>
-  <xsl:param name="draft.watermark.image" select="'../../../tools/docbook-xsl-1.65.1/images/draft.png'"/>
+  <xsl:param name="draft.watermark.image" select="'@LZ_DOCBOOK_XSL_HOME@/images/draft.png'"/>
   <!-- Cross References -->
   <xsl:param name="insert.xref.page.number" select="'yes'"/>
 
   <xsl:param name="callouts.extension" select="'1'"/>
-  <xsl:param name="callout.graphics.path" select="'../../../tools/docbook-xsl-1.65.1/images/callouts/'"/>
+  <xsl:param name="callout.graphics.path" select="'@LZ_DOCBOOK_XSL_HOME@/images/callouts/'"/>
   
   <xsl:param name="linenumbering.extension" select="'1'"/>
   <xsl:param name="tablecolumns.extension" select="'0'"/>

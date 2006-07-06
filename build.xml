@@ -236,7 +236,6 @@
     <echo message="    platform: is  ${build.platform}" />
     <echo message="    Skipping prefetch is ${skip.prefetch}" />
     <echo message="    Skipping wrappertest is ${skip.wrappertest}" />
-    <echo message="    classpath is ${my.classpath}" />
     
     <!-- We only support Java 1.4 and Java 1.5. This condition is a bit loose
         in that it only makes sure the java version _contains_ 1.4 or 1.5, not
@@ -511,15 +510,14 @@
 
   <!--================  Target [doc] ==============-->
   <target name="doc" 
-      description="Build documentation BUT DON'T RIGHT NOW"
+      description="Build documentation"
       depends="init" unless="done.doc,skip.doc">
-      <echo message="Building the reference." />
+      <echo message="Building the reference, devguide, designer's guide, and deployer's guide." />
 
-      <!-- Build the LZX reference -->
-      <ant dir="docs/src" target="reference" />
+      <ant dir="docs/src" />
+
+      <echo message="skipping javadoc and lzx-catalog [bshine 7.5.06]" />
       
-      <echo message="Skipping javadoc and lzx-catalog build [bshine 6.28.06]" />
-      <echo message="Skipping devguide. [bshine 6.28.06]" />
 <?ignore
       <!-- Build the public javadocs -->
       <ant dir="WEB-INF/lps/server" target="javadoc-public" />
