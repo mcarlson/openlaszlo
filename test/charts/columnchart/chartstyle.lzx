@@ -308,7 +308,7 @@
           <plotstyle name="plot" linesize = "3" fillcolor="0xC0C0C0" opacity="0.3"/>
           <chartbgstyle name="chartbgstyle">
               <linestyle name="line" size="2" color="0x000099" opacity="0.2"/>
-              <regionstyle name="region" image="images/beisbol.jpg"/>
+              <!--<regionstyle name="region" image="images/beisbol.jpg"/>-->
           </chartbgstyle>
           <valueregionstyle name="valueregionstyle">
               <linestyle name="line" color="0x000000" size="1" opacity="1"/>

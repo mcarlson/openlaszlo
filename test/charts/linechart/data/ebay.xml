@@ -1,5 +1,4 @@
-﻿<!-- Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved -->
-<?xml version="1.0" encoding="utf-8" standalone="no"?>
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <stock symbol="EBAY">
   <item index="0" date="3/1/2005 12:00:00 AM" high="43.07" low="42.08" close="42.58" />
   <item index="1" date="2/28/2005 12:00:00 AM" high="43.31" low="41.98" close="42.84" />
@@ -1619,3 +1618,4 @@
   <item index="1615" date="9/25/1998 12:00:00 AM" high="46.13" low="41.13" close="44.88" />
   <item index="1616" date="9/24/1998 12:00:00 AM" high="54.25" low="44.25" close="47.38" />
 </stock>
+<!-- Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.  -->
