@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -64,7 +64,7 @@ class ClassCompiler extends ViewCompiler {
      * For each CLASS element, find child ATTRIBUTE tags, and add them
      * to the schema.
      *
-     * Also, any HANDLER tags will be added to the schema as
+     * Also, any EVENT tags will be added to the schema as
      * attributes of type "script".
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
@@ -177,7 +177,7 @@ class ClassCompiler extends ViewCompiler {
                             attrSpec.contentType = attrSpec.HTML_CONTENT;
                     }
                     attributeDefs.add(attrSpec);
-                } else if (child.getName().equals("handler")) {
+                } else if (child.getName().equals("event")) {
                     String attrName;
                     try {
                         attrName = requireIdentifierAttributeValue(child, "name");
