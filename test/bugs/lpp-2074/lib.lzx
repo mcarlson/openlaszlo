@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<library>
+  <view id="bar" width="20" height="20" bgcolor="red">
+    <handler name='oninit'>
+      froggy.frog();
+      Debug.write("Library is inited. Didn't see any warnings.");
+    </handler>
+  </view>
+<!--
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+-->
+</library>

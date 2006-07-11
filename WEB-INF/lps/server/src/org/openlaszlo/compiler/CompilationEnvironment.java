@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -159,7 +159,7 @@ public class CompilationEnvironment {
         // Need to share name generator so we don't create non-unique
         // unique names!
         this.methodNameGenerator = srcEnv.methodNameGenerator;
-        this.mProperties = new Properties(srcEnv.getProperties());
+        this.mProperties = (Properties) (srcEnv.getProperties().clone());
         this.mFileResolver = srcEnv.getFileResolver();
         this.mParser = new Parser();
         this.mParser.setResolver(this.mFileResolver);
