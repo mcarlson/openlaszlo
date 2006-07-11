@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <%@ page import="java.util.ArrayList,
@@ -35,12 +35,30 @@ class TmpFileManager implements HttpSessionBindingListener
     }
 %>
 
+<%!
+    // Does this pathname point to a valid target directory? Should be
+    // a subdir of the webapp. 
+    boolean isValidSubdir(String path) {
+      try {
+          String canonical = (new File(path)).getCanonicalPath();
+          String webapp =  (new File((getServletContext().getRealPath(".")))).getCanonicalPath();
+     return canonical.startsWith(webapp);
+      } catch (IOException e) {
+        return false;
+       }
+    }
+
+    %>
+
 <%
     String src = request.getParameter("src");
     String title = request.getParameter("title");
     String fname = src;
-    src = src.replaceAll("[.][.]", "");
-    src = src.replaceAll("^[/\\\\]*", "");
+    // Check if url is in proper subdir of this JSP 
+    if (!isValidSubdir(application.getRealPath(src))) {
+        out.println("invalid path");
+        return;
+    }
 
     String sTmpFile = "TempFilePath";
     try {
@@ -86,10 +104,13 @@ class TmpFileManager implements HttpSessionBindingListener
                 }
             }
         } else if (formAction != null && formAction.startsWith(saveAsLabel)) {
-            response.addHeader("Content-Type","application/octet-strem");
-            response.addHeader("Content-Disposition","attachment; filename=\"" +
-                               request.getParameter("saveasfile") + "\"");
-            out.write(sourceCode);
+            // only allow requests from localhost
+            if (request.getRemoteAddr().equals("127.0.0.1")) {
+                response.addHeader("Content-Type","application/octet-strem");
+                response.addHeader("Content-Disposition","attachment; filename=\"" +
+                                   request.getParameter("saveasfile") + "\"");
+                out.write(sourceCode);
+            }
             return;
         } else {
             if ("Reset".equals(formAction)) {
