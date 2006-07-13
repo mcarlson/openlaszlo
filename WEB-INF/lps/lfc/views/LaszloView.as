@@ -2211,8 +2211,8 @@ LzView.prototype.setClickable = function ( amclickable ){
         mc.but.onKillFocus = Button.prototype.__lostFocus;
 
         //mc.tabIndex = _root.tabindexcounter++;
-        if (this.showhandcursor == false) this.setShowHandCursor(this.showhandcursor);
         this.__LZbuttonRef = mc;
+        if (this.showhandcursor == false) this.setShowHandCursor(this.showhandcursor);
         this.setButtonSize = this._setButtonSize;
         this.setButtonSize( "width" , this.width );
         this.setButtonSize( "height" , this.height );
@@ -2860,7 +2860,7 @@ LzView.prototype.setContextMenu = function ( cmenu ){
     if (! (cmenu instanceof ContextMenu)) {
         cmenu = cmenu.__LZcontextMenu();
     } else {
-        Debug.write("Passing a Flash ContextMenu to LzView.setContextMenu is deprecated, use LzContextMenu instead");
+        if ($debug) Debug.warn("Passing a Flash ContextMenu to LzView.setContextMenu is deprecated, use LzContextMenu instead");
     }
 
     var mc = this.getMCRef();
@@ -2874,7 +2874,7 @@ LzView.prototype.setContextMenu = function ( cmenu ){
     }
 
     if (mb == null && mc == null) {
-        Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip");
+        if ($debug) Debug.warn("LzView.setContextMenu: cannot set menu on view %w, it has no foreground or background movieclip", this);
     }
 }
 
