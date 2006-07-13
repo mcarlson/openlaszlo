@@ -46,6 +46,7 @@
             this.hold( sd ); //subviews are held by default
         }
 
+        this.resetDelegate.register(  sd , "onvisible" );
         this.resetDelegate.register( sd , "on" + this.sizeAxis );
         this.reset();
         ]]>
@@ -72,14 +73,25 @@
     <method name="reset" args="e">
         <![CDATA[
         if ( this.locked ) { return; }
+        var l = this.subviews.length;
         this.totalHeld = 0;
         this.heldAmount = 0;
         this.lastUnheld  = -1;
 
-        var svl = this.subviews.length;
-        for (var i = 0; i < svl; i++ ) {
+        // Only consider views that are visible
+        var inuse = 0;
+        for (var i = 0; i < l; i++ ) {
             var s = this.subviews[i];
-            var hs = i < svl-1 ? this.spacing : 0;
+            if (s.visible) inuse++;
+        }
+
+        // i is the view counter, j = visible view counter
+        var j = 0;
+        for (var i = 0; i < l; i++ ) {
+            var s = this.subviews[i];
+            if ( !s.visible ) continue;
+
+            var hs = (j < inuse-1) ? this.spacing : 0;
             if ( this.heldSubs[ s.getUID() ] ) {
                 hs += s[(this.sizeAxis)];
                 this.heldAmount += hs;
@@ -88,9 +100,11 @@
                 this.lastUnheld = i;
                 this.heldAmount += hs;
             }
+
+            j++;
         }
 
-        this.unheldCount = this.subviews.length - this.totalHeld ;
+        this.unheldCount = inuse - this.totalHeld ;
 
         this.update( );
 
@@ -111,9 +125,12 @@
 
         var sizeDifference  = layoutSize - (this.heldAmount );
         var newElementSize = sizeDifference /this.unheldCount;
+        var l = this.subviews.length;
         var c = 0;
-        for ( var i=0; i < this.subviews.length ; i++) {
+
+        for ( var i=0; i < l ; i++) {
             var s = this.subviews[i];
+            if ( !s.visible ) continue;
 
             // Set the position
             s.setAttribute( this.axis , c );
@@ -134,7 +151,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

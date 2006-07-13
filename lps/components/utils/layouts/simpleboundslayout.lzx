@@ -23,6 +23,7 @@
             this.updateDelegate.register( newsub,  "onrotation");
             this.updateDelegate.register( newsub,  "onwidth");
             this.updateDelegate.register( newsub,  "onheight");
+            this.updateDelegate.register( newsub,  "onvisible");
             super.addSubview( newsub );
             this.update();
 
@@ -41,6 +42,7 @@
                 
             for(var i=0; i < l; i++) {
                 var s = this.subviews[i]; 
+                if ( !s.visible ) continue;
                 var sb = s.getBounds();
                 if ( s[ this.axis ] != c - sb[ this.axis + "offset"] ){
                     s.setAttribute( this.axis , c - sb[ this.axis + "offset"] );
@@ -54,7 +56,7 @@
     </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->

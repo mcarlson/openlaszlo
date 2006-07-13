@@ -35,6 +35,7 @@
     <method name="addSubview" args="newsub">
         this.updateDelegate.register( newsub,  'onwidth');
         this.updateDelegate.register( newsub,  'onheight');
+        this.updateDelegate.register( newsub,  'onvisible');
         this.updateDelegate.register( this.immediateparent,  'onwidth');
         super.addSubview( newsub );
         this.update();
@@ -48,6 +49,14 @@
         <![CDATA[
         if ( this.locked ) return;
         var l = this.subviews.length;
+
+        // Only consider views that are visible
+        var inuse = 0;
+        for (var i = 0; i < l; i++ ) {
+            var s = this.subviews[i];
+            if (s.visible) inuse++;
+        }
+
         var limit = this.immediateparent[this.sizeAxis];
 
         // position along this.axis
@@ -58,12 +67,15 @@
         var space = this[this.axis + 'spacing'];    // spacing in axis dimension
         var otherspace = this[this.otherAxis + 'spacing'];    // spacing in other axis dimension
 
-        for(var i=0; i < l; i++) {
+        // i is the view counter, j = visible view counter
+        var j = 0;
+        for (var i = 0; i < l; i++ ) {
             var s = this.subviews[i];
+            if ( !s.visible ) continue;
             s.animate(this.axis, pos, this.duration,false);
             s.animate(this.otherAxis, otherpos, this.duration,false);
             pos += s[this.sizeAxis];
-            if ( i < (l - 1)) {
+            if ( j < (inuse - 1)) {
                 pos += space;
                 maxdimension = Math.max(maxdimension,s[this.otherSizeAxis]);
                 if (( pos > limit) ||
@@ -74,7 +86,7 @@
                 }
             }
 
-
+            j++;
         }
         ]]>
     </method>
@@ -85,7 +97,7 @@
 </class>
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
