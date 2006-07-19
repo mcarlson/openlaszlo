@@ -64,7 +64,7 @@
       <!-- doc build properties -->
       <property name="docbook-xsl" value="${env.LZ_VENDOR_ROOT}/docbook-xsl-1.65.1"/>
       <property name="docs.output.dir" value="${LPS_HOME}/docs" />
-      <if><equals arg1="${release}" arg2="Production" casesensitive="true"/>
+      <if><equals arg1="${release}" arg2="Production" casesensitive="true" trim="true"/>
       <then>
         <property name="draft.mode" value="no"/>
         <property name="show.comments" value="0"/>
@@ -73,7 +73,7 @@
       <else>
         <property name="draft.mode" value="yes"/>
         <property name="show.comments" value="1"/>
-        <if><equals arg1="${release}" arg2="Internal" casesensitive="true"/>
+        <if><equals arg1="${release}" arg2="Internal" casesensitive="true" trim="true"/>
         <then>
           <property name="show.fixmes" value="1"/>
         </then>
@@ -83,6 +83,7 @@
         </if>
       </else>
       </if>
+      <echo message="draft.mode=${draft.mode}" />
       
       <!-- reference properties -->
       <property name="schema.dir" value="${LPS_HOME}/WEB-INF/lps/schema" />
