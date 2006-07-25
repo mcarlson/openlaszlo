@@ -2,7 +2,7 @@
 <head>
     <title>LPS Installation Instructions</title>
 <script>
-<!-- 
+<!--
 var urlPrefix = './';
 // -->
 </script>
@@ -20,7 +20,7 @@ var urlPrefix = './';
 <h2>Installing OpenLaszlo Server</h2>
 
 
-<p>This page steps you through installing the OpenLaszlo server (formerly called Laszlo Presentation Server (LPS)) 
+<p>This page steps you through installing the OpenLaszlo server (formerly called Laszlo Presentation Server (LPS))
 and verifying that it is installed properly by running a Laszlo application.</p>
 
 <h2>Java</h2>
@@ -28,7 +28,7 @@ and verifying that it is installed properly by running a Laszlo application.</p>
 	It's available at:<br/>
     &nbsp;&nbsp;&nbsp;&nbsp;<a target="_blank" href="http://java.sun.com/j2se/1.4/">http://java.sun.com/j2se/1.4/</a><br>
 <br/>
-<b>Note</b>: Mac OSX users do not have to install the SDK, as it is installed with OSX by default.</p>
+<b>Note</b>: Mac OS X users do not have to install the SDK, as it is installed with OS X by default.</p>
 
 <p>
 <a href="#windows">Windows</a><br>
@@ -40,12 +40,12 @@ and verifying that it is installed properly by running a Laszlo application.</p>
 <a name="windows"></a>
 <h2>Windows</h2>
 
-<p>To install the Laszlo Presentation Server:</p>
+<p>To install the OpenLaszlo Server:</p>
 
 <ul>
-	<li>If you already have a copy of Tomcat (or any other service that is running on port 8080), please make 
+	<li>If you already have a copy of Tomcat (or any other service that is running on port 8080), please make
 	sure that it is stopped.</li>
-	<li><a href="http://www.laszlosystems.com/developers/download/">Download</a> the Laszlo Presentation Server for Windows.</li>
+	<li><a href="http://www.laszlosystems.com/developers/download/">Download</a> the OpenLaszlo Server for Windows.</li>
 	<li>Run the installer executable, which will be called something like: lps-@VERSIONID@-windows.exe.</li>
 	<li>Now <a href="run.html">test your installation</a>.</li>
 </ul>
@@ -56,17 +56,22 @@ and verifying that it is installed properly by running a Laszlo application.</p>
 <a name="unix"></a>
 <h2>Unix/Linux</h2>
 <ul>
-	<li><a href="../../download/">Download</a> the Laszlo Presentation Server for Unix/Linux.</li>
-    <li>After unzipping, untar the entire lps-@VERSIONID@-unix.tar file from /usr/local/ (or wherever you want it to 
-    go; you can even use your home directory for safety). </li>
-	<li>DON'T just copy the tomcat folder into /usr/local. Keep the whole distribution together. So if you put it in /usr/local, it would look something like this:</li>
+	<li><a href="../../download/">Download</a> the OpenLaszlo Server for Unix/Linux.</li>
+    <li>Use tar zxvf to unzip and untar the distribution from /usr/local (or wherever you want it to go; you can even use your home directory for safety). </li>
+	<li>DON'T just copy the Tomcat folder into /usr/local. Keep the whole distribution together. So if you put it in /usr/local, it would look something like this:</li>
 	<li>/usr/local/lps-@VERSIONID@/
 	&nbsp;&nbsp;&nbsp;&nbsp;...with Server/tomcat-5.0.24 as a subdirectory of lps-@VERSIONID@</li>
 	
-	<li>Make sure that JAVA_HOME is set correctly. See the instructions that come with the Java SDK.</li>
+	<li>Make sure that JAVA_HOME is set correctly. If the instructions below don't work, see the instructions that come with the Java SDK.</li>
 	
 	<li>You can check which version of java you have by typing:<br>
-	&nbsp;&nbsp;$ echo $JAVA_HOME</li>
+	&nbsp;&nbsp;$ echo $JAVA_HOME<br>
+&nbsp;&nbsp;and you should see something like:<br>
+&nbsp;&nbsp;/usr/java/j2sdk1.4.0<br>
+&nbsp;&nbsp;if not, type:<br>
+&nbsp;&nbsp;which java to find Java on your machine. If no value is returned check installation of Java.<br>
+&nbsp;&nbsp;Export JAVA_HOME by typing:<br>
+&nbsp;&nbsp;export JAVA_HOME=(location of Java on your machine) </li>
 	
 	<li>and you should see something like:<br>
 	&nbsp;&nbsp;&nbsp;&nbsp;/usr/java/j2sdk1.4.0</li>
@@ -75,8 +80,13 @@ and verifying that it is installed properly by running a Laszlo application.</p>
     browser plugin installed.</li>
 	
 	<li>Finally run the <br>
-	&nbsp;&nbsp;./lps-@VERSIONID@/Server/tomcat-5.0.24/bin/startup.sh<br>
-	script, and you're ready to go.</li>
+&nbsp;&nbsp;&nbsp;&nbsp;/lps-3.3/Server/tomcat-5.0.24/bin/startup.sh<br>
+&nbsp;&nbsp;script, and you're ready to go. This script will set the following environment variables:<br>
+&nbsp;&nbsp;CATALINA_BASE<br>
+&nbsp;&nbsp;CATALINA_HOME<br>
+&nbsp;&nbsp;CATALINA_TMDIR<br>
+&nbsp;&nbsp;JAVA_HOME - note that JAVA_HOME must be set before running the script</li>
+
 	<li>Now <a href="run.html">test your installation</a>.</li>
 </ul>
 
@@ -84,7 +94,7 @@ and verifying that it is installed properly by running a Laszlo application.</p>
 <p>On some installations of RedHat 7.2 Linux, you may need the XFree86-libs RPM from<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<a href="http://updates.redhat.com/7.2/en/os/i386/"
     >http://updates.redhat.com/7.2/en/os/i386/</a>.</p>
-<p>In order to access JSP pages, you may need to copy $JAVA_HOME/jre/lib/tools.jar to 
+<p>In order to access JSP pages, you may need to copy $JAVA_HOME/jre/lib/tools.jar to
 lps-@VERSIONID@/Server/tomcat-5.0.24/common/lib.</p>
 
 
@@ -92,7 +102,7 @@ lps-@VERSIONID@/Server/tomcat-5.0.24/common/lib.</p>
 <h2>Mac OS X</h2>
 <h4>Package installation</h4>
 <ul>
-    <li>Download the lps-@VERSIONID@-macosx.dmg file. You can save it to your 
+    <li>Download the lps-@VERSIONID@-macosx.dmg file. You can save it to your
         desktop.</li>
     <li>Double-click the lps-@VERSIONID@-macosx file to install it.</li>
 	<li>Now <a href="run.html">test your installation</a>.</li>
@@ -151,8 +161,7 @@ lps-@VERSIONID@/Server/tomcat-5.0.24/common/lib.</p>
 
 <!-- lz_content_end -->
 <!-- * H_LZ_COPYRIGHT_BEGIN *********************************************** -->
-<p class="copyright">Copyright &copy; 2002-2006 <a target="_top"
-href="http://www.laszlosystems.com/">Laszlo Systems, Inc.</a>
+<p class="copyright">Copyright 2006 Laszlo Systems, Inc.</a>
 All Rights Reserved. Unauthorized use, duplication or
 distribution is strictly prohibited. This is the proprietary
 information of Laszlo Systems, Inc. Use is subject to license terms.</p>
@@ -160,7 +169,3 @@ information of Laszlo Systems, Inc. Use is subject to license terms.</p>
 </body>
 
 </html>
-
-
-
-
