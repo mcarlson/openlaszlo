@@ -511,7 +511,7 @@
   <!--================  Target [doc] ==============-->
   <target name="doc" 
       description="Build documentation"
-      depends="init" unless="done.doc,skip.doc">
+      depends="init" unless="skip.doc">
       <echo message="Building the reference, devguide, designer's guide, and deployer's guide." />
 
       <ant dir="docs/src" />
