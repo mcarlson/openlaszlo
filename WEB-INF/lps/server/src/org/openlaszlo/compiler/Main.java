@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -42,8 +42,6 @@ public class Main {
         "  Compile to swf6, swf7, swf8.",
         "--dir outputdir",
         "  Output directory.",
-        "-k | --krank",
-        "  Add krank information to the output object.",
         "-g | --debug",
         "  Add debugging information into the output object.",
         "-p | --profile",
@@ -179,8 +177,6 @@ public class Main {
                     if (level != "" && level != null) {
                         thisLogger.setLevel(Level.toLevel(level));
                     }
-                } else if (arg == "-k" || arg == "--krank") {
-                    compiler.setProperty(CompilationEnvironment.KRANK_PROPERTY, "true");
                 } else if (arg == "-g" || arg == "--debug") {
                     compiler.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true");
                 } else if (arg == "-p" || arg == "--profile") {
@@ -216,8 +212,11 @@ public class Main {
         return 0;
     }
 
-    static private void compile(Compiler compiler, Logger logger,
-                 String sourceName, String outFileName, String outDir)
+    static private void compile(Compiler compiler,
+                                Logger logger,
+                                String sourceName,
+                                String outFileName,
+                                String outDir)
     {
         File sourceFile = new File(sourceName);
         if (outFileName == null && outDir == null) {

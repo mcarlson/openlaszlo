@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -45,7 +45,6 @@ public abstract class ResponderCompile extends Responder
 
     private static boolean mIsInitialized = false;
     private static boolean mAllowRequestSOURCE = true;
-    private static boolean mAllowRequestKRANK = true;
     private static boolean mAllowRecompile = true;
     private static boolean mCheckModifiedSince = true;
     private static String mAdminPassword = null;
@@ -68,8 +67,6 @@ public abstract class ResponderCompile extends Responder
 
             mAllowRequestSOURCE =
                 prop.getProperty("allowRequestSOURCE", "true").intern() == "true";
-            mAllowRequestKRANK =
-                prop.getProperty("allowRequestKRANK", "true").intern() == "true";
             mCheckModifiedSince =
                 prop.getProperty("checkModifiedSince", "true").intern() == "true";
             mAllowRecompile =
@@ -138,12 +135,6 @@ public abstract class ResponderCompile extends Responder
         String fileName = LZHttpUtils.getRealPath(mContext, req);
 
         String lzt  = req.getParameter("lzt");
-        String krank = req.getParameter("krank");
-        boolean kranking = ("true".equals(krank) && "swf".equals(lzt));
-
-        if (fileName.endsWith(".lzo") && kranking) {
-            fileName = fileName.substring(0, fileName.length()-1) + 'x';
-        }
 
         // FIXME: [2003-01-14 bloch] this needs to be rethought out for real!!
         // Is this the right logic for deciding when to do preprocessing?
@@ -183,7 +174,7 @@ public abstract class ResponderCompile extends Responder
              * is where we launch the serialization
              * port-listener thread.
              */
-            if (mCheckModifiedSince && !kranking) {
+            if (mCheckModifiedSince) {
                 long lastModified = getLastModified(fileName, req);
                 // Round to the nearest second.
                 lastModified = ((lastModified + 500L)/1000L) * 1000L;
@@ -399,26 +390,6 @@ public abstract class ResponderCompile extends Responder
     protected long getLastModified(String fileName, HttpServletRequest req)
         throws CompilationError, IOException
     {
-        // If it's a .lzo file (and lzt=swf), just return the file last modified
-        // date from the filesystem, or zero if the file does not
-        // exist, since the compilation manager cannot generate a
-        // kranked (.lzo) file file automatically under any
-        // circumstances.
-        if (fileName.endsWith(".lzo") && "swf".equals(req.getParameter("lzt"))) {
-            File kranked = new File(fileName);
-            if (kranked.exists()) {
-                return kranked.lastModified();
-            } else {
-                return 0;
-            }
-        }
-
-        // Pass the .lzx filename into compilation manager, so it can find/update the canvas
-        // for this app. 
-        if (fileName.endsWith(".lzo")) {
-            fileName = fileName.substring(0, fileName.length() - 1) + "x";
-        }
-
         Properties props = initCMgrProperties(req);
         return mCompMgr.getLastModified(fileName, props);
     }
@@ -436,7 +407,7 @@ public abstract class ResponderCompile extends Responder
      * <li> "debug"
      * <li> "logdebug"
      * <li> "profile"
-     * <li> "krank"
+     * <li> "validate"
      * <li> "sourcelocators"
      * <li> "lzr" (swf version := swf5 | swf6)
      * <li> "lzproxied" true|false
@@ -463,6 +434,13 @@ public abstract class ResponderCompile extends Responder
             String logdebug = req.getParameter(CompilationEnvironment.LOGDEBUG_PROPERTY);
             if (logdebug != null) {
                 props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
+            }
+
+            // Look for "validate=true" flag
+            props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, "false");
+            String validate = req.getParameter(CompilationEnvironment.VALIDATE_PROPERTY);
+            if (validate != null) {
+                props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, validate);
             }
 
             // Look for "debug=true" flag
@@ -517,20 +495,6 @@ public abstract class ResponderCompile extends Responder
                                 ResponderCompile.class.getName(),"051018-523")
 );
                 }
-            }
-        }
-
-        if (mAllowRequestKRANK) {
-            // Look for "krank=true" flag.  We only set this if
-            // lzt=swf, i.e., this is a request for an actual
-            // instrumented object (.swf) file. This tells the
-            // compilation manager to actually launch a krank
-            // listener.
-            props.setProperty(CompilationEnvironment.KRANK_PROPERTY, "false");
-            String lzt  = req.getParameter("lzt");
-            String krank = req.getParameter(CompilationEnvironment.KRANK_PROPERTY);
-            if (krank != null && "swf".equals(lzt)) {
-                props.setProperty(CompilationEnvironment.KRANK_PROPERTY, krank);
             }
         }
 

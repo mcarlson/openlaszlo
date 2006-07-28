@@ -149,8 +149,6 @@ public class CompilationEnvironment {
         this.mParser = new Parser();
         this.mParser.setResolver(resolver);
         this.mMediaCache = mcache;
-        // Default property values
-        this.setProperty(VALIDATE_PROPERTY, true);
     }
 
     /** Copy fields from an existing CompilationEnvironment.
@@ -164,7 +162,6 @@ public class CompilationEnvironment {
         this.mParser = new Parser();
         this.mParser.setResolver(this.mFileResolver);
         // Default property values
-        this.setProperty(VALIDATE_PROPERTY, true);
         this.mSchema = srcEnv.getSchema();
         this.mCanvas = srcEnv.getCanvas();
 

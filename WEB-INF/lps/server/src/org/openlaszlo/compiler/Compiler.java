@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -211,6 +211,7 @@ public class Compiler {
         throws CompilationError, IOException
     {
         mLogger.info("compiling " + file + "...");
+
         CompilationEnvironment env = makeCompilationEnvironment();
         CompilationErrorHandler errors = env.getErrorHandler();
         env.setApplicationFile(file);
@@ -268,14 +269,14 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
         }
 
+        String validate = props.getProperty(CompilationEnvironment.VALIDATE_PROPERTY);
+        if (validate != null) {
+            env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, validate);
+        }
+
         String profile = props.getProperty(CompilationEnvironment.PROFILE_PROPERTY);
         if (profile != null) {
             env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, profile);
-        }
-
-        String krank = props.getProperty(CompilationEnvironment.KRANK_PROPERTY);
-        if (krank != null) {
-            env.setProperty(CompilationEnvironment.KRANK_PROPERTY, krank);
         }
 
         String logdebug = props.getProperty(CompilationEnvironment.LOGDEBUG_PROPERTY);
@@ -310,8 +311,8 @@ public class Compiler {
             if ("true".equals(root.getAttributeValue("profile"))) {
                 env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, true);
             }
-            if ("false".equals(root.getAttributeValue("validate"))) {
-                env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, false);
+            if ("true".equals(root.getAttributeValue("validate"))) {
+                env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, true);
             }
 
             // If css map already exists, don't look at canvas's css property.
@@ -366,8 +367,9 @@ public class Compiler {
                 }
             }
             
-            if (env.getBooleanProperty(CompilationEnvironment.VALIDATE_PROPERTY))
+            if (env.getBooleanProperty(CompilationEnvironment.VALIDATE_PROPERTY)) {
                 Parser.validate(doc, file.getPath(), env);
+            } 
             
             SWFWriter writer = new SWFWriter(env.getProperties(), ostr,
                                              mMediaCache, true, env);
