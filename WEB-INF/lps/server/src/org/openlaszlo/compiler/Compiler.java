@@ -269,7 +269,8 @@ public class Compiler {
             env.setProperty(CompilationEnvironment.DEBUG_PROPERTY, debug);
         }
 
-        String validate = props.getProperty(CompilationEnvironment.VALIDATE_PROPERTY);
+        String validate = props.getProperty(CompilationEnvironment.VALIDATE_PROPERTY,
+                                            LPS.getProperty("compiler.validate", "true"));
         if (validate != null) {
             env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, validate);
         }
@@ -311,8 +312,12 @@ public class Compiler {
             if ("true".equals(root.getAttributeValue("profile"))) {
                 env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, true);
             }
-            if ("true".equals(root.getAttributeValue("validate"))) {
-                env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, true);
+            if (root.getAttributeValue(CompilationEnvironment.VALIDATE_PROPERTY) != null) {
+                if ("false".equals(root.getAttributeValue("validate"))) {
+                    env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, false);
+                } else {
+                    env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, true);
+                }
             }
 
             // If css map already exists, don't look at canvas's css property.

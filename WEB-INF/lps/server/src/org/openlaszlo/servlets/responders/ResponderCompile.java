@@ -436,8 +436,9 @@ public abstract class ResponderCompile extends Responder
                 props.setProperty(CompilationEnvironment.LOGDEBUG_PROPERTY, logdebug);
             }
 
-            // Look for "validate=true" flag
-            props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, "false");
+            // Look for "validate=boolean" flag, default to true
+            props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY,
+                              LPS.getProperty("compiler.validate", "true"));
             String validate = req.getParameter(CompilationEnvironment.VALIDATE_PROPERTY);
             if (validate != null) {
                 props.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, validate);
