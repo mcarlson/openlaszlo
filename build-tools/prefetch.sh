@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
@@ -81,9 +81,11 @@ case "${build_os}" in
         ;;
     windows)
         # Copy tools.jar to $TOMCAT_HOME/common/lib for JSPs (see bug 4560) -pk 
-        cp `cygpath "$JAVA_HOME\\lib\\tools.jar"`  `cygpath "$TOMCAT_HOME\\common\\lib"`
+        jt=`cygpath "$JAVA_HOME\\lib\\tools.jar"`
+	tt=`cygpath "$TOMCAT_HOME\\common\\lib\\tools.jar"`
+        cp "$jt" "$tt"
         if [ $? != 0 ]; then exit 1; fi # fail prefetch if copy couldn't be done
-        chmod 777 `cygpath "$TOMCAT_HOME\\common\\lib\\tools.jar"`
+        chmod 777 "$tt"
 
         # Install and start LPS
         build-tools/service.sh remove

@@ -181,6 +181,30 @@ Label1:
   FileWrite $R0 'call "%CATALINA_HOME%\bin\shutdown.bat"$\n'
   FileClose $R0
 
+  FileOpen $R0 "$INSTDIR\bin\setJavaHome.bat" "w"
+  FileWrite $R0 "@echo off$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "rem Copyright 2002-2006 Laszlo Systems, Inc.  All Rights Reserved.$\n"
+  FileWrite $R0 "rem Unauthorized use, duplication or distribution is strictly prohibited.$\n"
+  FileWrite $R0 "rem This software is the proprietary information of Laszlo Systems, Inc.$\n"
+  FileWrite $R0 "rem Use is subject to license terms.$\n"
+  FileWrite $R0 "rem ======================================================================$\n"
+  FileWrite $R0 "$\n"
+  FileWrite $R0 "set JAVA_HOME=$4$\n"
+  FileClose $R0
+
+  FileOpen $R0 "$INSTDIR\bin\setJavaHome.sh" "w"
+  FileWrite $R0 "# ======================================================================$\n"
+  FileWrite $R0 "# Copyright 2002-2006 Laszlo Systems, Inc.  All Rights Reserved.$\n"
+  FileWrite $R0 "# Unauthorized use, duplication or distribution is strictly prohibited.$\n"
+  FileWrite $R0 "# This software is the proprietary information of Laszlo Systems, Inc.$\n"
+  FileWrite $R0 "# Use is subject to license terms.$\n"
+  FileWrite $R0 "# ======================================================================$\n"
+  FileWrite $R0 "$\n"
+  FileWrite $R0 "export JAVA_HOME='$4'$\n"
+  FileClose $R0
+
+
 SectionEnd
 
 Section -post
