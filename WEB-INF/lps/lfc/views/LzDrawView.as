@@ -145,6 +145,8 @@ LzDrawView.prototype.fill = function(m) {
 // @keywords private
 //------------------------------------------------------------------------------
 LzDrawView.prototype.clip = function() {
+    if (this.mask)
+        this.removeMask(); // Remove any mask created by clip="true"
     if (this.__LZmaskClip == null){
         this.applyMask(true);
     }
