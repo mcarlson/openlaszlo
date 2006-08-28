@@ -18,13 +18,13 @@ document.write('&lt;object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000"\
 document.write('codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,79,0"\n');
 document.write('width="<xsl:value-of select="canvas/@width"/>" height="<xsl:value-of select="canvas/@height"/>"&gt;\n');
 document.write('&lt;param name="movie" value="<xsl:value-of select="$url"/>?lzt=swf<xsl:value-of select="$query_args"/>"/ &gt;\n');
-document.write('&lt;param name="quality" value="high"/ &gt;\n');
+document.write('&lt;param name="quality" value="best"/ &gt;\n');
 document.write('&lt;param name="scale" value="noscale"/ &gt;\n');
 document.write('&lt;param name="salign" value="LT"/ &gt;\n');
 document.write('&lt;param name="menu" value="false"/ &gt;\n');
 document.write('&lt;param name="bgcolor" value="<xsl:value-of select="/canvas/@bgcolor"/>"/ &gt;\n');
 document.write('&lt;embed src="<xsl:value-of select="$url"/>?lzt=swf<xsl:value-of select="$query_args"/>"\n');
-document.write('quality="high"\n');
+document.write('quality="best"\n');
 document.write('scale="noscale"\n');
 document.write('salign="lt"\n');
 document.write('width="<xsl:value-of select="/canvas/@width"/>"\n');

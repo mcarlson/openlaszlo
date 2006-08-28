@@ -69,7 +69,7 @@
         data="<xsl:value-of select='canvas/request/@url' />?lzt=swf<xsl:value-of select='canvas/request/@query_args' />"
         width="<xsl:value-of select='canvas/@width' />" height="<xsl:value-of select='canvas/@height' />">
   &lt;param name="movie" value="<xsl:value-of select='canvas/request/@url' />?lzt=swf<xsl:value-of select='canvas/request/@query_args' />" />
-  &lt;param name="quality" value="high" />
+  &lt;param name="quality" value="best" />
   &lt;param name="scale" value="noscale" />
   &lt;param name="salign" value="LT" />
   &lt;param name="menu" value="false" />

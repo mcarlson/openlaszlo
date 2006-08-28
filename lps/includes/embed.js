@@ -1,4 +1,7 @@
-// A_LZ_COPYRIGHT_BEGIN
+//* A_LZ_COPYRIGHT_BEGIN ******************************************************
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Use is subject to license terms.                                          *
+//* A_LZ_COPYRIGHT_END ********************************************************
 
 /*
  * JavaScript library for embedding Laszlo applications
@@ -110,7 +113,7 @@ function lzEmbed(properties, ieupgradeversion, escapeme) {
     objectParams = {
         movie: url,
         scale: 'noscale',
-        quality: 'high',
+        quality: 'best',
         menu: lzCanvasRuntimeVersion > 6,
         salign: 'lt',
         //allowScriptAccess: 'sameDomain',
@@ -125,7 +128,7 @@ function lzEmbed(properties, ieupgradeversion, escapeme) {
         pluginspage: "http://www.macromedia.com/go/getflashplayer",
         scale: 'noscale',
         src: url,
-        quality: 'high',
+        quality: 'best',
         salign: 'lt',
         menu: lzCanvasRuntimeVersion > 6,
         // The properties parameter should override these.
@@ -271,7 +274,7 @@ function lzHistEmbed(wr) {
 
 // string name
 // string value
-// bool add history	event   
+// bool add history event   
 lzSetCanvasAttributeQ = null;
 function lzSetCanvasAttribute(name, value, addhist) {
     if (lzSetCanvasAttributeQ == null) {

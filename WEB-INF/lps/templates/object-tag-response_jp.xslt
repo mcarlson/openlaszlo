@@ -20,13 +20,13 @@
             codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,79,0"
             width="{canvas/@width}" height="{canvas/@height}">
       <param name="movie" value="{$url}?lzt=swf{$query_args}"/>
-      <param name="quality" value="high"/>
+      <param name="quality" value="best"/>
       <param name="scale" value="exactfit"/>
       <param name="salign" value="LT"/>
       <param name="menu" value="false"/>
       <param name="bgcolor" value="{/canvas/@bgcolor}"/>
       <embed src="{$url}?lzt=swf{$query_args}"
-             quality="high"
+             quality="best"
              scale="exactfit"
              salign="lt"
              width="{/canvas/@width}"

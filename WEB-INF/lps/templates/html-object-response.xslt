@@ -41,13 +41,13 @@
                     data="{$url}?lzt=swf{$query_args}"
                     width="{canvas/@width}" height="{canvas/@height}">
               <param name="movie" value="{$url}?lzt=swf{$query_args}" />
-              <param name="quality" value="high" />
+              <param name="quality" value="best" />
               <param name="scale" value="noscale" />
               <param name="salign" value="LT" />
               <param name="menu" value="false" />
               <param name="bgcolor" value="{/canvas/@bgcolor}" />
               <embed src="{$url}?lzt=swf{$query_args}"
-                     quality="high"
+                     quality="best"
                      scale="noscale"
                      salign="lt"
                      width="{/canvas/@width}"
@@ -63,7 +63,7 @@
                     data="{$url}?lzt=swf{$query_args}"
                     width="{canvas/@width}" height="{canvas/@height}">
               <param name="movie" value="{$url}?lzt=swf{$query_args}" />
-              <param name="quality" value="high" />
+              <param name="quality" value="best" />
               <param name="scale" value="noscale" />
               <param name="salign" value="LT" />
               <param name="menu" value="false" />
