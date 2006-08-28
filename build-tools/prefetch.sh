@@ -14,6 +14,9 @@ find=find
 # where to find things to prefetch
 findwhere="laszlo-explorer examples demos lps/utils lps/admin $@"
 
+# The context of the webapp which we are prefetching from 
+webapp=$lps_dir
+
 if [ "${LPS_MAGIC}" != "" ]; then
     head=-5
 else
@@ -46,17 +49,21 @@ fi
 hostname=`hostname`
 hosttype=`uname`
 
+# Shut down tomcat if it's running. Shutdown will fail if tomcat isn't
+# running, but that's not a fatal error. 
 case "$hosttype" in
 Darwin|Linux)
     build_os=unix
     prefetch_dir="${LPS_HOME}/${lps_dir}"
     chmod -R +x ${lps_dir}/${tomcat}/bin/*.sh # just in case they aren't!
     ${prefetch_dir}/${tomcat}/bin/shutdown.sh 2>/dev/null
+    export TOMCAT_HOME=${prefetch_dir}/${tomcat}
     ;;
 CYGWIN*)
     build_os=windows
     prefetch_dir="${LPS_HOME}\\${lps_dir}"
     net stop LPS
+    export TOMCAT_HOME=`cygpath -w "$prefetch_dir/$tomcat"`    
     ;;
 *)
     exit 1
@@ -66,7 +73,6 @@ esac
 #rm -rf "${LPS_HOME}/WEB-INF/lps/work" # clean out the cache and logs
 
 export JAVA_HOME
-export TOMCAT_HOME=`cygpath -w "$prefetch_dir/$tomcat"`
 
 echo "---------- prefetch settings ----------"
 echo "prefetch dir: $prefetch_dir"
@@ -74,10 +80,11 @@ echo "JAVA_HOME: $JAVA_HOME"
 echo "TOMCAT_HOME: $TOMCAT_HOME"
 echo "---------------------------------------"
 
+# Start up tomcat
 case "${build_os}" in
     unix)
         env JAVA_OPTS="-Xms128m -Xmx512m -DuseBogusErrorCode=true" ${prefetch_dir}/${tomcat}/bin/startup.sh
-        sleep 30
+        sleep 5
         ;;
     windows)
         # Copy tools.jar to $TOMCAT_HOME/common/lib for JSPs (see bug 4560) -pk 
@@ -92,7 +99,6 @@ case "${build_os}" in
         build-tools/service.sh install "-Xms128m -Xmx512m -DuseBogusErrorCode=true"
         net start LPS
         if [ $? != 0 ]; then exit 1; fi
-
         sleep 5
         ;;
 esac
@@ -116,7 +122,7 @@ for path in $paths; do
     if ! grep -q '<canvas' $path; then continue; fi
     output=`retry 5 '000)' curl -L -w"%{url_effective} (%{time_total}s, %{size_download}b, %{http_code})\n" \
         -s -o/dev/null "-HAccept-Encoding: gzip" \
-        http://localhost:8080/${lps_dir}/$path'?lzt=swf'`
+        http://localhost:8080/$webapp/$path'?lzt=swf'`
     if echo $output | egrep -v "200\)$" > /dev/null 2>&1; then
         let rc1++
         echo "*** prefetch FAILED ***: $output"
@@ -127,14 +133,14 @@ done
 
 
 paths=`${find} ${findwhere} ! -path 'docs/src/*' -name '*.jsp'`
-for path in $paths; do
-    output=`retry 5 '000)' curl -L -w"%{url_effective} (%{time_total}s, %{size_download}b, %{http_code})" \
-        -s -o/dev/null http://localhost:8080/${lps_dir}/$path`
-    if echo $output | egrep -v "200\)$" > /dev/null 2>&1; then
+for p in $paths; do
+    output2=`retry 5 '000)' curl -L -w"%{url_effective} (%{time_total}s, %{size_download}b, %{http_code})" \
+        -s -o/dev/null http://localhost:8080/${webapp}/$p`
+    if echo $output2 | egrep -v "200\)$" > /dev/null 2>&1; then
         let rc2++
-        echo "*** prefetch FAILED ***: $output"
+        echo "*** prefetch FAILED ***: $p $output2"
     else
-        echo "prefetch ok: $output"
+        echo "prefetch ok: $output2"
     fi
 done
 
@@ -145,14 +151,14 @@ done
 ##--------------------------------------------------------------------------------
 # clear script cache 
 echo "Clear script cache:"
-curl -L -s "http://localhost:8080/${lps_dir}/foo.lzx?lzt=clearcache&cache=script"
-curl -L -s "http://localhost:8080/${lps_dir}/foo.lzx?lzt=clearcache&cache=media"
+curl -L -s "http://localhost:8080/${webapp}/foo.lzx?lzt=clearcache&cache=script"
+curl -L -s "http://localhost:8080/${webapp}/foo.lzx?lzt=clearcache&cache=media"
 
 # populate components script cache
 lastlzx=examples/components/style_example.lzx
 curl -L -w"prefetch scache: %{url_effective} (%{time_total}s, %{size_download}b, %{http_code})\n" \
         -s -o/dev/null "-HAccept-Encoding: gzip" \
-        "http://localhost:8080/${lps_dir}/${lastlzx}?lzrecompile=true"
+        "http://localhost:8080/${webapp}/${lastlzx}?lzrecompile=true"
 
 ##--------------------------------------------------------------------------------
 ##--------------------------------------------------------------------------------

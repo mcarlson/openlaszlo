@@ -69,9 +69,8 @@
          <os family="unix" />
     </condition>
     
-    <!-- TODO: we're turning this stuff off while we get the guts of
-     the distro process working again. [bshine 5.17.06] --> 
-    <property name="skip.prefetch" value="true" />
+    <!-- Remove these property definitions if you want the associated
+        ant target to run. [bshine 8.25.06] -->     
     <property name="skip.doc" value="true" />    
     <property name="skip.wrappertest" value="true" />
     <property name="skip.runlzunit" value="true" />
