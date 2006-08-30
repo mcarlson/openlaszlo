@@ -3,12 +3,20 @@
 # lzenv - script to set up laszlo env vars
 #
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
-# * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+# * Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.            *
 # * Use is subject to license terms.                                          *
 # * P_LZ_COPYRIGHT_END ********************************************************
 
 if [ "${OS}" == Windows_NT ];  then
-    export JAVAEXTDIRS="${LPS_HOME}\\WEB-INF\\lps\\server\\build;${LPS_HOME}\\3rd-party\\jars/dev;${LPS_HOME}\\WEB-INF\\lib;$ANT_HOME\\lib;${LPS_HOME}\\WEB-INF\\classes"
+    LZCP=${LPS_HOME}\\WEB-INF\\lps\\server\\build;
+    LZCP="${LZCP}"`/usr/bin/find "${LPS_HOME}\\3rd-party\\jars/dev" | tr '\n' ';'`
+    LZCP="${LZCP}"`/usr/bin/find "${LPS_HOME}\\WEB-INF\\lib" | tr '\n' ';'`
+    LZCP="${LZCP}$ANT_HOME\\lib\\junit.jar;${LPS_HOME}\\WEB-INF\\classes"
 else
-    export JAVAEXTDIRS="${LPS_HOME}/WEB-INF/lps/server/build:${LPS_HOME}/3rd-party/jars/dev:${LPS_HOME}/WEB-INF/lib:$ANT_HOME/lib/junit.jar:${LPS_HOME}/WEB-INF/classes"
+    LZCP="${LPS_HOME}"/WEB-INF/lps/server/build:
+    LZCP="${LZCP}"`/usr/bin/find "${LPS_HOME}/3rd-party/jars/dev" | tr '\n' ':'`
+    LZCP="${LZCP}"`/usr/bin/find "${LPS_HOME}/WEB-INF/lib" | tr '\n' ':'`
+    LZCP="${LZCP}$ANT_HOME/lib/junit.jar:${LPS_HOME}/WEB-INF/classes"
 fi
+
+export LZCP="${LZCP}"

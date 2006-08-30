@@ -7,4 +7,13 @@ REM * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.         *
 REM * Use is subject to license terms.                                       *
 REM * R_LZ_COPYRIGHT_END *****************************************************
 
-set JAVAEXTDIRS=%LPS_HOME%\WEB-INF\lps\server\build;%LPS_HOME%\3rd-party\jars\dev;%LPS_HOME%\WEB-INF\lib;%ANT_HOME%\lib;%LPS_HOME%\WEB-INF\classes
+set LZCP=%LPS_HOME%\WEB-INF\lps\server\build
+for /f "usebackq delims=" %%d in (`dir /s /b "%LPS_HOME%\3rd-party\jars\dev\*.jar"`) do call :add %%~sd
+for /f "usebackq delims=" %%d in (`dir /s /b "%LPS_HOME%\WEB-INF\lib\*.jar"`) do call :add %%~sd
+set LZCP=%LZCP%;%ANT_HOME%\lib\junit.jar;%LPS_HOME%\WEB-INF\classes
+goto :EOF
+
+:add
+set LZCP=%LZCP%;%*
+goto :EOF
+
