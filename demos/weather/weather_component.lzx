@@ -1,0 +1,217 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                     -->
+<library>
+
+    <font src="helmetr.ttf" name="Helvetica"/>
+    <font src="helmetb.ttf" name="Helvetica" style="bold" />
+    <font src="verity/verity9.ttf" name="Verity"/>
+    <font src="verity/verity9bold.ttf" name="Verity" style="bold" />
+    
+    <resource name="okeydokey">
+        <frame src="assets/btn_ok.png"/>
+        <frame src="assets/btn_ok_ovr.png"/>
+        <frame src="assets/btn_ok_dwn.png"/>
+    </resource>
+
+    <!-- IMAGE RESOURCES -->
+    <resource src="assets/weather_bg.jpg" name="weather_bg" />
+
+    <!-- DATA SOURCE -->
+    <dataset name="weatherdata"
+        src="http://www.laszlosystems.com/cgi-pub/weather.cgi"
+    querystring="zip=94107" request="true"/>
+
+    <!-- LASZLO CLASSES -->
+    <class name="weather_image">
+        <method name="applyData" args="d" >
+        if (d == null) { return; }
+            setSource( d );
+        </method>
+    </class>
+
+    <class name="weatherSummary" font="Verity" 
+        fontsize="8" width="34" height="34" x="2">
+        <weather_image name="icon" width="32" height="32" stretches="both" x="1" y="1"
+            datapath="@imageurl"/>
+        <text name="day"  x="38" fgcolor="#000000" width="140" 
+            fontstyle="bold" datapath="@label">Tonight</text>
+        <text name="desc" x="38" y="14" fgcolor="#000000" 
+            width="140" datapath="@desc">T-storms possible</text>
+    <text name="temp" x="120" width="60" fgcolor="#000000" 
+            fontstyle="bold" datapath="@temp">Hi 80 F</text>
+    </class>
+
+    <style name="streetstyle" basecolor="0x97ABBE" />
+
+    <class name="weather">
+    <view x="0" y="2">
+            <view name="headlogo" resource="assets/laszlo_weather_logo.png"
+        x="5" stretches="both" width="${resourcewidth / 2}" 
+        height="${resourceheight / 2}">
+        <method event="onclick">
+            LzBrowser.loadURL('http://www.laszlosystems.com', '_blank');
+        </method>
+        </view>
+
+        <view width="1" height="${parent.headlogo.height}"
+        bgcolor="${canvas.bgcolor == 0xAAAAAA ? 0x999999 : 0xAAAAAA}"
+        x="${parent.headlogo.width + 10}"/>
+
+        <view name="enterzip" resource="assets/enter_zip_type.png"
+        x="${parent.headlogo.width + 15}" y="5" stretches="both"
+        width="${resourcewidth * .8}" height="${resourceheight * .8}"/>
+
+            <view x="${parent.enterzip.x + 5}" y="${parent.headlogo.height - this.height - 5}">
+                <simplelayout spacing="6" axis="x"/>
+                <edittext id="zipcode" width="55" height="22">
+                    <method event="onkeydown" args="key">
+                        if(key == 13){
+                weatherApp.loadWeather();
+                        }
+                    </method>
+                </edittext>
+                <multistatebutton name="okButton" resource="okeydokey" statenum="0" 
+                    statelength="3" maxstate="1" y="3"
+                    onclick="weatherApp.loadWeather()" />
+            </view>
+
+        <view resource="weather_bg" y="${parent.headlogo.height + 5}"/> 
+
+        <view id="weatherApp" y="${parent.headlogo.height + 5}" >
+        <basetabslider id="weatherContent" width="180" height="332"
+            style="streetstyle"
+                    mintabheight="20" 
+                    datapath="weatherdata:/weather[1]">
+        
+            <tabelement name="tab1"
+                        text="Current Conditions" selected="true"
+                        text_x="20" 
+                        fontstyle="bold" 
+                        contentopacity=".8">
+            <method event="onselect">
+                weatherContent.tab1.arrow.animate("rotation", 0, 500, false);
+                weatherContent.tab2.arrow.animate("rotation", -90, 250, false);
+                weatherContent.tab3.arrow.animate("rotation", -90, 250, false);
+            </method>
+            <view name="arrow" resource="assets/arrow_open.png"
+                placement="header" x="${this.xoffset + 5}" y="${this.yoffset + 5}" opacity="1"
+                xoffset="${this.width / 2}" yoffset="${this.width / 2}"/>
+
+                        <view id="currentData" width="180" y="2" datapath="current[1]" >
+                            <view  name="form" width="180" font="Helvetica" 
+                    fontsize="14">
+                                <text name="where" width="180" fgcolor="#000000" 
+                                    fontstyle="bold" datapath="where[1]/text()"/>
+                                <weather_image name="icon"  y="23" width="64" 
+                                    height="64" 
+                                    stretches="both" 
+                                    datapath="/weather[1]/forecast[1]/day[1]/@imageurl"/>
+                                <text name="temp"  x="64" y="15" width="240" 
+                                    fontsize="48" 
+                                    fgcolor="#000000" fontstyle="bold" 
+                                    datapath="temp[1]/text()"/>
+                                <text name="description" width="240" y="90" 
+                                    fgcolor="#000000" fontstyle="bold" 
+                                    datapath="desc[1]/text()"/>
+                            </view>
+                            <view name="moredata" pixellock="true">
+                                <view name="labels" fontsize="8" font="Verity" fontstyle="plain">
+                                    <text fgcolor="#000000" width="90">
+                    <b>Humidity:</b>
+                                    </text>
+                                    
+                                    <text fgcolor="#000000"><b>Barometer:</b></text>
+                                    <text fgcolor="#000000"><b>Windspeed:</b></text>
+                                    <text fgcolor="#000000"><b>Dewpoint:</b></text>
+                                    <text fgcolor="#000000"><b>Heatindex:</b></text>
+                                    <text fgcolor="#000000"><b>Last Update:</b></text>
+                                    <simplelayout axis="y" spacing="3" />
+                                </view>
+                                <view name="fields" fontsize="8" font="Verity" fontstyle="plain">
+                                    <text name="humidity" width="180" 
+                                        fgcolor="#000000" 
+                                        datapath="humidity[1]/text()"/>
+                                    <text name="barometer" width="160" 
+                                        fgcolor="#000000" 
+                                        datapath="barometer[1]/text()"/>
+                                    <text name="windspeed" width="160" 
+                                        fgcolor="#000000" 
+                                        datapath="windspeed[1]/text()"/>
+                                    <text name="dewpoint"  width="160" 
+                                        fgcolor="#000000" 
+                                        datapath="dewpoint[1]/text()"/>
+                                    <text name="heatindex" width="160" 
+                                        fgcolor="#000000" 
+                                        datapath="heatindex[1]/text()"/>
+                                    <text name="when" width="160" 
+                                        fgcolor="#000000" 
+                                        datapath="when[1]/text()"/>
+                                    <simplelayout axis="y" spacing="3" />
+                                </view>
+                                <simplelayout axis="x" spacing="-24" />
+                            </view>
+                            <simplelayout axis="y" spacing="12" />
+                        </view>
+
+                </tabelement>
+                
+                <tabelement name="tab2" text="Radar Maps" text_x="20"  fontstyle="bold">
+            <method event="onselect">
+            weatherContent.tab1.arrow.animate("rotation", -90, 250, false);
+            weatherContent.tab2.arrow.animate("rotation", 0, 500, false);
+            weatherContent.tab3.arrow.animate("rotation", -90, 250, false);
+            </method>
+            <view name="arrow" resource="assets/arrow_open.png"
+            placement="header" x="${this.xoffset + 5}" y="${this.yoffset + 5}" opacity="1"
+            xoffset="${this.width / 2}" yoffset="${this.width / 2}" rotation="-90"/>
+                    <view id="radarData" y="10" align="center">
+                        <view name="shadow" x="3" y="3" width="173" 
+                            height="130"  
+                            opacity=".33"/>
+                        <weather_image name="radarscan" width="173" height="130" 
+                            stretches="both" datapath="radar[1]/@src"/>
+                    </view>
+                </tabelement>
+                
+                <tabelement name="tab3" text="Forecast" text_x="20" fontstyle="bold">
+            <method event="onselect">
+            weatherContent.tab1.arrow.animate("rotation", -90, 250, false);
+            weatherContent.tab2.arrow.animate("rotation", -90, 250, false);
+            weatherContent.tab3.arrow.animate("rotation", 0, 500, false);
+            </method>
+            <view name="arrow" resource="assets/arrow_open.png"
+            placement="header" x="${this.xoffset + 5}" y="${this.yoffset + 5}" opacity="1"
+            xoffset="${this.width / 2}" yoffset="${this.width / 2}"/>
+                        <view id="forecastData" y="5">
+                            <weatherSummary datapath="forecast[1]/day[1-6]"/>
+                            <simplelayout axis="y" spacing="5"/>
+            </view>
+                </tabelement>
+                
+            </basetabslider>
+            
+            <!-- METHODS for weatherApp -->
+            <method name="loadWeather">
+                var z = zipcode.getText();
+                weatherContent.datapath.getDataset().setQueryString({zip:  z});
+                weatherContent.datapath.getDataset().doRequest();
+            </method>
+
+        </view>
+        <view resource="assets/trim.png" y="${parent.headlogo.height + 5}" opacity=".5"/>
+    </view>
+    <view resource="assets/poweredby.swf" x="${(parent.width - this.width) / 2}"
+    y="${canvas.height - this.height - 5}">
+    <method event="onclick">
+        LzBrowser.loadURL('http://www.blogbox.com', '_blank');
+    </method>
+    </view>
+
+</class>
+
+</library>
