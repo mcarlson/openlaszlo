@@ -1,5 +1,7 @@
 <!-- Copyright 2006 Laszlo Systems --> 
 <canvas debug="true">
+   <include href="../../lps/utils/lztestmanager.lzx" /> 
+
    <dataset name="ds">
        <root>
            <text name="my-yellow-10-plain" fgcolor="0xFFFF00" fontsize="10" fontstyle="plain"/>
@@ -17,7 +19,7 @@
        var max = 4;
 
        for (var i = 0; i < max; i++){
-           Debug.write(i, " arr["+i+"] = dp.subnodes["+currIndex+"]");
+           // Debug.write(i, " arr["+i+"] = dp.subnodes["+currIndex+"]");
            
            arr[i] = dp.p.childNodes[currIndex];
 
@@ -27,83 +29,52 @@
               currIndex = 0;
        }
        c.testtext.datapath.setNodes(arr);
-       Debug.write("refresh() ",arr);
+       // Debug.write("refresh() ",arr);
    ]]>
    </method>
 
-   <view>
-       <simplelayout axis="x" spacing="10"/>
-       <view>
-           <simplelayout />
-           <text fontstyle="bold" fontsize="15">Regular replication</text>
-           <button text="start 0" onclick="canvas.refresh(container,0)" />
-           <button text="start 1" onclick="canvas.refresh(container,1)" />
-           <button text="start 2" onclick="canvas.refresh(container,2)" />
-           <button text="start 3" onclick="canvas.refresh(container,3)" />
-        
-           <button text="rapidclick">
-               <handler name="onclick">
-               <![CDATA[
-                   var max = 20;
-        
-                   for (var i = 0; i < max; i++){
-                       var j = i % 4;
-                       canvas.refresh(container,j);
-                   }
-               ]]>
-               </handler>
-           </button>
-        
-           <view id="container" height="200" width="300" bgcolor="gray">
-              <simplelayout />
-              <text name="testtext" resize="true">
-                  <datapath xpath="ds:/root/text"/>
-                  <handler name="ondata">
-                      var dat = this.data;
-                      this.setAttribute("text",dat.getAttr('name'));
-                      this.setAttribute("fgcolor",dat.getAttr('fgcolor')*1);
-                      this.setAttribute("fontsize",dat.getAttr('fontsize'));
-                      this.setAttribute("fontstyle",dat.getAttr('fontstyle'));
-                  </handler>
-              </text>
-           </view>
-       </view>
-    
-    
-       <view>
-           <simplelayout />
-           <text fontstyle="bold" fontsize="15">Lazy replication</text>
-           <button text="start 0" onclick="canvas.refresh(container2,0)" />
-           <button text="start 1" onclick="canvas.refresh(container2,1)" />
-           <button text="start 2" onclick="canvas.refresh(container2,2)" />
-           <button text="start 3" onclick="canvas.refresh(container2,3)" />
-        
-           <button text="rapidclick lazy rep">
-               <handler name="onclick">
-               <![CDATA[
-                   var max = 20;
-        
-                   for (var i = 0; i < max; i++){
-                       var j = i % 4;
-                       canvas.refresh(container2,j);
-                   }
-               ]]>
-               </handler>
-           </button>
-        
-           <view id="container2" datapath="ds:/root" height="200" width="300" bgcolor="gray">
-              <simplelayout />
-              <text name="testtext" resize="true">
-                  <datapath xpath="text" replication="lazy" />
-                  <handler name="ondata">
-                      var dat = this.data;
-                      this.setAttribute("text",dat.getAttr('name'));
-                      this.setAttribute("fgcolor",dat.getAttr('fgcolor')*1);
-                      this.setAttribute("fontsize",dat.getAttr('fontsize'));
-                      this.setAttribute("fontstyle",dat.getAttr('fontstyle'));
-                  </handler>
-              </text>
-           </view>
-       </view>
+    <view id="container2" datapath="ds:/root" height="200" width="300" bgcolor="gray">
+      <simplelayout />
+      <text name="testtext" id="mytext" resize="true">
+          <datapath xpath="text" replication="lazy" />
+          <handler name="ondata">
+              if (!this.data) return; 
+              var dat = this.data;
+              // Debug.write("ondata with dat=", dat);
+              this.setAttribute("text",dat.getAttr('name'));
+              this.setAttribute("fgcolor",dat.getAttr('fgcolor')*1);
+              this.setAttribute("fontsize",dat.getAttr('fontsize'));
+              this.setAttribute("fontstyle",dat.getAttr('fontstyle'));
+          </handler>
+      </text>
     </view>
+    
+    <script><![CDATA[
+
+    var suite = new LzTestSuite("lpp-2587 test suite"); 
+    
+    suite.test1 = function() {
+      canvas.refresh(container2,0);
+      canvas.refresh(container2,1);    
+      canvas.refresh(container2,2);      
+      canvas.refresh(container2,3);     
+      var textview = container2.subviews[1];
+      var fontstyle = textview.getAttribute("fontstyle"); 
+      LzTestManager.assertEquals ("plain", fontstyle, "fontstyle is plain");
+      
+      // The htmltext for this clip should not now have a <B> in it
+      var textclip = textview.__LZtextclip;
+      var htmlText = textclip.htmlText;
+      var indexOfB = htmlText.indexOf("<B>");
+      Debug.write("index of <B> is ", indexOfB);
+      LzTestManager.assertFalse( indexOfB > 0 , "<B> present in htmltext"); 
+      // The htmltext for this clip should not now have a <I> in it
+      var indexOfI = htmlText.indexOf("<I>");
+      Debug.write("index of <I> is ", indexOfI);
+      LzTestManager.assertFalse( indexOfI > 0 , "<I> present in htmltext"); 
+      
+    }
+
+    suite.addTest(suite.test1);
+    ]]></script>
 </canvas>
