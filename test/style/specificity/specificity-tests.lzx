@@ -1,0 +1,110 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true" bgcolor="0xAAAAAA">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file exercises specificity calculation and comparison. Heck yeah!");
+    </script>
+    <include href="../test"/>
+    <debug/>
+
+<!-- Instead of these stylesheet rules, we include directly the 
+compiler output for these rules. 
+    <stylesheet> 
+    person { favoritecolor: "0x0000AA"}
+    #gEasyStreet person person { favoritecolor: "0x00AA00"}
+    #gStreet person { favoritecolor: "0xAA0000"}
+    #gStreet person person { favoritecolor: "0xAA00AA"}    
+    #gStreet person person person { favoritecolor: "0x441a0a"}    
+    #gStreet cat { meowsound: "gstreetcat"}   
+    #gKennedyHouse cat { meowsound: "kennedycat"}       
+    
+    </stylesheet>
+-->
+
+    <script>       
+    
+    var __cssRule0 = new LzCSSStyleRule(); 
+    __cssRule0.selector = "person";
+    __cssRule0.properties = {favoritecolor: "0x0000AA"};
+     LzCSSStyle._addRule( __cssRule0 ); 
+    var __cssRule1 = new LzCSSStyleRule();       
+    __cssRule1.selector = [ "#gEasyStreet", "person" , "person"];
+    __cssRule1.properties = {favoritecolor: "0x00AA00"};
+     LzCSSStyle._addRule( __cssRule1 ); 
+    var __cssRule2 = new LzCSSStyleRule(); 
+    __cssRule2.selector = ["#gStreet", "person"];
+    __cssRule2.properties = {favoritecolor: "0xAA0000"};
+     LzCSSStyle._addRule( __cssRule2 ); 
+    var __cssRule3 = new LzCSSStyleRule(); 
+    __cssRule3.selector = [ "#gStreet", "person" , "person"];
+    __cssRule3.properties = {favoritecolor: "0xAA00AA"};
+     LzCSSStyle._addRule( __cssRule3 ); 
+
+    var __cssRule5 = new LzCSSStyleRule(); 
+    __cssRule5.selector = ["#gStreet", "cat"];
+    __cssRule5.properties = {meowsound: "gstreetcat"};
+     LzCSSStyle._addRule( __cssRule5 );             
+    var __cssRule6 = new LzCSSStyleRule(); 
+    __cssRule6.selector = ["#gKennedyHouse", "cat"];
+    __cssRule6.properties = {meowsound: "kennedycat"};
+     LzCSSStyle._addRule( __cssRule6 );
+
+     // To demonstrate that lexical order doesn't matter, we're putting this
+     // highly specific selector last; it should still win over less specific
+     // but also matching selectors, for Indio's favorite color. '
+
+     var __cssRule4 = new LzCSSStyleRule(); 
+     __cssRule4.selector = [  "#gStreet", "person" , "person" , "person"];
+     __cssRule4.properties = {favoritecolor: "0x441a0a"};
+     LzCSSStyle._addRule( __cssRule4 );     
+     
+    </script>              
+     
+    <simplelayout axis="y" spacing="30"/>
+    <include href="../neighborhood/neighborhoodclasses.lzx" />
+    <include href="../neighborhood/kennedyfamily.lzx" />
+    <include href="../neighborhood/thestreet.lzx" />    
+
+    <testsuite name="specificsuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testLessThan");
+            this.addTest("testSpecificityPeople");
+            this.addTest("testLittleBoys");
+            this.run();
+        </handler>
+
+        <method name="testLessThan"><![CDATA[
+            this.assertTrue( 3 < 4, "three less than four");   
+            this.assertFalse( 5 < 4, "five less than four"); 
+            this.finishedTest("testLessThan");
+        ]]></method>
+        
+        <method name="testSpecificityPeople"><![CDATA[
+            // Check the specificity of the rules 
+            var r0spec = __cssRule0.getSpecificity(); // "person";
+            var r1spec = __cssRule1.getSpecificity(); //  [ "#gEasyStreet", "person" , "person"];
+            var r2spec = __cssRule2.getSpecificity(); //  ["#gStreet", "person"];           
+            var r3spec = __cssRule3.getSpecificity(); //  [ "#gStreet", "person" , "person"];
+            var r4spec = __cssRule4.getSpecificity(); //  [  "#gStreet", "person" , "person" , "person"];
+            var r5spec = __cssRule5.getSpecificity(); //  ["#gStreet", "cat"];         
+            var r6spec = __cssRule6.getSpecificity(); //  ["#gKennedyHouse", "cat"];
+            
+            this.assertTrue( r0spec < r1spec, "r0 less than r1"); 
+            this.assertTrue( r0spec < r2spec, "r0 less than r2")
+            this.assertTrue( r2spec < r3spec, "more elements in selector");
+            this.assertTrue( r3spec < r4spec, "more elements in selector");
+            this.assertEquals(r5spec, r6spec, "Same specificity for cats");
+            
+            this.finishedTest("testSpecificityPeople");
+        ]]></method>
+        
+        <method name="testLittleBoys">
+            this.assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
+            this.assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
+            this.assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
+            this.finishedTest("testLittleBoys"); 
+        </method>
+    </testsuite>
+        
+    
+</canvas>

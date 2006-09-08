@@ -232,11 +232,15 @@ public class CompilationEnvironment {
     public void setCSSHandler(CSSHandler cssHandler) {
         mCSSHandler = cssHandler;
     }
+
     public CSSHandler getCSSHandler() {
         return mCSSHandler;
     }
-    public void preprocessCSS(Element elt) {
-        if (mCSSHandler!=null) mCSSHandler.preprocessCSS(elt);
+    
+    public void insertCSS() {
+        if (mCSSHandler!=null) {
+            compileScript( mCSSHandler.toJavascript() );                              
+        }        
     }
 
     public void setDefaultFontInfo(FontInfo fi) {

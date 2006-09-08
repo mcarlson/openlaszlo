@@ -1,0 +1,24 @@
+<!-- More test data, with various tag types as nodes in the tree. -->
+<!-- Copyright 2006 Laszlo Systems --> 
+  <street id="gStreet">
+      <house id="gSmithHouse" >
+          <person id="gGeorgeSmith" shortname="BigGeorge">
+              <person id="gLittleGeorge" shortname="LilGeorge" >
+                  <!-- Little George Smith has a cat named Blackie --> 
+                  <cat id="gBlackie" furcolor="0x555555" />
+              </person>
+              <person id="gBabySmithy" shortname="baby"/>
+          </person>
+      </house>
+      <house id="gDowneyHouse" >
+          <person id="gRobertSr" fullname="Robert Downey, Sr" shortname="Robert" occupation="director">
+              <person id="gRobertJr" fullname="Robert Downey, Jr" shortname="Robby" occupation="actor" >
+                  <person id="gIndio" fullname="Indio the Child" shortname="Indio" occupation="student" />
+              </person>
+          </person>
+      </house>
+      <!-- Note that Mr. Bo Jangles lives on the street, not in a house --> 
+      <person id="gBo" fullname="Mr. Bo Jangles" shortname="Bo" occupation="destitute"/>
+      <!-- Note that the kittycat lives on a street, not in a house --> 
+      <cat id="gKittycat" />        
+  </street>

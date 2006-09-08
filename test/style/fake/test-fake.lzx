@@ -1,0 +1,50 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas title="test-fake">
+<include href="html-fake-elements.lzx" />
+
+<include href="../test"/>
+<debug/>
+
+<stylesheet>
+   fakep {color:  "0x008800";}
+   fakeli { color: "0x000088";}
+   fakeul fakeul fakeli { color: "0x880000"}
+</stylesheet>
+
+<fakebody width="300" height="300">
+    <fakep id="gBan">banana paragraph should be green</fakep>
+    <fakep id="gLuff">luff luff luff luff ballot should be green</fakep>
+    <fakep id="gPeek">peek out at the fake p</fakep>
+           
+    <fakep> here there here here . </fakep>
+    <fakeul>
+        <fakeli id="gLiOne">i should be blue list item number one</fakeli>
+        <fakeli>i should be blue list item number two</fakeli>        
+        <fakeul>
+            <fakeli id="gLiSub">i am a sublist item should be red</fakeli>                                
+            <fakeli>another sublist item should be red</fakeli>                
+        </fakeul>
+        <fakeul>
+            <fakeli id="gLiSpecial"> i am a special one. should be red. </fakeli>
+         </fakeul>
+    </fakeul>
+</fakebody>
+
+<testsuite name="fakehtmlsuite" loglevel="log">
+    <handler name="oninit">
+        this.addTest( "testColors");
+        this.run();
+    </handler>
+
+    <method name="testColors">
+        this.assertEquals( 0x000088, gLiOne.getAttribute("fontcolor") );
+        this.assertEquals( 0x008800, gBan.getAttribute("fontcolor") );        
+        this.assertEquals( 0x880000, gLiSub.getAttribute("fontcolor") );                
+        this.assertEquals( 0x880000, gLiSpecial.getAttribute("fontcolor") );                        
+        this.finishedTest("testColors");
+    </method>
+
+</testsuite>
+
+
+</canvas>

@@ -1,0 +1,4 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    <include href="test.lzx"/>
+</library>

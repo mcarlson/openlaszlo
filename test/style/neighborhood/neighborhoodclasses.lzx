@@ -1,0 +1,72 @@
+<library> <!-- Copyright 2006 Laszlo Systems --> 
+    <!-- A bunch of silly classes for testing only. The general idea
+    is that a house is a child of street, people are children of houses, 
+    children are children of their their parents, and pets are children
+    of their owners. 
+    Animals can be cat, kitten, or duck.
+    --> 
+
+<include href="utils/traits/cssable.lzx" />
+
+<class name="animal">
+    <attribute name="misc" type="string" value="(none)" />
+</class>
+
+<class name="cat" extends="animal" traits="cssable">
+    <!-- List the attributes which will be styled by CSS --> 
+    <attribute name="cssPropertyMap" 
+        value="{furcolor:'furcolor',meowsound:'meowsound', misc:'misc'}" />
+    <handler name="onconstruct" method="_applyCSS" />                
+    <view x="15" bgcolor="${classroot.furcolor}" />        
+
+    <attribute name="furcolor" value="white" />
+    <attribute name="meowsound" value="meow" type="string"/>    
+</class>
+
+<class name="kitten" extends="animal" >
+    <attribute name="furcolor" value="white" />
+</class>
+
+<class name="house" bgcolor="0xFFFFFF" traits="cssable">
+    <simplelayout axis="x" spacing="2" />
+    <attribute name="paintcolor" value="0xFFFFFF" />
+    <attribute name="streetaddress" value="123" />
+    <attribute name="cssPropertyMap" 
+        value="{bgcolor: 'paintcolor', streetaddress: 'streetaddress', misc: 'misc'}" />
+    <handler name="onconstruct" method="_applyCSS" />        
+</class>
+
+<class name="street" bgcolor="0x8888AA" traits="cssable">
+    <simplelayout axis="x" spacing="30" />
+    <attribute name="cssPropertyMap" 
+        value="{streetname: 'streetname', streettype: 'streettype'}" />
+    <handler name="onconstruct" method="_applyCSS" />        
+    <attribute name="streetname" value="Main" type="string" />
+    <attribute name="streettype" value="Street" type="string" />
+</class>
+
+<class name="duck" extends="animal" >
+    <attribute name="feathercolor" value="white"/>
+    <text x="10" text="(duck)" />
+    <attribute name="cssPropertyMap" 
+        value="{bgcolor:'feathercolor',misc:'misc'}" />
+    <handler name="onconstruct" method="_applyCSS" />        
+</class>
+
+<class name="person" width="100" traits="cssable">
+    <simplelayout axis="y" spacing="5" />
+    <attribute name="fullname" type="string" value="Unnamed Person" />
+    <attribute name="shortname" type="string" value="Peep" />
+    <attribute name="occupation" value="none" type="string"/>
+    <attribute name="favoritecolor" value="0xAA33FF" />
+    <view height="20">
+        <view x="2" y="2" width="4" height="16" bgcolor="${classroot.favoritecolor}" />
+        <text x="8" text="${classroot.shortname}" />
+    </view>
+        
+    <!-- List the attributes which will be styled by CSS --> 
+    <attribute name="cssPropertyMap" 
+        value="{ occupation: 'occupation', favoritecolor: 'favoritecolor'}" />
+    <handler name="onconstruct" method="_applyCSS" />        
+</class>
+</library> 

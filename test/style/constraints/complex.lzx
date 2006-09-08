@@ -1,0 +1,48 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas>
+    <stylesheet>
+        #pacifica {
+          innerbgcolor: "0x00AA00"; 
+          logo: "resources/beach_bungalow.jpg";        
+          cityname: "pacifica";
+          description: "This should have a green background.";
+        }
+        
+        #losangeles {
+            logo: "resources/los_angeles.jpg";
+            cityname: "los angeles";
+            nicebgcolor: "0x94A586";
+            specialcolor: "0xFFA586";
+            description: "This should have a pink background.";
+            innerbgcolor: "0x00AA00"; 
+        }
+    </stylesheet>
+    
+    <simplelayout spacing="20" axis="y" />
+    <view id="seattle" width="300" height="200" bgcolor="0x94a586" clip="true">
+        <view name="container" x="10" y="10" width="$once{parent.width-20}" height="$once{parent.height-20}">
+            <simplelayout axis="y" spacing="10" />
+            <view name="logo" resource="resources/seattle_pike_place.jpg" x="10" y="10" />
+            <text name="title" text="foghorns" x="10" y="70" width="${parent.width-20}"/>
+            <view name="inner" y="100" x="10" width="${parent.width-20}" height="${parent.height-110}"
+                 bgcolor="#5F787F">            
+                 <text x="5" y="5" width="${parent.width-10}" text="We like Seattle" />
+            </view>        
+        </view> 
+    </view>
+
+    <class name="citybox" width="300" height="200" clip="true">
+        <view name="container" x="10" y="10" width="$once{parent.width-20}" height="$once{parent.height-20}">
+            <simplelayout axis="y" spacing="10" />
+            <view name="logo" source="$style{'logo'}" x="10" y="10" />
+            <text name="title" text="$style{'cityname'}" x="10" y="70" width="${parent.width-20}"/>
+            <view name="inner" y="100" x="10" width="${parent.width-20}" height="${parent.height-110}" bgcolor="$style{'innerbgcolor'}">            
+                 <text x="5" y="5" width="${parent.width-10}" text="$style{'description'}" />
+            </view>        
+        </view> 
+    </class>
+    
+    <citybox id="losangeles" bgcolor="$style{'specialcolor'}"/>
+    <citybox id="pacifica" bgcolor="$style{'nicebgcolor'}"  />    
+        
+</canvas>

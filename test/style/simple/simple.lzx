@@ -1,0 +1,27 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas>
+
+<stylesheet>
+    #gSimple {
+        bgcolor: "0x0000FA";
+    }
+</stylesheet>
+
+<simplelayout axis="y" spacing="5" />
+<view width="50" height="50" bgcolor="0x00B300" />
+
+<view id="gSimple" width="50" height="50">
+    <handler name="onconstruct" method="applyStyle" />
+    
+    <method name="applyStyle">
+        Debug.write("this is not simple");
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+    </method>
+    <text>hi there</text>
+</view> 
+
+<view width="50" height="50" bgcolor="0x00B300" />
+
+</canvas>

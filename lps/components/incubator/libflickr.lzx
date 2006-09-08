@@ -7,7 +7,7 @@
     -->
     <node id="gGlobals">
         <attribute name="SHAREDSECRET" type="string" value="b199acb45fd055e7"/>
-        <attribute name="RESTSRC" type="string" value="http://www.flickr.com/services/rest/"/>
+        <attribute name="RESTSRC" type="string" value="http://api.flickr.com/services/rest/"/>
     </node>
     
     <class name="photo" width="75" height="75"> 
@@ -109,8 +109,7 @@
             for (var i=0;i<argobjarr.length;i++) 
             {
                 var argobj=argobjarr[i];
-
-                // set query param
+                
                 ds.setQueryParam(argobj.argname, argobj.argvalue);
             }
 

@@ -1,0 +1,135 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<canvas debug="true"  bgcolor="0xAAAAAA">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file exercises the time it takes to lookup CSS properties");
+    </script>
+    <include href="../test"/>
+    <debug/>
+    
+    <stylesheet>
+        baseclass {
+            prop1: 10;
+            prop2: 100;
+        }
+        
+        subclass {
+            prop2 : 20;
+            prop3 : 200;
+        }
+
+        subsubclass {
+            prop3 : 30;
+            prop4 : 300;
+        }
+
+        #subID {
+            prop5 : 40;
+        }
+
+        #subsubID {
+            prop6 : 50;
+        }
+
+        [name="subName"] {
+            prop7 : 60;
+        }
+
+        [name="subsubName"] {
+            prop8 : 70;
+        }
+    </stylesheet>
+
+    <class name="baseclass"/>
+    <class name="subclass"/>
+    <class name="subsubclass"/>
+
+    <baseclass>
+        <subclass>
+            <subsubclass>
+                <subclass name="subName">
+                    <subclass name="subsubName">
+                        <subclass id="subID">
+                            <subsubclass id="subsubID">
+
+                            </subsubclass>
+
+                        </subclass>
+                    </subclass>
+
+                </subclass>
+            </subsubclass>
+        </subclass>
+    </baseclass>
+
+    <testsuite name="constraintsuite" loglevel="log" timeout="50000">
+        <handler name="oninit">
+            this.addTest("testLookupTimes");
+            this.addTest("makeSomeNodes");
+            this.addTest("lookupDifferent");
+            this.run();
+        </handler>
+
+        <attribute name="iter" value="500"/>
+        <!--
+        <attribute name="iter" value="1000"/>
+        -->
+
+        <method name="getCSSProp" args="n, prop">
+            var cssStyle = LzCSSStyle.getComputedStyle( n );
+            return cssStyle.getPropertyValue( prop ); 
+        </method>
+        
+        <!-- Descendant selectors test -->        
+        <method name="testLookupTimes">
+            var t = getTimer();
+            for ( var i = iter; i >= 0; i-- ){
+                this.assertEquals( 10, this.getCSSProp( subsubID, "prop1" ));
+                this.assertEquals( 20, this.getCSSProp( subsubID, "prop2" ));
+                this.assertEquals( 30, this.getCSSProp( subsubID, "prop3" ));
+                this.assertEquals( 300,this.getCSSProp( subsubID, "prop4" ));
+                this.assertEquals( 40, this.getCSSProp( subsubID, "prop5" ));
+                this.assertEquals( 50, this.getCSSProp( subsubID, "prop6" ));
+                this.assertEquals( 60, this.getCSSProp( subsubID, "prop7" ));
+                this.assertEquals( 70, this.getCSSProp( subsubID, "prop8" ) );
+            }
+            var tt = getTimer() - t ;
+            this.assertTrue(1000 > tt );
+            Debug.write( 'Lookup test took: ' + tt );
+            this.finishedTest("testLookupTimes");
+        </method>
+
+        <method name="makeSomeNodes">
+            for ( var i = iter; i > 0; i-- ){
+                new LzNode( subsubID );
+
+            }
+            this.assertEquals( iter, subsubID.subnodes.length );
+            this.finishedTest("makeSomeNodes");
+        </method>
+
+        <method name="lookupDifferent">
+            var t = getTimer();
+            for ( var i = iter-1; i >= 0; i-- ){
+                var n = subsubID.subnodes[ i ];
+                this.assertEquals( 10, this.getCSSProp( n, "prop1" ));
+                this.assertEquals( 20, this.getCSSProp( n, "prop2" ));
+                this.assertEquals( 30, this.getCSSProp( n, "prop3" ));
+                this.assertEquals( 300,this.getCSSProp( n, "prop4" ));
+                this.assertEquals( 40, this.getCSSProp( n, "prop5" ));
+                this.assertEquals( 50, this.getCSSProp( n, "prop6" ));
+                this.assertEquals( 60, this.getCSSProp( n, "prop7" ));
+                this.assertEquals( 70, this.getCSSProp( n, "prop8" ) );
+            }
+            this.assertEquals( iter, subsubID.subnodes.length );
+            var tt = getTimer() - t ;
+            this.assertTrue(1000 > tt );
+            Debug.write( 'Different lookup test took: ' + tt );
+            this.finishedTest("lookupDifferent");
+        </method>
+
+    </testsuite>
+
+        
+    
+</canvas>

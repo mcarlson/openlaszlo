@@ -1,0 +1,165 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<!-- These tests mostly test the runtime css system, not relying on the 
+     compiler support for css. Many of the tests test the internals of the
+     LzCSSStyle engine, by declaring selectors in the test case, then 
+     seeing whether that selector applies to various nodes in the tree.
+     These rules are *not* added to the LzCSSStyle list of rules, so they
+     do not affect anything outside of the test method in which they are
+     declared.
+     [bshine 8.4.06]
+-->
+<testsuite name="kennedysuite" loglevel="log">
+    <handler name="oninit">    
+        this.addTest( "testSingleTag");
+        this.addTest( "testTagDescendantTagSelector" );
+        this.addTest( "testMixedTagTypesSelector" );
+        this.addTest( "testTripleSelector" );
+        this.addTest( "testAttrTagSelector" );
+        this.addTest( "testAttrStarSelector" );
+        this.addTest( "testJoesKids" );
+        this.addTest( "testJoesGrandkids" );                        
+        this.run();
+   </handler>
+
+    <method name="testSingleTag">
+        this.assertNotUndefined(gGeorgeSmith);
+        this.assertEquals("waiting around", gGeorgeSmith.getAttribute("occupation"));
+        this.finishedTest("testSingleTag");
+    </method>
+           
+    <!-- Descendant selectors test -->        
+    <method name="testJoesKids">
+         this.assertEquals("president", gJFK.getAttribute("occupation"));
+         this.assertEquals("politician", gJoeJr.getAttribute("occupation"));            
+         this.assertEquals("politician", gRosemary.getAttribute("occupation"));            
+         this.assertEquals("politician", gKathleen.getAttribute("occupation"));            
+         this.assertEquals("senator", gTed.getAttribute("occupation"));                                                
+         this.finishedTest("testJoesKids");
+     </method>
+
+    <!-- Descendant selectors test --> 
+     <method name="testJoesGrandkids">
+        this.assertEquals("jetsetter", gCBK.getAttribute("occupation"));
+        this.assertEquals("jetsetter", gJFKJr.getAttribute("occupation"));            
+        this.assertEquals("jetsetter", gPatrick.getAttribute("occupation"));            
+        this.finishedTest("testJoesGrandkids");
+     </method>
+     
+    <method name="testTagDescendantTagSelector">
+        // This should select for any person who has a person as a parent or ancestor
+        // (Of course Joe Kennedy has a parent, just his parent is not represented in this 
+        // scene graph )
+        var somebodysChildSelector = [ "person", "person"]; 
+        Debug.write("gJoeSr");
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( somebodysChildSelector, gJoeSr, "occupation" ) );
+        Debug.write("gJFK");
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( somebodysChildSelector, gJFK, "occupation" ) );   
+        Debug.write("gRobertSr");
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( somebodysChildSelector, gRobertSr, "occupation" ) );                     
+        Debug.write("gRobertJr");
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( somebodysChildSelector, gRobertJr, "occupation" ) );                        
+        Debug.write("gIndio");
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( somebodysChildSelector, gIndio, "occupation" ) );                                    
+
+        this.finishedTest("testTagDescendantTagSelector");
+    </method>
+      
+    <method name="testMixedTagTypesSelector">
+        // Now let's match people who live in houses
+        var peopleInHousesSelector = ["house", "person"];
+        Debug.write("robert sr");
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( peopleInHousesSelector, gRobertSr, "occupation" ) );   
+        Debug.write("robert jr");
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( peopleInHousesSelector, gRobertJr, "occupation" ) );   
+        Debug.write("indio");
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( peopleInHousesSelector, gIndio, "occupation" ) );               
+        Debug.write("bo");
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( peopleInHousesSelector, gBo, "occupation" ) );                           
+        Debug.write("kitty");
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( peopleInHousesSelector, gKittycat, "occupation" ) );                                       
+
+        // Make sure we don't match houses inside people, because that wouldn't make any sense
+        var nonsenseRule1 = ["person", "house"];
+        Debug.write("all the nonsense tests");
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( nonsenseRule1, gRobertSr, "occupation" ) );   
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( nonsenseRule1, gRobertJr, "occupation" ) );   
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( nonsenseRule1, gIndio, "occupation" ) );               
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( nonsenseRule1, gBo, "occupation" ) );                           
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( nonsenseRule1, gKittycat, "occupation" ) );                                       
+
+        var deepRule1 = ["house", "cat"];
+        Debug.write("cat in house"); 
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( deepRule1, gRobertJr, "occupation" ) );   
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( deepRule1, gBlackie, "occupation" ) );   
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( deepRule1, gKittycat, "occupation" ) );   
+
+        this.finishedTest("testMixedTagTypesSelector");
+    </method>
+      
+    <method name="testTripleSelector">        
+        // This should select for any person who is a child of a person who is a child of a person
+        // in other words, someone who is a grandchild of someone in the tree
+        Debug.write("testing grandchild");
+        var grandchildSelector = [ "person", "person", "person"]; 
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gJoeSr, "occupation" ) );
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gJFK, "occupation" ) );   
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gRobertSr, "occupation" ) ); 
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gRobertJr, "occupation" ) ); 
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gIndio, "occupation" ) );
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gCBK, "occupation" ) );  
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gJFKJr, "occupation" ) );
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( grandchildSelector, gPatrick, "occupation" ) );
+
+        Debug.write("testing duck in family");
+        var duckinfamilySelector = [ "house", "person", "duck"];            
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( duckinfamilySelector, gKittycat, "occupation" ) );
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( duckinfamilySelector, gJFK, "occupation" ) ); 
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( duckinfamilySelector, gWildDuck, "occupation" ) ); 
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( duckinfamilySelector, gDuck3, "occupation" ) ); 
+
+        Debug.write("testing cat in person in house in street");
+        var kittyinhouseSelector = ["street", "house", "person", "cat"];
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( kittyinhouseSelector, gBlackie, "occupation" ) );
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( kittyinhouseSelector, gJFK, "occupation" ) ); 
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( kittyinhouseSelector, gKittycat, "occupation" ) );
+        this.finishedTest("testTripleSelector");            
+    </method>
+          
+    <!-- Test selectors that look like '[id="gJoeSr"] person' -->
+    <method name="testAttrTagSelector">
+        // This should select for children of Joe Kennedy, ie, a selector of '[id="gJoeSr"] person'
+        var joesDescendantsSelector = [
+          { attrname: "id", attrvalue: "gJoeSr" }, 
+          "person" ];
+        _root.Debug.format("selector %w", joesDescendantsSelector);
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( joesDescendantsSelector, gJoeSr, "occupation" ) );
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( joesDescendantsSelector, gJFK, "occupation" ) );   
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( joesDescendantsSelector, gKittycat, "occupation" ) );                     
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( joesDescendantsSelector, gCBK, "occupation" ) );               
+
+        // Now let's match just people who are in the kennedy house
+        var inKennedyHouseSelector = [ {attrname: "id", attrvalue: "gKennedyHouse"}, "person"];
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gJoeSr, "occupation" ) );
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gJFK, "occupation" ) );   
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gRobertSr, "occupation" ) );                     
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gRobertJr, "occupation" ) );                        
+        this.assertFalse( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gIndio, "occupation" ) );                                    
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gCBK, "occupation" ) );                                    
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gJFKJr, "occupation" ) );                                    
+        this.assertTrue( LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gPatrick, "occupation" ) );                          
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( inKennedyHouseSelector, gBo, "occupation" ) );
+
+        this.finishedTest("testAttrTagSelector");
+    </method>
+                  
+    <method name="testAttrStarSelector">                        
+        // Let's match anyone (including animals) in the Kennedy house
+        var anythingInKennedyHouseSelector = [ {attrname: "id", attrvalue: "gKennedyHouse"}, "*"];
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( anythingInKennedyHouseSelector, gBo, "occupation" ) );
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( anythingInKennedyHouseSelector, gWildDuck, "feathercolor" ) );
+        this.assertFalse(LzCSSStyle._compoundSelectorApplies( anythingInKennedyHouseSelector, gIndio, "occupation" ) );
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( anythingInKennedyHouseSelector, gDuck1, "feathercolor" ) );            
+        this.assertTrue(LzCSSStyle._compoundSelectorApplies( anythingInKennedyHouseSelector, gDuck4, "feathercolor" ) );                        
+        this.finishedTest("testAttrStarSelector");
+  </method>     
+</testsuite>

@@ -1,0 +1,36 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas  debug="true" cssfile="elementtypes-runtime.css">
+    <script>
+        Debug.write("at top of canvas: LzCSSStyle._rules: ", LzCSSStyle._rules);
+    </script>
+    <simplelayout />
+
+    <include href="test"/>
+    <debug/>
+  
+    <script>
+        Debug.write("cheese and fruit");
+    </script>
+       
+    <include href="designerview.lzx" />
+    
+    <designerview id="gTrent" />
+    <designerview id="gOscar" />    
+    <designerview id="gLaToya"/>        
+    
+    <testsuite name="elementtypes" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testElement");
+            this.run();
+        </handler>
+
+        <method name="testElement">
+            Debug.write("in testElement: LzCSSStyle._rules: ", LzCSSStyle._rules);
+            this.assertEquals("300", gTrent.getAttribute("width"));    
+            this.assertEquals("300", gOscar.getAttribute("width")); 
+            this.assertEquals("0xbe6127", gLaToya.getAttribute("innercolor"))                                                          
+            this.finishedTest("testElement");         
+        </method>
+        
+    </testsuite>
+</canvas>

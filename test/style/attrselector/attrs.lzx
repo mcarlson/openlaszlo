@@ -1,0 +1,66 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<library>
+    <include href="../runtime-only-tests/designerview.lzx" />
+    <simplelayout />
+    
+    <stylesheet>
+    [name='Philip'] {
+        width: 300;
+        miscdata: "san jose state";
+        innercolor: "0x8F008F";
+    }
+
+    [name='George'] {
+        width: 200;
+        miscdata: "somewhere far away";
+        innercolor: "0x245f84";
+    }
+    
+    [group="groovy"] {
+        innercolor: "0x25592c";
+    }
+    
+    [group="yucky"] {
+        innercolor: "0xbe6127";
+    }
+    
+    </stylesheet> 
+    
+    <designerview name="Philip" id="gPhilip" initstage="late"/>
+    <designerview name="George" id="gGeorge" initstage="late" />
+
+    <designerview id="gGroove" group="groovy" />
+    <designerview id="gYuck" group="yucky" />    
+    
+        
+    <testsuite name="idssuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testPhilip");
+            this.addTest("testGeorge");
+            this.addTest("testNonNameAttrs");
+            this.run();
+        </handler>
+
+        <method name="testPhilip">
+            this.assertNotNull( gPhilip );
+            this.assertEquals( 300, gPhilip.getWidth() );
+            this.assertEquals( "san jose state", gPhilip.getAttribute("miscdata"))
+            this.finishedTest("testPhilip");
+        </method>
+
+        <method name="testGeorge">
+            this.assertNotNull( gGeorge );
+            this.assertEquals( 200, gGeorge.getWidth() );
+            this.assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"))
+            this.finishedTest("testGeorge");
+        </method>
+
+        <method name="testNonNameAttrs">
+            this.assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
+            this.assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
+            this.finishedTest("testNonNameAttrs");
+        </method>
+        
+    </testsuite>
+
+</library>

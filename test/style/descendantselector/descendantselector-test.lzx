@@ -1,0 +1,66 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true" cssfile="../neighborhood/kennedy.css" bgcolor="0xAAAAAA">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file exercises compiler and runtimesupport for CSS" 
+        + " and DESCENDANT selectors. Mmm-hmm.");
+    </script>
+    <include href="../test"/>
+    <debug/>
+
+    <simplelayout axis="y" spacing="30"/>
+    <include href="../neighborhood/neighborhoodclasses.lzx" />
+    <include href="../neighborhood/kennedyfamily.lzx" />
+    <include href="../neighborhood/thestreet.lzx" />    
+    
+
+
+    <testsuite name="descendantsuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testSimpleDescendant");
+            this.addTest("testOverridenDescendant");
+            this.addTest("testGrandchildren");
+            this.addTest("testSpecificity");            
+            this.addTest("testCatAncestor");            
+            this.run();
+        </handler>
+
+        <!-- Descendant selectors test -->        
+        <method name="testSimpleDescendant">
+            this.assertEquals("politician", gJoeJr.getAttribute("occupation"));            
+            this.assertEquals("politician", gRosemary.getAttribute("occupation"));            
+            this.assertEquals("politician", gKathleen.getAttribute("occupation"));            
+            this.finishedTest("testSimpleDescendant");
+        </method>
+
+        <method name="testOverridenDescendant">
+            this.assertEquals("president", gJFK.getAttribute("occupation"));
+            this.assertEquals("senator", gTed.getAttribute("occupation"));                                                
+            this.finishedTest("testOverridenDescendant");
+        </method>
+
+        <!-- Descendant selectors test --> 
+        <method name="testGrandchildren">
+            this.assertEquals("jetsetter", gCBK.getAttribute("occupation"));
+            this.assertEquals("jetsetter", gJFKJr.getAttribute("occupation"));            
+            this.assertEquals("jetsetter", gPatrick.getAttribute("occupation"));            
+            this.finishedTest("testGrandchildren");
+        </method>
+        
+        <!-- This is the heart of how themes for diamond will work. --> 
+        <method name="testCatAncestor">
+            this.assertEquals( "kennedycat", gJoeCat.getAttribute("misc"));                        
+            this.assertEquals( "kennedycat", gPatCat.getAttribute("misc"));                                    
+            this.assertEquals( "smithcat", gBlackie.getAttribute("misc"));                                                
+            this.finishedTest("testCatAncestor");
+        </method>
+        
+        <method name="testSpecificity">
+            this.assertEquals("plainoldcat", gKittycat.getAttribute("misc"));        
+            this.finishedTest("testSpecificity");
+        </method>
+        
+    </testsuite>
+        
+    
+</canvas>

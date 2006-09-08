@@ -1,0 +1,92 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    <simplelayout />
+    
+    <view id="unstyledview"/>
+
+    <class name="simplestyled" extends="view"/>
+
+    <simplestyled id="asimplestyled"/>
+    
+    <simplestyled id="pip">
+        <view id="insidesimple"/>
+            <view id="wain" />
+    </simplestyled>
+    
+    <class name="animal" />
+    <class name="cat" extends="animal" >
+        <attribute name="furcolor" value="white" />
+    </class>
+    
+    <class name="kitten" extends="animal" >
+        <attribute name="furcolor" value="white" />
+    </class>
+    
+
+    <cat id="c1" />
+    <kitten id="k1" />
+    
+    <cat id="c2">
+        <view id="insidec2" />
+    </cat>
+
+    <script src="styledefhack.js"/>
+
+    <testsuite name="first" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "serviceExists" );
+            this.addTest( "simpleSelector")
+            this.addTest( "cascade" );
+            this.addTest( "cattest" );    
+            this.addTest( "propertiesExist" );        
+            this.run();
+        </handler>
+
+        <method name="serviceExists">
+            this.assertFalse( false );
+            this.assertNotNull( LzCSSStyle )
+            this.assertNotNull( LzCSSStyle.getComputedStyle )
+            this.finishedTest( "serviceExists" );
+        </method>
+        
+        <method name="simpleSelector">
+            var cssd = LzCSSStyle.getComputedStyle( unstyledview );
+            this.assertNotNull( cssd );
+            this.assertTrue( cssd instanceof LzCSSStyleDeclaration );
+            this.assertNull( cssd.getPropertyValue( "foo" ) );
+            
+            var cssd2 = LzCSSStyle.getComputedStyle( asimplestyled );
+            this.assertNotNull( cssd2 );
+            this.assertEquals ( "bar", cssd2.getPropertyValue( "foo" ) );
+            this.finishedTest( "simpleSelector" );
+        </method>
+        
+        <method name="cascade">
+            var cssd = LzCSSStyle.getComputedStyle( insidesimple );
+            this.assertEquals( "bar", cssd.getPropertyValue( "foo" ) );
+
+            var cssd2 = LzCSSStyle.getComputedStyle( wain );
+            this.assertEquals( "bar", cssd2.getPropertyValue( "foo" ) );
+
+            this.finishedTest( "cascade" );
+        </method>
+        
+        <method name="cattest">
+            var catstyle = LzCSSStyle.getComputedStyle( c2 );
+            this.assertEquals( "adult", catstyle.getPropertyValue("age"));
+            this.assertEquals( "furry", catstyle.getPropertyValue("texture"));            
+            this.assertEquals( "meow", catstyle.getPropertyValue("sound"));
+            this.finishedTest( "cattest" );                        
+        </method>
+        
+        <method name="propertiesExist">
+            var emptyStyle =  new LzCSSStyleRule();
+            this.assertNotUndefined( emptyStyle.properties );
+            this.assertNotUndefined( emptyStyle.selector );
+            
+            this.finishedTest( "propertiesExist" );
+        </method>
+        
+        
+    </testsuite>
+</library>

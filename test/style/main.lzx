@@ -1,0 +1,11 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true">
+    <include href="test"/>
+    <debug/>
+    <include href="ids.lzx" />
+    <include href="seeit.lzx" />        
+    <include href="firsttry.lzx"/>
+    <include href="moreselectors.lzx" />    
+    <include href="descendantselectors.lzx" />
+
+</canvas>

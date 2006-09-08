@@ -323,11 +323,12 @@ public class Compiler {
             // If css map already exists, don't look at canvas's css property.
             String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
             if (cssfile == null || "".equals(cssfile)) {
+                mLogger.info("Got cssfile named: " + cssfile);             
                 cssfile = root.getAttributeValue("cssfile");
             } 
 
             if ( cssfile != null && ! "".equals(cssfile) ) {
-                mLogger.debug("Using " + cssfile + " CSS file");
+                mLogger.info("Using " + cssfile + " CSS file");
 
                 // CSS path is relative to LZX file
                 String parentPath = file.getParent();
@@ -337,7 +338,13 @@ public class Compiler {
 
                 // CSS file is relative to directory of LZX file. 
                 String cssFullPath = parentPath + File.separatorChar + cssfile;
-                mLogger.debug("CSS file's full path is " + cssFullPath);
+                mLogger.info("CSS file's full path is " + cssFullPath);
+                
+                // Check whether css file exists
+                File cssf = new File(cssFullPath);
+                if (!cssf.exists()) {
+                    throw new CompilationError("Could not find css file " + cssfile);
+                }
 
                 try {
                     // set canvas's attribute to cssfile value 
@@ -393,6 +400,7 @@ public class Compiler {
             
             processCompilerInstructions(root, env);
             compileElement(root, env);
+            mLogger.debug("ben ben ben you are here css live love life");
             ViewCompiler.checkUnresolvedResourceReferences (env);
             mLogger.debug("done...");
             // This isn't in a finally clause, because it won't generally
@@ -507,7 +515,6 @@ public class Compiler {
 
     static ElementCompiler getElementCompiler(Element element,
                                               CompilationEnvironment env) {
-        env.preprocessCSS(element);
         if (CanvasCompiler.isElement(element)) {
             return new CanvasCompiler(env);
         } else if (ImportCompiler.isElement(element)) {
@@ -530,6 +537,8 @@ public class Compiler {
             return new DataCompiler(env);
         } else if (DebugCompiler.isElement(element)) {
             return new DebugCompiler(env);
+        } else if (StyleSheetCompiler.isElement(element)) {
+                return new StyleSheetCompiler(env);
         } else if (SwitchCompiler.isElement(element)) {
             return new SwitchCompiler(env);
             // The following test tests true for everything, so call

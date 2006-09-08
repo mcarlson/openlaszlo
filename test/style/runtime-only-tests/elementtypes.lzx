@@ -1,0 +1,35 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas  debug="true" cssfile="tests.css">
+    <simplelayout />
+
+    <include href="test"/>
+    <debug/>
+  
+    <script>
+        Debug.write("jenny young faced surgery for a ruptured disc");
+    </script>
+       
+    <include href="designerview.lzx" />
+  
+    <script src="elementtypes_css.js"/>
+    
+    <designerview id="gTrent" />
+    <designerview id="gOscar" />    
+    <designerview id="gLaToya"/>        
+    
+    <testsuite name="moreselectors" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testElement");
+            this.run();
+        </handler>
+
+        <method name="testElement">
+         Debug.write("LzCSSStyle._rules: ", LzCSSStyle._rules);
+         this.assertEquals("300", gTrent.getAttribute("width"));    
+         this.assertEquals("300", gOscar.getAttribute("width")); 
+         this.assertEquals("0xbe6127", gLaToya.getAttribute("innercolor"))                                                          
+         this.finishedTest("testElement");         
+        </method>
+        
+    </testsuite>
+</canvas>

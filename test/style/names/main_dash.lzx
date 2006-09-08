@@ -1,0 +1,36 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true">
+    <script>
+    Debug.write("This test file exercises compiler support for CSS names with underscores and dashes.");
+    </script>
+    <include href="../test"/>
+    
+    <stylesheet>
+        #gMax {
+            lzx-bgcolor: "0x652f15";
+        }
+    </stylesheet>
+    
+    <debug/>
+    
+    <include href="utils/traits/cssable.lzx" />
+
+    <class name="B" traits="cssable" bgcolor="0x776699" width="50" height="50">
+        <handler name="onconstruct" method="_applyCSS" />
+        <attribute name="cssPropertyMap" 
+            value="{width: 'width', bgcolor: 'lzx-bgcolor', coolness: 'coolness', height: 'lzxheight'}" />
+    </class>
+    
+<B id="gMax" />
+    
+    <testsuite name="namesuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testName");
+            this.run();            
+        </handler>
+        <method name="testName">
+            this.finishedTest("testName");
+        </method>
+    </testsuite>
+
+</canvas>

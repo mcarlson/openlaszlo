@@ -39,6 +39,7 @@ public class NodeModel implements Cloneable {
     public static final String WHEN_ONCE = "once";
     public static final String WHEN_ALWAYS = "always";
     public static final String WHEN_PATH = "path";
+    public static final String WHEN_STYLE = "style";
     private static final String SOURCE_LOCATION_ATTRIBUTE_NAME = "__LZsourceLocation";
 
     protected final ViewSchema schema;
@@ -54,6 +55,7 @@ public class NodeModel implements Cloneable {
     protected ComparisonMap references = new ComparisonMap();
     protected ComparisonMap paths = new ComparisonMap();
     protected ComparisonMap setters = new ComparisonMap();
+    protected ComparisonMap styles = new ComparisonMap();
     /** [eventName: String, methodName: String, Function] */
     protected List delegateList = new Vector();
     protected ClassModel parentClassModel;
@@ -74,6 +76,7 @@ public class NodeModel implements Cloneable {
         copy.references = new ComparisonMap(copy.references);
         copy.paths = new ComparisonMap(copy.paths);
         copy.setters = new ComparisonMap(copy.setters);
+        copy.styles = new ComparisonMap(copy.styles);
         copy.delegateList = new Vector(copy.delegateList);
         copy.children = new Vector();
         for (Iterator iter = children.iterator(); iter.hasNext(); ) {
@@ -184,6 +187,7 @@ public class NodeModel implements Cloneable {
         static final int EVENT = 1;
         static final int REFERENCE = 2;
         static final int PATH = 3;
+        static final int STYLE = 4;
 
         final int type;
         final Object value;
@@ -212,6 +216,8 @@ public class NodeModel implements Cloneable {
             buffer.append(" paths=" + paths.keySet());
         if (!setters.isEmpty())
             buffer.append(" setters=" + setters.keySet());
+        if (!styles.isEmpty())
+            buffer.append(" styles=" + styles.keySet());
         if (!delegateList.isEmpty())
             buffer.append(" delegateList=" + delegateList);
         if (!children.isEmpty())
@@ -481,7 +487,7 @@ public class NodeModel implements Cloneable {
                 location, ViewSchema.STRING_TYPE,
                 WHEN_IMMEDIATELY);
             addAttribute(cattr, SOURCE_LOCATION_ATTRIBUTE_NAME, 
-                         attrs, events, references, paths);
+                         attrs, events, references, paths, styles);
         }
 
         // Encode the attributes
@@ -645,7 +651,7 @@ solution =
                     CompiledAttribute cattr = compileAttribute(
                         element, name, value, type, when);
                     addAttribute(cattr, name, attrs, events,
-                                 references, paths);
+                                 references, paths, styles);
                     // Check if we are aliasing another 'name'
                     // attribute of a sibling
                     if (name.equals("name")) {
@@ -679,7 +685,8 @@ solution =
 
     void addAttribute(CompiledAttribute cattr, String name,
                       ComparisonMap attrs, ComparisonMap events,
-                      ComparisonMap references, ComparisonMap paths) {
+                      ComparisonMap references, ComparisonMap paths,
+                      ComparisonMap styles) {
         if (cattr.type == cattr.ATTRIBUTE) {
             if (attrs.containsKey(name, caseSensitive)) {
                 env.warn(
@@ -704,7 +711,7 @@ solution =
                     ,element);
             }
             events.put(name, cattr.value);
-        } else if (cattr.type == cattr.REFERENCE) {
+        } else if ((cattr.type == cattr.REFERENCE) || (cattr.type == cattr.PATH)) {
             if (references.containsKey(name, caseSensitive)) {
                 env.warn(
 /* (non-Javadoc)
@@ -716,8 +723,14 @@ solution =
                     ,element);
             }
             references.put(name, cattr.value);
-        } else if (cattr.type == cattr.PATH) {
-            references.put(name, cattr.value);
+        } else if (cattr.type == cattr.STYLE) {
+            if (styles.containsKey(name, caseSensitive)) {
+                env.warn(
+                    // TODO [2006-08-22 ptw] i18n this
+                    "duplicate $style binding for '" + name + "' in " + getMessageName(),
+                    element);
+            }
+            styles.put(name, cattr.value);
         }
     }
 
@@ -810,7 +823,6 @@ solution =
         // Encode the children
         for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
             ElementWithLocationInfo child = (ElementWithLocationInfo) iter.next();
-            env.preprocessCSS(child);
             try {
                 if (isPropertyElement(child)) {
                     addPropertyElement(child);
@@ -1233,10 +1245,16 @@ solution =
                 canonicalValue = value;
 
             // Handle when cases
+            // N.B., $path and $style are not really when values, but
+            // there you go...
             if (when.equals(WHEN_PATH)) {
                 return new CompiledAttribute(
                     CompiledAttribute.PATH,
                     srcloc + ScriptCompiler.quote(value) + "\n");
+            } else if (when.equals(WHEN_STYLE)) {
+                return new CompiledAttribute(
+                    CompiledAttribute.STYLE,
+                    srcloc + value + "\n");
             } else if (when.equals(WHEN_ONCE)) {
                 return new CompiledAttribute(
                     CompiledAttribute.REFERENCE,
@@ -1368,7 +1386,7 @@ solution =
             CompiledAttribute cattr = compileAttribute(element, name,
                                                        value, type,
                                                        when);
-            addAttribute(cattr, name, attrs, events, references, paths);
+            addAttribute(cattr, name, attrs, events, references, paths, styles);
         }
 
         // Add entry for attribute setter function
@@ -1448,6 +1466,34 @@ solution =
         }
         if (!paths.isEmpty()) {
             attrs.put("$paths", paths);
+        }
+        if (!styles.isEmpty()) {
+            String styleMap;
+            try {
+                java.io.Writer writer = new java.io.StringWriter();
+                ScriptCompiler.writeObject(styles, writer);
+                styleMap = writer.toString();
+            } catch (java.io.IOException e) {
+                throw new ChainedException(e);
+            }
+            // NOTE: [2006-09-04 ptw] The $styles method _must_ create
+            // a new map each time, because the sub-class or instance
+            // may modify it.
+            attrs.put("$styles",
+                      new
+                      Function(
+                          "",
+                          "",
+                          "\n#beginContent" +
+                          "\n#pragma 'withThis'" +
+                          "\n#pragma 'methodName=$styles'" +
+                          "\nvar map = super.$styles() || (new Object);" +
+                          "\nvar s = " + styleMap + ";" +
+                          "\nfor (var k in s) { map[k] = s[k]; };" +
+                          "\nreturn map;" +
+                          "\n#endContent" +
+                          "\n")
+                      );
         }
     }
 
@@ -1576,6 +1622,7 @@ solution =
         references.putAll(source.references);
         paths.putAll(source.paths);
         setters.putAll(source.setters);
+        styles.putAll(source.styles);
         delegateList.addAll(source.delegateList);
         // TBD: warn on children that share a name?
         // TBD: update the node count

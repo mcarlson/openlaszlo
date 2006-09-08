@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+    <title>specific</title>
+    <style type="text/css" media="screen">
+        /* List items should be purple if not styled otherwise */
+        /* Specificity: 010 */ 
+        li { color: purple;}
+        
+        /* Specificity: 100 */ 
+        #gJoeKennedy { color: blue ;}
+        
+        /* Elements of type li which are children of #gJoeKennedy should be green */ 
+        /* Specificity: 101 */  
+        #gJoeKennedy li { color: green ;}        
+        
+        /* The thing with an id of gJFK should be red */ 
+        /* Specificity: 100 */ 
+        #gJFK { color: red ;}
+        
+        /* The thing with an id of gTed which is a child of gJoeKennedy should be aqua */
+        /* Specificity 200 */ 
+        #gJoeKennedy #gTed { color: silver;}
+        
+        
+    </style>
+    
+</head>
+
+<ul>
+    <li id="gJoeKennedy">I am Joe Kennedy and I should be blue.
+        <ul id="gInnerList">
+            <li id="gJFK">I am JFK and I should be red.</li>
+                <ul>
+                </ul>
+            <li id="gRFK">I am Robert F. Kennedy. I should be green</li>
+            <li id="gTed">I am Ted Kennedy. I should be silver</li>            
+        </ul>
+    </li>
+    <li id="gBrother">I am one of Joe Kennedy's siblings. I should be purple.</li>
+</ul>   
+<p>Copyright 2006 Laszlo Systems</p>
+<body>
+
+
+</body>
+</html>

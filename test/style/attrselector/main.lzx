@@ -1,0 +1,12 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true">
+    <script>
+    Debug.write("This test file exercises compiler support for CSS [attr='val'].");
+    </script>
+    <include href="../test"/>
+    <debug/>
+    
+    <include href="attrs.lzx" />
+
+
+</canvas>

@@ -1,0 +1,11 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<canvas>
+<text text="this file tests what happens when we include an inline stylesheet" />
+
+<stylesheet>
+foo {
+    bar: "baz";
+}
+</stylesheet>
+
+</canvas> 

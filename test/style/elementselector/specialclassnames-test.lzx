@@ -1,0 +1,47 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    
+    <stylesheet>
+        view {
+            nicebgcolor: "0x366d3c";
+            styledname: "Frank";
+        }
+        
+        text {
+            foo: "text loves foo!";
+        }
+
+    </stylesheet>
+    
+    <view id="gView" 
+        name="$style{'styledname'}"
+        bgcolor="$style{'nicebgcolor'}"
+        height="100" width="100">
+        <text text="$style{'styledname'}" 
+            width="$once{parent.width}"/>
+    </view>
+    
+    <text id="gFooText" text="$style{'foo'}" width="200" />
+
+    <testsuite name="specialClassNamesSuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testview");
+            this.addTest( "testtext");            
+            this.run();
+        </handler>
+
+        <method name="testview">
+            this.assertEquals( 0x366d3c, gView.getAttribute("bgcolor") );
+            this.assertEquals( "Frank", gView.getAttribute("name"))
+            this.finishedTest("testview");
+        </method>
+
+        <method name="testtext">
+            this.assertEquals( "text loves foo!", gFooText.getAttribute("text"));
+            this.finishedTest("testtext");
+        </method>
+        
+    </testsuite>
+    
+    
+</library>

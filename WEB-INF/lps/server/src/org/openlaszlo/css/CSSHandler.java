@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -42,13 +42,15 @@ public class CSSHandler implements DocumentHandler, Serializable {
     }
 
     /** 
-     * Entry point to creating a CSSHandler.
+     * Entry point to creating a CSSHandler to read from an external 
+     *    stylesheet file
      * @param rootDir the directory where cssFile exists.
      * @param cssFile the css file to read. 
      */
     public static CSSHandler getHandler(String rootDir, String cssFile)
         throws CSSException {
         try {
+            mLogger.info("creating CSSHandler");
             CSSHandler handler = new CSSHandler(rootDir,cssFile);
             Parser parser = mCSSParserFactory.makeParser();
             parser.setDocumentHandler(handler);
@@ -59,6 +61,29 @@ public class CSSHandler implements DocumentHandler, Serializable {
             throw new CSSException(e.getMessage());
         }
     }
+
+    /** 
+     * Entry point to creating a CSSHandler from just a string of inlined css
+     * @param cssString a string containing the entire CSS to parse
+     */
+    public static CSSHandler getHandler(String cssString) 
+        throws CSSException {
+        try {
+            mLogger.debug("entering CSSHandler.getHandler with inline string");
+            CSSHandler handler = new CSSHandler(cssString);
+            Parser parser = mCSSParserFactory.makeParser();            
+            parser.setDocumentHandler(handler);
+            java.io.Reader cssReader = new java.io.StringReader(cssString);
+            InputSource inputSource = new InputSource(cssReader);
+            parser.parseStyleSheet(inputSource);
+            return handler;
+        } catch (Exception e) {
+            mLogger.error("Exception reading from inline stylesheet", e);
+            throw new CSSException(e.getMessage());
+        }
+    }
+
+
 
     //==========================================================================
     // instance
@@ -78,7 +103,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
 
     /** A list of CSS files separated by two file separators characters. */
     String mFileDependencies;
-
+    
     /** protected constructor */
     CSSHandler(String rootDir, String cssFile) {
         mCSSFile = cssFile;
@@ -97,6 +122,15 @@ public class CSSHandler implements DocumentHandler, Serializable {
         handler.mFileDependencies += 
             File.separator + File.separator + getFullPath();
     }
+    
+    /** protected constructor */
+    CSSHandler(String cssString) {
+        mCSSFile = "";
+        mRootDir = "";
+        mRuleList = new Vector();
+        mFileDependencies = ""; // inline css doesn't add any file dependencies
+    }
+    
 
     /** Helper function to log and throw an error. */
     void throwCSSException(String errMsg) throws CSSException {
@@ -127,8 +161,9 @@ public class CSSHandler implements DocumentHandler, Serializable {
     }
 
     /**
-     * Preprocess elements with CSS values.
+     * Preprocess elements with CSS values. Deprecated; use runtime styles instead. 
      * @param element element to apply style to.
+     * @deprecated 
      */
     public void preprocessCSS(Element element) {
         Map stylePropertyMap = null;
@@ -152,6 +187,174 @@ public class CSSHandler implements DocumentHandler, Serializable {
                 element.setAttribute(name, value);
             }
         }
+    }
+    /**
+     * Create a javascript representation of the css rules. 
+     @returns String a whole long javascript chunk
+     */ 
+    public String toJavascript() {
+        String script = "";         
+        // script += "Debug.write('Now the compiler will add " + mRuleList.size() + " rules');\n";
+
+        for (int i=0; i < mRuleList.size(); i++) {  
+            Rule rule = (Rule)mRuleList.get(i);
+            String curRuleName = "__cssRule" + Integer.toString(i); 
+            script += "var " + curRuleName + " = new LzCSSStyleRule(); \n";
+
+            String curRuleSelector = buildSelector(rule.getSelector());
+            script += curRuleName + ".selector = " + curRuleSelector + ";\n";
+            String curRuleProperties = buildPropertiesJavascript(rule);         
+            script += curRuleName + ".properties = " + curRuleProperties + ";\n";
+            script += " LzCSSStyle._addRule( " + curRuleName + " ); \n"; 
+            // script += "Debug.write('Added rule ' + " + curRuleName + " ); \n";
+        }
+        // mLogger.error("Here's the whole css thing:" + script);
+        return script; 
+    }
+
+
+    String buildSelector(Selector sel) {
+        String selectorString = "\"selector_not_handled\"";
+
+        switch (sel.getSelectorType()) {
+            case Selector.SAC_ELEMENT_NODE_SELECTOR: 
+                //  This selector matches only tag type
+                ElementSelector es = (ElementSelector)sel;
+                selectorString = buildElementSelectorJS(es.getLocalName());
+                break;
+            case Selector.SAC_CONDITIONAL_SELECTOR:
+                // This selector matches all the interesting things:
+                // #myId
+                // [someattr="someval"]
+                // simple[role="private"]
+                // myclass#myId (TODO: check this. [bshine 9.05.06])
+                ConditionalSelector cs = (ConditionalSelector)sel;
+                // Take care of the simple selector part of this                
+                selectorString = buildConditionalSelectorJS(cs.getCondition(),cs.getSimpleSelector());                
+                break;
+            case Selector.SAC_DESCENDANT_SELECTOR:
+                DescendantSelector ds = (DescendantSelector)sel;
+                selectorString = buildDescendantSelector(ds);
+                break;
+            default:
+                selectorString = "unknown_selector" + Integer.toString(sel.getSelectorType());
+        } 
+
+        return selectorString;
+    }
+
+    String buildElementSelectorJS(String localName) {
+        return "\"" + localName + "\"";   
+    }
+
+    String buildConditionalSelectorJS(Condition cond, SimpleSelector simpleSelector) {
+        mLogger.debug("Conditional selector: " + cond.toString());
+        String condString = "no_match";        
+        switch (cond.getConditionType()) {
+            case Condition.SAC_ID_CONDITION: /* #id */
+                AttributeCondition idCond = (AttributeCondition) cond;
+                condString = "\"#" + idCond.getValue() + "\""; // should be the id specified
+                break;
+
+             case Condition.SAC_ATTRIBUTE_CONDITION: // [attr] or [attr="val"] or elem[attr="val"]
+                mLogger.debug("Attribute condition");
+                AttributeCondition attrCond = (AttributeCondition) cond;
+                String name  = attrCond.getLocalName();
+                String value = attrCond.getValue();
+                condString = "{ attrname: \"" + name + "\", attrvalue: \"" + value + "\"";
+                // The simple selector is the element part of the selector, ie, 
+                // foo in foo[bar="baz"]. If there is no element part of the selector, ie
+                // [bar="lum"] then batik gives us a non-null SimpleSelector with a 
+                // localName of the null string. We don't write out the simple selector if 
+                // it's not specified. 
+                if (simpleSelector != null) {
+                    mLogger.debug("simple selector:" + simpleSelector.toString());
+                    if (simpleSelector.getSelectorType() == Selector.SAC_ELEMENT_NODE_SELECTOR) {
+
+                        ElementSelector es = (ElementSelector)simpleSelector;                                        
+                        String simpleSelectorString = es.getLocalName();
+                        // Discard the simple selector if it isn't specified
+                        if (simpleSelectorString != null) 
+                            condString += ", simpleselector: \"" + simpleSelectorString + "\""; 
+                    } else {
+                        mLogger.error("Can't handle CSS selector " + simpleSelector.toString());
+                    }
+                } 
+                
+                condString += "}";
+                mLogger.debug("Cond string: " + condString ); 
+                break;
+            default:
+        }
+        return condString;
+    }
+
+    /** 
+     * Build a string holding the javascript to create the selector at runtime, where
+       the selector is a descendant selector, ie 
+       E F
+       would be
+       descendantrule.selector =  [
+           "E", 
+           "F" ];
+       The selector is specified as an array of selectors, ancestor first. 
+      */
+    String buildDescendantSelector(DescendantSelector ds) {
+        // We need the simple selector and the ancestor selector
+        SimpleSelector ss = ds.getSimpleSelector();
+        Selector ancestorsel = ds.getAncestorSelector();
+        String str = "[";
+        
+        // If this is complicated, it will be [ "something", "complicated" ]
+        // Strip excessive square brackets. This lets us pretend to unroll
+        // recursive selectors into a list of selectors. 
+        // This is a cheap way to get deep selectors.
+        String ancestorselstr = buildSelector(ancestorsel);
+        ancestorselstr = ancestorselstr.replace('[', ' ');
+        ancestorselstr = ancestorselstr.replace(']', ' ');        
+        str += ancestorselstr; 
+        str += ", ";
+        str += buildSelector(ss);
+        
+        str += "]";
+        // mLogger.error("Here's the whole descendant selector:" + str);
+        return str;
+    }
+
+    /**
+      * Build a string holding the javascript to create the rule's properties attribute. 
+      * This should just be a standard javascript object composed of attributes and values,
+      * wrapped in curly quotes. Escape the quotes for attributes' values.
+      * for example "{ width: 500, occupation: \"pet groomer and holistic veterinarian\",
+                       miscdata: \"spends most days indoors\"}"" 
+      */                       
+      
+    String buildPropertiesJavascript(Rule rule) {
+        /*
+        String props = "{ width: 500, occupation: \"pet groomer and holistic veterinarian\"," + 
+                        " miscdata: \"spends most days indoors\"} ";
+                        */ 
+        
+        String props = "{";
+        Map ruleStyleMap = rule.getStyleMap();
+        boolean insertComma = false;     
+        Iterator iter = ruleStyleMap.entrySet().iterator();
+          while (iter.hasNext()) {
+              // don't put a comma before the first property. that would be illegal javascript.
+              if (!insertComma) { 
+                  insertComma = true; 
+              } else {
+                  props += ", ";
+              }
+              Map.Entry entry = (Map.Entry)iter.next();
+              String name = (String)entry.getKey();
+              StyleProperty newProp = (StyleProperty)entry.getValue();
+              props += name + ": "+ "\"" + newProp.value + "\"";
+
+          }        
+        props += "}";  
+        
+        return props; 
     }
 
     /**
@@ -220,7 +423,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
             throw new CSSException(e.getMessage());
         }
     }
-
+    
     public void startDocument(InputSource source) throws CSSException {
         /* ignore */
     }

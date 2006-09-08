@@ -1,0 +1,4 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas cssfile="idontexist.css">
+<text text="this file tests what happens when we reference a css file that doesn't exist" />
+</canvas>

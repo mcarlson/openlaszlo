@@ -1,0 +1,18 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true" cssfile="elementselectors.css">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file exercises RUNTIME support for CSS" 
+        + " and element selectors.");
+    </script>
+    <debug/>
+
+    <include href="../runtime-only-tests/designerview.lzx" />
+    
+    <include href="elementselector-test.lzx" />
+    <include href="specialclassnames-test.lzx" />    
+    
+
+    
+    
+</canvas>

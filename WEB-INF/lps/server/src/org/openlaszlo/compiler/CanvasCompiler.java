@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -100,6 +100,8 @@ class CanvasCompiler extends ToplevelCompiler {
         
         mEnv.getGenerator().importBaseLibrary(baseLibraryName, mEnv);
         
+
+        
         canvas.setSWFVersion(mEnv.getSWFVersion());
         initializeFromElement(canvas, element);
         
@@ -154,6 +156,10 @@ class CanvasCompiler extends ToplevelCompiler {
                 Compiler.compileElement(child, mEnv);
             }
         }
+        
+        // This seems like a good place to insert CSS [bshine 8.2.2006]
+        mEnv.insertCSS(); 
+
     }
         
     void updateSchema(Element element, ViewSchema schema, Set visited) {

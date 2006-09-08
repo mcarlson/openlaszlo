@@ -1,0 +1,43 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<library>
+    <include href="../runtime-only-tests/designerview.lzx" />
+    <simplelayout />
+    <designerview id="gPhilip" initstage="late"/>
+    <designerview id="gGeorge" initstage="late" />   
+    <designerview id="gIzzy" initstage="late" />    
+    <designerview id="cabinet"/>
+
+    <designerview /> <!-- no id, just plain --> 
+    <designerview id="gFindMe" /> 
+    <designerview bordercolor="0xABBADD" /> <!-- no id -->
+        
+    <testsuite name="idssuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testPhilip");
+            this.addTest("testGeorge");
+            // this.addTest( "testTagTypeAndId");            
+            this.run();
+        </handler>
+
+        <method name="testPhilip">
+            this.assertNotNull( gPhilip );
+            this.assertEquals( 300, gPhilip.getWidth() );
+            this.assertEquals( "san jose state", gPhilip.getAttribute("miscdata"))
+            this.finishedTest("testPhilip");
+        </method>
+
+        <method name="testGeorge">
+            this.assertNotNull( gGeorge );
+            this.assertEquals( 200, gGeorge.getWidth() );
+            this.assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"))
+            this.finishedTest("testGeorge");
+        </method>
+        
+        <method name="testTagTypeAndId">
+            this.assertEquals( "find me please", gFindMe.getAttribute("miscdata"));            
+            this.finishedTest("testTagTypeAndId");
+        </method>
+
+    </testsuite>
+
+</library>

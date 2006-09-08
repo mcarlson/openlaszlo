@@ -1,0 +1,19 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+
+<canvas debug="true" title="runtime css" cssfile="kennedy.css">
+    <include href="../test"/>
+    <debug/>
+    <simplelayout />
+    
+    <script>
+    Debug.write("get in the door first.");
+    </script>
+    
+    <include href="neighborhoodclasses.lzx" />
+    <include href="kennedyfamily.lzx" />    
+    <include href="thestreet.lzx" /> 
+   
+    <duck id="gWildDuck" />
+
+    <include href="neighborhoodtestsuite.lzx" />   
+</canvas>

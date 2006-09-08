@@ -1,0 +1,30 @@
+<!-- Test data. This represents the Kennedy dynasty, or at least, some of it. 
+    This tree is mostly for testing parent/child/descendant/ancestor selectors. -->
+<!-- Copyright 2006 Laszlo Systems --> 
+<street id="gEasyStreet">
+<house id="gKennedyHouse">
+    <simplelayout axis="y" spacing="10" />
+    <person id="gJoeSr" fullname="Joe P. Kennedy, Sr" shortname="Irish Joe">
+        <cat id="gJoeCat" meowsound="meep" />
+        <person x="100" id="gJFK" fullname="John Fitzgerald Kennedy" shortname="JFK">
+            <person id="gCBK" fullname="Caroline Bouvier Kennedy" shortname="Caroline">
+                <!-- Apparently, Caroline Kennedy had pet ducks when her father was president. 
+                See http://www.whitehouse.gov/president/holiday/historicalpets3/02-js.html --> 
+                <duck id="gDuck1" />
+                <duck id="gDuck2" />                    
+                <duck id="gDuck3" />                    
+                <duck id="gDuck4" />                    
+            </person>
+            <person id="gJFKJr" fullname="John F. Kennedy, Jr." shortname="JFKJr" />
+            <person id="gPatrick" fullname="Patrick Bouvier Kennedy" shortname="Patrick" >
+                      <cat id="gPatCat" meowsound="I say!" />        
+            </person>
+        </person>
+        <person x="100" id="gJoeJr" fullname="Joseph Patrick Kennedy Sr" shortname="Joe Jr" />
+        <person x="100" id="gRosemary" fullname="Rosemary Kennedy" shortname="Rose" />
+        <person x="100" id="gKathleen" fullname="Kathleen Kennedy" shortname="Kathy" />
+        <person x="100" id="gTed" fullname="Edward Moore Kennedy" shortname="Ted">
+        </person>
+    </person>
+</house>
+</street>

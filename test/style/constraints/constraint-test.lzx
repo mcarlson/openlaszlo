@@ -1,0 +1,133 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<canvas debug="true"  bgcolor="0xAAAAAA">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file exercises compiler and runtime support for $style constraints");
+    </script>
+    <include href="../test"/>
+    <debug/>
+    
+    <stylesheet>
+    #gComplicatedView {
+        indirect1: 200;
+        indirect2: "foo";
+    }
+    
+    #gSimpleView {
+        nicebgcolor: "0x00AA33"; /* nicebgcolor is green*/
+        nicexpos: 44;
+    }
+    
+    #gSB {
+        stylebgcolor : "0xAA0000";
+        styleinnercolor : "0xAAFFFF";        
+    }
+    
+    /* This should match gPlainView, and gWidthThirty, but the next
+        rule should take precedence for gWidthThirty */ 
+    /* Note that right now lexical order matters; this works if this
+        less-specific rule comes after the more-specific rule. 
+        The tests with width="62" test what happens when the rules
+        are declared in the opposite lexical order, most specific
+        first. */ 
+    [width="30"] {
+        stylebgcolor: "0xA4B2B1";
+    }
+    
+    /* This should only get gWidthThirty, not gPlainView */ 
+    styledbox[width="30"] {
+        stylebgcolor: "0x8E694B";
+        styleinnercolor: "0x880000";                
+    }
+    
+    styledbox[width="62"] {
+        stylebgcolor: "0x6B7347";
+        styleinnercolor: "0x8C9870";                    
+    }
+    
+    [width="62"] {
+        stylebgcolor: "0x963A1E";
+        styleinnercolor: "0xD2B46C";                            
+    }
+
+    
+    /* This should match gNugget bot not gWidthThirty */ 
+    styledbox {
+        stylebgcolor: "0x71919F";
+        styleinnercolor: "0xB79FC2";        
+    }
+    
+    </stylesheet>
+
+    <simplelayout axis="y" spacing="0"/>
+    <view id="gBefore" bgcolor="0xAA0033" width="50" height="50" />
+    <view id="gSimpleView" bgcolor="$style{'nicebgcolor'}" width="50" 
+          x="$style{ 'nicexpos' }" height="50" />
+    <view id="gAfter" bgcolor="0x3300BB" width="50" height="50" />
+
+    <text id="gComplicatedView" width="$style{ mystyleval1 }" 
+          text="$style{ mystyleval2 }">
+        <attribute name="mystyleval1" value="indirect1" type="string"/>
+        <attribute name="mystyleval2" value="indirect2" type="string"/>
+    </text>
+    
+    <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
+    </class>
+    
+    <styledbox x="20" y="20" id="gSB" />
+    <styledbox x="20" y="20" />    
+    
+    <view name="containerForNameTest" bgcolor="#95A1A1" width="${parent.width-5}" height="110">
+        <simplelayout axis="x" spacing="5" />
+        <text text="gWidthThirty:" />
+        <styledbox x="10" id="gWidthThirty" width="30" > <!-- Test selecting for this with styledbox[width="30"] -->
+        </styledbox>
+        <text text="gNugget:" />        
+        <styledbox id="gNugget">
+        </styledbox>
+        <text text="gPlainView:" />                
+        <view id="gPlainView" width="30" height="70" bgcolor="$style{'stylebgcolor'}"> <!-- This should not match `styledbox[width="30"] -->
+        </view>
+        <text text="gOdd:" />
+        <styledbox name="odd" id="gOdd" width="62"/>
+        <text text="gOtter:" />        
+        <view name="otter" id="gOtter" width="62" height="70" bgcolor="$style{'stylebgcolor'}"/>
+    </view>
+       
+    <testsuite name="constraintsuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testSimpleConstraint");
+            this.addTest("testClassConstraint");         
+            this.addTest("testClassAttrValSelector");                        
+            this.run();
+        </handler>
+
+        <!-- Descendant selectors test -->        
+        <method name="testSimpleConstraint">
+            this.assertEquals(  0x0AA33, gSimpleView.bgcolor);
+            this.assertEquals(  44 , gSimpleView.x);
+            this.assertEquals(  200 , gComplicatedView.width);
+            this.assertEquals(  "foo" , gComplicatedView.text);
+            this.finishedTest("testSimpleConstraint");
+        </method>
+        
+        <method name="testClassConstraint">
+            this.assertEquals(  0x71919F, gSB.bgcolor);
+            this.assertEquals(  0xB79FC2, gSB.inner.bgcolor);
+            this.finishedTest("testClassConstraint");
+        </method>
+        
+        <method name="testClassAttrValSelector">
+            this.assertEquals(  0x8E694B, gWidthThirty.bgcolor);  //  9,333,067 
+            this.assertEquals(  0x71919F, gNugget.bgcolor);       //  7,442,847
+            this.assertEquals(  0xA4B2B1, gPlainView.bgcolor);    // 10,793,649
+            this.assertEquals(  0x963A1E, gOtter.bgcolor );       //  9,845,278
+            this.assertEquals(  0x6B7347, gOdd.bgcolor );         //  7,041,863           
+            this.finishedTest("testClassAttrValSelector");
+        </method>
+
+    </testsuite>
+        
+    
+</canvas>

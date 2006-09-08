@@ -90,6 +90,9 @@ var mvn = function (){
 
         this.__LZapplyArgs( maskedargs , true );
 
+        var styleMap = this.$styles();
+        if ( styleMap ) this.__LZapplyStyleMap( styleMap );
+
         this.constructWithArgs( maskedargs );
 
         this.onconstruct.sendEvent( this );
@@ -147,6 +150,7 @@ LzNode.prototype.id = null;
 //and to a different one after they are created. See the
 //determinePlacement method.
 LzNode.prototype.defaultplacement = null;
+LzNode.prototype.placement = null;
 
 // Initial values
 LzNode.prototype.$cfn = 0;
@@ -169,6 +173,35 @@ if ($debug) {
 }
 
 
+//---
+// Default style map.  Will be overridden for classes that have $style
+// constraints.
+//
+// @keywords private
+//---
+LzNode.prototype.$styles = function () {
+  return null;
+}
+
+//------------------------------------------------------------------------------
+// @keywords private
+//------------------------------------------------------------------------------
+LzNode.prototype.__LZapplyStyleMap = function ( stylemap ){
+    for ( var k in stylemap ){
+        //we are going to bypass the CSS API and call the underlying
+        //implementation because we're concerned about speed
+
+        //in lieu of a real type conversion plan, try this as a number. if it's
+        //still equal, use the number form
+        var v = LzCSSStyle.getPropertyValueFor( this , stylemap[ k ] );
+        var nv = Number( v );
+        if ( v == nv ) v = nv;
+        this.setAttribute( k , v);
+
+        //Consider calling __LZapplyArgs instead of setAttribute here
+
+    }
+}
 //------------------------------------------------------------------------------
 // The construct() method of a node is called as early as possible --
 // before any arguments have been applied. This is the method to override in
@@ -235,6 +268,8 @@ LzNode.prototype.construct = function ( parent , args ){
       var thisplacement = a.placement;
       if (thisplacement == null) {
         thisplacement = lp.defaultplacement;
+      } else {
+        this.placement = thisplacement;
       }
       while (thisplacement != null) {
         if ($swf5) {
@@ -771,8 +806,7 @@ LzNode.prototype.dataBindAttribute = function ( attr , path  ) {
 }
 
 LzNode.prototype.__LZdelayedSetters ={
-    $refs : "__LZresolveRefs" ,
-    $delegates : "__LZsetDelegates"
+    $refs : "__LZresolveRefs" 
 }
 
 LzNode.prototype.earlySetters ={
@@ -849,8 +883,11 @@ LzNode.prototype.__LZresolveReferences = function (){
     var rdict = this.__LZresolveDict;
     this.__LZresolveDict = null;
     for ( var r in rdict ){
+        if ( r == "$delegates" ) continue;
         this[  this.__LZdelayedSetters[ r ] ] ( rdict[ r ] );
     }
+    // $delegates : "__LZsetDelegates"
+    if ( rdict.$delegates ) this.__LZsetDelegates( rdict.$delegates );
 }
 
 //------------------------------------------------------------------------------

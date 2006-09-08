@@ -1,11 +1,13 @@
-<canvas title="OpenLaszlo Flickr Mini" oninit="gFlickr.getRecent()" proxied="false">
+<canvas title="OpenLaszlo Flickr Mini" oninit="gFlickr.getRecent(canvas.myapikey)" proxied="false">
 
-<!--        When using this library, set api to your own flickr api key, from
-        http://www.flickr.com/services/api/misc.api_keys.html  -->
-<attribute name="myapikey" value="PLEASE_INSERT_FLICKR_API_KEY" type="string"/>
+<!--
+When using this library, set api to your own flickr api key, from
+http://www.flickr.com/services/api/misc.api_keys.html 
+This app is currently using OpenLaszlo's api key --> 
+        
+<attribute name="myapikey" value="563a40afe6128e60145dd1e347911e54" type="string"/>
 
 <include href="incubator/libflickr.lzx" />
-
 
 <simplelayout spacing="10" />
 <view

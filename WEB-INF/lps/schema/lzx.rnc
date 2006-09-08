@@ -114,7 +114,7 @@ element library {
 }
 
 toplevelElements = (
-    (viewElement | scriptElement | asset | font)*
+    (viewElement | scriptElement | styleSheetElement | asset | font)*
   & datasource*
   & connectiondatasource*
   & dataset*
@@ -1211,6 +1211,16 @@ scriptElement =
       attribute src {xsd:anyURI} 
     | text?)
   }
+
+styleSheetElement =
+ element stylesheet {
+  (## The pathname of a css file.  This pathname is resolved
+   ## relative to the file that contains the <tagname>stylesheet</tagname>
+   ## element.
+    attribute src {xsd:anyURI} 
+  | text?)
+}
+
 
 preloadresource = 
  element preloadresource {

@@ -1,0 +1,59 @@
+/* 
+    This tries to match the rules created in descendantselectors_css.js
+    with real css. 
+    Copyright 2006 Laszlo Systems
+*/
+
+person {
+    occupation: "waiting around";
+}
+
+#gJoeSr { 
+    occupation: "politician";
+    favoritecolor: "0x000000";
+}
+
+#gJoeSr person {
+    occupation: "politician";
+    favoritecolor: "0xFF0000";
+}
+
+/* this rule should win over the above rule, since specifying *this* id 
+   is more specific than "any descendant of type 'person' from gJoeSr".
+   But, based on the rules for selectors a I understand them, it doesn't
+   matter *where* in the selector the id comes. To make it work then we 
+   have to do #gJoeSr #gJFK, not because #gJoeSr person has higher specificity
+   (110) than just #gJFK (100)
+*/
+#gJoeSr #gJFK {
+    occupation: "president";
+    favoritecolor: "0xFF00FF";    
+}
+
+#gJoeSr #gTed {
+    occupation: "senator";
+    favoritecolor: "0x00FF00";    
+}
+
+
+/* JFK's kids are jetsetters */ 
+#gJoeSr #gJFK person {
+    occupation: "jetsetter";
+    favoritecolor: "0x7777AA";        
+}
+
+/* Cats usually have the misc attribute "plainoldcat" */
+cat {
+    misc: "plainoldcat";
+}
+
+/* This is the heart of how themes for diamond will work. All cats
+in the kennedy house have the properties specified here. */
+#gKennedyHouse cat {
+    misc: "kennedycat";
+}
+/* This is the heart of how themes for diamond will work. All cats
+in the smith house have the properties specified here. */
+#gSmithHouse cat {
+    misc: "smithcat";
+}

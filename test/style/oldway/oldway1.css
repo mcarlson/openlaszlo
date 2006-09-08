@@ -1,0 +1,17 @@
+/* Copyright 2006 Laszlo Systems */ 
+#gContactsWindow {
+    bgcolor: #000055;
+}
+
+#gVideoWindow {
+    bgcolor: #FFBBCC;
+}
+
+#gContactsWindow text {
+    fgcolor: #FFFFFF;    
+}
+
+#gVideoWindow text {
+    fgcolor: #000000;
+}
+

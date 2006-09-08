@@ -1,0 +1,47 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<canvas debug="true"  bgcolor="0xAAAAAA">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file experiments with using CSS to style text.");
+    </script>
+    <include href="../test"/>
+    <debug/>
+    
+    <stylesheet>
+        #gt2 {
+            textbg : "0xAA33AA"; /* purple background for text */ 
+        }
+    </stylesheet>
+
+    <simplelayout axis="y" spacing="10"/>
+    
+    <text id="gt1" width="300" multiline="true" 
+        text="OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt2" width="300" multiline="true" 
+        bgcolor="$style{'textbg'}"
+        text="OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt3" width="300" multiline="true" 
+        text="OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+    
+    <testsuite name="texttestsuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testSimpleText");
+            this.run();
+        </handler>
+
+        <method name="testSimpleText">
+            this.assertEquals( 0xAA33AA, gt2.getAttribute("bgcolor")); 
+            this.finishedTest("testSimpleText");
+        </method>
+        
+        
+
+    </testsuite>
+        
+    
+</canvas>

@@ -1,0 +1,227 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    <class name="testsuite">
+        <attribute name="timeout" value="3000"/>
+        <attribute name="wasrun" value="false"/>
+
+        <!-- info, log or error -->
+        <attribute name="loglevel" value="info" type="string"/>
+
+        <handler name="onconstruct">
+            gTestMan.addSuite( this );
+        </handler>
+
+        <attribute name="tests" value="$once{ [] }"/>
+        <attribute name="_failed" value="false"/>
+        <attribute name="failures" value="0"/>
+
+        <attribute name="currentTest" value="null"/>
+
+        <method name="addTest" args="tname">
+            this.tests.push( tname );
+        </method>
+
+        <attribute name="realstartdel" value="null"/>
+        <method name="nextTest">
+            if ( !realstartdel ) {
+                this.realstartdel = new LzDelegate ( this , '_reallyStart' );
+            }
+            //do this so that the call chain doesn't get confusingly
+            //deep
+            LzIdle.callOnIdle( realstartdel );
+        </method>
+
+        <method name="_reallyStart">
+            gTestMan.checkActive( this );
+
+            if ( !tests.length ) return;
+
+            if ( currentTest ) {
+                if ( !this.finishedTest( currentTest ) ) return;
+            }
+            this.wasrun = true;
+
+            this.setAttribute( 'currentTest', tests.shift() );
+            gTestMan.info( ' Running ' + this.getCurrentName() );
+            this._failed = false;
+            gTestMan.activity();
+            this[ currentTest ]();
+        </method>
+
+        <method name="finishedTest" args="tname">
+            this.assertEquals(  tname , currentTest ,
+                              "Test finished, but test names mismatched:" );
+            if ( tname != currentTest ) return false;
+            if ( _failed ){
+                gTestMan.logError( "FAILED: " + this.getCurrentName() );
+                this.failures++;
+            } else {
+                gTestMan.info( " Passed!" );
+            }
+
+            this.currentTest = null;
+            if ( !tests.length ) {
+                gTestMan.done( this );
+            } else {
+                this.nextTest();
+            }
+        </method>
+
+        <method name="testTimedOut">
+            gTestMan.logError( "Test timed out " + this.getCurrentName() );
+            this._failed = true;
+            this.finishedTest( currentTest );
+        </method>
+
+        <method name="run">
+            gTestMan.ready( this );
+        </method>
+
+        <method name="getCurrentName">
+            return this.name + "." + this.currentTest;
+        </method>
+
+    </class>
+
+    <script src="testmanager.js"/>
+
+    <node id="gTestMan">
+
+        <attribute name="maxReadyTime" value="1000"/>
+        <attribute name="readydel" 
+                   value="$once{ new LzDelegate( this, 'neverReady' ) }"/>
+
+        <attribute name="timedel" 
+                   value="$once{ new LzDelegate( this, 'timedOut' ) }"/>
+
+        <attribute name="suites" value="[]"/>
+        <attribute name="currsuite" value="null"/>
+        <attribute name="readylist" value="[]"/>
+
+        <method name="addSuite" args="s">
+            suites.push( s );
+        </method>
+
+        <method name="ready" args="s">
+            if ( currsuite ) {
+                readylist.push( s );
+            } else {
+                this._start( s );
+            }
+        </method>
+
+        <method name="_start" args="s">
+            this.currsuite = s;
+            this.activity();
+            this.info( "Starting suite: " + s.name );
+            this.currsuite.nextTest();
+            LzTimer.removeTimer( readydel );
+        </method>
+
+
+        <attribute name="_haderror" value="false"/>
+        <method name="done" args="s">
+            <![CDATA[
+            if ( s != currsuite ){
+                this.fatalError( "Test suite " + s + " thinks it's done but " +
+                                 "it shouldn't be running." );
+                return;
+            }
+
+            if ( currsuite.failures ){
+                this.logError( currsuite.name + " finished with " + 
+                               currsuite.failures + " failure(s)" );
+            } else {
+                this.log( "Finished suite: " + currsuite.name );
+            }
+
+            LzTimer.removeTimer( timedel );
+
+            if ( readylist.length ) {
+                this._start( readylist.shift() );
+            } else {
+                this.currsuite= null;
+                for ( var i = 0; i < suites.length; i++ ){
+                    if ( !suites[ i ].wasrun ){
+                        LzTimer.addTimer( readydel , maxReadyTime );
+                        return;
+                    }
+                }
+
+                this._complete();
+            }
+            ]]>
+        </method>
+
+        <method name="activity" args="s">
+            LzTimer.resetTimer( timedel, currsuite.timeout );
+        </method>
+
+        <method name="timedOut">
+            currsuite.testTimedOut();
+        </method>
+
+        <method name="neverReady">
+            <![CDATA[
+            this.logError ( "The following suite(s) were never run:" );
+            for ( var i = 0; i < suites.length; i++ ){
+                if ( !suites[ i ].wasrun ){
+                    this.logError( "    " + suites[ i ].name );
+                }
+            }
+            this._complete();
+            ]]>
+        </method>
+
+        <method name="_complete">
+            if ( this._haderror ){
+                this.logError( "Tests complete, with errors" );
+            } else {
+                this.log( "TESTS COMPLETE! SUCCESS!!!" );
+            }
+            this._finalize();
+        </method>
+
+        <method name="checkActive" args="s">
+            if ( s != this.currsuite ){
+                this.fatalError( "Inactive test tried to run: " + s +
+                             "    Active suite is: " + currsuite );
+            }
+        </method>
+
+        <method name="info" args="s">
+            <![CDATA[
+            if ( currsuite && currsuite.loglevel == "info" ) {
+                Debug.write( s );
+            }
+            ]]>
+        </method>
+        
+        <method name="log" args="s">
+            <![CDATA[
+            if ( !currsuite || currsuite.loglevel != "error" ) {
+                Debug.write( s );
+            }
+            ]]>
+        </method>
+
+        <method name="logError" args="e">
+            this._haderror = true;
+            Debug.error( e );
+        </method>
+
+        <method name="fatalError" args="e">
+            this.logError( "***FATAL ERROR***" );
+            this.logError( e );
+            this._finalize();
+        </method>
+
+        <method name="_finalize">
+            this._start = null;
+            this.done = null;
+            LzTimer.removeTimer( timedel );
+            LzTimer.removeTimer( readydel );
+        </method>
+        
+    </node>
+</library>

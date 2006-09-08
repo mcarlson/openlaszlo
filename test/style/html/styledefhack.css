@@ -1,0 +1,42 @@
+# Copyright 2006 Laszlo Systems
+#someid {
+	background-color: rgb(100,20,20);
+	color: rgb(200,200,255);
+}
+
+.simplestyled {
+	foo: bar;
+	color: rgb(10,100,10);
+}
+
+.cat {
+	background-color: rgb(0,0,100);
+	color: rgb(200,200,200);
+}
+
+.kitten {
+	border: 1px solid #999;
+	color: rgb(255,30,255);
+}
+
+# Kitten child of cat - this exercises the descendant selector
+.cat {
+	foo: meow;
+	color: rgb(255,30,30);
+}
+
+.cat .kitten {
+	foo: mrowr;
+	font-style: italic;
+	background-color: rgb(20,76,20);
+}
+
+.cat .kitten .kitten {
+	foo: nee;
+	background-color: rgb(20,76,255);
+}
+
+.kitten .kitten {
+	foo: meep;
+	background-color: rgb(128,128,128);
+}
