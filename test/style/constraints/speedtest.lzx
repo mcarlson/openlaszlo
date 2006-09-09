@@ -66,7 +66,6 @@
         <handler name="oninit">
             this.addTest("testLookupTimes");
             this.addTest("makeSomeNodes");
-            this.addTest("lookupDifferent");
             this.run();
         </handler>
 
@@ -106,26 +105,6 @@
             }
             this.assertEquals( iter, subsubID.subnodes.length );
             this.finishedTest("makeSomeNodes");
-        </method>
-
-        <method name="lookupDifferent">
-            var t = getTimer();
-            for ( var i = iter-1; i >= 0; i-- ){
-                var n = subsubID.subnodes[ i ];
-                this.assertEquals( 10, this.getCSSProp( n, "prop1" ));
-                this.assertEquals( 20, this.getCSSProp( n, "prop2" ));
-                this.assertEquals( 30, this.getCSSProp( n, "prop3" ));
-                this.assertEquals( 300,this.getCSSProp( n, "prop4" ));
-                this.assertEquals( 40, this.getCSSProp( n, "prop5" ));
-                this.assertEquals( 50, this.getCSSProp( n, "prop6" ));
-                this.assertEquals( 60, this.getCSSProp( n, "prop7" ));
-                this.assertEquals( 70, this.getCSSProp( n, "prop8" ) );
-            }
-            this.assertEquals( iter, subsubID.subnodes.length );
-            var tt = getTimer() - t ;
-            this.assertTrue(1000 > tt );
-            Debug.write( 'Different lookup test took: ' + tt );
-            this.finishedTest("lookupDifferent");
         </method>
 
     </testsuite>
