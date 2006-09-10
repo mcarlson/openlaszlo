@@ -1,5 +1,5 @@
 <!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
-<canvas debug="true"  bgcolor="0xAAAAAA">
+<canvas bgcolor="0xAAAAAA">
     <include href="../test"/>
     <script>
     Debug.write("This test file experiments with using CSS to style text.");
@@ -11,22 +11,66 @@
         #gt2 {
             textbg : "0xAA33AA"; /* purple background for text */ 
         }
+        
+        #gt3 {
+            stylefontcolor: "0x993399"; /* the text itself should be purple */ 
+        }
+
+        #gt4 {
+            stylefontsize: 18; /* nice big text */ 
+        }
+        
+        #gt7 {
+            stylefontstyle: "bold"; 
+        }
+
+
     </stylesheet>
 
     <simplelayout axis="y" spacing="10"/>
     
     <text id="gt1" width="300" multiline="true" 
-        text="OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+        text="(plain) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
     </text>
 
     <text id="gt2" width="300" multiline="true" 
         bgcolor="$style{'textbg'}"
-        text="OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+        text="(bg purple by css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
     </text>
 
     <text id="gt3" width="300" multiline="true" 
-        text="OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+        fgcolor="$style{'stylefontcolor'}"
+        text="(fgcolor purple by css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
     </text>
+
+<!-- this causes a compile warning:
+    bad value for attribute "fontsize"
+    but then the text is drawn properly, at size 18. 
+--> 
+    <text id="gt4" width="300" multiline="true" 
+        fontsize="$style{'stylefontsize'}"
+        text="(fontsize 18 via css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt5" width="300" multiline="true" 
+        fontsize="18"
+        text="(fontsize 18) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt6" width="300" multiline="true" 
+        fontstyle="bold"
+        text="(bold) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+    
+<!-- this causes a compile error: 
+        typography-test.lzx:66:177: Unknown style UNDEFINED STYLE
+--> 
+<!--    <text id="gt7" width="300" multiline="true" 
+        fontstyle="$style{'stylefontstyle'}"
+        text="(bold via css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text> 
+-->
+    
     
     <testsuite name="texttestsuite" loglevel="log">
         <handler name="oninit">
@@ -35,7 +79,23 @@
         </handler>
 
         <method name="testSimpleText">
-            this.assertEquals( 0xAA33AA, gt2.getAttribute("bgcolor")); 
+            this.assertEquals( 0xAA33AA, gt2.getAttribute("bgcolor"));
+            
+            // The htmltext for gt3 should now have the color string specified in
+            // stylefontcolor
+            var textclip = gt3.__LZtextclip;
+            var htmlText = textclip.htmlText;
+            var indexOfColor = htmlText.indexOf("993399");
+            this.assertTrue( indexOfColor > 0 , "993399 present in htmltext"); 
+
+            // it would be nice if this worked, too. 
+            this.assertEquals( 0x993399, gt3.getAttribute("fgcolor"));             
+            
+            this.assertEquals( 18, gt4.getAttribute("fontsize"));
+            
+            this.assertEquals( "bold", gt6.getAttribute("fontstyle")); 
+            // this.assertEquals( "bold", gt7.getAttribute("fontstyle"));             
+            
             this.finishedTest("testSimpleText");
         </method>
         
