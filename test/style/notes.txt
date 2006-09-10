@@ -1,6 +1,0 @@
-TODO
-
-7.21.06
-recursive selectors
-parsing (server-side)
-compiling to javascript

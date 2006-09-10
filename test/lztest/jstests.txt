@@ -1,4 +1,0 @@
-test/lfc/services/cssstyle/cssstylesheet-test.js
-test/lfc/services/cssstyle/stylesheet-test.js
-test/lztest/jstest-simple.js
-# test/lztest/jstest-fail.js

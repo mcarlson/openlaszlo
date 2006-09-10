@@ -1,6 +1,0 @@
-<!-- Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved. -->
-<canvas debug="true">
-    <include href="test"/>
-    <debug/>
-    <include href="brokentests.lzx" />
-</canvas>
