@@ -1,0 +1,75 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<canvas debug="true">
+    <include href="../test"/>
+    <stylesheet>
+        /*IMPORTANT: This test is only testing properly if the definitions
+          are not in class-hierarchy order. */
+        superclass {
+            testme: 1;
+        }
+
+        subsubclass {
+            testme: 3;
+        }
+
+        subclass {
+            testme: 2;
+        }
+        
+        special superclass {
+            testme: 4;
+        }
+
+        special subsubclass {
+            testme: 5;
+        }
+
+        special subclass {
+            testme: 6;
+        }
+        
+    </stylesheet> 
+    
+    <class name="superclass">
+        <attribute name="cprop" value="$style{ 'testme' }"/>
+    </class>
+
+    <class name="subclass" extends="superclass"/>
+    <class name="subsubclass" extends="subclass"/>
+
+    <superclass  id="supi"/>
+    <subclass    id="subi"/>
+    <subsubclass id="subsubi"/>
+
+    <class name="special" extends="subclass"/>
+    <special>
+        <superclass  id="sp_supi"/>
+        <subclass    id="sp_subi"/>
+        <subsubclass id="sp_subsubi"/>
+    </special>
+
+    <testsuite name="laszloclasses" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testClasses");
+            this.addTest( "testCompound");
+            this.run();
+        </handler>
+
+        <method name="testClasses">
+            this.assertEquals( supi.cprop , 1 );
+            this.assertEquals( subi.cprop , 2 );
+            this.assertEquals( subsubi.cprop , 3 );
+            this.finishedTest("testClasses");
+        </method>
+        
+        <method name="testCompound">
+            this.assertEquals( sp_supi.cprop , 4 );
+            this.assertEquals( sp_subi.cprop , 5 );
+            this.assertEquals( sp_subsubi.cprop , 6 );
+            this.finishedTest("testCompound");
+        </method>
+
+    </testsuite>
+
+</canvas>
+
