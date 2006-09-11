@@ -1,0 +1,111 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    <!-- Remember: attribute selectors win over element selectors. --> 
+    
+    <stylesheet>
+        /* rule 1, specificity 10 */ 
+        [name="thename"] {
+            testdata: "i am thename";
+        }
+        
+        /* rule 2, specificity 1 */ 
+        testclass {
+            testdata: "i am testclass";
+        }
+        
+        /* rule 3, specificity 1 */ 
+        view {
+            testdata: "i am view";
+        }
+        
+    </stylesheet>
+
+    <simplelayout />
+    
+    <view name="thename" id="joseph">
+        <attribute name="testdata" value="$style{'testdata'}" />
+    </view>
+    
+    <class name="testclass" />
+    
+    <view> <!-- this view just makes a new scope for name="thename" -->
+        <view name="thename"> 
+            <testclass id="edgar">
+                <attribute name="testdata" value="$style{'testdata'}" />
+            </testclass>    
+            <view id="cheever">
+                <attribute name="testdata" value="$style{'testdata'}" />
+            </view>
+        </view>
+    </view> 
+    
+    <view id="snoopy">
+        <attribute name="testdata" value="$style{'testdata'}" />
+    </view> 
+
+    <testclass id="jackie">
+            <view id="alice">
+                <!-- Should alice get her style from rule 2 or rule 3? 
+                I think she should get her style from rule 3.
+                --> 
+                <attribute name="testdata" value="$style{'testdata'}" />
+            </view>
+    </testclass>
+
+    <view> <!-- another scope for name="thename" --> 
+        <testclass id="doug" name="thename">
+                <attribute name="testdata" value="$style{'testdata'}" />
+                
+                <view id="randy">
+                    <attribute name="testdata" value="$style{'testdata'}" />
+                </view>
+        </testclass>
+    </view> 
+
+    <testsuite name="nameAttributesSuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testthename");
+            this.addTest( "testNamedAncestor"); 
+            this.addTest( "testNameVsElement");              
+            this.run();
+        </handler>
+
+        <method name="testthename">
+            this.assertEquals( "i am thename", joseph.getAttribute("testdata") );
+            this.assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
+            this.finishedTest("testthename");
+        </method>
+
+        <method name="testNamedAncestor">
+            /* 
+                Should edgar take his style from rule 1, which his
+                ancestor matches but he does not, or from rule 2, which
+                he matches, but has lower specificity than rule 1?
+                If edgar takes his style from rule 2, which feels like the
+                right behavior, the next assertion will pass.
+            */ 
+            this.assertEquals( "i am testclass", edgar.getAttribute("testdata") );             
+            /* 
+                The situation is the same for cheever, but with selecting for
+                element type of view rather than a user class. 
+                
+                If our implementation is consistent, then both of these assertions
+                should have the same success, because they only differ by whether
+                the class is a user class or built-in class.                 
+            */            
+            this.assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
+            this.finishedTest("testNamedAncestor");
+        </method>
+
+        <method name="testNameVsElement">
+            this.assertEquals( "i am view", alice.getAttribute("testdata") );            
+            /* randy is the reverse of the edgar test case */ 
+            this.assertEquals( "i am view", randy.getAttribute("testdata") );                        
+            this.assertEquals( "i am thename", doug.getAttribute("testdata") );            
+            this.finishedTest("testNameVsElement");
+        </method>
+
+    </testsuite>
+    
+    
+</library>
