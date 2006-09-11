@@ -1,6 +1,6 @@
 <!-- Copyright 2006 Laszlo Systems -->
 <library>
-    <include href="../runtime-only-tests/designerview.lzx" />
+    <include href="../designerview.lzx" />
     <simplelayout />
     
     <stylesheet>

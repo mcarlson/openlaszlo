@@ -10,6 +10,10 @@
         text {
             foo: "text loves foo!";
         }
+        
+        view[name="jean"] {
+            nicebgcolor: "0x81103f";   
+        }
 
     </stylesheet>
     
@@ -22,11 +26,14 @@
     </view>
     
     <text id="gFooText" text="$style{'foo'}" width="200" />
+    
+    <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
 
     <testsuite name="specialClassNamesSuite" loglevel="log">
         <handler name="oninit">
             this.addTest( "testview");
-            this.addTest( "testtext");            
+            this.addTest( "testtext");
+            this.addTest( "testclassattr");            
             this.run();
         </handler>
 
@@ -39,6 +46,11 @@
         <method name="testtext">
             this.assertEquals( "text loves foo!", gFooText.getAttribute("text"));
             this.finishedTest("testtext");
+        </method>
+
+        <method name="testclassattr">
+            this.assertEquals( 0x81103f, gJean.getAttribute("bgcolor"));
+            this.finishedTest("testclassattr");
         </method>
         
     </testsuite>

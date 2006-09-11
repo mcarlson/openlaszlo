@@ -205,7 +205,7 @@ LzCSSStyle._ruleOrSelectorApplies = function ( r , node ){
 
         case (this._selTypes.classAndAttr ):
             if (node[ rp.attrname ] == rp.attrvalue) {
-                return elmatches = node instanceof _root.global[ rp.simpleselector ];
+                return elmatches = node instanceof _root.global[ rp.classname ];
             }
             return false; 
     }
@@ -260,9 +260,10 @@ LzCSSStyle._addRule = function ( r ){
 LzCSSStyle._parseSelector = function( sel ){
     switch ( typeof ( sel ) ){
         case "object":
-            if (sel.simpleselector) 
+            if (sel.simpleselector) {
                 sel.type = this._selTypes.classAndAttr;
-            else     
+                sel.classname = this._normalizeClassname( sel.simpleselector );
+            } else     
                 sel.type = this._selTypes.attribute;
             return sel;
             break;
