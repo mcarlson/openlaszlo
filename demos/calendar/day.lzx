@@ -1,5 +1,5 @@
 <library>
-
+<!-- Copyright 2006 Laszlo Systems -->
     <!-- CLASS: CALENDAR DAY ============================================= -->
     <!-- ================================================================= -->
     <class name="calendar_day" bgcolor="#7A949E"
@@ -136,7 +136,7 @@
 
             // *NEW: Assign new datapath
             var vDatapath =
-                'eventdata:/vcalendar/year'+ this.year +
+                'builddata:/vcalendar/year'+ this.year +
                 '/month'+(this.month+1)+
                 '/day'+dayOfMonth;
 
@@ -144,7 +144,6 @@
                             //+vDatapath);
 
             this.details.bgrect.container.dataview.setDatapath(vDatapath);
-
 
             var textColor = 0xDAE3E8;
 

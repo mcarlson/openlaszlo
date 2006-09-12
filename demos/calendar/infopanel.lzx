@@ -1,3 +1,8 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->
 <library>
     <!-- LIBRARY: INFO PANEL ============================================== -->
     <!-- Here is where I will use states to fill out the various panels     -->
@@ -97,12 +102,11 @@
     <class name="inputtextbox" extends="inputtext" bgcolor="white"
         resizable="true" 
         font="eventTimefont" opacity=".7" > <!-- fgcolor="#535353"-->
-        <view name="v_border" height="1"       bgcolor="black" width="${parent.width}" />
+        <view name="v_border" height="1" bgcolor="black" width="${parent.width}" />
         <view name="h_border" width="1"  y="1" bgcolor="black" height="${parent.height -1}" />
 
         <command name="myenter" onselect="parent.datapath.updateData();"  
-                 key="['Enter']"
-                 active="false"/>
+        key="['Enter']" active="false"/>
         
         <method event="onfocus">
             myenter.setAttribute( "active" ,true );
@@ -121,7 +125,7 @@
         <attribute name="opened" value="false"/>
 
         <!-- VIEWS -->
-        <view name="summary" width="198" height="${this.content.height + 20}" bgcolor="0xEEF0EB">
+        <view name="summary" width="${parent.width - 6}" height="${this.content.height + 20}" bgcolor="0xEEF0EB">
             <view y="10" name="content" x="10" width="${parent.width - 20}" >
                 <inputtextbox name="title"
                     width="${immediateparent.width}" height="15"
@@ -232,17 +236,18 @@
                 bgcolor="0xFDFFFF"/>
         </view>
 
-        <basetabslider name="tabs" height="360" bgcolor="0xEEF0EB" width="100%" y="${parent.summary.height + 4}" pixellock="true"
+        <basetabslider name="tabs" height="360" bgcolor="0xEEF0EB" width="100%"
+            y="${parent.summary.height + 4}" pixellock="true"
             slideduration="200" mintabheight="20" oninit="this.openTab(this.notes,true)" >
             <infoTab name="notes" label="Notes" pixellock="true">
                 <!-- fixed size input text is best for large multiline text,
                  so it is good to declare with values for width/height -->
-                <inputtextbox name="txt" x="10" y="10" multiline="true" pixellock="true"
-                              width="${immediateparent.width - 20}" height="289" />
+                <inputtextbox datapath="comment/@value" name="txt" x="10" y="10" multiline="true" pixellock="true"
+                    width="${immediateparent.width - 20}" height="289" />
             </infoTab>
             
             <infoTab label="Location" pixellock="true">
-                <inputtextbox name="txt" x="10" y="10" multiline="true" pixellock="true"
+                <inputtextbox datapath="location/@value" name="txt" x="10" y="10" multiline="true" pixellock="true"
                               width="${immediateparent.width - 20}" height="289" />
             </infoTab>
             <infoTab label="Attendees" pixellock="true">
@@ -265,14 +270,12 @@
 
 
         <!-- ANIMATORS -->
-        <animator start="false" name="slideopen1old" attribute="width" to="204"
-            duration="500" relative="false"/>
-        <animator start="false" name="slideopen1" attribute="x" to="602" from="830"
+        <animator start="false" name="slideopen1" attribute="x" to="${canvas.width - (canvas.width / 4) - 40}" from="${canvas.width}"
             duration="500"/>
         <animator start="false" name="slideopen2" attribute="opacity" to="1" from="0"
             duration="500" relative="false"/>
             
-        <animator start="false" name="slideclose1" attribute="x" from="602" to="830"
+        <animator start="false" name="slideclose1" attribute="x" from="${canvas.width - (canvas.width / 4) - 40}" to="${canvas.width}"
             duration="500" onstop="parent.close_done()"/>
         <animator start="false" name="slideclose2" attribute="opacity" to="0"
             duration="400" relative="false"/>
@@ -334,8 +337,3 @@
 
     </class>
 </library>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->

@@ -1,3 +1,8 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->
 <library>
     <!-- CLASS: BASE PANEL ============================================ -->
     <!-- A simple beveled panel with a title field and a close button   -->
@@ -9,21 +14,21 @@
             <view name="top" width="${parent.width}" height="19" >
                 <view name="l" resource="tpLft" x="-1"  y="-1"/>
                 <view name="m" resource="tpMdl" stretches="width"
-                      width="${parent.width - 22}" x="5"/>
+                     width="${parent.width - 22}" x="5"/>
 
                 <basebutton name="r" resource="tpRgt_base" 
-                            x="${parent.m.x + parent.m.width - 1}"  y="-1"
-                            onclick="classroot.close()" />
+            x="${parent.m.x + parent.m.width - 1}"  y="-1"
+                    onclick="classroot.close()" />
             </view>
 
             <view name="middle" width="${parent.width}" options="releasetolayout">
                 <view name="l" resource="lft" x="-2" stretches="height"
-                      height="${parent.height}"/>
+                    height="${parent.height}"/>
                 <view name="content" x="${parent.l.width + -2}"
-                      width="${parent.width - 6}" height="${parent.height}"/>
+                    width="${parent.width - 6}" height="${parent.height}"/>
                 <view name="r" resource="rgt" stretches="height"
-                      x="${parent.content.x + parent.width - 8}"
-                      height="${parent.height}"/>
+                    x="${parent.content.x + parent.width - 8}"
+                    height="${parent.height}"/>
             </view>
 
             <view name="bottom" width="${parent.width}" height="7">
@@ -37,10 +42,10 @@
         </view>
 
         <text name="title" font="vera" fontsize="10" fgcolor="#DAE3E8"
-              width="${parent.width-30}" x="5" y="1"/>
+            width="${parent.width-30}" x="5" y="1"/>
 
         <view name="contents" x="3" y="19" height="${parent.height - 27}" 
-              width="${parent.width - 6}" bgcolor="#9BA9B1" /> 
+            width="${parent.width - 6}" bgcolor="#9BA9B1" /> 
 
         <attribute name="defaultplacement" value="contents" type="string"/>
         
@@ -49,17 +54,11 @@
 
         <!-- this is currently unused, but allows for coloriation of panel -->
         <method name="transformto" args="tm">
-                frame.setColorTransform(tm);
+            frame.setColorTransform(tm);
         </method>
-        
         <method name="setWindowTitle" args="s">
-                this.title.setText(s);
+            this.title.setText(s);
         </method>
-        
     </class>
+
 </library>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->

@@ -1,15 +1,17 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                          -->
 <library>
+
 <class name="gridsliderlayout" extends="layout" >
-
     <!-- ATTRIBUTES -->
-    <attribute name="spacing" value="0"
-               setter="this.spacing = spacing" />
+    <attribute name="spacing" value="0" setter="this.spacing = spacing" />
 
-    <attribute name="cols" value="6"
-               setter="this.cols = cols" />
+    <attribute name="cols" value="6" setter="this.cols = cols" />
 
-    <attribute name="rows" value="6"
-               setter="this.set_rows(rows);" />
+    <attribute name="rows" value="6" setter="this.set_rows(rows);" />
 
     <!-- doanimation means do layout update with animation -->
     <attribute name="doanimation" value="false" />
@@ -33,10 +35,8 @@
 
     <!-- indicies for the open view -->
     <!-- when set the width and height of that day is expanded -->
-    <attribute name="openrow" value="-1"
-               setter="this.setopenrow(openrow)" />
-    <attribute name="opencol" value="-1"
-               setter="this.setopencol(opencol)" />
+    <attribute name="openrow" value="-1" setter="this.setopenrow(openrow)" />
+    <attribute name="opencol" value="-1" setter="this.setopencol(opencol)" />
 
 
     <!-- indicies for the display view not the same as open -->
@@ -48,63 +48,73 @@
     <attribute name="addedOpenHeight" value="170" />
 
 
-    <method event="oninit" > <![CDATA[
+    <method event="oninit" >
+    <![CDATA[
         // Create delegates used by the update method.
-        this.updateDelegate.register( immediateparent,  "onwidth");
-        this.updateDelegate.register( immediateparent,  "onheight");
-        this.delayvisDL = new LzDelegate(this,'delayVisibility');
-        this.resetvisDL = new LzDelegate(this,'resetVisibility');
-    ]]> </method>
+        this.updateDelegate.register(immediateparent, "onwidth");
+        this.updateDelegate.register(immediateparent, "onheight");
+        this.delayvisDL = new LzDelegate(this, 'delayVisibility');
+        this.resetvisDL = new LzDelegate(this, 'resetVisibility');
+    ]]>
+    </method>
 
     <!-- METHOD: addSubview -->
     <!-- As subviews are added to this layout store their row and col.
          This adds the layout's data in an internal spot in the view, which
          is not great OOP, but it's fast. We could use v.setOption( 'col', ...
          for this -->
-    <method name="addSubview" args="v"> <![CDATA[
+    <method name="addSubview" args="v">
+    <![CDATA[
         super.addSubview(v);
-        v.col =  (this.subviews.length - 1) % 7;
-        v.row = Math.floor((this.subviews.length - 1)/ 7);
-    ]]> </method>
+        v.col = (this.subviews.length - 1) % 7;
+        v.row = Math.floor((this.subviews.length - 1) / 7);
+    ]]>
+    </method>
 
 
-    <method name="set_rows" args="r"> <![CDATA[
-        if (this['rows'] != r) {
+    <method name="set_rows" args="r">
+    <![CDATA[
+        if(this['rows'] != r){
             this.rows = r;
             this.update();
         }
-    ]]> </method>
+    ]]>
+    </method>
 
 
     <!-- OPEN METHODS -->
 
     <!-- used to set the indicies only -->
     <!--
-    <method name="set_open" args="row, col"> <![CDATA[
+    <method name="set_open" args="row, col">
+    <![CDATA[
         this.openrow = row;
         this.opencol = col;
         this.update();
-    ]]> </method>
+    ]]>
+    </method>
     -->
 
     <!-- METHOD: setopen -->
     <!-- Sets the indicies for the openview and then finds the reference-->
-    <method name="setopen" args="row,col,withupdate"> <![CDATA[
-
+    <method name="setopen" args="row,col,withupdate">
+    <![CDATA[
         // create a reference to the view at row,col
         var newView = this.subviews[this.cols*row + col];
 
         // call setopen with new view reference
-        setopenview(newView,withupdate);
-    ]]> </method>
+        setopenview(newView, withupdate);
+    ]]>
+    </method>
 
     <!-- METHOD: setopenview -->
     <!-- opens the designated view and sets the open indicies-->
-    <method name="setopenview" args="v,withupdate"> <![CDATA[
+    <method name="setopenview" args="v, withupdate">
+    <![CDATA[
         this.locked = true;
-        
-        if (this.openview)
-            if (this.openview!=v){
+
+        if(this.openview)
+            if(this.openview != v){
                 // Save a reference to close the view later
                 // by sending an 'onclosestart' event
                 this.closedview=this.openview;
@@ -113,10 +123,10 @@
 
         this.openview = v;
         
-        if (v == null) {
+        if(v == null){
             this.openrow  = -1
-            this.opencol  = -1; }
-        else {
+            this.opencol  = -1; 
+    } else {
             this.openrow  = v.row;
             this.opencol  = v.col;
             // will send the event 'onopenstart' later
@@ -124,33 +134,39 @@
             this.openview['onopenstart']['sendEvent']();
             }
         this.locked = false;
-        if (this.displaymode == 'grid') doanimation = false;
-        if (withupdate) this.update();
-    ]]> </method>
+        if(this.displaymode == 'grid') doanimation = false;
+        if(withupdate) this.update();
+    ]]>
+    </method>
 
-    <method name="setopenrow" args="row"> <![CDATA[
+    <method name="setopenrow" args="row">
+    <![CDATA[
         // using brackets avoids the undefined warning in the debugger
-        if (this['openrow'] == row) { return; }
+        if(this['openrow'] == row) { return; }
         this.openrow = row;
         this.update();
-    ]]> </method>
+    ]]>
+    </method>
 
-    <method name="setopencol" args="col"> <![CDATA[
+    <method name="setopencol" args="col">
+    <![CDATA[
         // using brackets avoids the undefined warning in the debugger
-        if (this['opencol'] == col) { return; }
+        if(this['opencol'] == col) { return; }
         this.opencol = col;
         this.update();
-    ]]> </method>
+    ]]>
+    </method>
 
 
     <!-- DISPLAY METHODS -->
 
     <!-- METHOD: showcell -->
-    <method name="showcell" args="row,col"> <![CDATA[
+    <method name="showcell" args="row, col">
+    <![CDATA[
         this.locked = true;
 
         // set the open view
-        this.setopen(row,col,false);
+        this.setopen(row, col, false);
         
         // Set these to only display one cell fully
         this.openrow_only = true;
@@ -158,27 +174,27 @@
 
         this.locked = false;
         this.displaymode = 'cell';
-        this.doanimation  = true;
+        this.doanimation = true;
         this.update();
-    ]]> </method>
+    ]]>
+    </method>
 
     <!-- METHOD: showrow -->
-    <method name="showrow" args="row"> <![CDATA[
-        if (row) this.displayrow = row
+    <method name="showrow" args="row">
+    <![CDATA[
+        if(row) this.displayrow = row
         else this.displayrow = 0;
 
         this.locked = true;
         this.openrow_only = true;
         
-        if (this.displaymode == 'row') {
+        if(this.displaymode == 'row'){
             // Already in 'row' mode so close openday to make
             // the columnm widths all same size
             
             this.opencol_only = false;
             this.setopenview(null,false);
-            
-        } else if (this.openrow != row) {
-            
+        } else if(this.openrow != row){
             // not in 'week' display mode
         
             // the opened row is different than the one
@@ -186,8 +202,7 @@
             // and expand row.
             this.openrow_only = true;
             this.displaymode = 'row';
-            this.setopenview(null,false);
-
+            this.setopenview(null, false);
         } else {
             // the opened row is the same as the row to be
             // expanded so just make sure there is no column only focus.
@@ -197,39 +212,41 @@
         this.locked = false;
         this.update();
         this.displaymode = 'row';
-    ]]> </method>
+    ]]>
+    </method>
 
     <!-- METHOD: showgrid -->
-    <method name="showgrid" args="noanimation" > <![CDATA[
-
+    <method name="showgrid" args="noanimation" >
+    <![CDATA[
         this.displayrow = -1;
         this.displaycol = -1;
 
-        if ( this.displaymode == "grid" ) {
+        if(this.displaymode == "grid"){
             // if gridslider already in grid mode, close cell
             // without animation
-            this.doanimation  = false;
-            if (this.openview) {
-               this.doanimation  = false;
-               this.setopenview(null,false);
+            this.doanimation = false;
+            if(this.openview){
+               this.doanimation = false;
+               this.setopenview(null, false);
             }
         } else {
             this.doanimation = true;
             this.openrow_only = false;
             this.opencol_only = false;
-            if (this.opencol <  0) this.openrow = -1;
+            if(this.opencol <  0) this.openrow = -1;
         }
         if(noanimation) this.doanimation = false;
         this.update();
         this.displaymode = "grid";
-    ]]> </method>
+    ]]>
+    </method>
 
 
     <!-- METHOD: update -->
 
     <method name="update" >
         <![CDATA[
-        if ( this['locked'] ) { return }
+        if(this['locked']){ return; }
         this['onupdatestart']['sendEvent'](this.openview);
 
         // store a local value for fast reference
@@ -245,11 +262,9 @@
         var fr = this.openrow < 0 ? this.displayrow : this.openrow;
         var fc = this.opencol < 0 ? this.displaycol : this.opencol;
 
-
         // This is the what each (cw=colwidth) and (ch=columnheight) should be with no open
         this.cw = Math.floor((w - this.spacing*(ncols-1))/ncols);
         this.ch = Math.floor((h - this.spacing*(nrows-1))/nrows);
-
 
         // If there is a column open then that column will be wider than the rest
         // so adjust this difference.
@@ -267,15 +282,14 @@
         var wspace = opencol_only ? 0 : this.spacing;
 
         // iterate once through entire subviews
-        for (var rowi = 0; rowi < nrows; rowi++) {
-
+        for(var rowi = 0; rowi < nrows; rowi++){
             x=0; // the initial position of the subview for this row
 
             // First if this row is the opened row then set its appropriate height
-            if (openrow_only) { // 'only' means all other rows will be invisible... h=0;
-                if (rowi == fr)  h = immediateparent.height;
+            if(openrow_only){ // 'only' means all other rows will be invisible... h=0;
+                if(rowi == fr) h = immediateparent.height;
                 else h = 0;
-            } else if (rowi != fr) {
+            } else if(rowi != fr){
                 h = cellheight;
             } else {
                 h = ch + this.addedOpenHeight;
@@ -283,14 +297,13 @@
 
             // Now for each column in this row...
             // set its appropriate width
-            for (var coli = 0; coli < ncols; coli++) {
-
+            for(var coli = 0; coli < ncols; coli++){
                 s = this.subviews[i];
 
-                if (opencol_only) {
-                    if (coli == fc)  w = immediateparent.width - this.spacing;
+                if(opencol_only){
+                    if(coli == fc) w = immediateparent.width - this.spacing;
                     else w = 0;
-                  } else if (coli != fc) {
+                  } else if(coli != fc){
                     w = cellwidth;
                 } else {
                     w = cw + this.addedOpenWidth;
@@ -301,13 +314,13 @@
                 // to be invisible WITHOUT actually setting its height and width.
                 // This avoids activating contraints
                 var vis = (w > 0) && (h > 0);
-                if (vis) {
-                    if (this.doanimation) {
-                        if (!s.visible) {
-                            if (s.x != x)       s.setX(x);
-                            if (s.y != y)       s.setY(y);
-                            if (s.width != w)   s.setWidth(w);
-                            if (s.height != h)  s.setHeight(h);
+                if(vis){
+                    if(this.doanimation){
+                        if(!s.visible){
+                            if(s.x != x) s.setX(x);
+                            if(s.y != y) s.setY(y);
+                            if(s.width != w) s.setWidth(w);
+                            if(s.height != h) s.setHeight(h);
                             // To speed up the process only the currently visible
                             // views are animated, while the hidden views are
                             // given there final dimensions and then popped into view
@@ -316,87 +329,88 @@
                             s.update_vis_later = true;
                         } else {
                             var anm;
-                            if (s.x != x)       anm = s.animate('x',x,this.duration,false);
-                            if (s.y != y)       anm = s.animate('y',y,this.duration,false);
-                            if (s.width != w)   anm = s.animate('width',w,this.duration,false);
-                            if (s.height != h)  anm = s.animate('height',h,this.duration,false);
+                            if(s.x != x) anm = s.animate('x',x,this.duration,false);
+                            if(s.y != y) anm = s.animate('y',y,this.duration,false);
+                            if(s.width != w) anm = s.animate('width',w,this.duration,false);
+                            if(s.height != h) anm = s.animate('height',h,this.duration,false);
                             didAnimation=true;
                             this.delayvisDL.register(anm,'onstop');
                         }
                     } else {
-                        if (s.x != x)       s.setX(x);
-                        if (s.y != y)       s.setY(y);
-                        if (s.width != w)   s.setWidth(w);
-                        if (s.height != h)  s.setHeight(h);
-                        if (!s.visible) s.setVisible(true);
+                        if(s.x != x) s.setX(x);
+                        if(s.y != y) s.setY(y);
+                        if(s.width != w) s.setWidth(w);
+                        if(s.height != h) s.setHeight(h);
+                        if(!s.visible) s.setVisible(true);
                     }
                 } else {
-                   if (rowi ==0) {
+                   if(rowi == 0){
                         // move the top row even though its invisible so that the
                         // headers for the day of week (which are constrained to the
                         // top row) move correctly. only need width and x info.
-                        if (this.doanimation) {
-                            if (s.x != x)       s.animate('x',x,this.duration,false);
-                            if (s.width != w)   s.animate('width',w,this.duration,false);
+                        if(this.doanimation){
+                            if(s.x != x) s.animate('x',x,this.duration,false);
+                            if(s.width != w) s.animate('width',w,this.duration,false);
                         } else {
-                            if (s.x != x)       s.setX(x);
-                            if (s.width != w)   s.setWidth(w);
+                            if(s.x != x) s.setX(x);
+                            if(s.width != w) s.setWidth(w);
                         }
                     }
-                    if (s.visible) s.setVisible(false);
+                    if(s.visible) s.setVisible(false);
                     s.update_vis_later = false;
                 }
 
                 i++; //increment index counter
 
-                if (i >= this.subviews.length) { break; }
+                if(i >= this.subviews.length){ break; }
 
                 x += w + wspace; // increment the x value for the next subview in this row
             }
-            if (i >= this.subviews.length) { break; }
+            if(i >= this.subviews.length){ break; }
             y += h + hspace;
          }
 
          // Check to see if we need the last row, and if not hide these days
-         if (nrows == 5) { // hide last row
-            for (var c = 35; c < 42; c++) {
+         if(nrows == 5){ // hide last row
+            for(var c = 35; c < 42; c++){
                 this.subviews[c].setVisible(false);
                 this.subviews[c].update_vis_later = false;
              }
          }
 
-         if (!didAnimation) this.resetVisibility();
-
+         if(!didAnimation) this.resetVisibility();
          ]]>
     </method>
 
-    <method name="delayVisibility" ><![CDATA[
-       // delay the updating of the invisible views so that
-       // at least one idle frame occurs. This allows for the
-       // animation to complete before making the hidden views
-       // visible
-       this.delayvisDL.unregisterAll();
-       LzTimer.addTimer(this.resetvisDL,300);
-    ]]> </method>
+    <method name="delayVisibility" >
+    <![CDATA[
+    // delay the updating of the invisible views so that
+    // at least one idle frame occurs. This allows for the
+    // animation to complete before making the hidden views
+    // visible
+    this.delayvisDL.unregisterAll();
+    LzTimer.addTimer(this.resetvisDL,300);
+    ]]>
+    </method>
 
-    <method name="resetVisibility" ><![CDATA[
+    <method name="resetVisibility" >
+    <![CDATA[
         // Now show the views that were hidden
         var s;
-        for (var i =0; i < this.subviews.length; i++) {
+        for(var i =0; i < this.subviews.length; i++){
             s = this.subviews[i];
-            if (s['update_vis_later']){
-                if (!s.opened) s.details.bgrect.dataview.setY(0);
+            if(s['update_vis_later']){
+                if(!s.opened) s.details.bgrect.container.dataview.setY(0);
                 s.setVisible(true);
             }
-
         }
         //this['closedview']['onclosestart']['sendevent']();
         //this['openview']['onopenstart']['sendevent']();
 
         // Process is complete so send  onupdatestop event
-        this['onupdatestop']['sendEvent'](this.openview); ]]>
+        this['onupdatestop']['sendEvent'](this.openview);
+    ]]>
     </method>
-
 
     <!-- TRACKING METHODS -->
 
@@ -404,15 +418,15 @@
          is dragged. These methods appear here because the layout has all the
          position information about the grid. -->
     <method name="startTrack" >
-        if ( ! this[ 'positiondel' ] ){
-            this.positiondel = new LzDelegate( this , "checkMousePosition" );
+        if(! this[ 'positiondel' ]){
+            this.positiondel = new LzDelegate(this , "checkMousePosition");
         }
-        this.positiondel.register( LzIdle , "onidle" );
+        this.positiondel.register(LzIdle , "onidle");
     </method>
 
     <method name="stopTrack" >
-        this.positiondel.unregisterAll( );
-        if ( lastsel != null ){
+        this.positiondel.unregisterAll();
+        if(lastsel != null){
             lastsel.hilite(false);
             lastsel.acceptDrop();
         } else {
@@ -420,32 +434,31 @@
         }
     </method>
 
-    <method name="checkMousePosition" ><![CDATA[
+    <method name="checkMousePosition" >
+    <![CDATA[
         //this runs every frame while dragging -- it's private to the layout
         var x = immediateparent.getMouse( 'x' );
         var y = immediateparent.getMouse( 'y' );
         var s;
 
         //if it's not on the grid
-        if ( x < 0 || x > parent.width
-             || y < 0 || y > parent.height ) {
-            s = null;
-        }else if ( this.openrow_only ){
+        if(x < 0 || x > parent.width || y < 0 || y > parent.height){
+        s = null;
+        } else if(this.openrow_only){
             //grid special condition
-            if ( this.opencol_only ){
+            if(this.opencol_only){
                 //in day only view
                 s = this.subviews[ this.cols * openrow + opencol ];
             } else {
                 //in week view
+                var newcol = Math.floor(x / (cellwidth + spacing));
 
-                var newcol = Math.floor( x/ (cellwidth + spacing ) );
-
-                if ( opencol != -1 && newcol > opencol ){
-                    var rightedge =  ( opencol * ( spacing + cellwidth ) )+ cw + addedOpenWidth;
-                    if ( x < rightedge ) {
+                if(opencol != -1 && newcol > opencol){
+                    var rightedge = (opencol * (spacing + cellwidth))+ cw + addedOpenWidth;
+                    if(x < rightedge){
                         newcol = opencol;
                     } else {
-                        newcol =  opencol + 1 + Math.floor( ( x - rightedge ) / (cellwidth + spacing ) );
+                        newcol =  opencol + 1 + Math.floor((x - rightedge) / (cellwidth + spacing));
                     }
                 }
 
@@ -453,32 +466,32 @@
                 s = this.subviews[ this.cols * displayrow + newcol ];
             }
         } else {
-            var newcol = Math.floor( x/ (cellwidth + spacing ) );
-            if ( opencol != -1 && newcol > opencol ){
-                var rightedge =  ( opencol * ( spacing + cellwidth ) )+ cw + addedOpenWidth;
-                if ( x < rightedge ) {
+            var newcol = Math.floor(x / (cellwidth + spacing));
+            if(opencol != -1 && newcol > opencol){
+                var rightedge = (opencol * (spacing + cellwidth))+ cw + addedOpenWidth;
+                if(x < rightedge){
                     newcol = opencol;
                 } else {
-                    newcol =  opencol + 1 + Math.floor( ( x - rightedge ) / (cellwidth + spacing ) );
+                    newcol =  opencol + 1 + Math.floor((x - rightedge) / (cellwidth + spacing));
                 }
             }
             //this doesn't find the case where the mouse is over the spacing between cells
 
-            var newrow = Math.floor( y/ (cellheight + spacing ) );
-            if ( openrow != -1 && newrow > openrow ){
-                var bottom =  ( openrow * ( spacing + cellheight ) )+ cw + addedOpenHeight;
-                if ( y < bottom ) {
+            var newrow = Math.floor(y / (cellheight + spacing));
+            if(openrow != -1 && newrow > openrow){
+                var bottom =  (openrow * (spacing + cellheight)) + cw + addedOpenHeight;
+                if(y < bottom){
                     newrow = openrow;
                 } else {
-                    newrow =  openrow + 1 + Math.floor( ( y - bottom ) / (cellheight + spacing ) );
+                    newrow =  openrow + 1 + Math.floor((y - bottom) / (cellheight + spacing));
                 }
             }
 
             s = this.subviews[ this.cols * newrow + newcol ];
         }
 
-        if( s != this['lastsel'] ){
-            if (this['lastsel'] != null ){
+        if(s != this['lastsel']){
+            if(this['lastsel'] != null){
                 lastsel.hilite(false);
             }
 
@@ -490,11 +503,6 @@
         }
         ]]>
     </method>
-
 </class>
+
 </library>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                         -->
