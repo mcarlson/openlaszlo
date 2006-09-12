@@ -113,8 +113,8 @@
         </method>
         
         <method name="testClassConstraint">
-            this.assertEquals(  0x71919F, gSB.bgcolor);
-            this.assertEquals(  0xB79FC2, gSB.inner.bgcolor);
+            this.assertEquals(  0xAA0000, gSB.bgcolor);
+            this.assertEquals(  0xAAFFFF, gSB.inner.bgcolor);
             this.finishedTest("testClassConstraint");
         </method>
         

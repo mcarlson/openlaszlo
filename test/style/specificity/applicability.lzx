@@ -4,6 +4,7 @@
     <stylesheet>
         /*IMPORTANT: This test is only testing properly if the definitions
           are not in class-hierarchy order. */
+
         superclass {
             testme: 1;
         }
@@ -16,18 +17,34 @@
             testme: 2;
         }
         
-        special superclass {
+        subcontainer superclass{
+            testme: 7;
+        }
+
+        subcontainer subclass{
+            testme: 8;
+        }
+
+        supercontainer superclass {
             testme: 4;
         }
 
-        special subsubclass {
+        supercontainer subsubclass {
+            testme: 6;
+        }
+
+        supercontainer subclass {
             testme: 5;
         }
 
-        special subclass {
-            testme: 6;
+        #multimatch{
+            testme : 10;
         }
-        
+
+        #multimatch{
+            testme : 100;
+        }
+
     </stylesheet> 
     
     <class name="superclass">
@@ -41,32 +58,60 @@
     <subclass    id="subi"/>
     <subsubclass id="subsubi"/>
 
-    <class name="special" extends="subclass"/>
-    <special>
+    <class name="supercontainer"/>
+    <class name="subcontainer" extends="supercontainer"/>
+
+    <supercontainer>
         <superclass  id="sp_supi"/>
         <subclass    id="sp_subi"/>
         <subsubclass id="sp_subsubi"/>
-    </special>
+    </supercontainer>
 
-    <testsuite name="laszloclasses" loglevel="log">
+    <subcontainer>
+        <superclass  id="sb_supi"/>
+        <subclass    id="sb_subi"/>
+        <subsubclass id="sb_subsubi"/>
+    </subcontainer>
+
+    <view id="multimatch">
+        <attribute name="cprop" value="$style{ 'testme' }"/>
+    </view>
+
+
+    <testsuite name="applicability" loglevel="log">
         <handler name="oninit">
             this.addTest( "testClasses");
             this.addTest( "testCompound");
+            this.addTest( "testMindBending");
+            this.addTest( "testRuleOrder");
             this.run();
         </handler>
 
         <method name="testClasses">
-            this.assertEquals( supi.cprop , 1 );
-            this.assertEquals( subi.cprop , 2 );
-            this.assertEquals( subsubi.cprop , 3 );
+            this.assertEquals( 1, supi.cprop );
+            this.assertEquals( 2, subi.cprop );
+            this.assertEquals( 3, subsubi.cprop );
             this.finishedTest("testClasses");
         </method>
         
         <method name="testCompound">
-            this.assertEquals( sp_supi.cprop , 4 );
-            this.assertEquals( sp_subi.cprop , 5 );
-            this.assertEquals( sp_subsubi.cprop , 6 );
+            this.assertEquals( 4, sp_supi.cprop );
+            this.assertEquals( 5, sp_subi.cprop );
+            this.assertEquals( 6, sp_subsubi.cprop );
             this.finishedTest("testCompound");
+        </method>
+
+        <method name="testMindBending">
+            this.assertEquals( 7, sb_supi.cprop );
+            this.assertEquals( 8, sb_subi.cprop );
+            //this is a case where the last one should win
+            this.assertEquals( 6, sb_subsubi.cprop );
+            this.finishedTest("testMindBending");
+        </method>
+
+        <method name="testRuleOrder">
+            this.assertEquals( 100, multimatch.cprop );
+            this.finishedTest("testRuleOrder");
         </method>
 
     </testsuite>
