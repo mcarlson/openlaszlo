@@ -17,38 +17,28 @@ function LzCSSStyleRule(){
 }
 LzCSSStyleRule.prototype.properties = null;
 LzCSSStyleRule.prototype.selector = null;
+//No rule has a specificity of zero
+LzCSSStyleRule.prototype.specificity = 0;
 LzCSSStyleRule.prototype.getSpecificity = function () {
     
-    // Only calculate this once. Store it after we've 
-    // calculated it once.     
-    if (typeof(this.specificity) != "undefined")
-        return this.specificity; 
+    // Only calculate this once. Store it after we've calculated it once.     
+    // No rule has a specificity of 0
+    if ( !this.specificity ) {
+        //need to treat compound selectors differently
 
-    // Go through all the selectors in the selector, keeping a running
-    // count of various kinds of selectors:
-    /*
-    count 1 if the selector is a ’style’ attribute rather than a selector, 
-        0 otherwise (= a) 
-    count the number of ID attributes in the selector (= b) 
-    count the number of other attributes and pseudo-classes in the selector (= c) 
-    count the number of element names and pseudo-elements in the selector (= d) 
-    */ 
-    var sel = this.selector; // put it in a register
-    var result = 0;
-    if (typeof sel == "string") {
-        // We've just got a simple boring selector
-        result = LzCSSStyleRule._getSimpleSelectorSpecificity( sel );
-    } else {
-        for (var k in sel ) {
-            result += LzCSSStyleRule._getSimpleSelectorSpecificity( sel, k );
+        if ( this.parsed.type == LzCSSStyle._selTypes.compound ){
+            for ( var i = 0; i < this.parsed.length; i++ ){
+                this.specificity += LzCSSStyle.getSelectorSpecificity( this.parsed[ i ] );
+            }
+        } else {
+            this.specificity = LzCSSStyle.getSelectorSpecificity( this.parsed );
         }
-    }
-    // Debug.write("for selector ", sel, "got specificity ", result);
-    this.specificity = result; 
-    return result; 
-}
 
-LzCSSStyleRule.prototype._classhops = 0;
+        //Debug.write( 'specificity for' , this , this.specificity );
+    }
+
+    return this.specificity; 
+}
 
 /* 
 For a simple selector, figure out the specificity based on the type of the
@@ -57,6 +47,7 @@ easy checks for sentinel characters.
 */ 
 LzCSSStyleRule._getSimpleSelectorSpecificity = function ( selarr, k ) {
     var sel = selarr[k];
+    //Debug.write( 'selarr' , selarr , "sel" , sel );
 
     // If this simple selector includes an element type, that counts for
     // specificity of +1. 
@@ -101,7 +92,7 @@ LzCSSStyle.getPropertyValueFor = function ( node , pname ){
         var r;
         for ( var i = this._rules.length -1; i >=0; i-- ){
             r = this._rules[ i ];
-            if ( this._selectorApplies( r, r.parsed, node, false ) ){
+            if ( this._selectorApplies( r, r.parsed, node ) ){
                 rules.push(r); 
             }
         }
@@ -112,7 +103,7 @@ LzCSSStyle.getPropertyValueFor = function ( node , pname ){
             //same code as above, but inline to avoid function call overhead
             for ( var i = pprules.length -1; i >=0; i-- ){
                 r = pprules[ i ];
-                if ( this._selectorApplies( r, r.parsed, node, false ) ){
+                if ( this._selectorApplies( r, r.parsed, node ) ){
                     rules.push(r); 
                 }
             }
@@ -147,6 +138,31 @@ LzCSSStyle.getPropertyValueFor = function ( node , pname ){
 
 }
 
+LzCSSStyle.getSelectorSpecificity = function ( parsedsel ){
+    // Go through all the selectors in the selector, keeping a running
+    // count of various kinds of selectors:
+    /*
+    count 1 if the selector is a ’style’ attribute rather than a selector, 
+        0 otherwise (= a) 
+    count the number of ID attributes in the selector (= b) 
+    count the number of other attributes and pseudo-classes in the selector (= c) 
+    count the number of element names and pseudo-elements in the selector (= d) 
+    */ 
+    switch ( parsedsel.type ){
+        case (this._selTypes.tag ):
+        case (this._selTypes.star ):
+            return 1;
+
+        case (this._selTypes.id ):
+            return 100;
+
+        case (this._selTypes.attribute ):
+            return 10;
+
+        case (this._selTypes.tagAndAttr ):
+            return 11; 
+    }
+}
 
 LzCSSStyle.__compareSpecificity = function (rA, rB) {
     // if rA specificity  is less than rB specifity, return -1
@@ -154,6 +170,8 @@ LzCSSStyle.__compareSpecificity = function (rA, rB) {
     // if rB specifitity is less than rA specificity, return 1
     var specificityA = rA.getSpecificity();
     var specificityB = rB.getSpecificity();
+    //Debug.write( rA, specificityA );
+    //Debug.write( rB, specificityB );
 
     if ( specificityA == specificityB ){
         // Laszlo has a special rules around applicability of rules. In the
@@ -164,8 +182,40 @@ LzCSSStyle.__compareSpecificity = function (rA, rB) {
         // if *that* matches, then the descendant rule with closer selectors
         // wins
 
-        if ( rA._classhops != rB._classhops ){
-            return (rA._classhops < rB._classhops ) ? -1 : 1;
+        if ( rA.parsed.type == LzCSSStyle._selTypes.compound && 
+             rB.parsed.type == LzCSSStyle._selTypes.compound ){
+            //iterate through the compound selector arrays 
+            //assume that the selector arrays are the same length, due to
+            //specificity. if they don't, or if all the comparisons match, then
+            //we drop down to lexical order
+            for ( var i = 0; i < rA.parsed.length; i++ ){
+                //if we get here, it means that two rules have the same
+                //specificity but different numbers of descendants
+                if ( !rA.parsed[ i ] || !rB.parsed[ i ] ) break;
+
+                //if one or neither selector has a classname, this test doesn't
+                //apply OR the classnames are the same
+                if ( !rA.parsed[ i ].classname || !rB.parsed[ i ].classname ||
+                      rA.parsed[ i ].classname ==  rB.parsed[ i ].classname ){
+                    continue;
+                }
+
+                var rac = global[ rA.parsed[ i ].classname ];
+                var rbc = global[ rB.parsed[ i ].classname ];
+                
+                return rac.prototype instanceof rbc ? -1 : 1;
+                
+
+            }
+        } 
+
+        if ( ( rA.parsed.classname && rB.parsed.classname ) &&
+             ( rA.parsed.classname != rB.parsed.classname ) ){
+                var rac = global[ rA.parsed.classname ];
+                var rbc = global[ rB.parsed.classname ];
+                
+                return rac.prototype instanceof rbc ? -1 : 1;
+
         } else return (rA._lexorder < rB._lexorder ) ? 1 : -1;
     }
 
@@ -180,13 +230,7 @@ LzCSSStyle._printRuleArray = function (arr) {
 }
 //this ideally would be two separate functions, but merging them
 //and inlining the cases of the switch statement is a 2x speedup [awolff]
-LzCSSStyle._selectorApplies = function ( rule, rp , node , recursive ){
-    if ( !recursive ){
-        //zero out an accumulated applicability information
-        //see __compareSpecificity for more
-        rule._classhops = 0;
-    }
-
+LzCSSStyle._selectorApplies = function ( rule, rp , node ){
     //rp is the parsed selector
     switch ( rp.type ){
         case (this._selTypes.star ):
@@ -195,10 +239,8 @@ LzCSSStyle._selectorApplies = function ( rule, rp , node , recursive ){
         case (this._selTypes.id ):
             return node.id == rp.id;
 
-        case (this._selTypes.class ):
-            var ch = this._countClassHops( rp.classname , node );
-            rule._classhops += ch;
-            return ch > 0;
+        case (this._selTypes.tag ):
+            return node instanceof global[ rp.classname ];
 
         case (this._selTypes.compound ):
             var curnode = node; 
@@ -208,7 +250,7 @@ LzCSSStyle._selectorApplies = function ( rule, rp , node , recursive ){
             var firstone = true;
             while ( curnode ){
 
-                if (this._selectorApplies( rule, rp[ sindex ], curnode, true)){
+                if (this._selectorApplies( rule, rp[ sindex ], curnode )){
                     if ( sindex-- == 0 ){
                         return true;
                     }
@@ -228,49 +270,22 @@ LzCSSStyle._selectorApplies = function ( rule, rp , node , recursive ){
         case (this._selTypes.attribute ):
             return node[ rp.attrname ] == rp.attrvalue;
 
-        case (this._selTypes.classAndAttr ):
+        case (this._selTypes.tagAndAttr ):
             if (node[ rp.attrname ] == rp.attrvalue) {
-                // it's important to countClassHops *after* we determine
-                // that the other aspects of this selector apply. otherwise
-                // we'd be supriously adding to _classhops
-                var ch = this._countClassHops( rp.classname , node );
-                rule._classhops += ch;
-                return ch > 0;
+                return node instanceof global[ rp.classname ];
             }
             return false; 
     }
-}
-
-LzCSSStyle._countClassHops = function ( classname , node ){
-    // TODO: This will break when we transition to the new class system,
-    // but there's no other way to tell how close an instance is to a given
-    // superclass, other than to walk up the class hierarchy
-
-    var count =1;
-  
-    //loosely copied from compiler/LzRuntime/$instanceof
-    var v = node.__proto__;
-    var p = global[ classname ].prototype;
-
-    while (v) {
-        if (v == p) {
-            return count;
-        }
-        count++;
-        v = v.__proto__;
-    }
-
-    return 0;
 }
 
 LzCSSStyle._selTypes = {
     "unknown"      : 0,   
     "star"         : 1,  // * 
     "id"           : 2,  // #gMyId
-    "class"        : 3,  // styledbox
+    "tag"        : 3,  // styledbox
     "compound"     : 4,  // E F 
     "attribute"    : 5,  // [attr="val"]
-    "classAndAttr" : 6   // class[attr="val"]
+    "tagAndAttr" : 6   // class[attr="val"]
 }
 
 LzCSSStyle._rules = new Array();
@@ -303,7 +318,7 @@ LzCSSStyle._addRule = function ( r ){
     //we could do this pretty easily for ID if ID rules were common,
     //or for other attibute names
     if ( ( lastsel.type == this._selTypes.attribute ||
-           lastsel.type == this._selTypes.classAndAttr )
+           lastsel.type == this._selTypes.tagAndAttr )
            && lastsel.attrname == "name" ){
         var aval = lastsel.attrvalue;
         if ( !this._nameRules[ aval ] ) this._nameRules[ aval ] = [];
@@ -317,7 +332,7 @@ LzCSSStyle._parseSelector = function( sel ){
     switch ( typeof ( sel ) ){
         case "object":
             if (sel.simpleselector) {
-                sel.type = this._selTypes.classAndAttr;
+                sel.type = this._selTypes.tagAndAttr;
                 sel.classname = this._normalizeClassname( sel.simpleselector );
             } else     
                 sel.type = this._selTypes.attribute;
@@ -340,7 +355,7 @@ LzCSSStyle._parseStringSelector = function ( sel ){
             parsed.id =  sel.substring(index + 1);        
             parsed.type =  this._selTypes.id;
         } else {
-            parsed.type =  this._selTypes.class;
+            parsed.type =  this._selTypes.tag;
             parsed.classname = this._normalizeClassname( sel );
         }
 

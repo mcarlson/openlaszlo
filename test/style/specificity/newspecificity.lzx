@@ -1,0 +1,159 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<canvas debug="true">
+    <include href="../test"/>
+    <stylesheet>
+        /* 1 */
+        view{
+            value1 : '1';
+            value2 : '1';
+            value3 : '1';
+            value4 : '1';
+            value5 : '1';
+            value6 : '1';
+            value7 : '1';
+            value8 : '1';
+            value9 : '1';
+            value10 : '1';
+            value11 : '1';
+        }
+
+        /* 2 */
+        view view{
+            value2 : '2';
+            value3 : '2';
+            value4 : '2';
+            value5 : '2';
+            value6 : '2';
+            value7 : '2';
+            value8 : '2';
+            value9 : '2';
+            value10 : '2';
+            value11 : '2';
+        }
+        
+        /* 10 */
+        [ name="aname" ]{
+            value3 : '3';
+            value4 : '3';
+            value5 : '3';
+            value6 : '3';
+            value7 : '3';
+            value8 : '3';
+            value9 : '3';
+            value10 : '3';
+            value11 : '3';
+        }
+
+        /* 11 */
+        [name="aname"] view{
+            value4 : '4';
+            value5 : '4';
+            value6 : '4';
+            value7 : '4';
+            value8 : '4';
+            value9 : '4';
+            value10 : '4';
+            value11 : '4';
+        }
+
+        /* 11 */
+        view [name="aname"] {
+            value5 : '5';
+            value6 : '5';
+            value7 : '5';
+            value8 : '5';
+            value9 : '5';
+            value10 : '5';
+            value11 : '5';
+        }
+
+        /* 11 */
+        view[ name="aname" ]{
+            value6 : '6';
+            value7 : '6';
+            value8 : '6';
+            value9 : '6';
+            value10 : '6';
+            value11 : '6';
+        }
+
+        /* 12 */
+        view[name="aname"] view{
+            value7 : '7';
+            value8 : '7';
+            value9 : '7';
+            value10 : '7';
+            value11 : '7';
+        }
+
+        /* 22 */
+        view[name="aname"] view[name="aname"]{
+            value8 : '8';
+            value9 : '8';
+            value10 : '8';
+            value11 : '8';
+        }
+
+        /* 100 */
+        #childID{
+            value9 : '9';
+            value10 : '9';
+            value11 : '9';
+        }
+
+        /* 101 */
+        view #childID{
+            value10 : '10';
+            value11 : '10';
+        }
+
+        /* 101 */
+        #parentID view{
+            value11 : '11';
+        }
+
+
+    </stylesheet> 
+
+    <view name="aname" id="parentID">
+        <view name="aname" id="childID">
+            <attribute name="value1"  value="$style{ 'value1'}"/>
+            <attribute name="value2"  value="$style{ 'value2'}"/>
+            <attribute name="value3"  value="$style{ 'value3'}"/>
+            <attribute name="value4"  value="$style{ 'value4'}"/>
+            <attribute name="value5"  value="$style{ 'value5'}"/>
+            <attribute name="value6"  value="$style{ 'value6'}"/>
+            <attribute name="value7"  value="$style{ 'value7'}"/>
+            <attribute name="value8"  value="$style{ 'value8'}"/>
+            <attribute name="value9"  value="$style{ 'value9'}"/>
+            <attribute name="value10" value="$style{ 'value10'}"/>
+            <attribute name="value11" value="$style{ 'value11'}"/>
+        </view>
+    </view>
+    
+    <testsuite name="applicability" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testRuleOrder");
+            this.run();
+        </handler>
+
+        <method name="testRuleOrder">
+            var n = childID;
+            this.assertEquals( 1 , n.value1 );
+            this.assertEquals( 2 , n.value2 );
+            this.assertEquals( 3 , n.value3 );
+            this.assertEquals( 4 , n.value4 );
+            this.assertEquals( 5 , n.value5 );
+            this.assertEquals( 6 , n.value6 );
+            this.assertEquals( 7 , n.value7 );
+            this.assertEquals( 8 , n.value8 );
+            this.assertEquals( 9 , n.value9 );
+            this.assertEquals( 10, n.value10 );
+            this.assertEquals( 11, n.value11 );
+            this.finishedTest( 'testRuleOrder' );
+        </method>
+        
+
+    </testsuite>
+
+</canvas>
