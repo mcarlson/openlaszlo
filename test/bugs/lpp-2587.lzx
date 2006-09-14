@@ -54,11 +54,13 @@
     var suite = new LzTestSuite("lpp-2587 test suite"); 
     
     suite.test1 = function() {
+      var textview = container2.subviews[1];
+      Debug.monitor(textview.__LZtextclip, 'htmlText');
+
       canvas.refresh(container2,0);
       canvas.refresh(container2,1);    
       canvas.refresh(container2,2);      
       canvas.refresh(container2,3);     
-      var textview = container2.subviews[1];
       var fontstyle = textview.getAttribute("fontstyle"); 
       LzTestManager.assertEquals ("plain", fontstyle, "fontstyle is plain");
       

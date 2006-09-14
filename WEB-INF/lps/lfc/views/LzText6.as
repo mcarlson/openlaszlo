@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -80,7 +80,7 @@ LzText.prototype.construct = function ( parent, args ) {
     this.text =  args.text == null ? "" : args.text;
     this.setMultiline( args.multiline );
     //this.setFormat();
-    textclip.htmlText = this.format + this.text;
+    textclip.htmlText = this.format + this.text + this.closeformat;
     textclip.background = false;
 
 
@@ -114,11 +114,11 @@ LzText.prototype.construct = function ( parent, args ) {
         this.sizeToHeight = true;
         // set autoSize to get text measured
         textclip.autoSize = true;
-        textclip.htmlText = this.format + "__ypgSAMPLE__";
+        textclip.htmlText = this.format + "__ypgSAMPLE__" + this.closeformat;
 
         this.setAttribute("height", textclip._height);
 
-        textclip.htmlText = this.format + this.text;
+        textclip.htmlText = this.format + this.text + this.closeformat;
         if (!this.multiline) {
             // But turn off autosizing for single line text, now that
             // we got a correct line height from flash.
@@ -629,7 +629,7 @@ LzText.prototype.setText = function ( t ){
     this.text =  t;// this.format + t if proper measurement were working
     var mc = this.__LZtextclip;
 
-    mc.htmlText = this.format + t;
+    mc.htmlText = this.format + t + this.closeformat;
         
     if (this.resize && (this.multiline == false)) {
         // single line resizable fields adjust their width to match the text
@@ -779,6 +779,7 @@ LzText.prototype.setFormat = function (){
     this.format ="<FONT FACE=\"" + (this.font == null ? cfontname : this.font.name) +
         "\" SIZE=\"" + this.fontsize + "\" " +
         "COLOR=\"" + this.colorstring + "\" >";
+    this.closeformat = "</FONT>";
 
     // If there is no font found, assume a device font
     if (this.font == null) {
@@ -789,13 +790,16 @@ LzText.prototype.setFormat = function (){
 
     if (this.fontstyle == "bold" || this.fontstyle =="bolditalic"){
         this.format += "<B>";
+        this.closeformat = "</B>" + this.closeformat;
     }
 
     if (this.fontstyle == "italic" || this.fontstyle =="bolditalic"){
         this.format += "<I>";
+        this.closeformat = "</I>" + this.closeformat;
     }
     if (this.underline){
         this.format += "<U>";
+        this.closeformat = "</U>" + this.closeformat;
     }
 }
 
