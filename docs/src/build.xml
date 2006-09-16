@@ -207,9 +207,7 @@
           <fileset dir="${jsdocs.dir}" includes="api-*.xml"/>
         </delete>
         <ant dir="${server.dir}" target="compile" />
-        <exec executable="bash" dir="${sc.dir}" failonerror="${build.docs.error.fail}">
-          <arg line="-c &quot;./sci jsdoc2xml.py&quot;"/>
-        </exec>
+        <ant dir="${server.dir}" target="jsdoc2xml" />
       </then></if>
       <!-- Copy the files -->
       <copy todir="${reference.input.wrappers.dir}">

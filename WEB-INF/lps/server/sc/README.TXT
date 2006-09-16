@@ -8,6 +8,8 @@ Notes on Python:
   define them yourself.
 
 Interactively testing the compiler:
+- NOTE: The use of extdirs in this script means it may not work on all setups. 
+LPP-2699 is tracking the task of updating it.
 - In cygwin or Unix, execute sci to start a Jython session.  An
   example session is below.  ">" is the unix prompt, and ">>>" is the
   Jython prompt.  "#" precedes commentary.

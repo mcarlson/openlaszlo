@@ -343,6 +343,26 @@
     </jar>
   </target>
 
+  <!--===============  Target [jsdoc2xml]  ====================-->
+  <!-- create xml version of js docs                           -->
+  <target name="jsdoc2xml" depends="init"
+          description="create xml version of js docs">
+    <java classname="org.python.util.jython" dir="${sc.src.py}" fork="true">
+        <classpath>
+            <path refid="3rd.party.classpath"/>
+            <pathelement path="${LPS_JAR}"/>
+        </classpath> 
+        <arg value="-Dpython.home=${JYTHON_HOME}"/>
+        <arg value="-DLPS_HOME=${LPS_HOME}"/>
+        <arg value="jsdoc2xml.py"/>
+    </java>
+<!--
+    <exec executable="bash" dir="${sc.dir}" failonerror="${build.docs.error.fail}">
+          <arg line="-c &quot;./sci jsdoc2xml.py&quot;"/>
+        </exec>
+-->
+  </target>
+  
   <!--===============  Target [test]  ====================-->
   <!-- build and run the tests                            -->
   <!-- XXX For now, we only have minimal things here      -->
