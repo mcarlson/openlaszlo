@@ -17,13 +17,6 @@
             testme: 2;
         }
         
-        subcontainer superclass{
-            testme: 7;
-        }
-
-        subcontainer subclass{
-            testme: 8;
-        }
 
         supercontainer superclass {
             testme: 4;
@@ -35,6 +28,26 @@
 
         supercontainer subclass {
             testme: 5;
+        }
+
+        superclass subclass{
+            testme :7;
+        }
+
+        superclass superclass{
+            testme :8;
+        }
+
+        superclass superclass{
+            testme :9;
+        }
+
+        subclass subsubclass{
+            testme :11;
+        }
+
+        superclass subsubclass{
+            testme :10;
         }
 
         #multimatch{
@@ -67,11 +80,11 @@
         <subsubclass id="sp_subsubi"/>
     </supercontainer>
 
-    <subcontainer>
+    <subclass>
         <superclass  id="sb_supi"/>
         <subclass    id="sb_subi"/>
         <subsubclass id="sb_subsubi"/>
-    </subcontainer>
+    </subclass>
 
     <view id="multimatch">
         <attribute name="cprop" value="$style{ 'testme' }"/>
@@ -82,7 +95,7 @@
         <handler name="oninit">
             this.addTest( "testClasses");
             this.addTest( "testCompound");
-            this.addTest( "testMindBending");
+            this.addTest( "testComplexFunky");
             this.addTest( "testRuleOrder");
             this.run();
         </handler>
@@ -101,12 +114,18 @@
             this.finishedTest("testCompound");
         </method>
 
-        <method name="testMindBending">
-            this.assertEquals( 7, sb_supi.cprop );
-            this.assertEquals( 8, sb_subi.cprop );
-            //this is a case where the last one should win
-            this.assertEquals( 6, sb_subsubi.cprop );
-            this.finishedTest("testMindBending");
+        <method name="testComplexFunky">
+            //you hit a closer 
+            //if the selectors match, lexical order should win
+            this.assertEquals( 9, sb_supi.cprop );
+
+            //should grab the more specific subclass selector
+            this.assertEquals( 7, sb_subi.cprop );
+
+            //should walk up and grab the more specifc previous descendant
+            //selector
+            this.assertEquals( 11, sb_subsubi.cprop );
+            this.finishedTest("testComplexFunky");
         </method>
 
         <method name="testRuleOrder">
