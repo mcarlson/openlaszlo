@@ -2,42 +2,108 @@
 * Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
+
 <canvas>
 
-    <rtmpconnection src="rtmp://localhost/test" autoconnect="true"/>
+
+    <rtmpconnection
+        src="rtmp://localhost/test" 
+        autoconnect="true"
+    />
    
     <simplelayout/>
+
     <rtmpstatus/>
-    <view layout="axis:x; inset:10; spacing:10">
-        <view layout="axis:y; spacing:4">
-            <videoview id="live" url="${parent.username.text}" type="rtmp">
-                <camera id="cam" show="false"/>
+
+    <view
+        layout="axis: x; inset: 10; spacing: 10"
+    >
+
+        <view
+            layout="axis: y; spacing: 4"
+        >
+
+            <videoview id="live" 
+                url="${parent.username.text}" 
+                type="rtmp"
+            >
+
+                <camera id="cam" 
+                    show="false"
+                />
+
             </videoview>
-            <edittext name="username">YourName</edittext>
-            <button text="broadcast">
-                <attribute name="text" value="${cam.show == false 
-                        ? 'broadcast' : 'stop'}"/>
-                <method event="onclick"> <![CDATA[ 
+
+            <edittext
+                name="username"
+            >YourName</edittext>
+
+            <button 
+                text="broadcast"
+            >
+
+                <attribute
+                    name="text" 
+                    value="${cam.show == false ? 'Broadcast' : 'Stop'}"
+                />
+
+                <method event="onclick"><![CDATA[ 
                     if (cam.show == false) {
-                        cam.showCamera();
+                        cam.setAttribute("show", true);
                         live.stream.broadcast();
                     } else {
                         live.stream.stop();
+                        cam.setAttribute("show", false);
                     }
-                ]]>
+                  ]]>
                 </method>
+
             </button>
+
         </view>
-        <view layout="axis:y; spacing:4">
-            <videoview name="v" url="${parent.username.text}" type="rtmp"/>
-            <edittext name="username">YourName</edittext>
-            <button text="receive" onclick="parent.v.stream.play()"/>
+
+        <view
+            layout="axis: y; spacing: 4"
+        >
+
+            <videoview name="v" 
+                url="${parent.username.text}" 
+                type="rtmp"
+            />
+
+            <edittext
+                name="username"
+            >YourName</edittext>
+
+            <button
+                text="Receive" 
+                onclick="parent.v.stream.play()"
+            />
+
         </view>
-        <view layout="axis:y; spacing:4">
-            <videoview name="v" url="${parent.username.text}" type="rtmp"/>
-            <edittext name="username">YourName</edittext>
-            <button text="receive" onclick="parent.v.stream.play()"/>
+
+        <view
+            layout="axis:y; spacing:4"
+        >
+
+            <videoview name="v" 
+                url="${parent.username.text}" 
+                type="rtmp"
+            />
+
+            <edittext
+                name="username"
+            >YourName</edittext>
+
+            <button
+                text="Receive" 
+                onclick="parent.v.stream.play()"
+            />
+
         </view>
+
     </view>
+
+
 </canvas>
 

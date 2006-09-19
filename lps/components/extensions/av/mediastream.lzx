@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+
+
+    <!---
+        Media stream. [TODO: Document mediastream class.]
+        @START_CODE
+            <mediastream/>
+        @END_CODE
+    -->
+    <class name="mediastream" extends="node">
+
+
+        <!--- The url of the mediastream, maybe be relative URL, 
+              for example: http://localhost/myvideo.flv, or simply myvideo.flv
+              when type="rtmp" the url is always relative to the rtmpconnection. -->
+        <attribute name="url" value="" type="string" setter="this._setUrl(url)"/>
+
+        <!--- Protocol "rtmp" or "http" (default: "http"). -->
+        <attribute name="type" value="http" type="string"/>
+
+        <!--- If true, video will start playing as soon as url is set.
+              Default: false. -->
+        <attribute name="autoplay" value="false"/>
+
+        <!--- Total length (in seconds) of mediastream currently playing. -->
+        <attribute name="totaltime" value="0" type="number"/>
+
+        <!--- Current time of mediastream currently playing (in seconds). -->
+        <attribute name="playtime" value="0" type="number"/>
+
+        <!--- The current frames per second for playing video .-->
+        <attribute name="fps" type="number" value="0"/>
+
+        <!--- True if playing, false if paused or not started yet. -->
+        <attribute name="playing" value="false"/>
+
+        <!--- Current time of mediastream being recorded (in seconds). -->
+        <attribute name="recordtime" value="0" type="number"/>
+
+        <!--- Mode: "playback" or "record". -->
+        <attribute name="mode" value="" type="string"/>
+
+        <!--- When true, print extra info to the debugger. -->
+        <attribute name="debug" value="false"/>
+
+        <!--- A reference to the camera. This must be set if broadcasting.
+              This is set automatically if the stream is a child of a videoview. -->
+        <attribute name="cam" value="null"/>
+
+        <!--- A reference to the microphone. This must be set if broadcasting.
+              This is set automatically if the stream is a child of a videoview. -->
+        <attribute name="mic" value="null"/>
+
+        <!--- The rtmp streamname (without .flv suffix). -->
+        <attribute name="streamname" value="" type="string"/>
+
+        <!--
+              Private attributes.
+        -->
+
+        <!--- A reference to the Flash NetConnection object.
+              @keywords private -->
+        <attribute name="_nc" value="null"/>
+
+        <!--- A reference to the Flash NetStream object.
+              @keywords private -->
+        <attribute name="_flashstream" value="null"/>
+
+        <!--- A delegate to update the playtime attribute. 
+              @keywords private -->
+        <attribute name="_playtimedel" value="null"/>
+
+        <!--- The pending stream name. 
+              @keywords private -->
+        <attribute name="_pendingstreamname" value="" type="string"/>
+
+        <!--- A delegate to update the record time. 
+              @keywords private -->
+        <attribute name="_recordtimedel" value="null"/>
+
+        <!--- The base time when we started recording. 
+              @keywords private -->
+        <attribute name="_basetime" value="0" type="number"/>
+
+
+        <!--- Event sent when url changes.
+              @keywords private -->
+        <event name="onurl"/>
+
+
+        <!--- Set up to publish a mediastream, type: "record" or "publish".
+              @keywords private -->
+        <method name="_publishSetup" args="type"> <![CDATA[     
+
+            //Debug.write("_publishSetup", this, type, this.streamname);
+
+            if ($debug) {
+                if (this.type != "rtmp") {
+                    Debug.warn("type must be rtmp to " + type + " %w", this);
+                }
+            }
+
+            if (!this._flashstream) {
+                this._createStream();
+            }
+
+            if (this.cam != null) {
+                this._flashstream.attachVideo(this.cam._dev);
+            }
+
+            if (this.mic != null) {
+                this._flashstream.attachAudio(this.mic._dev);
+            }
+
+            if (this.streamname == "") {
+                if (this.url != "") {
+                    this.streamname = this._namefromurl(this.url);
+                } else {
+                    // make up temporary name
+                }
+            }
+          ]]>
+        </method>
+
+
+        <!--- start sending a live mediastream to the server. -->
+        <method name="broadcast"><![CDATA[
+            this._publishSetup("broadcast");
+            //Debug.write("publish", this.streamname);
+            this._flashstream.publish(this.streamname);
+          ]]>
+        </method>
+
+
+        <!--- Start recording. -->
+        <method name="record"><![CDATA[
+            this._publishSetup("record");
+            this._flashstream.publish(this.streamname, "record");
+            //Debug.write("publish", this.streamname);
+
+            this._basetime = (new Date).getTime();
+            //Debug.write("basetime = ", this._basetime);
+            if (!this._recordtimedel) {
+                this._recordtimedel = new LzDelegate(this, "_updateRecordTime");
+            }
+            this._recordtimedel.unregisterAll();
+            this._recordtimedel.register(LzIdle, "onidle")
+            setAttribute("mode", "record");
+          ]]> 
+        </method>
+
+
+        <!--- Update the record time. 
+              @keywords private -->
+        <method name="_updateRecordTime"><![CDATA[
+            this.setAttribute("recordtime",
+                ((new Date).getTime() - this._basetime) / 1000);
+          ]]>
+        </method>
+
+
+        <!--- Stop the stream. 
+             TODO: Do we really want both stop and pause? -->
+        <method name="stop"><![CDATA[
+            if (this._flashstream == null) {
+                return;
+            }
+            if (this.mode == "record") {
+                this._flashstream.publish(false);
+                this._recordtimedel.unregisterAll();
+            } else {
+                this._flashstream.play(false);
+                this._playtimedel.unregisterAll();
+            }
+          ]]>
+        </method>
+
+
+        <!--- Find or create the Flash NetConnection object.
+              @keywords private -->
+        <method name="_findnc"><![CDATA[
+            if (this._nc) {
+                return;
+            }
+
+            //Debug.write('_findnc', this.type);
+
+            switch (this.type) {
+
+                case "http": {
+                    if (!this["_nullnc"]) {
+                        // keep one of these around for any http mediastream
+                        // we need (weird flash thing that we need a 
+                        // null NetConnection)
+                        mediastream.prototype._nullnc = new NetConnection();
+                        this._nullnc.connect(null);
+                    }
+                    this._nc = this._nullnc;
+                    break;
+                }
+
+                case "rtmp": {
+                        if (rtmpconnection == undefined) {
+                            Debug.write("rtmpconnection must be included");
+                        } 
+                        this._nc = rtmpconnection.prototype._default._nc;
+                    break;
+                }
+
+                default: {
+                    if ($debug) {
+                        Debug.write(
+                            "unexpected protocol for url: ",
+                            this.url.toString(), 
+                            this);
+                    }
+                    break;
+                }
+
+            }
+
+          ]]>
+        </method>
+
+
+        <!--- Create Flash NetStream object.
+              @keywords private -->
+        <method name="_createStream"><![CDATA[
+
+            //Debug.write("mediastream _createStream", this, this._flashstream, this.url);
+
+            if (!this.url) {
+                if ($debug) {
+                    Debug.write(
+                        "can't create mediastream w/ no url", 
+                        this,
+                        arguments.caller);
+                }
+                return;
+            }
+
+            if (this._flashstream) {
+                return;
+            }
+
+            this.setAttribute("_flashstream", new NetStream(this._nc));
+
+            this._flashstream.t = this;  
+
+            this._flashstream.onStatus = function(info) {
+                this.t._onStatus(info);
+            };
+
+            this._flashstream.onPlayStatus = function(info) {
+                this.t._onPlayStatus(info);
+            };
+
+            this._flashstream.onMetaData = function(info) {
+                this.t._onMetaData(info);
+            };
+
+          ]]>
+        </method>
+
+
+        <!--- Handle the onStatus callback from the Flash NetStream object. 
+              @keywords private -->
+        <method name="_onStatus" args="info"><![CDATA[
+            if (this.debug) {
+                Debug.write("ns status", this, info);
+            }
+
+            switch (info.code) {
+
+                case "NetStream.Buffer.Empty": {
+                    var newbuftime = this._flashstream.bufferTime + 1;
+                    this._flashstream.setBufferTime(newbuftime);
+                    //Debug.write("newbuffertime", newbuftime);
+                    break;
+                }
+
+                case "NetStream.Buffer.Full": {
+                    if (this._pendingstreamname != "") {
+                        this.setAttribute("streamname", this._pendingstreamname);
+                        //Debug.write("streamname", this.streamname);
+                        this._pendingstreamname = "";
+                    }
+                    break;
+                }
+
+                case "NetStream.Play.Start": {
+                    if (this._pendingstreamname != "") {
+                        //v.show(); // FIXME: what is v?
+                    }
+                    break;
+                }
+
+            }
+
+          ]]>
+        </method>
+
+
+        <!--- Handle the onPlayStatus callback from the Flash NetStream object. 
+              @keywords private -->
+        <method name="_onPlayStatus" args="info"><![CDATA[
+            if (this.debug) {
+                Debug.write("onPlayStatus", info);
+            }
+
+            switch (info.code) {
+
+                case "NetStream.Play.Complete": {
+                    // Correct for valid Buffer.Empty
+                    var newbuftime = 
+                        this._flashstream.bufferTime - 1;
+                    this._flashstream.setBufferTime(newbuftime);
+                    //Debug.write("newbuffertime=",newbuftime);
+                    break;
+                }
+
+             }
+
+          ]]>
+        </method>
+
+
+        <!--- Handle the onMetaData callback from the Flash NetStream object. 
+              @keywords private -->
+        <method name="_onMetaData" args="info"><![CDATA[
+            var propName;
+            for (propName in info) {
+                //Debug.write("MetaData: " + propName + " = " + info[propName]);
+                if (propName == "duration") {
+                    this.setAttribute("totaltime", info[propName]);
+                }
+            }
+          ]]>
+        </method>
+
+
+        <!--- Play the mediastream at this.url. 
+              Start is the time offset into the stream to start.
+              Pause is a flag that pauses the video if true. -->
+        <method name="play" args="start, pause"><![CDATA[
+
+            if (this.debug) {
+                //Debug.write("mediastream play", this, "start", start, "pause", pause, "_flashstream", this._flashstream, "type", this.type, "url", this.url);
+            }
+
+            if (this._flashstream) {
+                this._flashstream.play(false);
+            }
+
+            // Start must be undefined for a live mediastream.
+            this._basetime = (start == undefined) ? 0 : start;
+            this.setAttribute("playtime", this._basetime);
+
+            var isnew = false;
+            if (!this._flashstream) {
+                isnew = true;
+                //Debug.write("mediastream creating stream");
+                this._createStream();
+                //Debug.write("mediastream created stream", this._flashstream);
+                if (!this._flashstream) {
+                    return;
+               }
+            }
+
+            // set up delegate to update the playtime attribute
+            if (!this._playtimedel) {
+                this._playtimedel = new LzDelegate(this, "_updatePlayTime");
+            }
+
+            this._playtimedel.unregisterAll();
+            this._playtimedel.register(LzIdle, "onidle");
+            this.setAttribute("playtime", 0);
+
+            //Debug.write("_flashstream=", this._flashstream);
+
+            /** TODO: when to do this? 
+
+            // call function in server-side main.asc
+            var t = this;  // Fake a closure.
+            this.onResult = function(streamLength) {
+                //_root.Debug.write("onresult=", streamLength);
+                t.setAttribute("totaltime", streamLength);
+            };
+            rtc._nc.call("getLength", this, name);
+            //Debug.write("call getLength", name, "nc", rtc._nc);
+
+            **/
+
+            //var sname = this._namefromurl(this.url);
+            var sname = this.url;
+
+            //Debug.write("start=", start);
+
+            if (pause) {
+                //Debug.write("mediastream play pause",  this, "start", start);
+                this._flashstream.play(sname, start, 0);
+
+                if (playing) {
+                    this.setAttribute("playing", false);
+                }
+
+                if (this.type == "http") {
+                    // *** this doesn't work
+                    this._flashstream.pause(true);
+                }
+
+            } else {
+                //Debug.write("mediastream play PLAY", this, "start", start);
+
+                //Debug.write("play", sname, typeof(sname));
+
+                if (start == undefined) {
+                    // for a live stream, we need to omit the second param
+                    // for a recorded stream it will default to 0
+                    this._flashstream.play(sname);
+                } else {
+                    this._flashstream.play(sname, start);
+                }
+
+                //Debug.write("mediastream setting playing", this);
+                this.setAttribute("playing", true);
+
+            }
+
+            if (this.type == "rtmp") {
+                this._pendingstreamname = sname;
+            }
+
+            setAttribute("mode", "playback");
+
+            if (this.debug) {
+                //Debug.write("mediastream play", this, sname, typeof(sname), start);
+            }
+
+          ]]>
+        </method>
+
+
+        <!--- Update the playTime attribute. 
+              @keywords private -->
+        <method name="_updatePlayTime"><![CDATA[
+            // don't update if new mediastream about to start
+            if (this._pendingstreamname == "") {
+                //Debug.write("_updatePlayTime", this, "_flashstream", this._flashstream, "_pendingstreamname", _pendingstreamname);
+                this.setAttribute("playtime", this._flashstream.time + this._basetime);
+                this.setAttribute("fps", this._flashstream.currentFps);
+            } 
+          ]]>
+        </method>
+
+
+        <!--- Pause the video (calling while paused will toggle to play).
+              This does nothing when you record. -->
+        <method name="pause"><![CDATA[
+            if ((this.mode == "record") ||
+                (this._flashstream == null)) {
+                return;
+            }
+            this._flashstream.pause();
+            this.setAttribute("playing", !this.playing);
+          ]]>
+        </method>
+
+
+        <!--- Initialize the mediastream. 
+              @keywords private -->
+        <method name="init"><![CDATA[
+            super.init();
+            // Use duck typing to check for the existence of the
+            // _setStream method, instead of checking if the
+            // immediateparent is an instance of videoview, to avoid
+            // loading the videoview class if it's not needed.
+            if (immediateparent['_setStream']) {
+                immediateparent._setStream(this);
+            }
+            if (this.url != "") {
+                this._updateUrl();
+            }
+          ]]>
+        </method>
+
+
+        <!--- If the type is rtmp, then return the url without the .flv suffix, 
+              if there was one.
+              @keywords private -->
+        <method name="_namefromurl" args="fromurl"><![CDATA[
+            var sname = fromurl;
+
+            //Debug.write("sname=", sname, "suffix=", sname.substr(-4));
+
+            // FIXME: Compare file name suffix ignoring case.
+            if ((this.type == "rtmp") && 
+                (sname.substr(-4) == ".flv")) {
+                sname = sname.slice(0,-4);
+            }
+
+            return sname;
+
+          ]]>
+        </method>
+
+
+        <!--- Setter for the "url" attribute.
+              @keywords private -->
+        <method name="_setUrl" args="newurl"><![CDATA[
+            var old = this["url"];
+            this.url = newurl;
+
+            if ((!this.isinited) || 
+                (old == newurl)) {
+                return;
+            }
+
+            this._updateUrl();
+
+            if (this.url != "") { // changing the url
+                // TODO: if another URL is playing, maybe clear it?
+            }
+
+            if (this.onurl) {
+                this.onurl.sendEvent(url);
+            }
+
+          ]]>
+        </method>
+
+
+        <!--- Do whatever necessary setup for a new url,
+              based on the value of this.url.
+              @keywords private -->
+        <method name="_updateUrl"><![CDATA[
+            this._findnc();
+
+            if (this.type == "rtmp") {
+                // rtmp server appends the .flv (so we need to remove it)
+                var sname = this._namefromurl(this.url);
+                // call function in server-side main.asc
+                var t = this; // for use in closure
+                this.onResult = function(streamLength) {
+                    //_root.Debug.write("onresult=", streamLength);
+                    t.setAttribute("totaltime", streamLength);
+                };
+                this._nc.call("getLength", this, sname);
+            }
+          ]]>
+        </method>
+
+
+        <!--- Called by the videoview or camera to tell the stream about the camera. 
+              @keywords private -->
+        <method name="_setCam" args="cam"><![CDATA[
+            this.cam = cam;
+          ]]>
+        </method>
+
+
+        <!--- Called by the videoview or microphone to tell the stream about the microphone. 
+              @keywords private -->
+        <method name="_setMic" args="mic"><![CDATA[
+            this.mic = mic;
+          ]]>
+        </method>
+
+
+    </class>
+
+
+</library>

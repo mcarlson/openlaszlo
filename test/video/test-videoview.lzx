@@ -1,0 +1,62 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+<canvas>
+
+
+    <simplelayout
+        axis="y"
+        inset="10"
+        spacing="10"
+    />
+
+
+    <button
+        text="shrink width then height" 
+        onclick="v.shrink.doStart()"
+    />
+
+
+    <button
+        text="grow"
+        onclick="v.grow.doStart()"
+    />
+
+
+    <videoview id="v" 
+        bgcolor="red" 
+        width="200" 
+        height="200"
+    >
+
+
+        <animatorgroup name="grow" 
+            duration="1000" 
+            start="false"
+            process="simultaneous"
+        >
+            <animator attribute="width" to="400"/>
+            <animator attribute="height" to="400"/>
+        </animatorgroup>
+
+
+        <animatorgroup name="shrink" 
+            duration="1000" 
+            start="false"
+        >
+            <animator attribute="width" to="40"/>
+            <animator attribute="height" to="40"/>
+        </animatorgroup>
+
+
+        <camera id="c" 
+            show="true"
+        />
+
+
+    </videoview>
+
+
+</canvas>

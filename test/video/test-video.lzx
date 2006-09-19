@@ -2,9 +2,14 @@
 * Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
+
 <canvas>
+
     
-   <videoview autoplay="true"
-        url="http://localhost:8080/svn-video/test/video/videos/good-dog.flv"/>
+    <videoview 
+        autoplay="true"
+        url="http://localhost:8080/video/test/video/videos/good-dog.flv"
+    />
+
 
 </canvas>

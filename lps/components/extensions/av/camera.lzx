@@ -1,113 +1,277 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                       *
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
 <library>
 
-<class name="camera" extends="node">
-    <!--- if true, show camera on parent videoview -->
-    <attribute name="show" value="false" setter="showCamera(show)"/>
-    
-    <!--- zero-based index of the camera -->
-    <attribute name="index" value="0" setter="setIndex(index)"/>
-    
-    <!--- reference to flash camera object -->
-    <attribute name="_cam" value="null"/>
 
-    <!--- @keywords private -->
-    <event name="onshow"/>
+    <include href="mediadevice.lzx"/>
 
-    <!--- @keywords private -->
-    <event name="onindex"/>
 
-    <!--- @keywords private -->
-    <method name="init">
-        super.init();
-        this._cam = Camera.get(this.index);
-        parent.cam = this;
-    </method>
+    <!---
+        Camera. [TODO: Document camera class.]
+        @START_CODE
+            <camera/>
+        @END_CODE
+    -->
+    <class name="camera" 
+        extends="mediadevice"
+    >
 
-    <!--- @keywords private -->
-    <method name="getCameraNames">
-        return Camera.names;
-    </method>
 
-    <!--- setter for index attribute (0-based) -->
-    <method name="setIndex" args="ind">
-        if (ind == this['index']) return;
-        this.index = ind;
-        if (!this.isinited) return;
+        <!--- If true, show camera on immediateparent videoview. -->
+        <attribute name="show" value="false" setter="this._setShow(show)"/>
 
-        this._cam = Camera.get(ind);
-        this.index = this._cam.index;
-        if (this.onindex) this.onindex.sendEvent();
-    </method>
+        <!--- Camera width. -->
+        <attribute name="width" value="null"/>
 
-    <!--- setter for show attribute -->
-    <method name="showCamera" args="show">
-        if (! (parent instanceof videoview) ) {
-            if ($debug) {
-                Debug.write('camera, %w, expects to be child of videoview', this);
+        <!--- Camera height. -->
+        <attribute name="height" value="null"/>
+
+        <!--- Camera frames per second. -->
+        <attribute name="fps" value="null"/>
+
+        <!--- Camera favor size boolean flag. -->
+        <attribute name="favorsize" value="false"/>
+
+        <!--- Camera bandwidth. -->
+        <attribute name="bandwidth" value="16384"/>
+
+        <!--- Camera picture quality. -->
+        <attribute name="picturequality" value="0"/>
+
+
+        <!--- Event sent when show flag changes. 
+              @keywords private -->
+        <event name="onshow"/>
+
+
+        <method name="destroy"><![CDATA[
+            this._setShow(false);
+            super.destroy();
+          ]]>
+        </method>
+
+
+        <!--- Make the camera. 
+              @keywords private -->
+        <method name="_makeDevice"><![CDATA[
+            var deviceindex = 
+                this['deviceindex'];
+
+            if (deviceindex == null) {
+                dev = Camera.get();
+            } else {
+                dev = Camera.get(deviceindex);
             }
-            return;
-        }
-        if (show == undefined) show = true;
-        this.show = show;
-        this._showCamera(show);
-        if (this.onshow) this.onshow.sendEvent();
-    </method>
+
+            this._dev = 
+                dev;
+
+            return dev;
+          ]]>
+        </method>
 
 
-    <!--- internal show camera, doesn't set attribute just shows
-          the camera on the parent video surface
-          @keywords private -->
-    <method name="_showCamera" args="show">
-        if (!parent._initcomplete) return;
-        var vid = parent.__LZmovieClipRef.__lzvideo;
-        if (show) {
-            vid.attachVideo(this._cam);
-        } else {
-            vid.attachVideo(null);
-            vid.clear();
-        }
-    </method>
+        <!--- Set up the camera. 
+              @keywords private -->
+        <method name="_setupDevice"><![CDATA[
+            var dev = this._dev;
 
-    <!--- 
-        setMode(width,height,fps) 
-        width,height,fps = number 
-        favorsize  A Boolean value that specifies how to manipulate the 
-        width, height, and frame rate if the camera does not have a native 
-        mode that meets the specified requirements. The default is true, 
-        which means that maintaining capture size is favored; using this 
-        parameter selects the mode that most closely matches width and height 
-        values, even if doing so adversely affects performance by reducing
-        the frame rate. To maximize frame rate at the expense of camera 
-        height and width, pass false for the favorSize parameter. This 
-        parameter is optional. 
+            // TODO: 
+            // Get camera mode and quality attributes that aren't 
+            // declared (value is null). 
+            // Set camera mode and quality from attributes. 
+            // Or should we reset them when we change devices? We
+            // don't want to carry over the size of one camera to
+            // the next one.  For now, only change camera mode or
+            // quality through setQuality and setMode.
+          ]]>
+        </method>
 
-        TODO: should there be read-only class attributes for these?
-     --> 
-    <method name="setMode" args="width, height, fps, favorsize"> 
-        if (favorsize == undefined) favorsize = true;
-        this.camwidth = width; 
-        this.camheight  = height; 
-        this.fps = fps; 
-        this._cam.setMode(width, height, fps, favorsize); 
-    </method> 
 
-    <!--- 
-        setQuality(bandwidth,picturequality"); 
-        bandwidth = in Byte per second / defaultvalue:16384 
-        picturequality = Number from 0 - 100 / defaultvalue 
-        0 ... 0 means also that picturequality 
-        will be changed if bandwidth is concerned 
-        TODO: should there be read-only class attributes for these?
-     --> 
-    <method name="setQuality" args="bandwidth,picturequality">    
-        this._cam.setQuality(bandwidth,picturequality); 
-    </method> 
-</class>
+        <!--- Start the camera. -->
+        <method name="startDevice"><![CDATA[
+            // Use duck typing to check for the existence of the
+            // _setCam method, instead of checking if the
+            // immediateparent is an instance of videoview, to avoid
+            // loading the videoview class if it's not needed.
+            if (immediateparent['_setCam']) {
+                immediateparent._setCam(this);
+            }
 
+            super.startDevice();
+          ]]>
+        </method>
+
+
+        <!--- Called when the allowed flag changes.
+              @keywords private -->
+        <method name="_updateAllowed"><![CDATA[
+            //Debug.write("camera _updateAllowed", this, this.allowed, "show", this.show);
+
+            // Call super to send the onallowed event.
+            super._updateAllowed(allowed);
+
+            // Update the camera show state, since the camera is 
+            // only shown when both show and allow are true.
+            // This will attach and detatch the camera view as appropriate. 
+            this.setAttribute("show", this.show);
+          ]]>
+        </method>
+
+
+        <!--- Show or hide the camera image on the videoview. 
+              If the show parameter is true, 
+              then the camera is shown, 
+              otherwise it's not shown. 
+              Of course the camera will really only be shown if 
+              it's also allowed by the user. -->
+        <method name="_setShow" args="show"><![CDATA[
+
+            //Debug.write("camera _setShow", this, show);
+
+            this.show = show;
+
+            // Bail if we're not initialized, the dev isn't
+            // initialized, or the parent isn't finished initializing
+            // (or isn't a videoview).
+            if ((!this.isinited) ||
+                (!this._dev) ||
+                (!immediateparent['_initcomplete'])) {
+                return;
+            }
+
+            // Use duck typing to check for the existence of the
+            // _getflashvideo method, instead of checking if the
+            // immediateparent is an instance of videoview, to avoid
+            // loading the videoview class if it's not needed.
+            var vid = 
+                (immediateparent['_getflashvideo'] != undefined)
+                    ? immediateparent._getflashvideo()
+                    : null;
+
+            //Debug.write("vid", vid, "show", show, "allowed", this.allowed);
+
+            if (vid != null) {
+
+                if ((show == false) ||
+                    (this._allowedknown &&
+                     (this.allowed == false))) {
+                    // Hide the video if show is false or (not allowed, and
+                    // this is not the first time).
+
+                    // This is meant to hide the video when allowed
+                    // transitions from true to false, but we don't do
+                    // this if it's the first time (_allowedknown is
+                    // false).
+
+                    //Debug.write("detaching", this, vid);
+                    vid.attachVideo(null);
+                    vid.clear();
+                } else {
+                    // Try to show the video if show is true.
+                    // This may initiate the security dialog.
+                    // The device will issue an onStatus callback, 
+                    // which sets the new allowed value to
+                    // all mediadevices. 
+                    var dev = this._dev;
+                    //Debug.write("attaching", this, vid);
+                    vid.attachVideo(dev);
+
+                    // If this is the first device we've ever seen, 
+                    // then initialize the allowed flag, and set 
+                    // it to all mediadevices. The user might have 
+                    // checked the box to allow all access, and dev.muted
+                    // will initially be false. Or the security dialog 
+                    // may pop up, and dev.muted will initially be true,
+                    // but might change to false later, if the user allows it. 
+                    var devallowed = 
+                        !dev.muted;
+                    if (this.allowed != devallowed) {
+                        this._updateAllAllowed(devallowed);
+                    }
+                }
+            }
+
+            if (this.onshow) {
+                this.onshow.sendEvent(show);
+            }
+
+          ]]>
+        </method>
+
+
+        <!--- Get the names of the cameras. Returns an array of strings. 
+              This might take a while to run, since it has to scan the devices. -->
+        <method name="getCameraNames"><![CDATA[
+            return Camera.names;
+          ]]>
+        </method>
+
+
+        <!--- 
+            setMode(width, height, fps, favorsize) 
+            width, height, fps: number 
+            favorsize: A Boolean value that specifies how to manipulate the 
+            width, height, and frame rate if the camera does not have a native 
+            mode that meets the specified requirements. The default is true, 
+            which means that maintaining capture size is favored; using this 
+            parameter selects the mode that most closely matches width and height 
+            values, even if doing so adversely affects performance by reducing
+            the frame rate. To maximize frame rate at the expense of camera 
+            height and width, pass false for the favorSize parameter. This 
+            parameter is optional. 
+            The parameters are cached in the attributes
+            width, height, fps and favorsize. 
+            TODO: If those attributes are not null, 
+            then call setMode automatically after 
+            initializing camera. 
+            Otherwise read values from camera and set attributes.
+        --> 
+        <method name="setMode" args="width, height, fps, favorsize"><![CDATA[
+            if (favorsize == undefined) {
+                favorsize = true;
+            }
+
+            this.setAttribute("width", width);
+            this.setAttribute("height", height);
+            this.setAttribute("fps", fps);
+            this.setAttribute("favorsize", favorsize);
+
+            if (this._dev) {
+                this._dev.setMode(width, height, fps, favorsize); 
+            }
+          ]]>
+        </method> 
+
+
+        <!--- 
+            setQuality(bandwidth, picturequality"); 
+            bandwidth: in byte per second, default value: 16384
+            picturequality: number from 0 to 100, default value: 0
+            0 means also that picturequality will be changed
+            if bandwidth is concerned.
+            The parameters are cached in the attributes
+            bandwidth and picturequality. 
+            TODO: If those attributes are set, 
+            then call setQuality automatically after 
+            initializing camera. 
+            Otherwise read values from camera and set attributes.
+         --> 
+        <method name="setQuality" args="bandwidth, picturequality"><![CDATA[
+            this.setAttribute("bandwidth", bandwidth);
+            this.setAttribute("picturequality", picturequality);
+            if (this._dev) {
+                this._dev.setQuality(bandwidth, picturequality);
+            }
+          ]]>
+        </method>
+
+
+    </class>
 
 
 </library>

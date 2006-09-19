@@ -1,0 +1,113 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+<canvas>
+
+
+    <class name="camerawindow" 
+        extends="window"
+    >
+
+        <simplelayout spacing="5"/>
+
+        <videoview name="v">
+
+            <camera name="c">
+
+                <handler name="onshow"><![CDATA[
+                    //Debug.write("camera onshow", this, arguments.caller);
+                  ]]>
+                </handler>
+
+            </camera> 
+
+        </videoview>
+
+        <checkbox
+            text="Show Camera"
+            value="${parent.v.c.show}" 
+        >
+
+            <method event="onvalue"><![CDATA[
+                //Debug.write("Setting camera show", this.value);
+                classroot.v.c.setAttribute("show", this.value);
+              ]]>
+            </method>
+
+        </checkbox>
+
+        <text
+            text="${'allowed = ' + classroot.v.c.allowed}"
+        />
+
+        <text
+            text="${'show = ' + classroot.v.c.show}"
+        />
+
+        <button
+            text="Destroy Window"
+            onclick="parent.destroy()"
+        />
+
+        <button
+            text="Show Settings"
+            onclick="classroot.v.c.showSettings()"
+        />
+
+    </class>
+
+
+    <script><![CDATA[
+        global.wnum = 0;
+      ]]>
+    </script>
+
+
+    <view
+        x="10" 
+        y="10"
+    >
+
+        <simplelayout spacing="5"/>
+
+        <button text="new window">
+
+            <handler name="onclick" method="makeWindow"/>
+
+            <method name="makeWindow"><![CDATA[
+                var win =
+                    new camerawindow(
+                        this, {
+                            name: "w" + global.wnum, 
+                            x: 10 + global.wnum * 200, 
+                            y: 100
+                        });
+                global.wnum++;
+              ]]>
+            </method>
+
+            <handler name="oninit"><![CDATA[
+                this.makeWindow();
+                this.makeWindow();
+              ]]>
+            </handler>
+
+        </button>
+
+        <text
+            multiline="true" 
+            width="${canvas.width - this.x - 40}"
+        >
+1) Click 'Show Camera' on first window, click 'Allow' for the security dialog:
+   all windows should show 'allowed = true' <br/>
+2) Create two more windows -- should not show camera, but 'allowed = true'. <br/>
+3) Show camera in one of the new windows. <br/>
+4) Destroy two windows (one w/ camera shown and one not) check for debugger warnings.
+        </text>
+
+    </view>
+
+
+</canvas>

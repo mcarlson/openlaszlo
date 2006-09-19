@@ -2,17 +2,42 @@
 * Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
+
 <canvas>
 
-    <rtmpconnection src="rtmp://localhost/test" autoconnect="true"/>
+
+    <rtmpconnection 
+        src="rtmp://localhost/test" 
+        autoconnect="true"
+    />
    
     <simplelayout/>
+
     <rtmpstatus/>
-    <view layout="axis:x; inset:10; spacing:10">
-        <!-- " -->
-        <videoview id="live" url="me" type="rtmp" oninit="this.stream.broadcast()" >
-            <camera show="true"/>
+
+    <view
+        layout="axis: x; inset: 10; spacing: 10"
+    >
+
+        <videoview id="live" 
+            url="me" 
+            type="rtmp" 
+            oninit="this.stream.broadcast()"
+        >
+
+            <camera
+                show="true"
+            />
+
         </videoview>
-        <videoview id="vp" url="me" type="rtmp" oninit="this.stream.play()"/>
+
+        <videoview id="vp" 
+            url="me" 
+            type="rtmp" 
+            oninit="this.stream.play()"
+        />
+
     </view>
+
+
 </canvas>

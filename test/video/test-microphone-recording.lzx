@@ -19,6 +19,17 @@
         src="rtmp://localhost/test/instance1" 
     />
 
+    <mediastream id="ms"
+        type="rtmp"
+        url="temp"
+        debug="true"
+    />
+
+    <microphone id="mic"
+        capturing="${gCapturing.value}"
+        stream="${ms}"
+    />
+
     <simplelayout inset="10" spacing="10"/>
 
     <rtmpstatus/>
@@ -28,54 +39,35 @@
     />
 
     <view
-        width="168" 
-        height="138"
-        bgcolor="black" 
-        onmousedown="this.resizer.apply()" 
-        onmouseup="this.resizer.remove()"
+        width="102" 
+        height="12" 
+        bgcolor="black"
     >
 
-        <resizestate name="resizer"/> 
-
-        <videoview id="v" 
-            x="4" 
-            y="4" 
-            width="${parent.width-8}" 
-            height="${parent.height-18}"
-            type="rtmp"
-            url="temp" 
-        >
-
-            <mediastream
-                debug="true"
-            />
-
-            <camera
-                show="${gShow.value}"
-            />
-
-            <microphone
-                capturing="${gShow.value}"
-            />
-
-        </videoview>
+        <view
+            x="1" 
+            y="1" 
+            bgcolor="yellow" 
+            width="${mic.level}" 
+            height="10"
+        />
 
     </view>
 
     <text
-        text="${'recording: ' + v.stream.recordtime}"
+        text="${'recording: ' + ms.recordtime}"
     />
 
     <text
-        text="${'playtime: ' + v.stream.playtime}"
+        text="${'playtime: ' + ms.playtime}"
     />
 
     <text
-        text="${'totaltime: ' + v.stream.totaltime}"
+        text="${'totaltime: ' + ms.totaltime}"
     />
 
-    <checkbox id="gShow" 
-        text="show camera"
+    <checkbox id="gCapturing" 
+        text="Capturing Microphone"
     />
 
     <view 
@@ -84,12 +76,12 @@
 
         <button
             text="record"
-            onclick="v.cam.setAttribute('show', v.cam.show); v.stream.record()" 
+            onclick="gCapturing.setValue(true); ms.record()" 
         />
 
         <button
             text="stop"
-            onclick="v.stream.stop(); v.cam.setAttribute('show', v.cam.show)" 
+            onclick="ms.stop()" 
         />
 
     </view>
@@ -100,12 +92,12 @@
 
         <button
             text="play"
-            onclick="gShow.setValue(false); v.stream.play()" 
+            onclick="ms.play()" 
         />
 
         <button
             text="pause"
-            onclick="v.stream.pause()" 
+            onclick="ms.pause()" 
         />
 
     </view>
