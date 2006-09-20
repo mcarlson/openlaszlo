@@ -268,16 +268,7 @@ class CanvasCompiler extends ToplevelCompiler {
                 }
             }
         }
-        if (resizable && canvas.getSWFVersion().equals("swf5")) {
-            mEnv.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Percentage values for canvas width and height are not compatible with the swf5 runtime."
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                CanvasCompiler.class.getName(),"051018-270")
-);
-        }
+
         if (bgcolor != null) {
             try {
                 canvas.setBGColor(ViewSchema.parseColor(bgcolor));

@@ -23,7 +23,7 @@ colorLiteral = string
 numberLiteral = xsd:double
 sizeLiteral = xsd:double {minInclusive="0"}
 inheritableBooleanLiteral = booleanLiteral | "inherit"
-constraint = xsd:string {pattern="$(immediately|once|always)?\{.*\}"}
+constraint = xsd:string {pattern="$(style|path|immediately|once|always)?\{.*\}"}
 
 # Attribute value types
 boolean = booleanLiteral | constraint

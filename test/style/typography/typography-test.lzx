@@ -62,15 +62,10 @@
         text="(bold) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
     </text>
     
-<!-- this causes a compile error: 
-        typography-test.lzx:66:177: Unknown style UNDEFINED STYLE
---> 
-<!--    <text id="gt7" width="300" multiline="true" 
+    <text id="gt7" width="300" multiline="true" 
         fontstyle="$style{'stylefontstyle'}"
         text="(bold via css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
     </text> 
--->
-    
     
     <testsuite name="texttestsuite" loglevel="log">
         <handler name="oninit">

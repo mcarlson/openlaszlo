@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -1084,20 +1084,11 @@ class SWFWriter {
             }
         }
 
-        if (mFlashVersion == 5) {
-            addTextAsset("newtext", mDefaultFont);
-        }
-
         // Add font information
         addFontTable();
 
         // Add resource information to canvas.
         addResourceTable();
-
-        if (mFlashVersion == 5) {
-            // Add list of input text resource names
-            addInputTextResourceNames();
-        }
 
         addDefaultTextWidth();
 
@@ -1563,20 +1554,6 @@ class SWFWriter {
         addScript(buf.toString());
     }
 
-     /**
-      * Adds names of input text resources as a property of LzFontManager
-      */
-     private void addInputTextResourceNames() {
-         StringBuffer buf = new StringBuffer("");
-         Iterator resources = mInputTextSet.entrySet().iterator();
-         buf.append("_root.LzFontManager.inputTextResourceNames = {};\n");
-         while(resources.hasNext()) {
-             Map.Entry entry = (Map.Entry) resources.next();
-             buf.append("_root.LzFontManager.inputTextResourceNames['"+entry.getValue()+"'] = true;\n");
-         }
-         addScript(buf.toString());
-     }
-
     /**
      * @return height of fontinfo in pixels
      * @param fontinfo
@@ -1766,261 +1743,6 @@ class SWFWriter {
         actions.append("]}");
     }
 
-    /**
-     * Add an asset to the output SWF to represent an input text
-     * field that uses the given FontInfo
-     * @param fontInfo
-     */
-    public void addInputText(FontInfo fontInfo, boolean password) 
-        throws CompilationError {
-
-        // We only need to add text field defs at compile time to swf5 files;
-        // swf6 and greater create all text at runtime.
-        if (mFlashVersion != 5) {
-            return;
-        }
-
-        String fontName = fontInfo.getName();
-        Font font = getFontFromInfo(fontInfo);
-
-        String name =
-            "lzinputtext/" + 
-            fontName + "/" +
-            fontInfo.getSize() + "/" +
-            fontInfo.getStyle(false) + (password ? "/passwd" : "");
-
-        // We've already added an movieclip that will work for this 
-        // input text
-        if (mInputTextSet.containsKey(name)) {
-            return;
-        }
-
-        // Create a movieclip with a single frame with
-        // a text field of the correct size.
-        Script     movieClip = new Script(1);
-        Frame      frame     = movieClip.newFrame();
-
-        TextField  input = new TextField("", "text",
-                font, fontInfo.getSize()*TWIP, AlphaColor.black);
-
-        int flags = input.getFlags();
-
-        if (password) {
-            flags |= TextField.PASSWORD;
-        }
-
-        if (mProperties.getProperty("text.borders", "false").equals("true")) {
-            flags |= TextField.BORDER;
-        }
-
-        input.setFlags(flags 
-                           | TextField.USEOUTLINES
-                           | TextField.HASFONT
-                           | TextField.MULTILINE
-                           );
-
-        // left, right, indent, and align don't make sense 
-        // when we do all input text wrapping ourselves.
-        // Leading still matters though!
-        input.setLayout(0, 0, 0, 0, mTextLeading*TWIP);
-
-        input.setBounds(new Rectangle2D.Double(0, 0, mWidth*TWIP, mHeight*TWIP));
-
-        mLogger.debug("Add inputtext " + name + " " + mWidth + " " + mHeight);
-
-        frame.addInstance(input, 1, null, null);
-        frame.addStopAction();
-
-        // Add movieClip to library
-        mFlashFile.addDefToLibrary(name, movieClip);
-        // Export it.
-        ExportAssets ea = new ExportAssets();
-        ea.addAsset(name, movieClip);
-        Timeline timeline = mFlashFile.getMainScript().getTimeline();
-        frame = timeline.getFrameAt(timeline.getFrameCount() - 1);
-        frame.addFlashObject(ea);
-
-        // Add this clip to our set of clips
-        mInputTextSet.put(name, name);
-    }
-
-
-    /** Create a custom text input field that will correspond to a 
-     * specific lzx input text view.
-     */
-    public void addCustomInputText(FontInfo fontInfo, int width, int height,
-                                   boolean multiline, boolean password) 
-        throws CompilationError {
-
-        // We only need to add text field defs at compile time to swf5 files;
-        // swf6 and greater create all text at runtime.
-        if (mFlashVersion != 5) {
-            return;
-        }
-
-        String fontName = fontInfo.getName();
-        Font font = getFontFromInfo(fontInfo);
-        // code to designate if this resource is single line or multiline
-        String mstring;
-        mstring = multiline ? "/m" : "/s";
-
-        String name =
-            "lzinputtext/" + 
-            fontName + "/" +
-            fontInfo.getSize() + "/" +
-            fontInfo.getStyle(false) + "/" + width + "/" + height +
-            (password ? "/passwd" : "") + mstring;
-
-        // We've already added an movieclip that will work for this 
-        // input text
-        if (mInputTextSet.containsKey(name)) {
-            return;
-        }
-
-        // Create a movieclip with a single frame with
-        // a text field of the correct size.
-        Script     movieClip = new Script(1);
-        Frame      frame     = movieClip.newFrame();
-
-        TextField  input = new TextField("", "text",
-                font, fontInfo.getSize()*TWIP, AlphaColor.black);
-
-        int flags = input.getFlags();
-
-        if (password) {
-            flags |= TextField.PASSWORD;
-        }
-
-        if (mProperties.getProperty("text.borders", "false").equals("true")) {
-            flags |= TextField.BORDER;
-        }
-
-        input.setFlags(flags 
-                       | TextField.USEOUTLINES
-                       | TextField.HASFONT
-                       | (multiline ? TextField.MULTILINE : 0)
-                       | (multiline ? TextField.WORDWRAP : 0)
-                       );
-
-        // left, right, indent, and align don't make sense 
-        // when we do all input text wrapping ourselves.
-        // Leading still matters though!
-        input.setLayout(0, 0, 0, 0, mTextLeading*TWIP);
-        input.setBounds(new Rectangle2D.Double(0, 0, width*TWIP, (height+mTextLeading)*TWIP));
-        mLogger.debug(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="Add custom inputtext " + p[0] + " " + p[1] + " " + p[2]
- */
-                        org.openlaszlo.i18n.LaszloMessages.getMessage(
-                                SWFWriter.class.getName(),"051018-1915", new Object[] {name, new Integer(width), new Integer(height)})
-);
-
-        frame.addInstance(input, 1, null, null);
-        frame.addStopAction();
-
-        // Add movieClip to library
-        mFlashFile.addDefToLibrary(name, movieClip);
-        // Export it.
-        ExportAssets ea = new ExportAssets();
-        ea.addAsset(name, movieClip);
-        Timeline timeline = mFlashFile.getMainScript().getTimeline();
-        frame = timeline.getFrameAt(timeline.getFrameCount() - 1);
-        frame.addFlashObject(ea);
-
-        // Add this clip to our set of clips
-        mInputTextSet.put(name, name);
-    }
-
-
-
-    /**
-     * Add a movieclip with two frames in it,
-     * each one with a text field
-     */
-    void addTextAsset(String name, Font font) 
-        throws CompilationError {
-
-        if (font == null) { return; }
-
-        // Create a movieclip with a 2 frames with
-        // a text field the size of the canvas (or maxTextWidth/maxTextHeight).
-        Script     movieClip = new Script(2);
-
-        String     initText = 
-            "<P ALIGN=\"LEFT\"><FONT SIZE=\"" + DEFAULT_SIZE
-             + "\" COLOR=\"#000000\"> </FONT></P>";
-
-        // We only need to add text field defs at compile time to swf5 files;
-        // swf6 and greater create all text at runtime.
-        if (mFlashVersion != 5) {
-            return;
-        }
-
-        {
-            TextField  text = new TextField(initText, "text",
-                    font, mMaxTextWidth*TWIP, AlphaColor.black);
-    
-            int flags = text.getFlags();
-            if (mProperties.getProperty("text.borders", "false").equals("true")) {
-                flags |= TextField.BORDER;
-            }
-    
-            text.setFlags(flags 
-                               | TextField.USEOUTLINES
-                               | TextField.HASFONT
-                               | TextField.READONLY
-                               | TextField.MULTILINE
-                               | TextField.HTML
-                               | TextField.NOSELECT
-                               );
-    
-            text.setLayout(0, 0, 0, 0, mTextLeading*TWIP);
-            text.setBounds(new Rectangle2D.Double(0, 0, mMaxTextWidth*TWIP, mMaxTextHeight*TWIP));
-
-            Frame frame = movieClip.newFrame();
-            frame.addStopAction();
-            frame.addInstance(text, 1, null, null);
-        }
-
-        {
-            TextField  text = new TextField(initText, "text",
-                    font, mMaxTextWidth*TWIP, AlphaColor.black);
-    
-            int flags = text.getFlags();
-            if (mProperties.getProperty("text.borders", "false").equals("true")) {
-                flags |= TextField.BORDER;
-            }
-    
-            text.setFlags(flags 
-                               | TextField.USEOUTLINES
-                               | TextField.HASFONT
-                               | TextField.READONLY
-                               | TextField.MULTILINE
-                               | TextField.HTML
-                               );
-    
-            text.setLayout(0, 0, 0, 0, mTextLeading*TWIP);
-            text.setBounds(new Rectangle2D.Double(0, 0, mMaxTextWidth*TWIP, mMaxTextHeight*TWIP));
-
-            Frame frame = movieClip.newFrame();
-            frame.removeInstance(1);
-            frame.addInstance(text, 1, null, null);
-        }
-
-        // Add movieClip to library
-        mFlashFile.addDefToLibrary(name, movieClip);
-
-        // Export it.
-        ExportAssets ea = new ExportAssets();
-        ea.addAsset(name, movieClip);
-        Timeline timeline = mFlashFile.getMainScript().getTimeline();
-
-        // Add this asset
-        int num = mPreloaderAdded ? 1 : 0;
-        Frame frame = timeline.getFrameAt(num);
-        frame.addFlashObject(ea);
-    }
 
     /**
      * A resource we've imported

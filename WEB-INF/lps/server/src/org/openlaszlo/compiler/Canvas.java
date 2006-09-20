@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -58,34 +58,24 @@ public class Canvas implements java.io.Serializable {
     public static final String DEFAULT_VERSION = "1.1";
 
     // TODO: [2003-10-25 bloch] these should come from a properties file
-    public static final String DEFAULT_SWF6_FONT          = "Verdana,Vera,sans-serif";
+    public static final String DEFAULT_FONT          = "Verdana,Vera,sans-serif";
 
-    public static final String DEFAULT_FONT               = "default";
     public static final String DEFAULT_FONT_FILENAME      = "verity" + File.separator + "verity11.ttf";
     public static final String DEFAULT_BOLD_FONT_FILENAME = "verity" + File.separator + "verity11bold.ttf";
     public static final String DEFAULT_ITALIC_FONT_FILENAME = "verity" + File.separator + "verity11italic.ttf";
     public static final String DEFAULT_BOLD_ITALIC_FONT_FILENAME = "verity" + File.separator + "verity11bolditalic.ttf";
     
     public String defaultFont () {
-        if (mSWFVersion.equals( "swf5" )) {
-            return DEFAULT_FONT;
-        } else {
-            return DEFAULT_SWF6_FONT;
-        }
+        return DEFAULT_FONT;
     }
 
     public String defaultFontsize () {
-        if (mSWFVersion.equals( "swf5" )) {
-            return DEFAULT_FONTSIZE;
-        } else {
-            return DEFAULT_SWF6_FONTSIZE;
-        }
+        return DEFAULT_FONTSIZE;
     }
 
 
-    public static final String DEFAULT_FONTSIZE  = "8";
-    public static final String DEFAULT_SWF6_FONTSIZE  = "11";
-    public static final String DEFAULT_FONTSTYLE = "";
+    public static final String DEFAULT_FONTSIZE  = "11";
+    public static final String DEFAULT_FONTSTYLE = "plain";
     
     /** Default persistent connection parameters */
     private static final long DEFAULT_HEARTBEAT = 5000; // 5 seconds

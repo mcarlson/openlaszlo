@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -272,10 +272,8 @@ public class FontInfo implements java.io.Serializable {
                 } else {
                     return "bolditalic";
                 }
-          case NULL_STYLE:
-            return "UNDEFINED STYLE";
           default:
-                throw new RuntimeException("Unknown style " + styleBits);
+            return null;
         }
     }
 
@@ -329,6 +327,10 @@ public class FontInfo implements java.io.Serializable {
      * @return a <code>String</code> value
      */
     public static String normalizeStyleString(String style, boolean whitespace) {
-        return styleBitsToString(styleBitsFromString(style), whitespace);
+        if (style.matches("^\\s*\\$(\\w*)\\{(.*)}\\s*")) {
+            return style;
+        } else {
+            return styleBitsToString(styleBitsFromString(style), whitespace);
+        }
     }
 }
