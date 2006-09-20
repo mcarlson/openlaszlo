@@ -14,5 +14,6 @@ menus and commands
 rpc
 services
 charts and graphs
+audio video
 persistent connection
 development

@@ -72,7 +72,6 @@
     <!-- Remove these property definitions if you want the associated
         ant target to run. [bshine 8.25.06] -->     
     <property name="skip.prefetch" value="true" />    
-    <property name="skip.doc" value="true" />    
     <property name="skip.wrappertest" value="true" />
     <property name="skip.runlzunit" value="true" />
     
