@@ -6,7 +6,7 @@
 <class name="B" traits="cssable" bgcolor="0x776699" width="50" height="50">
     <handler name="onconstruct" method="_applyCSS" />
     <attribute name="cssPropertyMap" 
-        value="{width: 'width', bgcolor: 'lzx-bgcolor', coolness: 'coolness', height: 'lzxheight'}" />
+        value="{width: 'width', bgcolor: 'lzxbgcolor', coolness: 'coolness', height: 'lzxheight'}" />
 </class>
     
 <B id="gB1" y="0"/>
