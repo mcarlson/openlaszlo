@@ -13,7 +13,6 @@ import java.io.*;
 import java.util.*;
 import org.jdom.Element;
 import org.apache.log4j.*;
-import org.openlaszlo.css.CSSHandler;
 import org.openlaszlo.server.LPS;
 import org.openlaszlo.utils.ChainedException;
 import org.openlaszlo.utils.ComparisonMap;
@@ -77,11 +76,6 @@ public class CompilationEnvironment {
      * CompilerMediaCache
      */
     private CompilerMediaCache mMediaCache = null;
-
-    /**
-     * CSSHandler
-     */
-    private CSSHandler mCSSHandler = null;
 
     /** A cache of a compiled validator */
     private org.iso_relax.verifier.Verifier cachedVerifier = null;
@@ -227,20 +221,6 @@ public class CompilationEnvironment {
     }
     public CompilerMediaCache getMediaCache() {
         return this.mMediaCache;
-    }
-
-    public void setCSSHandler(CSSHandler cssHandler) {
-        mCSSHandler = cssHandler;
-    }
-
-    public CSSHandler getCSSHandler() {
-        return mCSSHandler;
-    }
-    
-    public void insertCSS() {
-        if (mCSSHandler!=null) {
-            compileScript( mCSSHandler.toJavascript() );                              
-        }        
     }
 
     public void setDefaultFontInfo(FontInfo fi) {

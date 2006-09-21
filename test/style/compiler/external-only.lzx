@@ -1,41 +1,12 @@
 <!-- Copyright 2006 Laszlo Systems -->
 <canvas>
-    <text text="this file tests what happens when we include an inline stylesheet, and a src= stylesheet" />
+    <text text="this file tests what happens when we include a src= stylesheet" />
     <debug/>
 
 
-    <stylesheet>
-        designerview {
-            width: 279;
-            miscdata: "uc berkeley";
-            innercolor: "0xFF0000";
-        }
-        
-        [name='Philip'] {
-            miscdata: "rules in external1.css should win over this rule";
-        }
-        
-
-    </stylesheet>
-
-    <stylesheet src="external1.css" />
-    <stylesheet src="external2.css" />
-    
-    <!-- this should cause a compiler error, and does -->
-    <!-- 
-    <stylesheet src="idontexist.css">
-        bad {
-            should: "not"; 
-        }
-    </stylesheet>  
-    -->
-    <!-- this should cause a compiler error, and does -->
-    <!--   <stylesheet></stylesheet> --> 
     
     <include href="../designerview.lzx" />
     <include href="../test"/>    
-    
-    <include href="nicelibraryfile.lzx" />
 
     <simplelayout axis="y" spacing="5" />
     
@@ -53,22 +24,16 @@
     
     <designerview id="mynewfun" />
 
-
+    <stylesheet src="external1.css" />
+    <stylesheet src="external2.css" /> 
+ 
 <testsuite name="stylesheetsuite" loglevel="log">
      <handler name="oninit">
-         this.addTest( "testPlain");
          this.addTest( "testPhilip");
          this.addTest( "testGeorge");         
-         this.addTest( "testNonNameAttrs"); 
-         this.addTest( "testLibrary");          
+         // this.addTest( "testNonNameAttrs"); 
          this.run();
      </handler>
-
-     <method name="testPlain">
-         this.assertEquals( 279, gPlainDV.getWidth() );
-         this.assertEquals( "uc berkeley", gPlainDV.getAttribute("miscdata"))
-         this.finishedTest("testPlain");
-     </method>
 
      <method name="testPhilip">
          this.assertNotNull( gPhilip );
@@ -90,11 +55,7 @@
          this.finishedTest("testNonNameAttrs");
      </method>
 
-     <method name="testLibrary">
-         this.assertEquals( 0x004499, gBiblio.getAttribute("innercolor") );
-         this.finishedTest("testLibrary");
-     </method>
-
  </testsuite>
+
 
 </canvas> 

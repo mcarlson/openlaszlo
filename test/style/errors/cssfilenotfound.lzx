@@ -1,4 +1,5 @@
 <!-- Copyright 2006 Laszlo Systems --> 
-<canvas cssfile="idontexist.css">
+<canvas >
+    <stylesheet src="idontexist.css" />
 <text text="this file tests what happens when we reference a css file that doesn't exist" />
 </canvas>

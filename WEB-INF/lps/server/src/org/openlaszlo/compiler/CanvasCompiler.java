@@ -157,9 +157,6 @@ class CanvasCompiler extends ToplevelCompiler {
             }
         }
         
-        // This seems like a good place to insert CSS [bshine 8.2.2006]
-        mEnv.insertCSS(); 
-
     }
         
     void updateSchema(Element element, ViewSchema schema, Set visited) {

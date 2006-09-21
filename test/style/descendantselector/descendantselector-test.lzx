@@ -1,5 +1,5 @@
 <!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
-<canvas debug="true" cssfile="../neighborhood/kennedy.css" bgcolor="0xAAAAAA">
+<canvas debug="true" bgcolor="0xAAAAAA">
     <include href="../test"/>
     <script>
     Debug.write("This test file exercises compiler and runtimesupport for CSS" 
@@ -9,6 +9,8 @@
     <debug/>
 
     <simplelayout axis="y" spacing="30"/>
+    
+    <stylesheet src="../neighborhood/kennedy.css" />
     <include href="../neighborhood/neighborhoodclasses.lzx" />
     <include href="../neighborhood/kennedyfamily.lzx" />
     <include href="../neighborhood/thestreet.lzx" />    

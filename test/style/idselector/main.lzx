@@ -1,10 +1,11 @@
 <!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
-<canvas debug="true" cssfile="ids.css">
+<canvas debug="true" >
     <script>
     Debug.write("This test file exercises compiler support for CSS and id tags.");
     Debug.write("(That would be perfect.");            
     
     </script>
+    <stylesheet src="ids.css" />
     <include href="../test"/>
     <debug/>
     <include href="ids.lzx" />

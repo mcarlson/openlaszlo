@@ -1,0 +1,7 @@
+<library>
+<!-- Copyright 2006 Laszlo Systems -->
+<stylesheet src="lib.css" />
+
+<designerview id="gBiblio" />
+
+</library>

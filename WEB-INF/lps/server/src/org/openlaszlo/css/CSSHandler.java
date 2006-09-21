@@ -47,7 +47,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
      * @param rootDir the directory where cssFile exists.
      * @param cssFile the css file to read. 
      */
-    public static CSSHandler getHandler(String rootDir, String cssFile)
+    public static CSSHandler parse(String rootDir, String cssFile)
         throws CSSException {
         try {
             mLogger.info("creating CSSHandler");
@@ -66,10 +66,10 @@ public class CSSHandler implements DocumentHandler, Serializable {
      * Entry point to creating a CSSHandler from just a string of inlined css
      * @param cssString a string containing the entire CSS to parse
      */
-    public static CSSHandler getHandler(String cssString) 
+    public static CSSHandler parse(String cssString) 
         throws CSSException {
         try {
-            mLogger.debug("entering CSSHandler.getHandler with inline string");
+            mLogger.debug("entering CSSHandler.parse with inline string");
             CSSHandler handler = new CSSHandler(cssString);
             Parser parser = mCSSParserFactory.makeParser();            
             parser.setDocumentHandler(handler);
@@ -96,7 +96,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
     String mCSSFile;
 
     /** List of Rule instances. */
-    List mRuleList;
+    public List mRuleList;
 
     /** Used as a map of style properties for selector group being parsed. */
     Map mStyleMap;
@@ -158,236 +158,6 @@ public class CSSHandler implements DocumentHandler, Serializable {
      */
     public String getFileDependencies() {
         return mFileDependencies;
-    }
-
-    /**
-     * Preprocess elements with CSS values. Deprecated; use runtime styles instead. 
-     * @param element element to apply style to.
-     * @deprecated 
-     */
-    public void preprocessCSS(Element element) {
-        Map stylePropertyMap = null;
-        for (int i=0; i < mRuleList.size(); i++) {
-            Rule rule = (Rule)mRuleList.get(i);
-            if ( match(rule, element) ) {
-                if (stylePropertyMap == null) {
-                    stylePropertyMap = new HashMap();
-                }
-                buildStyleProperties(stylePropertyMap, rule);
-            }
-        }
-
-        // Apply style to element, if any styles matched.
-        if (stylePropertyMap != null) {
-            Iterator iter = stylePropertyMap.entrySet().iterator();
-            while (iter.hasNext()) {
-                Map.Entry entry = (Map.Entry)iter.next();
-                String name = (String)entry.getKey();
-                String value = ((StyleProperty)entry.getValue()).value;
-                element.setAttribute(name, value);
-            }
-        }
-    }
-    /**
-     * Create a javascript representation of the css rules. 
-     @returns String a whole long javascript chunk
-     */ 
-    public String toJavascript() {
-        String script = "";         
-        // script += "Debug.write('Now the compiler will add " + mRuleList.size() + " rules');\n";
-
-        for (int i=0; i < mRuleList.size(); i++) {  
-            Rule rule = (Rule)mRuleList.get(i);
-            String curRuleName = "__cssRule" + Integer.toString(i); 
-            script += "var " + curRuleName + " = new LzCSSStyleRule(); \n";
-
-            String curRuleSelector = buildSelector(rule.getSelector());
-            script += curRuleName + ".selector = " + curRuleSelector + ";\n";
-            String curRuleProperties = buildPropertiesJavascript(rule);         
-            script += curRuleName + ".properties = " + curRuleProperties + ";\n";
-            script += " LzCSSStyle._addRule( " + curRuleName + " ); \n"; 
-            // script += "Debug.write('Added rule ' + " + curRuleName + " ); \n";
-        }
-        // mLogger.error("Here's the whole css thing:" + script);
-        return script; 
-    }
-
-
-    String buildSelector(Selector sel) {
-        String selectorString = "\"selector_not_handled\"";
-
-        switch (sel.getSelectorType()) {
-            case Selector.SAC_ELEMENT_NODE_SELECTOR: 
-                //  This selector matches only tag type
-                ElementSelector es = (ElementSelector)sel;
-                selectorString = buildElementSelectorJS(es.getLocalName());
-                break;
-            case Selector.SAC_CONDITIONAL_SELECTOR:
-                // This selector matches all the interesting things:
-                // #myId
-                // [someattr="someval"]
-                // simple[role="private"]
-                // myclass#myId (TODO: check this. [bshine 9.05.06])
-                ConditionalSelector cs = (ConditionalSelector)sel;
-                // Take care of the simple selector part of this                
-                selectorString = buildConditionalSelectorJS(cs.getCondition(),cs.getSimpleSelector());                
-                break;
-            case Selector.SAC_DESCENDANT_SELECTOR:
-                DescendantSelector ds = (DescendantSelector)sel;
-                selectorString = buildDescendantSelector(ds);
-                break;
-            default:
-                selectorString = "unknown_selector" + Integer.toString(sel.getSelectorType());
-        } 
-
-        return selectorString;
-    }
-
-    String buildElementSelectorJS(String localName) {
-        return "\"" + localName + "\"";   
-    }
-
-    String buildConditionalSelectorJS(Condition cond, SimpleSelector simpleSelector) {
-        mLogger.debug("Conditional selector: " + cond.toString());
-        String condString = "no_match";        
-        switch (cond.getConditionType()) {
-            case Condition.SAC_ID_CONDITION: /* #id */
-                AttributeCondition idCond = (AttributeCondition) cond;
-                condString = "\"#" + idCond.getValue() + "\""; // should be the id specified
-                break;
-
-             case Condition.SAC_ATTRIBUTE_CONDITION: // [attr] or [attr="val"] or elem[attr="val"]
-                mLogger.debug("Attribute condition");
-                AttributeCondition attrCond = (AttributeCondition) cond;
-                String name  = attrCond.getLocalName();
-                String value = attrCond.getValue();
-                condString = "{ attrname: \"" + name + "\", attrvalue: \"" + value + "\"";
-                // The simple selector is the element part of the selector, ie, 
-                // foo in foo[bar="baz"]. If there is no element part of the selector, ie
-                // [bar="lum"] then batik gives us a non-null SimpleSelector with a 
-                // localName of the null string. We don't write out the simple selector if 
-                // it's not specified. 
-                if (simpleSelector != null) {
-                    mLogger.debug("simple selector:" + simpleSelector.toString());
-                    if (simpleSelector.getSelectorType() == Selector.SAC_ELEMENT_NODE_SELECTOR) {
-
-                        ElementSelector es = (ElementSelector)simpleSelector;                                        
-                        String simpleSelectorString = es.getLocalName();
-                        // Discard the simple selector if it isn't specified
-                        if (simpleSelectorString != null) 
-                            condString += ", simpleselector: \"" + simpleSelectorString + "\""; 
-                    } else {
-                        mLogger.error("Can't handle CSS selector " + simpleSelector.toString());
-                    }
-                } 
-                
-                condString += "}";
-                mLogger.debug("Cond string: " + condString ); 
-                break;
-            default:
-        }
-        return condString;
-    }
-
-    /** 
-     * Build a string holding the javascript to create the selector at runtime, where
-       the selector is a descendant selector, ie 
-       E F
-       would be
-       descendantrule.selector =  [
-           "E", 
-           "F" ];
-       The selector is specified as an array of selectors, ancestor first. 
-      */
-    String buildDescendantSelector(DescendantSelector ds) {
-        // We need the simple selector and the ancestor selector
-        SimpleSelector ss = ds.getSimpleSelector();
-        Selector ancestorsel = ds.getAncestorSelector();
-        String str = "[";
-        
-        // If this is complicated, it will be [ "something", "complicated" ]
-        // Strip excessive square brackets. This lets us pretend to unroll
-        // recursive selectors into a list of selectors. 
-        // This is a cheap way to get deep selectors.
-        String ancestorselstr = buildSelector(ancestorsel);
-        ancestorselstr = ancestorselstr.replace('[', ' ');
-        ancestorselstr = ancestorselstr.replace(']', ' ');        
-        str += ancestorselstr; 
-        str += ", ";
-        str += buildSelector(ss);
-        
-        str += "]";
-        // mLogger.error("Here's the whole descendant selector:" + str);
-        return str;
-    }
-
-    /**
-      * Build a string holding the javascript to create the rule's properties attribute. 
-      * This should just be a standard javascript object composed of attributes and values,
-      * wrapped in curly quotes. Escape the quotes for attributes' values.
-      * for example "{ width: 500, occupation: \"pet groomer and holistic veterinarian\",
-                       miscdata: \"spends most days indoors\"}"" 
-      */                       
-      
-    String buildPropertiesJavascript(Rule rule) {
-        /*
-        String props = "{ width: 500, occupation: \"pet groomer and holistic veterinarian\"," + 
-                        " miscdata: \"spends most days indoors\"} ";
-                        */ 
-        
-        String props = "{";
-        Map ruleStyleMap = rule.getStyleMap();
-        boolean insertComma = false;     
-        Iterator iter = ruleStyleMap.entrySet().iterator();
-          while (iter.hasNext()) {
-              // don't put a comma before the first property. that would be illegal javascript.
-              if (!insertComma) { 
-                  insertComma = true; 
-              } else {
-                  props += ", ";
-              }
-              Map.Entry entry = (Map.Entry)iter.next();
-              String name = (String)entry.getKey();
-              StyleProperty newProp = (StyleProperty)entry.getValue();
-              props += name + ": "+ "\"" + newProp.value + "\"";
-
-          }        
-        props += "}";  
-        
-        return props; 
-    }
-
-    /**
-     * Build a single style based on precedence of rules that can immediately be
-     * applied to an element.
-     * @param stylePropertyMap style property map.
-     * @param rule CSS rule containing styles to add to stylePropertyMap.
-     */
-    void buildStyleProperties(Map stylePropertyMap, Rule rule) {
-        Map ruleStyleMap = rule.getStyleMap();
-        Specificity ruleSpecificity = rule.getSpecificity();
-
-        Iterator iter = ruleStyleMap.entrySet().iterator();
-        while (iter.hasNext()) {
-            Map.Entry entry = (Map.Entry)iter.next();
-            String name = (String)entry.getKey();
-            StyleProperty newProp = (StyleProperty)entry.getValue();
-
-            StyleProperty origProp = (StyleProperty)stylePropertyMap.get(name);
-            if (origProp == null) {
-                newProp.specificity = ruleSpecificity;
-                stylePropertyMap.put(name, newProp);
-
-            } else if (newProp.important) {
-                origProp.specificity = ruleSpecificity;
-                origProp.value = newProp.value;
-
-            } else if ( ! origProp.important && 
-                        origProp.specificity.compare(ruleSpecificity) <= 0 ) {
-                origProp.specificity = ruleSpecificity;
-                origProp.value = newProp.value;
-            }
-        }
     }
 
     //--------------------------------------------------------------------------
@@ -466,223 +236,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
     //--------------------------------------------------------------------------
     // helper methods
     //--------------------------------------------------------------------------
-
-    /** @return true if rule matches element */
-    boolean match(Rule rule, Element element) {
-        // reset specificity
-        rule.getSpecificity().reset();
-        return match(rule.getSelector(), rule.getSpecificity(), element);
-    }
-
-    /** 
-     * @param selector the CSS selector to match element.
-     * @param specificity the specificity of the selector. This value is only
-     * accurate if match returns true.
-     * @param element element to match with a CSS selector.
-     * @return true if selector matches element
-     */
-    boolean match(Selector selector, Specificity specificity, Element element) 
-        throws CSSException {
-
-        switch (selector.getSelectorType()) {
-
-        case Selector.SAC_ELEMENT_NODE_SELECTOR: {
-            // TODO [2005-10-25 pkang]: match namespace
-            ElementSelector es = (ElementSelector)selector;
-            String name = es.getLocalName();
-            boolean isok = (name == null || name.equals(element.getName()));
-            // don't increment for nay node match.
-            if (isok && name != null && ! name.equals("*")) specificity.incElement();
-            return isok;
-        }
-
-        case Selector.SAC_CONDITIONAL_SELECTOR: {
-            ConditionalSelector cs = (ConditionalSelector)selector;
-            if ( ! match(cs.getSimpleSelector(), specificity, element) ) return false;
-            return matchCondition(cs.getCondition(), specificity, element);
-        }
-
-        case Selector.SAC_ANY_NODE_SELECTOR: /* * */ {
-            return true;
-        }
-
-        case Selector.SAC_CHILD_SELECTOR: /* E > F */ {
-            // element must be a child and not just a descendant
-            DescendantSelector ds = (DescendantSelector)selector;
-            if ( ! match(ds.getSimpleSelector(), specificity, element) ) return false;
-            return match(ds.getAncestorSelector(), specificity, element.getParentElement());
-        }
-
-        case Selector.SAC_DESCENDANT_SELECTOR: /* E F */ {
-            // element must be a descendant.
-            DescendantSelector ds = (DescendantSelector)selector;
-            if ( ! match(ds.getSimpleSelector(), specificity, element) ) return false;
-            Element ancestor = element;
-            while (( ancestor = ancestor.getParentElement()) != null) {
-                if ( match(ds.getAncestorSelector(), specificity, ancestor) ) return true;
-            }
-            return false;
-        }
-
-        case Selector.SAC_DIRECT_ADJACENT_SELECTOR: /* E + F */ {
-            // if (E + F), E must directly precede F as a sibling.
-            SiblingSelector ss = (SiblingSelector)selector;
-
-            if ( ! match(ss.getSiblingSelector(), specificity, element) ) return false;
-
-            Element parent = element.getParentElement();
-            if (parent == null) return false;
-
-            Element prevElement = null;
-            List children = parent.getChildren();
-            for (int i=1; i < children.size(); i++) {
-                if (children.get(i) == element) {
-                    prevElement = (Element)children.get(i-1);
-                    break;
-                }
-            }
-            return prevElement != null && 
-                match(ss.getSelector(), specificity, prevElement);
-        }
-
-        case Selector.SAC_CDATA_SECTION_NODE_SELECTOR:
-            throwCSSException("SAC_CDATA_SECTION_NODE_SELECTOR unsupported");
-        case Selector.SAC_COMMENT_NODE_SELECTOR:
-            throwCSSException("SAC_COMMENT_NODE_SELECTOR unsupported");
-        case Selector.SAC_NEGATIVE_SELECTOR:
-            throwCSSException("SAC_NEGATIVE_SELECTOR unsupported");
-        case Selector.SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR:
-            throwCSSException("SAC_PROCESSING_INSTRUCTION_NODE_SELECTOR unsupported");
-        case Selector.SAC_PSEUDO_ELEMENT_SELECTOR:
-            throwCSSException("SAC_PSEUDO_ELEMENT_SELECTOR unsupported");
-        case Selector.SAC_ROOT_NODE_SELECTOR:
-            throwCSSException("SAC_ROOT_NODE_SELECTOR unsupported");
-        case Selector.SAC_TEXT_NODE_SELECTOR:
-            throwCSSException("SAC_TEXT_NODE_SELECTOR unsupported");
-        }
-
-        throwCSSException("unsupported selector: " + 
-                          selector.getSelectorType());
-        return false;
-    }
-
-    /** 
-     * @return true if condition matches.
-     */
-    boolean matchCondition(Condition condition, Specificity specificity, Element element) 
-        throws CSSException {
-
-        switch (condition.getConditionType()) {
-
-        case Condition.SAC_ID_CONDITION: /* #id */ {
-            AttributeCondition idCond = (AttributeCondition)condition;
-            String id = element.getAttributeValue("id");
-            boolean isok = (id != null && id.equals(idCond.getValue()));
-            if (isok) specificity.incID();
-            return isok;
-        }
-
-        case Condition.SAC_CLASS_CONDITION: /* .class */ {
-            AttributeCondition classCond = (AttributeCondition)condition;
-            String _class = element.getAttributeValue("class");
-            boolean isok = (_class != null && _class.equals(classCond.getValue()));
-            if (isok) specificity.incAttribute();
-            return isok;
-        }
-
-        case Condition.SAC_AND_CONDITION: /* .part1:lang(fr) */ {
-            CombinatorCondition combCond = (CombinatorCondition)condition;
-            return matchCondition(combCond.getFirstCondition(), specificity, element) &&
-                matchCondition(combCond.getSecondCondition(), specificity, element);
-        }
-
-        case Condition.SAC_ATTRIBUTE_CONDITION: /* [attr] or [attr="val"] */ {
-            AttributeCondition attrCond = (AttributeCondition)condition;
-            String name  = attrCond.getLocalName();
-            String value = attrCond.getValue();
-            String elAttrVal = element.getAttributeValue(name);
-
-            boolean isok;
-            if (value == null) {
-                // check the [attr] set case
-                isok = (elAttrVal != null);
-            } else {
-                // check the [attr="val"] case
-                isok = value.equals(elAttrVal);
-            }
-            if (isok) specificity.incAttribute();
-            return isok;
-        }
-
-
-        case Condition.SAC_ONE_OF_ATTRIBUTE_CONDITION: /* [attr~="val"] */ {
-            AttributeCondition attrCond = (AttributeCondition)condition;
-            String name  = attrCond.getLocalName();
-            String value = attrCond.getValue();
-            String elAttrVal = element.getAttributeValue(name);
-
-            boolean isok = false;
-            if (elAttrVal != null) {
-                String[] tok = elAttrVal.split("\\s");
-                for (int i=0; i < tok.length; i++) {
-                    if (value.equals(tok[i])) {
-                        specificity.incAttribute();
-                        isok = true;
-                        break;
-                    }
-                }
-            }
-            return isok;
-        }
-
-        case Condition.SAC_BEGIN_HYPHEN_ATTRIBUTE_CONDITION: /*[attr|="val"]*/ {
-            //--------------------------------------------------------------
-            // Match when the element's "att" attribute value is a
-            // hyphen-separated list of "words", beginning with "val". The
-            // match always starts at the beginning of the attribute
-            // value. This is primarily intended to allow language subcode
-            // matches (e.g., the "lang" attribute in HTML) as described in
-            // RFC 1766.
-            //--------------------------------------------------------------
-            AttributeCondition attrCond = (AttributeCondition)condition;
-            String name  = attrCond.getLocalName();
-            String value = attrCond.getValue();
-            String elAttrVal = element.getAttributeValue(name);
-
-            boolean isok = false;
-            if (elAttrVal != null) {
-                int index = elAttrVal.indexOf("-");
-                if (index != -1) {
-                    isok = value.equals(elAttrVal.substring(0, index));
-                    if (isok) specificity.incAttribute();
-                }
-            }
-            return isok;
-        }
-
-        case Condition.SAC_OR_CONDITION:
-            throwCSSException("SAC_OR_CONDITION unsupported");
-        case Condition.SAC_NEGATIVE_CONDITION:
-            throwCSSException("SAC_NEGATIVE_CONDITION unsupported");
-        case Condition.SAC_POSITIONAL_CONDITION:
-            throwCSSException("SAC_POSITIONAL_CONDITION unsupported");
-        case Condition.SAC_LANG_CONDITION: /* :lang(fr */
-            throwCSSException("SAC_LANG_CONDITION unsupported");
-        case Condition.SAC_PSEUDO_CLASS_CONDITION: /* like foo:first-child */
-            throwCSSException("SAC_PSEUDO_CLASS_CONDITION unsupported");
-        case Condition.SAC_ONLY_CHILD_CONDITION:
-            throwCSSException("SAC_ONLY_CHILD_CONDITION unsupported");
-        case Condition.SAC_ONLY_TYPE_CONDITION:
-            throwCSSException("SAC_ONLY_TYPE_CONDITION unsupported");
-        case Condition.SAC_CONTENT_CONDITION:
-            throwCSSException("SAC_CONTENT_CONDITION unsupported");
-        }
-
-        throwCSSException("unsupported condition: " +
-                          condition.getConditionType());
-        return false;
-    }
-
+    
     /** @return an RGB formatted hex string like #FFFFFF. */
     String getRGBString(LexicalUnit lu) {
         int rr = lu.getIntegerValue();
@@ -696,204 +250,114 @@ public class CSSHandler implements DocumentHandler, Serializable {
             + (gg < 16 ? "0" : "") + Integer.toHexString(gg).toUpperCase()
             + (bb < 16 ? "0" : "") + Integer.toHexString(bb).toUpperCase();
     }
-
+    
     /**
-     * Convert LexicalUnit to a string value.
-     */
-    String luToString(LexicalUnit lu) {
-        String str = "";
-        switch (lu.getLexicalUnitType()) {
-        case LexicalUnit.SAC_ATTR:
-        case LexicalUnit.SAC_IDENT:
-        case LexicalUnit.SAC_STRING_VALUE:
-        case LexicalUnit.SAC_URI:
-            str = lu.getStringValue();
-            break;
+      * Convert LexicalUnit to a string value.
+      */
+     String luToString(LexicalUnit lu) {
+         String str = "";
+         switch (lu.getLexicalUnitType()) {
+         case LexicalUnit.SAC_ATTR:
+         case LexicalUnit.SAC_IDENT:
+         case LexicalUnit.SAC_STRING_VALUE:
+         case LexicalUnit.SAC_URI:
+             str = lu.getStringValue();
+             break;
 
-        case LexicalUnit.SAC_CENTIMETER:
-        case LexicalUnit.SAC_DEGREE:
-        case LexicalUnit.SAC_DIMENSION:
-        case LexicalUnit.SAC_EM:
-        case LexicalUnit.SAC_EX:
-        case LexicalUnit.SAC_GRADIAN:
-        case LexicalUnit.SAC_HERTZ:
-        case LexicalUnit.SAC_INCH:
-        case LexicalUnit.SAC_KILOHERTZ:
-        case LexicalUnit.SAC_MILLIMETER:
-        case LexicalUnit.SAC_MILLISECOND:
-        case LexicalUnit.SAC_PERCENTAGE:
-        case LexicalUnit.SAC_PICA:
-        case LexicalUnit.SAC_PIXEL:
-        case LexicalUnit.SAC_POINT:
-        case LexicalUnit.SAC_RADIAN:
-        case LexicalUnit.SAC_REAL:
-        case LexicalUnit.SAC_SECOND:
-            str = Float.toString(lu.getFloatValue()) +
-                  lu.getDimensionUnitText();
-            break;
+         case LexicalUnit.SAC_CENTIMETER:
+         case LexicalUnit.SAC_DEGREE:
+         case LexicalUnit.SAC_DIMENSION:
+         case LexicalUnit.SAC_EM:
+         case LexicalUnit.SAC_EX:
+         case LexicalUnit.SAC_GRADIAN:
+         case LexicalUnit.SAC_HERTZ:
+         case LexicalUnit.SAC_INCH:
+         case LexicalUnit.SAC_KILOHERTZ:
+         case LexicalUnit.SAC_MILLIMETER:
+         case LexicalUnit.SAC_MILLISECOND:
+         case LexicalUnit.SAC_PERCENTAGE:
+         case LexicalUnit.SAC_PICA:
+         case LexicalUnit.SAC_PIXEL:
+         case LexicalUnit.SAC_POINT:
+         case LexicalUnit.SAC_RADIAN:
+         case LexicalUnit.SAC_REAL:
+         case LexicalUnit.SAC_SECOND:
+             str = Float.toString(lu.getFloatValue()) +
+                   lu.getDimensionUnitText();
+             break;
 
-        case LexicalUnit.SAC_INTEGER:
-            str = Integer.toString(lu.getIntegerValue());
-            break;
+         case LexicalUnit.SAC_INTEGER:
+             str = Integer.toString(lu.getIntegerValue());
+             break;
 
-        case LexicalUnit.SAC_RGBCOLOR:
-            str = getRGBString(lu.getParameters());
-            break;
+         case LexicalUnit.SAC_RGBCOLOR:
+             str = getRGBString(lu.getParameters());
+             break;
 
-        //----------------------------------------------------------------------
-        // TODO [2005-10-07 pkang]: don't think I'm handling these literal
-        // lexical units correctly. Not worrying for now since we only
-        // support basic values
-        //----------------------------------------------------------------------
+         //----------------------------------------------------------------------
+         // TODO [2005-10-07 pkang]: don't think I'm handling these literal
+         // lexical units correctly. Not worrying for now since we only
+         // support basic values
+         //----------------------------------------------------------------------
 
-        case LexicalUnit.SAC_INHERIT:
-            str = "inherit";
-            break;
-        case LexicalUnit.SAC_OPERATOR_COMMA:
-            str = ",";
-            break;
-        case LexicalUnit.SAC_OPERATOR_EXP:
-            str = "^";
-            break;
-        case LexicalUnit.SAC_OPERATOR_GE:
-            str = ">=";
-            break;
-        case LexicalUnit.SAC_OPERATOR_GT:
-            str = ">";
-            break;
-        case LexicalUnit.SAC_OPERATOR_LE:
-            str = "<=";
-            break;
-        case LexicalUnit.SAC_OPERATOR_LT:
-            str = "<";
-            break;
-        case LexicalUnit.SAC_OPERATOR_MINUS:
-            str = "-";
-            break;
-        case LexicalUnit.SAC_OPERATOR_MOD:
-            str = "%";
-            break;
-        case LexicalUnit.SAC_OPERATOR_MULTIPLY:
-            str = "*";
-            break;
-        case LexicalUnit.SAC_OPERATOR_PLUS:
-            str = "+";
-            break;
-        case LexicalUnit.SAC_OPERATOR_SLASH:
-            str = "/";
-            break;
-        case LexicalUnit.SAC_OPERATOR_TILDE:
-            str = "~";
-            break;
+         case LexicalUnit.SAC_INHERIT:
+             str = "inherit";
+             break;
+         case LexicalUnit.SAC_OPERATOR_COMMA:
+             str = ",";
+             break;
+         case LexicalUnit.SAC_OPERATOR_EXP:
+             str = "^";
+             break;
+         case LexicalUnit.SAC_OPERATOR_GE:
+             str = ">=";
+             break;
+         case LexicalUnit.SAC_OPERATOR_GT:
+             str = ">";
+             break;
+         case LexicalUnit.SAC_OPERATOR_LE:
+             str = "<=";
+             break;
+         case LexicalUnit.SAC_OPERATOR_LT:
+             str = "<";
+             break;
+         case LexicalUnit.SAC_OPERATOR_MINUS:
+             str = "-";
+             break;
+         case LexicalUnit.SAC_OPERATOR_MOD:
+             str = "%";
+             break;
+         case LexicalUnit.SAC_OPERATOR_MULTIPLY:
+             str = "*";
+             break;
+         case LexicalUnit.SAC_OPERATOR_PLUS:
+             str = "+";
+             break;
+         case LexicalUnit.SAC_OPERATOR_SLASH:
+             str = "/";
+             break;
+         case LexicalUnit.SAC_OPERATOR_TILDE:
+             str = "~";
+             break;
 
-        case LexicalUnit.SAC_COUNTER_FUNCTION:
-            throwCSSException("SAC_COUNTER_FUNCTION unsupported");
-        case LexicalUnit.SAC_COUNTERS_FUNCTION:
-            throwCSSException("SAC_COUNTERS_FUNCTION unsupported");
-        case LexicalUnit.SAC_FUNCTION:
-            throwCSSException("SAC_FUNCTION unsupported");
-        case LexicalUnit.SAC_RECT_FUNCTION:
-            throwCSSException("SAC_RECT_FUNCTION unsupported");
-        case LexicalUnit.SAC_SUB_EXPRESSION:
-            throwCSSException("SAC_SUB_EXPRESSION unsupported");
-        case LexicalUnit.SAC_UNICODERANGE:
-            throwCSSException("SAC_UNICODERANGE unsupported");
-        default:
-            throwCSSException("unsupported lexical unit type: " +
-                              lu.getLexicalUnitType());
-        }
-        return str;
-    }
+         case LexicalUnit.SAC_COUNTER_FUNCTION:
+             throwCSSException("SAC_COUNTER_FUNCTION unsupported");
+         case LexicalUnit.SAC_COUNTERS_FUNCTION:
+             throwCSSException("SAC_COUNTERS_FUNCTION unsupported");
+         case LexicalUnit.SAC_FUNCTION:
+             throwCSSException("SAC_FUNCTION unsupported");
+         case LexicalUnit.SAC_RECT_FUNCTION:
+             throwCSSException("SAC_RECT_FUNCTION unsupported");
+         case LexicalUnit.SAC_SUB_EXPRESSION:
+             throwCSSException("SAC_SUB_EXPRESSION unsupported");
+         case LexicalUnit.SAC_UNICODERANGE:
+             throwCSSException("SAC_UNICODERANGE unsupported");
+         default:
+             throwCSSException("unsupported lexical unit type: " +
+                               lu.getLexicalUnitType());
+         }
+         return str;
+     }
 
-    /**
-     * Specificity class.
-     */
-    class Specificity {
-        final static int SPECIFICITY_ID        = 0;
-        final static int SPECIFICITY_ATTRIBUTE = 1;
-        final static int SPECIFICITY_ELEMENT   = 2;
-
-        int[] mSpecificity = { 0, 0, 0 };
-
-        public void incID() {
-            ++mSpecificity[SPECIFICITY_ID];
-        }
-        public void incAttribute() { 
-            ++mSpecificity[SPECIFICITY_ATTRIBUTE]; 
-        }
-        public void incElement() {
-            ++mSpecificity[SPECIFICITY_ELEMENT];
-        }
-        public void reset() {
-            mSpecificity[SPECIFICITY_ID] = 0;
-            mSpecificity[SPECIFICITY_ATTRIBUTE] = 0;
-            mSpecificity[SPECIFICITY_ELEMENT] = 0;
-        }
-
-
-        /**
-         * @return 0 if this is equal, -1 if this is less, +1 if this is
-         * greater.
-         */
-        int compare(Specificity specificity) {
-            int diff;
-
-            diff = this.mSpecificity[SPECIFICITY_ID] 
-                - specificity.mSpecificity[SPECIFICITY_ID];
-            if (diff != 0) return diff < 0 ? -1 : +1;
-
-            diff = this.mSpecificity[SPECIFICITY_ATTRIBUTE] 
-                - specificity.mSpecificity[SPECIFICITY_ATTRIBUTE];
-            if (diff != 0) return diff < 0 ? -1 : +1;
-
-            diff = this.mSpecificity[SPECIFICITY_ELEMENT] 
-                - specificity.mSpecificity[SPECIFICITY_ELEMENT];
-            if (diff != 0) return diff < 0 ? -1 : +1;
-
-            return 0;
-        }
-    }
-
-    /**
-     * Rule class.
-     */
-    class Rule {
-        public Rule(Selector selector, Map styleMap) {
-            this.mSelector = selector;
-            this.mStyleMap = styleMap;
-            // specificity for rule is set when match() is called.
-            this.mSpecificity = new Specificity();
-        }
-
-        Selector    mSelector;
-        Map         mStyleMap;
-        Specificity mSpecificity;
-
-        public Selector    getSelector()    { return mSelector; }
-        public Map         getStyleMap()    { return mStyleMap; }
-        public Specificity getSpecificity() { return mSpecificity; }
-
-        /**
-         * @return 0 if this is equal, -1 if this is less, +1 if this is
-         * greater.
-         */
-        int compare(Rule rule) {
-            return this.mSpecificity.compare(rule.mSpecificity);
-        }
-
-
-    }
-
-    /**
-     * StyleProperty class.
-     */
-    class StyleProperty {
-        public StyleProperty(String value, boolean important) {
-            this.value = value;
-            this.important = important;
-        }
-        public String value;
-        public boolean important;
-        public Specificity specificity = null;
-    }
+    
 }

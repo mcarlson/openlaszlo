@@ -1,0 +1,4 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas cssfile="thisisbad.css">
+<text text="this file tests what happens when we use a cssfile attribute on the canvas." />
+</canvas>

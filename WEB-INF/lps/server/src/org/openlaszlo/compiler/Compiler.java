@@ -320,43 +320,16 @@ public class Compiler {
                 }
             }
 
-            // If css map already exists, don't look at canvas's css property.
+            // cssfile cannot be set in the canvas tag
             String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
-            if (cssfile == null || "".equals(cssfile)) {
+            if (cssfile != null) {
                 mLogger.info("Got cssfile named: " + cssfile);             
                 cssfile = root.getAttributeValue("cssfile");
+                 throw new CompilationError(
+                        "cssfile attribute of canvas is no longer supported. Use <stylesheet> instead.");
+                       
             } 
 
-            if ( cssfile != null && ! "".equals(cssfile) ) {
-                mLogger.info("Using " + cssfile + " CSS file");
-
-                // CSS path is relative to LZX file
-                String parentPath = file.getParent();
-                if ( parentPath == null || "".equals(parentPath) ) {
-                    parentPath = ".";
-                }
-
-                // CSS file is relative to directory of LZX file. 
-                String cssFullPath = parentPath + File.separatorChar + cssfile;
-                mLogger.info("CSS file's full path is " + cssFullPath);
-                
-                // Check whether css file exists
-                File cssf = new File(cssFullPath);
-                if (!cssf.exists()) {
-                    throw new CompilationError("Could not find css file " + cssfile);
-                }
-
-                try {
-                    // set canvas's attribute to cssfile value 
-                    root.setAttribute("cssfile", cssfile);
-                    CSSHandler handler = CSSHandler.getHandler(parentPath, cssfile);
-                    env.setCSSHandler(handler);
-                    props.setProperty("cssdepend", handler.getFileDependencies());
-                } catch (Exception e) {
-                    mLogger.error(e.getMessage(), e);
-                    throw new ChainedException(e);
-                }
-            }
             // Krank cannot be set in the canvas tag
             
             mLogger.debug("Making a writer...");
@@ -400,7 +373,6 @@ public class Compiler {
             
             processCompilerInstructions(root, env);
             compileElement(root, env);
-            mLogger.debug("ben ben ben you are here css live love life");
             ViewCompiler.checkUnresolvedResourceReferences (env);
             mLogger.debug("done...");
             // This isn't in a finally clause, because it won't generally

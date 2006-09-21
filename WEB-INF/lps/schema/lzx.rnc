@@ -79,8 +79,6 @@ element canvas {
     ## Text which extends beyond this width will be clipped.
     ## If this attribute is omitted, it defaults to the canvas width.
     attribute maxtextwidth {sizeLiteral}?
-  & ## The CSS file to use for the application.
-    attribute cssfile {xsd:anyURI}?
   & ## If present, specifies the maximum height in pixels of any output text field.
     ## Text which extends beyond this height will be clipped.
     ## If this attribute is omitted, it defaults to the canvas height.
