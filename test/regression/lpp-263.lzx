@@ -1,6 +1,0 @@
-<canvas>
-<simplelayout/>
-<text>You should load this test file with foo=bar&amp;lzproxied=false&amp;lzt=html</text>
-<text>if you see 'bar' below and you've loaded it correctly, the test passes!</text>
-<text oninit="this.setText(global.foo)"/>
-</canvas>

@@ -1,9 +1,0 @@
-<canvas>
-<text resize="true" multiline="true" width="640" height="480">
-<method event="oninit">
-<![CDATA[
-this.setText("THIS TEST REQUIRES SWF7: there should be an image here <img src='../resources/jpg/1998-35-a-640_wallpaper.jpg'> and text following it");
-]]>
-</method>
-</text>
-</canvas>

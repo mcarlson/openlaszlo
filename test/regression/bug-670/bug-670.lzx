@@ -1,9 +1,0 @@
-<canvas>
-    <splash persistent="true">
-        <view x="100" y="160" resource="font.swf" ratio="100%" center="true"/>
-    </splash>
-</canvas>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->

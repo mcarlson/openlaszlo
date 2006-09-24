@@ -1,9 +1,0 @@
-<!-- Test case will display 'String index out of range: 0' -->
-<!-- in debugger window. If fixed, 'empty filename'.       -->
-<canvas debug="true">
-    <dataset name="foo" type="http" src="file:" request="true" />
-</canvas>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->

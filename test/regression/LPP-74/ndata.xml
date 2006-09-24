@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<data>
-  <xresult code="0" tet="Ok" />
-  <recordset>
-    <record cim="ergtrtg" id="5" kontakt="rtgtrgrtg" nev="trgtrg" />
-    <record cim="" id="13" kontakt="nm,nm,nm," nev="m,nm,nm,nm,nm," />
-  </recordset>
-</data>

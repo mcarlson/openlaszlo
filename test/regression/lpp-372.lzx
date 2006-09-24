@@ -1,8 +1,0 @@
-<canvas width="1400" height="600" >
-<text id="t3"  width="600" height="150" multiline="true" bgcolor="#cccccc">
-<font size="10">line breaks were lost</font><br/>
-<font size="8">when they occur right after font tags</font><br/>
-<font size="14">but they work inside of text<br/> like this.</font>
-</text>
-
-</canvas>

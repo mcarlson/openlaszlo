@@ -1,9 +1,0 @@
-<canvas width="200" height="200" >
-    <simplelayout axis="y" spacing="8" />
-    <view width="80" height="80" stretches="both" resource="bug-283.png" />
-    <view width="80" height="80" stretches="both" bgcolor="#577180" resource="bug-283.png" />	
-</canvas>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->

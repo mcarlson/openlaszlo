@@ -1,5 +1,0 @@
-<!-- copyright 2006 Laszlo Systems, use subject to license -->
-<canvas debug="true">
-  <dataset name="foo" initstage="early"/>
-  <text>if this code compiles without warnings then the test is passed</text>
-</canvas>

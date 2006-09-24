@@ -1,9 +1,0 @@
-<canvas>
-    <simplelayout axis="x" spacing="5" />
-    <edittext width="${canvas.b.width}">I should be able to type here</edittext>
-    <button name="b"/>
-</canvas>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
