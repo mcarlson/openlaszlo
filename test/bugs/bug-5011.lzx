@@ -1,6 +1,0 @@
-<canvas debug="true">
-  <script>
-    var ﬀoo = "bar";
-    Debug.write("ﬀoo is", ﬀoo);
-  </script>
-</canvas>

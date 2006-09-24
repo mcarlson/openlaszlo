@@ -1,7 +1,0 @@
-<canvas height="50" width="500">
-  <view width="50" height="50" bgcolor="red" clickable="true" showhandcursor="false"/>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-</canvas>

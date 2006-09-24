@@ -1,9 +1,0 @@
-<canvas debug="true">
-
-    <font src="helmetb.ttf" name="helmet" />
-
-    <simplelayout/>
-    <text font="helmet">This looks ok.</text>
-    <text font="helmet" fontstyle="bold">Did not load bold helmet.</text>
-
-</canvas>

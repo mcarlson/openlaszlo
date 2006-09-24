@@ -1,6 +1,0 @@
-<canvas width="700" height="500">
-  <debug y="50" width="600" height="400" />
-  <window text="test window" width="250" height="250" x="10" y="18" resizable="true" id="fw" title="A Simple Window">
-    <scrollbar/>
-  </window>
-</canvas>

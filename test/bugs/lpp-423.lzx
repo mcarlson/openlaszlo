@@ -1,4 +1,0 @@
-<canvas>
-<!-- Problem with 'W' being clipped only happens with fontsize = 11, font=Arial --> 
-<inputtext visible="true" name="f" height="20" width="100" fontsize="11" font="Arial" x="0" y="0"/> 
-</canvas>

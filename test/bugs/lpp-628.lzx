@@ -1,8 +1,0 @@
-<canvas>
-    <attribute name="bgcolor" value="0xdddddd"/>
-    <text>PASS if bgcolor is grey</text>
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-</canvas>

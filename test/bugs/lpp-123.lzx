@@ -1,3 +1,0 @@
-<canvas width="800" height="300" bgcolor="#EAEAEA">
-  <view x="50" y="20" resource="../../examples/animation/logo.swf" id="v" />
-</canvas>
