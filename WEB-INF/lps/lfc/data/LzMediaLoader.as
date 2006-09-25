@@ -100,7 +100,10 @@ LzMediaLoader.prototype.attachLoadMovie = function ( resc ){
     }
     if (resc) {
         mc.attachMovie( resc , "lmc", this.LOADERDEPTH );
-        if (this.mc.loading == true) LzLoadQueue.loadFinished( mc );
+        if (this.mc.loading == true) {
+            Debug.error('already loading', this.mc);
+            LzLoadQueue.loadFinished( mc );
+        }    
     } else {
         Debug.error('%w.attachMovie(%w)', this, resc);
     }
@@ -109,9 +112,11 @@ LzMediaLoader.prototype.attachLoadMovie = function ( resc ){
 //==============================================================================
 // @keywords private
 //==============================================================================
+
 LzMediaLoader.prototype.startingLoad = function ( loadmc ){
     this.checkonce = false;
-    this.loadChecker.register( _root.LzIdle, "onidle" );
+    this.loadChecker.register( LzIdle, "onidle" );
+    this.removeLoadCheckerDel.register( this, "onloaddone" );
 }
 
 //=============================================================================
@@ -202,14 +207,20 @@ LzMediaLoader.prototype.testLoad = function (){
     //getBytesTotal is wrong before the header of the movie has loaded
 
     /*
-    _root.Debug.write('%w %w %w %w %w %w %w %w %w', this.mc.lmc, typeof(this.mc.lmc.getBytesTotal),
+    Debug.write('%w %w %w %w %w %w %w %w %w', this.mc.lmc, typeof(this.mc.lmc.getBytesTotal),
                       this.mc.lmc.getBytesLoaded(), typeof(this.mc.lmc.getBytesLoaded()),
                       this.mc.lmc.getBytesTotal(), typeof(this.mc.lmc.getBytesTotal()),
                       this.mc.lmc._currentframe, this.mc.lmc._framesloaded, this.mc.lmc._totalframes);
-*/
+    */
+       
+    if ( this.isjpeg && this.mc.lmc._height <= 0) {
+        //Debug.error('skipping 0 height jpeg');
+        return;
+    }    
+
     if ( this.checkonce ){
         var lr = this.mc.lmc.getBytesLoaded() / this.mc.lmc.getBytesTotal();
-        if (lr != this.owner["loadratio"]) {
+        if (lr != this.owner["loadratio"] && !isNaN(lr)) {
             this.owner.setAttribute("loadratio" , lr);
             //reset timeout for media which is streaming
             this.mc.loadtime = getTimer();
@@ -230,9 +241,9 @@ LzMediaLoader.prototype.testLoad = function (){
              var nlp = this.mc.lmc._framesloaded / 
              this.mc.lmc._totalframes;
 
-             if ( nlp > this.owner.loadperc ){
+             if ( nlp >= this.owner.loadperc ){
                  //reset timeout for media which is streaming
-                 //_root.Debug.write( "here" , this.mc.lmc._framesloaded , 
+                 //Debug.write( "here" , this.mc.lmc._framesloaded , 
                  //this.mc.lmc._totalframes );
 
                  if (this.mc.lmc._totalframes > 0) {
