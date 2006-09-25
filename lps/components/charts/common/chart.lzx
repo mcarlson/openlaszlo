@@ -17,15 +17,15 @@
         <!--- @keywords private -->
         <datatip name="datatooltip"/>
         <!--- enable zoom-->
-        <attribute name="zoomEnabled" type="boolean" /> 
+        <attribute name="zoomEnabled" type="boolean" value="false"/> 
         <!--- enable data point(data marker) -->
         <attribute name="dataPointsEnabled" type="boolean" value="false"/>
         <!--- enable tooltip for data -->
         <attribute name="datatipEnabled" type="boolean" value="false"/>
         <!--- data column name of the tooltip -->
-        <attribute name="datatipColumn" type="string" />
+        <attribute name="datatipColumn" type="string" value="" />
         <!--- data column name of the data label -->
-        <attribute name="datalabelColumn" type="string" />
+        <attribute name="datalabelColumn" type="string" value="" />
         <!--- enable data label -->
         <attribute name="datalabelEnabled" type="boolean" value="false"/>
         <!--- @keyword private -->
@@ -174,34 +174,50 @@
         </method>
         
         <!--- @keyword private -->
+        <!-- TBD[ Bret] - what is being drawn here -->
         <method name="renderPlotArea">
             this.adjustPlotAreaToLayout();
 
-            this.plotareabackground.clear();
+            //this.plotareabackground.clear();
 
+            // position the plotareabackground view
             this.plotareabackground.setAttribute( "x", this.plotarea.x );
             this.plotareabackground.setAttribute( "y", this.plotarea.y );
             this.plotareabackground.setAttribute( "width", this.plotarea.width );
             this.plotareabackground.setAttribute( "height", this.plotarea.height );
 
-            this.plotareabackground.lineWidth = this.style.plot.linesize;
+            // set the styles
+            this.plotareabackground.lineWidth   = this.style.plot.linesize;
             this.plotareabackground.strokeStyle = this.style.plot.linecolor;
+            this.plotareabackground.fillStyle = this.style.plot.fillcolor;
+            this.plotareabackground.globalAlpha = this.style.plot.opacity;
 
-            var lOffset = Math.floor(this.plotareabackground.lineWidth / 2);
+            // In order to draw within the frame, an 
+            var lOffset = Math.round(this.plotareabackground.lineWidth / 2);
+            var delta = 0;
+            
+            // to fix pixel offset for even linewidths
+            if ( this.plotareabackground.lineWidth%2 == 0 ) delta = 1;
 
+            // Draw rectangular background
             this.plotareabackground.beginPath();
             this.plotareabackground.moveTo(lOffset,lOffset);
-            this.plotareabackground.lineTo(this.plotarea.width-lOffset, lOffset);
-            this.plotareabackground.lineTo(this.plotarea.width-lOffset, this.plotarea.height-lOffset);
-            this.plotareabackground.lineTo(lOffset,this.plotarea.height-lOffset);
-            this.plotareabackground.lineTo(lOffset,lOffset);
+            this.plotareabackground.lineTo(this.plotarea.width-lOffset + 1, lOffset);
+            this.plotareabackground.lineTo(this.plotarea.width-lOffset + 1, this.plotarea.height-lOffset + delta );
+            this.plotareabackground.lineTo(lOffset,this.plotarea.height-lOffset + delta);
             this.plotareabackground.closePath();
-
-            this.plotareabackground.stroke();
+            
+            if(this.style.plot.linesize != 0){
+                this.plotareabackground.stroke();
+            }
+            
+            this.plotareabackground.fill();
+            
+            <?ignore
             this.plotareabackground.setAttribute( "width", this.plotarea.width );
             this.plotareabackground.setAttribute( "height", this.plotarea.height );
 
-            lOffset = 2*lOffset;
+            lOffset = 0; //2*lOffset;
 
             this.plotareabackground.beginPath();
             this.plotareabackground.moveTo(lOffset,lOffset);
@@ -218,6 +234,7 @@
 
             this.plotareabackground.stroke();
             this.plotareabackground.fill();
+            ?>
         </method>
 
         <!--- @keywords private
@@ -297,7 +314,7 @@
             <view/>
         </view>
         <method event="oninitdone">
-            Debug.write("initdone: " + this.initdone);
+            //Debug.write("initdone: " + this.initdone);
         </method>
 
     </class>
@@ -305,7 +322,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

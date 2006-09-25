@@ -4,7 +4,7 @@
     -->
     <class name="datacolumn">
         <!--- the name of the column in the datapath for the series -->
-        <attribute name="columndatapath" type="string"/>
+        <attribute name="columndatapath" type="string" value=""/>
         <!--- array of data representing the series values -->
         <attribute name="values" value="$once{null}"/>
         <!--- type of data: string or number -->  
@@ -15,18 +15,22 @@
         <method name="getMin">
         <![CDATA[
             var min;
-            if(values.length > 0)
-            {
-                min = values[0];
-            }
-            for(var i = 1; i < values.length; i++)
-            {
-                if(values[i] < min)
+            if(values != null){
+                if(values.length > 0)
                 {
-                    min = values[i];
-                }                                
+                    min = values[0];
+                }
+                for(var i = 1; i < values.length; i++)
+                {
+                    if(values[i] < min)
+                    {
+                        min = values[i];
+                    }                                
+                }
+                return min; 
+            } else {
+                return 0;
             }
-            return min; 
         ]]>
         </method>
         
@@ -34,18 +38,22 @@
         <method name="getMax">
         <![CDATA[
             var max;
-            if(values.length > 0)
-            {
-                max = values[0];
-            }
-            for(var i = 1; i < values.length; i++)
-            {
-                if(max < values[i])
+            if(values != null){
+                if(values.length > 0)
                 {
-                    max = values[i];
-                }                                
+                    max = values[0];
+                }
+                for(var i = 1; i < values.length; i++)
+                {
+                    if(max < values[i])
+                    {
+                        max = values[i];
+                    }                                
+                }
+                return max;
+            } else {
+                return 0;
             }
-            return max;
         ]]>
         </method>        
         
@@ -93,24 +101,27 @@
         <method name="loadData">
         <![CDATA[                         
             var dp = this.getDataPath();
-            if(dp == null)
-                return;  
-            this.values =  dp.xpathQuery(this.columndatapath);
-            
-
-            if(this.datatype == "number")
-            { 
-                //FIXME(peter, 4/12/2005):  is there a faster way of converting string to a number
-                for(var i = 0; i < this.values.length; i++)
-                {
-                    this.values[i] = this.processData(new Number(this.values[i]));
-                }
+            if(dp == null){
+                return;
             }
-            else
-            {
-                for(var i = 0; i < this.values.length; i++)
+            
+            if(dp.xpathQuery(this.columndatapath) != undefined){
+                this.values = dp.xpathQuery(this.columndatapath);
+                
+                if(this.datatype == "number")
+                { 
+                    //FIXME(peter, 4/12/2005):  is there a faster way of converting string to a number
+                    for(var i = 0; i < this.values.length; i++)
+                    {
+                        this.values[i] = this.processData(new Number(this.values[i]));
+                    }
+                }
+                else
                 {
-                    this.values[i] = this.processData(this.values[i]);
+                    for(var i = 0; i < this.values.length; i++)
+                    {
+                        this.values[i] = this.processData(this.values[i]);
+                    }
                 }
             }
             
@@ -143,7 +154,7 @@
         <!--- enable the dataseries -->       
         <attribute name="enabled" value="true"/>
         <!--- label of the dataseries -->
-        <attribute name="label" type="html" />
+        <attribute name="label" type="html" value=""/>
         <!--- @keyword private
             cache a leaf nodes of the dataseries -->        
         <attribute name="dataseriesleafs" value="$once{[]}"/>
@@ -357,7 +368,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

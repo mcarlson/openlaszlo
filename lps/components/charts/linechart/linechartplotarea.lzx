@@ -24,15 +24,17 @@
             this.stylingViewRenderer.setAttribute( "strokeWidth", style.line.size );
             this.stylingViewRenderer.setAttribute( "strokeType", style.line.type );
             this.stylingViewRenderer.globalAlpha = style.line.opacity;
-             
-            for(var i = 1; i < xseries.length; i++)
-            {
-                this.stylingViewRenderer.renderStroke(this.toDeviceX(xseries[i-1]), 
+
+            if(xseries != null){
+                for(var i = 1; i < xseries.length; i++)
+                {
+                    this.stylingViewRenderer.renderStroke(this.toDeviceX(xseries[i-1]), 
                                                       this.toDeviceY(yseries[i-1]), 
                                                       this.toDeviceX(xseries[i]), 
                                                       this.toDeviceY(yseries[i]));
-            }                               
-            //this.renderCurveSeries(xseries, yseries, style );
+                }                               
+                //this.renderCurveSeries(xseries, yseries, style );
+            }
         ]]>
         </method>
         
@@ -69,8 +71,10 @@
         <![CDATA[
              
             var pointList = listmanager.getList(this, "datapoints", seriesNum); 
-            for(var i = 0; i < xseries.length; i++){                    
-                this.renderDataPoint(xseries[i],yseries[i], tooltipseries[i], style, pointList.getViewAt(i));
+            if(xseries != null){
+                for(var i = 0; i < xseries.length; i++){                    
+                    this.renderDataPoint(xseries[i],yseries[i], tooltipseries[i], style, pointList.getViewAt(i));
+                }
             }                                
         ]]>
         </method>
@@ -145,7 +149,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

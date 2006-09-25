@@ -54,7 +54,9 @@
                     plotarea.renderSeries( xseries, yseries, ldatastyle );
                     
                     if(this.dataPointsEnabled){                                      
-                        tooltipseries = leafseries.getDataColumn(this.datatipColumn).values; 
+                        if(this.datatipColumn != "null"){
+                            tooltipseries = leafseries.getDataColumn(this.datatipColumn).values;
+                        } 
                         plotarea.renderDataPoints(xseries, yseries, tooltipseries, ldatastyle, i);                    
                     }
                     if ( this.datalabelEnabled ){
@@ -72,7 +74,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

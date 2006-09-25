@@ -11,7 +11,7 @@
     <!--- Indicates the axis type can be 'linear' or 'categorical' -->
     <attribute name="type" type="string" />
     <!--- Indicates the interval of values between the tic marks of the axis -->
-    <attribute name="interval" value="null" />
+    <attribute name="interval" value="5" />
     <!--- Indicates the column name associated to the axis -->
     <attribute name="columnName" type="string" />
     <!--- @keyword private -->
@@ -66,9 +66,9 @@
         
     <!-- Begin Axis Tick Marks Attributes -->
     <!--- Numerical value that indicates the Minimum value in the axis can be positive or negative value -->
-    <attribute name="minimum" value="null"/>
+    <attribute name="minimum" value="0"/>
     <!--- Numerical value that indicates the Maximum value in the axis can be positive or negative value -->
-    <attribute name="maximum" value="null"/>
+    <attribute name="maximum" value="100"/>
     <!-- Attributes that represent the boundaries of the values that can
              be rendered. -->
     <!--- @keyword private -->
@@ -546,7 +546,7 @@
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

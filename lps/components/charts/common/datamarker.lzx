@@ -2,13 +2,13 @@
     <!--- datamarker for the chart -->
     <class name="datamarker" extends="drawview">
         <!--- @keywords private -->
-        <attribute name="locationx"/>
+        <attribute name="locationx" type="number" value="0"/>
         <!--- @keywords private -->
-        <attribute name="locationy"/>
+        <attribute name="locationy" type="number" value="0"/>
         <!--- @keywords private -->
-        <attribute name="style" type="string"/>
+        <attribute name="style" type="string" value=""/>
         <!--- @keywords private -->
-        <attribute name="tooltip" type="string"/>         
+        <attribute name="tooltip" type="string" value=""/>         
         <!--- view to handle the image 
             @keyword private-->
         <view name="pointrepresentation" stretches="both" x="0" y="0" />    
@@ -27,9 +27,14 @@
                 this.pointrepresentation.stretchResource();
                 this.pointrepresentation.setOpacity(this.style.point.opacity);
             } else if (this.style.point.shape=='circle' || 
-                       this.style.point.shape=='triangle' ) {
+                       this.style.point.shape=='triangle' ||
+                       this.style.point.shape=='square' ||
+                       this.style.point.shape=='diamond' ||
+                       this.style.point.shape=='fourpoint') {
                         
                         this.fillStyle = this.style.point.color;
+                        this.strokeStyle = this.style.point.strokeStyle;
+                        this.lineWidth = this.style.point.lineWidth;
                         this.globalAlpha = this.style.point.opacity;
                         this.beginPath();
                         
@@ -40,14 +45,33 @@
                             this.quadraticCurveTo(this.pointrepresentation.width, 0, this.pointrepresentation.width, this.pointrepresentation.height/2);
                             this.quadraticCurveTo(this.pointrepresentation.width, this.pointrepresentation.height, this.pointrepresentation.width/2, this.pointrepresentation.height);
                             this.quadraticCurveTo(0, this.pointrepresentation.height, 0, this.pointrepresentation.height/2);
-
                             
-                         } else if(this.style.point.shape=='triangle') {
+                        } else if(this.style.point.shape=='triangle') {
                         
                             this.lineTo(0, this.pointrepresentation.height);                         
                             this.lineTo(this.pointrepresentation.width/2, 0);
                             this.lineTo(this.pointrepresentation.width,this.pointrepresentation.height);
-                        } 
+
+                        } else if(this.style.point.shape=='square') {
+                            this.lineTo(this.pointrepresentation.width, 0);
+                            this.lineTo(this.pointrepresentation.width, this.pointrepresentation.height);
+                            this.lineTo(0, this.pointrepresentation.height);
+                            this.lineTo(0, 0);
+                        } else if(this.style.point.shape=='diamond') {
+                            this.lineTo(this.pointrepresentation.width/2, 0);
+                            this.lineTo(this.pointrepresentation.width, this.pointrepresentation.height/2);
+                            this.lineTo(this.pointrepresentation.width/2, this.pointrepresentation.height);
+                            this.lineTo(0, this.pointrepresentation.height/2);
+                        } else if(this.style.point.shape=='fourpoint') {
+                            this.lineTo(this.pointrepresentation.width/2, 0);
+                            this.lineTo(this.pointrepresentation.width*.6, this.pointrepresentation.height*.4);
+                            this.lineTo(this.pointrepresentation.width, this.pointrepresentation.height/2);
+                            this.lineTo(this.pointrepresentation.width*.6, this.pointrepresentation.height*.6);
+                            this.lineTo(this.pointrepresentation.width/2, this.pointrepresentation.height);
+                            this.lineTo(this.pointrepresentation.width*.4, this.pointrepresentation.height*.6);
+                            this.lineTo(0, this.pointrepresentation.height/2);
+                            this.lineTo(this.pointrepresentation.width*.4, this.pointrepresentation.height*.4);
+                        }
 
                         this.closePath();
                         
@@ -56,6 +80,11 @@
                             this.gradientFill();
                         } else {
                             this.fill();   
+                        }
+                        
+                        //check for stroke
+                        if( this.strokeStyle != null){
+                            this.stroke();
                         }
            
                         this.pointrepresentation.setAttribute('visible',false);

@@ -154,10 +154,12 @@
                     this.labelLenght = lL.x + lL.getTextWidth();
                 }
             }
-            if ( this.width < this.labelLenght ){
-                parent.rightMargin = this.labelLenght - this.width + parent.defaultRightMargin;
-            } else {
-                parent.rightMargin = parent.defaultRightMargin;
+            if ( parent.rightMargin == null ){
+                if ( this.width < this.labelLenght ){
+                    parent.rightMargin = this.labelLenght - this.width + parent.defaultRightMargin;
+                } else {
+                    parent.rightMargin = parent.defaultRightMargin;
+                }
             }
             this.labelLenght = 0;
         ]]>        
@@ -195,7 +197,7 @@
         @keyword private-->     
         <method name="renderTick"> <![CDATA[        
             if(parent.class.classname=='barchart' && this.columnName.toUpperCase()=='Y' && type.toUpperCase()=='CATEGORICAL') {
-                Debug.write("RENDERTICKBAR");
+                //Debug.write("RENDERTICKBAR");
                 renderBarTick();
             } else {
                 if (type.toUpperCase()=='CATEGORICAL') {
@@ -211,7 +213,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

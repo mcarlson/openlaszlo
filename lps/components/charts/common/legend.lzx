@@ -28,7 +28,7 @@
         <!--- Indicates the style will be applied tho the border legend box -->
         <attribute name="styleBorder" type="string" value="null"/>
         <!--- Indicates the Font will be used in the legend item text -->
-        <attribute name="legendFont" type="string" value="default"/>
+        <attribute name="legendFont" type="string" value="serif"/>
         <!--- Indicates the Font size wiil be used in the legend item text, default: 10px -->
         <attribute name="legendFontsize" type="size" value="10"/>
         <!--- Indicates the Font color wiil be used in the legend item text, default: black -->
@@ -179,7 +179,7 @@
         <view name="leftmarginview" width="${parent.parent.parent.leftmargin}" />
         <marker name="legendmarker"></marker>    
         <text name="legendtext" resize="true" datapath="@name" fontsize="${parent.parent.parent.legendFontsize}"
-              font="${parent.parent.parent.legendFont" fgcolor="${parent.parent.parent.legendFontcolor}"
+              font="${parent.parent.parent.legendFont}" fgcolor="${parent.parent.parent.legendFontcolor}"
               height="${parent.parent.parent.legendFontsize+6}">
         </text>
         <view name="rightmarginview" width="${parent.parent.parent.rightmargin}"/>
@@ -273,7 +273,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

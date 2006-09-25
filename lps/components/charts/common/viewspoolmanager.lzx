@@ -16,7 +16,7 @@
             if(!pool)
             {
                 pool =  new viewspool(parent); 
-                debug.write(pool);
+                //debug.write(pool);
                 pool.parentview = parent;  
                 pool.viewclass = className;
                 this.pools[className] = pool;                                                                                
@@ -151,3 +151,11 @@
         </method>            
     </class>  
 </library>   
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

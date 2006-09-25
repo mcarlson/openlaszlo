@@ -7,13 +7,13 @@
         <viewspool name="_viewspool" parentview="${parent}" viewclass="datapoints"/>
         
         <!--- @keyword private -->
-        <attribute name="minx" type="number" value="null"/>
+        <attribute name="minx" type="number" value="0"/>
         <!--- @keyword private -->
-        <attribute name="miny" type="number" value="null"/>
+        <attribute name="miny" type="number" value="0"/>
         <!--- @keyword private -->
-        <attribute name="maxx" type="number" value="null"/>
+        <attribute name="maxx" type="number" value="100"/>
         <!--- @keyword private -->
-        <attribute name="maxy" type="number" value="null"/>
+        <attribute name="maxy" type="number" value="100"/>
         <!--- @keyword private -->
         <attribute name="_xscale" type="number" value="1"/>
         <!--- @keyword private -->
@@ -184,11 +184,17 @@
             var tooltipseries = new Array();
             var labelseries = new Array();
 
-           if( parent.dataPointsEnabled )
-               tooltipseries = pLeafSeries.getDataColumn(parent.datatipColumn).values;
+           if( parent.dataPointsEnabled ){
+                   if(parent.datatipColumn != "null"){
+                       tooltipseries = pLeafSeries.getDataColumn(parent.datatipColumn).values;
+                   }
+           }
 
-            if ( parent.datalabelEnabled )
-                labelseries = pLeafSeries.getDataColumn(parent.datalabelColumn).values;
+            if ( parent.datalabelEnabled ){
+                if(parent.datalabelColumn != "null"){
+                    labelseries = pLeafSeries.getDataColumn(parent.datalabelColumn).values;
+                }
+            }
 
             var larrayOfArray = new Array( xseries, yseries, tooltipseries, labelseries );
 
@@ -201,4 +207,12 @@
         </method>
                 
     </class>
-</library>    
+</library>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

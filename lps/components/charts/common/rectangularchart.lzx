@@ -27,10 +27,11 @@
         <attribute name="verticalGridLines" type="boolean" value="false"/>
         
         <!--- Determines if the horizontal grid lines are going to be used -->
+        <attribute name="horizontalGridBands" type="boolean" value="false"/>
         <attribute name="horizontalGridLines" type="boolean" value="false"/>
 
         <!--- @keyword private -->
-        <attribute name="gridlinecolor" />
+        <attribute name="gridlinecolor" type="color" value="0x000000"/>
 
         <!--- @keyword private -->
         <method name="setHAxisMin">
@@ -50,37 +51,111 @@
         <method name="setVAxisMax">
             this.vaxis.maximumRender = this.maxy;
         </method>
+
+        <!-- a utility method to render a basic filled rect with no outline -->
+        <method name="renderRect" args="dv, tlx, tly, brx, bry, fillcolor, fillopacity" >
+            // set styles to drawview
+            dv.fillStyle = fillcolor;
+            dv.globalAlpha = fillopacity;
+
+            // create rectangle path 
+            dv.beginPath();
+            dv.moveTo(tlx,tly);
+            dv.lineTo(brx,tly);
+            dv.lineTo(brx,bry);
+            dv.lineTo(tlx,bry);
+            dv.lineTo(tlx,tly);
+            
+            dv.fill(); 
+            
+            //this.closePath(); 
+        </method>
         
        <!--- Draw the grid lines 
        @keyword private -->
         <method name="renderGridLines">
         <![CDATA[
+            if ( this.horizontalGridBands ) {
+               this.renderHorizontalGridBands();         
+            }
+            
+            
+            if ( this.horizontalGridLines ) { 
+                this.renderHorizontalGridlines();
+            }
+            
             if ( this.verticalGridLines ){
                 this.renderVerticalGridlines();
             }
-            
-            if ( this.horizontalGridLines ) {
-                this.renderHorizontalGridlines();
-            }
         ]]>
         </method>
+
+
+        <method name="renderHorizontalGridBands">
+        <![CDATA[
+            if ( vaxis.getTickMarkPositions()!=null && vaxis.getTickMarkPositions().length > 0 ) {
+                
+                var colors = []; var j=1;
+                var rgnstyle = this.style.vaxisstyle['band' + j];
+                while ( this.style.vaxisstyle['band' + j] ) {                    
+                    colors.push( rgnstyle.color );
+                    j++;
+                    rgnstyle = this.style.vaxisstyle['band' + j];
+                }
+                
+                var tly = this.style.plot.linesize + 1; var colorindex;
+                for ( var i=1; i < vaxis.getTickMarkPositions().length ; i++ ) {  
+                    colorindex = (i-1) % colors.length;  
+                    //Debug.write("colorindex,points",colorindex,   0, tly, haxis.width, vaxis.getTickMarkPositions()[i]);
+                    this.renderRect( this.plotareabackground, this.style.plot.linesize, tly, (haxis.width - this.style.plot.linesize + 1), vaxis.getTickMarkPositions()[i], colors[colorindex], 1);
+                    tly = vaxis.getTickMarkPositions()[i] + 1;
+                }
+            }
+
+        ]]>
+        </method>        
+        
+        <method name="renderHorizontalGridlines">
+        <![CDATA[
+            
+            if ( vaxis.getTickMarkPositions()!=null && vaxis.getTickMarkPositions().length > 0 ) {
+            
+                var graphport = this.plotareabackground; //vaxis
+            
+                graphport.strokeStyle = this.style.haxisstyle.gridline.color;
+                graphport.lineWidth   = this.style.haxisstyle.gridline.size;
+                graphport.globalAlpha = this.style.haxisstyle.gridline.opacity;
+               // graphport.fill();
+                
+                for ( var i=0; i < vaxis.getTickMarkPositions().length ; i++ ) {
+                    graphport.beginPath();
+                    graphport.moveTo(0, vaxis.getTickMarkPositions()[i] );
+                    graphport.lineTo(haxis.width, vaxis.getTickMarkPositions()[i] );                
+                    graphport.stroke();
+                }
+            }
+
+        ]]>
+        </method>        
         
         <!-- Render vertical grid lines 
         @keyword private -->
         <method name="renderVerticalGridlines">
         <![CDATA[
             if ( haxis.getTickMarkPositions()!=null && haxis.getTickMarkPositions().length > 0 ) {
+            
+                var graphport = this.plotareabackground; //haxis
                 
-                haxis.strokeStyle = this.style.vaxisstyle.gridline.color;
-                haxis.lineWidth = this.style.vaxisstyle.gridline.size;
-                haxis.globalAlpha = this.style.vaxisstyle.gridline.opacity;
-                haxis.fill();
+                graphport.strokeStyle = this.style.vaxisstyle.gridline.color;
+                graphport.lineWidth   = this.style.vaxisstyle.gridline.size;
+                graphport.globalAlpha = this.style.vaxisstyle.gridline.opacity;
+                // graphport.fill();
                 
                 for ( var i=0; i < haxis.getTickMarkPositions().length ; i++ ) {
-                    haxis.beginPath();
-                    haxis.moveTo(haxis.getTickMarkPositions()[i], 0  );
-                    haxis.lineTo(haxis.getTickMarkPositions()[i], -(vaxis.height) );                
-                    haxis.stroke();
+                    graphport.beginPath();
+                    graphport.moveTo(haxis.getTickMarkPositions()[i], 0  );
+                    graphport.lineTo(haxis.getTickMarkPositions()[i], vaxis.height );                
+                    graphport.stroke();
                 }
             }
         ]]>
@@ -88,31 +163,17 @@
 
         <!-- Render horizontal grid lines 
         @keyword private -->
-        <method name="renderHorizontalGridlines">
-        <![CDATA[
-            if ( vaxis.getTickMarkPositions()!=null && vaxis.getTickMarkPositions().length > 0 ) {
-            
-                vaxis.strokeStyle = this.style.haxisstyle.gridline.color;
-                vaxis.lineWidth = this.style.haxisstyle.gridline.size;
-                vaxis.globalAlpha = this.style.haxisstyle.gridline.opacity;
-                vaxis.fill();
-                
-                for ( var i=0; i < vaxis.getTickMarkPositions().length ; i++ ) {
-                    vaxis.beginPath();
-                    vaxis.moveTo(0, vaxis.getTickMarkPositions()[i] );
-                    vaxis.lineTo(haxis.width, vaxis.getTickMarkPositions()[i] );                
-                    vaxis.stroke();
-                }
-            }
-        ]]>
-        </method>        
 
-        <!--- render the chart -->
         <method name="render">
         <![CDATA[
             var startTime = (new Date()).getTime();
+            
+            this.plotareabackground.clear(); // this should be abstracted
+            
+            // TBD: Why is this first 
             this.renderAxis();
             this.adjustAxesToLayout();
+            
             this.renderPlotArea();
             this.renderGridLines();
             
@@ -131,7 +192,7 @@
             this.applyBGStyle( this.style.chartbgstyle );
             haxis.sendBehind(plotarea);
             vaxis.sendBehind(plotarea);           
-            Debug.write("render time: " + (((new Date()).getTime() - startTime) / 1000) + " seconds");            
+            //Debug.write("render time: " + (((new Date()).getTime() - startTime) / 1000) + " seconds");            
         ]]>
         </method>
         
@@ -210,17 +271,26 @@
         <method name="adjustPlotAreaToLayout">
         <![CDATA[
             if( this.plotarea != null ) {
-                this.plotarea.setAttribute( "width", haxis.width );
-                this.plotarea.setAttribute( "height", vaxis.height );
+                var lX = this.leftMargin;
+                var lY = this.topMargin;
+                var overHeight = getAxisOverDimension("horizontal");
+                var overWidth = getAxisOverDimension("vertical");
+                var lWidth = this.width - (this.leftMargin + this.rightMargin + 5);
+                var lHeight = this.height - (this.topMargin + this.bottomMargin + overHeight);
 
-                this.plotarea.setAttribute( "x", (vaxis.x + vaxis.width) );
-                this.plotarea.setAttribute( "y", vaxis.y );
+                this.plotarea.setAttribute( "width", lWidth );
+                this.plotarea.setAttribute( "height", lHeight );
+                this.plotarea.setAttribute( "x", lX);
+                this.plotarea.setAttribute( "y", lY );
             }
         ]]>
         </method>
         <!--- @keyword private -->
         <method name="adjustAxesToLayout">
         <![CDATA[
+            if(this.leftMargin < getAxisOverDimension("vertical")){
+                this.setAttribute('leftMargin', getAxisOverDimension("vertical") + 5);
+            }
             var overHeight = 0;
             var overWidth = 0;
 
@@ -230,20 +300,20 @@
                 vaxis.setAttribute( "height", (this.height - 
                                                (overHeight + this.topMargin + this.bottomMargin) ) );
             }
-
             haxis.clear();
             haxis.setRightMargin();
             overWidth = getAxisOverDimension("vertical");
             if( (haxis.width + overWidth + this.leftMargin + this.rightMargin) > this.width ) {
                 haxis.setAttribute( "width", (this.width - 
-                                              (overWidth + this.leftMargin + this.rightMargin) ) );
+                                              (this.leftMargin + this.rightMargin + 5) ) );
             }
 
-            vaxis.setX( overWidth + this.leftMargin );
+            this.xoffset = this.width;
+            vaxis.setX( this.leftMargin );
             vaxis.setY( this.topMargin );
             vaxis.render();
 
-            haxis.setX( overWidth + this.leftMargin );
+            haxis.setX( this.leftMargin );
             haxis.setY( (vaxis.y + vaxis.height) );
             haxis.render();
         ]]>
@@ -352,11 +422,11 @@
 
             //Set the minimum and maximum values for this axis.
             if( pOrientation.toLowerCase() == 'x' ) {
-                this.defaultminx =  findMin(singledataseriesmin);
-                this.defaultmaxx =  findMax(singledataseriesmax);
+                this.defaultminx =  (findMin(singledataseriesmin) == undefined ? this.defaultminx : findMin(singledataseriesmin));
+                this.defaultmaxx =  (findMax(singledataseriesmax) == undefined ? this.defaultmaxx : findMax(singledataseriesmax));
             } if( pOrientation.toLowerCase() == 'y' ) {
-                this.defaultminy =  findMin(singledataseriesmin);
-                this.defaultmaxy =  findMax(singledataseriesmax);
+                this.defaultminy =  (findMin(singledataseriesmin) == undefined ? this.defaultminy : findMin(singledataseriesmin));
+                this.defaultmaxy =  (findMax(singledataseriesmax) == undefined ? this.defaultmaxy : findMax(singledataseriesmax));
             }
         ]]>
         </method>
@@ -449,9 +519,9 @@
         class that help with the zoom animation and undo ability
     -->
     <class name="chartactionhelper">
-        <attribute name="chart" type="expression"/>
+        <attribute name="chart" type="expression" value="${null}" />
         <attribute name="actionlist" value="[]"/>    
-        <attribute name="animateProgress" value="0" type="number"/>
+        <attribute name="animateProgress" value="0" type="number" />
         
         <animator name="animatezoom" attribute="animateProgress" from="0" to="1" start="false" duration="500">
             <method event="onstart">
@@ -558,7 +628,7 @@
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

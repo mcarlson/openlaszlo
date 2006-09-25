@@ -12,7 +12,7 @@
         <labelstyle name="tip" font="serif" fontsize="12" fontcolor="0x000000"/>
     </valueregionstyle>
     <axisstyle name="haxisstyle">
-        <labelstyle name="label" font="myverity" fontsize="16" fontcolor="0x000000" fontangle="90"/>
+        <labelstyle name="label" font="serif" fontsize="16" fontcolor="0x000000" fontangle="90"/>
         <tickstyle name="tickmajor" color="0x000000" position="outside" length="10" size="1">
             <labelstyle name="label" font="serif" fontsize="10" fontcolor="0x000000"/>
         </tickstyle>
@@ -54,3 +54,11 @@
         </datastyle>
     </datastylelist>
 </chartstyle>
+
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@ -->

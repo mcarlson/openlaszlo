@@ -86,6 +86,10 @@
     <attribute name="gradient" type="string" value="none" />
     <!--- image path -->
     <attribute name="image" type="string" value="${null}"/>
+    <!--- Color of the stroke -->
+    <attribute name="strokeStyle" type="color" value="0x000000"/>
+    <!--- Width of the stroke line -->
+    <attribute name="lineWidth" type="number" value="0"/>
 </class>
 
 <!--- style for point or border -->
@@ -313,7 +317,7 @@ bar and column chart: regionstyle. linestyle for the border
 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->
