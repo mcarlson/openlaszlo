@@ -1,0 +1,92 @@
+<vcalendar>
+<!-- LZ_XML_COPYRIGHT_BEGIN
+
+  Copyright (c) 2001-2006 Laszlo Systems, Inc.
+  All Rights Reserved.
+ 
+  This software is the proprietary information of Laszlo Systems, Inc.
+  Use is subject to license terms.
+ 
+LZ_XML_COPYRIGHT_END -->
+    <year2006>
+        <month7>
+            <day1>
+                <event>
+                   <summary value="Canada Day"/>
+                   <comment value="Canada Day"/>
+                   <start year="2006" month="7" day="1" hour="9"/>
+                   <end year="2006" month="7" day="1" hour="11"/>
+                   <category value="holiday"/>
+                </event>
+            </day1>
+            <day4>
+                <event>
+                   <summary value="U.S. Independence Day"/>
+                   <comment value="The fourth of July"/>
+                   <start year="2006" month="7" day="4" hour="9"/>
+                   <end year="2006" month="7" day="4" hour="11"/>
+                   <category value="holiday"/>
+                </event>
+           </day4>
+            <day5>
+                <event>
+                   <summary value="Independence Day Observed"/>
+                   <comment value="Not quite The fourth of July"/>
+                   <start year="2006" month="7" day="5" hour="9"/>
+                   <end year="2006" month="7" day="5" hour="11"/>
+                   <category value="holiday"/>
+                </event>
+           </day5>
+           <day9>
+                <event>
+                   <summary value="'Dinner at French Laundry"/>
+                   <comment value="Creating your own Blog."/>
+                   <start year="2006" month="7" day="9" hour="9"/>
+                   <end year="2006" month="7" day="9" hour="11"/>
+                </event>
+                <event>
+                   <summary value="Meeting"/>
+                   <comment value="Scheduel Review"/>
+                   <start year="2006" month="7" day="9" hour="1"/>
+                   <end year="2006" month="7" day="9" hour="2"/>
+                </event>
+           </day9>
+           <day17>
+                <event>
+                   <summary value="Pablo's Birthday Party"/>
+                   <comment value="Party!"/>
+                   <start year="2006" month="7" day="17" hour="2"/>
+                   <end year="2006" month="7" day="17" hour="4"/>
+                </event>
+                <event>
+                   <summary value="Dinner with Max"/>
+                   <comment value="Dinner at Farallon"/>
+                   <start year="2006" month="7" day="17" hour="7"/>
+                   <end year="2006" month="7" day="17" hour="10"/>
+                </event>
+           </day17>
+           <day21>
+                <event>
+                   <summary value="Company Meeting"/>
+                   <comment value="Overview of all Project Scedules"/>
+                   <start year="2006" month="7" day="21" hour="10"/>
+                   <end year="2006" month="7" day="21" hour="11"/>
+                </event>
+                <event>
+                   <summary value="Laszlo Project Review"/>
+                   <comment value="End of Laszlo Project Review"/>
+                   <start year="2006" month="7" day="21" hour="1"/>
+                   <end year="2006" month="7" day="21" hour="5"/>
+                </event>
+           </day21>
+           <day23>
+                <event>
+                   <summary value="Pablo Celebration"/>
+                   <comment value="Celebrating Pablo's Bday in the Kitchen"/>
+                   <start year="2006" month="7" day="23" hour="9"/>
+                   <end year="2006" month="7" day="23" hour="10"/>
+                </event>
+           </day23>
+       </month7>
+    </year2006>
+</vcalendar>

@@ -1,0 +1,109 @@
+<vcalendar>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+    <year2005>
+        <month12>
+            <day22>
+                <event>
+                       <summary value="Presidential Motorcade"/>
+                       <comment value="Lunch with the President"/>
+                       <start year="2005" month="12" day="22" hour="14" minute="1"/>
+                       <end year="2005" month="12" day="22" hour="16" minute="1"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Meeting with heads of state"/>
+                       <comment value="Meeting"/>
+                       <start year="2005" month="12" day="22" hour="16" minute="30"/>
+                       <end year="2005" month="12" day="22" hour="17" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Pick up Nobel Prize"/>
+                       <comment value="Pick up kids"/>
+                       <start year="2005" month="12" day="22" hour="17" minute="0"/>
+                       <end year="2005" month="12" day="22" hour="18" minute="0"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day22>
+            <day5>
+                <event>
+                       <summary value="Endow new Medical Center"/>
+                       <comment value="A test event"/>
+                       <start year="2005" month="12" day="5" hour="8" minute="30"/>
+                       <end year="2005" month="12" day="5" hour="10" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Lead campaign to bring enduring world peace"/>
+                       <comment value="A longer event to show wrapping"/>
+                       <start year="2005" month="12" day="5" hour="14" minute="12"/>
+                       <end year="2005" month="12" day="5" hour="15" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day5>
+            <day14>
+                <event>
+                       <summary value="Holiday shopping for family"/>
+                       <comment value="Lunch with kids"/>
+                       <start year="2005" month="12" day="14" hour="12" minute="12"/>
+                       <end year="2005" month="12" day="14" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day14>
+            <day10>
+                <event>
+                       <summary value="Write a song that makes the whole world sing"/>
+                       <comment value="Happy birthday bob!"/>
+                       <start year="2005" month="12" day="10" hour="3" minute="30"/>
+                       <end year="2005" month="12" day="10" hour="5" minute="30"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Host the Tonight Show"/>
+                       <comment value="yeah right"/>
+                       <start year="2005" month="12" day="10" hour="12" minute="12"/>
+                       <end year="2005" month="12" day="10" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Walk the dog"/>
+                       <comment value="Another example event"/>
+                       <start year="2005" month="12" day="10" hour="12" minute="12"/>
+                       <end year="2005" month="12" day="10" hour="13" minute="12"/>
+                       <category/>
+                       <uid/>
+                </event>
+            </day10>
+            <day31>
+                <event>
+                       <summary value="Dinner at Chez Panisse"/>
+                       <comment value="nice dinner"/>
+                       <start year="2005" month="12" day="31" hour="18" minute="0"/>
+                       <end year="2005" month="12" day="31" hour="20" minute="0"/>
+                       <category/>
+                       <uid/>
+                </event>
+                <event>
+                       <summary value="Attend Masquerade Ball"/>
+                       <comment value="How we do it back home"/>
+                       <start year="2005" month="12" day="31" hour="20" minute="0"/>
+                       <end year="2005" month="12" day="31" hour="23" minute="0"/>
+                       <category/>
+                       <uid/>
+                </event>
+
+            </day31>
+        </month12>
+    </year2005>
+</vcalendar>
