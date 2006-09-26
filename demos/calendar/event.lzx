@@ -1,12 +1,10 @@
-<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* X_LZ_COPYRIGHT_END ****************************************************** -->
-<!-- @LZX_VERSION@                                                          -->
 <library>
     <!-- CLASS: CALENDAR EVENT =========================================== -->
-    <class name="calendar_event" height="22" bgcolor="${normalColor}"
-        width="$once{canvas.width}" clickable="true">
+    <class name="calendar_event"
+           height="22"
+           bgcolor="${normalColor}"
+           width="$once{canvas.width}"
+           clickable="true">
 
         <attribute name="category" value="$path{'category[1]/@value'}"/>
 
@@ -17,11 +15,8 @@
         <attribute name="bkgndColor" type="color" value="0x5D84CB"/>
 
         <method name="getEventColor" args="cat">
-            if(cat==undefined || cat==""){
-                return (0xC6CEDC); //default
-            } else {
-                var catColor = category_colors[cat];
-            }
+            if (cat==undefined || cat=="") return (0xC6CEDC); //default
+            else var catColor = category_colors[cat];
 
             setAttribute('hiColor',gColorTable[catColor].bright);
             setAttribute('bkgndColor',gColorTable[catColor].bkgnd);
@@ -160,7 +155,7 @@
     </class>
 
     <!-- This script creates the a global colortable to be used by -->
-    <!-- should this be a data object, I actually prefere the dot  -->
+    <!-- shoudl this be a data object, I actually prefere the dot  -->
     <!-- notation instead of datapointers -->
     <script>
         // define colors for event types
@@ -170,12 +165,6 @@
                 bright:    0xD4DAC8,
                 bkgnd:    0x587457,
                 trans: {ra:85, ga:100, ba:85}
-                },
-            red:{
-                dim:    0xD1CBC5,
-                bright:    0xDAD4C8,
-                bkgnd:    0x745857,
-                trans: {ra:100, ga:85, ba:85}
                 },
             blue:{
                 dim:    0xBBC6D1,
@@ -198,14 +187,20 @@
                 bkgnd:    0x9F9F9F,
                 trans: {ra:80, ga:80, ba:80}
                 }
-        }
+            }
 
         var category_colors = {
-            Home: 'red',
-            Work: 'green',
-            PocketMac: 'purple',
-            Special: 'blue'
+            holiday: 'green',
+            astro: 'purple',
+            milestone: 'blue'
+
         }
     </script>
 
+
 </library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@                                                         -->
