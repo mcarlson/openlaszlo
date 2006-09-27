@@ -1,0 +1,54 @@
+<!--=======================================================================-->
+<!-- weather_cover.html                                        -->
+<!--                                                                       -->
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!--=======================================================================-->
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+
+      <link rel="SHORTCUT ICON" href="http://www.laszlosystems.com/favicon.ico">
+      <link href="../../lps/includes/explore.css" rel="stylesheet" type="text/css">
+      <style type="text/css">
+        .smallapp {margin-bottom: 200px;}
+      </style>
+      <script src="../../lps/includes/embed.js" type="text/javascript"></script>
+      <title>Weather</title>
+
+  </head>
+   <body>
+   <h1>Weather</h1>
+   <div class="smallapp">
+
+   <script type="text/javascript">
+          lzEmbed({url:'weather.lzx?lzt=swf', bgcolor: '#eaeaea', width: '240', height: '320'});
+   </script>
+   </div>
+   <div class="desc-short">
+    <p>
+       Executing in a 320 x 240 pixel window, the Laszlo weather application is
+       designed to run either within a regular browser or a handheld.
+       The application features four screens: one input screen for
+       entry of a U.S. Zip Code, and three display screens providing display
+       of the returned weather data.
+     </p><p>
+       Each of the display screens is accessed
+       via a "tabslider" interface element.
+       Switching between tabs occurs in a visually continuous manner,
+       with interface transition animations maintaining context.
+       The application looks and behaves like a desktop software application,
+       yet is deployed from a server.
+            </p><p>
+       In this example, the weather data source is an HTTP XML data feed
+       (a simple XML Web Service).  For more details about how this application
+       was built, read the
+       <a href="http://www.laszlosystems.com/demos/weather/weather_app_overview.pdf"
+       target="weatheroverview">application overview (PDF)</a>.
+       </p>
+    </div>
+
+</body>
+</html>
