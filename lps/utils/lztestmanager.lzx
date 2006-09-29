@@ -93,7 +93,7 @@ LzTestManager.printSummary = function () {
     }
     
     if ( this.passedsuites == this.totalsuites ) {
-        Debug.info("Passed all suites."); 
+        Debug.write("Passed all suites."); 
     }
 
     
@@ -136,7 +136,7 @@ LzTestManager.failAssertion = function( msg ) {
         // Mark this test suite as having failed 
         this.suites[this.cursuite].results[tst] = "fail"; 
     } else {
-        print("We crashed so hard that we can't even figure out what test suite we're in."); 
+        Debug.write("We crashed so hard that we can't even figure out what test suite we're in."); 
     }
 }
 
