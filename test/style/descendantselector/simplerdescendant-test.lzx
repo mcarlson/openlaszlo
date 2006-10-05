@@ -1,0 +1,61 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<canvas debug="true"  bgcolor="0xAAAAAA">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file demonstrates descendant selectors.");
+    </script>
+    <include href="../test"/>
+    <debug/>
+    
+    <stylesheet>
+    /* this should apply only to preston */ 
+    styledbox {
+        stylebgcolor: "0x515151";
+        styleinnercolor: "0xFF8888";        // pink
+    }
+    
+    /* this should apply only to george */ 
+    styledbox styledbox {
+        styleinnercolor: "0x8888FF";        // blue 
+    }
+    
+    /* This should apply only to jeb and gwb */ 
+    styledbox styledbox styledbox {
+        styleinnercolor: "0x88FF00";        // green
+    }
+    
+    
+    </stylesheet>
+    
+    <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
+    </class>
+    
+    <styledbox id="preston" width="150">
+        <styledbox id="george" x="30" width="150" y="20">
+            <styledbox x="50" id="jeb" y="20"/>
+            <styledbox x="70" id="gwb" y="20"/>            
+        </styledbox>
+    </styledbox>
+
+    <simplelayout axis="y" spacing="0"/>
+    <testsuite name="simpledescendant" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testSimpleDescendant");
+            this.run();
+        </handler>
+
+        <!-- Descendant selectors test -->        
+        <method name="testSimpleDescendant">
+            this.assertEquals(  0x515151, preston.bgcolor);
+            this.assertEquals(  0xFF8888, preston.inner.bgcolor); 
+            this.assertEquals(  0x8888FF, george.inner.bgcolor); 
+            this.assertEquals(  0x88FF00, jeb.inner.bgcolor);                         
+            this.assertEquals(  0x88FF00, gwb.inner.bgcolor);                                     
+            this.finishedTest("testSimpleDescendant");
+        </method>
+        
+    </testsuite>
+        
+    
+</canvas>
