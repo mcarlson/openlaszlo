@@ -1,0 +1,77 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<canvas title="subclassing test">
+    
+    <!-- [bshine 10.06.2006] This test demonstrates (LPP-2894) 
+    Subclasses and instances cannot override style constraints 
+    set on the superclass. If a class has a attr="$style{'thingy'}", 
+    then all subclasses and instances of that class will have that 
+    style constraint, even if a subclass explicitly sets the value 
+    of that attribute to a constant. The expected behavior is: if a 
+    class explicitly sets the value of an attribute to a constant, 
+    instances of that class have the attribute value specified by 
+    that constant, regardless of what the class's superclasses do.
+    -->
+    <include href="../test"/>
+    
+    <stylesheet>
+        styledbox {
+            stylebgcolor : "0x8A008A";
+        }
+    </stylesheet>
+
+    <simplelayout axis="y" spacing="5" />
+    
+    <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
+    </class>
+    
+    <!-- Instances of this class should be blue, overriding the parent's bgcolor style constraint --> 
+    <!-- Instances of this class should also have width=150, overriding the
+        parent's width attribute. -->
+    <class name="subclassbox" extends="styledbox">
+        <attribute name="bgcolor" value="0x000088" /> 
+        <attribute name="width" value="150" />
+    </class>
+    
+    <!-- This box should be green. -->
+    <class name="otherlassbox" extends="styledbox" bgcolor="0x00FF00">
+    </class>
+    
+    <styledbox id="sb0" />
+    
+    <!-- This box is purple, not red, even though we explicitly set the 
+        bgcolor to red on this instance. An instance can't override a 
+        style constraint on the class? Weird. 
+    -->
+    <styledbox id="sb1" bgcolor="0xFF0000" />
+    
+    <subclassbox id="sb2" />
+    <otherlassbox id="sb3" />
+    
+    <testsuite name="subclasssuite" loglevel="log">
+         <handler name="oninit">
+             this.addTest("testClassConstraint");         
+             this.addTest("testInstanceOverrideConstraint"); 
+             this.addTest("testSubclassOverrideConstraint"); 
+             this.run();
+         </handler>
+
+         <method name="testClassConstraint">
+             this.assertEquals("0x8A008A", sb0.getAttribute("bgcolor"));
+             this.finishedTest("testClassConstraint");
+         </method>
+
+         <method name="testInstanceOverrideConstraint">
+             this.assertEquals("0xFF0000", sb1.getAttribute("bgcolor"));
+             this.finishedTest("testInstanceOverrideConstraint"); 
+         </method>
+         
+         <method name="testSubclassOverrideConstraint">
+             this.assertEquals("150", sb2.getAttribute("width")); 
+             this.assertEquals("0x000088", sb2.getAttribute("bgcolor"));
+             this.finishedTest("testSubclassOverrideConstraint"); 
+         </method>
+         
+    </testsuite>
+    
+</canvas>
