@@ -6,4 +6,9 @@
 <library>
   <include href="extensions/views/richinputtext.lzx" />
   <include href="extensions/av/rtmpconnection.lzx" />
+  <include href="extensions/av/camera.lzx" />
+  <include href="extensions/av/mediadevice.lzx" />
+  <include href="extensions/av/mediastream.lzx" />
+  <include href="extensions/av/microphone.lzx" />
+  <include href="extensions/av/videoview.lzx" />
 </library>
