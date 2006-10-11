@@ -165,7 +165,7 @@ the resource(s) in the stylesheet. For instance:</p>
     #gBox {
         height: "350";
         width: "500";
-        bgcolor: "0x330099";
+        bgcolor: "0x990033";
         x: "0";
         y: "0";
     }
@@ -336,7 +336,7 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
 
 &lt;class name="bouncebox"&gt;
         &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
-            &lt;view name="inner" x="100" y="100" bgcolor="0xFFFFFF" width="${parent.width-100}" height="${parent.height-100}" /&gt;
+            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-150}" height="${immediateparent.height-150}" /&gt;
         	&lt;view name="gBounce" source="$style{'face'}" x="100" y="125"&gt;
 				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
 				&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
@@ -712,7 +712,7 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</p>
 
 &lt;canvas&gt;
 
-	&lt;stylesheet src="foo.css" /&gt;
+	&lt;stylesheet src="../resources/foo.css" /&gt;
 
 	&lt;view id="gPhilip" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
 
