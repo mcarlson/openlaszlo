@@ -81,7 +81,7 @@ stylesheet for that view. </p>
 
 <p>The advantage of using stylesheets shows in a
 slightly more difficult OpenLaszlo application -- this example includes
-a nested view, plus two resources:</p>
+a nested view, plus one resource:</p>
 
 <example class="code" title="Nested view">
 
@@ -104,14 +104,6 @@ a nested view, plus two resources:</p>
         x: "100";
         y: "100";
     }
-    
-    #gLogo {
-    	resource: "kings.gif";
-    	x: "0";
-    	y: "0";
-    	height: "100";
-    	width: "100";
-	}
 	
 &lt;/stylesheet&gt;
 
@@ -149,23 +141,6 @@ a nested view, plus two resources:</p>
      &lt;/method&gt;
 &lt;/view&gt;
 
-&lt;view id="gLogo"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-        var myLogo = style.getPropertyValue("resource");
-        this.setSource(myLogo);
-        var myHorizontalSpace = style.getPropertyValue("x");
-        this.setX(myHorizontalSpace);
-        var myVerticalSpace = style.getPropertyValue("y");
-        this.setY(myVerticalSpace);
-        &lt;/method&gt;
-&lt;/view&gt;
-
 &lt;view id="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
 		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
 		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
@@ -177,19 +152,20 @@ a nested view, plus two resources:</p>
 
 </example>
 
-<p>If a designer wanted to use this template for a league of basketball
-teams, no knowledge of OpenLaszlo's LZX language is necessary -- in this
-example, s/he just has to change the color hexcode and the name(s) of
+<p>If a designer wanted to reuse this template, no knowledge of OpenLaszlo's LZX language is necessary -- in this
+example, s/he just has to change the color hexcode(s) and the name(s) of
 the resource(s) in the stylesheet. For instance:</p>
 
-<example title="Stylesheet change" extract="false">
+<example class="code" title="Stylesheet change">
+
+&lt;canvas&gt;
 
 &lt;stylesheet&gt;
 
     #gBox {
         height: "350";
         width: "500";
-        bgcolor: "0xFF0000";
+        bgcolor: "0x330099";
         x: "0";
         y: "0";
     }
@@ -201,16 +177,51 @@ the resource(s) in the stylesheet. For instance:</p>
         x: "100";
         y: "100";
     }
-    
-    #gLogo {
-    	resource: "comets.gif";
-    	x: "0";
-    	y: "0";
-    	height: "100";
-    	width: "100";
-	}
 	
 &lt;/stylesheet&gt;
+
+&lt;view id="gBox"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+        var myHorizontalSpace = style.getPropertyValue("x");
+        this.setX(myHorizontalSpace);
+        var myVerticalSpace = style.getPropertyValue("y");
+        this.setY(myVerticalSpace);
+     &lt;/method&gt;
+&lt;/view&gt;
+
+&lt;view id="gInsideBox"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+        var myHorizontalSpace = style.getPropertyValue("x");
+        this.setX(myHorizontalSpace);
+        var myVerticalSpace = style.getPropertyValue("y");
+        this.setY(myVerticalSpace);
+     &lt;/method&gt;
+&lt;/view&gt;
+
+&lt;view id="gBounce" resource="../resources/sourface.gif" x="100" y="125"&gt;
+		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
+		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	    &lt;/animatorgroup&gt; 
+&lt;/view&gt;
+
+&lt;/canvas&gt;
 
 </example>
 
@@ -240,15 +251,7 @@ the guts of the <code>getPropertyValue</code> methods:</p>
         x: "100";
         y: "100";
     }
-    
-    #gLogo {
-    	resource: "kings.gif";
-    	x: "0";
-    	y: "0";
-    	height: "100";
-    	width: "100";
-	}
-	
+    	
 &lt;/stylesheet&gt;
 
 &lt;class name="myStyledView" extends="view"&gt;
@@ -265,14 +268,11 @@ the guts of the <code>getPropertyValue</code> methods:</p>
         this.setX(myHorizontalSpace);
         var myVerticalSpace = style.getPropertyValue("y");
         this.setY(myVerticalSpace);
-        var myLogo = style.getPropertyValue("resource");
-        this.setSource(myLogo);
      &lt;/method&gt;
 &lt;/class&gt;
 
 &lt;myStyledView id="gBox"/&gt;
 &lt;myStyledView id="gInsideBox"/&gt;
-&lt;myStyledView id="gLogo"/&gt;
 
 &lt;view id="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
 		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
@@ -322,12 +322,10 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
 
         #sun {
           bgcolor: "0x16355E"; 
-          logo: "sun.gif";
         }
         
         #monarchs {
             bgcolor: "0xB2B9CB";
-            logo: "monarchs.gif";
         }
  
 &lt;/stylesheet&gt;
@@ -336,7 +334,6 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
 
 &lt;class name="bouncebox"&gt;
         &lt;view name="outer" x="0" y="0" width="400" height="350" bgcolor="$style{'bgcolor'}"&gt;
-            &lt;view name="logo" source="$style{'logo'}" x="0" y="0" /&gt;
             &lt;view name="inner" x="100" y="100" bgcolor="0xFFFFFF" width="${parent.width-200}" height="${parent.height-200}" /&gt;
         	&lt;view name="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
 				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
