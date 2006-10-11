@@ -322,12 +322,12 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
 
         #sun {
           bgcolor: "0x16355E"; 
-          face: "../resources/smileyface.gif"
+          face: "../resources/smileyface.gif";
         }
         
         #monarchs {
             bgcolor: "0xB2B9CB";
-            face: "../resources/sourface.png"
+            face: "../resources/sourface.png";
         }
  
 &lt;/stylesheet&gt;
@@ -335,8 +335,8 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
 &lt;simplelayout axis="x" spacing="10"/&gt;
 
 &lt;class name="bouncebox"&gt;
-        &lt;view name="outer" x="0" y="0" width="300" height="300" bgcolor="$style{'bgcolor'}"&gt;
-            &lt;view name="inner" x="100" y="100" bgcolor="0xFFFFFF" width="${parent.width-200}" height="${parent.height-200}" /&gt;
+        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
+            &lt;view name="inner" x="100" y="100" bgcolor="0xFFFFFF" width="${parent.width-100}" height="${parent.height-100}" /&gt;
         	&lt;view name="gBounce" source="$style{'face'}" x="100" y="125"&gt;
 				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
 				&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
