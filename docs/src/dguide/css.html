@@ -166,7 +166,7 @@ a nested view, plus two resources:</p>
         &lt;/method&gt;
 &lt;/view&gt;
 
-&lt;view id="gBounce" resource="basketb1.jpg" x="100" y="125"&gt;
+&lt;view id="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
 		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
 		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
 		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
@@ -274,7 +274,7 @@ the guts of the <code>getPropertyValue</code> methods:</p>
 &lt;myStyledView id="gInsideBox"/&gt;
 &lt;myStyledView id="gLogo"/&gt;
 
-&lt;view id="gBounce" resource="basketb1.jpg" x="100" y="125"&gt;
+&lt;view id="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
 		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
 		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
 		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
@@ -338,7 +338,7 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
         &lt;view name="outer" x="0" y="0" width="400" height="350" bgcolor="$style{'bgcolor'}"&gt;
             &lt;view name="logo" source="$style{'logo'}" x="0" y="0" /&gt;
             &lt;view name="inner" x="100" y="100" bgcolor="0xFFFFFF" width="${parent.width-200}" height="${parent.height-200}" /&gt;
-        	&lt;view name="gBounce" resource="basketb1.jpg" x="100" y="125"&gt;
+        	&lt;view name="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
 				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
 				&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
 				&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
