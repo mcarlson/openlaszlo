@@ -1,0 +1,736 @@
+<html xmlns="http://www.w3.org/1999/xhtml" id="css">
+<head>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>Cascading Style Sheets</title>
+</head>
+
+<body>
+
+<!-- Put Chapter title in h1 -->
+<h1>Cascading Style Sheets</h1>
+
+Cascading Style Sheets (CSS) enable web designers to enhance the power
+of HTML tags. In old-fashioned HTML, an &lt;H1&gt; tag would make displayed
+text a little bigger and bolder, but font style, color, and size were
+left to the browser. With CSS, the web designer can use the &lt;H1&gt; tag to
+specify those font attributes.
+
+CSS support within OpenLaszlo helps designers who are not fluent with
+the LZX scripting language maintain the appearance of Laszlo
+applications. 
+
+<!--=========================================================================-->
+<!-- Major sub-heads in h2, etc                                                               -->
+<!--=========================================================================-->
+<h2>Overview</h2>
+
+<p>If an OpenLaszlo application is to be deployed
+more than once -- but with different colors, sizes, or resources in each
+deployment, for instance -- the designer can alter those attributes within a
+stylesheet.</p>
+
+<h2>Simple Views</h2>
+
+<p>This is the simplest example of an OpenLaszlo view:</p>
+
+<example title="Simplest view" extract="false">
+  &lt;canvas&gt;
+      &lt;view height="100" width="100" bgcolor="0x663399"/&gt;
+  &lt;/canvas&gt;
+</example>
+
+<p>To generate that view with a cascading stylesheet:</p>
+
+<example title="Invisible square" extract="false">
+  &lt;canvas height="20"&gt; <co>This is a callout</co>
+      &lt;view visible="false" width="10"<co>another callout</co> height="10"/&gt;
+  &lt;/canvas&gt;
+</example>
+
+<example title="Simplest view with CSS" extract="false">
+
+&lt;canvas&gt;
+
+&lt;stylesheet&gt;
+    #gView {
+        height: "200";
+        width: "200";
+        bgcolor: "0x663399";
+    }
+&lt;/stylesheet&gt;
+
+&lt;view id="gView"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+     &lt;/method&gt;
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<p>The <code>applyStyle</code> method (the <code>oninit</code> handler fires <code>applyStyle</code> when the
+application initializes) tells the OpenLaszlo runtime to look up the
+style that applies to the view. The variable <code>style</code> is a place to store
+the current style's values (computed by <code>LzCSSStyle.getComputedStyle</code>),
+and then <code>style.getPropertyValue("foo")</code> fetches foo's values from the
+stylesheet for that view. </p>
+
+<h2>A Nested View</h2>
+
+<p>The advantage of using stylesheets shows in a
+slightly more difficult OpenLaszlo application -- this example includes
+a nested view, plus two resources:</p>
+
+<example title="Nested view" extract="false">
+
+&lt;canvas height="800" width="800"&gt;
+
+&lt;stylesheet&gt;
+
+    #gBox {
+        height: "350";
+        width: "500";
+        bgcolor: "0x330099";
+        x: "0";
+        y: "0";
+    }
+
+    #gInsideBox {
+        height: "150";
+        width: "300";
+        bgcolor: "0xFFFFFF";
+        x: "100";
+        y: "100";
+    }
+    
+    #gLogo {
+    	resource: "kings.gif";
+    	x: "0";
+    	y: "0";
+    	height: "100";
+    	width: "100";
+	}
+	
+&lt;/stylesheet&gt;
+
+&lt;view id="gBox"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+        var myHorizontalSpace = style.getPropertyValue("x");
+        this.setX(myHorizontalSpace);
+        var myVerticalSpace = style.getPropertyValue("y");
+        this.setY(myVerticalSpace);
+     &lt;/method&gt;
+&lt;/view&gt;
+
+&lt;view id="gInsideBox"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+        var myHorizontalSpace = style.getPropertyValue("x");
+        this.setX(myHorizontalSpace);
+        var myVerticalSpace = style.getPropertyValue("y");
+        this.setY(myVerticalSpace);
+     &lt;/method&gt;
+&lt;/view&gt;
+
+&lt;view id="gLogo"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+        var myLogo = style.getPropertyValue("resource");
+        this.setSource(myLogo);
+        var myHorizontalSpace = style.getPropertyValue("x");
+        this.setX(myHorizontalSpace);
+        var myVerticalSpace = style.getPropertyValue("y");
+        this.setY(myVerticalSpace);
+        &lt;/method&gt;
+&lt;/view&gt;
+
+&lt;view id="gBounce" resource="basketb1.jpg" x="100" y="125"&lt;
+		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
+		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	    &lt;/animatorgroup&gt; 
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<p>If a designer wanted to use this template for a league of basketball
+teams, no knowledge of OpenLaszlo's LZX language is necessary -- in this
+example, s/he just has to change the color hexcode and the name(s) of
+the resource(s) in the stylesheet. For instance:</p>
+
+<example title="Stylesheet change" extract="false">
+
+&lt;stylesheet&gt;
+
+    #gBox {
+        height: "350";
+        width: "500";
+        bgcolor: "0xFF0000";
+        x: "0";
+        y: "0";
+    }
+
+    #gInsideBox {
+        height: "150";
+        width: "300";
+        bgcolor: "0xFFFFFF";
+        x: "100";
+        y: "100";
+    }
+    
+    #gLogo {
+    	resource: "comets.gif";
+    	x: "0";
+    	y: "0";
+    	height: "100";
+    	width: "100";
+	}
+	
+&lt;/stylesheet&gt;
+
+</example>
+
+<h3>Applying CSS styles to user-defined classes</h3>
+
+<p>Several lines of code can be saved by defining a class which contains
+the guts of the <code>getPropertyValue</code> methods:</p>
+
+<example class="code" title="User-defined class">
+
+&lt;canvas height="800" width="800"&gt;
+
+&lt;stylesheet&gt;
+
+    #gBox {
+        height: "350";
+        width: "500";
+        bgcolor: "0x330099";
+        x: "0";
+        y: "0";
+    }
+
+    #gInsideBox {
+        height: "150";
+        width: "300";
+        bgcolor: "0xFFFFFF";
+        x: "100";
+        y: "100";
+    }
+    
+    #gLogo {
+    	resource: "kings.gif";
+    	x: "0";
+    	y: "0";
+    	height: "100";
+    	width: "100";
+	}
+	
+&lt;/stylesheet&gt;
+
+&lt;class name="myStyledView" extends="view"&gt;
+	&lt;handler name="oninit" method="applyStyle" /&gt;
+    &lt;method name="applyStyle"&gt;
+        var style = LzCSSStyle.getComputedStyle( this );
+        var bgc = style.getPropertyValue( "bgcolor" );
+        this.setBGColor(bgc);
+        var myHeight = style.getPropertyValue( "height" );
+        this.setHeight(myHeight);
+        var myWidth = style.getPropertyValue( "width" );
+        this.setWidth(myWidth);
+        var myHorizontalSpace = style.getPropertyValue("x");
+        this.setX(myHorizontalSpace);
+        var myVerticalSpace = style.getPropertyValue("y");
+        this.setY(myVerticalSpace);
+        var myLogo = style.getPropertyValue("resource");
+        this.setSource(myLogo);
+     &lt;/method&gt;
+&lt;/class&gt;
+
+&lt;myStyledView id="gBox"/&gt;
+&lt;myStyledView id="gInsideBox"/&gt;
+&lt;myStyledView id="gLogo"/&gt;
+
+&lt;view id="gBounce" resource="basketb1.jpg" x="100" y="125"&gt;
+		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
+		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	    &lt;/animatorgroup&gt;
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<h3>$style{} constraints</h3>
+
+<p>For comparison's sake, the previous examples use lots of JavaScript -- descending in clunkiness. Simpler still is to use OpenLaszlo's built-in
+<code>$style</code> constraint for looking up stylesheets. Again, the most basic
+example of a view, but this time using the <code>$style</code> constraint:</p>
+
+<example class="code" title="User-defined class">
+
+&lt;canvas&gt;
+
+&lt;stylesheet&gt;
+    #gView {
+        height: "200";
+        width: "200";
+        bgcolor: "0x663399";
+    }
+&lt;/stylesheet&gt;
+
+&lt;view id="gView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<p>The ID selector <code>#gView</code> matches the ID <code>gView</code>, and then <code>$style{}</code> assigns
+attribute values according to the <code>#gView</code> stylesheet.</p>
+
+<p>The more complex example:</p>
+
+<example class="code" title="Nested view class">
+
+&lt;canvas height="500" width="1000"&gt;
+
+&lt;stylesheet&gt;
+
+        #sun {
+          bgcolor: "0x16355E"; 
+          logo: "sun.gif";
+        }
+        
+        #monarchs {
+            bgcolor: "0xB2B9CB";
+            logo: "monarchs.gif";
+        }
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="50"/&gt;
+
+&lt;class name="bouncebox"&gt;
+        &lt;view name="outer" x="0" y="0" width="400" height="350" bgcolor="$style{'bgcolor'}"&gt;
+            &lt;view name="logo" source="$style{'logo'}" x="0" y="0" /&gt;
+            &lt;view name="inner" x="100" y="100" bgcolor="0xFFFFFF" width="${parent.width-200}" height="${parent.height-200}" /&gt;
+        	&lt;view name="gBounce" resource="basketb1.jpg" x="100" y="125"&gt;
+				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+				&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
+				&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	   			&lt;/animatorgroup&gt;
+   	   		&lt;/view&gt;
+		&lt;/view&gt;
+&lt;/class&gt;
+
+&lt;bouncebox id="monarchs" /&gt;
+&lt;bouncebox id="sun" /&gt;
+
+&lt;/canvas&gt;
+
+<h2>Selectors</h2>
+
+<p>The stylesheet is a collection of rules that apply to the LZX document.
+Each rule applies to one aspect of the document, and consists of two
+parts: selector and declaration.</p>
+
+<example title="Selector" extract="false">
+#myView { bgcolor: "0x0000FF"; }
+</example>
+
+<p>The selector comes before the curly brace, the declaration after. In the
+example above, an LZX element with <code>id="myView"</code> and
+<code>bgcolor="$style{'bgcolor'}</code> within its declaration will get a blue
+background color.</p>
+
+<p>CSS support for OpenLaszlo enables four types of selectors:</p> 
+
+<ol>
+  <li>Attribute</li>
+  <li>Element</li>
+  <li>ID</li>
+  <li>Descendant</li>
+</ol>
+
+<h3>Attribute selectors</h3>
+
+<example title="Attribute example" extract="false">
+[attribute="value of attribute"] {
+	property: "foo";
+	}
+</example>
+
+<p>The attribute selector applies when it corresponds to a node's attribute
+(for instance, <attribute>name</attribute> or <attribute>width</attribute>):</p>
+
+<example class="code" title="Attribute selector">
+
+&lt;canvas height="150" width="800"&gt;
+
+&lt;stylesheet&gt;
+
+[name="PurpleView"] {
+	width: "100";
+	height: "100";
+	bgcolor: "0x9900FF"
+}
+
+[width="200"] {
+	bgcolor: "0x0000FF";
+}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="myPurpleView"&gt;
+	&lt;view name="PurpleView" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="myWiderView"&gt;
+	&lt;view name="hoo" height="100" width="200" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;myPurpleView/&gt;
+&lt;myWiderView/&gt;
+
+&lt;/canvas&gt;
+</example>
+
+<p>The class <code>myPurpleView</code> contains a view whose <code>name</code> corresponds to the
+stylesheet selector <code>[name="PurpleView"]</code>, so each of its <code>$style</code> rules is
+applied. The class <code>myWiderView</code> contains a view whose <code>width</code> fires the
+<code>$style</code> that applies to its background color.</p>
+
+<h3>Element selectors</h3>
+
+<example title="Element example" extract="false">
+        LzNode {
+            property: "foo";
+        }
+</example>
+
+<p>The element selector applies when it matches the name of the node itself:</p>
+
+<example class="code" title="Element selector">
+
+&lt;canvas height="400" width="400"&gt;
+ 
+&lt;stylesheet&gt;
+        view {
+            nicebgcolor: "0x0000FF";
+            micebgcolor: "0xCCCCCC";
+        }
+&lt;/stylesheet&gt;
+
+&lt;view height="100" width="100" bgcolor="$style{'nicebgcolor'}"/&gt;
+&lt;view height="75" width="75" bgcolor="0xFFFFFF"/&gt;
+&lt;view height="50" width="50" bgcolor="$style{'micebgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+
+<h3>ID selectors</h3>
+
+<example title="ID example" extract="false">
+        #LzNode {
+            property: "foo";
+        }
+</example>
+
+<p>ID selectors are identified by # in the stylesheet. The selector applies
+when it matches a node's ID:</p>
+
+<example class="code" title="ID selector">
+
+&lt;canvas height="1000" width="1000"&gt;
+
+&lt;stylesheet&gt;
+
+#red {
+    width: 100;
+    height: 100;
+	bgcolor: "0xFF3333";
+}
+
+#blue {
+    width: 150;
+    height: 150;
+	bgcolor: "0x3333FF";
+}
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="5" /&gt;
+
+&lt;class name="gBox" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+
+&lt;gBox id="red" /&gt;
+&lt;gBox id="blue" /&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<h3>Descendant selectors </h3>
+
+<example title="Descendant example" extract="false">
+	fee fi {
+        property: "car";
+    }
+
+	fee fi foo {
+        property: "cart";
+    }
+    
+    fee fi foo fum {
+        property: "cartman";
+    }
+</example>
+
+<p>A selector in an ancestor/descendant hierarchy applies when its
+ancestors do. In the snippet above, the "fee" selector depends on no
+ancestors, so it would always fire on an LzNode identified by "fee". The
+"fum" selector, on the other hand, would only fire if the LzNode had
+three ancestors "fee", "fi", and "foo".</p>
+
+<example class="code" title="Descendant selector">
+
+&lt;canvas width="400" height="400"&gt;
+
+&lt;stylesheet&gt;
+
+    styledbox {
+        stylebgcolor: "0xCCCCCC";
+        styleinnercolor: "0xFF0000";        // red
+    }
+
+    styledbox styledbox2 {
+        stylebgcolor: "0x999999";
+        styleinnercolor: "0x0000FF";        // blue
+    }
+
+    styledbox styledbox2 styledbox3 {
+        stylebgcolor: "0x666666";
+        styleinnercolor: "0x00FF00";        // green
+    }
+
+&lt;/stylesheet&gt;
+
+&lt;class name="styledbox" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="snow" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="styledbox2" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="braxton" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="styledbox3" height="100" width="100" bgcolor="$style{'stylebgcolor'}"&gt;
+	&lt;view name="jackson" x="10" y="10" height="10" width="10" bgcolor="$style{'styleinnercolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;styledbox id="comet" x="200" y="0"&gt;
+			&lt;styledbox2 id="shock" x="-100" y="100"&gt;
+					&lt;styledbox3 id="storm" x="-100" y="100"/&gt;
+			&lt;/styledbox2&gt;
+&lt;/styledbox&gt;
+
+&lt;styledbox2/&gt;
+&lt;styledbox3/&gt;
+
+&lt;/canvas&gt;
+
+<p>In the example above, the instances of <code>styledbox2</code> and <code>styledbox3</code> at the
+end of the script don't appear on the canvas at all, because there's no
+stylesheet information for <code>styledbox2</code> unless it descends from <code>styledbox</code>,
+and no stylesheet information for <code>styledbox3</code> unless it descends from
+<code>stylebox</code> and <code>stylebox2</code>.</p>
+
+<h2>Specificity</h2>
+
+<p>An instance of an LzNode -- most likely a view, or some other OpenLaszlo
+element -- can trigger more than one selector in the stylesheet. In such
+cases, CSS gives precedence according to <a
+href="http://www.w3.org/TR/CSS21/cascade.html#specificity">rules of
+specificity</a>. In general, the more specific the selector, the higher
+its precedence. For instance, the ID of a view is more specific (can
+only apply to one view) than view itself (applies to every view).</p>
+
+<p>Within OpenLaszlo's CSS support, the order of specificity is (in
+ascending order):</p>
+
+<ol>
+  <li>Element</li>
+  <li>Attribute</li>
+  <li>ID</li>
+</ol>
+
+<p>This example uses all three selectors:</p>
+
+<example class="code" title="Specificity">
+
+&lt;canvas width="350" height="150"&gt;
+
+&lt;stylesheet&gt;
+
+view {
+	height: "50";
+	width: "50";
+	bgcolor: "0xFF0000";
+	}
+	
+[name='blue'] {
+	height: "50";
+	width: "50";
+	bgcolor: "0x0000FF";
+	}
+
+#green {
+	height: "50";
+	width: "50";
+	bgcolor: "0x006600";
+	}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="25"/&gt;
+
+	&lt;view id="red" name="red" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
+	&lt;view id="blue" name="blue" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+	&lt;view id="green" name="green" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" /&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<p>The first view -- <code>red</code> -- fires the element selector, because its ID is
+not "green", and its name is not "blue". It is an instance of a "view"
+element, which triggers the element selector. The second view -- <code>blue</code> -- fires the name selector; its ID is not "green", but the next selector in
+order of priority is attribute, which <code>name='blue'</code> matches. The third
+view -- <code>green</code> -- hits the highest-priority selector; <code>id='green'</code> matches
+the ID selector <code>#green<code>, and looks up that stylesheet.</p>
+
+<warning>Style selectors: Under w3's CSS specificity rules, the highest-priority
+selector is "style='foo'", which directly looks up the foo stylesheet.
+The OpenLaszlo implementation does not support "style='foo'" because
+that expression cannot be used as a Laszlo property or attribute.</warning>
+
+<h3>Lexical order</h3>
+
+<p>In some cases, more than one selector of the same type will be
+triggered. In this example, the view <code>short</code> fires two selectors:
+<code>[height="50"]</code> and <code>[width="100"]</code>. Neither selector takes precedence
+because they are both attribute selectors, so a tiebreaker has to be
+invoked. The selector closest to the bottom of the stylesheet prevails.</p>
+
+<example class="code" title="Lexical order">
+
+&lt;canvas height="200" width="345"&gt;
+
+&lt;stylesheet&gt;
+	
+	[height="50"] {
+	height: "50";
+	width: "100";
+	bgcolor: "0xFF0000";
+	}
+	
+	[width="100"] {
+	height: "50";
+	width: "100";
+	bgcolor: "0x0000FF";
+	}
+	
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="y" spacing="10"/&gt;
+
+&lt;view name="short" width="100" height="50" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;view y="75"&gt;
+	&lt;text text="If I'm red, the first stylesheet was triggered."/&gt;
+&lt;/view&gt;
+
+&lt;view y="100"&gt;
+	&lt;text text="If I'm blue, the second stylesheet was triggered."/&gt;
+&lt;/view&gt;
+
+&lt;/canvas&gt;
+
+<h3>Importing an external stylesheet</h3>
+
+<p>A stylesheet can be imported by using</p>
+
+<example title="Imported stylesheet clipping" extract="false">
+   <stylesheet src="foo.css" />
+</example>
+
+<p>when the stylesheet is in its typical format:</p>
+
+<example title="Imported stylesheet example" extract="false">
+
+&lt;!--begin foo.css--&gt;
+
+#gPhilip {
+    width: 300;
+    height: 200;
+    bgcolor: "0x8F008F";
+}
+
+&lt;!--end--&gt;
+
+</example>
+
+<example class="code" title="Imported stylesheet">
+
+&lt;canvas&gt;
+
+	&lt;stylesheet src="foo.css" /&gt;
+
+	&lt;view id="gPhilip" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<todo>
+<h2>Best practices</h2>
+</todo>
+
+
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
