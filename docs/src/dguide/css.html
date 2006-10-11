@@ -339,8 +339,8 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
             &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
         	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
 				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-				&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
-				&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
+				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
    	   			&lt;/animatorgroup&gt;
    	   		&lt;/view&gt;
 		&lt;/view&gt;
@@ -708,7 +708,7 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</p>
 
 </example>
 
-<example class="code" title="Imported stylesheet">
+<example title="Imported stylesheet" extract="false">
 
 &lt;canvas&gt;
 
