@@ -1,0 +1,61 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<link rel="STYLESHEET" type="text/css" href="./styles.css" /></head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="Stylesheet">
+    <lztier>Language Feature</lztier>
+    <lzcategory>Scripting</lzcategory>
+    <lzshortdesc>
+        Enables the use of Cascading Style Sheets within LZX.
+    </lzshortdesc>
+    <lztag>tag-stylesheet.xml</lztag>
+    <lzapi></lzapi>
+</lzelement>
+
+<p>In a <tagname>stylesheet</tagname>, class attributes can be defined and modified outside the class instantiation. This enables developers to alter views of different colors, sizes, and resources without digging into the LZX script, and aids designers who aren't fluent in LZX in changing the appearance of OpenLaszlo applications. In this example, the size and color of the red and blue views are defined inside the stylesheet tag.</p>
+
+<example class="code" extract="false">
+&lt;canvas height="1000" width="1000">
+
+&lt;stylesheet>
+
+#red {
+    width: 100;
+    height: 100;
+	bgcolor: "0xFF3333";
+}
+
+#blue {
+    width: 150;
+    height: 150;
+	bgcolor: "0x3333FF";
+}
+ 
+&lt;/stylesheet>
+
+&lt;simplelayout axis="x" spacing="5" />
+
+&lt;class name="gBox" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}" />
+
+&lt;gBox id="red" />
+&lt;gBox id="blue" />
+
+&lt;/canvas>
+
+&lt;/example>
+</example>
+
+<p>See the <a href="${dguide}css?.html">Guide</a> for a complete discussion of
+cascading stylesheets in Laszlo applications.</p>
+
+<!--blah-->
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

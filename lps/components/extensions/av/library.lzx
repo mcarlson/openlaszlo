@@ -4,6 +4,10 @@
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- used by rngparse.py to determine which extensions to document -->
 <library>
-  <include href="extensions/views/richinputtext.lzx" />
-  <include href="extensions/av/library.lzx" />
+  <include href="extensions/av/rtmpconnection.lzx" />
+  <include href="extensions/av/camera.lzx" />
+  <include href="extensions/av/mediadevice.lzx" />
+  <include href="extensions/av/mediastream.lzx" />
+  <include href="extensions/av/microphone.lzx" />
+  <include href="extensions/av/videoview.lzx" />
 </library>

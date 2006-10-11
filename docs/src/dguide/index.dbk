@@ -41,7 +41,7 @@
     <xi:include href="comp-overview.dbk"/>
     <xi:include href="layout-and-design.dbk"/>
     <xi:include href="media-resources.dbk"/>
-    <xi:include href="css.dbk"/>
+    <!-- xi:include href="css.dbk"/ -->
     <xi:include href="text.dbk"/>
     <xi:include href="richtext.dbk"/>
     <xi:include href="fonts.dbk"/>

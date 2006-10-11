@@ -5,6 +5,9 @@
 #
 # lzx.rng is a RELAXNG schema:
 # http://www.oasis-open.org/committees/relax-ng/
+#
+# Note: This is the master schema. lzx.dtd, lzx.rng, lzx.xsd, and lzxdoc.rng
+# are all generated from this file.
 
 # * P_LZ_COPYRIGHT_BEGIN ******************************************************
 # * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
@@ -1067,13 +1070,22 @@ trait =
 handler =
   element handler {
      nameAttribute
-   & [a:defaultValue="this"]
+   & ## If this attribute is present, it is a JavaScript expression
+     ## that evaluates to an object.  The code in this method executes
+     ## when this object sends the event named by the @a{event}
+     ## attribute.  This attribute may be present only if
+     ## the @a{event} attribute is present too.
+     [a:defaultValue="this"]
      attribute reference {reference}?
-   & (([a:defaultValue=""
+   & ((
+       ## The parameter names of this handler.  The value of this attribute
+       ## is a comma-separated list of JavaScript identifiers.
+       [a:defaultValue=""
         lza:modifiers="final"]
        attribute args {string}? &
        text) |
-      (attribute method {string}))
+      ( ## A method to call when this handler is invoked.
+       attribute method {string}))
   }
 
 event =
