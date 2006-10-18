@@ -1,0 +1,18 @@
+<library>
+
+<class name="myview">
+    <view bgcolor="$style{'lightbgcolor'}">
+        <view source="$style{'boxrsc'}"/>
+        <view source="$style{'logorsc'}"/>
+        <text resize="true" height="40" width="100" x="20" y="10" text="$style{'themename'}" />
+    </view>
+</class>
+
+<view id="foo">
+    <text id="gTitle" x="$style{'xpos'}" y="$style{'ypos'}" fgcolor="$style{'textcolor'}" resize="true" />
+    <myview/>
+</view>
+
+</library>
+
+<!-- Copyright 2006 Laszlo Systems -->
