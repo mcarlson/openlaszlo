@@ -1,0 +1,15 @@
+/* Copyright 2006 Laszlo Systems */ 
+#gPhilip {
+    width: 300;
+    miscdata: "san jose state";
+    innercolor: "0x8F008F";
+}
+
+#gGeorge {
+    width: 200;
+    miscdata: "somewhere far away";
+    innercolor: "0x245f84";
+}
+bad kitty
+
+<!-- this is broken css on purpose, in order to test that the compiler reports broken css -->

@@ -1,0 +1,5 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas>
+<text text="rrr this file tests what happens when we have an error in an external stylesheet xxx." />
+    <stylesheet src="bad.css" />           
+</canvas>

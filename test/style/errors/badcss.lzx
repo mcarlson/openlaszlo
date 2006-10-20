@@ -1,0 +1,7 @@
+<!-- Copyright 2006 Laszlo Systems --> 
+<canvas>
+<text text="rrr this file tests what happens when we have an error in a styleddddddddsheet." />
+    <stylesheet>
+        this right here is not valid css
+    </stylesheet>
+</canvas>
