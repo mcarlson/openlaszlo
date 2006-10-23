@@ -466,12 +466,6 @@ public abstract class ResponderCompile extends Responder
             }
         }
 
-        // Look for cssfile param
-        String cssfile = req.getParameter(CompilationEnvironment.CSSFILE_PROPERTY);
-        if (cssfile != null && ! "".equals(cssfile)) {
-            props.setProperty(CompilationEnvironment.CSSFILE_PROPERTY, cssfile);
-        }
-
         // Set the 'lzproxied' default = false
         String proxied = req.getParameter(CompilationEnvironment.PROXIED_PROPERTY);
         if (proxied != null) {

@@ -20,7 +20,7 @@ import org.jdom.*;
  *
  * @author <a href="mailto:pkang@laszlosystems.com">Pablo Kang</a>
  */
-public class CSSHandler implements DocumentHandler, Serializable {
+public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
 
     //==========================================================================
     // class static
@@ -31,7 +31,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
 
     /** CSS parser factory. */ 
     private static org.w3c.css.sac.helpers.ParserFactory mCSSParserFactory = null;
-
+    
     static {
         // This system property is required for the SAC ParserFactory.
         if (System.getProperty("org.w3c.css.sac.parser") == null) {
@@ -41,44 +41,58 @@ public class CSSHandler implements DocumentHandler, Serializable {
         mCSSParserFactory = new org.w3c.css.sac.helpers.ParserFactory();
     }
 
-    /** 
-     * Entry point to creating a CSSHandler to read from an external 
+   /**
+     * Entry point to creating a CSSHandler to read from an external
      *    stylesheet file
      * @param rootDir the directory where cssFile exists.
-     * @param cssFile the css file to read. 
+     * @param cssFile the css file to read.
      */
-    public static CSSHandler parse(String rootDir, String cssFile)
-        throws CSSException {
-        try {
-            mLogger.info("creating CSSHandler");
-            CSSHandler handler = new CSSHandler(rootDir,cssFile);
-            Parser parser = mCSSParserFactory.makeParser();
-            parser.setDocumentHandler(handler);
-            parser.parseStyleSheet(handler.getInputSource());
-            return handler;
-        } catch (Exception e) {
-            mLogger.error("Exception", e);
-            throw new CSSException(e.getMessage());
-        }
+    public static CSSHandler parse(File file)
+           throws CSSException {
+       try {
+           mLogger.info("creating CSSHandler");
+           CSSHandler handler = new CSSHandler(file);
+           Parser parser = mCSSParserFactory.makeParser();
+           parser.setDocumentHandler(handler);
+           parser.setErrorHandler(handler);
+           parser.parseStyleSheet(handler.getInputSource());
+           return handler;
+       } catch (CSSParseException e) {
+           mLogger.error("got css parse exception");
+           throw e;
+       } catch (CSSException e) {
+           mLogger.error("got css exception");
+           throw e;
+       } catch (Exception e) {
+           mLogger.error("exception while parsing CSS");
+           throw new CSSException(e.getMessage());
+       }
     }
 
-    /** 
+    /**
      * Entry point to creating a CSSHandler from just a string of inlined css
      * @param cssString a string containing the entire CSS to parse
      */
-    public static CSSHandler parse(String cssString) 
-        throws CSSException {
+    public static CSSHandler parse(String cssString)
+            throws CSSException {
         try {
             mLogger.debug("entering CSSHandler.parse with inline string");
             CSSHandler handler = new CSSHandler(cssString);
-            Parser parser = mCSSParserFactory.makeParser();            
+            Parser parser = mCSSParserFactory.makeParser();
             parser.setDocumentHandler(handler);
+            parser.setErrorHandler(handler);
             java.io.Reader cssReader = new java.io.StringReader(cssString);
             InputSource inputSource = new InputSource(cssReader);
             parser.parseStyleSheet(inputSource);
             return handler;
+        } catch (CSSParseException e) {
+            mLogger.error("got css parse exception on inline css, " + e.getMessage());
+            throw e;
+        } catch (CSSException e) {
+            mLogger.error("got css exception on inline css" + e.getMessage());
+            throw e;
         } catch (Exception e) {
-            mLogger.error("Exception reading from inline stylesheet", e);
+            mLogger.error("exception while parsing inline css");
             throw new CSSException(e.getMessage());
         }
     }
@@ -89,11 +103,8 @@ public class CSSHandler implements DocumentHandler, Serializable {
     // instance
     //==========================================================================
 
-    /** The directory where the main CSS file exists */
-    String mRootDir;
-
-    /** The CSS file to parse. */
-    String mCSSFile;
+    /** The css file itself */
+    File mFile;
 
     /** List of Rule instances. */
     public List mRuleList;
@@ -104,29 +115,17 @@ public class CSSHandler implements DocumentHandler, Serializable {
     /** A list of CSS files separated by two file separators characters. */
     String mFileDependencies;
     
+
     /** protected constructor */
-    CSSHandler(String rootDir, String cssFile) {
-        mCSSFile = cssFile;
-        mRootDir = rootDir;
+    CSSHandler(File file) {
+        mFile = file;
         mRuleList = new Vector();
         mFileDependencies = getFullPath();
-    }
-
-    /** protected constructor */
-    CSSHandler(CSSHandler handler, String cssFile) {
-        mCSSFile = cssFile;
-        mRootDir = handler.mRootDir;
-        mRuleList = handler.mRuleList;
-        mFileDependencies = null;
-
-        handler.mFileDependencies += 
-            File.separator + File.separator + getFullPath();
     }
     
     /** protected constructor */
     CSSHandler(String cssString) {
-        mCSSFile = "";
-        mRootDir = "";
+        mFile = null; // No file associated with inline css
         mRuleList = new Vector();
         mFileDependencies = ""; // inline css doesn't add any file dependencies
     }
@@ -140,13 +139,18 @@ public class CSSHandler implements DocumentHandler, Serializable {
 
     /** @return full path to CSS file */
     String getFullPath () {
-        return mRootDir + File.separatorChar + mCSSFile;
+        try {
+            return mFile.getCanonicalPath();
+        } catch (IOException e) {
+            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            return ""; 
+        }
     }
 
     /** @return InputSource object pointing to the CSS file. */
     InputSource getInputSource() throws FileNotFoundException {
         InputSource is =
-            new InputSource(new FileReader(new File(getFullPath())));
+            new InputSource(new FileReader(mFile));
 //         is.setEncoding("ISO-8859-1");
         return is;                                         
     }
@@ -184,7 +188,7 @@ public class CSSHandler implements DocumentHandler, Serializable {
     public void importStyle(String uri, SACMediaList media,
                             String defaultNamespaceURI) throws CSSException {
         try {
-            CSSHandler handler = new CSSHandler(this, uri);
+            CSSHandler handler = new CSSHandler(new File(uri));
             Parser parser = mCSSParserFactory.makeParser();
             parser.setDocumentHandler(handler);
             parser.parseStyleSheet(handler.getInputSource());
@@ -359,5 +363,19 @@ public class CSSHandler implements DocumentHandler, Serializable {
          return str;
      }
 
-    
+
+    public void warning(CSSParseException e) throws CSSException {
+        mLogger.error("warning ", e);
+        throw e;
+    }
+
+    public void error(CSSParseException e) throws CSSException {
+        mLogger.error("error ", e);
+        throw e;
+    }
+
+    public void fatalError(CSSParseException e) throws CSSException {
+        mLogger.error("fatal error while parsing css", e);
+        throw e;
+    }
 }

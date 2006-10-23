@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -855,6 +855,9 @@ throw new CompilationError(
                                          dependencyTracker);
             dependencyTracker.addFile(sourceFile);
             if (mLPSJarFile != null) {
+                // TODO [bshine 10.19.06] mLPSJarFile doesn't seem to
+                // have the correct value. It doesn't point to a real
+                // jar.
                 dependencyTracker.addFile(mLPSJarFile);
             }
             compiler.setFileResolver(resolver);
@@ -896,21 +899,6 @@ throw new CompilationError(
                 );
 
                 tempFileStream = new FileInputStream(tempFile);
-
-                // If css property is set, add it to dependency
-                String cssDepend = 
-                    compilationProperties.getProperty("cssdepend");
-                if (cssDepend != null && ! "".equals(cssDepend)) {
-                    String sep = File.separator;
-                    if (sep.equals("\\")) sep = "\\\\";
-
-                    String[] files = cssDepend.split(sep + sep);
-                    for (int i=0; i < files.length; i++) {
-                        dependencyTracker.addFile(new File(files[i]));
-                    }
-                }
-                compilationProperties.remove("cssdepend");
-
 
                 item.update(tempFileStream);
                 dependencyTracker.addFile(objectFile);

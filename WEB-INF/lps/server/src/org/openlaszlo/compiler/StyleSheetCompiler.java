@@ -17,7 +17,10 @@ import org.openlaszlo.utils.FileUtils;
 import org.w3c.css.sac.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 import java.util.*;
+import java.text.MessageFormat;
+
 import org.jdom.Element;
 import org.apache.log4j.*;
 
@@ -25,9 +28,9 @@ import org.apache.log4j.*;
  *
  * @author  Benjamin Shine
  */
-class StyleSheetCompiler extends ElementCompiler {
+class StyleSheetCompiler extends LibraryCompiler {
     /** Logger */
-    private static Logger mLogger = Logger.getLogger(CanvasCompiler.class);
+    private static Logger mLogger = Logger.getLogger(StyleSheetCompiler.class);
 
     private static final String SRC_ATTR_NAME = "src";
 
@@ -45,7 +48,6 @@ class StyleSheetCompiler extends ElementCompiler {
 
     public void compile(Element element) {
         try {
-            Logger log =  Logger.getLogger(StyleSheetCompiler.class);
             mLogger.info("StyleSheetCompiler.compile called!");
                     
             if (!element.getChildren().isEmpty()) {
@@ -57,29 +59,31 @@ class StyleSheetCompiler extends ElementCompiler {
             String stylesheetText = element.getText(); 
             String src = element.getAttributeValue(SRC_ATTR_NAME); 
             
-            
             if (src != null) {
-                mLogger.info("reading in stylesheet from src=" + src); 
-                // Resolve the file reference 
-                // Read in the stylesheet from the file 
-                
-                String parentPath = mEnv.getApplicationFile().getParent();
-                if ( parentPath == null || "".equals(parentPath) ) {
-                    parentPath = ".";
-                }
+                mLogger.info("reading in stylesheet from src=" + src);
+                // Find the css file 
+                // Using the FileResolver accomplishes two nice things:
+                // 1, it searches the standard directory include paths
+                // including the application directory for the css file.
+                // 2, it adds the css file to the dependencies for the
+                // current application. This makes the application be
+                // recompiled if the css file changes.
+                // This fixes LPP-2733 [bshine 10.20.06] 
+                String base =  mEnv.getApplicationFile().getParent();
 
-                // CSS file is relative to directory of LZX file. 
-                String cssFullPath = parentPath + File.separatorChar + src;
-                mLogger.info("CSS file's full path is " + cssFullPath);
-                
-                // Check whether css file exists
-                File cssf = new File(cssFullPath);
-                if (!cssf.exists()) {
+                File resolvedFile = mEnv.getFileResolver().resolve(src, base);
+                if (resolvedFile.exists()) {
+                    mLogger.info("Resolved css file to a file that exists!");
+                } else {
+                    mLogger.error("Could not resolve css file to a file that exists.");
                     throw new CompilationError("Could not find css file " + src);
                 }
-                
-                CSSHandler fileHandler = CSSHandler.parse( parentPath, src );
-                this.compile(fileHandler); 
+
+                // Actually parse and compile the stylesheet! W00t!
+                CSSHandler fileHandler = CSSHandler.parse( resolvedFile );
+                this.compile(fileHandler);
+
+
             } else if (stylesheetText != null && (!"".equals(stylesheetText))) {
                 mLogger.info("inline stylesheet");
                 CSSHandler inlineHandler = CSSHandler.parse(stylesheetText); 
@@ -91,16 +95,45 @@ class StyleSheetCompiler extends ElementCompiler {
                     element); 
             }
     
-        // Compile stylesheets to run at construction time in the view
         } catch (CompilationError e) {
-            Logger.getLogger(StyleSheetCompiler.class)
-                .error("Error compiling StyleSheet element: " + element); 
+            // If there was an error compiling a stylesheet, we report
+            // it as a compilation error, and fail the compile.
+            // Fixes LPP-2734 [bshine 10.20.06]
+            mLogger.error("Error compiling StyleSheet element: " + element); 
             throw e;
+        } catch (IOException e) {
+            // This exception indicates there was a problem reading the
+            // CSS from the file
+            mLogger.error("IO error compiling StyleSheet: " + element);
+            throw new CompilationError("IO error, can't find source file for <stylesheet> element.",
+                 element);
+        } catch (CSSParseException e) {
+            // CSSParseExceptions provide a line number and URI,
+            // as well as a helpful message
+            // Fixes LPP-2734 [bshine 10.20.06]
+            String message = "Error parsing css file at line " + e.getLineNumber()
+                    + ", " + e.getMessage();
+
+            mLogger.error(message);
+            throw new CompilationError(message);
+        } catch (CSSException e) {
+            // CSSExceptions don't provide a line number, just a message
+            // Fixes LPP-2734 [bshine 10.20.06]            
+            mLogger.error("Error compiling css: " + element);
+            throw new CompilationError("Error compiling css, no line number available: "
+                    + e.getMessage());            
+        } catch (Exception e) {
+            // This catch clause will catch disastrous errors; normal expected
+            // css-related errors are handled with the more specific catch clauses
+            // above. 
+            mLogger.error("Exception compiling css: " + element + ", " + e.getMessage());
+            throw new CompilationError("Error compiling css. " + e.getMessage());            
         }
+
     }
     
     public void compile(CSSHandler handler) throws CompilationError {
-        Logger.getLogger(StyleSheetCompiler.class).debug("compiling CSSHandler using new unique names"); 
+        mLogger.debug("compiling CSSHandler using new unique names"); 
         String script = "";
         for (int i=0; i < handler.mRuleList.size(); i++) {  
             Rule rule = (Rule)handler.mRuleList.get(i);
@@ -113,9 +146,9 @@ class StyleSheetCompiler extends ElementCompiler {
             String curRuleProperties = buildPropertiesJavascript(rule);         
             script += curRuleName + ".properties = " + curRuleProperties + ";\n";
             script += " LzCSSStyle._addRule( " + curRuleName + " ); \n"; 
-            Logger.getLogger(StyleSheetCompiler.class).debug("created rule " + curRuleName); 
+            mLogger.debug("created rule " + curRuleName);
         }
-        Logger.getLogger(StyleSheetCompiler.class).debug("whole stylesheet as css " + script +"\n\n"); 
+        mLogger.debug("whole stylesheet as css " + script +"\n\n");
         mEnv.compileScript( "(function() { " + script + "})()" ); 
     }
 
