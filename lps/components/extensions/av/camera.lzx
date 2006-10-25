@@ -24,22 +24,30 @@
         <!--- If true, show camera on immediateparent videoview. -->
         <attribute name="show" value="false" setter="this._setShow(show)"/>
 
-        <!--- Camera width. -->
+        <!--- The width (resolution) that will be captured by the camera. -->
         <attribute name="width" value="null"/>
 
-        <!--- Camera height. -->
+        <!--- The height (resolution) that will be captured by the camera. -->
         <attribute name="height" value="null"/>
 
-        <!--- Camera frames per second. -->
+        <!--- The number of frames per second that will be captured 
+              by the camera. -->
         <attribute name="fps" value="null"/>
 
-        <!--- Camera favor size boolean flag. -->
+        <!--- Often several capture modes are available per camera device.
+              These modes will allow capturing at a specific size (width/height)
+              and framerate.  If you specify both fps and width and height for
+              this camera, this attribute will control which capturing mode
+              for the camera device will be used. -->
         <attribute name="favorsize" value="false"/>
 
-        <!--- Camera bandwidth. -->
+        <!--- Camera bandwidth (in bytes per second). -->
         <attribute name="bandwidth" value="16384"/>
 
-        <!--- Camera picture quality. -->
+        <!--- Camera picture quality: a value between 0 and 1, where 1
+              represents the highest quality (no compression). When
+              0 is passed, this indicates to use highest quality that
+              fits into the available bandwidth -->
         <attribute name="picturequality" value="0"/>
 
 
@@ -66,9 +74,10 @@
             } else {
                 dev = Camera.get(deviceindex);
             }
+            
 
-            this._dev = 
-                dev;
+            this._dev = dev;
+            this.setQuality(bandwidth,picturequality);
 
             return dev;
           ]]>
@@ -251,7 +260,7 @@
         <!--- 
             setQuality(bandwidth, picturequality"); 
             bandwidth: in byte per second, default value: 16384
-            picturequality: number from 0 to 100, default value: 0
+            picturequality: number from 0 to 1, default value: 0
             0 means also that picturequality will be changed
             if bandwidth is concerned.
             The parameters are cached in the attributes
@@ -265,7 +274,7 @@
             this.setAttribute("bandwidth", bandwidth);
             this.setAttribute("picturequality", picturequality);
             if (this._dev) {
-                this._dev.setQuality(bandwidth, picturequality);
+                this._dev.setQuality(bandwidth, picturequality*100);
             }
           ]]>
         </method>
