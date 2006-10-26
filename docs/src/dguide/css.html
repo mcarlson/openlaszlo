@@ -353,6 +353,42 @@ attribute values according to the <code>#gView</code> stylesheet.</p>
 
 </example>
 
+<h3>Dynamically-Created Views</h3>
+
+<p>For now, we are unable to style dynamically-created views. The workaround is to create a dummy view statically, apply CSS to the dummy view, then set the dynamic view's attributes accordingly:
+
+&lt;example class="code" title="Borrowing styled attributes from a dummy view"&gt;
+
+&lt;canvas height="200" width="300" debug="true"&gt;
+
+&lt;stylesheet&gt;
+
+	#anotherView {
+			bgcolor : "0xFF0000";
+			}
+
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing ="10"/&gt;
+
+&lt;view id="anotherView" height="5" width="5" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;!--anotherView was assigned height and width attributes so we can see it in this test, but it doesn't have to be visible--&gt;
+
+&lt;method event="oninit"&gt;
+
+		var myView=new LzView(canvas, {});
+		canvas.addSubview(myView);
+
+		myView.setAttribute('height', '50');
+		myView.setAttribute('width', '50');
+		myView.setAttribute('bgcolor', anotherView.bgcolor);
+
+&lt;/method&gt;
+
+&lt;/canvas&gt;
+</example>
+
 <h2>Selectors</h2>
 
 <p>The stylesheet is a collection of rules that apply to the LZX document.
