@@ -1,7 +1,6 @@
 <!DOCTYPE canvas SYSTEM "http://laszlosystems.com/lps/tools/lzx.dtd">
 
-<canvas width="780" height="540" bgcolor="#EAEAEA" debug="false" fontsize="8">
-    <debug x="250" height="200" />
+<canvas width="780" height="540" bgcolor="#EAEAEA" fontsize="8">
     <!-- <inittimer/> -->
 
     <include href="redmond/redmondinputtext.lzx" />
@@ -94,25 +93,15 @@
               resource="images/loading_anim.swf" />
     </splash>
 
-    <!-- Startup box
-    <view name="progressBar" resource="splash_init_bar" 
-          oninit="canvas.initdelay=400" pixellock="true" initstage="early">
+    <!-- Give user a chance to see the splash at 100% -->
+    <attribute name="initdelay" value="400" />
 
-        <method event="onpercentcreated" reference="canvas" args="p">
-            var pp = Math.floor( 90*p );
-            canvas.splash_anim.stop( pp );
-        </method>
-
-        <attribute name="hasSplash" value="true" />
-
-        <method name="destroySplash">
-            this.setAttribute( "hasSplash", false );
-            canvas.splash.deleteView();
-            this.deleteView();
-        </method>
-
-    </view> -->
-
+    <!-- Continue to animate splash for created progress -->
+    <method event="onpercentcreated" args="p">
+      var sa = canvas.splash.splash_anim;
+      sa.stop(Math.floor(sa.totalframes * (1+p)/2));
+    </method>
+    <!-- End of Splash -->
 
     <view width="${parent.width}">
 
@@ -571,7 +560,7 @@
 
 </canvas>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
