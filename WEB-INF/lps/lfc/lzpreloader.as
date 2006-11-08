@@ -5,7 +5,7 @@
 //
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -125,8 +125,9 @@ function heartbeat (p) {
   }
 }
 
-// called by the compiler (last thing), or from
-// _root.$SID_RESOLVE_OBJECT in a kranked world
+// called by the compiler (as the last instruction in the executable),
+// this causes the transition from loading animation to construction
+// animation.
 function done() {
   //this.mydebug('done');
   _root.lzpreloader._heartbeat.removeMovieClip();
@@ -138,8 +139,6 @@ function done() {
     mc.gotoAndStop(mc.lastframe);
     //this.mydebug('lastframe='+mc.lastframe);
   }
-  // Don't create the view version of this if kranking, it will be
-  // (re-)created when done is called by _root.$SID_RESOLVE_OBJECT
   var vis = (this.hideafterinit != true) ? true : false;
 
   var svd = _root.canvas.__LZsvdepth;
@@ -153,9 +152,18 @@ function done() {
 
   for (var i = 0; i < this.protoviews.length; i++) {
     var mc = this.protoviews[i];
+    var ratio = mc.lastframe / mc._totalframes;
     var nv = new _root.LzView(v, {name: mc.name, x: mc._x, y: mc._y,
                                   width: mc._width, height: mc._height,
+                                  totalframes: mc._totalframes, ratio: ratio,
                                   options: {ignorelayout: true}});
+    // If ratio is less than one, animate the remaining way using percentcreated
+    if (ratio < 1) {
+      nv.noteCreated = function (p) {
+        this.stop(Math.floor(this.totalframes * (this.ratio + (1-this.ratio)*p)));
+      };
+      var del = new _root.LzDelegate(nv, 'noteCreated', _root.canvas, 'onpercentcreated');
+    }
     nv.setMovieClip(mc);
     mc._visible = true;
   }

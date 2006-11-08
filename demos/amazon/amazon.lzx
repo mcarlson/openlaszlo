@@ -95,12 +95,6 @@
 
     <!-- Give user a chance to see the splash at 100% -->
     <attribute name="initdelay" value="400" />
-
-    <!-- Continue to animate splash for created progress -->
-    <method event="onpercentcreated" args="p">
-      var sa = canvas.splash.splash_anim;
-      sa.stop(Math.floor(sa.totalframes * (1+p)/2));
-    </method>
     <!-- End of Splash -->
 
     <view width="${parent.width}">
