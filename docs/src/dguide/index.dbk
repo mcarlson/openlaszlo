@@ -42,6 +42,7 @@
     <xi:include href="layout-and-design.dbk"/>
     <xi:include href="media-resources.dbk"/>
     <xi:include href="css.dbk"/>
+    <xi:include href="colors.dbk"/>
     <xi:include href="text.dbk"/>
     <xi:include href="richtext.dbk"/>
     <xi:include href="fonts.dbk"/>
@@ -68,6 +69,10 @@
      <xi:include href="data-structures.dbk"/>
      <xi:include href="databinding.dbk"/>
      <xi:include href="../tutorials/data_app.dbk"/>
+   </part>
+   <part id="media">
+     <title>Media</title>
+     <xi:include href="video.dbk"/>
    </part>
    <part id="application">
        <title>Examining Applications</title>

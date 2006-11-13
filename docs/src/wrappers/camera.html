@@ -16,9 +16,10 @@
 </lzelement>
 
 <p>
+In order to use a camera in an LZX application, the <attribute>visible</attribute> and <attribute>allowed</attribute> attributes must be set to <code>true</code>.  The <attribute>visible</attribute> indicates the program's intent and the <attribute>allowed</attribute> attribute indicates the user's permission. To protect privacy, camera operation must be explicitly approved by the user.
 </p>
 
-<example class="program">
+<example class="program" extract="false">
 &lt;canvas height="100"&gt;
   &lt;camera id="rtc" src="rtmp://localhost/test" autoconnect="false"/&gt;
   &lt;text text="${rtc.status}"/&gt;

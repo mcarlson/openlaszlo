@@ -14,16 +14,47 @@
     </lzshortdesc>
     <lztag>extensions/av/mediastream.xml</lztag>
 </lzelement>
-
 <p>
-
+A <tagname>mediastream</tagname> opens a connection for recieving streaming media.
 </p>
 
-<example class="program">
-&lt;canvas height="100"&gt;
-  &lt;mediastream id="rtc" src="rtmp://localhost/test" autoconnect="false"/&gt;
-  &lt;text text="${rtc.status}"/&gt;
-  &lt;button onclick="rtc.connect()"&gt;Click to Connect&lt;/button&gt;
+<p>
+Note: Total time is only defined for FLV's delivered over http
+if they have "metaData" defined, and we don't know the stream
+length until it starts playing.
+</p>
+
+<example title="A media stream" extract="false">
+&lt;canvas&gt;
+
+    &lt;simplelayout axis="y" inset="10" spacing="5"/&gt;
+    &lt;constantlayout axis="x" value="10"/&gt;
+    &lt;videoview&gt;
+        &lt;mediastream id="s" 
+            url="http://localhost:8080/video/test/video/videos/good-dog.flv"
+            debug="true"
+        /&gt;
+    &lt;/videoview&gt;
+    &lt;button
+        text="play" 
+        onclick="s.play()"
+    /&gt;
+    &lt;button
+        text="pause" 
+        onclick="s.pause()"
+    /&gt;
+    &lt;text
+        text="${'playtime: ' + s.playtime}"
+    /&gt;
+    &lt;text
+        text="${'totaltime: ' + s.totaltime}"
+    /&gt;
+    &lt;text
+        width="300" 
+        multiline="true"
+    &gt;
+    &lt;/text&gt;
+
 &lt;/canvas&gt;
 </example>
 

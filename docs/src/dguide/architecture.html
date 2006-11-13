@@ -43,19 +43,28 @@ the persistent connection manager) will not be available.
 </p>
 <h2>Client and Server: Synopsis</h2>
 <p>        
-OpenLaszlo Server is a Java application that executes in a J2EE servlet
+The OpenLaszlo Server is a Java application that executes in a J2EE servlet
 container. The OpenLaszlo Server may communicate with <glossterm>back end</glossterm>
 servers and data sources using a variety of protocols. OpenLaszlo
-applications written in LZX are compiled by the OpenLaszlo Server and served as bytecode
-to a plug in that runs in the client's web browser.  This constitutes
+applications written in LZX are compiled by the OpenLaszlo Server and served either as bytecode
+to a plug in that runs in the client's web browser (such as Flash or J2ME) or as JavaScript (DHTML) that is directly executed by the browser itself.  This constitutes
 the <dfn>front end</dfn>.  The currently supported run-time
-environment, the Flash 7 or higher plug-in, executes consistently and
+environments, including DTHTML and the Flash 7 or higher plug-in, executes consistently and
 reliably on a variety of operating systems and device types, including
 Windows, Pocket PC, Mac OS, Linux, and Solaris, and a variety of
-mobile and set-top box platforms. The OpenLaszlo Server outputs bytecode in the SWF file
+mobile and set-top box platformss.
+</p>
+<p>
+When compiled for execution by the Flashplayer, the OpenLaszlo Server outputs bytecode in the SWF ("shockwave format) file
 format recognized by the Macromedia Flash player (version 7 and
 higher). Nothing in the OpenLaszlo architecture binds it to Flash,
-however.  In the future, OpenLaszlo may support other run time clients as
+however. 
+</p>
+<fixme>
+about DHTML format.
+</fixme>
+<p>
+In the future, OpenLaszlo may support other run time clients as
 they become widely available.</p>
 
 <p>

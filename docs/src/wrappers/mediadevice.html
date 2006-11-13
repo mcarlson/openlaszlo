@@ -10,22 +10,17 @@
     <lztier>Audio Video</lztier>
     <lzcategory>audio video</lzcategory>
     <lzshortdesc>
-        A connection to an RTMP server.
+        The base class for media devices such as <tagname>microphone</tagname> and <tagname>camera</tagname>.
     </lzshortdesc>
     <lztag>extensions/av/mediadevice.xml</lztag>
 </lzelement>
 
 <p>
+As of OpenLaszlo release 4.0, subclasses of this class are <tagname link="true">microphone</tagname> and <tagname link="true">camera</tagname>.
 
 </p>
 
-<example class="program">
-&lt;canvas height="100"&gt;
-  &lt;mediadevice id="rtc" src="rtmp://localhost/test" autoconnect="false"/&gt;
-  &lt;text text="${rtc.status}"/&gt;
-  &lt;button onclick="rtc.connect()"&gt;Click to Connect&lt;/button&gt;
-&lt;/canvas&gt;
-</example>
+
 
 </body>
 </html>

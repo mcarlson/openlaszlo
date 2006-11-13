@@ -1,104 +1,319 @@
-<html xmlns="http://www.w3.org/1999/xhtml" id="colors">
+<html xmlns="http://www.w3.org/1999/xhtml" id="color">
 <head>
-  <title>Color in Laszlo Applications</title>
+  <!-- title is currently ignored; doc tool uses h1 instead -->
+  <title>Color</title>
 </head>
 
 <body>
 
-<h1>Colors in Laszlo Applications</h1>
-<todo>
-This chapter is not written.  We expect to able to cover some of the following topics:
- </todo>
- 
-<pre> 
-HTML and CSS Colors
-Animating Colors
-Design Considerations
- e.Pointer to later chapter on subclassing "layout"
- ii.Setcolor() and sectcolorTransform()
-</pre>
- 
-<p> </p>
-<h2>Colors and .SWF files</h2>
-<fixme>
-
-Chris from Semaphore is porting some old code that used to colorize a
-SWF. He asserts that it's not just tinting he's looking for:
-
-=================================================
-&lt;view name="some_color" resource="colorbox.swf"&gt;
-
-    &lt;method name="applyColor" args="someRGB"&gt;
-        var thisClass = this.parent;
-        this.colorControl=new Color(this.movieClipRef);
-        this.colorControl.setRGB(someRGB);
-    &lt;/method&gt;
-
-&lt;/view&gt;
-=================================================
-
-a) Does that code really affect the SWF or is it the same as
-setcolortransform?
-
-LzView.setColor is probably what he wants.  It does the same thing as the example code you have (takes an RGB and applies it as an offset.)
-
-LzView.setColorTransform allows you to set both the RGB offsets and the RGB alphas.
-
-b) What's the movieClipRef for?
-
-That's the way Flash does it.  To control the color of a clip you make a Color object that references the clip.  It's like the Color object exposes some otherwise inaccessible API.
-
-Here's the post:
+<!-- Put Chapter title in h1 -->
+<h1>Color</h1>
 
 
-http://www.laszlosystems.com/developers/community/forums/showthread.php
- postid=3315#post3315
-</fixme>
+
 <!--=========================================================================-->
 <!-- Major sub-heads in h2, etc                                                               -->
 <!--=========================================================================-->
 <h2>Overview</h2>
 
-<p>This-a-here chapter is about this subject.</p>
-
-<p>If the first h2 heading is named "Overview", it is given index 0.  Otherwise, it is given index 1.</p>
-<example class="code" title="Using setattribute to change a color">
-&lt;canvas&gt;
-   &lt;view width="60" height="60" bgcolor="red" onclick="changecolor()"&gt;
-       &lt;method name="changecolor"&gt;
-       this.setattribute(bgcolor, "red")
-       &lt;/method&gt;
-    &lt;/view&gt;
-&lt;/canvas&gt;
-</example>
-<example class="code" title="applying transform to text color">
-&lt;canvas debug="true"&gt;
-    &lt;simplelayout axis="y" spacing="10" /&gt;
-
-    &lt;view id="foo" width="400" height="200"&gt;
-        &lt;simplelayout axis="y" spacing="10" /&gt;
-        &lt;text&gt;
-            &lt;font color="#0000FF"&gt;
-            Hello world
-            &lt;/font&gt;
-        &lt;/text&gt;
-    &lt;/view&gt;
-
-    &lt;button&gt;Apply tint now
-        &lt;handler name="onclick"&gt;
-            var transColor = {rb:255};
-            foo.setColorTransform( transColor );
-        &lt;/handler&gt;
-    &lt;/button&gt;
-&lt;/canvas&gt;
-</example>
+<p>This chapter gives a brief introduction to the use of colors in OpenLaszlo applications. It explains the various syntaxes that are used to specify color, and gives general guidelines for using color effectively.</p>
+<p>
+OpenLaszlo uses the standard web color definitions, three hexadecimal values in a row, representing red, green, and blue components of a color (all colors can be created by mixing these three primary colors). Computer monitors are comprised of thousands of red, green, and blue dots grouped so closely by threes that our eyes see them as one blended color.
+</p>
 <fixme>
-SetColorTransform applies a tint :-)
-
-SetColor sets an rgb color, but setColorTransform takes an argument with 8 components that lets you adjust the percentage and offset of each of the red/green/blue channels or an overall percent and offset.  It is applied as a transform to the view and all subviews.
-
-I'm no color expert, so I can't tell you how to compute the right value for a particular tint, but I'm guessing that if you wanted to tint something red, you could just apply a transform with a positive red offset.
+Different syntaxes for javascript and HTML color specifications.
 </fixme>
+
+<h2>RGB or Red, Green, Blue</h2>
+<p>
+Each red, blue, or green dot can have a value from 0 to 255. If the red dot is fully "on" at 255, while blue and green are fully "off" at 0, we see red. The RBG color code for red is 255,0,0. Blue is 0,255,0; green is 0,0,255. (Some graphics systems combine an RGB triplet with an 8-bit alpha value, and get a 32-bit color word; in those systems, we think of colors as RGBA.)
+</p>
+<example title="RGB color values">
+&lt;canvas height="125"&gt;
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+  &lt;class name="gView"&gt;
+    &lt;view height="100" width="100"/&gt;
+  &lt;/class&gt;     
+  &lt;gView id="red"   bgcolor="rgb(255,0,0)"/&gt;
+  &lt;gView id="blue"  bgcolor="rgb(0,255,0)"/&gt;
+  &lt;gView id="green" bgcolor="rgb(0,0,255)"/&gt;
+&lt;/canvas&gt; 
+</example>
+       
+
+<h2>Hexadecimal Code</h2>
+<p>
+Some web applications require that RGB be expresssed in hexadecimal (base 16 instead of base 10) values. OpenLaszlo much prefers hex values; for one thing, using hexadecimal values enables the use of stylesheets (see Cascading Style Sheets):
+</p>
+<example title="Using Hex for Colors with Sytlesheet">
+&lt;canvas height="125"&gt;
+
+  &lt;stylesheet&gt;
+    
+    #red {
+        bgcolor: "0xFF0000";
+        }
+
+    #blue {
+        bgcolor: "0x00FF00";
+        }
+            
+    #green {
+        bgcolor: "0x0000FF";
+        }
+            
+  &lt;/stylesheet&gt;        
+        
+  &lt;simplelayout axis="x" spacing="10"/&gt;
+
+  &lt;class name="gView"&gt;
+    &lt;view height="100" width="100" bgcolor="$style{'bgcolor'}"/&gt;
+  &lt;/class&gt;
+        
+  &lt;gView id="red"  /&gt;
+  &lt;gView id="blue" /&gt;
+  &lt;gView id="green"/&gt;
+
+&lt;/canvas&gt;        
+</example>
+<p>
+OpenLaszlo enables coloring in four ways: 0x000000, #000000, rgb(0,0,0), and "black". For now, the best reason to prefer to use the hex style 0x000000 is that it always works, whether the color is assigned explicitly within the view, or by stylesheet. Color assignment by stylesheet fails by name, #hex, or rgb(). Explicit color assignment by rgb() fails unless the RGB values are all numerals -- that is, rgb(0,0,0) produces black, but rgb(FF,FF,FF), which should produce white, comes back at compile time as an invalid color.
+</p>
+<p>
+Coloring of text with fgcolor="foo" is enabled in the same fashions, but with the same limitations.
+</p>
+<example title="coloring text using CSS">
+&lt;canvas width="860" debug="true"&gt;
+
+&lt;stylesheet&gt;
+    #vName {
+    bgcolorName : "blue";
+    }
+    
+    #tName {
+    fgcolorName : "blue";
+    }
+
+    #vRGB {
+    bgcolorRGB : "#0000FF";
+    }
+    
+    #tRGB {
+    fgcolorRGB : "#0000FF";
+    }
+    
+    #vHex {
+    bgcolorHex : "0x0000FF";
+    }
+
+    #tHex {
+    fgcolorHex : "0x0000FF";
+    }
+
+    #vParens {
+    bgcolorParens : "rgb(0,0,255)";
+    }
+    
+    #tParens {
+    fgcolorParens : "rgb(0,0,255)";
+    }
+    
+&lt;/stylesheet&gt;
+
+&lt;wrappinglayout axis="x" spacing="10"/&gt;
+
+    &lt;view id="vName" height="100" width="100" bgcolor="$style{'bgcolorName'}"/&gt;
+    &lt;text id="tName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorName'}"&gt;Blue1&lt;/text&gt;
+
+    &lt;view id="vRGB" height="100" width="100" bgcolor="$style{'bgcolorRGB'}"/&gt;
+    &lt;text id="tRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorRGB'}"&gt;Blue2&lt;/text&gt;
+
+    &lt;view id="vHex" height="100" width="100" bgcolor="$style{'bgcolorHex'}"/&gt;
+    &lt;text id="tHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorHex'}"&gt;Blue3&lt;/text&gt;
+
+    &lt;view id="vParens" height="100" width="100" bgcolor="$style{'bgcolorParens'}"/&gt;
+    &lt;text id="tParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="$style{'fgcolorParens'}"&gt;Blue4&lt;/text&gt;
+
+    &lt;view id="explicitVName" height="100" width="100" bgcolor="blue"/&gt;
+    &lt;text id="explicitTName" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="blue"&gt;Blue5&lt;/text&gt;
+    
+    &lt;view id="explicitVRGB" height="100" width="100" bgcolor="#0000FF"/&gt;
+    &lt;text id="explicitTRGB" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="#0000FF"&gt;Blue6&lt;/text&gt;
+
+    &lt;view id="explicitVHex" height="100" width="100" bgcolor="0x0000FF"/&gt;
+    &lt;text id="explicitTHex" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="0x0000FF"&gt;Blue7&lt;/text&gt;
+
+    &lt;view id="explicitVParens" height="100" width="100" bgcolor="rgb(0,0,255)"/&gt;
+    &lt;text id="explicitTParens" font="verdana,sans-serif" fontsize="30" fontstyle="bold" height="40" fgcolor="rgb(0,0,255)"&gt;Blue8&lt;/text&gt;
+
+&lt;script&gt;
+Debug.write("1=styled by blue");
+Debug.write("2=styled by #0000FF");
+Debug.write("3=styled by 0x0000FF");
+Debug.write("4=styled by rgb(0,0,255)");
+Debug.write("5=explicitly named blue");
+Debug.write("6=explicitly colored #0000FF");
+Debug.write("7=explicitly colored 0x0000FF");
+Debug.write("8=explicitly colored rgb(0,0,255)");
+&lt;/script&gt;
+
+&lt;/canvas&gt;
+</example>
+<h3>Mixing Colors</h3>
+<p>
+To blend a color, combine the RGB values. Red (FF0000) plus blue (0000FF) equals fuchsia (FF00FF):
+</p>
+<example title="Blending Colors">
+&lt;canvas height="850"&gt;
+  &lt;window name="raptor" x="25" y="50" height="200" width="200" resizable="true" title="Resize this window"&gt;
+    &lt;view name="red" height="${raptor.height*.5}" width="${raptor.height*.5}" bgcolor="0xFF0000"/&gt;
+    &lt;view name="blue" height="${raptor.red.height}" width="${raptor.red.width}" bgcolor="0x0000FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}"/&gt;
+    &lt;view name="fuchsia" height="${raptor.red.height*.5}" width="${raptor.red.width*.5}" bgcolor="0xFF00FF" x="${raptor.red.width-(raptor.red.width*.5)}" y="${raptor.red.height-(raptor.red.height*.5)}" /&gt;
+  &lt;/window&gt;
+&lt;/canvas&gt;
+</example>
+
+<h3>Standard Web Colors</h3>
+<p>
+The 16 basic web colors can be employed by name:
+</p>
+<example title="Named Colors">
+&lt;canvas height="250" width="250"&gt;
+&lt;wrappinglayout axis="y" spacing="10"/&gt;
+    
+&lt;class name="swatch" width="50" height="50"  /&gt;
+&lt;swatch bgcolor="black"&gt;
+    &lt;text fgcolor="white" text="Black"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="silver"&gt;
+    &lt;text text="Silver"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="gray"&gt;
+    &lt;text text="Gray"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="white"&gt;
+    &lt;view name="inner" width="50" height="50" bgcolor="black"&gt;
+        &lt;view name="furtherinner" width="46" height="46" bgcolor="white" x="2" y="2"/&gt;
+    &lt;/view&gt;    
+    &lt;text text="White"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="maroon"&gt;
+    &lt;text fgcolor="white" text="Maroon"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="red"&gt;
+    &lt;text text="Red"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="purple"&gt;
+    &lt;text fgcolor="white" text="Purple"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="fuchsia"&gt;
+    &lt;text text="Fuchsia"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="green"&gt;
+    &lt;text text="Green"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="lime"&gt;
+    &lt;text text="Lime"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="olive"&gt;
+    &lt;text text="Olive"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="yellow"&gt;
+    &lt;text text="Yellow"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="navy"&gt;
+    &lt;text fgcolor="white" text="Navy"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="blue"&gt;
+    &lt;text fgcolor="white" text="Blue"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="teal"&gt;
+    &lt;text fgcolor="white" text="Teal"/&gt;
+&lt;/swatch&gt;
+&lt;swatch bgcolor="aqua"&gt;
+    &lt;text text="Aqua"/&gt;
+&lt;/swatch&gt;
+&lt;/canvas&gt;
+</example>
+<h3>Non-Standard Colors</h3>
+<p>
+To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes. An alternative is to include colors.lzx  -- &lt;include href="../lps/components/base/colors.lzx"/&gt; -- which assigns names to various non-standard colors. Note the ${constraint} syntax around the bgcolor specification.
+</p>
+<example title="Non-standard colors">
+&lt;canvas height="200" width="120"&gt;
+
+&lt;include href="../lps/components/base/colors.lzx"/&gt;
+
+&lt;wrappinglayout axis="x" spacing="10"/&gt;
+    
+&lt;class name="swatch" width="50" height="50"  /&gt;
+
+&lt;swatch bgcolor="${gold4}"&gt;
+    &lt;text text="Sun"/&gt;
+&lt;/swatch&gt;
+
+&lt;swatch bgcolor="${iceblue1}"&gt;
+    &lt;text fgcolor="0xFFFFFF" text="Mystic"/&gt;
+&lt;/swatch&gt;
+
+&lt;/canvas&gt;
+</example>
+<h3>Opacity</h3>
+<p>
+In OpenLaszlo, a view has a color and an opacity which are handled separately. The opacity attribute ranges from 0 (transparent) to 1 (opaque).
+</p>
+<example title="Color and Opacity">
+&lt;canvas height="300" width="600" debug="true"&gt;
+  &lt;simplelayout axis="x"/&gt;
+  &lt;class name="fader"&gt;
+    &lt;view height="100" width="200"&gt;
+        &lt;handler name="onclick"&gt;
+            immediateparent.animate('opacity', -.20, 25, true);
+        &lt;/handler&gt;
+        &lt;handler name="onmouseout" &gt;
+            immediateparent.animate('opacity', 1, 2500, false);
+        &lt;/handler&gt;
+    &lt;/view&gt;
+    
+  &lt;/class&gt;
+  &lt;fader name="houston" bgcolor="0xFF0000"&gt;
+    &lt;text text="Comet"/&gt;
+  &lt;/fader&gt;
+  &lt;fader name="sacramento" bgcolor="0x800080"&gt;
+    &lt;text fgcolor="0xFFFFFF" text="Monarch"/&gt;
+  &lt;/fader&gt;
+  &lt;fader name="seattle" bgcolor="0x008000"&gt;
+    &lt;text text="Storm"/&gt;
+  &lt;/fader&gt;
+  &lt;script&gt;
+    Debug.write("Click on a view to reduce its opacity. Mouse out to restore 100% opacity.");
+  &lt;/script&gt;
+&lt;/canvas&gt;
+</example>
+<h2>When Red Isn't Red</h2>
+
+<p>
+The print world paid careful attention to color matching: the color the client saw on the comprehensives in the conference room turned out the same as the color the customer saw on the cereal boxes. That involved synchronizing colors between a computer monitor and a laser printer (used to print the comprehensives), then the physical film separation into cyan, magenta, yellow, and black for the printer, and finally the finished product.
+</p>
+
+<p>
+Web publishers had to let go of all that. Color specifications look different on different platforms and workstations -- Macintosh or Windows, normal backlit LCD screens or aging CRTs, projectors in a conference room or high fidelity cinema displays. Web designers pretend that "0x6C6BA2" is always the same color, and hope it looks right other places.
+</p>
+
+<p>
+The best a designer can do is look at his/her application on several different kinds of monitors and operating systems, and tweak the application until it looks decent across each platform.
+</p>
+
+<p>
+W3 aims to mitigate this problem with support for the color model <a href="www.w3.org/Graphics/Color/sRBG">SRBG: Standard Default Color Space for the Internet</a>.
+</p>
+
+<p>
+!! For more about this topic, look up "color gamut", "color space", "color matching", "display gamma", and the ActionScript function setColorTransform.
+</p>
+
+
+
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************

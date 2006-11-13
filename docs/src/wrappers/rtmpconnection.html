@@ -21,15 +21,32 @@ audio/video. This allows you to broadcast and
 receive live audio and/or video, as well as recording video from a webcam or 
 audio from a microphone to files on the server.  Recorded files may be played
 back over http (using <classname>stream</classname> and 
-<classname>videoview</classname> classes) or with RTMP to allow 
+<tagname link="true">videoview</tagname> classes) or with RTMP to allow 
 seeking within and playback of long files that are impractical to load 
 into memory.</p>
 
-<example class="program">
-&lt;canvas height="100"&gt;
-  &lt;rtmpconnection id="rtc" src="rtmp://localhost/test" autoconnect="false"/&gt;
-  &lt;text text="${rtc.status}"/&gt;
-  &lt;button onclick="rtc.connect()"&gt;Click to Connect&lt;/button&gt;
+<example extract="false" title="Simple RTMP Connection">
+&lt;canvas&gt;
+     
+    &lt;simplelayout inset="10" spacing="10"/&gt;
+    &lt;rtmpconnection id="rtc" 
+        src="rtmp://localhost/test"
+        autoconnect="false"
+        debug="true"
+    /&gt;
+    &lt;view
+        layout="axis: x; spacing: 4"
+    &gt;
+        &lt;rtmpstatus/&gt;
+        &lt;text
+            text="${rtc.status}"
+            resize="true"
+        /&gt;
+    &lt;/view&gt;
+    &lt;button
+        onclick="rtc.connect()"
+    &gt;Click to Connect&lt;/button&gt;
+
 &lt;/canvas&gt;
 </example>
 
