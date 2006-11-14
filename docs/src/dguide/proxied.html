@@ -6,10 +6,7 @@
 
 <body>
 <fixme>
-These things should be converted to serverless operation. Except, that
-requires that the XML files be stored either on the same host as your
-web site or that there be a macromedia crossdomain.xml file where you
-get them from.
+When compiling for DHTML, you should ensure that gzipping is turned on at the server. This is done automatically for swf files, but not for DHTML.
 </fixme>
 <fixme>
 Regarding the SOLO deploy wizard, it just zips everything in the applications
@@ -283,7 +280,18 @@ in same directory as the source. The compiled file can be deployed by any applic
 <p>
 Alternatively you can cause the compilation as a side effect of requesting unproxied deployment, as explained in the next section.
 </p>
+<fixme>
+SOLO Deploy "Wizard".
+1) recursive copy of all files in the directory in which the app
+resides, and also includes
+2) An html wrapper file (app.swf.html)
 
+3) these include files
+   filenames.add("lps/includes/embed.js");
+    filenames.add("lps/includes/h.html");
+    filenames.add("lps/includes/h.swf");
+    filenames.add("lps/includes/vbembed.js");
+</fixme>
 
 <h3>How to specify proxied or SOLO deployment</h3>
 <p>
