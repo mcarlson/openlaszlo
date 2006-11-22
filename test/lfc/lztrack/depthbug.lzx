@@ -1,0 +1,27 @@
+<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true">
+    <!-- Can't put bgcolor on the view b/c LzTrack doesn't work if there's
+         no __LZmovieClipRef ;) LPP-1582 -->
+    <view name="a">
+        <handler name="onmousetrackover">
+            Debug.write( this );
+        </handler>
+        <view  bgcolor="red" width="100" height="100"/>
+
+    </view>
+    <view name="b" x="50" y="50">
+        <handler name="onmousetrackover">
+            Debug.write( this );
+        </handler>
+        <view  bgcolor="blue" width="100" height="100"/>
+    </view>
+
+    <script>
+        Debug.write( "Roll the mouse over the views; expect to see the correct"
+                   + "color name as you roll over each." );
+        a.bringToFront();
+        LzTrack.register( a , "foo" );
+        LzTrack.register( b , "foo" );
+        LzTrack.activate( "foo" );
+    </script>
+</canvas>

@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -127,7 +127,7 @@ LzTrack.__LZtopview = function(a, b) {
         btemp = btemp.immediateparent;
     }
     // a and b are siblings, check depth
-    if (atemp.depth > btemp.depth) return a;
+    if (atemp.__LZdepth > btemp.__LZdepth) return a;
     else return b;
 }
 
