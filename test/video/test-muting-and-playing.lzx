@@ -1,0 +1,114 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+<canvas debug="true">
+
+
+    <rtmpconnection
+        src="rtmp://localhost/test" 
+        autoconnect="true"
+    />
+
+    <mediastream name="s1" 
+        type="rtmp"
+    />
+
+    <mediastream name="s2" 
+        type="rtmp"
+    />
+
+    <simplelayout/>
+    
+    <text multiline="true" width="100%">
+    Instructions:<br/>
+    1. Either run a flash media server on localhost, or ssh tunnel to fms.laszlosystems.com<br/>
+    2. Press the broadcast button. (Grant camera access permission if needed.)
+       The button should change to say "stop broadcasting"<br/>
+    3. Press the receive button. You should be receiving audio and video from yourself and the
+       button should say "stop receiving."<br/>
+    4. Try out the audio and video mute buttons. The video mute should freeze the received picture.
+       The audio mute should silence the received sound.<br/>
+    5. Press the receive button. The received video should freeze and the button should say "stop receiving".<br/>
+    6. Press the receive button again. The video should resume and the button should say "receiving".<br/>
+    7. Press the broadcast button. The received video should freeze and the button should say "broadcast".
+       
+    </text>
+
+    <rtmpstatus/>
+
+    <view
+        layout="axis:x; inset:10; spacing:10"
+    >
+
+        <view id="v1" 
+            layout="axis:y; spacing:4"
+        >
+
+            <videoview id="live" 
+                type="rtmp" 
+                stream="$once{canvas.s1}"
+            >
+
+                <camera id="cam" 
+                    show="false"
+                />
+                <microphone id="mic" capturing="false"/>
+                
+
+            </videoview>
+
+            <edittext name="username">YourName</edittext>
+
+            <button
+                text="broadcast"
+            >
+
+                <attribute
+                    name="text" 
+                    value="${(s1.broadcasting == false) ? 'broadcast' : 'stop broadcasting'}"
+                />
+
+                <method event="onclick"><![CDATA[
+                    if (cam.show == false) {
+                        live.stream.setAttribute('url', parent.username.text);
+                        live.stream.broadcast();
+                        cam.setAttribute('show', true);
+                    } else {
+                        live.stream.stop();
+                        cam.setAttribute('show', false);
+                    }
+                  ]]>
+                </method>
+
+            </button>
+            
+            <checkbox onvalue="s1.setAttribute('muteaudio', value)">Mute Audio</checkbox>
+            <checkbox onvalue="s1.setAttribute('mutevideo', value)">Mute Video</checkbox>
+
+        </view>
+
+        <view id="v2" 
+            layout="axis:y; spacing:4"
+        >
+
+            <videoview name="vid" 
+                type="rtmp" 
+                stream="$once{canvas.s2}"
+            />
+
+            <edittext name="username">YourName</edittext>
+
+            <button
+                text="${s2.playing ? 'stop receiving' : 'receive'}"
+                onclick="s2.setAttribute('url', parent.username.text);
+                         if (s2.playing) s2.stop(); else s2.play();"
+            />
+
+        </view>
+
+    </view>
+
+
+</canvas>

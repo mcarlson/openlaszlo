@@ -38,14 +38,37 @@
         <!--- The current frames per second for playing video .-->
         <attribute name="fps" type="number" value="0"/>
 
-        <!--- True if playing, false if paused or not started yet. -->
-        <attribute name="playing" value="false"/>
+        
+        <!--- True to pause playback. Named this way to pun with paused for animators. -->
+        <attribute name="paused" value="false" setter="this._setPaused(paused)" />
+        
+        <!--- Works for playback and mimics animator pause() semantics. -->
+        <method name="pause" args="p"> setAttribute("paused",  (p == null) ? !this['paused'] : p) </method>
+        
+        <!--- True if playing right now. 
+              @keywords readonly -->
+        <attribute name="playing" 
+                   value="${this.mode == 'playing'  &amp;&amp;  !this['paused']}"/>
 
+        <!--- True if recording right now. 
+              @keywords readonly -->
+        <attribute name="recording" 
+                   value="${this.mode == 'recording'}"/>
+
+        <!--- True if broadcasting right now. 
+              @keywords readonly -->
+        <attribute name="broadcasting" 
+                   value="${this.mode == 'broadcasting'  ||  this.mode == 'recording'}"/>
+
+        <!--- Mode: "" if doing nothing, "playing" if playing,
+             "broadcasting" if can be received, "recording" if recording.
+              Recording also implies can be received, i.e., broadcasting. 
+              Pausing does not affect the mode, unlike stopping.
+              @keywords readonly -->
+        <attribute name="mode" value="" type="string"/>
+        
         <!--- Current time of mediastream being recorded (in seconds). -->
         <attribute name="recordtime" value="0" type="number"/>
-
-        <!--- Mode: "playback" or "record". -->
-        <attribute name="mode" value="" type="string"/>
 
         <!--- When true, print extra info to the debugger. -->
         <attribute name="debug" value="false"/>
@@ -60,6 +83,12 @@
 
         <!--- The rtmp streamname (without .flv suffix). -->
         <attribute name="streamname" value="" type="string"/>
+        
+        <!--- True iff audio is muted. -->
+        <attribute name="muteaudio" value="false"  setter="this._setMuteaudio(muteaudio)" />
+
+        <!--- True iff video is muted. -->
+        <attribute name="mutevideo" value="false"  setter="this._setMutevideo(mutevideo)" />
 
         <!--
               Private attributes.
@@ -95,37 +124,26 @@
         <event name="onurl"/>
 
 
-        <!--- Set up to publish a mediastream, type: "record" or "publish".
+        <!--- Set up to publish a mediastream.
               @keywords private -->
-        <method name="_publishSetup" args="type"> <![CDATA[     
+        <method name="_publishSetup"> <![CDATA[     
 
-            //Debug.write("_publishSetup", this, type, this.streamname);
+            //Debug.write("_publishSetup", this, this.streamname);
 
-            if ($debug) {
-                if (this.type != "rtmp") {
-                    Debug.warn("type must be rtmp to " + type + " %w", this);
-                }
-            }
+            if ( $debug  &&  this.type != "rtmp" ) 
+                 Debug.warn("type must be rtmp %w", this);
 
-            if (!this._flashstream) {
-                this._createStream();
-            }
+            if (!this._flashstream)   this._createStream();
 
-            if (this.cam != null) {
-                this._flashstream.attachVideo(this.cam._dev);
-            }
+            if ( this.cam )   setAttribute("mutevideo", false);
+            if ( this.mic )   setAttribute("muteaudio", false);
 
-            if (this.mic != null) {
-                this._flashstream.attachAudio(this.mic._dev);
-            }
-
-            if (this.streamname == "") {
-                if (this.url != "") {
-                    this.streamname = this._namefromurl(this.url);
-                } else {
-                    // make up temporary name
-                }
-            }
+                 if ( this.streamname != "" ) 
+                      ;  // cool; already has a name
+            else if ( this.url != "" )
+                      this.streamname = this._namefromurl(this.url);
+            else 
+                      ; // make up temporary name
           ]]>
         </method>
 
@@ -135,6 +153,7 @@
             this._publishSetup("broadcast");
             //Debug.write("publish", this.streamname);
             this._flashstream.publish(this.streamname);
+            setAttribute("mode", "broadcasting");
           ]]>
         </method>
 
@@ -152,7 +171,7 @@
             }
             this._recordtimedel.unregisterAll();
             this._recordtimedel.register(LzIdle, "onidle")
-            setAttribute("mode", "record");
+            setAttribute("mode", "recording");
           ]]> 
         </method>
 
@@ -166,19 +185,32 @@
         </method>
 
 
-        <!--- Stop the stream. 
-             TODO: Do we really want both stop and pause? -->
+       <!--- Stop the stream. Whereas pause will keep the 'mode' as 
+              playing, stop will set mode to "" and is heavier-weight
+              operation. -->
         <method name="stop"><![CDATA[
-            if (this._flashstream == null) {
-                return;
-            }
-            if (this.mode == "record") {
-                this._flashstream.publish(false);
+            if ( this._flashstream == null )
+                 return;
+
+            switch (this.mode) {
+              default:
+                Debug.warn("bogus mode: " + this.mode);
+                break;
+                
+              case "recording":
                 this._recordtimedel.unregisterAll();
-            } else {
+                // fall through
+              case "broadcasting":
+                this._flashstream.publish(false);
+                break;
+
+              case "playing":
                 this._flashstream.play(false);
-                this._playtimedel.unregisterAll();
+                if (this._playtimedel) this._playtimedel.unregisterAll();
+                this.setAttribute("playing", false);
+                break;
             }
+            this.setAttribute("mode", "");
           ]]>
         </method>
 
@@ -407,14 +439,11 @@
                 //Debug.write("mediastream play pause",  this, "start", start);
                 this._flashstream.play(sname, start, 0);
 
-                if (playing) {
-                    this.setAttribute("playing", false);
-                }
-
                 if (this.type == "http") {
                     // *** this doesn't work
                     this._flashstream.pause(true);
                 }
+                setAttribute("paused", true);
 
             } else {
                 //Debug.write("mediastream play PLAY", this, "start", start);
@@ -430,15 +459,13 @@
                 }
 
                 //Debug.write("mediastream setting playing", this);
-                this.setAttribute("playing", true);
-
             }
 
             if (this.type == "rtmp") {
                 this._pendingstreamname = sname;
             }
 
-            setAttribute("mode", "playback");
+            setAttribute("mode", "playing");
 
             if (this.debug) {
                 //Debug.write("mediastream play", this, sname, typeof(sname), start);
@@ -463,13 +490,16 @@
 
         <!--- Pause the video (calling while paused will toggle to play).
               This does nothing when you record. -->
-        <method name="pause"><![CDATA[
-            if ((this.mode == "record") ||
-                (this._flashstream == null)) {
-                return;
+        <method name="_setPaused" args="paused"><![CDATA[
+            if ( this.mode != "playing"  ||  !this._flashstream) {
+                 if ( paused )
+                      Debug.warn( "mediastream: trying to pause a stream that is not playing");
+                 return;
             }
-            this._flashstream.pause();
-            this.setAttribute("playing", !this.playing);
+            this._flashstream.pause(paused);
+            this.setAttribute("paused", paused);
+            if ( this["onpaused"] )  
+                 this.onpaused.sendEvent(paused);
           ]]>
         </method>
 
@@ -562,6 +592,7 @@
               @keywords private -->
         <method name="_setCam" args="cam"><![CDATA[
             this.cam = cam;
+            if (this["oncam"]) this.oncam.sendEvent();
           ]]>
         </method>
 
@@ -570,6 +601,30 @@
               @keywords private -->
         <method name="_setMic" args="mic"><![CDATA[
             this.mic = mic;
+            if (this["onmic"]) this.onmic.sendEvent();
+          ]]>
+        </method>
+        
+        
+        <!--- Setter for the "muteaudio" attribute.
+              @keywords private -->
+        <method name="_setMuteaudio" args="muteaudio"><![CDATA[
+            this.muteaudio = muteaudio;
+            if (!this.mic)           return;
+            if (!this._flashstream)  return;
+            this._flashstream.attachAudio(muteaudio ? false : this.mic._dev);
+            if (this["onmuteaudio"]) this.onmuteaudio.sendEvent();
+          ]]>
+        </method>
+        
+        
+        <!--- Setter for the "mutevideo" attribute.
+              @keywords private -->
+        <method name="_setMutevideo" args="mutevideo"><![CDATA[
+            this.mutevideo = mutevideo;
+            if (!this.cam)  return;
+            this._flashstream.attachVideo(mutevideo ? false : this.cam._dev);
+            if (this["onmutevideo"]) this.onmutevideo.sendEvent();
           ]]>
         </method>
 
