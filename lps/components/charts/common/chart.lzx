@@ -207,11 +207,11 @@
             this.plotareabackground.lineTo(lOffset,this.plotarea.height-lOffset + delta);
             this.plotareabackground.closePath();
             
+            this.plotareabackground.fill();
+            
             if(this.style.plot.linesize != 0){
                 this.plotareabackground.stroke();
             }
-            
-            this.plotareabackground.fill();
             
             <?ignore
             this.plotareabackground.setAttribute( "width", this.plotarea.width );
@@ -270,6 +270,9 @@
             var objs = [];                       
             for (var i = this.subnodes.length - 1; i >= 0; i--)
             {
+                if((className == "dataseries" || className == "datacolumn") && this.subnodes[i] instanceof dataseries){
+                    return this.subnodes[i];
+                }
                 if(this.subnodes[i].classname == className)
                 {
                     return this.subnodes[i];

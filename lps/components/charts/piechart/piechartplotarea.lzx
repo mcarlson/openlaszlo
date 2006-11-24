@@ -59,35 +59,37 @@
 
             this.arrPiePieces = new Array(0);
             
-            for(var i = 0; i < xseries.length; i++)
-            {   
-                var arc = yseries[i] / sum * 360;   
-                
-                var lx = this.width/2;
-                var ly = this.height/2;
-
-                var v = _piepiecespool.getView({x : lx, y : ly, width: 0, height : 0});
-                v.clear();
-                
-                //v.tooltip = tooltipseries[i];
-                
-                v.setAttribute( "x", lx );
-                v.setAttribute( "y", ly );
-                v.setAttribute( "angle", angle );
-                v.setAttribute( "arc", arc );
-                v.setAttribute( "radius", radius );
-                  
-                v.setAttribute( "style", parent.style.getDataStyle(i));
-
-                this.arrPiePieces.push(v);
-                v.renderWedge();
-
-                if(tooltipseries != null)
-                {
-                    v.tooltip = tooltipseries[i];
+            if(xseries != null){
+                for(var i = 0; i < xseries.length; i++)
+                {   
+                    var arc = yseries[i] / sum * 360;   
+                    
+                    var lx = this.width/2;
+                    var ly = this.height/2;
+    
+                    var v = _piepiecespool.getView({x : lx, y : ly, width: 0, height : 0});
+                    v.clear();
+                    
+                    //v.tooltip = tooltipseries[i];
+                    
+                    v.setAttribute( "x", lx );
+                    v.setAttribute( "y", ly );
+                    v.setAttribute( "angle", angle );
+                    v.setAttribute( "arc", arc );
+                    v.setAttribute( "radius", radius );
+                      
+                    v.setAttribute( "style", parent.style.getDataStyle(i));
+    
+                    this.arrPiePieces.push(v);
+                    v.renderWedge();
+    
+                    if(tooltipseries != null)
+                    {
+                        v.tooltip = tooltipseries[i];
+                    }
+                    angle += arc;
                 }
-                angle += arc;
-            }                                            
+            }
         ]]>
         </method>
         
@@ -96,9 +98,11 @@
         <method name="calcSum" args="arr">
         <![CDATA[
             var sum = 0;
-            for(var i = 0; i < arr.length; i++)
-            {
-                sum += arr[i];
+            if(arr != null){
+                for(var i = 0; i < arr.length; i++)
+                {
+                    sum += arr[i];
+                }
             }
             return sum;
         ]]>            
@@ -117,3 +121,11 @@
         </method>
     </class>     
 </library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->

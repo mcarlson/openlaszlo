@@ -3,16 +3,16 @@
    Represents a single pie slice in the chart -->
     <class name="piepiece" extends="drawview">
         <attribute name="tooltip" type="string" value=""/> 
-        <attribute name="angle" type="number"/>
+        <attribute name="angle" type="number" value="25"/>
         <!--- The length of the radius in pixels -->
-        <attribute name="radius" type="number"/>
+        <attribute name="radius" type="number" value="10"/>
         <!--- The data label of this pie slice -->
-        <attribute name="label" type="string"/>
+        <attribute name="label" type="string" value="null"/>
         <!--- The value of the angle, in degrees where the rendering of the piepieces started,
               default = 0 -->
         <!-- attribute name="startAngle" type="number" value="0"/-->
         <!--- The segment of the circle that defines the current pie slice -->
-        <attribute name="arc" type="number"/>
+        <attribute name="arc" type="number" value="10"/>
         <!--- The y radius of the slice. default = null -->
         <attribute name="yRadius" type="number" value="${null}"/>
         <!--- The strokestyle object that is applied to the pie slice border -->

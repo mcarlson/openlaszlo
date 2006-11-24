@@ -8,17 +8,17 @@
         <!--- The minimum virtual value to be rendered in the 'x' axis -->
         <attribute name="minx" type="number" value="0"/>
         <!--- The maximum virtual value to be rendered in the 'x' axis -->
-        <attribute name="maxx" type="number" value="0"/>
+        <attribute name="maxx" type="number" value="100"/>
         <!--- The minimum virtual value to be rendered in the 'y' axis -->
         <attribute name="miny" type="number" value="0"/>
         <!--- The maximum virtual value to be rendered in the 'y' axis -->
-        <attribute name="maxy" type="number" value="0"/>
+        <attribute name="maxy" type="number" value="100"/>
 
         <!-- The default min's ans max's values that belongs to all the data series -->
         <attribute name="defaultminx" type="number" value="0"/>
-        <attribute name="defaultmaxx" type="number" value="0"/>
+        <attribute name="defaultmaxx" type="number" value="100"/>
         <attribute name="defaultminy" type="number" value="0"/>
-        <attribute name="defaultmaxy" type="number" value="0"/>
+        <attribute name="defaultmaxy" type="number" value="100"/>
 
         <!--- @keyword private -->
         <attribute name="dataSeriesLeaf" type="expression" value="${null}"/>
@@ -176,6 +176,7 @@
             
             this.renderPlotArea();
             this.renderGridLines();
+
             
             if (this.valuelinesenabled) {
                 this.renderValueLine();    
@@ -412,12 +413,15 @@
             for (i = 0; i < this.dataSeriesLeaf.length; i++) {
                 //Get the a single data series from the array
                 column = this.dataSeriesLeaf[i].getDataColumn(pAxis.columnName);
+                
+                if(column != null){
 
-                //Get the mininum value of the single data series
-                singledataseriesmin.push(column.getMin());
-
-                //Get the maximum value of the single data series
-                singledataseriesmax.push(column.getMax());
+                    //Get the mininum value of the single data series
+                    singledataseriesmin.push(column.getMin());
+    
+                    //Get the maximum value of the single data series
+                    singledataseriesmax.push(column.getMax());
+                }
             }
 
             //Set the minimum and maximum values for this axis.
@@ -434,15 +438,21 @@
         <method name="buildCategoricalMinMax" args="pAxis, pOrientation"> 
         //Categorical Axis - When the axis type is categorical, the axis class only expects one data serie
         //The Axis minimun value is 0 and maximum value is the # of Categories -1 for the data serie.
-            pAxis.categoricalArray = this.dataSeriesLeaf[0].getDataColumn(pAxis.columnName).values;
+            if(this.dataSeriesLeaf[0].getDataColumn(pAxis.columnName) != null){
+                pAxis.categoricalArray = this.dataSeriesLeaf[0].getDataColumn(pAxis.columnName).values;
+            }
 
             //Set the minimum and maximum values for this axis.
             if( pOrientation.toLowerCase() == 'x' ) {
                 this.defaultminx = 0;
-                this.defaultmaxx = pAxis.categoricalArray.length - 1;
+                if(pAxis.categoricalArray != null){
+                    this.defaultmaxx = pAxis.categoricalArray.length - 1;
+                }
             } if( pOrientation.toLowerCase() == 'y' ) {
                 this.defaultminy = 0;
-                this.defaultmaxy = pAxis.categoricalArray.length - 1;
+                if(pAxis.categoricalArray != null){
+                    this.defaultmaxy = pAxis.categoricalArray.length - 1;
+                }
             }
         </method>
 

@@ -5,12 +5,23 @@
     <class name="datacolumn">
         <!--- the name of the column in the datapath for the series -->
         <attribute name="columndatapath" type="string" value=""/>
+        <!--- the name of the label in the datapath for the series -->
+        <attribute name="labeldatapath" type="string" value=""/>
         <!--- array of data representing the series values -->
         <attribute name="values" value="$once{null}"/>
         <!--- type of data: string or number -->  
         <attribute name="datatype" value="string" type="string"/>
         <!--- true when data had been loaded at least once -->
         <attribute name="datadone" value="false" type="boolean"/>
+        <!--- this is part of the fix that allows charts to refresh if data has
+            been changed.  (Datacolumn itself can't have a datapath attribute or
+            else it somehow changes how everything works.) -->
+        <view name="dataview" visible="false">
+            <method event="ondata">
+                parent.getRootDataSeries().ondata.sendEvent();
+            </method>
+        </view>
+        
         <!--- get the min value of the columns for the series -->      
         <method name="getMin">
         <![CDATA[
@@ -86,7 +97,7 @@
         <![CDATA[
             var obj = this;
             while(obj != canvas)
-            {                
+            {
                 if(obj["datapath"] != null)
                 {
                     return obj.datapath;
@@ -123,6 +134,7 @@
                         this.values[i] = this.processData(this.values[i]);
                     }
                 }
+                this.dataview.setDatapath(this.columndatapath);
             }
             
         ]]>    
@@ -140,12 +152,24 @@
             //this.values = null;
         </method>
         
-        <!--- @keyword private -->
-        <method event="oncolumndatapath">
-            parent.getRootDataSeries().ondata.sendEvent();
+        <method name="getRootDataSeries">
+            var objectplace = this;
+            while(objectplace.parent instanceof dataseries){
+                if(parent instanceof dataseries){
+                    objectplace = objectplace.parent;
+                } else {
+                    break;
+                }
+            }
+            return objectplace;
         </method>
         
-     </class>
+        <!--- @keyword private -->
+        <method event="ondata">
+            //this.getRootDataseries().ondata.sendEvent();
+        </method>
+        
+    </class>
           
     <!---          
         A  dataseries in a container for dataseries and datacolumn. dataseries can be nested. 
@@ -174,7 +198,7 @@
             {
                 return this[attName];
             }
-            else if(parent.classname == "dataseries")
+            else if(parent instanceof dataseries)
             {         
                 return parent.getNestedAttribute(attName);
             }
@@ -191,28 +215,30 @@
         <method name="getDataColumn" args="name">
         <![CDATA[
             //debug.write("datacolumnsmap[name]: "  + datacolumnsmap[name]);
-            
-            if(datacolumnsmap[name] && datacolumnsmap[name].values)
-            {
-                return datacolumnsmap[name]; 
-            }            
-            
-            for(var i = 0; i < this.subnodes.length; i++)
-            {
-                //debug.write("subnodename: " + this.subnodes[i].name);
-                if((this.subnodes[i].classname == "datacolumn") && (this.subnodes[i].name == name))
-                {
-                
-                    datacolumnsmap[name] = this.subnodes[i];
-                    datacolumnsmap[name].loadData();
-                    return datacolumnsmap[name];                       
-                }
-            }               
 
-            if(parent.classname == "dataseries")
-            {
+            if(name != undefined){            
+                if(datacolumnsmap[name] && datacolumnsmap[name].values)
+                {
+                    return datacolumnsmap[name]; 
+                }            
                 
-                return parent.getDataColumn(name);
+                for(var i = 0; i < this.subnodes.length; i++)
+                {
+                    //debug.write("subnodename: " + this.subnodes[i].name);
+                    if((this.subnodes[i] instanceof datacolumn) && (this.subnodes[i].name == name))
+                    {
+                    
+                        datacolumnsmap[name] = this.subnodes[i];
+                        datacolumnsmap[name].loadData();
+                        return datacolumnsmap[name];                       
+                    }
+                }               
+    
+                if(parent instanceof dataseries)
+                {
+                    
+                    return parent.getDataColumn(name);
+                }
             }
             
             return null;
@@ -242,7 +268,7 @@
                 for(var i = 0; i < this.subnodes.length; i++){
                     var childDataSeries = this.subnodes[i];
                     
-                    if(childDataSeries.classname  == "dataseries"){
+                    if(childDataSeries instanceof dataseries){
                         this.dataseriesleafs = this.dataseriesleafs.concat(childDataSeries.getDataSeriesLeafs());                                                                                                
                     }
                 }                       
@@ -260,11 +286,20 @@
         <method name="getLegend">
         <![CDATA[
 
+            var dscounter = 1;
+            // The counter serves to keep track of the number of legends on the
+            // canvas.  This fixes the issue with multiple charts all ending up
+            // with the same legend text.
+            
             var ds = canvas["legendds"];
             if(!canvas["legendds"])
             {
                 ds = new LzDataset("legendds");
-                canvas["legendds"] = ds;            
+                canvas["legendds"] = ds;     
+            } else {
+                dscounter++;
+                ds = new LzDataset("legendds"+dscounter);
+                canvas["legendds"+dscounter] = ds;
             }
  
             ds.childNodes = [];
@@ -272,17 +307,23 @@
             var series = this.getDataSeriesLeafs();
             var dp = ds.getPointer();
  
-            if( parent.class.classname=='piechart' ) {
+            if( parent.class.classname == 'piechart') {
                 
-                 var xseries = parent.getDataSeries().getDataSeries(0).getDataColumn("x").values;
-                 
-                 for (var i=0 ; i<xseries.length ; i++ ) {
-                    dp.addNode("item", "", {name: xseries[i]}); 
-                 } 
+                if(parent.getDataSeries().getDataSeries(0).getDataColumn("x") != null){
+                    var xseries = parent.getDataSeries().getDataSeries(0).getDataColumn("x").values;
+                } else {
+                    var xseries = null;
+                }
+                
+                if(xseries != null){
+                    for (var i=0 ; i<xseries.length ; i++ ) {
+                        dp.addNode("item", "", {name: xseries[i]}); 
+                    }
+                }
                  
             } else {
                            
-                var yseriesname = (parent.class.classname == "barchart"? 'x' : 'y');
+                var yseriesname = (parent.class.classname == 'barchart'? 'x' : 'y');
 
                 for(var i = 0; i < series.length; i++)
                 {
@@ -301,14 +342,15 @@
 
         <!--- get the top level -->
         <method name="getRootDataSeries">
-            if(parent.classname != "dataseries")
-            {
-                return this;
+            var objectplace = this;
+            while(objectplace.parent instanceof dataseries){
+                if(parent instanceof dataseries){
+                    objectplace = objectplace.parent;
+                } else {
+                    break;
+                }
             }
-            else
-            {
-                return parent.getRootDataSeries();
-            }
+            return objectplace;
         </method>
 
 
@@ -360,8 +402,12 @@
         
         <!--- @keyword private -->
         <method event="ondata">
-            this.clearCache();
-            this.setAttribute("datadone", true);
+            // Have to keep this from happening on linechart, or else it doesn't
+            // draw it properly the first time.  This may need to be fixed.  -JC
+            if(this.getRootDataSeries().parent.class.classname != "linechart"){
+                this.clearCache();
+                this.setAttribute("datadone", true);
+            }
         </method>                       
     </class>
 </library>

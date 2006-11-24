@@ -114,28 +114,29 @@
         <method name="renderDataLabels" args="xseries, yseries, datalabelseries, style, seriesNum">
         <![CDATA[             
             var labelList = listmanager.getList(this, "datalabel", seriesNum);
-            for(var i = 0; i < xseries.length; i++){                    
-
-                var label = labelList.getViewAt(i);
-            
-                if(style.updateNeeded(label))
-                {
-                    label.setAttribute('style', style.label);
+            if(xseries != null){
+                for(var i = 0; i < xseries.length; i++){                    
+                    if(datalabelseries[i] != "null" && datalabelseries[i] != null && datalabelseries[i] != ''){    
+                        var label = labelList.getViewAt(i);
                     
-                    label.render(datalabelseries[i]);
-                    label.bringToFront(); 
-                    style.markUpdated(label);                        
+                        if(style.updateNeeded(label))
+                        {
+                            label.setAttribute('style', style.label);
+                            
+                            label.render(datalabelseries[i]);
+                            label.bringToFront(); 
+                            style.markUpdated(label);                        
+                        }
+                        //label.setX( lx+label.width>plotarea.width?plotarea.width-label.width-5:lx );
+                        label.setX( lx );
+                        label.setY(devicey - label.height/2);
+                    }
+                            
+                    var devicex = this.toDeviceX(xseries[i]);
+                    var devicey = this.toDeviceY(yseries[i]);
+                    var lx = devicex + 5;
                 }
-                        
-                var devicex = this.toDeviceX(xseries[i]);
-                var devicey = this.toDeviceY(yseries[i]);
-                var lx = devicex + 5;
-                
-                //label.setX( lx+label.width>plotarea.width?plotarea.width-label.width-5:lx );
-                label.setX( lx );
-                label.setY(devicey - label.height/2);
-            
-            }                                
+            }
         ]]>
         </method>
         

@@ -469,7 +469,7 @@
         <![CDATA[  
         //Using useLabelColumns
         //Perform validations
-        if(this.labelTextArray!=null && dataSeries!=null && dataSeries[0]!=null && dataSeries[0].getDataColumn(this.ticklabelcolumn).values!=null && this.labelTextArray.length==dataSeries[0].getDataColumn(this.ticklabelcolumn).values.length) {
+        if(this.labelTextArray!=null && dataSeries!=null && dataSeries[0]!=null && dataSeries[0].getDataColumn(this.ticklabelcolumn)!=null && this.labelTextArray.length==dataSeries[0].getDataColumn(this.ticklabelcolumn).values.length) {
             this.labelTextArray = dataSeries[0].getDataColumn(this.ticklabelcolumn).values;    
         }
         ]]> 

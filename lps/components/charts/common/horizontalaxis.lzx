@@ -34,7 +34,7 @@
             switch( this.titleLocation ) {
                 case "high":
                     this.titleView.setX((this.width - this.titleView.width)/2);
-                    this.titleView.setY(-(this.height + this.style.tickmajor.length.height)- this.titleGap - this.titleView.height);
+                    this.titleView.setY(-(this.height + this.style.tickmajor.length)- this.titleGap - this.titleView.height);
                     break;
                 
                 case "low":

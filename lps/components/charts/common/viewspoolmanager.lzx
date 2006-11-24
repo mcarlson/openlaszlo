@@ -144,14 +144,15 @@
         <![CDATA[             
              for(var i = 0; i < list.length; i++)
              {                
-                list[i].setVisible(false);
-                //list[i].clear();
+                 if(list[i] != undefined){
+                    list[i].setVisible(false);
+                    //list[i].clear();
+                }
              }
         ]]>
         </method>            
     </class>  
 </library>   
-
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
 * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              

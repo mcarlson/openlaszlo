@@ -48,21 +48,35 @@
                     var tooltipseries = null;
                     var labelseries = null;
 
-                    var xseries = leafseries.getDataColumn(haxis.columnName).values;
-                    var yseries = leafseries.getDataColumn(vaxis.columnName).values;
+                    if(leafseries.getDataColumn(haxis.columnName) != null){
+                        var xseries = leafseries.getDataColumn(haxis.columnName).values;
+                    } else {
+                        var xseries = null;
+                    }
+                    if(leafseries.getDataColumn(vaxis.columnName) != null){
+                        var yseries = leafseries.getDataColumn(vaxis.columnName).values;
+                    } else {
+                        var yseries = null;
+                    }
                     
                     plotarea.renderSeries( xseries, yseries, ldatastyle );
                     
                     if(this.dataPointsEnabled){                                      
-                        if(this.datatipColumn != "null"){
+                        if(this.datatipColumn != "null" && leafseries.getDataColumn(this.datatipColumn) != null){
                             tooltipseries = leafseries.getDataColumn(this.datatipColumn).values;
                         } 
                         plotarea.renderDataPoints(xseries, yseries, tooltipseries, ldatastyle, i);                    
                     }
-                    if ( this.datalabelEnabled ){
-                        labelseries = leafseries.getDataColumn(this.datalabelColumn).values;
-                        plotarea.renderDataLabels(xseries, yseries, labelseries, ldatastyle, i);
+                    
+                labeldpath = (leafseries.getDataColumn(vaxis.columnName).labeldatapath == '' ?
+                    leafseries.getDataColumn(haxis.columnName).labeldatapath : leafseries.getDataColumn(vaxis.columnName).labeldatapath);
+                if ( this.datalabelEnabled && labeldpath != ''){
+                    if(leafseries.getDataColumn(this.datalabelColumn) != ''){
+                        labelseries = leafseries.getDataColumn(vaxis.columnName).getDataPath().xpathQuery(labeldpath);
                     }
+                }
+
+                    plotarea.renderDataLabels(xseries, yseries, labelseries, ldatastyle, i);
                 }
             }
         ]]>

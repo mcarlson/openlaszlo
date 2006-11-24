@@ -24,23 +24,27 @@
         <![CDATA[ 
             var x = offset;
 
-            for(var i = 0; i < xseries.length; i++)
-            {                
-                var v = renderBar(i + offset, width, yseries[i], style );
-                if(tooltipseries != null)
-                    v.tooltip = tooltipseries[i];
-
-                if ( parent.datalabelEnabled ){
-                    var label = _datalabelpool.getView();
-                    var lx = v.x + v.width + 5;
-                    label.setAttribute('style', style.label);
-                    label.render(labelseries[i]);
-
-                    label.setX( lx+label.width>this.width?this.width-label.width:lx );
-                    label.setY( v.y + v.height);
-                    label.bringToFront();
+            if(xseries != null){
+                for(var i = 0; i < xseries.length; i++)
+                {                
+                    var v = renderBar(i + offset, width, yseries[i], style );
+                    if(tooltipseries != null)
+                        v.tooltip = tooltipseries[i];
+    
+                    if ( parent.datalabelEnabled && labelseries != null){
+                        if(labelseries[i] != "null" && labelseries[i] != null && labelseries[i] != ''){
+                            var label = _datalabelpool.getView();
+                            var lx = v.x + v.width + 5;
+                            label.setAttribute('style', style.label);
+                            label.render(labelseries[i]);
+        
+                            label.setX( lx+label.width>this.width?this.width-label.width:lx );
+                            label.setY( v.y + v.height);
+                            label.bringToFront();
+                        }
+                    }
                 }
-            }                                            
+            }
         ]]>
         </method>
                 
@@ -79,7 +83,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

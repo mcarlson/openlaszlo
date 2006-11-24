@@ -38,20 +38,39 @@
                                 
             for(var i = 0; i < numSeries; i++)
             {
-                var leafseries = topseries.getDataSeries(i); 
-                var xseries = leafseries.getDataColumn(vaxis.columnName).values;
-                var yseries = leafseries.getDataColumn(haxis.columnName).values;
+                var leafseries = topseries.getDataSeries(i);
+                if(leafseries.getDataColumn(vaxis.columnName) != null){
+                    var xseries = leafseries.getDataColumn(vaxis.columnName).values;
+                } else {
+                    var xseries = null;
+                }
+                if(leafseries.getDataColumn(haxis.columnName) != null){
+                    var yseries = leafseries.getDataColumn(haxis.columnName).values;
+                } else {
+                    var yseries = null;
+                }
                 var tooltipseries = null;
                 var labelseries = null;
                 var ldatastyle = this.style.getDataStyle(i);
-                if(this.datatipEnabled){                                      
+                if(this.datatipEnabled && leafseries.getDataColumn(this.datatipColumn) != null){                                      
                     tooltipseries = leafseries.getDataColumn(this.datatipColumn).values; 
                 }
-                if ( this.datalabelEnabled ){
-                    labelseries = leafseries.getDataColumn(this.datalabelColumn).values;
+
+                var labeldpath;
+                var usehaxis = false;
+                if(leafseries.getDataColumn(vaxis.columnName).labeldatapath == ''){
+                    labeldpath = leafseries.getDataColumn(haxis.columnName).labeldatapath;
+                    usehaxis = true;
+                } else {
+                    labeldpath = leafseries.getDataColumn(vaxis.columnName).labeldatapath;
+                }
+                if ( this.datalabelEnabled && labeldpath != ''){
+                    if(leafseries.getDataColumn(this.datalabelColumn) != ''){
+                        labelseries = leafseries.getDataColumn((usehaxis == true ? haxis.columnName : vaxis.columnName)).getDataPath().xpathQuery(labeldpath);
+                    }
                 }
                 
-                if (leafseries.enabled ) {                
+                if (leafseries.enabled ) {
                     plotarea.renderSeries(xseries, yseries, tooltipseries, labelseries, ldatastyle, barwidth / 2 + barwidth * i, barwidth);
                 }
             }
@@ -76,7 +95,7 @@
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

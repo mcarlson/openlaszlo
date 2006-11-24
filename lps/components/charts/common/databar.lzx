@@ -129,14 +129,14 @@
             this.strokeDataBar.renderStroke(endx, endy, startx, endy);
             this.strokeDataBar.renderStroke(startx, endy, startx, starty);
         </method>
-        <method event="onmousedown">
-            parent.onmousedown.sendEvent();
+        <method event="onMouseDown">
+            parent.onMouseDown.sendEvent();
         </method>
     </class>    
 </library> 
 <!-- * X_LZ_COPYRIGHT_BEGIN 
 ***************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
 * Use is subject to license terms.                                            
 * X_LZ_COPYRIGHT_END 
 ****************************************************** -->

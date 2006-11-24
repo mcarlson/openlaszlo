@@ -40,8 +40,16 @@
             {
                 var leafseries = topseries.getDataSeries(i);
                 //FIXME!!(LHCR, 5/06/2005): Read hard coded data columns - 'x', 'y'
-                var xseries = leafseries.getDataColumn("x").values;
-                var yseries = leafseries.getDataColumn("y").values;
+                if(leafseries.getDataColumn("x") != null){
+                    var xseries = leafseries.getDataColumn("x").values;
+                } else {
+                    var xseries = null;
+                }
+                if(leafseries.getDataColumn("y") != null){
+                    var yseries = leafseries.getDataColumn("y").values;
+                } else {
+                    var yseries = null;
+                }
                 var tooltipseries;// = leafseries.getDataColumn(this.datatipColumn).values; 
                 
                 plotarea.renderSeries(xseries, yseries, tooltipseries);          
@@ -63,7 +71,11 @@
                 var topseries = this.getDataSeries();
                 var leafseries = topseries.getDataSeries(0);
                     //FIXME!!(LHCR, 5/06/2005): Read hard coded data columns - 'x', 'y'
-                var yseries = leafseries.getDataColumn(this.datalabelColumn).values;
+                if(leafseries.getDataColumn(this.datalabelColumn) != null){
+                    var yseries = leafseries.getDataColumn(this.datalabelColumn).values;
+                } else {
+                    var yseries = null;
+                }
 
                 for(var i = 0; i < arrPiePieces.length; i++){ 
                     piePiece = arrPiePieces[i];  
@@ -83,3 +95,11 @@
     </class>
     
 </library> 
+<!-- * X_LZ_COPYRIGHT_BEGIN 
+***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              
+* Use is subject to license terms.                                            
+* X_LZ_COPYRIGHT_END 
+****************************************************** -->
+<!-- @LZX_VERSION@                                                       
+   -->
