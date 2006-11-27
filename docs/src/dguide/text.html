@@ -55,7 +55,8 @@ setting the font parameters. These are the
 <attribute>fontsize</attribute> attributes:</p>
 
 <example title="setting font, fonstyle and fontsize">
-&lt;canvas height="50" layout="y"&gt;
+&lt;canvas height="50"&gt;
+  &lt;simplelayout axis="y"/&gt;
   &lt;text fontstyle="bold"&gt;Default bold&lt;/text&gt;
   &lt;text fontstyle="italic"&gt;Default italic&lt;/text&gt;
   &lt;text fontstyle="bold italic"&gt;Default bold italic&lt;/text&gt;
@@ -65,7 +66,8 @@ setting the font parameters. These are the
 <p>Within the text content, HTML tags may also be used:</p>
 
 <example title="HTML tags within text">
-&lt;canvas height="50" layout="y"&gt;
+&lt;canvas height="50"&gt;
+  &lt;simplelayout axis="y"/&gt;
   &lt;text&gt;&lt;b&gt;Default bold&lt;/b&gt;&lt;/text&gt;
   &lt;text&gt;&lt;i&gt;Default italic&lt;/i&gt;&lt;/text&gt;
   &lt;text fontstyle="bold"&gt;&lt;i&gt;Default bold italic&lt;/i&gt;&lt;/text&gt;
@@ -95,7 +97,9 @@ are preserved:</p>
 as an RGB hex string of the form "<code>#<var>RRGGBB</var></code>".</p>
 
 <example title="Setting text colors using RGB strings">
-&lt;canvas height="60" layout="y"&gt;
+&lt;canvas height="60"&gt;
+  &lt;simplelayout axis="y"/&gt;
+
   &lt;font name="Times Roman" src="bitstream-vera-1.10/vera.ttf"/&gt;
   
   &lt;text height="30"&gt;
