@@ -214,7 +214,8 @@ LzLoader.prototype.returnData = function ( loadobj , data ){
         if (typeof(data) != 'undefined') {
             if (loadobj.proxied) {
                 // proxied req gets back <resultset><body>XML</body><headers/></resultset>
-                ndata.setChildNodes([data.childNodes[0].childNodes[0]]);
+                ndata.setChildNodes(data.childNodes[0].childNodes); 
+                //ndata.setChildNodes([data.childNodes[0].childNodes[0]]);
             } else {
                 // SOLO, we get back raw XML only
                 ndata.setChildNodes([data]);
