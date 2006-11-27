@@ -1,0 +1,54 @@
+<library>
+  <!-- test the 'getresponseheaders=true' option, request the LPS server to add HTTP header metadata   -->
+    <include href="lzunit/lzunit.lzx" />
+
+    <!-- default value of nsprefix -->
+    <dataset name="ds_head" src="http:testdata.xml"
+             getresponseheaders="true" request="true" type="http" />
+
+    <class name="TestSendHeaders" extends="TestCase">
+        <attribute name="dp2ready" value="false"/>
+        <attribute name="t2del" value="false"/>
+        <attribute name="waitcnt" value="0"/>
+
+        <datapointer xpath="ds_head:/data" name="dp2" ondata="parent.dp2ready = true"/>
+
+        <method name="test2">
+            if ( ! this.dp2ready ){
+                if ( ! this.t2del ){
+                    Debug.write( "test isn't done until async test runs" );
+                    this.t2del = new LzDelegate( this , 'test2' );
+                }
+
+                if ( this.waitcnt++ > 100 ){
+                    fail( "Didn't get async data" );
+                } else {
+                    LzIdle.callOnIdle( this.t2del );
+                }
+                return;
+            }
+
+            Debug.write( 'running async test for loaded data' );
+            this.doIt( 'http', dp2 );
+        </method>
+
+        <method name="doIt" args="dtype, dp">
+            <![CDATA[
+            assertTrue( true );
+
+            Debug.write("type of dataset", dtype);
+            Debug.write("dp", dp);
+
+            assertEquals(  '1', dp.xpathQuery( 'record[1]/@a' ) );
+            assertEquals(  '2', dp.xpathQuery( 'record[2]/@a' ) );
+
+            ]]>
+            
+        </method>
+    </class>
+
+</library>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
