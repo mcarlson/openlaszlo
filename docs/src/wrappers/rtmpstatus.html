@@ -1,0 +1,47 @@
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+</head>
+<body>
+
+<!-- ===================================================================== -->
+<!-- = XML information goes here                                         = -->
+<!-- ===================================================================== -->
+<lzelement title="rtmpstatus">
+    <lztier>Audio Video</lztier>
+    <lzcategory>audio video</lzcategory>
+    <lzshortdesc>
+       An indicator "light" that shows status of connection to a media server.  
+    </lzshortdesc>
+    <lztag>av/rtmpstatus.xml</lztag>
+</lzelement>
+<p>
+This element causes a small indicator "light" to show the status of the connection:</p>
+<ul>
+	<li>red: no connection</li>
+	<li>green: working connection</li>
+</ul>
+
+
+<example title="Trivial rtmpstatus example">
+&lt;canvas height="40"&gt;
+   &lt;simplelayout spacing="5"/&gt;
+   &lt;text text="The indidcator light is red because there is no rtmp connection."/&gt;
+   &lt;rtmpstatus/&gt;
+&lt;/canvas&gt;
+</example>
+
+<p>
+See the Developer's Guide for a more complete description.
+<fixme>
+Introductory paragraph
+</fixme>
+
+</p>
+
+
+</body>
+</html>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->

@@ -1,15 +1,7 @@
 <!-- used by rngparse.py to determine which components to document -->
 <!-- order is important -->
 <library>
-  <include href="av/library.lzx"/>
-  <include href="base/library.lzx" />
-  <include href="utils/library.lzx" />
-  <include href="debugger/library.lzx" />
-  <include href="charts/library.lzx" />
-  <include href="lz/library.lzx" />
-  <include href="lzunit/library.lzx" />
-  <include href="rpc/library.lzx" />
-  <include href="extensions/library.lzx" />
+  <include href="rtmpstatus.lzx" />
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
 * Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
