@@ -1,22 +1,22 @@
 <canvas debug="true">
     <dataset name="imagedata">
-        <image url="beavis_butthead_bush_cheney.jpg"/>
+        <image url="food_is_large.jpg"/>
     </dataset>
 
     <wrappinglayout/>
     <image prefix="img/" datapath="imagedata:/image/@url"/>
-    <image prefix="img/" imageurl="beavis_butthead_bush_cheney.jpg"/>
-    <image imageurl="beavis_butthead_bush_cheney.jpg"/>
+    <image prefix="img/" imageurl="food_is_large.jpg"/>
+    <image imageurl="food_is_large.jpg"/>
     <image>
         <text>Click me</text>
         <method event="onclick">
-            this.setAttribute('imageurl', 'beavis_butthead_bush_cheney.jpg');
+            this.setAttribute('imageurl', 'food_is_large.jpg');
         </method>
     </image>
     <image forcereload="true">
         <text>Click me to reload</text>
         <method event="onclick">
-            this.setAttribute('imageurl', 'beavis_butthead_bush_cheney.jpg');
+            this.setAttribute('imageurl', 'food_is_large.jpg');
         </method>
     </image>
 
@@ -26,3 +26,5 @@
     <image prefix="img/"/>
     <image/>
 </canvas>
+
+<!-- Copyright 2001-2006 Laszlo Systems, Inc. -->
