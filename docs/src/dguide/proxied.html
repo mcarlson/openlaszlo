@@ -577,16 +577,50 @@ This program makes a direct (serverless) media request:
     &lt;view src="http:logo.jpg"/&gt;
   &lt;/canvas&gt;
 </example>
-
-<h2>Further Analysis of Proxied versus SOLO Deployment</h2>
+<h2>Moving from Proxied Development to SOLO Deployment</h2>
 <p>
-It's best to avoid OpenLaszlo proxied mode if possible in deployed applications, and just run the OpenLaszlo server on your development machine when you're developing them. 
+Unlike proxied applications, SOLO applications require URLs to be relative. This means that absolute URLS that you use when developing your program no longer work when you deploy it unless you edit them.  You can get around this problem by storing URLs in an external XML file.  When you switch from proxied to SOLO, you merely switch out that file; you don't have to touch the code.</p>
+<p>
+The example below shows how to load dataset URLs from an external XML file called <code>paths.xml</code>. 
+This is the code in "canvas": </p>
+<example title="Storing URLS in an external file" extract="false">
+&lt;dataset name="ds_paths" request="true" type="http" src="paths.xml" /&gt;
+&lt;dataset name="ds1"/&gt;
+&lt;datapointer xpath="ds_paths:/paths/ds1"&gt;
+  &lt;handler name="ondata"&gt;
+    parent.ds1.setAttribute( 'src', this.getNodeText() );
+  &lt;/handler&gt;
+&lt;/datapointer&gt;
+&lt;dataset name="ds2"/&gt;
+&lt;datapointer xpath="ds_paths:/paths/ds2"&gt;
+  &lt;handler name="ondata"&gt;
+    parent.ds2.setAttribute( 'src', this.getNodeText() );
+  &lt;/handler&gt;
+&lt;/datapointer&gt;
+&lt;dataset name="ds3"/&gt;
+&lt;datapointer xpath="ds_paths:/paths/ds3"&gt;
+  &lt;handler name="ondata"&gt;
+    parent.ds3.setAttribute( 'src', this.getNodeText() );
+  &lt;/handler&gt;
+&lt;/datapointer&gt;
+</example>
+<p>
+The contents of paths.xml looks something like this:
 </p>
+<example extract="false" title="XML file to hold URLS">
+&lt;paths&gt;
+   &lt;ds1&gt;http://www.domain.com/dsservlet/getds1&lt;/ds1&gt;
+   &lt;ds2&gt;http://www.domain.com/dsservlet/getds2&lt;/ds2&gt;
+   &lt;ds3&gt;http://www.domain.com/dsservlet/getds3&lt;/ds3&gt;
+&lt;/paths&gt;
+</example>
+
+<h2>Creating your own Proxy</h2>
 
 <p>
-The OpenLaszlo server can perform a lot of different functions, including transcoding, proxying and compiling programs, not all of which are needed by every application. In fact, most applications need none of these functions, which is why they can be run SOLO.
+The OpenLaszlo server can perform a lot of different functions, including transcoding, proxying and compiling programs, not all of which are needed by every application. In fact, most applications need none of these functions, which is why they can be run SOLO. However, in some cases you may need proxying without all the other things the go with the OpenLazlo Server. In such cases you may consider creating a proxy of your own.
 </p>
-<h3>Creating Your Own Proxy</h3>
+<h3>Reasons to Build Your Own Proxy</h3>
 <p>
 It's possible to write proxies and transcoders in other languages, so you only really need the OpenLaszlo server if you want to dynamically compile OpenLaszlo programs on the fly. Python, Ruby, Java and PHP all work well for writing proxies and transcoders, depending on the kind of data formats you need to work with. Of course, using the OpenLaszlo Server is easier then writing your own from scratch, but if you need to do so, there is nothing in the OpenLaszlo architecture that prevents that.
 </p>
@@ -614,11 +648,11 @@ You can see the Cooqy program in action <a href="http://www.cooqy.com/">here</a>
 <p>
 Rich object oriented interfaces like the eBay web service API aren't always the right level of abstraction for the most efficient client/server communication. So there are some good reasons to make a proxy server that boils everything down to your own application specific XML format, instead of trying to mash together a whole bunch of complex general purpose APIs in the client. Cooqy does a great job of distributing the processing and network load so it works well over a low speed network connection, so it's much more efficient that the equivalent html pages. Plus it doesn't hurt that the entire Cooqy application is smaller than eBay's html home page!
 </p>
-<h3>Crossdomain Security Issues</h3>
+<h3>Using a Proxy to Handle Crossdomain Security Issues</h3>
 <p>
 The other issue you have to deal with are the security restrictions on the Flash player downloading XML and .swf files from other servers than the one it's running from. The remote server you want to download xml from must give you permission with a <code>crossdomain.xml</code> file. If you need to download swf or XML from a server that doesn't give the Flash player permission with a crossdomain.xml file, then that's another reason you might want to have a proxy running on your own server. 
 </p>
-<h4>Using Proxies to Handle Browser Inconsistencies</h4>
+<h3>Using Proxies to Handle Browser Inconsistencies</h3>
 <p>
 And of course there are always unfortunate browser bugs that may force you to use a proxy. Internet Explorer has a bug that makes it impossible to download compressed content into plug-ins like Flash, which you can work around with a proxy. 
 </p>
