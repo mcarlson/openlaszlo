@@ -312,6 +312,101 @@ In the example below, two videoviews are communicating with each other through a
        &lt;videoview id="vp" url="you" type="rtmp" oninit="this.stream.play()"/&gt;
    &lt;/view&gt;
 </example>
+<h3>Control of muting, recording, and broadcasting</h3>
+<p>
+
+</p>
+<example title="control of Muting, Recording, Broadcasting" extract="false">
+&lt;canvas debug="true"&gt;
+
+    &lt;rtmpconnection
+        src="rtmp://localhost/test" 
+        autoconnect="true"
+    /&gt;
+    &lt;mediastream name="s1" 
+        type="rtmp"
+    /&gt;
+    &lt;mediastream name="s2" 
+        type="rtmp"
+    /&gt;
+    &lt;simplelayout/&gt;
+    
+    &lt;text multiline="true" width="100%"&gt;
+    Instructions:&lt;br/&gt;
+    1. Either run a flash media server on localhost, or ssh tunnel to a media server at a known host&lt;br/&gt;
+    2. Press the broadcast button. (Grant camera access permission if needed.)
+       The button should change to say "stop broadcasting"&lt;br/&gt;
+    3. Press the receive button. You should be receiving audio and video from yourself and the
+       button should say "stop receiving."&lt;br/&gt;
+    4. Try out the audio and video mute buttons. The video mute should freeze the received picture.
+       The audio mute should silence the received sound.&lt;br/&gt;
+    5. Press the receive button. The received video should freeze and the button should say "stop receiving".&lt;br/&gt;
+    6. Press the receive button again. The video should resume and the button should say "receiving".&lt;br/&gt;
+    7. Press the broadcast button. The received video should freeze and the button should say "broadcast".&lt;/br&gt;
+    &lt;/br&gt;
+    The indicator below shows the status of the video connection. 
+       
+    &lt;/text&gt;
+    &lt;rtmpstatus/&gt;
+    &lt;view
+        layout="axis:x; inset:10; spacing:10"
+    &gt;
+        &lt;view id="v1" 
+            layout="axis:y; spacing:4"
+        &gt;
+            &lt;videoview id="live" 
+                type="rtmp" 
+                stream="$once{canvas.s1}"
+            &gt;
+                &lt;camera id="cam" 
+                    show="false"
+                /&gt;
+                &lt;microphone id="mic" capturing="false"/&gt;
+                
+            &lt;/videoview&gt;
+            &lt;edittext name="username"&gt;YourName&lt;/edittext&gt;
+            &lt;button
+                text="broadcast"
+            &gt;
+                &lt;attribute
+                    name="text" 
+                    value="${(s1.broadcasting == false) ? 'broadcast' : 'stop broadcasting'}"
+                /&gt;
+                &lt;method event="onclick"&gt;&lt;![CDATA[
+                    if (cam.show == false) {
+                        live.stream.setAttribute('url', parent.username.text);
+                        live.stream.broadcast();
+                        cam.setAttribute('show', true);
+                    } else {
+                        live.stream.stop();
+                        cam.setAttribute('show', false);
+                    }
+                  ]]&gt;
+                &lt;/method&gt;
+            &lt;/button&gt;
+            
+            &lt;checkbox onvalue="s1.setAttribute('muteaudio', value)"&gt;Mute Audio&lt;/checkbox&gt;
+            &lt;checkbox onvalue="s1.setAttribute('mutevideo', value)"&gt;Mute Video&lt;/checkbox&gt;
+        &lt;/view&gt;
+        &lt;view id="v2" 
+            layout="axis:y; spacing:4"
+        &gt;
+            &lt;videoview name="vid" 
+                type="rtmp" 
+                stream="$once{canvas.s2}"
+            /&gt;
+            &lt;edittext name="username"&gt;YourName&lt;/edittext&gt;
+            &lt;button
+                text="${s2.playing ? 'stop receiving' : 'receive'}"
+                onclick="s2.setAttribute('url', parent.username.text);
+                         if (s2.playing) s2.stop(); else s2.play();"
+            /&gt;
+        &lt;/view&gt;
+    &lt;/view&gt;
+
+&lt;/canvas&gt;
+</example>
+
 <h2>Comparison of Views and Videoviews for Rendering Audio and Video</h2>
 <p>
 Audio and video files that are attached as resources to regular <tagname>view</tagname>s are not described in this chapter.  However, here is a brief discussion of how they differ in terms of designing applications.
