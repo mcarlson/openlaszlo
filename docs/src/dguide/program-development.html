@@ -99,9 +99,11 @@ in the browser:</p>
 
 <img src="images/browser.png" class="screenshot"/>
 
-<h4>Using lzc the stand-along compiler</h4>
+<h4>Using the standalone compiler lzc</h4>
 <p>
-The standalone compiler is called <code>lzc</code>. It is located in <code>$LPS_HOME/WEB-INF/lps/server/bin/lzc</code>.</p>
+The standalone compiler is called <code>lzc</code>. Its location depends on how you have installed OpenLaszlo. Developers who build OpenLaszlo from the source will find lzc in <code>$LPS_HOME/WEB-INF/lps/server/bin/</code>. Developers who install OpenLaszlo with a binary installer will find it in the directory <code>OpenLaszlo Server 3.x.x/bin</code>.</p>
+<p>Developers with more than one version of the OpenLaszlo server in play should define an alias: <code>alias lzc='$LPS_HOME/WEB-INF/lps/server/bin/lzc'</code>. By defining an alias based on $LPS_HOME, one can have multiple shells -- each with a different $LPS_HOME -- and the alias will map to the correct compiler for each shell</p>
+
 <p>
 Here are the options available for compilation:
 </p>
