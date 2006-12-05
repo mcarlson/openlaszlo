@@ -12,10 +12,10 @@
 This chapter discusses streaming audio and video in .flv and .mp3 formats that are rendered in the specialized <tagname>videoview</tagname>. More limited audio and visual capabilities can be obtained by attaching audio and visual sources as resources to regular <tagname>view</tagname>s. For discussion of that topic, see <xref linkend="media-resources"/>.
 </p>
 
-<p>OpenLaszlo video APIs give you access to the full functionality of media players such as the <a href="http://www.adobe.com/products/flashmediaserver/">Flash Media Server</a> and the <a href="http://www.osflash.org/red5">Red5</a> media player. When you OpenLaszlo program is connected to a media server over a Real Time Media Protocol connection, you can not only recieve and play audio and video (in mp3 and flv formats), you can also record your own audio and video locally and send it to the server, where it can be stored or shared in real time with other client programs.
+<p>OpenLaszlo video APIs give you access to the full functionality of media players such as the <a href="http://www.adobe.com/products/flashmediaserver/">Flash Media Server</a> and the <a href="http://www.osflash.org/red5">Red5</a> media player. When you OpenLaszlo program is connected to a media server over a Real Time Media Protocol connection, you can not only receive and play audio and video (in mp3 and flv formats), you can also record your own audio and video locally and send it to the server, where it can be stored or shared in real time with other client programs.
 </p>
 <p>
-In contrast to RTMP, fles that are streamed over an HTTP connection allow more limited limited functionality.</p>
+In contrast to RTMP, files that are streamed over an HTTP connection allow more limited limited functionality.</p>
 
 <p>This chapter explains the concepts of controlling streaming media over an HTTP connection and and bi-directional communication with a media server over an RTMP connection. </p>
 <warning>
@@ -32,7 +32,7 @@ How this differs from earlier LPS, which did allow playing of video media.
 <!--=========================================================================-->
 <h2>Overview</h2>
 <p>
-There are two main ways that OpenLaszlo applications can intereract with video media: as a basically passive recipient of streamed video served over HTTP, or, when a media server is present, the OpenLaszlo application can fully interact with the server, capturing video and audio data with local cameras and microphones and sending it back to the media server over RTMP.
+There are two main ways that OpenLaszlo applications can interact with video media: as a basically passive recipient of streamed video served over HTTP, or, when a media server is present, the OpenLaszlo application can fully interact with the server, capturing video and audio data with local cameras and microphones and sending it back to the media server over RTMP.
 </p>
 <p>
 Media servers do not only stream media content to the Flash plugin, they can also send instructions to be executed on the client and other kinds of data. Servers can receive video, audio and data from an OpenLaszlo application and either save it or rebroadcast it. These APIs allow you to manipulate the source video content on the client&#8212;for example, to rotate it, change its transparency, seek forward and back, and so forth.
@@ -46,7 +46,7 @@ This functionality makes possible entirely new types of web applications. For ex
 	<li>Multi-user video chat</li>
 	<li>Video sharing and publishing</li>
 	<li>Conferencing</li>
-	<li>Broacasting live streams of concerts</li>
+	<li>Broadcasting live streams of concerts</li>
 	<li>Screensharing / whiteboard applications</li>
 	<li>Recording and manipulating video, even collaborative movie making</li>
 	<li>Recording audio, even collaborative music making</li>
@@ -56,12 +56,12 @@ This functionality makes possible entirely new types of web applications. For ex
 OpenLaszlo APIs implement an abstraction layer so that you can use the same classes to manipulate video data regardless of its source. For example, you use a <tagname>videoview</tagname> to contain video data, regardless of the protocol (HTTP or RTMP) over which the data comes.  The <tagname>mediastream</tagname> associated with that <tagname>videoview</tagname> determines its properties.
 </p>
 
-<h2>Achitecture</h2>
+<h2>Architecture</h2>
 <p>
 
 </p>
 <todo>
-Should there be an illustration? How would we illustrate the differnce between streaming and full interaction?
+Should there be an illustration? How would we illustrate the difference between streaming and full interaction?
 
 </todo>
 <fixme>
@@ -85,14 +85,14 @@ HTTP, the HyperText Transfer Protocol, is useful for downloading files to a clie
 </p>
 <h4>RTMP</h4>
 <p>
-RTMP, the Real Time Messaging Protocol, whas developed by Adobe (formerly Macromedia), in order to get around the limitations of HTTP when dealing with bi-drectional ("full duplex") video data in real time. In order to use the RTMP protocol, you must establish a connection to a server. You do this using the <tagname link="true">rtmpconnection</tagname> tag.
+RTMP, the Real Time Messaging Protocol, was developed by Adobe (formerly Macromedia), in order to get around the limitations of HTTP when dealing with bi-directional ("full duplex") video data in real time. In order to use the RTMP protocol, you must establish a connection to a server. You do this using the <tagname link="true">rtmpconnection</tagname> tag.
 </p>
 <p>
 Each of these protocols has its uses. The RTMP protocol, coupled with a media server, provides a much more rich environment for creating interactive media applications.  On the other hand HTTP requires no special media server software, and for many simple streaming applications it provides faster startup.
 </p>
 <h2>The OpenLaszlo Video Client Model</h2>
 <p>
-OpenLaszlo capablities on the client are provided through a group of base classes and through two components that are built on top of these base classes.</p>
+OpenLaszlo capabilities on the client are provided through a group of base classes and through two components that are built on top of these base classes.</p>
 <h3>Overview of Base Classes</h3>
 <p>
 The <tagname>videoview</tagname> is the visual object that is used to display audio and visual data. The <tagname>mediastream</tagname> associated with a <tagname>videoview</tagname> tells it where and how to get its content. You can attach devices to the <tagname>videoview</tagname>; as of OpenLaszlo 3.4 the two supported devices are <tagname link="true">camera</tagname> and <tagname link="true">microphone</tagname>. The classes <tagname>camera</tagname> and <tagname>microphone</tagname> are implemented as extensions of the base class <tagname link="true">mediadevice</tagname>.
@@ -119,7 +119,7 @@ Create wrapper page for rtmpstatus component
 
 <h3>The Videoview</h3>
 <p>
-The <tagname link="true">videoview</tagname> is a subclass of <tagname>view</tagname> that is optimized for audio/visual resources.  In addition to the attributes inherited from <tagname>view</tagname>, this class has attitional attributes that allow you to, for example identify a camera and microphone associated with it, to control whether media starts playing immediately or not, to determine play rates, and so forth.
+The <tagname link="true">videoview</tagname> is a subclass of <tagname>view</tagname> that is optimized for audio/visual resources.  In addition to the attributes inherited from <tagname>view</tagname>, this class has additional attributes that allow you to, for example identify a camera and microphone associated with it, to control whether media starts playing immediately or not, to determine play rates, and so forth.
 </p>
 <p>
 <tagname>videoview</tagname> does not have any methods unique to it.  You use methods inherited from <tagname>view</tagname>, for example <method>play</method> and <method>stop</method> to control the video playback.
@@ -150,7 +150,7 @@ OpenLaslzo implements the <tagname>camera</tagname> and <tagname>microphone</tag
 <p>
 When your program instantiates a camera or microphone object, the Flash Player causes a dialogue to be appear on the screen. If the person using the application indicates that permission has been granted, the <attribute>allowed</attribute> attribute for that device is set to <code>true></code>
 </p>
-<p>Here's an illustration of a representative security dialoguge:
+<p>Here's an illustration of a representative security dialogue:
 </p>
 
 <img class="illustration" src="images/AdobeFlashPlayerSettings1.png"
@@ -164,7 +164,7 @@ Explain privacy policy, capturing and allowed attributes.
 </todo>
 <h3>Recording Audio and Video</h3>
 <p>
-Once you have attached a microphone and/or camera to a videoview and recieved permission from the user to turn them on, you turn them on by setting <attribute>capturing</attribute> to <code>true</code>.
+Once you have attached a microphone and/or camera to a videoview and received permission from the user to turn them on, you turn them on by setting <attribute>capturing</attribute> to <code>true</code>.
 </p>
 <example title="Turning microphone and camera on" extract="false">
    &lt;rtmpconnection src="rtmp://mysite.com/myapp/" autoconnect="true"/&gt;
@@ -199,7 +199,7 @@ To show a video from http server and play it automatically:</p>
 &lt;videoview url="myvideo.flv" autoplay="true"/&gt;  
 </example>
 <todo>
-Using cameras and microphones on HTTP: mirror only.  For example, motion-dection, mirror playback, etc.
+Using cameras and microphones on HTTP: mirror only.  For example, motion-detection, mirror playback, etc.
 </todo>
 <h2>Bidirectional interaction over Real Time Media Protocol (RTMP)</h2>
 <p>
@@ -223,7 +223,7 @@ Install the Flash Media Server in:</p>
 C:\Program Files\Macromedia\Flash Media Server 2\
 </pre>
 <p>
-Create the test application directy and subdirectories:
+Create the test application directly and subdirectories:
 </p>
 <pre>
 C:\Program Files\Macromedia\Flash Media Server 2\applications\test
@@ -268,7 +268,7 @@ that interferes with Cygwin, the one that substitutes computer
 generated characters for the video stream, who track your motion and
 facial expressions. It causes cygwin to fail forking new
 processes. This manifests itself by build processes mysteriously
-failing, and Emacs having problem forking sub-processes in dired and
+failing, and Emacs having problem forking sub-processes in 
 shell windows. You have to disable the server to make Cygwin work
 again.
 </p>
@@ -416,11 +416,11 @@ If you attach a resource to a view it's compiled into the swf, making the initia
 </p>
 
 <p>
-If you stream the mp3 it will usually be easier on the memory, but timing will be less reliable, as the player has to buffer the downloaded file. For example, consider how you might build a video editor. If you had two video clips on a server and you wanted to use two video views to overlay on top of one another so you could create a transition from one to the other (creating a virtual video editor), you could monitor the first video so you know when to start the second. However, the appearance of this transition would be unpredicatble. If you were tell the second video to play while fading from one video view to another, the ammount of time before the second video were to play would depend on the buffer amount and bandwidth, not on time, so you would not be able to preload it and pause it in order to control the precise moment for the second video to start playing. 
+If you stream the mp3 it will usually be easier on the memory, but timing will be less reliable, as the player has to buffer the downloaded file. For example, consider how you might build a video editor. If you had two video clips on a server and you wanted to use two video views to overlay on top of one another so you could create a transition from one to the other (creating a virtual video editor), you could monitor the first video so you know when to start the second. However, the appearance of this transition would be unpredictable. If you were tell the second video to play while fading from one video view to another, the amount of time before the second video were to play would depend on the buffer amount and bandwidth, not on time, so you would not be able to pre-load it and pause it in order to control the precise moment for the second video to start playing. 
 </p>
 
 <p>
-So you'd use the first approach, using files transcoded to .swf and attached as resources to <tagname>view</tagname> for mouse clicks and other places where precise timing is important and you'd use the second appoach, streaming to <tagname>videoview</tagname>s for an mp3 or video player where the size of the file and memory efficiency becomes important. 
+So you'd use the first approach, using files transcoded to .swf and attached as resources to <tagname>view</tagname> for mouse clicks and other places where precise timing is important and you'd use the second approach, streaming to <tagname>videoview</tagname>s for an mp3 or video player where the size of the file and memory efficiency becomes important. 
 </p>
 
 <todo>
