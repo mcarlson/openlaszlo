@@ -15,27 +15,31 @@
     <lztag>utils/layouts/simplelayout.xml</lztag>
 </lzelement>
 
-<p><classname>simplelayout</classname> extends
-<classname>LzLayout</classname>, and therefore it is responsible for
-arranging all of the subviews for the view that it is attached to. The
-attributes of a view that <classname>simplelayout</classname> effects
-are the <attribute>x</attribute> and <attribute>y</attribute>
-values. <classname>simplelayout</classname> places the first subview
-at (0, 0) and then places each subsequent subview based on the width
-(or height) of the previous subview, depending on which axis was
-specified.</p>
+<p><classname>simplelayout</classname> extends <classname>LzLayout</classname>. <classname>simplelayout</classname> arranges sibling views along the <attribute>x</attribute> and <attribute>y</attribute> axis, or both. <classname>simplelayout</classname> places each sibling view based on the width
+(or height) of the previous subview, depending on whether the x-axis or the y-axis was specified.</p>
 
 <p>The following example illustrates the use of
-<classname>simplelayout</classname>.</p>
+<classname>simplelayout</classname>. The first instance of <classname>simplelayout</classname> lays out the sibling views 'across' and 'down' along the y-axis. Then the 'across' and 'down' views apply their own <classname>simplelayout</classname>: three blue views are simply laid out on the x-axis within the 'across' view, and three red views are simply laid out on the y-axis within the 'down' view. </p>
 
 <example>
-&lt;canvas height="60"&gt;
-  &lt;view &gt;
+&lt;canvas height="160"&gt;
+
+&lt;simplelayout axis="y" spacing="10"/&gt;
+
+  &lt;view id="across"&gt;
     &lt;simplelayout axis="x" spacing="10"/&gt;
     &lt;view bgcolor="blue" height="30" width="50"/&gt;
     &lt;view bgcolor="blue" height="30" width="50"/&gt;
     &lt;view bgcolor="blue" height="30" width="50"/&gt;
   &lt;/view&gt;
+
+ &lt;view id="down"&gt;
+    &lt;simplelayout axis="y" spacing="10"/&gt;
+    &lt;view bgcolor="red" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" width="50"/&gt;
+    &lt;view bgcolor="red" height="30" width="50"/&gt;
+  &lt;/view&gt;
+
 &lt;/canvas&gt;
 </example>
 <!--
