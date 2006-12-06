@@ -47,9 +47,7 @@ This functionality makes possible entirely new types of web applications. For ex
 	<li>Video sharing and publishing</li>
 	<li>Conferencing</li>
 	<li>Broadcasting live streams of concerts</li>
-	<li>Screensharing / whiteboard applications</li>
-	<li>Recording and manipulating video, even collaborative movie making</li>
-	<li>Recording audio, even collaborative music making</li>
+	<li>Recording audio</li>
        
 </ul>
 <p>
@@ -58,7 +56,7 @@ OpenLaszlo APIs implement an abstraction layer so that you can use the same clas
 
 <h2>Architecture</h2>
 <p>
-
+Depending on whether your application is a simple receptor of streams or a sender and receiver, the architecture of the application may be simple or complex.  In the simplest case, the LZX application merely catches and displays streamed files, and your programming options are limited.  In the more complex case, for example, a multi-point video chat, your application may be considered to have a central server component and any number of clients, which communicate with each other through the server. In such applications you need to handle such things as receiving and displaying streamed data, recording and broadcasting from local microphones and cameras, seeking forward and back in the stream, and so forth. We'll examine some of these cases in examples below.
 </p>
 <todo>
 Should there be an illustration? How would we illustrate the difference between streaming and full interaction?
@@ -69,6 +67,22 @@ etc
 
 FLV format.  What is it.  Reference Youtube, etc.
 </fixme>
+<h3>File Formats</h3>
+<p>
+LZX videoviews can stream content in FLV or Mp3 format.  According to the <a href="http://en.wikipedia.org/wiki/FLV">Wikipedia</a>,
+</p>
+<p>
+<i>
+FLV (Flash Video) is a proprietary file format used to deliver video over the Internet using Adobe Flash Player (also called Macromedia Flash Player) version 6, 7, 8, or 9. FLV content may also be embedded within SWF files. Notable users of the FLV format include Google Video, Reuters.com, YouTube and MySpace. Flash Video is viewable on most operating systems, via the widely available Macromedia Flash Player and web browser plug-in, or one of several third-party programs such as Media Player Classic (with the ffdshow codec installed), MPlayer, or VLC media player.
+</i>
+</p>
+<p>
+The ubiquitous Mp3 format is <a href="http://en.wikipedia.org/wiki/Mp3">described</a>:</p>
+<p>
+<i>
+MPEG-1 Audio Layer 3, more commonly referred to as MP3, is a popular digital audio encoding and lossy compression format, designed to greatly reduce the amount of data required to represent audio, yet still sound like a faithful reproduction of the original uncompressed audio to most listeners. It was invented by a team of German engineers who worked in the framework of the EUREKA 147 DAB digital radio research program, and it became an ISO/IEC standard in 1991.
+</i>
+</p>
 <h3>Protocols</h3>
 <p>
 Video content can be communicated from the server using either of two protocols:</p>
@@ -81,11 +95,16 @@ Depending on where the media is being served from and what protocol connects the
 </p>
 <h4>HTTP</h4>
 <p>
-HTTP, the HyperText Transfer Protocol, is useful for downloading files to a client. However it's not interactive and has no special provisions for handling data in video format. When you load an URL that identifies a .flv or mp3 file, that file is downloaded. You have some control over when to start playing the download, but that's about it. From the point of view of the content provider, the most obvious value of using HTTP is that it requires no special media server. Also, HTTP is useful when bidirectional communication is not needed because videos downloaded on this protocol start fast and do not consume lots of memory.
+HTTP, the HyperText Transfer Protocol, is useful for downloading files to a client. However it's not interactive and has no special provisions for handling data in video format. When you load an URL that identifies a .flv or mp3 file, that file is downloaded. You have some control over when to start playing the download, but that's about it. From the point of view of the content provider, the most obvious value of using HTTP is that it requires no special media server. Also, HTTP is useful when bidirectional communication is not needed because videos downloaded on this protocol start fast.
 </p>
+<p>
+When you download a file over HTTP, the entire file is loaded into memory. Once in memory you can quickly seek.  But because the files must all fit into memory, there is a limit on the size of files that you can handle in this way.</p>
 <h4>RTMP</h4>
 <p>
-RTMP, the Real Time Messaging Protocol, was developed by Adobe (formerly Macromedia), in order to get around the limitations of HTTP when dealing with bi-directional ("full duplex") video data in real time. In order to use the RTMP protocol, you must establish a connection to a server. You do this using the <tagname link="true">rtmpconnection</tagname> tag.
+RTMP, the Real Time Messaging Protocol, was developed by Adobe (formerly Macromedia), in order to get around the limitations of HTTP when dealing with bi-directional ("full duplex") video data in real time. RTMP provides APIs for complex interactions, and because the connection allows you to download portions of the file as needed, you can handle larger files than can HTTP, which download the entire file.  With RTMP there is less memory usage, as only one frame is loaded into memory at a time. RTMP has been optimized for video, and has better compression rates. In order to use the RTMP protocol, you must establish a connection to an application on a server. You do this using the <tagname link="true">rtmpconnection</tagname> tag.
+</p>
+<p>
+For more information on the RTMP protocol, see <a href="http://www.adobe.com/cfusion/knowledgebase/index.cfm?id=tn_16458">Adobe</a> and <a href="http://www.osflash.org/rtmp/protocol">OS Flash</a> sites.
 </p>
 <p>
 Each of these protocols has its uses. The RTMP protocol, coupled with a media server, provides a much more rich environment for creating interactive media applications.  On the other hand HTTP requires no special media server software, and for many simple streaming applications it provides faster startup.
@@ -100,62 +119,94 @@ The <tagname>videoview</tagname> is the visual object that is used to display au
 <p>
 <tagname>videoview</tagname> is an extension of <tagname>view</tagname>. It's a visual object whose height, width, placement, etc, you can control just as you would any other view.
 </p>
+<h4>The Videoview</h4>
 <p>
-
-</p>
-
-<h3>Overview of Components</h3>
-<h3>rtmpstatus</h3>
-<p>
-The <tagname>rtmpstatus</tagname> component provides a visual indication of the status of the rtmp connection.
-</p>
-<todo>
-Picture of running rtmpstatus object
-Create wrapper page for rtmpstatus component
-
-</todo>
-<h3>videoplayer</h3>
-
-
-<h3>The Videoview</h3>
-<p>
-The <tagname link="true">videoview</tagname> is a subclass of <tagname>view</tagname> that is optimized for audio/visual resources.  In addition to the attributes inherited from <tagname>view</tagname>, this class has additional attributes that allow you to, for example identify a camera and microphone associated with it, to control whether media starts playing immediately or not, to determine play rates, and so forth.
+The <tagname link="true">videoview</tagname> is a subclass of <tagname>view</tagname> that is optimized for audio/visual streaming.  In addition to the attributes inherited from <tagname>view</tagname>, this class has additional attributes that allow you to, for example identify a camera and microphone associated with it, to control whether media starts playing immediately or not, to determine play rates, and so forth.
 </p>
 <p>
-<tagname>videoview</tagname> does not have any methods unique to it.  You use methods inherited from <tagname>view</tagname>, for example <method>play</method> and <method>stop</method> to control the video playback.
+Notice that unlike <tagname>view</tagname>, you cannot attach a resource to a <tagname>videoview</tagname>. 
 </p>
-<h3>The mediastream</h3>
-<p>When you create a <tagname>videoview</tagname> and pass an address to it, a stream is created, by default.  If you wish to have more control over the stream, you can define a <tagname>mediastream</tagname>.</p>
+<p>
+<tagname>videoview</tagname> has methods parallel to those on <tagname>resource</tagname>.  For example, you use <method>play</method> and <method>stop</method> to control the video playback.
+<!-- 6 december 2006 these methods are not exposed see LPP-3216 jsundman --> 
+</p>
+<h4>The mediastream</h4>
+<p>When you create a <tagname>videoview</tagname> and pass an URL and type (http or rtmp) to it, a stream is created, by default.  If you wish to have more control over the stream, you can define a <tagname>mediastream</tagname>.</p>
 <p>
 The <tagname link="true">mediastream</tagname> tag allows you to identify the type of stream to be associated with a given <tagname>videoview</tagname>. Using attributes of and methods on the <tagname>mediastream</tagname>, you can, for example, determine the frame rate and current time of the stream, set it to record or broadcast and so forth.
 </p>
 
+<h3>Overview of Components</h3>
+<p>
+OpenLaszlo provides two upper level components for managing connections and video objects.
+</p>
+<h4>rtmpstatus</h4>
+<p>
+The <tagname>rtmpstatus</tagname> component provides a visual indication of the status of the rtmp connection. 
+</p>
+<p>
+This element causes a small indicator "light" to show the status of the connection:</p>
+<ul>
+	<li>red: no connection</li>
+	<li>green: working connection</li>
+</ul>
+<p>
+The example below shows this component.
+</p>
+<example title="Trivial rtmpstatus example">
+&lt;canvas height="40"&gt;
+   &lt;simplelayout spacing="5"/&gt;
+   &lt;text text="The indidcator light is red because there is no rtmp connection."/&gt;
+   &lt;rtmpstatus/&gt;
+&lt;/canvas&gt;
+</example>
+<h4>videoplayer</h4>
+<p>
+The <tagname>videoplayer</tagname> component provides the a graphical represnetation of the essential controls for handling video and audio: play, stop, pause, seek forward, seek in reverse, and control volume.
+</p>
+<fixme>
+We'll need to spruce this up, of course, when the real video player gets checked in.
+</fixme>
+
+
 <h2>Establishing a connection to an RTMP sever</h2>
 <p>
-An rtmpconnection represents a connection to an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming of audio and video. This allows you to broadcast and receive live audio and and or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over http (using <tagname>mediastream</tagname> and <tagname>videoview</tagname> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.
+An <tagname link="true">rtmpconnection</tagname> represents a connection to an appllication running on an RTMP server, such as the Flash Media Server or Red5, enabling two-way streaming of audio and video. This allows you to broadcast and receive live audio and and or video, as well as recording video from a webcam or audio from a microphone to files on the server. Recorded files may be played back over HTTP (using <tagname>mediastream</tagname> and <tagname>videoview</tagname> classes) or with RTMP to allow seeking within and playback of long files that are impractical to load into memory.
 </p>
 
-<h4>Automatic connection to the RTMP service</h4>
+<h3>Automatic connection to the RTMP service</h3>
 <p>
 If there is only one rtmpconnection, the video object automatically hooks up to it:</p>
 <example extract="false" title="automatic connection to RTMP connection">
    &lt;rtmpconnection src="rtmp://mysite.com/myapp/" autoconnect="true"/&gt;
    &lt;videoview url="myvideo.flv" type="rtmp" autoplay="true"/&gt;
 </example>
+<h3>Chosing between multiple connections</h3>
+<p>
+When an application has more than one rtmp connection active, you chose among them by specifying the URL passed to the <tagname>videoview</tagname>.
+</p>
+
 <h2>Cameras and Microphones</h2>
 <p>
 OpenLaslzo implements the <tagname>camera</tagname> and <tagname>microphone</tagname> objects as subclasses of the <tagname link="true">mediadevice</tagname> base class. Most of the methods and attributes that you use to control cameras and microphones are inherited from the base class. In order to ensure the privacy of computer users, camera and microphone objects must explicitly obtain permission from the user before they can be turned on (this ensures that people are not being spied upon without their knowledge). 
 </p>
 <h3>Obtaining permission</h3>
 <p>
-When your program instantiates a camera or microphone object, the Flash Player causes a dialogue to be appear on the screen. If the person using the application indicates that permission has been granted, the <attribute>allowed</attribute> attribute for that device is set to <code>true></code>
+When your program instantiates a camera or microphone object, the Flash Player causes a dialogue to be appear on the screen. If the person using the application indicates that permission has been granted, the <attribute>allowed</attribute> attribute for every device is set to <code>true></code>
 </p>
-<p>Here's an illustration of a representative security dialogue:
+<p>
+Note that it is not possible to allow permission on one device and not another. It's an all-or-nothing proposition. You grant access to all cameras and microphones, or to none.
+</p>
+
+<p>Here's an illustration of a representative security dialogue the first time the camera is requested:
 </p>
 
 <img class="illustration" src="images/AdobeFlashPlayerSettings1.png"
 title="Permission to record dialoge"/>
-
+<h4>Changing permissions</h4>
+<p>
+You can change the permissions of a running application by using the right-click context menu on the video. Note that the menu may show the name of device <i>drivers</i>, not the actual devices. A typical right-click menu is shown below.
+</p>
 <img class="illustration" src="images/AdobeFlashPlayerSettings2.png"
 title="Permission to record dialoge"/> 
 <todo>
@@ -164,7 +215,7 @@ Explain privacy policy, capturing and allowed attributes.
 </todo>
 <h3>Recording Audio and Video</h3>
 <p>
-Once you have attached a microphone and/or camera to a videoview and received permission from the user to turn them on, you turn them on by setting <attribute>capturing</attribute> to <code>true</code>.
+Once you have attached a microphone and/or camera to a videoview and received permission from the user to turn them on, the application turns them on by setting <attribute>capturing</attribute> to <code>true</code>.
 </p>
 <example title="Turning microphone and camera on" extract="false">
    &lt;rtmpconnection src="rtmp://mysite.com/myapp/" autoconnect="true"/&gt;
@@ -172,7 +223,9 @@ Once you have attached a microphone and/or camera to a videoview and received pe
        &lt;camera show="true"/&gt;
        &lt;microphone capturing="true"/&gt;
    &lt;/videoview&gt;
+   &lt;!-- a progress indicator bar proportional to stream time--&gt;
    &lt;view bgcolor="black" width="${v.stream.time/180*v.width}"/&gt;
+   &lt;!--methods on the stream automatically created by the videoview --&gt;
    &lt;button text="record" onclick="v.stream.record()"/&gt;
    &lt;button text="stop" onclick="v.stream.stop()"/&gt;
 </example>
@@ -258,6 +311,9 @@ to /usr/lib.
 http://livedocs.macromedia.com/fms/2/docs/wwhelp/wwhimpl/common/html/wwhelp.htm?context=LiveDocs_Parts&amp;file=00000009.html
 </pre>
 <h3>Red5</h3>
+<p>
+OpenLaszlo applications can communicate with the Red5 media server, an open source Flash media server that uses rtmp. For more on Red5, see their <a href="http://osflash.org/red5">website</a>.
+</p>
 <todo>
 Red5 setup instructions: TBD
 </todo>
