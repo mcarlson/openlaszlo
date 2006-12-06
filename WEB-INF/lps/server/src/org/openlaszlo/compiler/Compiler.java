@@ -312,13 +312,6 @@ public class Compiler {
             if ("true".equals(root.getAttributeValue("profile"))) {
                 env.setProperty(CompilationEnvironment.PROFILE_PROPERTY, true);
             }
-            if (root.getAttributeValue(CompilationEnvironment.VALIDATE_PROPERTY) != null) {
-                if ("false".equals(root.getAttributeValue("validate"))) {
-                    env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, false);
-                } else {
-                    env.setProperty(CompilationEnvironment.VALIDATE_PROPERTY, true);
-                }
-            }
 
             // cssfile cannot be set in the canvas tag
             String cssfile = props.getProperty(CompilationEnvironment.CSSFILE_PROPERTY);
@@ -415,6 +408,7 @@ public class Compiler {
             throw errors.toCompilationError();
         }
     }
+
 
     public void compileAndWriteToSWF (String script, String seqnum, OutputStream out, String swfversion) {
         try {
@@ -583,7 +577,7 @@ public class Compiler {
             Compiler.updateSchema(root, env, schema, visited);
         }
     }
-    
+
     protected void processCompilerInstructions(Element element,
                                                CompilationEnvironment env) {
         for (Iterator iter = element.getContent().iterator();

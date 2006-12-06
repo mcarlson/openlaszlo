@@ -111,7 +111,9 @@ element library {
   attribute href {xsd:anyURI} |
   ([a:defaultValue="inherit"] attribute proxied {booleanLiteral | "inherit"}? &
    (toplevelElements &
-     datapointer*))
+     ## If false, disables validation against the schema during compilation
+    [a:defaultValue="true"] attribute validate {booleanLiteral}? 
+    & datapointer*))
 }
 
 toplevelElements = (

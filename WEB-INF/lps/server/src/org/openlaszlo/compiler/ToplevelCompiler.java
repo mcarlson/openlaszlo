@@ -55,16 +55,54 @@ abstract class ToplevelCompiler extends ElementCompiler {
      * look for elements named "class", find the "name" and "extends"
      * attributes, and enter them in the ViewSchema.
      *
+     * Also check for the "validate" attribute, to optionally disable validator.
+     *
      * @param visited {canonical filenames} for libraries whose
      * schemas have been visited; used to prevent recursive
      * processing.
+     * 
      */
     void updateSchema(Element element, ViewSchema schema, Set visited) {
+        setValidateProperty(element, mEnv);
         Iterator iterator = element.getChildren().iterator();
         while (iterator.hasNext()) {
             Element child = (Element) iterator.next();
             if (!NodeModel.isPropertyElement(child)) {
                 Compiler.updateSchema(child, mEnv, schema, visited);
+            }
+        }
+    }
+
+
+    /**
+     * Look for the "validate" attribute on canvas or at top level of imported libraries
+     *
+     * We look these places for the validate attribute:
+     *   <li>  canvas (root) element
+     *   <li>  direct child atttribute of canvas
+     * @param root source code document root
+     * @param env the CompilationEnvironment
+     */
+    void setValidateProperty(Element root , CompilationEnvironment env) {
+        String validate = CompilationEnvironment.VALIDATE_PROPERTY;
+        // Look for canvas attribute
+        if (root.getAttributeValue(validate) != null) {
+            if ("false".equals(root.getAttributeValue("validate"))) {
+                env.setProperty(validate, false);
+            } else {
+                env.setProperty(validate, true);
+            }
+        }
+
+        // Look for direct canvas children <attribute name="validate" value="false">
+        for (Iterator iter = root.getChildren().iterator();
+             iter.hasNext(); ) {
+            Element child = (Element) iter.next();
+            if (child.getName().equals("attribute")
+                && validate.equals(child.getAttributeValue("name"))) {
+                if ("false".equals(child.getAttributeValue("value"))) {
+                    env.setProperty(validate, false);
+                }
             }
         }
     }
