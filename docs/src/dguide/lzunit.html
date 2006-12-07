@@ -7,8 +7,7 @@
  
 <h1>Unit Testing</h1>
 
-<p><classname link="true">LzUnit</classname> is an implementation of the xUnit testing framework, for
-OpenLaszlo applications. LzUnit is useful in automated unit-testing of Laszlo
+<p><classname link="true">LzUnit</classname> is OpenLaszlo's implementation of the xUnit testing framework. LzUnit enables automated unit-testing of Laszlo
 applications and libraries.</p>
 
 <h2><a name="overview">Overview</a></h2>
@@ -22,7 +21,7 @@ applications and libraries.</p>
 <p>
 The unit testing code is not a part of the Openlaszlo Runtime Library; you must explicitly include it using   &lt;include href="lzunit"/&gt;.
  The <tagname link="true">lzunit</tagname> library has a &lt;debug 
- y="500"/&gt; in it. If you would like to see the debugger elsewhere (as in the examples below), assign it a differnt "y" value. Be sure to put the &lt;debug&gt; before the include statement.  (The compiler ignores all but the first occurence when it 
+ y="500"/&gt; in it. If you would like to see the debugger elsewhere (as in the examples below), assign it a different "y" value. Put the &lt;debug&gt; before the include statement.  (The compiler ignores all but the first occurence when it 
  sees two debug tags.)
 </p>
 
@@ -115,21 +114,21 @@ approach illustrated by the example below involves waiting for the event that si
 action, and putting the checkpoint in the event handler method.</p>
 
 <example title="Deferred execution of tests">
-&lt;canvas debug="true" height="400"&gt;
-    &lt;debug y="80"/&gt;
+&lt;canvas debug="true" height="800"&gt;
+    &lt;debug x="100" y="280"/&gt;
     &lt;include href="lzunit"/&gt;
     
     &lt;TestSuite&gt;
         &lt;TestCase&gt;
             &lt;view name="redbox" bgcolor="red" width="50" height="50"&gt;
-                &lt;animator name="anm" attribute="x" from="0" to="200" duration="1000" start="false" 
+                &lt;animator name="anm" attribute="y" from="200" to="-400" duration="1000" start="false" 
                 relative="false" onstop="parent.parent.checkStatus()"/&gt;
             &lt;/view&gt;
             &lt;method name="testanim"&gt;
                 redbox.anm.doStart()
             &lt;/method&gt;
             &lt;method name="checkStatus"&gt;
-                assertEquals(200, redbox.x)
+                assertEquals(-400, redbox.y)
             &lt;/method&gt;
         &lt;/TestCase&gt;
     &lt;/TestSuite&gt;
