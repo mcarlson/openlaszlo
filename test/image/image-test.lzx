@@ -1,30 +1,25 @@
 <canvas debug="true">
     <dataset name="imagedata">
-        <image url="food_is_large.jpg"/>
+        <image url="img/food_is_large.jpg"/>
     </dataset>
 
     <wrappinglayout/>
-    <image prefix="img/" datapath="imagedata:/image/@url"/>
-    <image prefix="img/" imageurl="food_is_large.jpg"/>
-    <image imageurl="food_is_large.jpg"/>
+    <image src="img/food_is_large.jpg"/>
+    <image datapath="imagedata:/image/@url"/>
+    <image prefix="" src="img/food_is_large.jpg"/>
+    <image src="img/food_is_large.jpg"/>
     <image>
         <text>Click me</text>
-        <method event="onclick">
-            this.setAttribute('imageurl', 'food_is_large.jpg');
-        </method>
+        <handler name="onclick">
+            this.setAttribute('src', 'img/food_is_large.jpg');
+        </handler>
     </image>
     <image forcereload="true">
         <text>Click me to reload</text>
-        <method event="onclick">
-            this.setAttribute('imageurl', 'food_is_large.jpg');
-        </method>
+        <handler name="onclick">
+            this.setAttribute('src', 'img/food_is_large.jpg');
+        </handler>
     </image>
-
-    <!-- these shouldn't load -->
-    <image prefix="img/" datapath="imagedata:/image/@bogus"/>
-    <image datapath="imagedata:/image/@bogus"/>
-    <image prefix="img/"/>
-    <image/>
 </canvas>
 
 <!-- Copyright 2001-2006 Laszlo Systems, Inc. -->
