@@ -242,7 +242,18 @@ To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes
 <example title="Non-standard colors">
 &lt;canvas height="200" width="120"&gt;
 
+&lt;!--
+
+Commented this out because it breaks in the online editor, and included the pertinent part of the colors.lzx script.
+
 &lt;include href="../lps/components/base/colors.lzx"/&gt;
+
+--&gt;
+
+&lt;script&gt;
+    var iceblue1 = 0x325693;
+    var gold4 = 0xF8E496;
+&lt;/script&gt;
 
 &lt;wrappinglayout axis="x" spacing="10"/&gt;
     
@@ -263,10 +274,10 @@ To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes
 In OpenLaszlo, a view has a color and an opacity which are handled separately. The opacity attribute ranges from 0 (transparent) to 1 (opaque).
 </p>
 <example title="Color and Opacity">
-&lt;canvas height="300" width="600" debug="true"&gt;
+&lt;canvas height="300" width="300" debug="true"&gt;
   &lt;simplelayout axis="x"/&gt;
   &lt;class name="fader"&gt;
-    &lt;view height="100" width="200"&gt;
+    &lt;view height="100" width="100"&gt;
         &lt;handler name="onclick"&gt;
             immediateparent.animate('opacity', -.20, 25, true);
         &lt;/handler&gt;

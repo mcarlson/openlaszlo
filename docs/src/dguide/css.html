@@ -609,6 +609,8 @@ stylesheet information for <code>styledbox2</code> unless it descends from <code
 and no stylesheet information for <code>styledbox3</code> unless it descends from
 <code>stylebox</code> and <code>stylebox2</code>.</p>
 
+<warning>The difference between an attribute selector and a descendant selector is as little as a spacebar. The attribute selector <code>person[name='george']</code> (no space between person and name) selects a person whose name is george, but the descendant selector <code>person [name='george']</code> selects a view named george which is a child of the view named person.</warning>
+
 <h2>Specificity</h2>
 
 <p>An instance of an LzNode -- most likely a view, or some other OpenLaszlo
