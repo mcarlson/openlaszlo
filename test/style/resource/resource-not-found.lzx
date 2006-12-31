@@ -1,0 +1,92 @@
+<canvas debug="true">
+    <include href="../test"/>
+    <script>
+    Debug.write("This test file exercises loading and styling resources.");
+    </script>
+    <debug/>
+
+    <stylesheet>
+        #gBonk {
+            styledresource: "test.png"; 
+        }
+
+        [name="monkresource"] {
+            cssimage: "monk.jpg"; 
+        }
+
+    </stylesheet>
+
+    <simplelayout axis="y" spacing="30"/>
+
+    <view id="gView" resource="test.png" />
+
+    <!-- the resource used by the following view, missing.png,
+      does not exist, so this line, if uncommented, would cause a
+       compilation error. That is the correct behavior. -->
+    <!-- view id="gLorem" resource="missing.png" -->
+
+    <view id="gBonk" source="$style{'styledresource'}" />
+
+    <resource name="niceresource" src="test.png" />
+    <view id="gMarsh" resource="niceresource" />
+
+    <!-- this should give us an error, because monkimagefile is undefined.
+         indeed, we do get an error if this line is uncommented. -->         
+    <!-- resource name="monkresource" src="$style{'monkimagefile'}" -->
+    <!-- if we give a null value for the resource's src attribute, we
+       get a compiler warning, which is correct behavior. -->
+    <resource name="monkresource" src="" />
+    <view id="gMonk" resource="monkresource" />
+
+    <resource name="jimresource" id="gJimResource" src="test.png" />
+    <view id="gJim" resource="jimresource" />
+
+    <!-- Making the resource reference a source file which doesn't exist
+     gives a compiler error. This is correct behavior. Uncomment the
+     following line to manifest this error. -->
+    <!-- resource name="sillyresource" src="idontexist.png" -->
+    <view id="gSilly" resource="sillyresource" />
+
+    <testsuite name="resourcesuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest("testFoundResource");
+            this.addTest("testFoundStyledResource");
+            this.addTest("testNotFoundResource");
+            this.run();
+        </handler>
+
+        <!-- Descendant selectors test -->
+        <method name="testFoundResource">
+            this.assertTrue( "test.png", gView.getAttribute("resource") );
+            this.assertEquals( 77, gView.getAttribute("resourceheight") );
+            this.assertEquals( 206, gView.getAttribute("resourcewidth") );
+
+            this.assertTrue( 77, gMarsh.getAttribute("resourceheight") );
+            this.assertTrue( 206, gMarsh.getAttribute("resourcewidth") );
+
+            this.assertTrue( 77, gJim.getAttribute("resourceheight") );
+            this.assertTrue( 206, gJim.getAttribute("resourcewidth") );
+
+            this.finishedTest("testFoundResource");
+        </method>
+
+        <method name="testFoundStyledResource">
+            // gBonk should be just like gView, but gBonk is styled with CSS
+            this.assertTrue( "test.png", gBonk.getAttribute("resource") );
+            this.assertEquals( 77, gBonk.getAttribute("resourceheight") );
+            this.assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
+
+            this.finishedTest("testFoundStyledResource");
+        </method>
+
+        <method name="testNotFoundResource">
+
+            this.finishedTest("testNotFoundResource");
+        </method>
+
+    </testsuite>
+
+
+</canvas>
+<!-- Copyright 2006 Laszlo Systems -->       
+   
