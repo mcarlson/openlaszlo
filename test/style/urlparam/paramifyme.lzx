@@ -1,0 +1,27 @@
+<!-- Copyright 2006 Laszlo Systems -->
+<!-- This file is to demonstrate the feature whereby a cssfile can
+        be specified as a http parameter. Run with ?cssfile=carla.css
+        to test this feature. cf LPP-2703.
+        -->
+<canvas debug="true">
+    <include href="../test"/>
+    <simplelayout />
+    <stylesheet>
+        #gCarla { cssbg: "0x245680"; }
+    </stylesheet>
+    <view id="gCarla" bgcolor="$style{'cssbg'}" width="100" height="100" />
+
+    <testsuite name="paramifysuite" loglevel="log">
+        <handler name="oninit">
+            this.addTest( "testCarla");
+            this.run();
+        </handler>
+
+        <method name="testCarla">
+            this.assertEquals( 0x366d3c, gCarla.getAttribute("bgcolor") );
+            this.finishedTest("testCarla");
+        </method>
+
+    </testsuite>
+
+</canvas>
