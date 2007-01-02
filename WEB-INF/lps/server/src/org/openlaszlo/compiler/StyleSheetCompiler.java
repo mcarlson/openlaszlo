@@ -2,12 +2,8 @@
  * StyleSheetCompiler.java
 * ****************************************************************************/
 
-/*
-TODO: [2006-09-21 ben] (LPP-2733) Make apps recompile if external css file changes
-*/ 
-
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -69,16 +65,27 @@ class StyleSheetCompiler extends LibraryCompiler {
                 // current application. This makes the application be
                 // recompiled if the css file changes.
                 // This fixes LPP-2733 [bshine 10.20.06] 
+                
                 String base =  mEnv.getApplicationFile().getParent();
 
-                File resolvedFile = mEnv.getFileResolver().resolve(src, base);
-                if (resolvedFile.exists()) {
-                    mLogger.info("Resolved css file to a file that exists!");
-                } else {
-                    mLogger.error("Could not resolve css file to a file that exists.");
-                    throw new CompilationError("Could not find css file " + src);
+                // [bshine 12.29.06] For LPP-2974, we also have to 
+                // check for the css file relative to the file which is including it.                
+                // First try to find the css file as a sibling of this source file
+                String sourceDir = new File(Parser.getSourcePathname(element)).getParent();
+                File resolvedFile = new File( sourceDir, src);
+                
+                // If our first try at finding the css file doesn't find it as a sibling, 
+                // try to resolve relative to the application source file. 
+                if (! resolvedFile.exists() ) {
+                    resolvedFile = mEnv.getFileResolver().resolve(src, base);
+                    if (resolvedFile.exists()) {
+                        mLogger.info("Resolved css file to a file that exists!");
+                    } else {
+                        mLogger.error("Could not resolve css file to a file that exists.");
+                        throw new CompilationError("Could not find css file " + src);
+                    }
                 }
-
+                
                 // Actually parse and compile the stylesheet! W00t!
                 CSSHandler fileHandler = CSSHandler.parse( resolvedFile );
                 this.compile(fileHandler);
