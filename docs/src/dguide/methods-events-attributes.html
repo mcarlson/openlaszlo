@@ -661,8 +661,7 @@ See the <xref linkend="constraints"/> for details.
 </p>
 <h3>Attribute types</h3>
 <p>
-By default attributes are typed as "expression," which means JavaScript expression. In many cases this is not what you want.
-In this example no labels are displayed:
+By default, attributes are of the JavaScript expression type, but in some cases the default declaration doesn't give enough instruction to achieve the desired result. In this example, no labels are displayed in the boxes:
 </p>
 <example title="Incorrect: attribute has no effect" >
 &lt;canvas height="300"&gt;
@@ -677,7 +676,7 @@ In this example no labels are displayed:
 &lt;/canvas&gt;
 </example>
 <p>
-To make sure attributes do what you want them to do, type your attributes when you declare them:
+To make sure attributes do what you want them to do, assign a <code>type</code> to your attributes when you declare them:
 </p>
 <example title="Declaring attribute type">
 &lt;canvas height="300"&gt;
@@ -1126,6 +1125,6 @@ setting coding standards for your LZX project.
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
