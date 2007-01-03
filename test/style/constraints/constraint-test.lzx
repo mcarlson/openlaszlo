@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas debug="true"  bgcolor="0xAAAAAA">
     <include href="../test"/>
     <script>
@@ -14,13 +14,13 @@
     }
     
     #gSimpleView {
-        nicebgcolor: "0x00AA33"; /* nicebgcolor is green*/
+        nicebgcolor: #00AA33; /* nicebgcolor is green*/
         nicexpos: 44;
     }
     
     #gSB {
-        stylebgcolor : "0xAA0000";
-        styleinnercolor : "0xAAFFFF";        
+        stylebgcolor : #AA0000;
+        styleinnercolor : #AAFFFF;        
     }
     
     /* This should match gPlainView, and gWidthThirty, but the next
@@ -31,30 +31,30 @@
         are declared in the opposite lexical order, most specific
         first. */ 
     [width="30"] {
-        stylebgcolor: "0xA4B2B1";
+        stylebgcolor: #A4B2B1;
     }
     
     /* This should only get gWidthThirty, not gPlainView */ 
     styledbox[width="30"] {
-        stylebgcolor: "0x8E694B";
-        styleinnercolor: "0x880000";                
+        stylebgcolor: #8E694B;
+        styleinnercolor: #880000;                
     }
     
     styledbox[width="62"] {
-        stylebgcolor: "0x6B7347";
-        styleinnercolor: "0x8C9870";                    
+        stylebgcolor: #6B7347;
+        styleinnercolor: #8C9870;                    
     }
     
     [width="62"] {
-        stylebgcolor: "0x963A1E";
-        styleinnercolor: "0xD2B46C";                            
+        stylebgcolor: #963A1E;
+        styleinnercolor: #D2B46C;                            
     }
 
     
     /* This should match gNugget bot not gWidthThirty */ 
     styledbox {
-        stylebgcolor: "0x71919F";
-        styleinnercolor: "0xB79FC2";        
+        stylebgcolor: #71919F;
+        styleinnercolor: #B79FC2;        
     }
     
     </stylesheet>

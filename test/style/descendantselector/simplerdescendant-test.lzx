@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas debug="true"  bgcolor="0xAAAAAA">
     <include href="../test"/>
     <script>
@@ -10,18 +10,18 @@
     <stylesheet>
     /* this should apply only to preston */ 
     styledbox {
-        stylebgcolor: "0x515151";
-        styleinnercolor: "0xFF8888";        // pink
+        stylebgcolor: #515151;
+        styleinnercolor: #FF8888;
     }
     
     /* this should apply only to george */ 
     styledbox styledbox {
-        styleinnercolor: "0x8888FF";        // blue 
+        styleinnercolor: #8888FF;  
     }
     
     /* This should apply only to jeb and gwb */ 
     styledbox styledbox styledbox {
-        styleinnercolor: "0x88FF00";        // green
+        styleinnercolor: #88FF00;  
     }
     
     

@@ -1,4 +1,4 @@
-<!-- Copyright 2006 Laszlo Systems -->
+<!-- Copyright 2007 Laszlo Systems -->
 <canvas title="subclassing test">
     
     <!-- [bshine 10.06.2006] This test demonstrates (LPP-2894) 
@@ -15,7 +15,7 @@
     
     <stylesheet>
         styledbox {
-            stylebgcolor : "0x8A008A";
+            stylebgcolor : #8A008A;
         }
     </stylesheet>
 
@@ -57,18 +57,18 @@
          </handler>
 
          <method name="testClassConstraint">
-             this.assertEquals("0x8A008A", sb0.getAttribute("bgcolor"));
+             this.assertEquals(0x8A008A, sb0.getAttribute("bgcolor"));
              this.finishedTest("testClassConstraint");
          </method>
 
          <method name="testInstanceOverrideConstraint">
-             this.assertEquals("0xFF0000", sb1.getAttribute("bgcolor"));
+             this.assertEquals(0xFF0000, sb1.getAttribute("bgcolor"));
              this.finishedTest("testInstanceOverrideConstraint"); 
          </method>
          
          <method name="testSubclassOverrideConstraint">
              this.assertEquals("150", sb2.getAttribute("width")); 
-             this.assertEquals("0x000088", sb2.getAttribute("bgcolor"));
+             this.assertEquals(0x000088, sb2.getAttribute("bgcolor"));
              this.finishedTest("testSubclassOverrideConstraint"); 
          </method>
          
