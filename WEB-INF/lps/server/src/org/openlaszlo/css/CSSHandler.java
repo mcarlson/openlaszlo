@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -243,30 +243,50 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
     
     /** @return an RGB formatted hex string like #FFFFFF. */
     String getRGBString(LexicalUnit lu) {
-        int rr = lu.getIntegerValue();
-        lu = lu.getNextLexicalUnit().getNextLexicalUnit(); // skip comma
-        int gg = lu.getIntegerValue();
-        lu = lu.getNextLexicalUnit().getNextLexicalUnit(); // skip comma
-        int bb = lu.getIntegerValue();
+      int rr = lu.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE ?
+        (int)Math.round(Math.min(lu.getFloatValue() * 255.0 / 100.0, 255.0)) :
+        lu.getIntegerValue();
+      lu = lu.getNextLexicalUnit().getNextLexicalUnit(); // skip comma
+      int gg = lu.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE ?
+        (int)Math.round(Math.min(lu.getFloatValue() * 255.0 / 100.0, 255.0)) :
+        lu.getIntegerValue();
+      lu = lu.getNextLexicalUnit().getNextLexicalUnit(); // skip comma
+      int bb = lu.getLexicalUnitType() == LexicalUnit.SAC_PERCENTAGE ?
+        (int)Math.round(Math.min(lu.getFloatValue() * 255.0 / 100.0, 255.0)) :
+        lu.getIntegerValue();
 
-        return "#"
-            + (rr < 16 ? "0" : "") + Integer.toHexString(rr).toUpperCase()
-            + (gg < 16 ? "0" : "") + Integer.toHexString(gg).toUpperCase()
-            + (bb < 16 ? "0" : "") + Integer.toHexString(bb).toUpperCase();
+      return "0x"
+        + (rr < 16 ? "0" : "") + Integer.toHexString(rr).toUpperCase()
+        + (gg < 16 ? "0" : "") + Integer.toHexString(gg).toUpperCase()
+        + (bb < 16 ? "0" : "") + Integer.toHexString(bb).toUpperCase();
     }
     
     /**
-      * Convert LexicalUnit to a string value.
+      * Convert LexicalUnit to a Javascript value (represented
+      * as a String).
       */
      String luToString(LexicalUnit lu) {
          String str = "";
          switch (lu.getLexicalUnitType()) {
+
          case LexicalUnit.SAC_ATTR:
+           // attr needs to be defined when this is evaluated
+           str = "attr(\"" + lu.getStringValue() + "\")";
+           break;
+
+
          case LexicalUnit.SAC_IDENT:
-         case LexicalUnit.SAC_STRING_VALUE:
-         case LexicalUnit.SAC_URI:
              str = lu.getStringValue();
              break;
+
+         case LexicalUnit.SAC_STRING_VALUE:
+           str = "\"" + lu.getStringValue() + "\"";
+           break;
+
+         case LexicalUnit.SAC_URI:
+           // url needs to be defined when this is evaluated
+           str = "url(\"" + lu.getStringValue() + "\")";
+           break;
 
          case LexicalUnit.SAC_CENTIMETER:
          case LexicalUnit.SAC_DEGREE:
@@ -279,15 +299,25 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
          case LexicalUnit.SAC_KILOHERTZ:
          case LexicalUnit.SAC_MILLIMETER:
          case LexicalUnit.SAC_MILLISECOND:
-         case LexicalUnit.SAC_PERCENTAGE:
          case LexicalUnit.SAC_PICA:
          case LexicalUnit.SAC_PIXEL:
          case LexicalUnit.SAC_POINT:
          case LexicalUnit.SAC_RADIAN:
-         case LexicalUnit.SAC_REAL:
          case LexicalUnit.SAC_SECOND:
-             str = Float.toString(lu.getFloatValue()) +
-                   lu.getDimensionUnitText();
+             // Dimensioned values are stored as strings for now, but
+             // perhaps they should be converted to
+             // length/frequency/angle in the appropriate base unit?
+           float val = lu.getFloatValue();
+           str = "\"" + (val == 0 ? "0" : Float.toString(val)) +
+             lu.getDimensionUnitText() + "\"";
+           break;
+
+         case LexicalUnit.SAC_PERCENTAGE:
+             str = Float.toString(lu.getFloatValue() / 100);
+             break;
+
+         case LexicalUnit.SAC_REAL:
+             str = Float.toString(lu.getFloatValue());
              break;
 
          case LexicalUnit.SAC_INTEGER:
@@ -344,14 +374,16 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
              str = "~";
              break;
 
+         // Can we support these as functions?
          case LexicalUnit.SAC_COUNTER_FUNCTION:
              throwCSSException("SAC_COUNTER_FUNCTION unsupported");
          case LexicalUnit.SAC_COUNTERS_FUNCTION:
              throwCSSException("SAC_COUNTERS_FUNCTION unsupported");
-         case LexicalUnit.SAC_FUNCTION:
-             throwCSSException("SAC_FUNCTION unsupported");
          case LexicalUnit.SAC_RECT_FUNCTION:
-             throwCSSException("SAC_RECT_FUNCTION unsupported");
+         case LexicalUnit.SAC_FUNCTION:
+           // Function needs to be defined when this is evaluated
+           str = lu.getFunctionName() + "(" + luToString(lu.getParameters()) + ")";
+           break;
          case LexicalUnit.SAC_SUB_EXPRESSION:
              throwCSSException("SAC_SUB_EXPRESSION unsupported");
          case LexicalUnit.SAC_UNICODERANGE:

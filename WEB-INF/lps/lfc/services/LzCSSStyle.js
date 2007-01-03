@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -126,8 +126,9 @@ LzCSSStyle.getPropertyValueFor = function ( node , pname ){
     var pv = null;
     var i = 0; 
     while ( i < l ) {
+        // TODO: [2007-01-02 ptw] In Legal's you can ask `pname in properties`
         pv = rules[ i++ ].properties[ pname ]; 
-        if ( pv ) return pv;
+        if ( pv !== void 0 ) return pv;
     }
 
     ////this.time1 += getTimer() - t;

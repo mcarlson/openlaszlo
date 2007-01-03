@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -191,11 +191,18 @@ LzNode.prototype.__LZapplyStyleMap = function ( stylemap ){
         //we are going to bypass the CSS API and call the underlying
         //implementation because we're concerned about speed
 
-        //in lieu of a real type conversion plan, try this as a number. if it's
-        //still equal, use the number form
         var v = LzCSSStyle.getPropertyValueFor( this , stylemap[ k ] );
-        var nv = Number( v );
-        if ( v == nv ) v = nv;
+
+        // This is a hack because people want to give color styles as
+        // Ox... which is not valid CSS, so they pass it as a string.
+        // They really should be using #...
+        if ((typeof v == 'string') && (! isNaN(v))) {
+          if ($debug) {
+            Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, v, Number(v));
+          }
+          v = Number(v);
+        }
+
         this.setAttribute( k , v);
 
         //Consider calling __LZapplyArgs instead of setAttribute here

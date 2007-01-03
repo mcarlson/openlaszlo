@@ -9,11 +9,10 @@
 
 package org.openlaszlo.compiler;
 import org.openlaszlo.css.*;
+import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.utils.FileUtils;
 import org.w3c.css.sac.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.*;
 import java.text.MessageFormat;
 
@@ -281,26 +280,14 @@ class StyleSheetCompiler extends LibraryCompiler {
                         " miscdata: \"spends most days indoors\"} ";
                         */ 
         
-        String props = "{";
-        Map ruleStyleMap = rule.getStyleMap();
-        boolean insertComma = false;     
-        Iterator iter = ruleStyleMap.entrySet().iterator();
-          while (iter.hasNext()) {
-              // don't put a comma before the first property. that would be illegal javascript.
-              if (!insertComma) { 
-                  insertComma = true; 
-              } else {
-                  props += ", ";
-              }
-              Map.Entry entry = (Map.Entry)iter.next();
-              String name = (String)entry.getKey();
-              StyleProperty newProp = (StyleProperty)entry.getValue();
-              props += name + ": "+ "\"" + newProp.value + "\"";
-
-          }        
-        props += "}";  
-        
-        return props; 
+      StringWriter result = new StringWriter();
+      try {
+        Map properties = rule.getStyleMap();
+        ScriptCompiler.writeObject(properties, result);
+      } catch (IOException e) {
+        throw new CompilationError("IO error writing property map");
+      }
+      return result.toString();
     }    
 }
 

@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -2020,13 +2020,9 @@ LzView.prototype.setBGColor = function ( bgc ) {
     //@field Number bgcolor: The color of background of this view. Null if there is
     //no bgcolor. A number from 0 - 0xFFFFFF.
     if (bgc != null) {
-        if ( $debug ){
-            var bgcn = Number( bgc );
-            if ( bgcn != bgcn ) {
-                if ( $debug ){
-                    _root.Debug.write( "Invalid value for bgcolor: " + 
-                                       bgca,this );
-                }
+        if ($debug) {
+            if (isNaN(bgc)) {
+              Debug.error("Invalid value %#w for %w.bgcolor", bgc, this);
             }
         }
         this.bgcolor = Number(bgc);
