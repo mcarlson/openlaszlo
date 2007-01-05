@@ -1,6 +1,7 @@
-<!-- Copyright 2006 Laszlo Systems -->
+<!-- Copyright 2007 Laszlo Systems -->
 <canvas debug="true">
-    <include href="../test"/>
+<include href="lzunit"/>
+<include href="../test"/>
     <stylesheet>
         /*IMPORTANT: This test is only testing properly if the definitions
           are not in class-hierarchy order. */
@@ -91,49 +92,51 @@
     </view>
 
 
-    <testsuite name="applicability" loglevel="log">
-        <handler name="oninit">
+<TestSuite name="applicability">
+<TestCase>
+        <!--<handler name="oninit">
             this.addTest( "testClasses");
             this.addTest( "testCompound");
             this.addTest( "testComplexFunky");
             this.addTest( "testRuleOrder");
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testClasses">
-            this.assertEquals( 1, supi.cprop );
-            this.assertEquals( 2, subi.cprop );
-            this.assertEquals( 3, subsubi.cprop );
-            this.finishedTest("testClasses");
+            assertEquals( 1, supi.cprop );
+            assertEquals( 2, subi.cprop );
+            assertEquals( 3, subsubi.cprop );
+            <!--this.finishedTest("testClasses");-->
         </method>
         
         <method name="testCompound">
-            this.assertEquals( 4, sp_supi.cprop );
-            this.assertEquals( 5, sp_subi.cprop );
-            this.assertEquals( 6, sp_subsubi.cprop );
-            this.finishedTest("testCompound");
+            assertEquals( 4, sp_supi.cprop );
+            assertEquals( 5, sp_subi.cprop );
+            assertEquals( 6, sp_subsubi.cprop );
+            <!--this.finishedTest("testCompound");-->
         </method>
 
         <method name="testComplexFunky">
             //you hit a closer 
             //if the selectors match, lexical order should win
-            this.assertEquals( 9, sb_supi.cprop );
+            assertEquals( 9, sb_supi.cprop );
 
             //should grab the more specific subclass selector
-            this.assertEquals( 7, sb_subi.cprop );
+            assertEquals( 7, sb_subi.cprop );
 
             //should walk up and grab the more specifc previous descendant
             //selector
-            this.assertEquals( 11, sb_subsubi.cprop );
-            this.finishedTest("testComplexFunky");
+            assertEquals( 11, sb_subsubi.cprop );
+            <!--this.finishedTest("testComplexFunky");-->
         </method>
 
         <method name="testRuleOrder">
-            this.assertEquals( 100, multimatch.cprop );
-            this.finishedTest("testRuleOrder");
+            assertEquals( 100, multimatch.cprop );
+            <!--this.finishedTest("testRuleOrder");-->
         </method>
 
-    </testsuite>
+</TestCase>
+</TestSuite>
 
 </canvas>
 

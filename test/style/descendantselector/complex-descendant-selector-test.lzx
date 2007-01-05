@@ -1,6 +1,7 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true" bgcolor="0xAAAAAA">
     <include href="../test"/>
+    <include href="lzunit"/>
     <script>
     Debug.write("This test file exercises compiler and runtime support for complex descendant selectors.");
     </script>
@@ -8,11 +9,11 @@
     <debug/>
 
     <stylesheet>
-    person { favoritecolor: "0x0000AA"}
-    #gEasyStreet person person { favoritecolor: "0x00AA00"}
-    #gStreet person { favoritecolor: "0xAA0000"}
-    #gStreet person person { favoritecolor: "0xAA00AA"}    
-    #gStreet person person person { favoritecolor: "0x441a0a"}    
+    person { favoritecolor: #0000AA}
+    #gEasyStreet person person { favoritecolor: #00AA00}
+    #gStreet person { favoritecolor: #AA0000}
+    #gStreet person person { favoritecolor: #AA00AA}    
+    #gStreet person person person { favoritecolor: #441a0a}    
     #gStreet cat { meowsound: "gstreetcat"}   
     #gKennedyHouse cat { meowsound: "kennedycat"}       
     </stylesheet>
@@ -22,38 +23,39 @@
     <include href="../neighborhood/kennedyfamily.lzx" />
     <include href="../neighborhood/thestreet.lzx" />    
 
-    <testsuite name="complexsuite" loglevel="log">
-        <handler name="oninit">
+    <TestSuite name="complexsuite">
+        <TestCase>
+<!--        <handler name="oninit">
             this.addTest("testTopLevel");
             this.addTest("testTwoLevel");
             this.addTest("testThreeLevel");            
             this.run();
-        </handler>
+        </handler>-->
 
         <!-- Descendant selectors test -->        
         <method name="testTopLevel">
-            this.assertEquals( "0x0000AA", gJoeSr.getAttribute("favoritecolor"))
-            this.finishedTest("testTopLevel");
+            assertEquals( "0x0000AA", gJoeSr.getAttribute("favoritecolor"));
+            <!--this.finishedTest("testTopLevel");-->
         </method>
 
         <method name="testTwoLevel">
-            this.assertEquals( "0x00AA00", gJFK.getAttribute("favoritecolor"));
-            this.assertEquals( "0xAA0000", gBo.getAttribute("favoritecolor"));            
-            this.assertEquals( "gstreetcat", gKittycat.getAttribute("meowsound"));
-            this.assertEquals( "gstreetcat", gBlackie.getAttribute("meowsound"));            
-            this.assertEquals( "kennedycat", gPatCat.getAttribute("meowsound"));            
-            this.finishedTest("testTwoLevel");
+            assertEquals( "0x00AA00", gJFK.getAttribute("favoritecolor"));
+            assertEquals( "0xAA0000", gBo.getAttribute("favoritecolor"));            
+            assertEquals( "gstreetcat", gKittycat.getAttribute("meowsound"));
+            assertEquals( "gstreetcat", gBlackie.getAttribute("meowsound"));            
+            assertEquals( "kennedycat", gPatCat.getAttribute("meowsound"));            
+            <!--this.finishedTest("testTwoLevel");-->
         </method>
 
         <method name="testThreeLevel">
-            this.assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
-            this.assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
-            this.assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
-            this.finishedTest("testThreeLevel");
+            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
+            assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
+            assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
+            <!--this.finishedTest("testThreeLevel");-->
         </method>
 
-        
-    </testsuite>
+        </TestCase>
+    </TestSuite>
         
     
 </canvas>

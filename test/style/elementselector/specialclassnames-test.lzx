@@ -1,9 +1,9 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
-    
+    <include href="lzunit"/>
     <stylesheet>
         view {
-            nicebgcolor: "0x366d3c";
+            nicebgcolor: #366d3c;
             styledname: "Frank";
         }
         
@@ -12,7 +12,7 @@
         }
         
         view[name="jean"] {
-            nicebgcolor: "0x81103f";   
+            nicebgcolor: #81103f;   
         }
 
     </stylesheet>
@@ -29,31 +29,32 @@
     
     <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
 
-    <testsuite name="specialClassNamesSuite" loglevel="log">
-        <handler name="oninit">
+    <TestSuite name="specialClassNamesSuite">
+        <TestCase>
+        <!--<handler name="oninit">
             this.addTest( "testview");
             this.addTest( "testtext");
             this.addTest( "testclassattr");            
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testview">
-            this.assertEquals( 0x366d3c, gView.getAttribute("bgcolor") );
-            this.assertEquals( "Frank", gView.getAttribute("name"))
-            this.finishedTest("testview");
+            assertEquals( '0x366d3c', gView.getAttribute("bgcolor") );
+            assertEquals( "Frank", gView.getAttribute("name"))
+            <!--this.finishedTest("testview");-->
         </method>
 
         <method name="testtext">
-            this.assertEquals( "text loves foo!", gFooText.getAttribute("text"));
-            this.finishedTest("testtext");
+            assertEquals( "text loves foo!", gFooText.getAttribute("text"));
+            <!--this.finishedTest("testtext");-->
         </method>
 
         <method name="testclassattr">
-            this.assertEquals( 0x81103f, gJean.getAttribute("bgcolor"));
-            this.finishedTest("testclassattr");
+            assertEquals( '0x81103f', gJean.getAttribute("bgcolor"));
+            <!--this.finishedTest("testclassattr");-->
         </method>
-        
-    </testsuite>
+        </TestCase>
+    </TestSuite>
     
     
 </library>

@@ -1,9 +1,10 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true" bgcolor="0xAAAAAA">
     <include href="../test"/>
     <script>
     Debug.write("This test file exercises specificity calculation and comparison. Heck yeah!");
     </script>
+    <include href="lzunit"/>
     <include href="../test"/>
     <debug/>
 
@@ -65,18 +66,18 @@ compiler output for these rules.
     <include href="../neighborhood/kennedyfamily.lzx" />
     <include href="../neighborhood/thestreet.lzx" />    
 
-    <testsuite name="specificsuite" loglevel="log">
-        <handler name="oninit">
+<TestSuite name="specificsuite">
+<TestCase>
+<!--        <handler name="oninit">
             this.addTest("testLessThan");
             this.addTest("testSpecificityPeople");
             this.addTest("testLittleBoys");
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testLessThan"><![CDATA[
-            this.assertTrue( 3 < 4, "three less than four");   
-            this.assertFalse( 5 < 4, "five less than four"); 
-            this.finishedTest("testLessThan");
+            assertTrue( 3 < 4, "three less than four");   
+            assertFalse( 5 < 4, "five less than four"); 
         ]]></method>
         
         <method name="testSpecificityPeople"><![CDATA[
@@ -89,22 +90,22 @@ compiler output for these rules.
             var r5spec = __cssRule5.getSpecificity(); //  ["#gStreet", "cat"];         
             var r6spec = __cssRule6.getSpecificity(); //  ["#gKennedyHouse", "cat"];
             
-            this.assertTrue( r0spec < r1spec, "r0 less than r1"); 
-            this.assertTrue( r0spec < r2spec, "r0 less than r2")
-            this.assertTrue( r2spec < r3spec, "more elements in selector");
-            this.assertTrue( r3spec < r4spec, "more elements in selector");
-            this.assertEquals(r5spec, r6spec, "Same specificity for cats");
+           assertTrue( r0spec < r1spec, "r0 less than r1"); 
+           assertTrue( r0spec < r2spec, "r0 less than r2");
+           assertTrue( r2spec < r3spec, "more elements in selector");
+           assertTrue( r3spec < r4spec, "more elements in selector");
+           assertEquals(r5spec, r6spec, "Same specificity for cats");
             
-            this.finishedTest("testSpecificityPeople");
         ]]></method>
         
         <method name="testLittleBoys">
-            this.assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
+            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
             this.assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
             this.assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
-            this.finishedTest("testLittleBoys"); 
+<!--            this.finishedTest("testLittleBoys"); -->
         </method>
-    </testsuite>
+    </TestCase>
+    </TestSuite>
         
     
 </canvas>

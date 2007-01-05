@@ -1,5 +1,6 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas debug="true"  bgcolor="0xAAAAAA">
+    <include href="lzunit"/>
     <include href="../test"/>
     <script>
     Debug.write("This test file exercises the time it takes to lookup CSS properties");
@@ -62,12 +63,13 @@
         </subclass>
     </baseclass>
 
-    <testsuite name="constraintsuite" loglevel="log" timeout="50000">
-        <handler name="oninit">
+<TestSuite name="constraintsuite">
+    <TestCase>
+<!--        <handler name="oninit">
             this.addTest("testLookupTimes");
             this.addTest("makeSomeNodes");
             this.run();
-        </handler>
+        </handler>-->
 
         <attribute name="iter" value="500"/>
         <!--
@@ -83,19 +85,19 @@
         <method name="testLookupTimes">
             var t = getTimer();
             for ( var i = iter; i >= 0; i-- ){
-                this.assertEquals( 10, this.getCSSProp( subsubID, "prop1" ));
-                this.assertEquals( 20, this.getCSSProp( subsubID, "prop2" ));
-                this.assertEquals( 30, this.getCSSProp( subsubID, "prop3" ));
-                this.assertEquals( 300,this.getCSSProp( subsubID, "prop4" ));
-                this.assertEquals( 40, this.getCSSProp( subsubID, "prop5" ));
-                this.assertEquals( 50, this.getCSSProp( subsubID, "prop6" ));
-                this.assertEquals( 60, this.getCSSProp( subsubID, "prop7" ));
-                this.assertEquals( 70, this.getCSSProp( subsubID, "prop8" ) );
+                assertEquals( 10, this.getCSSProp( subsubID, "prop1" ));
+                assertEquals( 20, this.getCSSProp( subsubID, "prop2" ));
+                assertEquals( 30, this.getCSSProp( subsubID, "prop3" ));
+                assertEquals( 300,this.getCSSProp( subsubID, "prop4" ));
+                assertEquals( 40, this.getCSSProp( subsubID, "prop5" ));
+                assertEquals( 50, this.getCSSProp( subsubID, "prop6" ));
+                assertEquals( 60, this.getCSSProp( subsubID, "prop7" ));
+                assertEquals( 70, this.getCSSProp( subsubID, "prop8" ) );
             }
             var tt = getTimer() - t ;
-            this.assertTrue(1000 > tt );
+            assertTrue(1000 > tt );
             Debug.write( 'Lookup test took: ' + tt );
-            this.finishedTest("testLookupTimes");
+            <!--this.finishedTest("testLookupTimes");-->
         </method>
 
         <method name="makeSomeNodes">
@@ -103,12 +105,10 @@
                 new LzNode( subsubID );
 
             }
-            this.assertEquals( iter, subsubID.subnodes.length );
-            this.finishedTest("makeSomeNodes");
+            assertEquals( iter, subsubID.subnodes.length );
+            <!--this.finishedTest("makeSomeNodes");-->
         </method>
 
-    </testsuite>
-
-        
-    
+    </TestCase>        
+</TestSuite> 
 </canvas>

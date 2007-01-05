@@ -1,6 +1,7 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. --> 
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas bgcolor="0xAAAAAA">
     <include href="../test"/>
+    <include href="lzunit"/>
     <script>
     Debug.write("This test file experiments with using CSS to style text.");
     </script>
@@ -9,11 +10,11 @@
     
     <stylesheet>
         #gt2 {
-            textbg : "0xAA33AA"; /* purple background for text */ 
+            textbg : #AA33AA; /* purple background for text */ 
         }
         
         #gt3 {
-            stylefontcolor: "0x993399"; /* the text itself should be purple */ 
+            stylefontcolor: #993399; /* the text itself should be purple */ 
         }
 
         #gt4 {
@@ -67,14 +68,15 @@
         text="(bold via css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
     </text> 
     
-    <testsuite name="texttestsuite" loglevel="log">
-        <handler name="oninit">
+<TestSuite name="texttestsuite">
+<TestCase>
+<!--        <handler name="oninit">
             this.addTest("testSimpleText");
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testSimpleText">
-            this.assertEquals( 0xAA33AA, gt2.getAttribute("bgcolor"));
+            assertEquals( '0xAA33AA', gt2.getAttribute("bgcolor"));
             
             // The htmltext for gt3 should now have the color string specified in
             // stylefontcolor
@@ -84,19 +86,19 @@
             this.assertTrue( indexOfColor > 0 , "993399 present in htmltext"); 
 
             // it would be nice if this worked, too. 
-            this.assertEquals( 0x993399, gt3.getAttribute("fgcolor"));             
+            assertEquals( '0x993399', gt3.getAttribute("fgcolor"));             
             
-            this.assertEquals( 18, gt4.getAttribute("fontsize"));
+            assertEquals( 18, gt4.getAttribute("fontsize"));
             
-            this.assertEquals( "bold", gt6.getAttribute("fontstyle")); 
+            assertEquals( "bold", gt6.getAttribute("fontstyle")); 
             // this.assertEquals( "bold", gt7.getAttribute("fontstyle"));             
             
-            this.finishedTest("testSimpleText");
+            <!--this.finishedTest("testSimpleText");-->
         </method>
         
         
-
-    </testsuite>
+</TestCase>
+    </TestSuite>
         
     
 </canvas>

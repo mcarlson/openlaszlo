@@ -1,6 +1,7 @@
 <!-- Copyright 2007 Laszlo Systems -->
 <canvas title="subclassing test">
-    
+<include href="lzunit"/>
+
     <!-- [bshine 10.06.2006] This test demonstrates (LPP-2894) 
     Subclasses and instances cannot override style constraints 
     set on the superclass. If a class has a attr="$style{'thingy'}", 
@@ -48,30 +49,31 @@
     <subclassbox id="sb2" />
     <otherlassbox id="sb3" />
     
-    <testsuite name="subclasssuite" loglevel="log">
-         <handler name="oninit">
+<TestSuite name="subclasssuite">
+    <TestCase>
+<!--         <handler name="oninit">
              this.addTest("testClassConstraint");         
              this.addTest("testInstanceOverrideConstraint"); 
              this.addTest("testSubclassOverrideConstraint"); 
              this.run();
-         </handler>
+         </handler>-->
 
          <method name="testClassConstraint">
-             this.assertEquals(0x8A008A, sb0.getAttribute("bgcolor"));
-             this.finishedTest("testClassConstraint");
+             assertEquals(0x8A008A, sb0.getAttribute("bgcolor"));
+             <!--this.finishedTest("testClassConstraint");-->
          </method>
 
          <method name="testInstanceOverrideConstraint">
-             this.assertEquals(0xFF0000, sb1.getAttribute("bgcolor"));
-             this.finishedTest("testInstanceOverrideConstraint"); 
+             assertEquals(0xFF0000, sb1.getAttribute("bgcolor"));
+             <!--this.finishedTest("testInstanceOverrideConstraint"); -->
          </method>
          
          <method name="testSubclassOverrideConstraint">
-             this.assertEquals("150", sb2.getAttribute("width")); 
-             this.assertEquals(0x000088, sb2.getAttribute("bgcolor"));
-             this.finishedTest("testSubclassOverrideConstraint"); 
+             assertEquals(150, sb2.getAttribute("width")); 
+             assertEquals(0x000088, sb2.getAttribute("bgcolor"));
+             <!--this.finishedTest("testSubclassOverrideConstraint"); -->
          </method>
          
-    </testsuite>
-    
+    </TestCase>
+</TestSuite>    
 </canvas>

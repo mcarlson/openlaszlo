@@ -1,6 +1,7 @@
-<!-- Copyright 2006 Laszlo Systems -->
+<!-- Copyright 2007 Laszlo Systems -->
 <canvas debug="true">
-    <include href="../test"/>
+<include href="lzunit"/>
+<include href="../test"/>
     <stylesheet>
         /* 1 */
         view{
@@ -131,29 +132,30 @@
         </view>
     </view>
     
-    <testsuite name="applicability" loglevel="log">
-        <handler name="oninit">
+<TestSuite name="applicability">
+<TestCase>
+<!--        <handler name="oninit">
             this.addTest( "testRuleOrder");
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testRuleOrder">
             var n = childID;
-            this.assertEquals( 1 , n.value1 );
-            this.assertEquals( 2 , n.value2 );
-            this.assertEquals( 3 , n.value3 );
-            this.assertEquals( 4 , n.value4 );
-            this.assertEquals( 5 , n.value5 );
-            this.assertEquals( 6 , n.value6 );
-            this.assertEquals( 7 , n.value7 );
-            this.assertEquals( 8 , n.value8 );
-            this.assertEquals( 9 , n.value9 );
-            this.assertEquals( 10, n.value10 );
-            this.assertEquals( 11, n.value11 );
-            this.finishedTest( 'testRuleOrder' );
+            assertEquals( 1 , n.value1 );
+            assertEquals( 2 , n.value2 );
+            assertEquals( 3 , n.value3 );
+            assertEquals( 4 , n.value4 );
+            assertEquals( 5 , n.value5 );
+            assertEquals( 6 , n.value6 );
+            assertEquals( 7 , n.value7 );
+            assertEquals( 8 , n.value8 );
+            assertEquals( 9 , n.value9 );
+            assertEquals( 10, n.value10 );
+            assertEquals( 11, n.value11 );
+            <!--this.finishedTest( 'testRuleOrder' );-->
         </method>
         
-
-    </testsuite>
+</TestCase>
+    </TestSuite>
 
 </canvas>

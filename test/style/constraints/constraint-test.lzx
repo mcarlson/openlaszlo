@@ -1,5 +1,6 @@
 <!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
-<canvas debug="true"  bgcolor="0xAAAAAA">
+<canvas debug="true"  bgcolor="#AAAAAA">
+<include href="lzunit"/>
     <include href="../test"/>
     <script>
     Debug.write("This test file exercises compiler and runtime support for $style constraints");
@@ -60,10 +61,10 @@
     </stylesheet>
 
     <simplelayout axis="y" spacing="0"/>
-    <view id="gBefore" bgcolor="0xAA0033" width="50" height="50" />
+    <view id="gBefore" bgcolor="#AA0033" width="50" height="50" />
     <view id="gSimpleView" bgcolor="$style{'nicebgcolor'}" width="50" 
           x="$style{ 'nicexpos' }" height="50" />
-    <view id="gAfter" bgcolor="0x3300BB" width="50" height="50" />
+    <view id="gAfter" bgcolor="#3300BB" width="50" height="50" />
 
     <text id="gComplicatedView" width="$style{ mystyleval1 }" 
           text="$style{ mystyleval2 }">
@@ -95,39 +96,40 @@
         <view name="otter" id="gOtter" width="62" height="70" bgcolor="$style{'stylebgcolor'}"/>
     </view>
        
-    <testsuite name="constraintsuite" loglevel="log">
-        <handler name="oninit">
+<TestSuite>
+    <TestCase>
+<!--        <handler name="oninit">
             this.addTest("testSimpleConstraint");
             this.addTest("testClassConstraint");         
             this.addTest("testClassAttrValSelector");                        
             this.run();
-        </handler>
+        </handler>-->
 
         <!-- Descendant selectors test -->        
         <method name="testSimpleConstraint">
-            this.assertEquals(  0x0AA33, gSimpleView.bgcolor);
-            this.assertEquals(  44 , gSimpleView.x);
-            this.assertEquals(  200 , gComplicatedView.width);
-            this.assertEquals(  "foo" , gComplicatedView.text);
-            this.finishedTest("testSimpleConstraint");
+            assertEquals(  '0x00AA33', gSimpleView.bgcolor);
+            assertEquals(  44 , gSimpleView.x);
+            assertEquals(  200 , gComplicatedView.width);
+            assertEquals(  "foo" , gComplicatedView.text);
+            <!--this.finishedTest("testSimpleConstraint");-->
         </method>
         
         <method name="testClassConstraint">
-            this.assertEquals(  0xAA0000, gSB.bgcolor);
-            this.assertEquals(  0xAAFFFF, gSB.inner.bgcolor);
-            this.finishedTest("testClassConstraint");
+            assertEquals(  '0xAA0000', gSB.bgcolor);
+            assertEquals(  '0xAAFFFF', gSB.inner.bgcolor);
+            <!--this.finishedTest("testClassConstraint");-->
         </method>
         
         <method name="testClassAttrValSelector">
-            this.assertEquals(  0x8E694B, gWidthThirty.bgcolor);  //  9,333,067 
-            this.assertEquals(  0x71919F, gNugget.bgcolor);       //  7,442,847
-            this.assertEquals(  0xA4B2B1, gPlainView.bgcolor);    // 10,793,649
-            this.assertEquals(  0x963A1E, gOtter.bgcolor );       //  9,845,278
-            this.assertEquals(  0x6B7347, gOdd.bgcolor );         //  7,041,863           
-            this.finishedTest("testClassAttrValSelector");
+            assertEquals(  '0x8E694B', gWidthThirty.bgcolor);  //  9,333,067 
+            assertEquals(  '0x71919F', gNugget.bgcolor);       //  7,442,847
+            assertEquals(  '0xA4B2B1', gPlainView.bgcolor);    // 10,793,649
+            assertEquals(  '0x963A1E', gOtter.bgcolor );       //  9,845,278
+            assertEquals(  '0x6B7347', gOdd.bgcolor );         //  7,041,863           
+            <!--this.finishedTest("testClassAttrValSelector");-->
         </method>
 
-    </testsuite>
-        
+    </TestCase> 
+</TestSuite>
     
 </canvas>

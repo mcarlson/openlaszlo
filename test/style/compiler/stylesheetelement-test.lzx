@@ -1,5 +1,7 @@
-<!-- Copyright 2006 Laszlo Systems -->
+<!-- Copyright 2007 Laszlo Systems -->
 <canvas>
+<include href="lzunit"/>
+
     <text text="this file tests what happens when we include an inline stylesheet, and a src= stylesheet" />
     <debug/>
 
@@ -53,48 +55,51 @@
     
     <designerview id="mynewfun" />
 
+<TestSuite>
+    <TestCase>
 
-<testsuite name="stylesheetsuite" loglevel="log">
-     <handler name="oninit">
+<!--     <handler name="oninit">
          this.addTest( "testPlain");
          this.addTest( "testPhilip");
          this.addTest( "testGeorge");         
          this.addTest( "testNonNameAttrs"); 
          this.addTest( "testLibrary");          
          this.run();
-     </handler>
+     </handler>-->
 
      <method name="testPlain">
-         this.assertEquals( 279, gPlainDV.getWidth() );
-         this.assertEquals( "uc berkeley", gPlainDV.getAttribute("miscdata"))
-         this.finishedTest("testPlain");
+         assertEquals( 279, gPlainDV.getWidth() );
+         assertEquals( "uc berkeley", gPlainDV.getAttribute("miscdata"));
+         <!--this.finishedTest("testPlain");-->
      </method>
 
      <method name="testPhilip">
-         this.assertNotNull( gPhilip );
-         this.assertEquals( 300, gPhilip.getWidth() );
-         this.assertEquals( "san jose state", gPhilip.getAttribute("miscdata"))
-         this.finishedTest("testPhilip");
+         assertNotNull( gPhilip );
+         assertEquals( 300, gPhilip.getWidth() );
+         assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
+<!--         this.finishedTest("testPhilip");-->
      </method>
 
      <method name="testGeorge">
-         this.assertNotNull( gGeorge );
-         this.assertEquals( 200, gGeorge.getWidth() );
-         this.assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"))
-         this.finishedTest("testGeorge");
+         assertNotNull( gGeorge );
+         assertEquals( 200, gGeorge.getWidth() );
+         assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
+<!--         this.finishedTest("testGeorge");-->
      </method>
 
      <method name="testNonNameAttrs">
-         this.assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
-         this.assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
-         this.finishedTest("testNonNameAttrs");
+         assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
+         assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
+         <!--this.finishedTest("testNonNameAttrs");-->
      </method>
 
      <method name="testLibrary">
-         this.assertEquals( 0x004499, gBiblio.getAttribute("innercolor") );
-         this.finishedTest("testLibrary");
+         assertEquals( 0x004499, gBiblio.getAttribute("innercolor") );
+         <!--this.finishedTest("testLibrary");-->
      </method>
 
- </testsuite>
+
+    </TestCase> 
+</TestSuite>
 
 </canvas> 

@@ -1,5 +1,6 @@
 <!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
 <canvas debug="true"  bgcolor="0xAAAAAA">
+<include href="lzunit"/>
     <include href="../test"/>
     <script>
     Debug.write("This test file demonstrates descendant selectors.");
@@ -39,23 +40,24 @@
     </styledbox>
 
     <simplelayout axis="y" spacing="0"/>
-    <testsuite name="simpledescendant" loglevel="log">
-        <handler name="oninit">
+    <TestSuite name="simpledescendant">
+        <TestCase>
+        <!--<handler name="oninit">
             this.addTest("testSimpleDescendant");
             this.run();
-        </handler>
+        </handler>-->
 
         <!-- Descendant selectors test -->        
         <method name="testSimpleDescendant">
-            this.assertEquals(  0x515151, preston.bgcolor);
-            this.assertEquals(  0xFF8888, preston.inner.bgcolor); 
-            this.assertEquals(  0x8888FF, george.inner.bgcolor); 
-            this.assertEquals(  0x88FF00, jeb.inner.bgcolor);                         
-            this.assertEquals(  0x88FF00, gwb.inner.bgcolor);                                     
-            this.finishedTest("testSimpleDescendant");
+            assertEquals(  '0x515151', preston.bgcolor);
+            assertEquals(  '0xFF8888', preston.inner.bgcolor); 
+            assertEquals(  '0x8888FF', george.inner.bgcolor); 
+            assertEquals(  '0x88FF00', jeb.inner.bgcolor);                         
+            assertEquals(  '0x88FF00', gwb.inner.bgcolor);                                     
+            <!--this.finishedTest("testSimpleDescendant");-->
         </method>
-        
-    </testsuite>
+        </TestCase>
+    </TestSuite>
         
     
 </canvas>

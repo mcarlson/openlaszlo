@@ -1,15 +1,16 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true">
+<include href="lzunit"/>
     <script>
     Debug.write("This test file exercises compiler support for CSS names with underscores and dashes.");
     </script>
     <include href="../test"/>
     
-    <stylesheet>
-        #gMax {
-            lzx_bgcolor: "0x652f15";
-        }
-    </stylesheet>
+<stylesheet>
+#gMax {
+       lzx_bgcolor : #652f15;
+    }
+</stylesheet>
     
     <debug/>
     
@@ -23,14 +24,16 @@
     
 <B id="gMax" />
     
-    <testsuite name="namesuite" loglevel="log">
-        <handler name="oninit">
+<TestSuite name="namesuite">
+        <TestCase>
+        <!--<handler name="oninit">
             this.addTest("testName");
             this.run();            
-        </handler>
-        <method name="testName">
+        </handler>-->
+        <!--<method name="testName">
             this.finishedTest("testName");
-        </method>
-    </testsuite>
+        </method>-->
+    </TestCase>
+</TestSuite>
 
 </canvas>

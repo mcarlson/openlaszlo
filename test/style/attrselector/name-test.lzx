@@ -1,4 +1,4 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
     <!-- Remember: attribute selectors win over element selectors. --> 
     
@@ -62,18 +62,19 @@
         </testclass>
     </view> 
 
-    <testsuite name="nameAttributesSuite" loglevel="log">
-        <handler name="oninit">
+<TestSuite>
+    <TestCase>
+<!--        <handler name="oninit">
             this.addTest( "testthename");
             this.addTest( "testNamedAncestor"); 
             this.addTest( "testNameVsElement");              
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testthename">
-            this.assertEquals( "i am thename", joseph.getAttribute("testdata") );
-            this.assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
-            this.finishedTest("testthename");
+            assertEquals( "i am thename", joseph.getAttribute("testdata") );
+            assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
+            <!--this.finishedTest("testthename");-->
         </method>
 
         <method name="testNamedAncestor">
@@ -84,7 +85,7 @@
                 If edgar takes his style from rule 2, which feels like the
                 right behavior, the next assertion will pass.
             */ 
-            this.assertEquals( "i am testclass", edgar.getAttribute("testdata") );             
+            assertEquals( "i am testclass", edgar.getAttribute("testdata") );             
             /* 
                 The situation is the same for cheever, but with selecting for
                 element type of view rather than a user class. 
@@ -93,19 +94,19 @@
                 should have the same success, because they only differ by whether
                 the class is a user class or built-in class.                 
             */            
-            this.assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
-            this.finishedTest("testNamedAncestor");
+            assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
+            <!--this.finishedTest("testNamedAncestor");-->
         </method>
 
         <method name="testNameVsElement">
-            this.assertEquals( "i am view", alice.getAttribute("testdata") );            
+            assertEquals( "i am view", alice.getAttribute("testdata") );            
             /* randy is the reverse of the edgar test case */ 
-            this.assertEquals( "i am view", randy.getAttribute("testdata") );                        
-            this.assertEquals( "i am thename", doug.getAttribute("testdata") );            
-            this.finishedTest("testNameVsElement");
+            assertEquals( "i am view", randy.getAttribute("testdata") );                        
+            assertEquals( "i am thename", doug.getAttribute("testdata") );            
+            <!--this.finishedTest("testNameVsElement");-->
         </method>
 
-    </testsuite>
-    
+    </TestCase> 
+</TestSuite>
     
 </library>

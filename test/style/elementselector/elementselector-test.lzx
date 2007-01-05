@@ -1,5 +1,6 @@
-<!-- Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved. -->
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
+<include href="lzunit"/>
     <simplelayout />
     <designerview id="gRobby" />
     <designerview id="gPatrick" />    
@@ -9,27 +10,28 @@
     <designerview id="gFindMe" /> 
     <designerview bordercolor="0xABBADD" /> <!-- no id -->
 
-    <testsuite name="elementsuite" loglevel="log">
-        <handler name="oninit">
+    <TestSuite name="elementsuite">
+        <TestCase>
+<!--        <handler name="oninit">
             this.addTest( "testRobby");
             this.addTest("testPatrick");
             this.run();
-        </handler>
+        </handler>-->
 
         <method name="testRobby">
-            this.assertNotNull( gRobby );
-            this.assertEquals( 279, gRobby.getWidth() );
-            this.assertEquals( "uc berkeley", gRobby.getAttribute("miscdata"))
-            this.finishedTest("testRobby");
+            assertNotNull( gRobby );
+            assertEquals( 279, gRobby.getWidth() );
+            assertEquals( "uc berkeley", gRobby.getAttribute("miscdata"));
+            <!--this.finishedTest("testRobby");-->
         </method>
         <method name="testPatrick">
-            this.assertNotNull( gPatrick );
-            this.assertEquals( 279, gPatrick.getWidth() );
-            this.assertEquals( "uc berkeley", gPatrick.getAttribute("miscdata"))
-            this.finishedTest("testPatrick");
+            assertNotNull( gPatrick );
+            assertEquals( 279, gPatrick.getWidth() );
+            assertEquals( "uc berkeley", gPatrick.getAttribute("miscdata"));
+            <!--this.finishedTest("testPatrick");-->
         </method>
-
-    </testsuite>
+        </TestCase> 
+    </TestSuite>
     
     
 </library>

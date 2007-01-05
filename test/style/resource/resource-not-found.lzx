@@ -1,4 +1,5 @@
 <canvas debug="true">
+    <include href="lzunit"/>
     <include href="../test"/>
     <script>
     Debug.write("This test file exercises loading and styling resources.");
@@ -47,46 +48,47 @@
     <!-- resource name="sillyresource" src="idontexist.png" -->
     <view id="gSilly" resource="sillyresource" />
 
-    <testsuite name="resourcesuite" loglevel="log">
-        <handler name="oninit">
+<TestSuite name="resourcesuite">
+<TestCase>
+<!--        <handler name="oninit">
             this.addTest("testFoundResource");
             this.addTest("testFoundStyledResource");
             this.addTest("testNotFoundResource");
             this.run();
-        </handler>
+        </handler>-->
 
         <!-- Descendant selectors test -->
         <method name="testFoundResource">
-            this.assertTrue( "test.png", gView.getAttribute("resource") );
-            this.assertEquals( 77, gView.getAttribute("resourceheight") );
-            this.assertEquals( 206, gView.getAttribute("resourcewidth") );
+            assertTrue( "test.png", gView.getAttribute("resource") );
+            assertEquals( 77, gView.getAttribute("resourceheight") );
+            assertEquals( 206, gView.getAttribute("resourcewidth") );
 
-            this.assertTrue( 77, gMarsh.getAttribute("resourceheight") );
-            this.assertTrue( 206, gMarsh.getAttribute("resourcewidth") );
+            assertTrue( 77, gMarsh.getAttribute("resourceheight") );
+            assertTrue( 206, gMarsh.getAttribute("resourcewidth") );
 
-            this.assertTrue( 77, gJim.getAttribute("resourceheight") );
-            this.assertTrue( 206, gJim.getAttribute("resourcewidth") );
+            assertTrue( 77, gJim.getAttribute("resourceheight") );
+            assertTrue( 206, gJim.getAttribute("resourcewidth") );
 
-            this.finishedTest("testFoundResource");
+            <!--this.finishedTest("testFoundResource");-->
         </method>
 
         <method name="testFoundStyledResource">
             // gBonk should be just like gView, but gBonk is styled with CSS
-            this.assertTrue( "test.png", gBonk.getAttribute("resource") );
-            this.assertEquals( 77, gBonk.getAttribute("resourceheight") );
-            this.assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
+            assertTrue( "test.png", gBonk.getAttribute("resource") );
+            assertEquals( 77, gBonk.getAttribute("resourceheight") );
+            assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
 
-            this.finishedTest("testFoundStyledResource");
+            <!--this.finishedTest("testFoundStyledResource");-->
         </method>
 
         <method name="testNotFoundResource">
 
-            this.finishedTest("testNotFoundResource");
+<!--            this.finishedTest("testNotFoundResource");-->
         </method>
-
-    </testsuite>
+</TestCase>
+</TestSuite>
 
 
 </canvas>
-<!-- Copyright 2006 Laszlo Systems -->       
+<!-- Copyright 2007 Laszlo Systems -->       
    
