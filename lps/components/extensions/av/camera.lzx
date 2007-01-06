@@ -1,17 +1,16 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
-
-
 <library>
 
 
     <include href="mediadevice.lzx"/>
 
 
-    <!---
-        Camera. [TODO: Document camera class.]
+    <!--
+        Camera.
+
         @START_CODE
             <camera/>
         @END_CODE
@@ -179,7 +178,7 @@
 
                     //Debug.write("detaching", this, vid);
                     vid.attachVideo(null);
-                    vid.clear();
+                    //vid.clear(); // FIXME: this clears the video but makes subsequent attachvideo's not work.
                 } else {
                     // Try to show the video if show is true.
                     // This may initiate the security dialog.
@@ -187,7 +186,7 @@
                     // which sets the new allowed value to
                     // all mediadevices. 
                     var dev = this._dev;
-                    //Debug.write("attaching", this, vid);
+                    //Debug.write("attaching", this, vid, dev);
                     vid.attachVideo(dev);
 
                     // If this is the first device we've ever seen, 

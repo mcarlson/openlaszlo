@@ -1,10 +1,10 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
 <!--
-    requires Flash Media Server (not tested with red5)
+    Requires Flash Media Server or red5.
     Create applications directories: test/streams/instance1
     The recorded streams will be saved there.
 -->
@@ -42,12 +42,12 @@
             y="4" 
             width="${parent.width-8}" 
             height="${parent.height-18}"
-            type="rtmp"
-            url="temp" 
         >
 
             <mediastream
                 debug="true"
+        type="rtmp"
+        url="temp" 
             />
 
             <camera
@@ -63,11 +63,7 @@
     </view>
 
     <text
-        text="${'recording: ' + v.stream.recordtime}"
-    />
-
-    <text
-        text="${'playtime: ' + v.stream.playtime}"
+        text="${'time: ' + v.stream.time}"
     />
 
     <text
@@ -84,12 +80,12 @@
 
         <button
             text="record"
-            onclick="v.cam.setAttribute('show', v.cam.show); v.stream.record()" 
+            onclick="gShow.setValue(true); v.stream.record()" 
         />
 
         <button
             text="stop"
-            onclick="v.stream.stop(); v.cam.setAttribute('show', v.cam.show)" 
+            onclick="v.stream.stop(); gShow.setValue(false)" 
         />
 
     </view>

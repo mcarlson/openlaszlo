@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -23,7 +23,7 @@
     
     <text multiline="true" width="100%">
     Instructions:<br/>
-    1. Either run a flash media server on localhost, or ssh tunnel to fms.laszlosystems.com<br/>
+    1. Run a flash media server on localhost<br/>
     2. Press the broadcast button. (Grant camera access permission if needed.)
        The button should change to say "stop broadcasting"<br/>
     3. Press the receive button. You should be receiving audio and video from yourself and the

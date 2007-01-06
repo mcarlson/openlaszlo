@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -42,10 +42,12 @@
     />
 
     <text
-        text="${'playtime: ' + s.playtime}"
+        resize="true"
+        text="${'time: ' + s.time}"
     />
 
     <text
+        resize="true"
         text="${'totaltime: ' + s.totaltime}"
     />
 

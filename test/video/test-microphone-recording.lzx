@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -16,7 +16,7 @@
 
     <rtmpconnection id="rtc" 
         autoconnect="true"
-        src="rtmp://localhost/test/instance1" 
+        src="rtmp://localhost/test" 
     />
 
     <mediastream id="ms"
@@ -55,11 +55,7 @@
     </view>
 
     <text
-        text="${'recording: ' + ms.recordtime}"
-    />
-
-    <text
-        text="${'playtime: ' + ms.playtime}"
+        text="${'time: ' + ms.time}"
     />
 
     <text

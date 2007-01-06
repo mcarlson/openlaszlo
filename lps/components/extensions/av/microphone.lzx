@@ -1,5 +1,5 @@
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -10,12 +10,14 @@
     <include href="mediadevice.lzx"/>
 
 
-    <!---
-        Microphone. [TODO: Document microphone class.]
+    <!--
+        Microphone. 
+
         Usage:
         @START_CODE
             <microphone/>
         @END_CODE
+
         Declaring a microphone with its default attributes will cause it
         to be immediately useful, which means that a security dialog will
         appear allowing the end user to allow or deny access to the microphone.
@@ -179,8 +181,12 @@
 
 
         <!--- Associate a mediastream with the microphone.
+          This is called to connect a microphone directly
+          to a mediastream, without an intervening videoview,
+          for audio only recording.
               @keywords private -->
         <method name="_setStream" args="stream"><![CDATA[
+        //Debug.write("microphone _setStream", stream);
             this.stream = stream;
             if (stream) {
                 //Debug.write("microphone", this, "_setStream", stream);

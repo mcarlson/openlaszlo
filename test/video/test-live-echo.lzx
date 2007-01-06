@@ -1,14 +1,15 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
 <canvas>
 
 
-    <rtmpconnection 
+    <rtmpconnection id="conn"
         src="rtmp://localhost/test" 
         autoconnect="true"
+        debug="true"
     />
    
     <simplelayout/>
@@ -34,10 +35,9 @@
         <videoview id="vp" 
             url="me" 
             type="rtmp" 
-            oninit="this.stream.play()"
+            oninit="Debug.write('Playing', this, this.stream); this.stream.play()"
         />
 
     </view>
-
 
 </canvas>

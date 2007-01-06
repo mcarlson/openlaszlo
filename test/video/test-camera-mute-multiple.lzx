@@ -1,5 +1,5 @@
 <!-- X_LZ_COPYRIGHT_BEGIN ************************************************
-* Copyright 2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2006-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                       *
 * X_LZ_COPYRIGHT_END ************************************************** -->
 
@@ -104,7 +104,7 @@
    all windows should show 'allowed = true' <br/>
 2) Create two more windows -- should not show camera, but 'allowed = true'. <br/>
 3) Show camera in one of the new windows. <br/>
-4) Destroy two windows (one w/ camera shown and one not) check for debugger warnings.
+4) Destroy two windows (one w/ camera shown and one not), and check for debugger warnings.
         </text>
 
     </view>
