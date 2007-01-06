@@ -632,6 +632,8 @@ stylesheet information for <code>styledbox2</code> unless it descends from <code
 and no stylesheet information for <code>styledbox3</code> unless it descends from
 <code>stylebox</code> and <code>stylebox2</code>.</p>
 
+<warning>Don't include an underscore in selector names. Your LZX files will not compile.</warning>
+
 <warning>The difference between an attribute selector and a descendant selector is as little as a spacebar. The attribute selector <code>person[name='george']</code> (no space between person and name) selects a person whose name is george, but the descendant selector <code>person [name='george']</code> selects a view named george which is a child of the view named person.</warning>
 
 <h2>Specificity</h2>
@@ -785,6 +787,6 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
