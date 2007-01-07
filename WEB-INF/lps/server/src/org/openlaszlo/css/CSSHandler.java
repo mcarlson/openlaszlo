@@ -270,14 +270,12 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
          switch (lu.getLexicalUnitType()) {
 
          case LexicalUnit.SAC_ATTR:
-           // attr needs to be defined when this is evaluated
-           str = "attr(\"" + lu.getStringValue() + "\")";
+           str = "function () { return this['" + lu.getStringValue() + "']; }";
            break;
 
-
          case LexicalUnit.SAC_IDENT:
-             str = lu.getStringValue();
-             break;
+           str = "function () { return global['" + lu.getStringValue() + "']; }";
+           break;
 
          case LexicalUnit.SAC_STRING_VALUE:
            str = "\"" + lu.getStringValue() + "\"";

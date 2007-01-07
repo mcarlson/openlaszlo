@@ -1,79 +1,89 @@
 <!-- Copyright 2007 Laszlo Systems -->
 <canvas title="subclassing test">
-<include href="lzunit"/>
 
-    <!-- [bshine 10.06.2006] This test demonstrates (LPP-2894) 
-    Subclasses and instances cannot override style constraints 
-    set on the superclass. If a class has a attr="$style{'thingy'}", 
-    then all subclasses and instances of that class will have that 
-    style constraint, even if a subclass explicitly sets the value 
-    of that attribute to a constant. The expected behavior is: if a 
-    class explicitly sets the value of an attribute to a constant, 
-    instances of that class have the attribute value specified by 
-    that constant, regardless of what the class's superclasses do.
-    -->
+  <include href="lzunit"/>
+
+    <!-- [bshine 10.06.2006] This test validates (LPP-2894) The
+         expected behavior is: if a class explicitly sets the value of
+         an attribute to a constant, instances of that class have the
+         attribute value specified by that constant, regardless of
+         what the class's superclasses do. -->
     <include href="../test"/>
-    
+
     <stylesheet>
         styledbox {
-            stylebgcolor : #8A008A;
+            stylebgcolor : purple;
+            styleinnercolor : attr(myInnerColor);
         }
     </stylesheet>
 
     <simplelayout axis="y" spacing="5" />
-    
+
+    <!-- This class has a bgcolor defined by a style and an inner view
+         whose bgcolor is defined by a style that references an
+         attribute of the view that is constrained to an attribute of
+         the parent.  This was the most complex dependency I could
+         think of to test. [2007-01-04 ptw] -->
     <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
-        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
+        <attribute name="innerColor" type="color" value="fuchsia" />
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10">
+          <attribute name="myInnerColor" type="color" value="${parent.innerColor}" />
+        </view>
     </class>
-    
-    <!-- Instances of this class should be blue, overriding the parent's bgcolor style constraint --> 
-    <!-- Instances of this class should also have width=150, overriding the
-        parent's width attribute. -->
+
+    <!-- Instances of this class should be navy, overriding the parent's bgcolor style constraint -->
+    <!-- Instances of this class should also have width=150,
+         overriding the parent's width attribute. -->
+    <!-- And finally, their inner view should be blue -->
     <class name="subclassbox" extends="styledbox">
-        <attribute name="bgcolor" value="0x000088" /> 
+        <attribute name="bgcolor" value="navy" />
         <attribute name="width" value="150" />
+        <attribute name="innerColor" value="blue" />
     </class>
-    
-    <!-- This box should be green. -->
-    <class name="otherlassbox" extends="styledbox" bgcolor="0x00FF00">
+
+    <!-- This box should be green with an inner view of lime. -->
+    <class name="otherlassbox" extends="styledbox" bgcolor="green">
+        <attribute name="innerColor" value="lime" />
     </class>
-    
+
     <styledbox id="sb0" />
-    
-    <!-- This box is purple, not red, even though we explicitly set the 
-        bgcolor to red on this instance. An instance can't override a 
-        style constraint on the class? Weird. 
-    -->
-    <styledbox id="sb1" bgcolor="0xFF0000" />
-    
+
+    <!-- This box is maroon with an inner view of red -->
+    <styledbox id="sb1" bgcolor="maroon" innerColor="red" />
+
     <subclassbox id="sb2" />
     <otherlassbox id="sb3" />
-    
+
 <TestSuite name="subclasssuite">
     <TestCase>
 <!--         <handler name="oninit">
-             this.addTest("testClassConstraint");         
-             this.addTest("testInstanceOverrideConstraint"); 
-             this.addTest("testSubclassOverrideConstraint"); 
+             this.addTest("testClassConstraint");
+             this.addTest("testInstanceOverrideConstraint");
+             this.addTest("testSubclassOverrideConstraint");
              this.run();
          </handler>-->
 
          <method name="testClassConstraint">
-             assertEquals(0x8A008A, sb0.getAttribute("bgcolor"));
+             this.assertEquals(purple, sb0.getAttribute("bgcolor"));
+             this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"));
              <!--this.finishedTest("testClassConstraint");-->
          </method>
 
          <method name="testInstanceOverrideConstraint">
-             assertEquals(0xFF0000, sb1.getAttribute("bgcolor"));
+             this.assertEquals(maroon, sb1.getAttribute("bgcolor"));
+             this.assertEquals(red, sb1.inner.getAttribute("bgcolor"));
              <!--this.finishedTest("testInstanceOverrideConstraint"); -->
          </method>
-         
+
          <method name="testSubclassOverrideConstraint">
-             assertEquals(150, sb2.getAttribute("width")); 
-             assertEquals(0x000088, sb2.getAttribute("bgcolor"));
+             this.assertEquals("150", sb2.getAttribute("width"));
+             this.assertEquals(navy, sb2.getAttribute("bgcolor"));
+             this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"));
+             this.assertEquals(green, sb3.getAttribute("bgcolor"));
+             this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"));
              <!--this.finishedTest("testSubclassOverrideConstraint"); -->
          </method>
-         
+
     </TestCase>
 </TestSuite>    
 </canvas>

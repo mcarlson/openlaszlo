@@ -91,7 +91,9 @@ var mvn = function (){
         this.__LZapplyArgs( maskedargs , true );
 
         var styleMap = this.$styles();
-        if ( styleMap ) this.__LZapplyStyleMap( styleMap );
+        if ( styleMap ) {
+            this.__LZstyleConstraints = this.__LZapplyStyleMap( styleMap, attrs );
+        }
 
         this.constructWithArgs( maskedargs );
 
@@ -184,31 +186,69 @@ LzNode.prototype.$styles = function () {
 }
 
 //------------------------------------------------------------------------------
+// Process the style map
 // @keywords private
+// @param Object styleMap: a map of attribute names to the css style
+// they are to be constrained to.
+// @param Object initialArgs: the attributes specified explicitly for
+// this instance (which may override style constraints).
+//
+// For each style-constrained attribute, if it does not have an
+// explicit value defined by the instance, lookup the css value that
+// it should be constrained to.  If it is a simple value, set it
+// directly, otherwise save it to be applied after the instance is
+// fully inited (since the constraint may depend on other attributes).
 //------------------------------------------------------------------------------
-LzNode.prototype.__LZapplyStyleMap = function ( stylemap ){
-    for ( var k in stylemap ){
+LzNode.prototype.__LZapplyStyleMap = function ( stylemap, initialArgs) {
+    var styleConstraints = {};
+    for ( var k in stylemap ) {
         //we are going to bypass the CSS API and call the underlying
         //implementation because we're concerned about speed
-
         var v = LzCSSStyle.getPropertyValueFor( this , stylemap[ k ] );
 
         // This is a hack because people want to give color styles as
         // Ox... which is not valid CSS, so they pass it as a string.
         // They really should be using #...
         if ((typeof v == 'string') && (! isNaN(v))) {
-          if ($debug) {
-            Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, v, Number(v));
-          }
-          v = Number(v);
+            if ($debug) {
+                Debug.warn("Invalid CSS value for %w.%s: `%#w`.  Use: `#%06x`.", this, k, v, Number(v));
+            }
+            v = Number(v);
         }
 
-        this.setAttribute( k , v);
+        // A style does not override an explicit attribute
+        // TODO: [2007-01-04 ptw] Use `in` for Legal's
+        if (initialArgs && (initialArgs[ k ] === void 0)) {
+            // A style that is a function is a constraint
+            if (v instanceof Function) {
+                styleConstraints[k] = v;
+            } else {
+//                 Debug.format("%w[%s] (%#w) %#w -> %#w", this, k, stylemap[k], this.k, v);
+                this.setAttribute(k, v);
+            }
+        }
+    }
+    return styleConstraints;
+}
 
-        //Consider calling __LZapplyArgs instead of setAttribute here
-
+//---
+// Process style constraints
+// @keywords private
+//
+// Compute each of the style constraints that were saved above and
+// apply them
+LzNode.prototype.__LZapplyStyleConstraints = function () {
+    if (this.hasOwnProperty('__LZstyleConstraints')) {
+        var styleConstraints = this.__LZstyleConstraints;
+        for ( var k in styleConstraints ) {
+            var fn = styleConstraints[ k ];
+            var v = fn.call(this);
+//             Debug.format("%w[%s] (%#w) %#w -> %#w", this, k, stylemap[k], this.k, v);
+            this.setAttribute(k, v);
+        }
     }
 }
+
 //------------------------------------------------------------------------------
 // The construct() method of a node is called as early as possible --
 // before any arguments have been applied. This is the method to override in
@@ -396,6 +436,7 @@ LzNode.prototype.__LZcallInit = function ( ){
     this.isinited = true;
 
     this.__LZresolveReferences();
+    this.__LZapplyStyleConstraints();
     var sl = this.subnodes;
     var i = 0;
     while( i < sl.length ){
