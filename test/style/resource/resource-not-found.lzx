@@ -28,6 +28,9 @@
 
     <view id="gBonk" source="$style{'styledresource'}" />
 
+    <!-- this should give a warning -->
+    <view id="gMissing" source="$style{'nostyledefined'}" />
+
     <resource name="niceresource" src="test.png" />
     <view id="gMarsh" resource="niceresource" />
 
@@ -39,7 +42,7 @@
     <resource name="monkresource" src="" />
     <view id="gMonk" resource="monkresource" />
 
-    <resource name="jimresource" id="gJimResource" src="test.png" />
+    <resource name="jimresource" src="test.png" />
     <view id="gJim" resource="jimresource" />
 
     <!-- Making the resource reference a source file which doesn't exist
