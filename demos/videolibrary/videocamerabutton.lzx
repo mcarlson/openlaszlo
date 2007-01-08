@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+
+
+    <resource name="cam_btn_rsc">
+        <frame src="resources/cam_btn_up.png"/>
+        <frame src="resources/cam_btn_mo.png"/>
+        <frame src="resources/cam_btn_dn.png"/>
+        <frame src="resources/cam_btn_selected.png"/>
+    </resource>
+
+
+    <class name="videocamerabutton"
+        extends="videotogglebutton"
+        resource="cam_btn_rsc"
+    />
+
+
+</library>

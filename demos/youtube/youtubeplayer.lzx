@@ -1,0 +1,504 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+<library>
+
+
+    <!-- Datasets -->
+
+
+    <method name="videosListFeatured"><![CDATA[
+        var ds = ds_videoList;
+        ds.abort();
+        ds.setQueryParams(null);
+        ds.setQueryParam("method", "videosListFeatured");
+        ds.doRequest();
+      ]]>
+    </method>
+
+
+    <attribute name="searchTag" type="string" value=""/>
+
+
+    <attribute name="searchUser" type="string" value=""/>
+
+
+    <method name="videosListByTag" args="tag"><![CDATA[
+        canvas.setAttribute("searchTag", tag);
+        tag = tag.split(" ").join(",").split(";").join(",");
+        var ds = ds_videoList;
+        ds.abort();
+        ds.setQueryParams(null);
+        ds.setQueryParam("method", "videosListByTag");
+        ds.setQueryParam("tag", tag);
+        ds.doRequest();
+      ]]>
+    </method>
+
+
+    <method name="videosListByUser" args="user"><![CDATA[
+        canvas.setAttribute("searchUser", user);
+        var ds = ds_videoList;
+        ds.abort();
+        ds.setQueryParams(null);
+        ds.setQueryParam("method", "videosListByUser");
+        ds.setQueryParam("user", user);
+        ds.doRequest();
+      ]]>
+    </method>
+
+
+    <method name="videoGetFlvUrl" args="id"><![CDATA[
+        var ds = ds_videoGetFlvUrl;
+        ds.abort();
+        ds.setQueryParams(null);
+        ds.setQueryParam("method", "videoGetFlvUrl");
+        ds.setQueryParam("id", id);
+        ds.doRequest();
+      ]]>
+    </method>
+
+
+    <class name="youtubelibrarypanel"
+        visible="${this.width &gt; 0}"
+        clip="true"
+    >
+
+
+        <attribute name="ms" value="null"/>
+
+        <attribute name="selectedindex" value="0"/>
+
+        <attribute name="librarypopup" value="null"/>
+
+        <attribute name="videoIdCache" value="$once{{}}"/>
+
+
+
+        <handler name="onheight" reference="classroot"><![CDATA[
+            this.resizeHeight(this.height, 0);
+          ]]>
+        </handler>
+
+
+        <handler name="ondata" reference="ds_videoGetFlvUrl"><![CDATA[
+            var ds = 
+                ds_videoGetFlvUrl;
+            var atts = 
+                ds.data.attributes;
+
+            var url = atts['url'];
+            var id = atts['id']
+
+            this.videoIdCache[id] = 
+                url;
+
+            this.playVideoUrl(
+                url,
+                ds.duration);
+          ]]>
+        </handler>
+
+
+        <method name="resizeHeight" args="h, delay"><![CDATA[
+            var minh =
+                -parent.vsearch.height - 10;
+            var maxh = 
+                parent.height - parent.resizer.height - parent.vsearch.height - 10;
+            if (h == -1) {
+                h = maxh;
+            } else if (h == -2) {
+                h = (minh + maxh) / 2;
+            }
+            h = 
+                Math.max(
+                    minh,
+                    Math.min(
+                        maxh,
+                        h));
+            if (this.height != h) {
+                if (delay) {
+                    this.animate("height", h, delay);
+                } else {
+                    this.setAttribute("height", h);
+                }
+            }
+          ]]>
+        </method>
+
+
+        <method name="playVideoId" args="id, duration"><![CDATA[
+            var url = 
+                this.videoIdCache[id];
+            if (url != null) {
+                this.playVideoUrl(url, duration);
+                return;
+            }
+
+            var ds = 
+                ds_videoGetFlvUrl;
+
+            ds.duration = duration;
+            ds.setQueryParams(null);
+            ds.setQueryParam('method', 'videoGetFlvUrl');
+            ds.setQueryParam('id', id);
+            ds.doRequest();
+
+          ]]>
+        </method>
+
+
+        <method name="playVideoUrl" args="url, duration"><![CDATA[
+            var ms = classroot.ms;
+
+            ms.stop();
+            var totalTime = 1.0;
+            ms.setAttribute("totaltime", duration);
+            ms.setAttribute("type", "http");
+            ms.setAttribute("url", url);
+            ms.play();
+
+          ]]>
+        </method>
+
+
+        <view name="bg"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${parent.height}"
+            bgcolor="0xa0a0a0"
+        />
+
+        <view name="g"
+            width="${parent.width}"
+            height="${parent.height}"
+            clip="true"
+        >
+
+            <view name="g"
+                y="5"
+                width="${parent.width}"
+            >
+
+                <wrappinglayout
+                    axis="x" 
+                    spacing="2"
+                />
+
+                <videolibraryicon
+                    datapath="ds_videoList:/library/*"
+                    icon="$path{'@icon'}"
+                    selected="${this['clonenumber'] == classroot.selectedindex}"
+                    maxHeight="${Math.max(1, parent.parent.height - 5)}"
+                >
+
+
+                    <attribute name="videoId" value="$path{'@id'}"/>
+                    <attribute name="title" value="$path{'@title'}"/>
+                    <attribute name="description" value="$path{'@description'}"/>
+                    <attribute name="duration" value="$path{'@duration'}"/>
+
+
+                    <handler name="ondata"><![CDATA[
+                        // Handle case of only one video (single replication doesn't set clonenumber).
+                        var index = 
+                            this['clonenumber'] == undefined  ? 0 : this['clonenumber'];
+                        if (index == 0) {
+                            classroot.parent.firstVideo();
+                        }
+                      ]]>
+                    </handler>
+
+
+                    <handler name="onselected"><![CDATA[
+                        if (this.selected &&
+                            this['data'] &&
+                            this.data['attributes']) {
+                            // Handle case of only one video (single replication doesn't set clonenumber).
+                            var index = 
+                                this['clonenumber'] == undefined  ? 0 : this['clonenumber'];
+                            classroot.setAttribute("selectedindex", index);
+                            classroot.playVideoId(this.videoId, this.duration);
+                        }
+                      ]]>
+                    </handler>
+
+
+                    <handler name="onover"><![CDATA[
+                        if (classroot.librarypopup) {
+                            if (this.over) {
+                                classroot.librarypopup.popup(this, this.data.attributes);
+                            } else {
+                                classroot.librarypopup.popdown();
+                            }
+                        }
+                      ]]>
+                    </handler>
+
+
+                </videolibraryicon>
+
+            </view>
+
+            <scrollbar name="sb"
+                axis="y"
+            />
+
+        </view>
+
+
+    </class>
+
+
+
+    <class name="youtubesearchpanel">
+
+
+        <button name="featured"
+            x="5"
+            y="${(parent.height - this.height) / 2}"
+            text="Featured"
+            onclick="canvas.videosListFeatured()"
+        />
+
+        <text name="taglabel"
+            x="${parent.featured.x + parent.featured.width + 5}" 
+            y="${((parent.height - this.height) / 2) - 1}"
+            resize="true"
+            fontstyle="bold"
+            text="Tags:"
+        />
+
+        <edittext name="tagedit"
+            x="${parent.taglabel.x + parent.taglabel.width + 5}" 
+            y="${(parent.height - this.height) / 2}"
+            width="${(2 * (parent.width / 3)) - this.x}"
+            text="${canvas.searchTag}"
+        >
+
+            <handler name="onkeydown" args="ch"><![CDATA[
+                if (ch == 13) {
+                    canvas.videosListByTag(this.getText());
+                }
+              ]]>
+            </handler>
+
+        </edittext>
+
+        <text name="userlabel"
+            x="${(2 * (parent.width / 3)) + 5}" 
+            y="${((parent.height - this.height) / 2) - 1}"
+            resize="true"
+            fontstyle="bold"
+            text="User:"
+        />
+
+        <edittext name="useredit"
+            x="${parent.userlabel.x + parent.userlabel.width + 5}" 
+            y="${(parent.height - this.height) / 2}"
+            width="${parent.width - this.x - 5}"
+            text="${canvas.searchUser}"
+        >
+
+            <handler name="onkeydown" args="ch"><![CDATA[
+                if (ch == 13) {
+                    canvas.videosListByUser(this.getText());
+                }
+              ]]>
+            </handler>
+
+        </edittext>
+
+    </class>
+
+
+    <class name="youtubeplayer">
+
+
+        <attribute name="type" type="string" value="http"/>
+
+        <attribute name="url" type="string" value=""/>
+
+        <attribute name="autoplay" value="false"/>
+
+        <attribute name="ms" value="$once{
+            this.vp.vscreen.ms}"/>
+
+
+        <handler name="onplaystop" reference="this.ms"><![CDATA[
+            this.nextVideo();
+          ]]>
+        </handler>
+
+
+        <method name="firstVideo"><![CDATA[
+            var subviews = this.vlibrarypanel.g.g.subviews;
+            if (subviews &&
+                (subviews.length > 0)) {
+                subviews[0].setAttribute("selected", true);
+            }
+          ]]>
+        </method>
+
+
+        <method name="nextVideo"><![CDATA[
+            var subviews = this.vlibrarypanel.g.g.subviews;
+            var n;
+            if (subviews &&
+                ((n = subviews.length) > 0)) {
+                var i;
+                for (i = 0; i < n; i++) {
+                    var v = subviews[i];
+                    if (v.selected) {
+                        if (i == (n - 1)) {
+                            this.firstVideo();
+                        } else {
+                            v.setAttribute("selected", false);
+                            subviews[i + 1].setAttribute("selected", true);
+                        }
+                        return;
+                    }
+                }
+                this.firstVideo();
+            }
+          ]]>
+        </method>
+
+
+        <videoplayer name="vp"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${parent.resizer.y}"
+            type="${parent.type}"
+            url="${parent.url}"
+            autoplay="${parent.autoplay}"
+        />
+
+
+        <view name="resizer"
+            x="0"
+            y="${parent.vsearch.y - this.height - 5}"
+            width="${parent.width}"
+            height="10"
+            bgcolor="${this.down ? 0x000000 : (this.over ? 0x404040 : 0xc0c0c0)}"
+        >
+
+
+            <attribute name="over" value="false"/>
+
+            <attribute name="down" value="false"/>
+
+            <attribute name="downy" value="0"/>
+
+            <attribute name="downheight" value="0"/>
+
+            <attribute name="idleDelegate" value="null"/>
+
+
+            <handler name="onmouseover"><![CDATA[
+                this.setAttribute("over", true);
+              ]]>
+            </handler>
+
+
+            <handler name="onmouseout"><![CDATA[
+                this.setAttribute("over", false);
+              ]]>
+            </handler>
+
+
+            <handler name="onmousedown"><![CDATA[
+                var del = 
+                    this.idleDelegate;
+
+                if (del == null) {
+                    del = new LzDelegate(this, 'handleIdle');
+                    this.idleDelegate = del;
+                }
+
+                LzIdle.onidle.addDelegate(del);
+
+                this.setAttribute("downy", canvas.getMouse("y"));
+                this.setAttribute("downheight", parent.vlibrarypanel.height);
+
+                this.setAttribute("down", true);
+              ]]>
+            </handler>
+
+
+            <handler name="onmouseup"><![CDATA[
+                var del = 
+                    this.idleDelegate;
+                
+                if (del != null) {
+                    LzIdle.onidle.removeDelegate(del);
+                }
+
+                this.setAttribute("down", false);
+              ]]>
+            </handler>
+
+
+            <method name="handleIdle"><![CDATA[
+                var y = 
+                    canvas.getMouse("y");
+                var dy = 
+                    this.downy - y;
+                parent.vlibrarypanel.resizeHeight(
+                    this.downheight + dy, 
+                    0);
+              ]]>
+            </method>
+
+
+            <view
+                x="0"
+                y="1"
+                width="${parent.width}"
+                height="1"
+                bgcolor="0x808080"
+            />
+
+
+            <view
+                x="0"
+                y="${parent.height - 2}"
+                width="${parent.width}"
+                height="1"
+                bgcolor="0x808080"
+            />
+
+
+        </view>
+
+
+        <youtubesearchpanel name="vsearch"
+            x="0"
+            y="${parent.vlibrarypanel.y - 5 - this.height}"
+            width="${parent.width}"
+            height="30"
+        />
+
+
+        <youtubelibrarypanel name="vlibrarypanel"
+            x="0"
+            y="${parent.height - this.height}"
+            width="${parent.width}"
+            height="120"
+            selectedindex="0"
+            ms="${classroot.ms}"
+            librarypopup="${classroot.popup}"
+        />
+
+
+        <videolibrarypopup name="popup" id="vlp"/>
+
+
+    </class>
+
+
+</library>

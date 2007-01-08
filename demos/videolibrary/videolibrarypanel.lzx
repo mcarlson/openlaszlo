@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+
+
+    <class name="videolibrarypanel"
+        visible="${(this.width &gt; 0) &amp;&amp; (this.height &gt; 0)}"
+    >
+
+
+        <attribute name="ms" value="null"/>
+
+        <attribute name="opened" value="false"/>
+
+        <attribute name="firsttime" value="true"/>
+
+        <attribute name="selectedindex" value="-1"/>
+
+        <attribute name="librarypopup" value="null"/>
+
+
+        <handler name="onopened"><![CDATA[
+            var w =
+                this.opened ? (parent.width - this.x) : 0;
+            if (this.width != w) {
+                if (this.firsttime) {
+                    this.setAttribute("firsttime", false);
+                    this.setAttribute("width", w);
+                } else {
+                    this.animate(
+                        "width", 
+                        w,
+                        500);
+                }
+            }
+          ]]>
+        </handler>
+
+        <handler name="oninit"><![CDATA[
+            this.updateWidth();
+          ]]>
+        </handler>
+
+        <handler name="onwidth" reference="parent"><![CDATA[
+            this.updateWidth();
+          ]]>
+        </handler>
+
+        <handler name="onx"><![CDATA[
+            this.updateWidth();
+          ]]>
+        </handler>
+
+
+        <method name="updateWidth"><![CDATA[
+            this.setAttribute(
+                "width", 
+                this.opened ? (parent.width - this.x) : 0);
+          ]]>
+        </method>
+
+
+        <method name="playVideo" args="atts"><![CDATA[
+            //Debug.write("PLAYVIDEO", this, atts);
+            var ms = this.ms;
+
+            ms.setAttribute("type", atts['type']);
+            ms.setAttribute("url", atts['url']);
+            ms.play();
+
+          ]]>
+        </method>
+
+
+        <view name="g"
+            width="${parent.width}"
+            height="${parent.height}"
+            clip="true"
+        >
+
+            <view name="g"
+                height="${parent.height}"
+            >
+
+                <simplelayout axis="x" spacing="2"/>
+
+
+                <videolibrarythumbnail name="vlt"
+                    datapath="ds_library:/library/video"
+                    url="$path{'@url'}"
+                    type="$path{'@type'}"
+                    thumbnailtime="$path{'@thumbnailtime'}"
+                    selected="${this.isinited &amp;&amp; 
+                                ((this['clonenumber'] || 0) == parent.classroot.selectedindex)}"
+                >
+
+
+                    <attribute name="icon" value="$path{'@icon'}"/>
+                    <attribute name="title" value="$path{'@title'}"/>
+                    <attribute name="description" value="$path{'@description'}"/>
+
+
+                    <handler name="onselected"><![CDATA[
+                        if (this.isinited &&
+                            this.selected &&
+                            this['data'] &&
+                            this.data['attributes']) {
+                            parent.classroot.setAttribute(
+                                "selectedindex", 
+                                this['clonenumber'] || 0);
+                            parent.classroot.playVideo(this.data.attributes);
+                        }
+                      ]]>
+                    </handler>
+
+
+                    <handler name="onover"><![CDATA[
+                        if (classroot.librarypopup) {
+                            if (this.over) {
+                                parent.classroot.librarypopup.popup(this, this.data.attributes);
+                            } else {
+                                parent.classroot.librarypopup.popdown();
+                            }
+                        }
+                      ]]>
+                    </handler>
+
+
+                </videolibrarythumbnail>
+
+
+            </view>
+
+            <scrollbar axis="x"/>
+
+        </view>
+
+
+    </class>
+
+
+</library>

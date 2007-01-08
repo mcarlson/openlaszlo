@@ -1,0 +1,99 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+
+<library>
+
+
+    <class name="videoscreen"
+        bgcolor="0x000000"
+        visible="${(this.width &gt; 1) &amp;&amp; (this.height &gt; 1)}"
+    >
+
+        <attribute name="type" type="string" value="http"/>
+
+        <attribute name="url" type="string" value=""/>
+
+        <attribute name="autoplay" value="false"/>
+
+        <attribute name="capturing" value="false"/>
+
+        <attribute name="volume" value="1.0"/>
+
+        <attribute name="sourceWidth" value="720"/>
+
+        <attribute name="sourceHeight" value="480"/>
+
+        <attribute name="aspectRatio" value="${
+            this.sourceHeight / this.sourceWidth}"/>
+
+        <attribute name="borderLeft" value="5"/>
+
+        <attribute name="borderRight" value="5"/>
+
+        <attribute name="borderTop" value="5"/>
+
+        <attribute name="borderBottom" value="5"/>
+
+        <attribute name="innerWidth" value="${
+            this.width - (this.borderLeft + this.borderRight)}"/>
+
+        <attribute name="innerHeight" value="${
+            this.height - (this.borderTop + this.borderBottom)}"/>
+
+        <attribute name="videoPosX" value="0.5"/>
+
+        <attribute name="videoPosY" value="0.5"/>
+
+        <attribute name="videoWidth" value="${
+            Math.min(this.innerWidth,
+                     this.innerHeight / this.aspectRatio)}"/>
+
+        <attribute name="videoHeight" value="${
+            Math.min(this.innerHeight,
+                     this.innerWidth * this.aspectRatio)}"/>
+
+        <attribute name="videoX" value="${
+            this.borderLeft + ((this.innerWidth - this.videoWidth) * this.videoPosX)}"/>
+
+        <attribute name="videoY" value="${
+            this.borderTop + ((this.innerHeight - this.videoHeight) * this.videoPosY)}"/>
+
+
+        <mediastream 
+            name="ms"
+            debug="true" 
+            autoplay="${classroot.autoplay}"
+            type="${classroot.type}" 
+            url="${classroot.url}"
+        />
+
+
+        <videoview 
+            name="vv"
+            x="${parent.videoX}"
+            y="${parent.videoY}"
+            width="${parent.videoWidth}"
+            height="${parent.videoHeight}"
+            stream="$once{classroot.ms}"
+            visible="${parent.visible &amp;&amp; (this.width &gt; 1) &amp;&amp; (this.height &gt; 1)}"
+            playvolume="${classroot.volume}"
+        >
+
+            <camera name="mycam"
+                show="${classroot.capturing}"
+            />
+
+            <microphone name="mymic"
+                capturing="${classroot.capturing}"
+            />
+
+        </videoview>
+
+
+    </class>
+
+
+</library>

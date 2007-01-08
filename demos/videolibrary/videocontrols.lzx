@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+
+
+    <class name="videocontrols">
+
+
+        <attribute name="ms" value="null"/>
+
+        <attribute name="cam" value="null"/>
+
+        <attribute name="mic" value="null"/>
+
+        <attribute name="showcamerabutton" value="true"/>
+
+        <attribute name="showcamerapanel" value="${this.vcamerabutton.engaged}"/>
+
+        <attribute name="showlibrarybutton" value="true"/>
+
+        <attribute name="showlibrarypanel" value="${this.vlibrarybutton.engaged}"/>
+
+        <attribute name="capturing" value="${this.showcamerapanel}"/>
+
+        <attribute name="videomaker" value="null"/>
+
+        <attribute name="librarypopup" value="null"/>
+
+
+        <simplelayout axis="x" spacing="0"/>
+
+
+        <view name="bg"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${parent.height}"
+            resource="controls_well"
+            stretches="both"
+            options="ignorelayout"
+        />
+
+        <videocamerabutton name="vcamerabutton"
+            engaged="false"
+            visible="${parent.showcamerabutton}"
+        />
+
+        <videocamerapanel name="vcamerapanel"
+            opened="${parent.showcamerapanel}"
+            ms="${classroot.ms}"
+            cam="${classroot.cam}"
+            mic="${classroot.mic}"
+            videomaker="${classroot.videomaker}"
+        />
+
+        <videolibrarybutton name="vlibrarybutton"
+            engaged="true"
+            visible="${parent.showlibrarybutton}"
+        />
+
+        <videolibrarypanel name="vlibrarypanel" id="vlp"
+            height="70"
+            selectedindex="-1"
+            opened="${parent.showlibrarypanel}"
+            ms="${classroot.ms}"
+            librarypopup="${classroot.librarypopup}"
+        />
+
+
+    </class>
+
+
+</library>

@@ -1,0 +1,88 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+
+<library>
+
+
+    <class name="videolibraryplayer">
+
+
+        <attribute name="type" type="string" value="rtmp"/>
+
+        <attribute name="url" type="string" value=""/>
+
+        <attribute name="autoplay" value="false"/>
+
+        <attribute name="showscreen" value="true"/>
+
+        <attribute name="showslider" value="true"/>
+
+        <attribute name="showcontrols" value="true"/>
+
+        <attribute name="controlsHeight" value="${
+            this.showcontrols ? this.controlsHeightVal : 0}"/>
+
+        <attribute name="controlsHeightVal" value="70"/>
+
+        <attribute name="controlsTop" value="${
+            this.height - this.controlsHeight}"/>
+
+        <attribute name="capturing" value="${
+            this.vcontrols.capturing}"/>
+
+        <attribute name="ms" value="$once{
+            this.vp.vscreen.ms}"/>
+
+        <attribute name="vv" value="$once{
+            this.vp.vscreen.vv}"/>
+
+        <attribute name="videomaker" value="${
+            this}"/>
+
+
+        <method name="makeNewVideo"><![CDATA[
+            return {
+                'url': 'temp',
+                'type': 'rtmp',
+                'title': 'Temporary Video',
+                'description': 'This is a temporary video.'
+            };
+          ]]>
+        </method>
+
+
+        <videoplayer name="vp"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${parent.controlsTop}"
+            type="${parent.type}"
+            url="${parent.url}"
+            autoplay="${parent.autoplay}"
+            showscreen="${parent.showscreen}"
+            showslider="${parent.showslider}"
+        />
+
+        <videocontrols name="vcontrols"
+            visible="${parent.showcontrols}"
+            x="0"
+            y="${parent.controlsTop}"
+            width="${parent.width}"
+            height="${parent.controlsHeight}"
+            ms="${classroot.ms}"
+            cam="${classroot.vv.cam}"
+            mic="${classroot.vv.mic}"
+            videomaker="${classroot.videomaker}"
+            librarypopup="${classroot.librarypopup}"
+        />
+
+        <videolibrarypopup name="librarypopup"/>
+
+
+    </class>
+
+
+</library>

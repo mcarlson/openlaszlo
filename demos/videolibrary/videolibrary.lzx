@@ -1,0 +1,109 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+
+<canvas
+  width="100%"
+  height="100%"
+  proxied="false"
+>
+
+    
+    <include href="av/videoutils.lzx"/>
+    <include href="av/videotogglebutton.lzx"/>
+    <include href="av/videoscreen.lzx"/>
+    <include href="av/videoslider.lzx"/>
+    <include href="av/videoplayer.lzx"/>
+    <include href="av/videothumbnail.lzx"/>
+    <include href="av/videolibrarypopup.lzx"/>
+    <include href="videocamerabutton.lzx"/>
+    <include href="videocamerapanel.lzx"/>
+    <include href="videolibrarybutton.lzx"/>
+    <include href="videolibrarypanel.lzx"/>
+    <include href="videolibrarythumbnail.lzx"/>
+    <include href="videocontrols.lzx"/>
+    <include href="videolibraryplayer.lzx"/>
+
+
+    <dataset name="ds_library"
+        src="http:videolibrary.jsp?method=getLibrary"
+        request="true"
+    />
+
+
+    <method name="makeNewVideo"><![CDATA[
+        var url = 'temp';
+        var type = 'rtmp';
+
+        var now = Date();
+
+        url += 
+            "_" + 
+            now.split(" ").join("_").split(":").join("_") +
+            "_" +
+            Math.floor(Math.random() * 1000000);
+
+        var title =
+            "Video From " + now;
+
+        var description =
+             "This video was recorded on " + now + ".";
+
+        return {
+            'url': url,
+            'type': type,
+            'title': title,
+            'description': description
+        };
+      ]]>
+    </method>
+
+
+    <method name="doneRecording"><![CDATA[
+        ds_library.doRequest();
+      ]]>
+    </method>
+
+
+    <!-- The src attribute of this rtmpconnection should be 
+         the same as the libraryUrl in videolibrary.jsp. -->
+    <rtmpconnection id="rtc"
+        autoconnect="true" 
+        debug="true"
+        src="rtmp:localhost/test/instance1"
+    />
+
+
+    <videolibraryplayer
+        id="vp"
+        name="vp"
+        width="${immediateparent.width}"
+        height="${immediateparent.height}"
+        type="rtmp"
+        videomaker="${canvas}"
+        visible="${rtc.stage == 2}"
+    />
+
+
+    <text
+        x="10"
+        y="10"
+        width="${canvas.width - 20}"
+        multiline="true"
+        fontsize="24"
+        visible="${rtc.stage != 2}"
+        text="${
+            ['Unable to connect to RTMP server:\n' + rtc.src,
+             'Connecting to RTMP server:\n' + rtc.src,
+             ''][rtc.stage]}"
+    />
+
+
+    <debug
+      x="20" y="50"
+    />
+
+
+</canvas>

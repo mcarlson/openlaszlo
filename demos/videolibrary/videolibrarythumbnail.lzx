@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+
+
+    <class name="videolibrarythumbnail"
+        width="62"
+        height="47"
+    >
+
+
+        <attribute name="url" type="string" value=""/>
+
+        <attribute name="type" type="string" value="http"/>
+
+        <attribute name="thumbnailtime" value="0"/>
+
+        <attribute name="selected" value="false"/>
+
+        <attribute name="over" value="false"/>
+
+
+        <handler name="onmouseover"><![CDATA[
+            this.setAttribute("over", true);
+          ]]>
+        </handler>
+
+
+        <handler name="onmouseout"><![CDATA[
+            this.setAttribute("over", false);
+          ]]>
+        </handler>
+
+
+        <handler name="onclick"><![CDATA[
+            this.setAttribute("selected", true);
+          ]]>
+        </handler>
+
+
+        <videothumbnail name="vt"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${parent.height}"
+            bgcolor="${classroot.selected ? 0x000000 : (classroot.over ? 0xffff00 : null)}"
+            url="${classroot.url}"
+            type="${classroot.type}"
+            thumbnailtime="${classroot.thumbnailtime}"
+        />
+
+
+    </class>
+
+
+</library>

@@ -1,0 +1,42 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+
+<library>
+
+
+    <script><![CDATA[
+
+        function formatTimeHHMMSS(t) 
+        {
+            if (isNaN(t)) {
+                t = 0;
+            }
+
+            var seconds = 
+                Math.floor(t);
+            var ticks =
+                Math.floor(10 * (t - seconds));
+            var minutes = 
+                Math.floor(seconds / 60);
+
+            seconds = seconds % 60;
+
+            var hours = 
+                Math.floor(minutes / 60);
+
+            minutes = minutes % 60;
+
+            return (
+                ((hours < 10) ? ("0" + hours) : hours) + ":" +
+                ((minutes < 10) ? ("0" + minutes) : minutes) + ":" +
+                ((seconds < 10) ? ("0" + seconds) : seconds));
+        }
+
+      ]]>
+    </script>
+
+
+</library>

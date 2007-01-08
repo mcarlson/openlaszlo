@@ -1,0 +1,87 @@
+<!-- X_LZ_COPYRIGHT_BEGIN ************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                       *
+* X_LZ_COPYRIGHT_END ************************************************** -->
+
+
+<library>
+
+
+    <class name="videoplayer">
+
+
+        <attribute name="type" type="string" value="http"/>
+
+        <attribute name="url" type="string" value=""/>
+
+        <attribute name="autoplay" value="false"/>
+
+        <attribute name="showscreen" value="true"/>
+
+        <attribute name="showslider" value="true"/>
+
+        <attribute name="borderLeft" value="5"/>
+
+        <attribute name="borderRight" value="5"/>
+
+        <attribute name="borderTop" value="5"/>
+
+        <attribute name="sliderGap" value="5"/>
+
+        <attribute name="sliderHeight" value="${
+            this.showslider ? this.sliderHeightVal : 0}"/>
+
+        <attribute name="sliderHeightVal" value="16"/>
+
+        <attribute name="borderBottom" value="5"/>
+
+        <attribute name="screenWidth" value="${
+            this.width - (this.borderLeft + this.borderRight)}"/>
+
+        <attribute name="sliderTop" value="${
+            this.height - (this.borderBottom + this.sliderHeight)}"/>
+
+        <attribute name="videoBottom" value="${
+            this.sliderTop - (this.showslider ? this.sliderGap : 0)}"/>
+
+
+        <method name="playVideo" args="url, type"><![CDATA[
+            var ms = 
+                this.vscreen.ms;
+
+            ms.setAttribute("type", type);
+            ms.setAttribute("url", url);
+
+            ms.play();
+          ]]>
+        </method>
+
+
+        <videoscreen name="vscreen"
+            x="${parent.borderLeft}"
+            y="${parent.borderTop}"
+            width="${parent.screenWidth}"
+            height="${parent.videoBottom - parent.borderTop}"
+            visible="${parent.showscreen}"
+            type="${classroot.type}"
+            autoplay="${classroot.autoplay}"
+            url="${classroot.url}"
+            volume="${parent.vslider.volume}"
+        />
+
+        <videoslider name="vslider"
+            x="${parent.borderLeft}"
+            y="${parent.height - (parent.borderBottom + parent.sliderHeight)}"
+            width="${parent.screenWidth}"
+            height="${parent.sliderHeight}"
+            visible="${parent.showslider}"
+            ms="${classroot.vscreen.ms}"
+            time="${classroot.vscreen.ms.time}"
+            totaltime="${classroot.vscreen.ms.totaltime}"
+        />
+
+
+    </class>
+
+
+</library>

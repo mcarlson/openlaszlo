@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.                   *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+
+
+<library>
+
+
+    <resource name="controls_well"
+        src="resources/controls_well.swf"
+    />
+
+    <resource name="record_btn">
+        <frame src="resources/record_btn_up.png"/>
+        <frame src="resources/record_btn_mo.png"/>
+        <frame src="resources/record_btn_dn.png"/>
+    </resource>
+
+    <resource name="stop_btn">
+        <frame src="resources/stop_btn_up.png"/>
+        <frame src="resources/stop_btn_mo.png"/>
+        <frame src="resources/stop_btn_dn.png"/>
+    </resource>
+
+    <resource name="audio_meter_over"
+        src="resources/audio_meter_over.png"
+    />
+
+    <resource name="audio_meter_under"
+        src="resources/audio_meter_under.png"
+    />
+
+
+    <class name="videocamerapanel"
+        width="0"
+        height="70"
+        visible="${this.width > 0}"
+        clip="true"
+    >
+
+
+        <attribute name="ms" value="null"/>
+
+        <attribute name="cam" value="null"/>
+
+        <attribute name="mic" value="null"/>
+
+        <attribute name="opened" value="false"/>
+
+        <attribute name="topHeight" value="${this.height - 22}"/>
+
+        <attribute name="openedWidth" value="150"/>
+
+        <attribute name="videomaker" value="null"/>
+
+
+        <handler name="onopened"><![CDATA[
+            var w =
+                this.opened ? this.openedWidth : 0;
+            this.animate(
+                "width", 
+                w,
+                this.openedWidth);
+            this.ms.stop();
+            this.cam.setAttribute("show", this.opened);
+          ]]>
+        </handler>
+
+
+        <view name="bg"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${classroot.topHeight}"
+            resource="controls_well"
+            stretches="both"
+        />
+
+        <videotogglebutton name="recordbutton"
+            x="${(parent.width - this.width) / 2}"
+            y="${(parent.topHeight - this.height) / 2}"
+            resource="${this.engaged ? 'stop_btn' : 'record_btn'}"
+            visible="${classroot.cam.allowed}"
+        >
+
+            <handler name="onengaged"><![CDATA[
+                if (this.engaged) {
+                    classroot.ms.stop();
+                    classroot.ms.close(); // FIXME: being paranoid, because it keeps writing over the last stream played.
+                    classroot.cam.setAttribute("show", true);
+                    var v = classroot.videomaker.makeNewVideo();
+                    classroot.ms.setAttribute("type", v.type);
+                    classroot.ms.setAttribute("url", v.url);
+                    classroot.ms.record();
+                } else {
+                    classroot.ms.stop();
+                    //classroot.cam.setAttribute("show", false);
+                    classroot.cam.setAttribute("show", true);
+                    var v = classroot.videomaker.doneRecording();
+                }
+              ]]>
+            </handler>
+
+        </videotogglebutton>
+
+        <view name="timedisplay"
+            x="0"
+            y="${parent.topHeight}"
+            width="${parent.width / 2}"
+            height="22"
+        >
+
+          <view name="background"
+              x="0"
+              y="0"
+              width="${parent.width}"
+              height="${parent.height}"
+              bgcolor="0xdddddd"
+          />
+
+          <text name="recordtimefield"
+            resize="true"
+            fontsize="11"
+            x="${(parent.width - this.width) / 2}"
+            y="${(parent.height - this.height) / 2}"
+            text="${formatTimeHHMMSS(classroot.ms.time)}"
+          />
+
+        </view>
+
+        <view name="audiometer"
+            x="${parent.width / 2}"
+            y="${parent.height - 22}"
+            width="${parent.width / 2}"
+            height="22"
+            clip="true"
+        >
+
+            <view name="background"
+                x="0"
+                y="0"
+                width="${parent.width}"
+                height="${parent.height}"
+                bgcolor="0xdddddd"
+            />
+
+            <view name="g"
+                x="${(parent.width - this.width) / 2}"
+                y="${(parent.height - this.height) / 2}"
+                width="50"
+                height="22"
+            >
+
+                <view name="meterbg"
+                    bgcolor="0xffffff"
+                    width="${parent.width}"
+                    height="${parent.height}"
+                />
+
+                <view name="meterclipper"
+                    clip="true"
+                    width="${parent.width * (classroot.mic.level / 100.0)}"
+                >
+
+                    <view name="meterunder"
+                        resource="audio_meter_under"
+                    />
+
+                </view>
+
+                <view name="meterover"
+                    resource="audio_meter_over"
+                />
+
+            </view>
+
+        </view>
+
+        <view name="overlay"
+            x="0"
+            y="0"
+            width="${parent.width}"
+            height="${parent.height}"
+            opacity="0.75"
+            bgcolor="0x808080"
+            visible="${!classroot.cam.allowed}"
+            onclick="classroot.cam.showSettings()"
+        />
+
+        <text name="t1"
+            x="${(parent.width - this.width) / 2}"
+            y="0"
+            text="Camera Disabled."
+            fontsize="12"
+            fontstyle="bold"
+            resize="true"
+            visible="${!classroot.cam.allowed}"
+        />
+
+        <text name="t2"
+            x="${(parent.width - this.width) / 2}"
+            y="${parent.t1.y + parent.t1.height}"
+            text="Click to Change."
+            fontsize="12"
+            fontstyle="bold"
+            resize="true"
+            visible="${!classroot.cam.allowed}"
+        />
+
+
+    </class>
+
+
+</library>
