@@ -71,7 +71,7 @@ class StyleSheetCompiler extends LibraryCompiler {
                 // check for the css file relative to the file which is including it.                
                 // First try to find the css file as a sibling of this source file
                 String sourceDir = new File(Parser.getSourcePathname(element)).getParent();
-                File resolvedFile = new File( sourceDir, src);
+                File resolvedFile = mEnv.getFileResolver().resolve(src, sourceDir);
                 
                 // If our first try at finding the css file doesn't find it as a sibling, 
                 // try to resolve relative to the application source file. 
