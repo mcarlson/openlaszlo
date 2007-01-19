@@ -55,7 +55,6 @@
      <method name="testNonNameAttrs">
          assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
          assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
-         finishedTest("testNonNameAttrs");
      </method>
 
     </TestCase> 
