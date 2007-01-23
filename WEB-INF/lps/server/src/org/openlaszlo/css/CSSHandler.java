@@ -11,6 +11,7 @@ package org.openlaszlo.css;
 
 import java.io.*;
 import java.util.*;
+import java.util.regex.*;
 import org.w3c.css.sac.*;
 import org.apache.log4j.*;
 import org.jdom.*;
@@ -180,9 +181,36 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
         }
     }
 
+    // Unicode characters
+    Pattern hexEscapePattern = Pattern.compile("\\\\([0-9a-fA-F]{1,6})(\r\n|[ \t\r\n\f])?");
+    // The only characters that need to be escaped in javascript
+    Pattern charEscapePattern = Pattern.compile("\\\\([^\r\n\f0-9a-fA-F])");
+
+    // Convert CSS escapes to Javascript
+    protected String processEscapes (String input) {
+        // Convert unicode escapes to Javascript equivalent (which
+        // means parse the hex escape and insert the corresponding
+        // unicode character in it's place).
+        Matcher m =  hexEscapePattern.matcher(input);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) {
+            // Have I told you how much Java sucks lately?
+            CharArrayWriter u = new CharArrayWriter();
+            u.write(Integer.parseInt(m.group(1), 16));
+            m.appendReplacement(sb, u.toString());
+        }
+        m.appendTail(sb);
+        input = sb.toString();
+        // Convert character escapes to Javascript (which means just
+        // remove the escape, since none of those chars need escaping
+        // in Javascript).
+        input = charEscapePattern.matcher(input).replaceAll("$1");
+        return input;
+    }
+
     public void property(String name, LexicalUnit value, boolean important)
         throws CSSException {
-        mStyleMap.put(name, new StyleProperty(luToString(value), important));
+        mStyleMap.put(processEscapes(name), new StyleProperty(luToString(value), important));
     }
 
     public void importStyle(String uri, SACMediaList media,
@@ -270,15 +298,15 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
          switch (lu.getLexicalUnitType()) {
 
          case LexicalUnit.SAC_ATTR:
-           str = "function () { return this['" + lu.getStringValue() + "']; }";
+             str = "function () { return this['" + processEscapes(lu.getStringValue()) + "']; }";
            break;
 
          case LexicalUnit.SAC_IDENT:
-           str = "function () { return global['" + lu.getStringValue() + "']; }";
+             str = "function () { return global['" + processEscapes(lu.getStringValue()) + "']; }";
            break;
 
          case LexicalUnit.SAC_STRING_VALUE:
-           str = "\"" + lu.getStringValue() + "\"";
+             str = "\"" + processEscapes(lu.getStringValue()) + "\"";
            break;
 
          case LexicalUnit.SAC_URI:

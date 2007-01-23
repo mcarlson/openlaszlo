@@ -6,21 +6,25 @@
     </script>
      
     <stylesheet>
-        #gMax {
-            lzx_bgcolor: #00FF00;
+        #brown {
+            lzx\_bgcolor: #00FF00;
+            lzx\5f content: "now is the time...";
         }
     </stylesheet>
     
     <debug/>
     
-    <class name="B" width="50" height="50" bgcolor="$style{'lzx_bgcolor'}"/>
+    <class name="B" width="50" height="50" bgcolor="$style{'lzx_bgcolor'}">
+      <text name='text' text="$style{'lzx_content'}" />
+    </class>
     
-<B id="gMax" />
+<B id="brown" />
     
 <TestSuite>
     <TestCase>
         <method name="testnamesuite">
-                assertEquals('0x00FF00', gMax.bgcolor);
+                assertEquals('0x00FF00', brown.bgcolor);
+                assertEquals("now is the time...", brown.text.text)
         </method>
     </TestCase> 
 </TestSuite>
