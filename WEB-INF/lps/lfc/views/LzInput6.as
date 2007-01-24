@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -114,6 +114,13 @@ TextField.prototype.__gotFocus = function ( oldfocus ){
 //-----------------------------------------------------------------------------
 TextField.prototype.__onChanged = function ( ){
     //this.__lzview.setText(this.text);
+
+    //multiline resizable fields adjust their height
+    if ( this.__lzview.multiline && 
+         this.__lzview.sizeToHeight && 
+         this.__lzview.height != this._height ) {
+        this.__lzview.setHeight(this._height);
+    }
     this.__lzview.ontext.sendEvent( );
 }
 
