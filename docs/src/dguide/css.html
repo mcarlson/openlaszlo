@@ -47,258 +47,8 @@ stylesheet.</p>
 
 &lt;stylesheet&gt;
     #gView {
-        height: "200";
-        width: "200";
-        bgcolor: "0x663399";
-    }
-&lt;/stylesheet&gt;
-
-&lt;view id="gView"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-     &lt;/method&gt;
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-
-</example>
-
-<p>The <code>applyStyle</code> method (the <code>oninit</code> handler fires <code>applyStyle</code> when the
-application initializes) tells the OpenLaszlo runtime to look up the
-style that applies to the view. The variable <code>style</code> is a place to store
-the current style's values (computed by <code>LzCSSStyle.getComputedStyle</code>),
-and then <code>style.getPropertyValue("foo")</code> fetches foo's values from the
-stylesheet for that view. </p>
-
-<h2>A Nested View</h2>
-
-<p>The advantage of using stylesheets shows in a
-slightly more difficult OpenLaszlo application -- this example includes
-a nested view, plus one resource:</p>
-
-<example class="code" title="Nested view">
-
-&lt;canvas&gt;
-
-&lt;stylesheet&gt;
-
-    #gBox {
-        height: "350";
-        width: "500";
-        bgcolor: "0x330099";
-        x: "0";
-        y: "0";
-    }
-
-    #gInsideBox {
-        height: "150";
-        width: "300";
-        bgcolor: "0xFFFFFF";
-        x: "100";
-        y: "100";
-    }
-	
-&lt;/stylesheet&gt;
-
-&lt;view id="gBox"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-        var myHorizontalSpace = style.getPropertyValue("x");
-        this.setX(myHorizontalSpace);
-        var myVerticalSpace = style.getPropertyValue("y");
-        this.setY(myVerticalSpace);
-     &lt;/method&gt;
-&lt;/view&gt;
-
-&lt;view id="gInsideBox"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-        var myHorizontalSpace = style.getPropertyValue("x");
-        this.setX(myHorizontalSpace);
-        var myVerticalSpace = style.getPropertyValue("y");
-        this.setY(myVerticalSpace);
-     &lt;/method&gt;
-&lt;/view&gt;
-
-&lt;view id="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
-		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
-		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
-   	    &lt;/animatorgroup&gt; 
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-
-</example>
-
-<p>If a designer wanted to reuse this template, no knowledge of OpenLaszlo's LZX language is necessary -- in this
-example, s/he just has to change the color hexcode(s) and the name(s) of
-the resource(s) in the stylesheet. For instance:</p>
-
-<example class="code" title="Stylesheet change">
-
-&lt;canvas&gt;
-
-&lt;stylesheet&gt;
-
-    #gBox {
-        height: "350";
-        width: "500";
-        bgcolor: "0x990033";
-        x: "0";
-        y: "0";
-    }
-
-    #gInsideBox {
-        height: "150";
-        width: "300";
-        bgcolor: "0xFFFFFF";
-        x: "100";
-        y: "100";
-    }
-	
-&lt;/stylesheet&gt;
-
-&lt;view id="gBox"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-        var myHorizontalSpace = style.getPropertyValue("x");
-        this.setX(myHorizontalSpace);
-        var myVerticalSpace = style.getPropertyValue("y");
-        this.setY(myVerticalSpace);
-     &lt;/method&gt;
-&lt;/view&gt;
-
-&lt;view id="gInsideBox"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-        var myHorizontalSpace = style.getPropertyValue("x");
-        this.setX(myHorizontalSpace);
-        var myVerticalSpace = style.getPropertyValue("y");
-        this.setY(myVerticalSpace);
-     &lt;/method&gt;
-&lt;/view&gt;
-
-&lt;view id="gBounce" resource="../resources/sourface.png" x="100" y="125"&gt;
-		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
-		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
-   	    &lt;/animatorgroup&gt; 
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-
-</example>
-
-<h3>Applying CSS styles to user-defined classes</h3>
-
-<p>Several lines of code can be saved by defining a class which contains
-the guts of the <code>getPropertyValue</code> methods:</p>
-
-<example class="code" title="User-defined class">
-
-&lt;canvas height="800" width="800"&gt;
-
-&lt;stylesheet&gt;
-
-    #gBox {
-        height: "350";
-        width: "500";
-        bgcolor: "0x330099";
-        x: "0";
-        y: "0";
-    }
-
-    #gInsideBox {
-        height: "150";
-        width: "300";
-        bgcolor: "0xFFFFFF";
-        x: "100";
-        y: "100";
-    }
-    	
-&lt;/stylesheet&gt;
-
-&lt;class name="myStyledView" extends="view"&gt;
-	&lt;handler name="oninit" method="applyStyle" /&gt;
-    &lt;method name="applyStyle"&gt;
-        var style = LzCSSStyle.getComputedStyle( this );
-        var bgc = style.getPropertyValue( "bgcolor" );
-        this.setBGColor(bgc);
-        var myHeight = style.getPropertyValue( "height" );
-        this.setHeight(myHeight);
-        var myWidth = style.getPropertyValue( "width" );
-        this.setWidth(myWidth);
-        var myHorizontalSpace = style.getPropertyValue("x");
-        this.setX(myHorizontalSpace);
-        var myVerticalSpace = style.getPropertyValue("y");
-        this.setY(myVerticalSpace);
-     &lt;/method&gt;
-&lt;/class&gt;
-
-&lt;myStyledView id="gBox"/&gt;
-&lt;myStyledView id="gInsideBox"/&gt;
-
-&lt;view id="gBounce" resource="../resources/smiley.gif" x="100" y="125"&gt;
-		&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-		&lt;animator attribute="y" from="100" to="150" duration="1000" motion="linear"/&gt;
-		&lt;animator attribute="y" from="150" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
-   	    &lt;/animatorgroup&gt;
-&lt;/view&gt;
-
-&lt;/canvas&gt;
-
-</example>
-
-<h3>$style{} constraints</h3>
-
-<p>For comparison's sake, the previous examples use lots of JavaScript -- descending in clunkiness. Simpler still is to use OpenLaszlo's built-in
-<code>$style</code> constraint for looking up stylesheets. Again, the most basic
-example of a view, but this time using the <code>$style</code> constraint:</p>
-
-<example class="code" title="User-defined class">
-
-&lt;canvas height="200" &gt;
-
-&lt;stylesheet&gt;
-    #gView {
-        height: "200";
-        width: "200";
+        height: "100";
+        width: "100";
         bgcolor: "0x663399";
     }
 &lt;/stylesheet&gt;
@@ -309,109 +59,7 @@ example of a view, but this time using the <code>$style</code> constraint:</p>
 
 </example>
 
-<p>The ID selector <code>#gView</code> matches the ID <code>gView</code>, and then <code>$style{}</code> assigns
-attribute values according to the <code>#gView</code> stylesheet.</p>
-
-<p>The more complex example:</p>
-
-<example class="code" title="Nested view class">
-
-&lt;canvas height="350" width="700"&gt;
-
-&lt;stylesheet&gt;
-
-        #sun {
-          bgcolor: "0x16355E"; 
-          face: "../resources/smiley.gif";
-        }
-        
-        #monarchs {
-            bgcolor: "0xB2B9CB";
-            face: "../resources/sourface.png";
-        }
- 
-&lt;/stylesheet&gt;
-
-&lt;simplelayout axis="x" spacing="10"/&gt;
-
-&lt;class name="bouncebox"&gt;
-        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
-            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
-        	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
-				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
-				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
-				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
-   	   			&lt;/animatorgroup&gt;
-   	   		&lt;/view&gt;
-		&lt;/view&gt;
-&lt;/class&gt;
-
-&lt;bouncebox id="monarchs" /&gt;
-&lt;bouncebox id="sun" /&gt;
-
-&lt;/canvas&gt;
-
-</example>
-
-<h3>Dynamically-Created Views</h3>
-
-<p>For styling a view created dynamically with <code>new</code>, it's easiest to define a class, then <code>new</code> instances of the class:</p>
-
-<example class="code" title="Borrowing styled attributes from a dummy view">
-
-&lt;canvas debug="true"&gt;
-
-&lt;stylesheet&gt;
-mookie {
-height : "25";
-width : "25";
-bgcolor : "0x0000FF";
-}
-
-blaylock {
-title : "Blaylock";
-bgcolor : "0xFF0000";
-}
-
-wilson {
-height : "25";
-width : "200";
-fgcolor : "0xFF00FF";
-text : "Wilson";
-}
-&lt;/stylesheet&gt;
-
-&lt;class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
-
-&lt;class name="blaylock"&gt;
-&lt;window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;class name="wilson" &gt;
-&lt;text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/&gt;
-&lt;/class&gt;
-
-&lt;button text="Dynamically create Mookie"&gt;
-&lt;method event="onclick"&gt;
-canvas.mookieView=new mookie(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;button text="Dynamically create Blaylock" y="50"&gt;
-&lt;method event="onclick"&gt;
-canvas.blaylockWindow=new blaylock(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;button text="Dynamically create Wilson" y="100"&gt;
-&lt;method event="onclick"&gt;
-canvas.wilsonText=new wilson(canvas, {});
-&lt;/method&gt;
-&lt;/button&gt;
-
-&lt;/canvas&gt;
-
-</example>
+<p>The <code>$style</code> constraint tells the OpenLaszlo runtime to style an attribute according to the <code>stylesheet</code>. More than one stylesheet can be used in an LZX document; the application of a stylesheet is determined by selectors. </p>
 
 <h2>Selectors</h2>
 
@@ -587,17 +235,17 @@ three ancestors "fee", "fi", and "foo".</p>
 
     styledbox {
         stylebgcolor: "0xCCCCCC";
-        styleinnercolor: "0xFF0000";        // red
+        styleinnercolor: "0xFF0000";
     }
 
     styledbox styledbox2 {
         stylebgcolor: "0x999999";
-        styleinnercolor: "0x0000FF";        // blue
+        styleinnercolor: "0x0000FF";
     }
 
     styledbox styledbox2 styledbox3 {
         stylebgcolor: "0x666666";
-        styleinnercolor: "0x00FF00";        // green
+        styleinnercolor: "0x00FF00";
     }
 
 &lt;/stylesheet&gt;
@@ -632,9 +280,115 @@ stylesheet information for <code>styledbox2</code> unless it descends from <code
 and no stylesheet information for <code>styledbox3</code> unless it descends from
 <code>stylebox</code> and <code>stylebox2</code>.</p>
 
-<warning>Don't include an underscore in selector names. Your LZX files will not compile.</warning>
+<warning>Don't include an underscore in selector names, because the LZX file will not compile.</warning>
 
 <warning>The difference between an attribute selector and a descendant selector is as little as a spacebar. The attribute selector <code>person[name='george']</code> (no space between person and name) selects a person whose name is george, but the descendant selector <code>person [name='george']</code> selects a view named george which is a child of the view named person.</warning>
+
+<h2>A Nested View</h2>
+<p>The advantage of using stylesheets shows in a
+slightly more difficult OpenLaszlo application. If a designer wanted to reuse a template, no knowledge of OpenLaszlo's LZX language is necessary -- in this
+example, s/he just has to change the color hexcode(s) and the name(s) of
+the resource(s) in the stylesheet:</p>
+
+<example class="code" title="Nested view">
+
+&lt;canvas height="350" width="700"&gt;
+
+&lt;stylesheet&gt;
+
+        #sun {
+          bgcolor: "0x16355E"; 
+          face: "../resources/smiley.gif";
+        }
+        
+        #monarchs {
+            bgcolor: "0xB2B9CB";
+            face: "../resources/sourface.png";
+        }
+ 
+&lt;/stylesheet&gt;
+
+&lt;simplelayout axis="x" spacing="10"/&gt;
+
+&lt;class name="bouncebox"&gt;
+        &lt;view name="outer" x="0" y="0" width="200" height="200" bgcolor="$style{'bgcolor'}"&gt;
+            &lt;view name="inner" x="50" y="50" bgcolor="0xFFFFFF" width="${immediateparent.width-100}" height="${immediateparent.height-100}" /&gt;
+        	&lt;view name="gBounce" source="$style{'face'}" x="50" y="50"&gt;
+				&lt;animatorgroup name="myAnimatorGroup" start="true" process="sequential" &gt;
+				&lt;animator attribute="y" from="50" to="150" duration="1000" motion="linear"/&gt;
+				&lt;animator attribute="y" from="50" to="100" duration="1000" repeat="Infinity" motion="easeout"/&gt;
+   	   			&lt;/animatorgroup&gt;
+   	   		&lt;/view&gt;
+		&lt;/view&gt;
+&lt;/class&gt;
+
+&lt;bouncebox id="monarchs" /&gt;
+&lt;bouncebox id="sun" /&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
+<h2>Dynamically-Created Views</h2>
+
+<p>For styling a view created dynamically with <code>new</code>, it's easiest to define a class, then <code>new</code> instances of the class:</p>
+
+<example class="code" title="Borrowing styled attributes from a dummy view">
+
+&lt;canvas debug="true"&gt;
+
+&lt;stylesheet&gt;
+mookie {
+height : "25";
+width : "25";
+bgcolor : "0x0000FF";
+}
+
+blaylock {
+title : "Blaylock";
+bgcolor : "0xFF0000";
+}
+
+wilson {
+height : "25";
+width : "200";
+fgcolor : "0xFF00FF";
+text : "Wilson";
+}
+&lt;/stylesheet&gt;
+
+&lt;class name="mookie" x="200" height="$style{'height'}" width="$style{'width'}" bgcolor="$style{'bgcolor'}"/&gt;
+
+&lt;class name="blaylock"&gt;
+&lt;window title="$style{'title'}" x="250" height="100" width="150" bgcolor="$style{'bgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;class name="wilson" &gt;
+&lt;text text="$style{'text'}" x="400" height="$style{'height'}" width="$style{'width'}" fgcolor="$style{'fgcolor'}"/&gt;
+&lt;/class&gt;
+
+&lt;button text="Dynamically create Mookie"&gt;
+&lt;method event="onclick"&gt;
+canvas.mookieView=new mookie(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;button text="Dynamically create Blaylock" y="50"&gt;
+&lt;method event="onclick"&gt;
+canvas.blaylockWindow=new blaylock(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;button text="Dynamically create Wilson" y="100"&gt;
+&lt;method event="onclick"&gt;
+canvas.wilsonText=new wilson(canvas, {});
+&lt;/method&gt;
+&lt;/button&gt;
+
+&lt;/canvas&gt;
+
+</example>
+
 
 <h2>Specificity</h2>
 
@@ -748,7 +502,7 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</p>
 &lt;/canvas&gt;
 </example>
 
-<h3>Importing an external stylesheet</h3>
+<h2>Importing an external stylesheet</h2>
 
 <p>A stylesheet can be imported by using</p>
 
@@ -770,13 +524,11 @@ invoked. The selector closest to the bottom of the stylesheet prevails.</p>
 
 &lt;!--end--&gt;
 
-</example>
-
-<example title="Imported stylesheet" extract="false">
+&lt;!--The LZX file--&gt;
 
 &lt;canvas&gt;
 
-	&lt;stylesheet src="../resources/foo.css" /&gt;
+	&lt;stylesheet src="foo.css" /&gt;
 
 	&lt;view id="gPhilip" width="$style{'width'}" height="$style{'height'}" bgcolor="$style{'bgcolor'}"/&gt;
 
