@@ -134,7 +134,7 @@
       <dt><code>lzt=swf</code></dt><dd>
       
       Returns the SWF file that represents the application, without
-      any HTML. This is used to embed an OpenLaszlo application in an HTML
+      any HTML. This is used to embed a Laszlo application in an HTML
       page.  (Most of the other request types generate code that
       includes a URL with this request type.)  The mime-type returned
       by this request is <code>application/x-shockwave-flash</code>.
@@ -184,7 +184,10 @@
       <li><code>lzt=deployment</code></li>
       <li><code>lzt=inline-examples</code></li>
       <li><code>lzt=v1</code></li>
+      <li><code>lzt=serverinfo</code></li>
+
     </ul>
+<p><code>lzt=serverinfo</code> returns a list of server attributes, some of which can also be fetched by an expression like Debug.write(canvas.version).</p> 
     
     <h2><a name="query-parameters"/>Other Query Parameters</h2>
     
@@ -318,6 +321,6 @@
   </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
