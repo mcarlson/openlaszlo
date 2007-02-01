@@ -41,7 +41,7 @@
 
 <p>In the above example, the single root element is myXML. The <attribute>datapath</attribute> attribute of the <tagname>text</tagname> tag binds it to the data.</p>
 
-<p>Datapaths use XPath attributes to navigate through the XML data. So the name of the dataset to use goes before the colon <code>myData:</code>, followed by the nodes, separated by forward slashes (/). The square brackets provide a (one-based) space to enter which sibling node we want. [1] is implied, so the above example could be rewritten without any "[1]"s.</p>
+<p>Datapaths use XPath attributes to navigate through the XML data. So the name of the dataset to use goes before the colon <code>myData:</code>, followed by the nodes, separated by forward slashes (/). The square brackets provide a (one-based) space to enter which sibling node we want. </p>
 
 <p>In plain English, the above example says: "get me the text from the first firstName node, of the first person node of the first (and of course, only) myXML node." The text() method call returns that node's text.</p>
 
@@ -51,7 +51,7 @@
 &lt;text datapath="myData:/myXML/person[2]/firstName/text()" /&gt; 
 </pre>
 
-<p>(Note that I've omitted the "[1]"s as they are implied. To get the "show" attribute of Montgomery, we could write:</p>
+<p>To get the "show" attribute of Montgomery, we could write:</p>
 
 <pre class="code">
 &lt;text datapath="myData:/myXML/person[3]/@show" /&gt; 
@@ -250,7 +250,7 @@
 
 <ul>
 	<li>The client will request the data as soon as the app loads if the dataset's  <attribute>request</attribute> attribute is true. </li>
-	<li>If the <attribute>request</attribute> attribute is set to "true", the client will also request the data every time the querystring or base URL of the dataset changes (using the <method>setQueryString</method> or <method>setSrc</method> respectively).</li>
+	<li>If the <attribute>request</attribute> attribute is set to "true", the client will also request the data every time the querystring or base URL of the dataset changes (using the <method>setQueryString</method> or <method>setSrc</method> respectively) methods of the <!-- TODO: add link to LZX ref -->LzHTTPDataset object.</li>
 	<li>When the dataset's <method>doRequest</method> method gets called.</li>
 </ul>
 

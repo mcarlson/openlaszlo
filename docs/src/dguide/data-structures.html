@@ -199,7 +199,28 @@ See the <xref linkend="databinding"/> for an explanation of how XPath is used
 in LZX to provide powerful databinding and data manipulation.</p>
 <h3>Supported XPath functionality</h3>
 <p>XPath is an extensive specification that is largely, but not entirely, implemented in LZX.</p>
-<p><a name="xpathnodes"></a>The following table shows XPath functionality implemented in OpenLaszlo 3.1:</p>
+<p><a name="xpathnodes"></a>The following table shows XPath functionality implemented in OpenLaszlo:</p>
+
+<example title="Datasets" extract="false">
+&lt;canvas height="80" width="500" &gt;
+  &lt;dataset name="myData"&gt;
+    &lt;myXML&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Homer&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Marge&lt;/firstName&gt;
+        &lt;lastName&gt;Simpson&lt;/lastName&gt;
+      &lt;/person&gt;
+      &lt;person show="simpsons"&gt;
+        &lt;firstName&gt;Montgomery&lt;/firstName&gt;
+        &lt;lastName&gt;Burns&lt;/lastName&gt;
+      &lt;/person&gt;
+    &lt;/myXML&gt;
+  &lt;/dataset&gt;
+&lt;/canvas&gt;
+</example>
 
 
 <table border="0" cellspacing="0" cellpadding="4" width="100%" title="Supported XPath Funtionality">
@@ -309,6 +330,6 @@ also find the following online documents useful:
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
