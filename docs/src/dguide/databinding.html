@@ -335,7 +335,7 @@ The table below highlights ways of categorizing datasets according to where the 
 
 <ul>
 	<li>The client will request the data as soon as the app loads if the the dataset's  <attribute>request</attribute> attribute is true. </li>
-	<li>The client will also request the data every time the querystring or base URL of the dataset changes (using the <method>setQueryString</method> or <method>setURL</method> respectively).</li>
+	<li>The client will also request the data every time the querystring or base URL of the dataset changes (using the <method>setQueryString</method> or <method>setURL</method> respectively) methods of the <!-- TODO: add link to LZX ref -->LzHTTPDataset object.</li>
 	<li>When the dataset's <method>doRequest</method> method gets called.</li>
 </ul>
 
@@ -795,6 +795,32 @@ on a node's datapath will store the current value for that attribute back in the
     &lt;/handler&gt;
   &lt;/button&gt;
 &lt;/canvas&gt;
+</example>
+
+<h4>Attribute values by $path constraint</h4>
+
+<p>The <code>dataset</code> is basically an array. Assigning a node's attribute value by <code>$path</code> constraint, and then using the XPath expression <code>myData:/myXML/person</code> -- which gathers all the "person" nodes -- results in replication of the node as many times as necessary to correspond with each item in the dataset.</p>
+
+<p>In this example, there are three items in the dataset, so the <code>box</code> node replicates three times.</p>
+
+<example title="Assigning an attribute value by $path constraint">
+&lt;canvas debug="true"&gt;
+
+    &lt;dataset name="boxes"&gt;
+        &lt;boxes&gt;
+         &lt;box color="0xFF0000"/&gt;
+         &lt;box color="0x00FF00"/&gt;
+         &lt;box color="0x0000FF"/&gt;
+         &lt;/boxes>
+    &lt;/dataset&gt;
+
+&lt;simplelayout axis="x" spacing="10" /&gt;
+
+&lt;class name="coloredbox"  height="50" width="50" bgcolor="$path{'@color'}"/&gt;
+
+&lt;coloredbox datapath="boxes:/boxes/box"/&gt;
+
+&lt;/canvas&gt; 
 </example>
 
 <h3>The .data property</h3>

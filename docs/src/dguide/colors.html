@@ -237,38 +237,29 @@ The 16 basic web colors can be employed by name:
 </example>
 <h3>Non-Standard Colors</h3>
 <p>
-To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes. An alternative is to include colors.lzx  -- &lt;include href="../lps/components/base/colors.lzx"/&gt; -- which assigns names to various non-standard colors. Note the ${constraint} syntax around the bgcolor specification.
+To specify any color but the 16 which are usable by name, use 0xFFFFFF hex codes. Alternatively, the non-standard colors named in <code>lps/components/base/colors.lzx</code> were added to OpenLaszlo's global namespace. Those colors can also be employed by name, but note the ${constraint} syntax around the bgcolor specification.  There are two ways to make the constraint: <code>bgcolor="${global['iceblue1']}"</code> is the same as <code>bgcolor="${iceblue1}"</code>.
 </p>
 <example title="Non-standard colors">
-&lt;canvas height="200" width="120"&gt;
 
-&lt;!--
+&lt;canvas&gt;
+&lt;simplelayout axis="x" spacing="10"/&gt;
 
-Commented this out because it breaks in the online editor, and included the pertinent part of the colors.lzx script.
+&lt;class name="box1" width="100" height="100" bgcolor="${global['gold4']}" /&gt;
 
-&lt;include href="../lps/components/base/colors.lzx"/&gt;
-
---&gt;
-
-&lt;script&gt;
-    var iceblue1 = 0x325693;
-    var gold4 = 0xF8E496;
-&lt;/script&gt;
-
-&lt;wrappinglayout axis="x" spacing="10"/&gt;
-    
-&lt;class name="swatch" width="50" height="50"  /&gt;
-
-&lt;swatch bgcolor="${gold4}"&gt;
+&lt;class name="box2" width="100" height="100" bgcolor="${iceblue1}" /&gt;
+ 
+&lt;box1 id="sun"&gt;
     &lt;text text="Sun"/&gt;
-&lt;/swatch&gt;
+&lt;/box1&gt;
 
-&lt;swatch bgcolor="${iceblue1}"&gt;
+&lt;box2 id="mystic"&gt;
     &lt;text fgcolor="0xFFFFFF" text="Mystic"/&gt;
-&lt;/swatch&gt;
-
+&lt;/box2&gt;
+    
 &lt;/canvas&gt;
+
 </example>
+
 <h3>Opacity</h3>
 <p>
 In OpenLaszlo, a view has a color and an opacity which are handled separately. The opacity attribute ranges from 0 (transparent) to 1 (opaque).
@@ -331,6 +322,6 @@ W3 aims to mitigate this problem with support for the color model <a href="www.w
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
