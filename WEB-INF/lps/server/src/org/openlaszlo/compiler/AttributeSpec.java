@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -35,6 +35,48 @@ class AttributeSpec {
     static final int TEXT_CONTENT = 1;
     static final int HTML_CONTENT = 2;
 
+  private String typeToLZX() {
+    switch (contentType) {
+      case TEXT_CONTENT:
+        return "text";
+      case HTML_CONTENT:
+        return "html";
+      default:
+        return type.toString();
+    }
+  }
+
+  public String toLZX(String indent, ClassModel superclass) {
+    AttributeSpec superSpec = superclass.getAttribute(name);
+    if (superSpec == null) {
+      if (ViewSchema.EVENT_TYPE.equals(type)) {
+        return indent + "<event name='" + name + "' />";
+      }
+      return indent + "<attribute name='" + name + "'" +
+        ((defaultValue != null)?(" value='" + defaultValue + "'"):"") +
+        ((type != null)?(" type='" + typeToLZX() + "'"):"") +
+        (required?(" required='true'"):"") +
+        " />";
+    } else if (! ViewSchema.EVENT_TYPE.equals(type)) {
+      String attrs = "";
+      if (defaultValue != null &&
+          (! defaultValue.equals(superSpec.defaultValue))) {
+        attrs += " value='" + defaultValue + "'";
+      }
+      if (type != null &&
+          (! type.equals(superclass.getAttributeType(name)))) {
+        attrs += " type='" + typeToLZX() + "'";
+      }
+      if (required != superSpec.required) {
+        attrs += " required='" + required + "'";
+      }
+      if (attrs.length() > 0) {
+        return  indent + "<attribute name='" + name + "'" + attrs + " />";
+      }
+    }
+    return null;
+  }
+    
     AttributeSpec (String name, Type type, String defaultValue, String setter, Element source) {
         this.source = source;
         this.name = name;

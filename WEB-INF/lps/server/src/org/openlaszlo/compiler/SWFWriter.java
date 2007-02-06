@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -54,7 +54,7 @@ import org.apache.log4j.*;
  */
 class SWFWriter {
     /** Stream to write to. */
-    private OutputStream mStream = null;
+    protected OutputStream mStream = null;
     /** Movie being constructed. */
     private SWFFile mFlashFile;
     /** Fonts being collected. */
@@ -62,9 +62,9 @@ class SWFWriter {
     private FontsCollector mPreloaderFontsCollector = new FontsCollector();
     private FontManager mFontManager = new FontManager();
     /** True iff close() has been called. */
-    private boolean mCloseCalled = false;
+    protected boolean mCloseCalled = false;
 
-    private final CompilationEnvironment mEnv;
+    protected final CompilationEnvironment mEnv;
 
     /** Set of resoures we're importing into the output SWF */
     private final HashSet mMultiFrameResourceSet = new HashSet();
@@ -79,7 +79,7 @@ class SWFWriter {
     protected SymbolGenerator mNameSupply = new SymbolGenerator("$LZ");
 
     /** Properties */
-    private Properties mProperties;
+    protected Properties mProperties;
 
     /** Input text fontinfo map */
     private final TreeMap mInputTextSet = new TreeMap();

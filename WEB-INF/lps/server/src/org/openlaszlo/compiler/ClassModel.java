@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -11,7 +11,7 @@ package org.openlaszlo.compiler;
 import java.util.*;
 import org.jdom.Element;
 
-class ClassModel {
+class ClassModel implements Comparable {
     protected final ViewSchema schema;
     protected final String className;
     // This is null for builtin classes
@@ -28,11 +28,12 @@ class ClassModel {
     /* Class or superclass has an <attribute type="text"/>  */
     protected boolean supportsTextAttribute = false;
     /** Map attribute name to type */
-    protected final Map attributeSpecs = new HashMap();
+    protected final Map attributeSpecs = new LinkedHashMap();
     /** Map of method names to arglist */
-    protected final Map methods = new HashMap();
+    protected final Map methods = new LinkedHashMap();
     protected boolean inline = false;
-    
+    protected String sortkey = null;
+
     public String toString() {
         return "ClassModel: className="+className + ", " + 
             "superclass=" + superclass + ", " + 
@@ -49,12 +50,50 @@ class ClassModel {
         this.superclass = superclass;
         this.definition = definition;
         this.schema = schema;
+        this.sortkey = className;
+        if (superclass != null) {
+          this.sortkey = superclass.sortkey + "." + this.sortkey;
+        }
     }
-    
+
     // Construct a builtin class
     ClassModel(String className, ViewSchema schema) {
         this(className, null, schema, null);
     }
+
+  public int compareTo(Object other) throws ClassCastException {
+    ClassModel o = (ClassModel)other;
+    int order = this.sortkey.startsWith(o.sortkey) ? +1 : this.sortkey.compareTo(o.sortkey);
+    return order;
+  }
+
+  public String toLZX() {
+    return toLZX("");
+  }
+
+  public String toLZX(String indent) {
+    String lzx = indent + "<interface name='" + className + "'" +
+      ((superclass != null)?(" extends='" + superclass.className +"'"):"") + ">";
+    for (Iterator i = attributeSpecs.values().iterator(); i.hasNext(); ) {
+      AttributeSpec spec = (AttributeSpec)i.next();
+      String specLZX = spec.toLZX(indent + "  ", superclass);
+      if (specLZX != null) {
+        lzx += "\n";
+        lzx += specLZX;
+      }
+    }
+    for (Iterator i = methods.entrySet().iterator(); i.hasNext(); ) {
+      Map.Entry entry = (Map.Entry)i.next();
+      String name = (String)entry.getKey();
+      String arglist = (String)entry.getValue();
+      if (superclass.getMethod(name) == null) {
+        lzx += "\n" + indent + "  <method name='" + name + "'" + (("".equals(arglist))?"":(" args='" + arglist +"'")) + " />";
+      }
+    }
+    lzx += "\n" + indent + "</interface>";
+    return lzx;
+  }
+
     
     /** Returns true if this is equal to or a subclass of
      * superclass. */
@@ -68,6 +107,11 @@ class ClassModel {
         return superclass == null;
     }
     
+    boolean hasNodeModel() {
+        // Classes that have generated code will have a nodeModel
+        return nodeModel != null;
+    }
+
     ClassModel getSuperclassModel() {
         return superclass;
     }
@@ -150,6 +194,23 @@ class ClassModel {
         return type;
     }
     
+    /** Return the 'MethodSpec' for the method named methName.  If
+     * the method is not defined on this class, look up the
+     * superclass chain.
+     * TODO: [2007-01-27 ptw] For now the MethodSpec is just the
+     * arglist String
+     */
+    String getMethod(String methName) {
+        String meth = (String) methods.get(methName);
+        if (meth != null) {
+            return meth;
+        } else if (superclass != null) {
+            return(superclass.getMethod(methName));
+        } else {
+            return null;
+        }
+    }
+
     void setNodeModel(NodeModel model) {
         this.nodeModel = model;
     }

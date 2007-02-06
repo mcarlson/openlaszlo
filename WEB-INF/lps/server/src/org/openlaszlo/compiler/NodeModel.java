@@ -3,7 +3,7 @@
  * ***************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -891,20 +891,22 @@ solution =
             parent_name =
                 CompilerUtils.attributeUniqueName(element, "event");
         }
-        String name = env.methodNameGenerator.next();
+        // Names have to be unique across binary libraries, so append
+        // parent name
+        String name = env.methodNameGenerator.next() + "_" + parent_name + "_reference";
         String reference = element.getAttributeValue("reference");
         Object referencefn = "null";
         if (reference != null) {
             String ref_loc =
                 CompilerUtils.attributeLocationDirective(element, "reference");
             referencefn = new Function(
-                ref_loc +
-                parent_name + "_" + name + "_reference",
+                name,
                 args,
                 "\n#pragma 'withThis'\n" +
                 "return (" +
                 "#beginAttribute\n" + ref_loc +
-                reference + "\n#endAttribute\n)");
+                reference + "\n#endAttribute\n)",
+                ref_loc);
         }
          
         // delegates is only used to determine whether to
@@ -944,16 +946,15 @@ solution =
             }
         }
         Function fndef = new
-            // Use "mangled" name, so it will be unique
-            Function(name_loc +
-                     parent_name + "_" + name,
+            Function(name,
                      //"#beginAttribute\n" +
                      CompilerUtils.attributeLocationDirective(element, "args") + args,
                      "\n#beginContent\n" +
                      "\n#pragma 'methodName=" + name + "'\n" +
                      "\n#pragma 'withThis'\n" +
                      childcontentloc +
-                     body + "\n#endContent");
+                     body + "\n#endContent",
+                     name_loc);
 
         attrs.put(name, fndef);
     }
@@ -964,8 +965,7 @@ solution =
             CompilerUtils.sourceLocationDirective(element, true);
         String name = element.getAttributeValue("name");
         String event = element.getAttributeValue("event");
-        String args = CompilerUtils.attributeLocationDirective(element, "args") +
-            XMLUtils.getAttributeValue(element, "args", "");
+        String args = XMLUtils.getAttributeValue(element, "args", "");
         if ((name == null || !ScriptCompiler.isIdentifier(name)) &&
             (event == null || !ScriptCompiler.isIdentifier(event))) {
             env.warn(
@@ -1004,18 +1004,17 @@ solution =
                  CompilerUtils.attributeUniqueName(element, "event") :
                  CompilerUtils.attributeUniqueName(element, "name"));
         }
+        if (name != null && "class".equals(className)) {
+          schema.addMethodDeclaration(element,
+                                      element.getParentElement().getAttributeValue("name"),
+                                      name, args);
+        }
+
         if (event != null) {
             if (name == null) {
-                // Note, this could be optimized again to try to
-                // reuse names where they don't conflict, but if
-                // we create a new symbol generator for each view,
-                // and restart it at $m1, we have this screw case
-                // of an unnamed method in a class getting the
-                // same gensym'ed name as an unnamed method in an
-                // instance.
-                // Could use $cn with a global generator for classes,
-                // and a restarted $m1 generator for each instance.
-                name = env.methodNameGenerator.next();
+                // Names have to be unique across binary libraries, so
+                // append parent name
+                name = env.methodNameGenerator.next() + "_" + parent_name + "_reference";
             }
             String reference = element.getAttributeValue("reference");
             Object referencefn = "null";
@@ -1023,13 +1022,13 @@ solution =
                 String ref_loc =
                     CompilerUtils.attributeLocationDirective(element, "reference");
                 referencefn = new Function(
-                    ref_loc +
-                    parent_name + "_" + name + "_reference",
-                    args,
+                    name,
+                    CompilerUtils.attributeLocationDirective(element, "args") + args,
                     "\n#pragma 'withThis'\n" +
                     "return (" +
                     "#beginAttribute\n" + ref_loc +
-                    reference + "\n#endAttribute\n)");
+                    reference + "\n#endAttribute\n)",
+                    ref_loc);
             }
             // delegates is only used to determine whether to
             // default clickable to true.  Clickable should only
@@ -1046,16 +1045,15 @@ solution =
         String childcontentloc =
             CompilerUtils.sourceLocationDirective(element, true);
         Function fndef = new
-            // Use "mangled" name, so it will be unique
-            Function(name_loc +
-                     parent_name + "_" + name,
+            Function(name,
                      //"#beginAttribute\n" +
                      CompilerUtils.attributeLocationDirective(element, "args") + args,
                      "\n#beginContent\n" +
                      "\n#pragma 'methodName=" + name + "'\n" +
                      "\n#pragma 'withThis'\n" +
                      childcontentloc +
-                     body + "\n#endContent");
+                     body + "\n#endContent",
+                     name_loc);
 
         if (attrs.containsKey(name, caseSensitive)) {
             env.warn(
@@ -1498,7 +1496,7 @@ solution =
     }
 
     Map asMap() {
-        Map map = new HashMap();
+        Map map = new LinkedHashMap();
         updateAttrs();
         map.put("name", ScriptCompiler.quote(className));
         map.put("attrs", attrs);
@@ -1611,8 +1609,8 @@ solution =
         Object sourceOptions = source.attrs.get(OPTIONS_ATTR_NAME);
         attrs.putAll(source.attrs);
         if (options instanceof Map && sourceOptions instanceof Map) {
-            System.err.println(options);
-            System.err.println(sourceOptions);
+//             System.err.println(options);
+//             System.err.println(sourceOptions);
             Map newOptions = new HashMap((Map) options);
             newOptions.putAll((Map) sourceOptions);
             attrs.put(OPTIONS_ATTR_NAME, newOptions);

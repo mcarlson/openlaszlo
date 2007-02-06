@@ -6,11 +6,6 @@
  * Description: JavaScript -> SWF bytecode compiler
  */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
-
 //
 // Code Generation
 //
@@ -136,7 +131,6 @@ public class CodeGenerator implements Translator {
     // These affect the default settings for the options above, but
     // do not themselves make a difference.
     NonCodeGenerationOptions.add(Compiler.DEBUG);
-    NonCodeGenerationOptions.add(Compiler.KRANK);
   }
 
   static class LessHalfAssedHashMap extends HashMap {
@@ -227,6 +221,13 @@ public class CodeGenerator implements Translator {
     BinopInstrs.put(ParserConstants.NE, new Instruction[] {Instructions.EQUALS, Instructions.NOT});
     BinopInstrs.put(ParserConstants.SNE, new Instruction[] {Instructions.StrictEquals, Instructions.NOT});
     BinopInstrs.put(ParserConstants.INSTANCEOF, new Instruction[] {Instructions.InstanceOf});
+    // Approximate a in b as b.a =! void 0
+    BinopInstrs.put(ParserConstants.IN, new Instruction[]
+      {Instructions.SWAP,
+       Instructions.GetMember,
+       Instructions.PUSH.make(Values.Undefined),
+       Instructions.StrictEquals,
+       Instructions.NOT});
   };
 
   static LessHalfAssedHashMap AssignOpTable = new LessHalfAssedHashMap();
@@ -281,8 +282,8 @@ public class CodeGenerator implements Translator {
          "if ($lzsc$lzp) {" +
            "var $lzsc$tick = $lzsc$lzp.tick;" +
            "var $lzsc$now = (new Date).getTime();" +
-           "while ($lzsc$tick == $lzsc$now) {" +
-             "$lzsc$now += 0.01;" +
+           "if ($lzsc$tick >= $lzsc$now) {" +
+             "$lzsc$now = $lzsc$tick + 0.0078125;" +
            "}" +
            "$lzsc$lzp.tick = $lzsc$now;" +
            "$lzsc$lzp." + event + "[$lzsc$now] = " + getname + ";" +
@@ -1630,6 +1631,38 @@ public class CodeGenerator implements Translator {
       return true;
     }
     Object value = translateLiteralNode(node);
+    if (value instanceof String) {
+      String str = (String)value;
+      // Can't push a constant that will cause the instruction to have
+      // a byte length > 2^16-1.  String constant needs a type byte
+      // and a (byte) 0 terminator, plus a 2-byte length field.
+      // Strings are UTF-8, so may be more than one byte per
+      // character.
+      int maxBytes = (1<<16)-1-1-1-2;
+      int byteLen = 0;
+      // Assume worst case (that every character will take 4 bytes
+      // when UTF-8 encoded), since the only way to be more exact is to
+      // loop over the string trying different splits and measuring
+      // the length of the encoded bytes.
+      byteLen = str.length()*4;
+      if (byteLen > maxBytes) {
+        // Find a split that makes it fit
+        int nChunks = (byteLen + (maxBytes - 1))/maxBytes; // (int)Math.ceil((double)l/(double)maxBytes);
+        int strLen = str.length();
+        int chunkLen = strLen/nChunks;
+        int start = 0, end = chunkLen, next;
+        while (start < strLen) {
+          collector.push(str.substring(start, end));
+          start = end;
+          next = end + chunkLen;
+          end = (next > strLen)?strLen:next;
+        }
+        while (--nChunks > 0) {
+          collector.emit(Instructions.ADD);
+        }
+        return false;
+      }
+    }
     collector.push(value);
     return false;
   }
@@ -1935,7 +1968,7 @@ public class CodeGenerator implements Translator {
       name = ((ASTIdentifier)fname).getName();
     }
     String methodName = (String)options.get(Compiler.METHOD_NAME);
-    if ((! name.equals(methodName))) {
+    if (methodName != null && (! name.equals(methodName))) {
       String supplement = "";
       if (name.equalsIgnoreCase(name)) {
         supplement = ".  The method names must have the same capitalization.";
@@ -2063,6 +2096,7 @@ public class CodeGenerator implements Translator {
       visitExpression(arg);
     }
     Instruction[] instrs = (Instruction[])UnopInstrs.get(op);
+    assert instrs != null : "No instrr for op " + op;
     if (options.getBoolean(Compiler.FLASH_COMPILER_COMPATABILITY) &&
         ParserConstants.TILDE == (op)) {
       instrs = new Instruction[] {Instructions.PUSH.make(new Long(0xffffffffL)),
@@ -2154,6 +2188,7 @@ public class CodeGenerator implements Translator {
       ref.get();
       visitExpression(rhs);
       Instruction[] instrs = (Instruction[])BinopInstrs.get(AssignOpTable.get(op));
+
       for (int i = 0, len = instrs.length; i < len; i++) {
         collector.emit(instrs[i]);
       }
@@ -2232,8 +2267,6 @@ public class CodeGenerator implements Translator {
     String lineno = "" + node.beginLine;
     if (functionName != null) {
       userFunctionName = functionName;
-      // needed?
-      options.put(Compiler.METHOD_NAME, functionName.substring(functionName.lastIndexOf('.')+1));
     } else {
       // TODO: [2003-06-19 ptw] (krank) Sanitization of names to
       // identifiers moved to krank user, remove #- when it works
@@ -2584,9 +2617,15 @@ public class CodeGenerator implements Translator {
       for (Iterator i = fundefs.keySet().iterator(); i.hasNext(); ) {
         String name = (String)i.next();
         SimpleNode fun = (SimpleNode)fundefs.get(name);
+        // Make sure all our top-level functions have root context
+        String withBlock = newLabel(node);
+        collector.push("_root");
+        collector.emit(Instructions.GetVariable);
+        collector.emit(Instructions.WITH.make(withBlock));
         collector.push(name);
         translateFunction(fun, false, fun.getChildren());
         collector.emit(Instructions.SetVariable);
+        collector.emit(Instructions.LABEL.make(withBlock));
       }
     } else {
       for (Iterator i = fundefs.keySet().iterator(); i.hasNext(); ) {
@@ -2753,3 +2792,9 @@ public class CodeGenerator implements Translator {
     }
   }
 }
+
+/* J_LZ_COPYRIGHT_BEGIN *******************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* J_LZ_COPYRIGHT_END *********************************************************/
+

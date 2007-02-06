@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -85,30 +85,31 @@ public class ViewCompiler extends ElementCompiler {
     public void compile(Element element) throws CompilationError
     {
         preprocess(element, mEnv);
-        FontInfo fontInfo;
+        FontInfo fontInfo = null;
 
         String name = element.getName();
-        if (name != null
-            && !mEnv.getCanvas().isProxied()
-            && sServerOnlyTags.containsKey(name)) {
-            mEnv.warn(
-/* (non-Javadoc)
- * @i18n.test
- * @org-mes="The tag '" + p[0] + "' will not work as expected when used in a serverless application."
- */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewCompiler.class.getName(),"051018-99", new Object[] {name})
-            );
-        }
+        if (mEnv.isCanvas()) {
+          if (name != null
+              && sServerOnlyTags.containsKey(name)
+              && !mEnv.getCanvas().isProxied()) {
+              mEnv.warn(
+  /* (non-Javadoc)
+   * @i18n.test
+   * @org-mes="The tag '" + p[0] + "' will not work as expected when used in a serverless application."
+   */
+              org.openlaszlo.i18n.LaszloMessages.getMessage(
+                  ViewCompiler.class.getName(),"051018-99", new Object[] {name})
+              );
+          }
 
-        fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
-        try {
-            fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
-            mapTextMetricsCompilation(element, mEnv, fontInfo, new HashSet());
-        } catch (NumberFormatException e) {
-            throw new CompilationError(e.getMessage());
+          fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
+          try {
+              fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
+              mapTextMetricsCompilation(element, mEnv, fontInfo, new HashSet());
+          } catch (NumberFormatException e) {
+              throw new CompilationError(e.getMessage());
+          }
         }
-        
         compileXML(element, fontInfo);
     }
 
@@ -337,7 +338,7 @@ public class ViewCompiler extends ElementCompiler {
                     env.addResourceReference(value, elt);
                 }
             } else if (XMLUtils.isURL(value)) {
-                if (!env.getCanvas().isProxied()) {
+                if (env.isCanvas() && !env.getCanvas().isProxied()) {
                     checkUnsupportedMediaTypes(env, elt, value);
                 }
                 // URL: relativize, and rename to "source" for runtime
@@ -361,14 +362,7 @@ public class ViewCompiler extends ElementCompiler {
 
             } else {
                 // pathname: turn into an id
-                Element info = new Element("resolve");
-                info.setAttribute("src", elt.getAttributeValue(RESOURCE_ATTR_NAME));
-
                 File file = env.resolveReference(elt, RESOURCE_ATTR_NAME);
-                Element rinfo = new Element("resolve");
-                    rinfo.setAttribute("src", elt.getAttributeValue(RESOURCE_ATTR_NAME));
-                    rinfo.setAttribute("pathname", file.getPath());
-                env.getCanvas().addInfo(rinfo);
                 // N.B.: Resources are always imported into the main
                 // program for the Flash target, hence the use of
                 // getResourceGenerator below
@@ -379,19 +373,23 @@ public class ViewCompiler extends ElementCompiler {
                 }
                 elt.setAttribute(RESOURCE_ATTR_NAME, value);
 
-                try {
+                if (env.isCanvas()) {
+                  Element info = new Element("resolve");
+                  info.setAttribute("src", elt.getAttributeValue(RESOURCE_ATTR_NAME));
+                  try {
                     info.setAttribute("pathname", file.getCanonicalPath());
-                } catch (java.io.IOException ioe) {
+                  } catch (java.io.IOException ioe) {
                     mLogger.warn(
 /* (non-Javadoc)
  * @i18n.test
  * @org-mes="Can't canonicalize " + p[0]
  */
-            org.openlaszlo.i18n.LaszloMessages.getMessage(
-                ViewCompiler.class.getName(),"051018-384", new Object[] {file.toString()})
-);
+                      org.openlaszlo.i18n.LaszloMessages.getMessage(
+                        ViewCompiler.class.getName(),"051018-384", new Object[] {file.toString()})
+                                 );
+                  }
+                  env.getCanvas().addInfo(info);
                 }
-                env.getCanvas().addInfo(info);
             }
         }
         

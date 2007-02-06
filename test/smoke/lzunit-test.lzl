@@ -10,7 +10,7 @@
   wrong error is signalled).
 -->
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 
@@ -291,7 +291,7 @@
 
       // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
       var flashVersion = LzBrowser.getVersion();
-      if ((! flashVersion) || flashVersion < 8 || flashVersion > 8.24) {
+      if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
           assertNotSame(NaN, NaN, "NaN !== NaN");
       }
 
@@ -488,7 +488,7 @@
       // TODO: [2005-11-02 ptw] (Flash 8) Fails in Flash 8.24
       var flashVersion = LzBrowser.getVersion();
       var nexp = 27;
-      if ((! flashVersion) || flashVersion < 8 || flashVersion > 8.24) {
+      if ((! flashVersion) || flashVersion < 8 || flashVersion > 10) {
           nexp++;
           assertSame(NaN, NaN, "Expected");
       }

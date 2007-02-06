@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -124,7 +124,7 @@ class CanvasCompiler extends ToplevelCompiler {
         } catch (java.io.IOException e) {
             throw new ChainedException(e);
         }
-        if (mEnv.getCanvas() != null) {
+        if (mEnv.isCanvas()) {
             throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test

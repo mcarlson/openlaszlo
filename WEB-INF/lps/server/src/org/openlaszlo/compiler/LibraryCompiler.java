@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -40,7 +40,18 @@ class LibraryCompiler extends ToplevelCompiler {
     static File resolveLibraryName(File file)
     {
         if (file.isDirectory()) {
-            file = new File(file, "library.lzx");
+          File lib = new File(file, "library.lzo");
+          if (lib.exists()) {
+            return lib;
+          }
+          file = new File(file, "library.lzx");
+        }
+        String name = file.getName();
+        if (name.endsWith(".lzx")) {
+          File lib = new File(file.getParentFile(), name.substring(0, name.length()-4) +".lzo");
+          if (lib.exists()) {
+            return lib;
+          }
         }
         return file;
     }
@@ -124,6 +135,15 @@ class LibraryCompiler extends ToplevelCompiler {
     void updateSchema(Element element, ViewSchema schema, Set visited) {
         element = resolveLibraryElement(element, mEnv, visited, false);
         if (element != null) {
+            // If compiling a library we need to get the auto-includes
+            // into the schema
+            if (element.getParentElement() == null) {
+                for (Iterator iter = getLibraries(element).iterator();
+                     iter.hasNext(); ) {
+                    File file = (File) iter.next();
+                    Compiler.updateSchemaFromLibrary(file, mEnv, schema, visited);
+                }
+            }
             super.updateSchema(element, schema, visited);
             // TODO [hqm 2005-02-09] can we compare any 'proxied' attribute here
             // with the parent element (canvas) to warn if it conflicts.

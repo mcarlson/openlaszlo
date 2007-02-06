@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -13,6 +13,7 @@ import org.openlaszlo.iv.flash.api.action.*;
 import java.io.*;
 import org.jdom.Element;
 import org.jdom.JDOMException;
+import org.openlaszlo.sc.ScriptCompiler;
 import org.openlaszlo.xml.internal.XMLUtils;
 
 /** Compiler for local data elements.
@@ -79,25 +80,34 @@ class DataCompiler extends ElementCompiler {
             nsprefix = false;
         }
             
-        int flashVersion = mEnv.getSWFVersionInt();
+        if (mEnv.isCanvas()) {
+          int flashVersion = mEnv.getSWFVersionInt();
 
-        Program program = org.openlaszlo.xml.internal.DataCompiler.makeProgram(data, flashVersion, trimwhitespace, true, nsprefix);
-        // this leaves the value in a variable named "__lzdataroot"
+          Program program = org.openlaszlo.xml.internal.DataCompiler.makeProgram(data, flashVersion, trimwhitespace, true, nsprefix);
+          // this leaves the value in a variable named "__lzdataroot"
         
-        program.push(LOCAL_DATA_FNAME);
-        program.push("_level0");
-        program.getVar();
-        program.push(LOCAL_DATA_FNAME);
-        program.getMember();
-        program.setVar();
+          program.push(LOCAL_DATA_FNAME);
+          program.push("_level0");
+          program.getVar();
+          program.push(LOCAL_DATA_FNAME);
+          program.getMember();
+          program.setVar();
 
-        program.push("__lzdataroot");
-        program.getVar();
-        program.push(XMLUtils.requireAttributeValue(element, "name"));
-        program.push(2);
-        program.push(LOCAL_DATA_FNAME);
-        program.callFunction();
-        program.pop();
-        mEnv.getGenerator().addProgram(program);
-    }
+          program.push("__lzdataroot");
+          program.getVar();
+          program.push(XMLUtils.requireAttributeValue(element, "name"));
+          program.push(2);
+          program.push(LOCAL_DATA_FNAME);
+          program.callFunction();
+          program.pop();
+          mEnv.getGenerator().addProgram(program);
+        } else {
+          // Library just spit out script, no compilation of data
+          String dsetname = XMLUtils.requireAttributeValue(element, "name");
+          mEnv.compileScript("LzInstantiateView({name: \"dataset\", attrs: { " + 
+                             "name: "+ScriptCompiler.quote(dsetname) + ", " +
+                             " initialdata: "+ NodeModel.getDatasetContent(element, mEnv)+"}}, 1)", element);
+
+        }
+    } 
 }

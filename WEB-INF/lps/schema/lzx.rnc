@@ -125,6 +125,7 @@ toplevelElements = (
   & command*
   & objectElements
   & class*
+  & interface*
   & trait*
   & includeElement*
   & importElement*
@@ -1041,8 +1042,7 @@ element attribute {
      }
 
 class = 
- 
-  element class {
+  element class  {
      ## The name of a new tag that this element defines.
      [lza:modifiers="final"]
      attribute name {token} &
@@ -1052,6 +1052,21 @@ class =
      attribute extends {token}? &
      ## The comma-separated list of traits, applied in order
      attribute traits {string}? &
+     ## Any attribute can occur, depending on superclass.
+     ## We need to handle this in a preprocessing step.
+     attribute * - (name|extends|traits) {string}*
+   & viewContentElements
+  }
+
+interface =
+  element interface  {
+     ## The name of a new tag that this element defines.
+     [lza:modifiers="final"]
+     attribute name {token} &
+     ## The name of the tag that this tag extends.
+     [a:defaultValue="view"
+      lza:modifiers="final"]
+     attribute extends {token}? &
      ## Any attribute can occur, depending on superclass.
      ## We need to handle this in a preprocessing step.
      attribute * - (name|extends|traits) {string}*
@@ -1217,11 +1232,14 @@ splash =
 
 scriptElement =
   element script {
-    (## The pathname of a JavaScript file.  This pathname is resolved
-     ## relative to the file that contains the <tagname>script</tagname>
-     ## element.
-      attribute src {xsd:anyURI} 
-    | text?)
+    ## The pathname of a JavaScript file.  This pathname is resolved
+    ## relative to the file that contains the <tagname>script</tagname>
+    ## element.
+     [a:defaultValue="Javascript" lza:modifiers="final"]
+     attribute type {xsd:string}? &
+     [a:defaultValue="normal" lza:modifiers="final"]
+     attribute when {"normal" | "immediate" }? &
+     (attribute src {xsd:anyURI} | text?)
   }
 
 styleSheetElement =

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -238,16 +238,7 @@ class SWFFile extends FlashFile {
             f0 = movieClip.getFrameAt(0);
             f0.addInstance(rectShape, 1, at, null);
 
-            // 8. A movieclip with the export identifier "LZkranker" which has 2 frames:
-            String krank = mProperties.getProperty(CompilationEnvironment.KRANK_PROPERTY);
-            if ("true".equals(krank)) {
-                movieClip = new Script(2);
-                export("__LZkranker", movieClip);
-                f0 = movieClip.getFrameAt(0); 
-                f0.addFlashObject(actionBlock("_root.LzSerializer.procStack();"));
-                f1 = movieClip.getFrameAt(1); 
-                f1.addFlashObject(actionBlock("_root.LzSerializer.procStack()"));
-            }
+            // 8. Was krank, now obsolete
 
             // 9. A movieclip with the export identifier "LZprofiler" which has 2 frames:
             String profile = mProperties.getProperty(CompilationEnvironment.PROFILE_PROPERTY);

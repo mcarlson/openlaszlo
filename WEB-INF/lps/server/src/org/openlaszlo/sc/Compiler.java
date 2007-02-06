@@ -7,7 +7,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -74,9 +74,9 @@ public class Compiler {
     if (! options.containsKey(RUNTIME)) {
       options.put(RUNTIME, LPS.getProperty("compiler.runtime.default", "swf6"));
     }
-    this.defaultOptions();
+    defaultOptions();
     if (options.getBoolean(PRINT_COMPILER_OPTIONS)) {
-      System.out.println("init compiler options" +  options.toString());
+      System.err.println("init compiler options" +  options.toString());
     }
   }
 
@@ -116,7 +116,7 @@ public class Compiler {
     // For Jython
     public Object get(Object key, Object deflt) {
       if (containsKey(key)) {
-        return (this.get(key));
+        return (get(key));
       }
       return deflt;
     }
@@ -154,14 +154,12 @@ public class Compiler {
     if (node != null) {
       if (node.filename != null) {
         location.append(node.filename);
-        location.append(":");
         if (node.beginLine != 0) {
+          location.append("#");
           location.append(Integer.toString(node.beginLine));
-          location.append(":");
+          location.append(".");
           location.append(Integer.toString(node.beginColumn));
-          location.append(":");
         }
-        location.append(" ");
       }
     }
     return location.toString();
@@ -304,12 +302,6 @@ public class Compiler {
     }
     options.putBoolean(GENERATE_FUNCTION_2, true);
     options.putBoolean(GENERATE_FUNCTION_2_FOR_LZX, true);
-    if (options.getBoolean(KRANK)) {
-      options.putBoolean(NAME_FUNCTIONS, true);
-      options.putBoolean(DISABLE_CONSTANT_POOL, true);
-      options.putBoolean(OBFUSCATE, false);
-      options.put(COMPILE_TRACE, "flash");
-    }
   }
 
   public void setProperties(Map properties) {
@@ -329,9 +321,9 @@ public class Compiler {
       }
       options.put(key, value);
     }
-    this.defaultOptions();
+    defaultOptions();
     if (options.getBoolean(PRINT_COMPILER_OPTIONS)) {
-      System.out.println("set compiler options" +  options.toString());
+      System.err.println("set compiler options" +  options.toString());
     }
   }
 
@@ -346,7 +338,7 @@ public class Compiler {
       cg.setOptions(options);
       cg.translate(program);
       if (options.getBoolean(PROGRESS)) {
-        System.out.println("Assembling...");
+        System.err.println("Assembling...");
       }
       profiler.phase("collect");
       List instrs = ((InstructionCollector)cg.getCollector()).getInstructions(true);
@@ -361,16 +353,16 @@ public class Compiler {
       profiler.exit();
       if (options.getBoolean(PROFILE_COMPILER)) {
         profiler.pprint();
-        System.out.println();
+        System.err.println();
       }
       if (options.getBoolean(PROGRESS)) {
-        System.out.println("done.");
+        System.err.println("done.");
       }
       return bytes;
     }
     catch (CompilerImplementationError e) {
       String ellipses = source.trim().length() > 80 ? "..." : "";
-      System.out.println("while compiling " +  source.trim().substring(0, 80) + ellipses);
+      System.err.println("while compiling " +  source.trim().substring(0, 80) + ellipses);
       throw(e);
     }
     catch (CompilerError e) {
@@ -400,7 +392,7 @@ public class Compiler {
   public static String GENERATE_FUNCTION_2_FOR_LZX = "generateFunction2ForLZX";
   public static String INCLUDES = "processIncludes";
   public static String INSTR_STATS = "instrStats";
-  public static String KRANK = "krank";
+  public static String LINK = "link";
   public static String RUNTIME = "runtime";
   public static String METHOD_NAME = "methodName";
   public static String NAME_FUNCTIONS = "nameFunctions";
@@ -440,7 +432,7 @@ public class Compiler {
     }
 
     public String toString() {
-      return "Splice(" + this.value.toString() + ")";
+      return "Splice(" + value.toString() + ")";
     }
   }
 
@@ -472,11 +464,11 @@ public class Compiler {
     }
 
     public SimpleNode parse0(String str) {
-      return this.parse0(str, "Program");
+      return parse0(str, "Program");
     }
 
     public SimpleNode parse(String str) {
-      SimpleNode node = this.parse0(str, "Program");
+      SimpleNode node = parse0(str, "Program");
       SimpleNode refactored = refactorAST(node);
       if (refactored != null) {
         return refactored;
@@ -540,7 +532,7 @@ public class Compiler {
         return null;
       }
       for (int i = 0; i < node.size(); i++) {
-        SimpleNode x = this.refactorAST(node.get(i));
+        SimpleNode x = refactorAST(node.get(i));
         if (x != null) {node.set(i, x);}
       }
       if (node instanceof ASTBinaryExpressionSequence) {
@@ -632,19 +624,14 @@ public class Compiler {
         }
       }
       // After refactoring, assure each function has a name
-      // TODO: [2005-11-16 ptw] This was for krank, and possibly
-      // debugging.  Is it still needed?
+      // for debugging and profiling
       if (node instanceof ASTAssignmentExpression) {
-        if (node.get(2) instanceof ASTFunctionExpression) {
+        SimpleNode rhs = node.get(2);
+        if (rhs instanceof ASTFunctionExpression) {
           // fn children are [(name), arglist, body]
-          if (node.get(2).size() == 2) {
-            // TODO: [2003-06-19 ptw] (krank) Sanitization of
-            // name to identifier moved to krank user, remove
-            // //- when it works
-            //- from string import replace
-            //- name = replace(ptp.visit(node[0]), ".", "_")
+          if (rhs.size() == 2) {
             String name = ptp.visit(node.get(0));
-            SimpleNode child = node.get(2);
+            SimpleNode child = rhs;
             int size = child.size();
             SimpleNode children[] = new SimpleNode[size + 1];
             children[0] = new ASTIdentifier(name);
@@ -665,7 +652,7 @@ public class Compiler {
 //         assert ! node.children
 //         for (child in tuple[1)]:
 //             if (isinstance(child, TupleType))
-//                 child = this.build(*child)
+//                 child = build(*child)
 //             node.jjtAddChild(child, len(node.children))
 //         return node
 
@@ -713,7 +700,7 @@ public class Compiler {
     public SimpleNode substitute(String str, Map keys) {
       // Since the parser can't parse an Expression, turn the source
       // into a Program, and extract the Expression from the parse tree.
-      SimpleNode node = this.parse("x = " + str).get(0).get(0).get(2);
+      SimpleNode node = parse("x = " + str).get(0).get(0).get(2);
       return visit(node, keys);
     }
   }
@@ -768,6 +755,14 @@ public class Compiler {
   }
 
 
+  public static class PassThroughNode extends SimpleNode {
+    public SimpleNode realNode;
+
+    public PassThroughNode (SimpleNode realNode) {
+      this.realNode = realNode;
+    }
+  }
+
   //
   // Parse Tree Printer
   //
@@ -778,6 +773,53 @@ public class Compiler {
   // FIXME: [2002-12-21 ows] the parenthesizing mechanism doesn't work for
   // non-binary operators (unary "-", typeof, void, ?:, etc.)
   public static class ParseTreePrinter {
+    boolean compress;
+    String SPACE;
+    String NEWLINE;
+    String COMMA;
+    String COLON;
+    String ASSIGN;
+    String CONDITIONAL;
+    String ALTERNATIVE;
+    String OPENPAREN;
+    String CLOSEPAREN;
+    String SEMI;
+    String OPTIONAL_SEMI;
+    String OPENCURLY;
+    String CLOSECURLY;
+    Map Joins;
+
+    public ParseTreePrinter() {
+      this(false, false);
+    }
+
+    public ParseTreePrinter(boolean compress) {
+      this(compress, false);
+    }
+
+    public ParseTreePrinter(boolean compress, boolean obfuscate) {
+      this.compress = compress;
+      // Set whitespace
+      this.SPACE = compress ? "" : " ";
+      this.NEWLINE = obfuscate ? "" : "\n";
+      // Set punctuation
+      this.COMMA = "," + SPACE;
+      this.COLON = ":" + SPACE;
+      this.ASSIGN = SPACE + "=" + SPACE;
+      this.CONDITIONAL = SPACE + "?" + SPACE;
+      this.ALTERNATIVE = SPACE + ":" + SPACE;
+      this.OPENPAREN = SPACE + "(";
+      this.CLOSEPAREN = ")" + SPACE;
+      this.SEMI = ";" + (compress ? SPACE : NEWLINE);
+      this.OPTIONAL_SEMI = (compress && "\n".equals(NEWLINE)) ? NEWLINE : SEMI;
+      this.OPENCURLY = "{" + NEWLINE;
+      this.CLOSECURLY = NEWLINE + "}";
+      // Set Joins
+      Joins = new HashMap();
+      Joins.put(ASTFormalParameterList.class, COMMA);
+      Joins.put(ASTFunctionCallParameters.class, COMMA);
+    }
+
     public void print(SimpleNode node, OutputStream output) {
       PrintStream where = new PrintStream(output);
       print(node, where);
@@ -789,6 +831,17 @@ public class Compiler {
 
     public void print(SimpleNode node) {
       print(node, System.out);
+    }
+
+    public String delimit(String phrase, boolean force) {
+      if (phrase.length() > 0) {
+        return ((('(' != phrase.charAt(0)) && force)?" ":SPACE) + phrase;
+      }
+      return phrase;
+    }
+
+    public String delimit(String phrase) {
+      return delimit(phrase, true);
     }
 
     public static String join(String token, String[] strings) {
@@ -805,6 +858,10 @@ public class Compiler {
     }
 
     public String visit(SimpleNode node) {
+      if (node instanceof PassThroughNode) {
+        node = ((PassThroughNode)node).realNode;
+      }
+
       int size = node.size();
       String[] children = new String[size];
       for (int i = 0; i < size; i++) {
@@ -817,20 +874,32 @@ public class Compiler {
       }
 
       // Are we doing OOP yet?
-      if (node instanceof ASTProgram || node instanceof ASTStatementList || node instanceof ASTDirectiveBlock) {
+      if (node instanceof ASTProgram ||
+          node instanceof ASTStatementList ||
+          node instanceof ASTDirectiveBlock ||
+          node instanceof ASTStatement ||
+          node instanceof ASTVariableStatement) {
         // Conditional join
         StringBuffer sb = new StringBuffer();
-        int l = children.length - 1;
+        String sep = "";
+        int l = children.length;
         for (int x = 0; x < l; x++) {
           String child = children[x];
           // Elide empty nodes
           if (! "".equals(child)) {
+            if (OPTIONAL_SEMI.equals(sep) && child.startsWith("(")) {
+              // Ensure a parenthesized expression is not mistaken for
+              // a function call
+              sep = SEMI;
+            }
+            sb.append(sep);
             sb.append(child);
-            sb.append(child.endsWith("}") ? "\n" : ";\n");
+            if (child.endsWith("}")) {
+              sep = NEWLINE.equals("\n") ? NEWLINE : OPTIONAL_SEMI;
+            } else {
+              sep = OPTIONAL_SEMI;
+            }
           }
-        }
-        if (l >= 0) {
-          sb.append(children[l].toString());
         }
         return(sb.toString());
       }
@@ -839,6 +908,9 @@ public class Compiler {
       }
       if (node instanceof ASTCallExpression) {
         return visitCallExpression(node, children);
+      }
+      if (node instanceof ASTSuperCallExpression) {
+        return visitSuperCallExpression(node, children);
       }
       if (node instanceof ASTConditionalExpression) {
         return visitConditionalExpression(node, children);
@@ -912,6 +984,9 @@ public class Compiler {
       if (node instanceof ASTBinaryExpressionSequence) {
         return visitBinaryExpressionSequence(node, children);
       }
+      if (node instanceof ASTExpressionList) {
+        return visitExpressionList(node, children);
+      }
       if (node instanceof ASTAndExpressionSequence) {
         return visitAndOrExpressionSequence(true, node, children);
       }
@@ -943,15 +1018,7 @@ public class Compiler {
     }
 
     public String defaultVisitor(SimpleNode node, String[] children) {
-      return "//\u00AB" + node.toString() + "(" + join(", ", children) + ")\u00BB";
-    }
-
-    public static Map Joins = new HashMap();
-    static {
-      Joins.put(ASTFormalParameterList.class, ", ");
-      Joins.put(ASTFunctionCallParameters.class, ", ");
-      Joins.put(ASTStatement.class, "\n");
-      Joins.put(ASTVariableStatement.class, "\n");
+      return "//\u00AB" + node.toString() + "(" + join(COMMA, children) + ")\u00BB";
     }
 
     // Copied (and massaged) from Parser.jjt
@@ -962,6 +1029,7 @@ public class Compiler {
       // tell us the range of its Ops
       for (int i = 0; i < 256; i++) { on.add("<" + Integer.toString(i) + ">"); }
       on.set(Ops.ASSIGN, "=");
+      on.set(Ops.COMMA, ",");
       on.set(Ops.GT, ">");
       on.set(Ops.LT, "<");
       on.set(Ops.BANG, "!");
@@ -1014,10 +1082,9 @@ public class Compiler {
     public String visitAssignmentExpression(SimpleNode node, String[] children) {
       int thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), false);
       for (int i = 1; i < children.length; i += 2) {
-        SimpleNode c = node.get(i);
-        children[i] = maybeAddParens(thisPrec, c, children[i]);
+        children[i] = maybeAddParens(thisPrec, node.get(i), children[i]);
       }
-      return children[0] + " " + children[1] + " " + children [2];
+      return children[0] + SPACE + children[1] + delimit(children [2], false);
     }
     public String visitCallExpression(SimpleNode node, String[] children) {
       SimpleNode c = node.get(0);
@@ -1031,31 +1098,35 @@ public class Compiler {
         return children[0] + "(" + children[1] + ")";
       }
     }
+    public String visitSuperCallExpression(SimpleNode node, String[] children) {
+      // Same as above
+      return "super." + children[0] + "(" + children[1] + ")";
+    }
     public String visitConditionalExpression(SimpleNode node, String[] children) {
       int thisPrec = prec(Ops.COLON, false);
       for (int i = 1; i < children.length; i++) {
-        SimpleNode c = node.get(i);
-        children[i] = maybeAddParens(thisPrec, c, children[i]);
+        children[i] = maybeAddParens(thisPrec, node.get(i), children[i]);
       }
-      return children[0] + " ? " + children[1] + " : " + children[2];
+      return children[0] + CONDITIONAL + children[1] + ALTERNATIVE + children[2];
     }
     public String visitEmptyExpression(SimpleNode node, String[] children) {
       return "";
     }
     public String visitForVarInStatement(SimpleNode node, String[] children) {
-      return "for (var " + children[0] + " in " + children[2] + ") {\n" + children[3] + "\n}";
+      return "for" + OPENPAREN + "var " + children[0] + " in " + children[2] + CLOSEPAREN + OPENCURLY + children[3] + CLOSECURLY;
     }
     public String visitForInStatement(SimpleNode node, String[] children) {
-      return "for (" + children[0] + " in " + children[1] + ") {\n" + children[2] + "\n}";
+      return "for" + OPENPAREN + children[0] + " in " + children[1] + CLOSEPAREN + OPENCURLY + children[2] + CLOSECURLY;
     }
     public String visitForVarStatement(SimpleNode node, String[] children) {
-      return "for (" + children[0] + "; " + children[1] + "; " + children[2] + ") {\n" + children[3] + "\n}";
+      return "for" + OPENPAREN + children[0] + SEMI + children[1] + SEMI + children[2] + CLOSEPAREN +OPENCURLY + children[3] + CLOSECURLY;
     }
     public String visitIfStatement(SimpleNode node, String[] children) {
       if (children.length == 2) {
-        return "if (" + children[0] + ") {\n" + children[1] + "\n}";
+        return "if" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
       } else if (children.length == 3) {
-        return "if (" + children[0] + ") {\n" + children[1] + "\n} else {\n" + children[2] + "\n}";
+        return "if" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY +
+          SPACE + "else" + SPACE + OPENCURLY + children[2] + CLOSECURLY;
       }
       return defaultVisitor(node, children);
     }
@@ -1064,7 +1135,8 @@ public class Compiler {
 //       int thisPrec = prec(Ops.NEW, true);
 //       SimpleNode c = node.get(0);
 //       children[0] = maybeAddParens(thisPrec, c, children[0]);
-      return "new " + children[0];
+      // Kludge for (new Foo).whatever
+      return "(new " + children[0] + ")";
     }
     public String visitPragmaDirective(SimpleNode node, String[] children) {
       return "#pragma " + children[0];
@@ -1072,8 +1144,7 @@ public class Compiler {
     public String visitPostfixExpression(SimpleNode node, String[] children) {
       int op = ((ASTOperator)node.get(1)).getOperator();
       int thisPrec = prec(op, true);
-      SimpleNode c = node.get(0);
-      children[0] = maybeAddParens(thisPrec, c, children[0]);
+      children[0] = maybeAddParens(thisPrec, node.get(0), children[0]);
       return children[0] + children[1];
     }
     public String visitPropertyIdentifierReference(SimpleNode node, String[] children) {
@@ -1083,49 +1154,48 @@ public class Compiler {
       return children[0] + "[" + children[1] + "]";
     }
     public String visitReturnStatement(SimpleNode node, String[] children) {
-      return "return " + children[0];
+      return "return" + delimit(children[0]);
     }
     public String visitThisReference(SimpleNode node, String[] children) {
       return "this";
     }
     public String visitContinueStatement(SimpleNode node, String[] children) {
-      return "continue" + (children.length > 0 ? (" " + children[0]) : "");
+      return "continue" + (children.length > 0 ? delimit(children[0]) : "");
     }
     public String visitBreakStatement(SimpleNode node, String[] children) {
-      return "break" + (children.length > 0 ? (" " + children[0]) : "");
+      return "break" + (children.length > 0 ? delimit(children[0]) : "");
     }
     public String visitUnaryExpression(SimpleNode node, String[] children) {
       // Prefix and Unary are the same node
       int op = ((ASTOperator)node.get(0)).getOperator();
       boolean letter = java.lang.Character.isLetter(OperatorNames[op].charAt(0));
       int thisPrec = prec(op, true);
-      SimpleNode c = node.get(1);
-      children[1] = maybeAddParens(thisPrec, c, children[1]);
+      children[1] = maybeAddParens(thisPrec, node.get(1), children[1]);
       return children[0] + (letter ? " " : "") + children[1];
     }
     public String visitWithStatement(SimpleNode node, String[] children) {
-      return "with (" + children[0] + ") {\n" + children[1] + "\n}";
+      return "with" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
     }
     public String visitWhileStatement(SimpleNode node, String[] children) {
-      return "while (" + children[0] + ") {\n" + children[1] + "\n}";
+      return "while" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
     }
     public String visitDoWhileStatement(SimpleNode node, String[] children) {
-      return "do {\n" + children[0] + "\n} while(" + children[1] + ")";
+      return "do" + OPENCURLY + children[0] + CLOSECURLY + SPACE + "while" + OPENPAREN + children[1] + ")";
     }
 
     public String visitDefaultClause(SimpleNode node, String[] children) {
-      return "default:\n" + (children.length > 0 ? (children[0] + ";\n") : "");
+      return "default:" + NEWLINE + (children.length > 0 ? (children[0] + OPTIONAL_SEMI) : "");
     }
     public String visitCaseClause(SimpleNode node, String[] children) {
-      return "case " + children[0] + ":\n" +
-        (children.length > 1 ? (children[1] + ";\n") : "");
+      return "case" + delimit(children[0]) + ":" + NEWLINE +
+        (children.length > 1 ? (children[1] + OPTIONAL_SEMI) : "");
     }
     public String visitSwitchStatement(SimpleNode node, String[] children) {
-      String value = "switch (" + children[0] + ") {\n";
+      String value = "switch" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY;
       for (int i = 1, len = children.length; i < len; i++) {
         value += children[i];
       }
-      value += "\n}";
+      value += CLOSECURLY;
       return value;
     }
 
@@ -1157,79 +1227,80 @@ public class Compiler {
     }
 
     public String visitArrayLiteral(SimpleNode node, String[] children) {
-      return "[" + join(", ", children) + "]";
+      return "[" + join(COMMA, children) + "]";
     }
 
     public String maybeAddParens(int parentPrec, SimpleNode node, String nodeRep) {
+      return maybeAddParens(parentPrec, node, nodeRep, false);
+    }
+
+    public String maybeAddParens(int parentPrec, SimpleNode node, String nodeRep, boolean assoc) {
+      int thisPrec = 0;
       if (node instanceof ASTBinaryExpressionSequence ||
           node instanceof ASTAssignmentExpression) {
-        if (prec(((ASTOperator)node.get(1)).getOperator(), false) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), false);
       } else if (node instanceof ASTUnaryExpression) {
-        if (prec(((ASTOperator)node.get(0)).getOperator(), true) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(((ASTOperator)node.get(0)).getOperator(), true);
       } else if (node instanceof ASTPostfixExpression) {
-        if (prec(((ASTOperator)node.get(1)).getOperator(), true) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), true);
       } else if (node instanceof ASTAndExpressionSequence) {
-        if (prec(Ops.SC_AND, false) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(Ops.SC_AND, false);
       } else if (node instanceof ASTOrExpressionSequence) {
-        if (prec(Ops.SC_OR, false) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(Ops.SC_OR, false);
       } else if (node instanceof ASTConditionalExpression) {
-        if (prec(Ops.COLON, false) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(Ops.COLON, false);
       } else if (node instanceof ASTNewExpression) {
-        if (prec(Ops.NEW, true) <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = prec(Ops.NEW, true);
       } else if (node instanceof ASTCallExpression ||
                  node instanceof ASTPropertyValueReference ||
                  node instanceof ASTPropertyIdentifierReference) {
         // These have prec of 0 even though they don't have ops
-        if (0 <= parentPrec) {
-          nodeRep = "(" + nodeRep + ")";
-        }
+        thisPrec = 0;
+      } else if (node instanceof ASTExpressionList) {
+        thisPrec = prec(Ops.COMMA, false);
+      }
+      if (assoc ? (thisPrec < parentPrec) : (thisPrec <= parentPrec)) {
+        nodeRep = "(" + nodeRep + ")";
       }
       return nodeRep;
     }
 
     public String visitAndOrExpressionSequence(boolean isAnd, SimpleNode node, String[] children) {
       int thisPrec = prec(isAnd ? Ops.SC_AND : Ops.SC_OR, false);
-      for (int i = 0; i < children.length; i++) {
-        SimpleNode c = node.get(i);
-        children[i] = maybeAddParens(thisPrec, c, children[i]);
+      children[0] = maybeAddParens(thisPrec, node.get(0), children[0], true);
+      for (int i = 1; i < children.length; i++) {
+        children[i] = delimit(maybeAddParens(thisPrec, node.get(i), children[i]), false);
       }
-      return join(isAnd ? " && " : " || ", children);
+      return join(isAnd ? (SPACE + "&&") : (SPACE + "||"), children);
+    }
+
+    public String visitExpressionList(SimpleNode node, String[] children) {
+      int thisPrec = prec(Ops.COMMA, false);
+      for (int i = 0; i < children.length; i++) {
+        children[i] = maybeAddParens(thisPrec, node.get(i), children[i]);
+      }
+      return join(COMMA, children);
     }
 
     public String visitBinaryExpressionSequence(SimpleNode node, String[] children) {
       int thisPrec = prec(((ASTOperator)node.get(1)).getOperator(), false);
       for (int i = 0; i < children.length; i += (i==0?2:1)) {
-        SimpleNode c = node.get(i);
-        children[i] = maybeAddParens(thisPrec, c, children[i]);
+        children[i] = maybeAddParens(thisPrec, node.get(i), children[i], i == 0);
       }
 
       String op = children[1];
+      char opChar = op.charAt(op.length() - 1);
       StringBuffer sb = new StringBuffer();
+      boolean required = java.lang.Character.isLetter(op.charAt(0));
+      String space = required?" ":SPACE;
       sb.append(children[0]);
-      sb.append(" ");
-      sb.append(op);
-      sb.append(" ");
-      for (int x = 2; x < (children.length - 1); x++) {
-        sb.append(children[x]);
-        sb.append(" ");
+      for (int x = 2; x < (children.length); x++) {
+        String child = children[x];
+        sb.append(space);
         sb.append(op);
-        sb.append(" ");
+        // Disambiguate `a + ++b`, `a++ + b` etc.
+        sb.append(delimit(child, required || opChar == child.charAt(0)));
       }
-      sb.append(children[children.length - 1]);
       return(sb.toString());
     }
 
@@ -1238,7 +1309,8 @@ public class Compiler {
     }
 
     public String visitFunctionExpression(SimpleNode node, String[] children) {
-      return doFunctionDeclaration(node, children, false);
+      // Elide optional name if compressing, otherwise leave it for debugging
+      return doFunctionDeclaration(node, children, this.compress ? false : true);
     }
 
     String doFunctionDeclaration(SimpleNode node, String[] children, boolean useName) {
@@ -1254,7 +1326,13 @@ public class Compiler {
       } else {
         return defaultVisitor(node, children);
       }
-      return "function " + (useName ? name : "") + "(" + args + ") {\n" + body + "\n}";
+      String loc = "";
+      // Add location information if not compressing
+      if ((!this.compress) && (node.filename != null) && (node.beginLine != 0)) {
+        loc = ("\n/* -*- file: " + getLocationString(node) + " -*- */\n" );
+      }
+      return
+        loc + "function" + (useName ? (" " + name) : "") + OPENPAREN + args + CLOSEPAREN + OPENCURLY + body + CLOSECURLY;
     }
 
     public String visitIdentifier(SimpleNode node, String[] children) {
@@ -1282,11 +1360,30 @@ public class Compiler {
       return s;
     }
 
+    static Double zero = new Double(0);
 
     public String visitLiteral(SimpleNode node, String [] children) {
       Object value = ((ASTLiteral)node).getValue();
       if (value instanceof String) {
-        return "\"" + stringEscape((String)value) + "\"";
+        return ScriptCompiler.quote((String)value);
+      }
+      if (value instanceof Double) {
+        // Make integers compact
+        Double n = (Double)value;
+        long l = n.longValue();
+        if ((double)l == n.doubleValue()) {
+          if (l == 0 ) {return "0";}
+          else {
+            String d = Long.toString(l);
+            if (compress && l > 0) {
+              String h = "0x" + Long.toHexString(l);
+              if (h.length() <= d.length()) {
+                return h;
+              }
+            }
+            return d;
+          }
+        }
       }
       return "" + value;
     }
@@ -1297,9 +1394,9 @@ public class Compiler {
       for (int i = 0; i < len; i++) {
         s.append(children[i]);
         if (i % 2 != 0) {
-          s.append(", ");
+          s.append(COMMA);
         } else {
-          s.append(": ");
+          s.append(COLON);
         }
       }
       if (len > 0) {
@@ -1316,12 +1413,29 @@ public class Compiler {
 
     public String visitVariableDeclaration(SimpleNode node, String[] children) {
       if (children.length > 1) {
-        return "var " + children[0] + " = " + children[1];
+        return "var " + children[0] + ASSIGN + children[1];
       } else {
         return "var " + children[0];
       }
     }
 
+    public String visitTryStatement(SimpleNode node, String[] children) {
+      if (children.length == 2) {
+        return "try" + SPACE + OPENCURLY + children[0] + CLOSECURLY + NEWLINE + children[1];
+      } else if (children.length == 3) {
+        return "try" + SPACE + OPENCURLY + children[0] + CLOSECURLY + NEWLINE + children[1] + NEWLINE + children[2];
+      }
+      return defaultVisitor(node, children);
+    }
+    public String visitCatchClause(SimpleNode node, String[] children) {
+      return "catch" + OPENPAREN + children[0] + CLOSEPAREN + OPENCURLY + children[1] + CLOSECURLY;
+    }
+    public String visitFinallyClause(SimpleNode node, String[] children) {
+      return "finally" + SPACE + OPENCURLY + children[0] + CLOSECURLY;
+    }
+    public String visitThrowStatement(SimpleNode node, String[] children) {
+      return "throw" + delimit(children[0]);
+    }
   }
 
 
@@ -1351,7 +1465,7 @@ public class Compiler {
       Block make(String name) {
         Block block = new Block(name);
         block.parent = this;
-        this.children.add(block);
+        children.add(block);
         return block;
       }
     }
@@ -1368,8 +1482,8 @@ public class Compiler {
     }
 
     public void enter(String name) {
-      Block block = this.current.make(name);
-      this.current = block;
+      Block block = current.make(name);
+      current = block;
     }
 
     public void exit() {

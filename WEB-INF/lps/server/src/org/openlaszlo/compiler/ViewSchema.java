@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -1033,7 +1033,23 @@ throw new CompilationError(sourceElement, attr.name, new Throwable(
     ClassModel getClassModel (String elementName) {
         return (ClassModel) mClassMap.get(elementName);
     }
-    
+
+  public String toLZX() {
+    return toLZX("");
+  }
+
+  public String toLZX(String indent) {
+    String lzx = "";
+    for (Iterator i = (new TreeSet(mClassMap.values())).iterator(); i.hasNext(); ) {
+      ClassModel model = (ClassModel)i.next();
+      if (model.hasNodeModel()) {
+        lzx += model.toLZX(indent);
+        lzx += "\n";
+      }
+    }
+    return lzx;
+  }
+
     public void loadSchema() throws JDOMException, IOException {
         String schemaPath = SCHEMA_PATH;
         // Load the schema if it hasn't been.

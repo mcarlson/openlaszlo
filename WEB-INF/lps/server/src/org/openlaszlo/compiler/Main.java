@@ -1,11 +1,10 @@
-/* *****************************************************************************
- * Main.java
- * ****************************************************************************/
+/**
+ * Main entry point for the script compiler
+ *
+ * @author steele@osteele.com
+ * @author ptw@openlaszlo.org
+ */
 
-/* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
-* Use is subject to license terms.                                            *
-* J_LZ_COPYRIGHT_END *********************************************************/
 
 package org.openlaszlo.compiler;
 import org.openlaszlo.server.LPS;
@@ -42,6 +41,8 @@ public class Main {
         "  Compile to swf6, swf7, swf8.",
         "--dir outputdir",
         "  Output directory.",
+        "-c | --compile",
+        "  Compile and assemble, but do not link",
         "-g | --debug",
         "  Add debugging information into the output object.",
         "-p | --profile",
@@ -74,7 +75,7 @@ public class Main {
     public static void main(String args[])
         throws IOException
     {
-        lzc(args, null, null, null);
+      System.exit(lzc(args, null, null, null));
     }
 
     /** This method implements the behavior described in main
@@ -140,7 +141,8 @@ public class Main {
                       System.err.println("Invalid value for --runtime");
                       return 1;
                     }
-                } else if (arg == "--script") {
+                } else if (arg == "-S" || arg == "--script") {
+                    // This is bogus -- should write out a .lzx file
                     Logger.getLogger(org.openlaszlo.sc.ScriptCompiler.class)
                         .setLevel(Level.ALL);
                 } else if (arg == "-mcache" || arg == "--mcache") {
@@ -181,6 +183,8 @@ public class Main {
                     compiler.setProperty(CompilationEnvironment.DEBUG_PROPERTY, "true");
                 } else if (arg == "-p" || arg == "--profile") {
                     compiler.setProperty(CompilationEnvironment.PROFILE_PROPERTY, "true");
+                } else if (arg == "-c" || arg == "--compile") {
+                  compiler.setProperty(CompilationEnvironment.LINK_PROPERTY, "false");
                 } else if (arg == "--help") {
                     for (int j = 0; j < USAGE.length; j++) {
                         System.err.println(USAGE[j]);
@@ -203,29 +207,38 @@ public class Main {
 
         LPS.initialize();
 
+        int status = 0;
         for (Iterator iter = files.iterator(); iter.hasNext(); ) {
             String sourceName = (String) iter.next();
             if (files.size() > 1)
                 System.err.println("Compiling " + sourceName);
-            compile(compiler, logger, sourceName, outFileName, outDir);
+            status += compile(compiler, logger, sourceName, outFileName, outDir);
         }
-        return 0;
+        return status;
     }
 
-    static private void compile(Compiler compiler,
+    static private int compile(Compiler compiler,
                                 Logger logger,
                                 String sourceName,
                                 String outFileName,
                                 String outDir)
     {
         File sourceFile = new File(sourceName);
-        if (outFileName == null && outDir == null) {
-            outFileName = FileUtils.getBase(sourceName) + ".swf";
-        } else if (outFileName == null) {
-            outFileName = outDir + File.separator + 
-                FileUtils.getBase(sourceFile.getName()) + ".swf";
-        } 
-        File objectFile = new File(outFileName);
+
+        String objExtension = null;
+        if ("false".equals(compiler.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
+          objExtension = ".lzo";
+        } else {
+          objExtension = ".swf";
+        }
+
+        if (outDir == null) {
+          outDir = sourceFile.getParent();
+        }
+        if (outFileName == null) {
+            outFileName = FileUtils.getBase(sourceName) + objExtension;
+        }
+        File objectFile = new File(outDir, outFileName);
         try {
             compiler.compile(sourceFile, objectFile, new Properties());
         } catch (CompilationError e) {
@@ -238,6 +251,8 @@ public class Main {
                     Main.class.getName(),"051018-249")
                 );
             logger.error(e.getMessage());
+            e.printStackTrace();
+            return 2;
         } catch (IOException e) {
             logger.error(
 /* (non-Javadoc)
@@ -248,6 +263,15 @@ public class Main {
                     Main.class.getName(),"051018-259", new Object[] {e.getMessage()})
                 );
             e.printStackTrace();
+            return 3;
         }
+        return 0;
     }
 }
+
+/**
+ * @copyright Copyright 2001-2007 Laszlo Systems, Inc.  All Rights
+ * Reserved.  Use is subject to license terms.
+ */
+
+

@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -213,16 +213,11 @@ class ClassCompiler extends ViewCompiler {
 , elt);
         }
                 
-        String extendsName = XMLUtils.getAttributeValue(
-            elt, "extends", DEFAULT_SUPERCLASS_NAME);
-        
         ViewSchema schema = mEnv.getSchema();
         ClassModel classModel = schema.getClassModel(className);
         
         String linedir = CompilerUtils.sourceLocationDirective(elt, true);
         ViewCompiler.preprocess(elt, mEnv);
-        
-        FontInfo fontInfo = new FontInfo(mEnv.getCanvas().getFontInfo());
         
         // We compile a class declaration just like a view, and then
         // add attribute declarations and perhaps some other stuff that
@@ -236,6 +231,11 @@ class ClassCompiler extends ViewCompiler {
         // Put in the class name, not "class" 
         viewMap.put("name", ScriptCompiler.quote(className));
         
+        // TODO: [2007-01-29 ptw]  Someday write out real Javascript classes
+//         String superclass = XMLUtils.getAttributeValue(elt, "extends", DEFAULT_SUPERCLASS_NAME);
+//         org.openlaszlo.sc.ScriptClass scriptClass =
+//           new org.openlaszlo.sc.ScriptClass(className, superclass, (Map)viewMap.get("attrs"));
+        
         // Construct a Javascript statement from the initobj map
         String initobj;
         try {
@@ -245,32 +245,37 @@ class ClassCompiler extends ViewCompiler {
         } catch (java.io.IOException e) {
             throw new ChainedException(e);
         }
-        // Generate a call to queue instantiation
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(VIEW_INSTANTIATION_FNAME + 
-                      "({name: 'userclass', attrs: " +
-                      "{parent: " +
-                      ScriptCompiler.quote(extendsName) +
-                      ", initobj: " + initobj +
-                      "}}" +
-                      ", " + ((ElementWithLocationInfo)elt).model.totalSubnodes() +
-                      ");\n");
-        if (!classModel.getInline()) {
-            ClassModel superclassModel = classModel.getSuperclassModel();
-            mEnv.compileScript(buffer.toString(), elt);
-        }
-        
-        // TODO: [12-27-2002 ows] use the log4j API instead of this property
-        boolean tracexml =
-            mEnv.getProperties().getProperty("trace.xml", "false") == "true";
-        if (tracexml) {
-            Logger mXMLLogger = Logger.getLogger("trace.xml");
-            mXMLLogger.info("compiling class definition:");
-            org.jdom.output.XMLOutputter outputter =
-                new org.jdom.output.XMLOutputter();
-            outputter.getFormat().setTextMode(TextMode.NORMALIZE);
-            mXMLLogger.info(outputter.outputString(elt));
-            mXMLLogger.info("compiled to:\n" + buffer.toString() + "\n");
-        }
+        compileClass(elt, classModel, initobj);
     }
+
+  protected void compileClass(Element elt, ClassModel classModel, String initobj) {
+    // Generate a call to queue instantiation
+    String extendsName = XMLUtils.getAttributeValue(
+      elt, "extends", DEFAULT_SUPERCLASS_NAME);
+    StringBuffer buffer = new StringBuffer();
+    buffer.append(VIEW_INSTANTIATION_FNAME + 
+                  "({name: 'userclass', attrs: " +
+                  "{parent: " +
+                  ScriptCompiler.quote(extendsName) +
+                  ", initobj: " + initobj +
+                  "}}" +
+                  ", " + ((ElementWithLocationInfo)elt).model.totalSubnodes() +
+                  ");\n");
+    if (!classModel.getInline()) {
+      ClassModel superclassModel = classModel.getSuperclassModel();
+      mEnv.compileScript(buffer.toString(), elt);
+    }
+    // TODO: [12-27-2002 ows] use the log4j API instead of this property
+    boolean tracexml =
+      mEnv.getProperties().getProperty("trace.xml", "false") == "true";
+    if (tracexml) {
+      Logger mXMLLogger = Logger.getLogger("trace.xml");
+      mXMLLogger.info("compiling class definition:");
+      org.jdom.output.XMLOutputter outputter =
+        new org.jdom.output.XMLOutputter();
+      outputter.getFormat().setTextMode(TextMode.NORMALIZE);
+      mXMLLogger.info(outputter.outputString(elt));
+      mXMLLogger.info("compiled to:\n" + buffer.toString() + "\n");
+    }
+  }
 }

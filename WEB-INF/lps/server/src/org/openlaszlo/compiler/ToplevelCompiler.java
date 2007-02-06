@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -138,7 +138,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
                 collectReferences(env, (Element) iter.next(), defined, referenced,
                                   libsVisited);
             }
-        } else if (compiler instanceof ClassCompiler) {
+        } else if (compiler instanceof ClassCompiler || compiler instanceof InterfaceCompiler) {
             String name = element.getAttributeValue("name");
             if (name != null) {
                 defined.add(name);
@@ -155,7 +155,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
 
 
 
-    static List getLibraries(CompilationEnvironment env, Element element, Map explanations) {
+    static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded) {
         List libraryNames = new ArrayList();
         String librariesAttr = element.getAttributeValue("libraries");
         String base = new File(Parser.getSourcePathname(element)).getParent();
@@ -195,14 +195,23 @@ abstract class ToplevelCompiler extends ElementCompiler {
                     // included that would have been auto-included is
                     // emitted where the auto-include would have been.
                     if (defined.contains(key)) {
-                      File canonical = (File)canonicalAuto.get(key);
-                      if (visited.contains(canonical)) {
-                        explanations.put(value, "explicit include");
-                        additionalLibraries.add(value);
-                      }
+                        File canonical = (File)canonicalAuto.get(key);
+                        if (visited.contains(canonical)) {
+                            // Annotate as explicit
+                            if (explanations != null) {
+                                explanations.put(value, "explicit include");
+                            }
+                            // but include as auto
+                            additionalLibraries.add(value);
+                        }
                     } else {
-                      explanations.put(value, "reference to <" + key + "> tag");
-                      additionalLibraries.add(value);
+                        if (explanations != null) {
+                            explanations.put(value, "reference to <" + key + "> tag");
+                        }
+                        additionalLibraries.add(value);
+                        if (autoIncluded != null) {
+                            autoIncluded.add(value);
+                        }
                     }
                 }
             }
@@ -221,7 +230,9 @@ abstract class ToplevelCompiler extends ElementCompiler {
         
         // add the debugger, if canvas debug=true
         if (env.getBooleanProperty(env.DEBUG_PROPERTY)) {
-            explanations.put("debugger", "the canvas debug attribute is true");
+            if (explanations != null) {
+                explanations.put("debugger", "the canvas debug attribute is true");
+            }
             String pathname = LPS.getComponentsDirectory() +
                 File.separator + "debugger" +
                 File.separator + "debugger.lzx";
@@ -231,7 +242,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
     }
     
     List getLibraries(Element element) {
-        return getLibraries(mEnv, element, new HashMap());
+        return getLibraries(mEnv, element, null, null);
     }
 
 
@@ -249,9 +260,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         // etc.
         String ext = swfversion; 
         
-        // krank trumps profiling
-        ext += env.getBooleanProperty(env.KRANK_PROPERTY)?"-krank":
-            (env.getBooleanProperty(env.PROFILE_PROPERTY)?"-profile":"");
+        ext += env.getBooleanProperty(env.PROFILE_PROPERTY)?"-profile":"";
         ext += env.getBooleanProperty(env.DEBUG_PROPERTY)?"-debug":"";
         return "LFC" + ext + ".lzl";
     }
@@ -265,7 +274,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         String baseLibraryBecause = "Required for all applications";
 
         Map explanations = new HashMap();
-        for (Iterator iter = getLibraries(env, element, explanations).iterator();
+        for (Iterator iter = getLibraries(env, element, explanations, null).iterator();
              iter.hasNext(); ) {
             File file = (File) iter.next();
             Compiler.importLibrary(file, env);

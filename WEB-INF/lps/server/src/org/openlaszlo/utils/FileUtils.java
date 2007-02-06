@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -175,7 +175,10 @@ public abstract class FileUtils {
     public static Reader makeXMLReaderForFile (String pathname, String defaultEncoding)
       throws IOException {
         String encoding = getXMLEncodingFromFile(pathname, defaultEncoding);
-        java.io.FileInputStream ifs = new java.io.FileInputStream(pathname);
+        InputStream ifs = new java.io.FileInputStream(pathname);
+        if (pathname.endsWith(".lzo")) {
+          ifs = new java.util.zip.GZIPInputStream(ifs);
+        }
         java.io.PushbackInputStream pbis = new java.io.PushbackInputStream(ifs, 1024);
         // We will ignore the byte order mark encoding for now,
         // hopefully no one is going to be using UTF16. I don't want

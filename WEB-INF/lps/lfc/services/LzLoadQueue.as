@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -510,7 +510,7 @@ LzLoadQueue.loadXMLProxied = function (loadobj) {
     var qargs = LzLoadQueue.qargs;
     for ( var keys in qargs ) {
         var key = qargs[keys];
-        if (typeof (loadobj[key] != "undefined")) {
+        if (typeof (loadobj[key]) != "undefined") {
             lvar[key] = loadobj[key];
         }
     }

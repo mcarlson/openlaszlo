@@ -1,5 +1,5 @@
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2005 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -21,6 +21,6 @@ public class CompilerImplementationError extends RuntimeException {
   }
 
   public String toString() {
-    return Compiler.getLocationString(node) + super.toString();
+    return Compiler.getLocationString(node) + ": " + super.toString();
   }
 }

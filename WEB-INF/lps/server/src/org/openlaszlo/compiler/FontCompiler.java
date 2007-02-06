@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -70,10 +70,12 @@ class FontCompiler extends ElementCompiler {
         String style = element.getAttributeValue("style");
         try {
             String path = mEnv.resolveReference(element).getAbsolutePath();
-            Element info = new Element("resolve");
-            info.setAttribute("src", element.getAttributeValue("src"));
-            info.setAttribute("pathname", mEnv.resolveReference(element).toString());
-            mEnv.getCanvas().addInfo(info);
+            if (mEnv.isCanvas()) {
+              Element info = new Element("resolve");
+              info.setAttribute("src", element.getAttributeValue("src"));
+              info.setAttribute("pathname", mEnv.resolveReference(element).toString());
+              mEnv.getCanvas().addInfo(info);
+            }
             mEnv.getGenerator().importFontStyle(path, name, style, mEnv);
         } catch (FileNotFoundException e) {
             throw new CompilationError(element, e);

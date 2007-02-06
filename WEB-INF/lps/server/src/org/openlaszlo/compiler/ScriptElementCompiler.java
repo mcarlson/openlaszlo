@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -50,24 +50,31 @@ class ScriptElementCompiler extends ElementCompiler {
                 throw new CompilationError(e);
             }
         }
-        
-        // Compile scripts to run at construction time in the view
-        // instantiation queue.
         try {
-            mEnv.compileScript(
-                // Provide file info for anonymous function name
-                CompilerUtils.sourceLocationDirective(element, true) +
-                VIEW_INSTANTIATION_FNAME + 
-                "({name: 'script', attrs: " +
-                "{script: function () {\n" +
-                "#beginContent\n" +
-                "#pragma 'scriptElement'\n" +
-                CompilerUtils.sourceLocationDirective(element, true) +
-                script +
-                "\n#endContent\n" +
-                // Scripts have no children
-                "}}}, 1)",
-                element);
+            // If it is when=immediate, emit code inline
+            if ("immediate".equals(element.getAttributeValue("when"))) {
+                mEnv.compileScript(
+                    CompilerUtils.sourceLocationDirective(element, true) + script, 
+                    element);
+            } else {
+                // Compile scripts to run at construction time in the view
+                // instantiation queue.
+
+                mEnv.compileScript(
+                    // Provide file info for anonymous function name
+                    CompilerUtils.sourceLocationDirective(element, true) +
+                    VIEW_INSTANTIATION_FNAME + 
+                    "({name: 'script', attrs: " +
+                    "{script: function () {\n" +
+                    "#beginContent\n" +
+                    "#pragma 'scriptElement'\n" +
+                    CompilerUtils.sourceLocationDirective(element, true) +
+                    script +
+                    "\n#endContent\n" +
+                    // Scripts have no children
+                    "}}}, 1)",
+                    element);
+            }
         } catch (CompilationError e) {
             // TODO: [2003-01-16] Instead of this, put the filename in ParseException,
             // and modify CompilationError.initElement to copy it from there.

@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -155,17 +155,19 @@ public class Compiler {
 
         // Compile to a byte-array, and write out to objectFile, and 
         // write a copy into sourceFile.swf if this is a serverless deployment.
+        CompilationEnvironment env = makeCompilationEnvironment();
         ByteArrayOutputStream bstream = new ByteArrayOutputStream();
         OutputStream ostream = new FileOutputStream(objectFile);
+        env.setObjectFile(objectFile);
 
         boolean success = false;
         try {
-            Canvas canvas = compile(sourceFile, bstream, props);
+            Canvas canvas = compile(sourceFile, bstream, props, env);
             bstream.writeTo(ostream);
             ostream.close();
 
             // If the app is serverless, write out a .lzx.swf file when compiling
-            if (!canvas.isProxied()) {
+            if (canvas != null && !canvas.isProxied()) {
                 OutputStream fostream = null;
                 try {
                     // Create a foo.lzx.swf serverless deployment file for sourcefile foo.lzx
@@ -207,12 +209,12 @@ public class Compiler {
      * The parameters currently being looked for in the PROPS arg
      * are "debug", "logdebug", "profile", "krank"
      */
-    public Canvas compile(File file, OutputStream ostr, Properties props)
+
+    public Canvas compile(File file, OutputStream ostr, Properties props, CompilationEnvironment env)
         throws CompilationError, IOException
     {
         mLogger.info("compiling " + file + "...");
 
-        CompilationEnvironment env = makeCompilationEnvironment();
         CompilationErrorHandler errors = env.getErrorHandler();
         env.setApplicationFile(file);
         
@@ -323,8 +325,6 @@ public class Compiler {
                        
             } 
 
-            // Krank cannot be set in the canvas tag
-            
             mLogger.debug("Making a writer...");
 
             // Initialize the schema from the base RELAX file
@@ -349,11 +349,18 @@ public class Compiler {
                 Parser.validate(doc, file.getPath(), env);
             } 
             
-            SWFWriter writer = new SWFWriter(env.getProperties(), ostr,
-                                             mMediaCache, true, env);
+            SWFWriter writer = null;
+            if ("false".equals(env.getProperty(env.LINK_PROPERTY))) {
+              writer = new LibraryWriter(props, ostr, mMediaCache, true, env);
+            } else {
+              writer = new SWFWriter(env.getProperties(), ostr, mMediaCache, true, env);
+            }
             env.setSWFWriter(writer);
             mLogger.debug("new env..." + env.getProperties().toString());
-            if (root.getName().intern() != "canvas") {
+            if (root.getName().intern() != 
+                (("false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) ?
+                 "library" :
+                 "canvas")) {
                 throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
@@ -373,17 +380,19 @@ public class Compiler {
             writer.close();
             
             Canvas canvas = env.getCanvas();
-            if (!errors.isEmpty()) {
-                if (canvas != null) {
-                    canvas.setCompilationWarningText(
-                        errors.toCompilationError().getMessage());
-                    canvas.setCompilationWarningXML(
-                        errors.toXML());
-                }
-                System.err.println(errors.toCompilationError().getMessage());
+            if (canvas != null) {
+              if (!errors.isEmpty()) {
+                  if (canvas != null) {
+                      canvas.setCompilationWarningText(
+                          errors.toCompilationError().getMessage());
+                      canvas.setCompilationWarningXML(
+                          errors.toXML());
+                  }
+                  System.err.println(errors.toCompilationError().getMessage());
+              }
+              // set file path (relative to webapp) in canvas
+              canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             }
-            // set file path (relative to webapp) in canvas
-            canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             mLogger.info("done");
             return canvas;
         } catch (CompilationError e) {
@@ -501,6 +510,8 @@ public class Compiler {
             return new ClassCompiler(env);
         } else if (DataCompiler.isElement(element)) {
             return new DataCompiler(env);
+        } else if (InterfaceCompiler.isElement(element)) {
+            return new InterfaceCompiler(env);
         } else if (DebugCompiler.isElement(element)) {
             return new DebugCompiler(env);
         } else if (StyleSheetCompiler.isElement(element)) {

@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -123,7 +123,7 @@ public abstract class SimpleNode implements Node, Serializable {
     }
     
     public SimpleNode set(int n, SimpleNode v) {
-        SimpleNode old = get(n);
+        SimpleNode old = n < children.length ? get(n) : null;
         jjtAddChild(v, n);
         return old;
     }

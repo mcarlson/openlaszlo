@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -21,7 +21,7 @@ import java.util.*;
  * keys to lower case)
  *
  */
-public class ComparisonMap extends HashMap {
+public class ComparisonMap extends LinkedHashMap {
 
     /** canonical lower-case map */
     private HashMap keyMap;

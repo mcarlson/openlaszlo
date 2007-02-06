@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -70,7 +70,9 @@ class ResourceCompiler extends ElementCompiler {
                 ResourceCompiler.class.getName(),"051018-69", new Object[] {file.toString()})
 );
             }
-            mEnv.getCanvas().addInfo(info);
+            if (mEnv.isCanvas()) {
+              mEnv.getCanvas().addInfo(info);
+            }
         }
         
         String tagName = element.getName();
@@ -145,7 +147,9 @@ class ResourceCompiler extends ElementCompiler {
                         Element rinfo = new Element("resolve");
                         rinfo.setAttribute("src", child.getAttributeValue("src"));
                         rinfo.setAttribute("pathname", pathname.toString());
-                        mEnv.getCanvas().addInfo(rinfo);
+                        if (mEnv.isCanvas()) {
+                          mEnv.getCanvas().addInfo(rinfo);
+                        }
                     }
                     if (!sources.isEmpty()) {
                         if (tagName.equals("preloadresource")) {

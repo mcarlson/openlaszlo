@@ -8,7 +8,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -71,7 +71,7 @@ public class Assembler implements Emitter {
         int patchloc = ((Integer)i.next()).intValue();
         int offset = location - patchloc - 2;
         if (offset < MIN_OFFSET() || offset > MAX_OFFSET()) {
-          throw new CompilerException(this instanceof Block?"Block":"Label " + 
+          throw new CompilerException((this instanceof Block?"Block":"Label") + " " +
                                       name + ": jump offset " + offset + " too large");
         }
         bytes.putShort(patchloc, (short)offset);
@@ -83,7 +83,7 @@ public class Assembler implements Emitter {
       assert (this.isResolved()) : "Label.computeOffset() called on unresolved label";
       int offset = location - bytes.position();
       if (offset < MIN_OFFSET() || offset > MAX_OFFSET()) {
-        throw new CompilerException(this instanceof Block?"Block":"Label " + 
+        throw new CompilerException((this instanceof Block?"Block":"Label") + " " +
                                     name + ": jump offset " + offset + " too large");
       }
       return (short) offset;

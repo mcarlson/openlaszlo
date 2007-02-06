@@ -1,7 +1,7 @@
 /* -*- mode: Java; c-basic-offset: 2; -*- */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -46,18 +46,21 @@ public class ReferenceCollector {
   // Convert a list of PropertyReference's to an ArrayLiteral of
   // alternating reference/property
   private SimpleNode rsubst(Set r) {
-    Map map =  new HashMap();
     List l = new ArrayList();
+    Set added = new HashSet();
+    Compiler.ParseTreePrinter ptp = new Compiler.ParseTreePrinter();
     for (Iterator i = r.iterator(); i.hasNext(); ) {
       SimpleNode n = (SimpleNode)i.next();
-      l.add(n.get(0));
-      l.add(new ASTLiteral(((ASTIdentifier)n.get(1)).getName()));
+      String s = ptp.visit(n);
+      // Eliminate redundant constraints
+      if (! added.contains(s)) {
+        added.add(s);
+        l.add(n.get(0));
+        l.add(new ASTLiteral(((ASTIdentifier)n.get(1)).getName()));
+      }
     }
     SimpleNode s = new ASTArrayLiteral(0);
-    // Can this be done in fewer steps?
-    SimpleNode[] c = {};
-    c = (SimpleNode[])l.toArray(c);
-    s.setChildren(c);
+    s.setChildren((SimpleNode[])l.toArray(new SimpleNode[0]));
     return s;
   }
 
@@ -65,9 +68,15 @@ public class ReferenceCollector {
   // a.f(args...) -> f["dependencies"](a, args...)
   private SimpleNode fsubst(SimpleNode node) {
     SimpleNode fn = node.get(0);
-    SimpleNode callee = new ASTEmptyExpression(0);
+    SimpleNode callee;
     if (fn instanceof ASTPropertyIdentifierReference) {
       callee = fn.get(0);
+    } else {
+      callee  = new ASTUnaryExpression(0);
+      ASTOperator voidOp = new ASTOperator(0);
+      voidOp.setOperator(ParserConstants.VOID);
+      callee.set(0, voidOp);
+      callee.set(1, new ASTLiteral(0));
     }
     // the function uses #pragma "warnUndefinedReferences=false"
     // to avoid warnings for non-existent dependencies
@@ -76,7 +85,7 @@ public class ReferenceCollector {
     map.put("_2", callee);
     map.put("_3", new Compiler.Splice(node.get(1).getChildren()));
     // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
-    return (new Compiler.Parser()).substitute("_1.dependencies(this, _2, _3)", map);
+    return (new Compiler.Parser()).substitute("_1.hasOwnProperty('dependencies') ? _1.dependencies(this, _2, _3) : []", map);
   }
 
   // Concatenate references array with any results from dependeny
@@ -84,20 +93,28 @@ public class ReferenceCollector {
   private SimpleNode build(Set references, Set functions) {
     SimpleNode a = rsubst(references);
     Map map = new HashMap();
+    Set added = new HashSet();
+    Compiler.ParseTreePrinter ptp = new Compiler.ParseTreePrinter();
     for (Iterator i = functions.iterator(); i.hasNext(); ) {
-      SimpleNode b = fsubst((SimpleNode)i.next());
+      SimpleNode n = (SimpleNode)i.next();
+      String s = ptp.visit(n);
+      // Eliminate redundant constraints
+      if (! added.contains(s)) {
+        added.add(s);
+        SimpleNode b = fsubst(n);
 
-      map.put("_1", a);
-      map.put("_2", b);
-      // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
-      a = (new Compiler.Parser()).substitute("_1.concat(_2 || [])", map);
+        map.put("_1", a);
+        map.put("_2", b);
+        // TODO: [2006-01-03 ptw] Do we really need a new Parser each time?
+        a = (new Compiler.Parser()).substitute("_1.concat(_2)", map);
+      }
     }
     return a;
   }
 
   public SimpleNode computeReferences(String name) {
     // Sanitize the name
-    name = name.replace('#', '_').replace(' ', '_').replace('/', '_');
+    name = name.replace('#', '_').replace(' ', '_').replace('/', '_').replace('.', '_');
     SimpleNode d = build(references, functions);
     if (computeMetaReferences) {
       for (Iterator i = metareferences.iterator(); i.hasNext(); ) {
@@ -183,7 +200,7 @@ public class ReferenceCollector {
           ;
         } else {
           if (computeMetaReferences) {
-          // Visit the function for meta-dependencies
+            // Visit the function for meta-dependencies
             visitInternal(base, metareferences, metafunctions);
           }
           // Collect the function's dependency function

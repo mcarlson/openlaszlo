@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -31,7 +31,7 @@ public class CompilationEnvironment {
     public static final String PROXIED_PROPERTY    = "lzproxied";
     public static final String DEBUG_PROPERTY      = "debug";
     public static final String PROFILE_PROPERTY    = "profile";
-    public static final String KRANK_PROPERTY      = "krank";
+    public static final String LINK_PROPERTY       = "link";
     public static final String VALIDATE_PROPERTY   = "validate";
     public static final String CSSFILE_PROPERTY    = "cssfile";
 
@@ -50,6 +50,7 @@ public class CompilationEnvironment {
     /** The root file being compiled.  This is used to resolve
      * relative pathnames. */
     protected File mApplicationFile = null;
+    protected File mObjectFile = null;
 
     final SymbolGenerator methodNameGenerator;
 
@@ -185,6 +186,10 @@ public class CompilationEnvironment {
         mParser.basePathnames.add(LPS.getLFCDirectory());
     }
 
+  void setObjectFile(File file) {
+    mObjectFile = file;
+  }
+
     // For an app named /path/to/myapp.lzx, returns /path/to/build/myapp
     public String getLibPrefix() {
         File appfile = getApplicationFile();
@@ -215,6 +220,10 @@ public class CompilationEnvironment {
     public File getApplicationFile() {
         return mApplicationFile;
     }
+
+  public File getObjectFile() {
+    return mObjectFile;
+  }
 
     public void setMediaCache(CompilerMediaCache cache) {
         this.mMediaCache = cache;
@@ -303,6 +312,11 @@ public class CompilationEnvironment {
 
     public Canvas getCanvas() {
         return mCanvas;
+    }
+
+    // We are compiling a canvas (whole program) not just a library
+    public boolean isCanvas() {
+        return mCanvas != null;
     }
 
     public void setCanvas(Canvas canvas, String constructorScript) {
@@ -453,16 +467,18 @@ public class CompilationEnvironment {
     void compileScript(String script, Element elt) {
         try {
             int size = getGenerator().addScript(script);
-            Element info = new Element("block");
-            info.setAttribute("pathname", Parser.getSourceMessagePathname(elt) );
-            info.setAttribute("lineno", ""+Parser.getSourceLocation(elt, Parser.LINENO));
-            info.setAttribute("tagname", elt.getName());
-            if (elt.getAttribute("id") != null)
+            if (mCanvas != null) {
+              Element info = new Element("block");
+              info.setAttribute("pathname", Parser.getSourceMessagePathname(elt) );
+              info.setAttribute("lineno", ""+Parser.getSourceLocation(elt, Parser.LINENO));
+              info.setAttribute("tagname", elt.getName());
+              if (elt.getAttribute("id") != null)
                 info.setAttribute("id", elt.getAttributeValue("id"));
-            if (elt.getAttribute("name") != null)
+              if (elt.getAttribute("name") != null)
                 info.setAttribute("name", elt.getAttributeValue("name"));
-            info.setAttribute("size", "" + size);
-            mCanvas.addInfo(info);
+              info.setAttribute("size", "" + size);
+              mCanvas.addInfo(info);
+            }
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(elt, e);
         }
