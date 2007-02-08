@@ -458,7 +458,9 @@ public class CompilationEnvironment {
             int size = getGenerator().addScript(script);
             Element info = new Element("block");
             info.setAttribute("size", "" + size);
-            mCanvas.addInfo(info);
+            if (mCanvas != null) {
+                mCanvas.addInfo(info);
+            }
         } catch (org.openlaszlo.sc.CompilerException e) {
             throw new CompilationError(e);
         }

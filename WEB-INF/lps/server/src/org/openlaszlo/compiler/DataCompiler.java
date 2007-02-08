@@ -45,69 +45,9 @@ class DataCompiler extends ElementCompiler {
     }
     
     public void compile(Element element) {
-        Element data = element;
-        if (element.getAttribute("src") != null) {
-            File file = resolveSrcReference(element);
-            try {
-                Element newdata = new org.jdom.input.SAXBuilder(false)
-                    .build(file)
-                    .getRootElement();
-                newdata.detach();
-                data.addContent(newdata);
-            } catch (org.jdom.JDOMException e) {
-                throw new CompilationError(e);
-            }  catch (IOException e) {
-                throw new CompilationError(e.getMessage());
-            } catch (java.lang.OutOfMemoryError e) {
-                // The runtime gc is necessary in order for subsequent
-                // compiles to succeed.  The System gc is for good
-                // luck.
-                throw new CompilationError("out of memory", element);
-            }
-        }
+        String dsetname = XMLUtils.requireAttributeValue(element, "name");
+        String content = NodeModel.getDatasetContent(element, mEnv);
+        mEnv.compileScript(LOCAL_DATA_FNAME+"("+ScriptCompiler.quote(dsetname) + ", " +content+");\n");
+    }
 
-        // trimwhitespace defaults to false
-        boolean trimwhitespace = false;
-        String trimAttr = element.getAttributeValue("trimwhitespace");
-        if (trimAttr != null && trimAttr.equals("true")) {
-            trimwhitespace = true;
-        }
-
-        // nsprefix defaults to true
-        boolean nsprefix = true;
-        String nsattr = element.getAttributeValue("nsprefix");
-        if (nsattr != null && nsattr.equals("false")) {
-            nsprefix = false;
-        }
-            
-        if (mEnv.isCanvas()) {
-          int flashVersion = mEnv.getSWFVersionInt();
-
-          Program program = org.openlaszlo.xml.internal.DataCompiler.makeProgram(data, flashVersion, trimwhitespace, true, nsprefix);
-          // this leaves the value in a variable named "__lzdataroot"
-        
-          program.push(LOCAL_DATA_FNAME);
-          program.push("_level0");
-          program.getVar();
-          program.push(LOCAL_DATA_FNAME);
-          program.getMember();
-          program.setVar();
-
-          program.push("__lzdataroot");
-          program.getVar();
-          program.push(XMLUtils.requireAttributeValue(element, "name"));
-          program.push(2);
-          program.push(LOCAL_DATA_FNAME);
-          program.callFunction();
-          program.pop();
-          mEnv.getGenerator().addProgram(program);
-        } else {
-          // Library just spit out script, no compilation of data
-          String dsetname = XMLUtils.requireAttributeValue(element, "name");
-          mEnv.compileScript("LzInstantiateView({name: \"dataset\", attrs: { " + 
-                             "name: "+ScriptCompiler.quote(dsetname) + ", " +
-                             " initialdata: "+ NodeModel.getDatasetContent(element, mEnv)+"}}, 1)", element);
-
-        }
-    } 
 }

@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -151,5 +151,5 @@ function LzFixTags ( e ){
 }
 
 function lzAddLocalData(name, d) {
-    return new _root.LzDataset(null, {name: name, data: d });
+    return new LzDataset(null, {name: name, initialdata: d });
 }
