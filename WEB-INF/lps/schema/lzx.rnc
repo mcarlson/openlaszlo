@@ -109,7 +109,8 @@ element library {
   ## be used in user programs.
   [lza:visibility="private"]
   attribute href {xsd:anyURI} |
-  ([a:defaultValue="inherit"] attribute proxied {booleanLiteral | "inherit"}? &
+  ([lza:visibility="private"] attribute includes {string}? &
+   [a:defaultValue="inherit"] attribute proxied {booleanLiteral | "inherit"}? &
    (toplevelElements &
      ## If false, disables validation against the schema during compilation
     [a:defaultValue="true"] attribute validate {booleanLiteral}? 

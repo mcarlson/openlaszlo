@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -440,12 +440,7 @@ public class Parser {
                 Parser.class.getName(),"051018-438")
 , child);
                 }
-                File target = resolver.resolve(href, base);
-                // An include whose href is a directory implicitly
-                // includes the library.lzx file in that directory.
-                if (type.equals("xml") && target.isDirectory()) {
-                    target = new File(target, "library.lzx");
-                }
+                File target = resolver.resolve(href, base, true);
                 if (type.equals("text")) {
                     replacements.put(child,
                                      new org.jdom.Text(

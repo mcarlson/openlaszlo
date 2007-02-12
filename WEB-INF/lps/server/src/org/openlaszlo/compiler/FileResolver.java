@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -27,10 +27,11 @@ public interface FileResolver {
     /** Given a pathname, return the File that it names.
      * @param pathname a path to resolve
      * @param base a relative URI against which to resolve it
+     * @param asLibrary whether this URI is to a library or not
      * @return see doc
      * @exception java.io.FileNotFoundException if an error occurs
      */
-    File resolve(String pathname, String base)
+    File resolve(String pathname, String base, boolean asLibrary)
         throws java.io.FileNotFoundException;
 }
 
@@ -45,9 +46,38 @@ class DefaultFileResolver implements FileResolver {
     }
 
     /** @see FileResolver */
-    public File resolve(String pathname, String base) 
-        throws java.io.FileNotFoundException
-    {
+    public File resolve(String pathname, String base, boolean asLibrary)
+        throws java.io.FileNotFoundException {
+        if (asLibrary) {
+            File binary = null;
+            if (pathname.endsWith(".lzx")) {
+                binary = resolveInternal(pathname.substring(0, pathname.length()-4) +".lzo", base);
+            }
+            if (binary != null) {
+                return binary;
+            }
+            File library = resolveInternal(pathname, base);
+            if (library != null && (! library.isDirectory())) {
+                return library;
+            }
+            binary = new File(library, "library.lzo");
+            if (binary.exists()) {
+                return binary;
+            }
+            library = new File(library, "library.lzx");
+            if (library.exists()) {
+                return library;
+            }
+        } else {
+            File resolved = resolveInternal(pathname, base);
+            if (resolved != null) {
+                return resolved;
+            }
+        }
+        throw new java.io.FileNotFoundException(pathname);
+    }
+
+    protected File resolveInternal(String pathname, String base) {
         Logger mLogger = Logger.getLogger(FileResolver.class);
 
         final String FILE_PROTOCOL = "file";
@@ -112,6 +142,8 @@ class DefaultFileResolver implements FileResolver {
                 return f;
             }
         }
-        throw new java.io.FileNotFoundException(pathname);
+        return null;
     }
 }
+
+

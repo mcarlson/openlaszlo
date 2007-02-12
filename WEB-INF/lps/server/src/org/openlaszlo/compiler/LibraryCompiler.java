@@ -27,33 +27,12 @@ class LibraryCompiler extends ToplevelCompiler {
     private static Logger mLogger  = Logger.getLogger(Compiler.class);
 
 
-    
     LibraryCompiler(CompilationEnvironment env) {
         super(env);
     }
 
     static boolean isElement(Element element) {
         return element.getName().equals("library");
-    }
-
-    // TODO: [ows] this duplicates functionality in Parser
-    static File resolveLibraryName(File file)
-    {
-        if (file.isDirectory()) {
-          File lib = new File(file, "library.lzo");
-          if (lib.exists()) {
-            return lib;
-          }
-          file = new File(file, "library.lzx");
-        }
-        String name = file.getName();
-        if (name.endsWith(".lzx")) {
-          File lib = new File(file.getParentFile(), name.substring(0, name.length()-4) +".lzo");
-          if (lib.exists()) {
-            return lib;
-          }
-        }
-        return file;
     }
 
     /** Return the library element and add the library to visited.  If
@@ -65,7 +44,6 @@ class LibraryCompiler extends ToplevelCompiler {
                                          boolean validate)
     {
         try {
-            file = resolveLibraryName(file);
             File key = file.getCanonicalFile();
             if (!visited.contains(key)) {
                 visited.add(key);
@@ -97,6 +75,17 @@ class LibraryCompiler extends ToplevelCompiler {
                 if (validate)
                     Parser.validate(doc, file.getPath(), env);
                 Element root = doc.getRootElement();
+                // Look for and add any includes from a binary library
+                String includesAttr = root.getAttributeValue("includes");
+                String base = new File(Parser.getSourcePathname(root)).getParent();
+                if (includesAttr != null) {
+                    for (StringTokenizer st = new StringTokenizer(includesAttr);
+                         st.hasMoreTokens();) {
+                        String name = (String) st.nextToken();
+                        visited.add((new File(base, name)).getCanonicalFile());
+                    }
+                }
+
                 return root;
             } else {
                 return null;
@@ -118,7 +107,7 @@ class LibraryCompiler extends ToplevelCompiler {
         if (href == null) {
             return element;
         }
-        File file = env.resolveReference(element, HREF_ANAME);
+        File file = env.resolveReference(element, HREF_ANAME, true);
         return resolveLibraryElement(file, env, visited, validate);
     }
     

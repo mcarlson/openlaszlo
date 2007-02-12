@@ -351,7 +351,10 @@ public class Compiler {
             
             SWFWriter writer = null;
             if ("false".equals(env.getProperty(env.LINK_PROPERTY))) {
-              writer = new LibraryWriter(props, ostr, mMediaCache, true, env);
+              LibraryWriter lw = new LibraryWriter(props, ostr, mMediaCache, true, env);
+              env.setApplicationFile(file);
+              lw.setRoot(doc.getRootElement());
+              writer = lw;
             } else {
               writer = new SWFWriter(env.getProperties(), ostr, mMediaCache, true, env);
             }

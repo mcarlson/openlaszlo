@@ -202,7 +202,7 @@ class SWFWriter {
     public void importBaseLibrary(String library, CompilationEnvironment env) {
 
         try {
-            File f = env.resolve(library, "");
+            File f = env.resolveLibrary(library, "");
             mFlashFile = new SWFFile(f.getAbsolutePath(), mProperties);
             mFlashFile.setVersion(mFlashVersion);
             // Set the frame rate (shifted)

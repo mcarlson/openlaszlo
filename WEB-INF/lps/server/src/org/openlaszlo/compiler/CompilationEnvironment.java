@@ -506,20 +506,32 @@ public class CompilationEnvironment {
     File resolve(String name, String base)
         throws FileNotFoundException
     {
-        return mFileResolver.resolve(name, base);
+        return mFileResolver.resolve(name, base, false);
+    }
+
+    File resolveLibrary(String name, String base)
+        throws FileNotFoundException
+    {
+        return mFileResolver.resolve(name, base, true);
+    }
+
+    File resolveReference(Element element, String aname)
+        throws CompilationError
+    {
+        return resolveReference(element, aname, element.getName().equals("include"));
     }
 
     /** Resolve the value of the named attribute, relative to the
      * source location of the element.
      */
-    File resolveReference(Element element, String aname)
+    File resolveReference(Element element, String aname, boolean asLibrary)
         throws CompilationError
     {
         String base = new File(Parser.getSourcePathname(element)).getParent();
         String href =  XMLUtils.requireAttributeValue(element, aname);
 
         try {
-            return mFileResolver.resolve(href, base);
+            return mFileResolver.resolve(href, base, asLibrary);
         } catch (FileNotFoundException e) {
             throw new CompilationError(element, e);
         }

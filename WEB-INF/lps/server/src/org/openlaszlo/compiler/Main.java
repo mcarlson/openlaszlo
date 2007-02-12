@@ -251,7 +251,6 @@ public class Main {
                     Main.class.getName(),"051018-249")
                 );
             logger.error(e.getMessage());
-            e.printStackTrace();
             return 2;
         } catch (IOException e) {
             logger.error(
@@ -262,7 +261,6 @@ public class Main {
                 org.openlaszlo.i18n.LaszloMessages.getMessage(
                     Main.class.getName(),"051018-259", new Object[] {e.getMessage()})
                 );
-            e.printStackTrace();
             return 3;
         }
         return 0;

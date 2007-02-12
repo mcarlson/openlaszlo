@@ -71,12 +71,12 @@ class StyleSheetCompiler extends LibraryCompiler {
                 // check for the css file relative to the file which is including it.                
                 // First try to find the css file as a sibling of this source file
                 String sourceDir = new File(Parser.getSourcePathname(element)).getParent();
-                File resolvedFile = mEnv.getFileResolver().resolve(src, sourceDir);
+                File resolvedFile = mEnv.resolve(src, sourceDir);
                 
                 // If our first try at finding the css file doesn't find it as a sibling, 
                 // try to resolve relative to the application source file. 
                 if (! resolvedFile.exists() ) {
-                    resolvedFile = mEnv.getFileResolver().resolve(src, base);
+                    resolvedFile = mEnv.resolve(src, base);
                     if (resolvedFile.exists()) {
                         mLogger.info("Resolved css file to a file that exists!");
                     } else {
@@ -87,13 +87,13 @@ class StyleSheetCompiler extends LibraryCompiler {
                 
                 // Actually parse and compile the stylesheet! W00t!
                 CSSHandler fileHandler = CSSHandler.parse( resolvedFile );
-                this.compile(fileHandler);
+                this.compile(fileHandler, element);
 
 
             } else if (stylesheetText != null && (!"".equals(stylesheetText))) {
                 mLogger.info("inline stylesheet");
                 CSSHandler inlineHandler = CSSHandler.parse(stylesheetText); 
-                this.compile(inlineHandler); 
+                this.compile(inlineHandler, element); 
                 // 
             } else {
                 // TODO: i18n errors
@@ -138,7 +138,7 @@ class StyleSheetCompiler extends LibraryCompiler {
 
     }
     
-    public void compile(CSSHandler handler) throws CompilationError {
+    void compile(CSSHandler handler, Element element) throws CompilationError {
         mLogger.debug("compiling CSSHandler using new unique names"); 
         String script = "";
         for (int i=0; i < handler.mRuleList.size(); i++) {  
@@ -155,7 +155,12 @@ class StyleSheetCompiler extends LibraryCompiler {
             mLogger.debug("created rule " + curRuleName);
         }
         mLogger.debug("whole stylesheet as css " + script +"\n\n");
-        mEnv.compileScript( "(function() { " + script + "})()" ); 
+        mEnv.compileScript(CompilerUtils.sourceLocationDirective(element, true) +
+                           // NOTE: [2007-02-11 ptw] It is crucial
+                           // that this be terminated with a `;` so
+                           // that it is a statement, not an
+                           // expression.
+                           "(function() { " + script + "})();", element ); 
     }
 
 

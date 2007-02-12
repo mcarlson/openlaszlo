@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -1043,13 +1043,14 @@ class TrackingFileResolver implements FileResolver {
      *
      * @param pathname a <code>String</code> value
      * @param base a <code>String</code> value
+     * @param asLibrary a <code>boolean</code> value
      * @return a <code>File</code> value
      * @exception FileNotFoundException if an error occurs
      */
-    public File resolve(String pathname, String base)
+    public File resolve(String pathname, String base, boolean asLibrary)
         throws FileNotFoundException
     {
-        File file = mBaseResolver.resolve(pathname, base);
+        File file = mBaseResolver.resolve(pathname, base, asLibrary);
         mDependencies.addFile(file);
         return file;
     }

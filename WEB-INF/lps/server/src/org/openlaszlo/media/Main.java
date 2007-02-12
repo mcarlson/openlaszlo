@@ -3,7 +3,7 @@
 * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -142,7 +142,6 @@ public class Main {
                         org.openlaszlo.i18n.LaszloMessages.getMessage(
                                 Main.class.getName(),"051018-142", new Object[] {e.getMessage()})
 );
-            e.printStackTrace();
         }
 
         if (errorChecker.hadError)

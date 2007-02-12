@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -76,9 +76,7 @@ class ImportCompiler extends ToplevelCompiler {
             // We're not compiling this into the current app, we're
             // building a separate binary library object file for it.
             File appdir = mEnv.getApplicationFile().getParentFile();
-            File file = mEnv.resolveReference(element, HREF_ANAME);
-            // If the filename is a directory "dir", we need to make it "dir/library.lzx"
-            File libsrcfile = LibraryCompiler.resolveLibraryName(file);
+            File libsrcfile = mEnv.resolveReference(element, HREF_ANAME, true);
             String adjustedhref = libsrcfile.getPath();
 
             if (appdir != null) {

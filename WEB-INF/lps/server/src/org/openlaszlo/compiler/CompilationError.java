@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -330,7 +330,9 @@ throw new IllegalStateException(
      */
     private String _getMessage() {
         String message = "";
-        if (mPathname != null && !super.getMessage().startsWith(mPathname)) {
+        if (mPathname != null && 
+            super.getMessage() != null &&
+            !super.getMessage().startsWith(mPathname)) {
             message += mPathname + ":";
             if (mLineNumber != null) {
                 message += mLineNumber + ":";

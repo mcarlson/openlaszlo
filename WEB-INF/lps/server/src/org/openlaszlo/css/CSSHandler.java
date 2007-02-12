@@ -143,7 +143,7 @@ public class CSSHandler implements DocumentHandler, Serializable, ErrorHandler {
         try {
             return mFile.getCanonicalPath();
         } catch (IOException e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
+            mLogger.error("Exception getting canonical path of: " + mFile + ", " + e.getMessage());
             return ""; 
         }
     }

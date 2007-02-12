@@ -155,11 +155,10 @@ abstract class ToplevelCompiler extends ElementCompiler {
 
 
 
-    static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded) {
+    static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded, Set visited) {
         List libraryNames = new ArrayList();
         String librariesAttr = element.getAttributeValue("libraries");
         String base = new File(Parser.getSourcePathname(element)).getParent();
-        FileResolver resolver = env.getFileResolver();
         if (librariesAttr != null) {
             for (StringTokenizer st = new StringTokenizer(librariesAttr);
                  st.hasMoreTokens();) {
@@ -172,7 +171,6 @@ abstract class ToplevelCompiler extends ElementCompiler {
         {
             Set defined = new HashSet();
             Set referenced = new HashSet();
-            Set visited = new HashSet();
             collectReferences(env, element, defined, referenced, visited);
             // keep the keys sorted so the order is deterministic for qa
             Set additionalLibraries = new TreeSet();
@@ -181,7 +179,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
             try {
               for (Iterator iter = autoincludes.keySet().iterator(); iter.hasNext(); ) {
                 String key = (String) iter.next();
-                canonicalAuto.put(key, resolver.resolve((String)autoincludes.get(key), base).getCanonicalFile());
+                canonicalAuto.put(key, env.resolveLibrary((String)autoincludes.get(key), base).getCanonicalFile());
               }
             } catch (IOException e) {
               throw new CompilationError(element, e);
@@ -222,7 +220,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         for (Iterator iter = libraryNames.iterator(); iter.hasNext(); ) {
             String name = (String) iter.next();
             try {
-                libraries.add(resolver.resolve(name, base));
+              libraries.add(env.resolveLibrary(name, base));
             } catch (FileNotFoundException e) {
                 throw new CompilationError(element, e);
             }
@@ -242,7 +240,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
     }
     
     List getLibraries(Element element) {
-        return getLibraries(mEnv, element, null, null);
+        return getLibraries(mEnv, element, null, null, new HashSet());
     }
 
 
@@ -274,7 +272,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         String baseLibraryBecause = "Required for all applications";
 
         Map explanations = new HashMap();
-        for (Iterator iter = getLibraries(env, element, explanations, null).iterator();
+        for (Iterator iter = getLibraries(env, element, explanations, null, new HashSet()).iterator();
              iter.hasNext(); ) {
             File file = (File) iter.next();
             Compiler.importLibrary(file, env);
@@ -286,7 +284,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
         info.setAttribute("explanation", baseLibraryBecause);
         try {
             info.setAttribute("size", "" + 
-                              FileUtils.getSize(env.resolve(baseLibraryName, "")));
+                              FileUtils.getSize(env.resolveLibrary(baseLibraryName, "")));
         } catch (Exception e) {
             mLogger.error(
 /* (non-Javadoc)
