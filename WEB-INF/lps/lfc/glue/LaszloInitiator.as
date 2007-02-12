@@ -150,6 +150,7 @@ function LzFixTags ( e ){
     }
 }
 
+
 function lzAddLocalData(name, d) {
-    return new LzDataset(null, {name: name, initialdata: d });
+    return new LzDataset(canvas, {name: name, initialdata: d });
 }
