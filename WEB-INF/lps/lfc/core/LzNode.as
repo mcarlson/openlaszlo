@@ -741,6 +741,7 @@ LzNode.prototype.makeChild = function ( e , async ){
     // This should not happen
     if ($debug) {
         for (var p = this; p != canvas; p = p.immediateparent) {
+            if (p == null) break;
             if (p.__LZdeleted) {
                 Debug.error("%w.makeChild(%w, %w) when %w.__LZdeleted", this, e, async, p);
             }
