@@ -10,6 +10,7 @@
 package org.openlaszlo.compiler;
 
 import org.openlaszlo.xml.internal.Schema.Type;
+import org.openlaszlo.xml.internal.XMLUtils;
 import org.jdom.Element;
 
 /** Contains information about an attribute of a laszlo viewsystem class.
@@ -27,6 +28,9 @@ class AttributeSpec {
     Type type;
     /** Is this attribute required to instantiate an instance of this class? */
     boolean required = false;
+    /** When does the initial value for this attribute get evaluated? */
+    String when = NodeModel.WHEN_IMMEDIATELY;
+
     /** Is this attribute equivalent to element content of a given type? */
     int contentType = NO_CONTENT;
 
@@ -55,6 +59,7 @@ class AttributeSpec {
       return indent + "<attribute name='" + name + "'" +
         ((defaultValue != null)?(" value='" + defaultValue + "'"):"") +
         ((type != null)?(" type='" + typeToLZX() + "'"):"") +
+        ((when != NodeModel.WHEN_IMMEDIATELY)?(" when='" + when + "'"):"") + 
         (required?(" required='true'"):"") +
         " />";
     } else if (! ViewSchema.EVENT_TYPE.equals(type)) {
@@ -66,6 +71,10 @@ class AttributeSpec {
       if (type != null &&
           (! type.equals(superclass.getAttributeType(name)))) {
         attrs += " type='" + typeToLZX() + "'";
+      }
+      if (when != null &&
+          (! when.equals(superSpec.when))) {
+        attrs += " when='" + when + "'";
       }
       if (required != superSpec.required) {
         attrs += " required='" + required + "'";
@@ -83,6 +92,7 @@ class AttributeSpec {
         this.type = type;
         this.defaultValue = defaultValue;
         this.setter = setter;
+        this.when = XMLUtils.getAttributeValue(source, "when", NodeModel.WHEN_IMMEDIATELY);
     }
 
     AttributeSpec (String name, Type type, String defaultValue, String setter, boolean required, Element source) {
@@ -92,6 +102,7 @@ class AttributeSpec {
         this.defaultValue = defaultValue;
         this.setter = setter;
         this.required = required;
+        this.when = XMLUtils.getAttributeValue(source, "when", NodeModel.WHEN_IMMEDIATELY);
     }
 
     AttributeSpec (String name, Type type, String defaultValue, String setter) {
