@@ -1836,7 +1836,12 @@ public class CodeGenerator implements Translator {
           assert v instanceof String;
           collector.push("FSCommand:" + v);
           visitExpression(args[1]);
-          collector.emit(Instructions.GetURL2);
+          collector.emit(Instructions.GetURL2.make(0));
+          return true;
+        }
+        if ("FSCommand2".equals(name)) {
+          visitCallParameters(node, isReferenced, args);
+          collector.emit(Instructions.FSCommand2);
           return true;
         }
         if ("removeMovieClip".equals(name) && arglen == 1) {
@@ -1859,7 +1864,7 @@ public class CodeGenerator implements Translator {
         // it could visit them in reverse order if they don't
         // have side effects, otherwise emit SWAP.
         //- if "getURL".equals(name) && arglen == 2:
-        //-    collector.emit(Instructions.GetURL2); return
+        //-    collector.emit(Instructions.GetURL2.make(0)); return
         if ("getVersion".equals(name) && arglen == 0) {
           collector.push("/:$version");
           collector.emit(Instructions.GetVariable);

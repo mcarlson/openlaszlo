@@ -3,7 +3,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -174,7 +174,7 @@ public class Actions {
     public static Action WaitForFrameExpression   = new Action("WaitForFrameExpression", (byte)0x8D); 
     public static Action PUSH                     = new Action("PUSH", (byte)0x96, 0, 1);
     public static Action BRANCH                   = new Action("BRANCH", (byte)0x99);
-    public static Action GetURL2                  = new Action("GetURL2", (byte)0x9A, 2, 0, false);
+    public static Action GetURL2                  = new Action("GetURL2", (byte)0x9A, 2, 0);
     public static Action BranchIfTrue             = new Action("BranchIfTrue", (byte)0x9D);
     public static Action CallFrame                = new Action("CallFrame", (byte)0x9E);
     public static Action GotoExpression           = new Action("GotoExpression", (byte)0x9F);
@@ -237,4 +237,9 @@ public class Actions {
     public static Action DefineFunction2          = new Action("DefineFunction2", (byte)0x8e);
     public static Action TRY                      = new Action("TRY", (byte)0x8f);
     public static Action THROW                    = new Action("THROW", (byte)0x2a);
+
+    /*
+     * Flash Lite 2
+     */
+    public static Action FSCommand2               = new Action("FsCommand2", (byte)0x2d);
 }

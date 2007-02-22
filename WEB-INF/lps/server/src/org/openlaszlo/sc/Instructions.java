@@ -1,4 +1,4 @@
-/* -*- mode: JDE; c-basic-offset: 2; -*- */
+/* -*- mode: java; c-basic-offset: 2; -*- */
 
 /***
  * Instructions.java
@@ -7,7 +7,7 @@
  */
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -341,7 +341,6 @@ public class Instructions {
      * against constants.
      */
     public void writeBytes(ByteBuffer bytes, Map constants) {
-      bytes.order(ByteOrder.LITTLE_ENDIAN);
       assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       bytes.put(this.op.opcode);
       // Flash has two types of instructions: single-byte instructions,
@@ -406,6 +405,14 @@ public class Instructions {
 );
         }
         bytes.put(regno.byteValue());
+      } else if (op == Actions.GetURL2) {
+        Integer flags = ((Integer)args.get(0));
+        if (flags.intValue() != flags.byteValue()) {
+          throw new CompilerException("Invalid FLAGS for GetURL2");
+        }
+        bytes.put(flags.byteValue());
+        // TODO: [2007-02-08 ptw] Are there more args?  The variables
+        // to send?
       } else {
         throw new CompilerException(
 /* (non-Javadoc)
@@ -432,7 +439,7 @@ public class Instructions {
           assert false : "this can't happen";
         }
         return b;
-      } else if (op == Actions.SetRegister) {
+      } else if (op == Actions.SetRegister || op == Actions.GetURL2) {
         return 1;
       } else {
         return 0;
@@ -483,6 +490,7 @@ public class Instructions {
     }
 
     public void writeArgs(ByteBuffer bytes, Map pool) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       bytes.putShort(this.targetOffset);
     }
 
@@ -564,6 +572,7 @@ public class Instructions {
     }
 
     public void writeArgs(ByteBuffer bytes, Map pool) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       try {
         List args = this.args;
         String fname = (String)args.get(1);
@@ -660,6 +669,7 @@ public class Instructions {
     }
 
     public void writeArgs(ByteBuffer bytes, Map pool) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       try {
         List args = this.args;
         String fname = (String)args.get(1);
@@ -893,6 +903,7 @@ public class Instructions {
     }
 
     public void writeArgs(ByteBuffer bytes, Map constants) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       try {
         for (Iterator i = this.args.iterator(); i.hasNext(); ) {
           Object o = i.next();
@@ -1008,6 +1019,7 @@ public class Instructions {
     }
 
     public void writeBytes(ByteBuffer bytes, Map constants) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       ;
     }
 
@@ -1116,6 +1128,7 @@ public class Instructions {
     }
 
     public void writeBytes(ByteBuffer bytes, Map constants) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       System.out.println(super.toString() + "\t" + bytes.position());
     }
   }
@@ -1134,6 +1147,7 @@ public class Instructions {
     }
 
     public void writeBytes(ByteBuffer bytes, Map constants) {
+      assert bytes.order() == ByteOrder.LITTLE_ENDIAN;
       bytes.put(this.blob);
     }
 
@@ -1251,6 +1265,9 @@ public class Instructions {
 
   // Flash 7
   public static Instruction DefineFunction2          = Instruction.curry(Actions.DefineFunction2);
+
+  // Flash Lite 2
+  public static Instruction FSCommand2          = Instruction.curry(Actions.FSCommand2);
 
   // Psuedo-instructions
   public static Instruction BranchIfFalse            = new BranchIfFalseInstruction("");
