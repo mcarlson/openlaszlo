@@ -207,13 +207,13 @@ abstract class ToplevelCompiler extends ElementCompiler {
                             explanations.put(value, "reference to <" + key + "> tag");
                         }
                         additionalLibraries.add(value);
-                        if (autoIncluded != null) {
-                            autoIncluded.add(value);
-                        }
                     }
                 }
             }
             libraryNames.addAll(additionalLibraries);
+            if (autoIncluded != null) {
+              autoIncluded.addAll(libraryNames);
+            }
         }
         // Turn the library names into pathnames
         List libraries = new ArrayList();
