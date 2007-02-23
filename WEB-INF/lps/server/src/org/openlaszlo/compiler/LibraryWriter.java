@@ -124,9 +124,13 @@ class LibraryWriter extends SWFWriter {
     try {
       return new URL(src).toString();
     } catch (MalformedURLException e) {
-      String outdir = mEnv.getObjectFile().getAbsoluteFile().getParent();
-      File file = new File(src);
-      return FileUtils.adjustRelativePath(file.getName(), outdir, file.getParent());
+      try {
+        String outdir = mEnv.getObjectFile().getCanonicalFile().getParent();
+        File file = new File(src).getCanonicalFile();
+        return FileUtils.adjustRelativePath(file.getName(), outdir, file.getParent());
+      } catch (IOException f) {
+        return src;
+      }
     }
   }
 

@@ -226,8 +226,11 @@ public class Main {
         File sourceFile = new File(sourceName);
 
         String objExtension = null;
+        String finalExtension = null;
+        String finalFileName = null;
         if ("false".equals(compiler.getProperty(CompilationEnvironment.LINK_PROPERTY))) {
-          objExtension = ".lzo";
+          objExtension = ".gz";
+          finalExtension = ".lzo";
         } else {
           objExtension = ".swf";
         }
@@ -236,11 +239,18 @@ public class Main {
           outDir = sourceFile.getParent();
         }
         if (outFileName == null) {
-            outFileName = FileUtils.getBase(sourceName) + objExtension;
+          String base = FileUtils.getBase(sourceName);
+          outFileName = base + objExtension;
+          if (finalExtension != null) {
+            finalFileName = base + finalExtension;
+          }
         }
         File objectFile = new File(outDir, outFileName);
         try {
             compiler.compile(sourceFile, objectFile, new Properties());
+            if (finalFileName != null) {
+              objectFile.renameTo(new File(finalFileName));
+            }
         } catch (CompilationError e) {
             logger.error(
 /* (non-Javadoc)
