@@ -35,15 +35,6 @@ class LibraryCompiler extends ToplevelCompiler {
         return element.getName().equals("library");
     }
 
-    // TODO: [ows] this duplicates functionality in Parser
-    static File resolveLibraryName(File file)
-    {
-        if (file.isDirectory()) {
-            file = new File(file, "library.lzx");
-        }
-        return file;
-    }
-
     /** Return the library element and add the library to visited.  If
      * the library has already been visited, return null instead.
      */
@@ -53,7 +44,6 @@ class LibraryCompiler extends ToplevelCompiler {
                                          boolean validate)
     {
         try {
-            file = env.resolveLibrary(file.getCanonicalPath(), "");
             File key = file.getCanonicalFile();
             if (!visited.contains(key)) {
                 visited.add(key);
