@@ -249,7 +249,13 @@ public class Main {
         try {
             compiler.compile(sourceFile, objectFile, new Properties());
             if (finalFileName != null) {
-              objectFile.renameTo(new File(finalFileName));
+              File dest = new File(finalFileName);
+              if (dest.exists()) {
+                dest.delete();
+              }
+              if (! objectFile.renameTo(dest)) {
+                throw new CompilationError("Could not rename " + objectFile + " to " + dest);
+              }
             }
         } catch (CompilationError e) {
             logger.error(

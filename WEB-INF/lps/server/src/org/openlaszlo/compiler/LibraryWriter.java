@@ -127,8 +127,7 @@ class LibraryWriter extends SWFWriter {
       try {
         String outdir = FileUtils.toURLPath(mEnv.getObjectFile().getCanonicalFile().getParentFile());
         File file = new File(src).getCanonicalFile();
-        String fileURL = FileUtils.toURLPath(file);
-        return FileUtils.adjustRelativePath(fileURL,
+        return FileUtils.adjustRelativePath(file.getName(),
                                             outdir,
                                             FileUtils.toURLPath(file.getParentFile()));
       } catch (IOException f) {
