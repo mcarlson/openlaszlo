@@ -1464,9 +1464,7 @@ public class CodeGenerator implements Translator {
     // endsWith tests for.
     String name = node.getClass().getName();
     return name.endsWith("Expression") ||
-      // TODO: [2006-01-11 ptw] Noone can explain this vestigial code, remove it
-      //         name.substring(5).equals("ExpressionList") ||
-      //         name.substring(5).equals("Identifier") ||
+      name.endsWith("ExpressionList") ||
       name.endsWith("ExpressionSequence") ||
       name.endsWith("Identifier") ||
       name.endsWith("Literal") ||
