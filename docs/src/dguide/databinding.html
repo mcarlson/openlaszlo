@@ -631,7 +631,7 @@ Also, in SOLO deployed applications, the <classname>XMLHTTPRequest</classname> c
       this.selectChild(2); 
       do {
         if (this.xpathQuery( '@show' ) == 'south park') {
-            Debug.write(this.xpathQuery('firstName/text()'));
+            Debug.write(this.xpathQuery('lastName/text()'));
         }
       } while (this.selectNext()); 
     &lt;/method&gt;
@@ -641,9 +641,9 @@ Also, in SOLO deployed applications, the <classname>XMLHTTPRequest</classname> c
 
 <p>For brevity's sake, we are writing to the debugger, and we are including the data from a local file.</p>
 
-<p>The first <code>selectNext(2)</code> method call selects first the <tagname link="false">myXML</tagname> node, then the South Park <tagname link="false">person</tagname> node. It selects two because of the depth argument "2" we pass it (otherwise it would default to 1.</p>
+<p>The <code>selectChild(2)</code> method call selects the <tagname link="false">myXML</tagname> node, then the South Park <tagname link="false">person</tagname> node -- it selects the second-depth node because of the depth argument "2" we passed it (otherwise it would default to 1.</p>
 
-<p>The other <code>selectNext</code> method call returns <code>true</code> as long as an XML node was successfully selected (i.e. until there aren't any more). We exploit this by using it in a <code>do <i>&#x2026;</i> while</code> loop, so that the same iteration occurs for every <tagname>person</tagname> node.</p>
+<p>The <code>selectNext</code> method call returns <code>true</code> as long as an XML node was successfully selected (i.e. until there aren't any more). We exploit this by using it in a <code>do <i>&#x2026;</i> while</code> loop, so that the same iteration occurs for every <tagname>person</tagname> node.</p>
 
 <p>We could also have given the <tagname>datapointer</tagname> <event>onerror</event> and <event>ontimeout</event> event handlers to capture any problems. </p>
 
