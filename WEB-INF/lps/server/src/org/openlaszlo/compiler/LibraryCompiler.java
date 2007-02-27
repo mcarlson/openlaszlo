@@ -124,15 +124,6 @@ class LibraryCompiler extends ToplevelCompiler {
     void updateSchema(Element element, ViewSchema schema, Set visited) {
         element = resolveLibraryElement(element, mEnv, visited, false);
         if (element != null) {
-            // If compiling a library we need to get the auto-includes
-            // into the schema
-            if (element.getParentElement() == null) {
-                for (Iterator iter = getLibraries(element).iterator();
-                     iter.hasNext(); ) {
-                    File file = (File) iter.next();
-                    Compiler.updateSchemaFromLibrary(file, mEnv, schema, visited);
-                }
-            }
             super.updateSchema(element, schema, visited);
             // TODO [hqm 2005-02-09] can we compare any 'proxied' attribute here
             // with the parent element (canvas) to warn if it conflicts.

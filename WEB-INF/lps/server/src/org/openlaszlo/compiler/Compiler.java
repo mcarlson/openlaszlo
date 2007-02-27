@@ -333,13 +333,13 @@ public class Compiler {
             } catch (org.jdom.JDOMException e) {
                 throw new ChainedException(e);
             }
-            Compiler.updateSchema(doc.getRootElement(), env,
-                                  env.getSchema(), new HashSet());
+            ViewSchema schema = env.getSchema();
+            Compiler.updateRootSchema(root, env, schema, new HashSet());
             if (SchemaLogger.isDebugEnabled()) {
                 org.jdom.output.XMLOutputter xmloutputter =
                     new org.jdom.output.XMLOutputter();
                 try {
-                    SchemaLogger.debug(xmloutputter.outputString(env.getSchema().getSchemaDOM()));
+                    SchemaLogger.debug(xmloutputter.outputString(schema.getSchemaDOM()));
                 } catch (org.jdom.JDOMException e) {
                     throw new ChainedException(e);
                 }
@@ -353,7 +353,7 @@ public class Compiler {
             if ("false".equals(env.getProperty(env.LINK_PROPERTY))) {
               LibraryWriter lw = new LibraryWriter(props, ostr, mMediaCache, true, env);
               env.setApplicationFile(file);
-              lw.setRoot(doc.getRootElement());
+              lw.setRoot(root);
               writer = lw;
             } else {
               writer = new SWFWriter(env.getProperties(), ostr, mMediaCache, true, env);
@@ -565,6 +565,19 @@ public class Compiler {
             }
             throw e;
         }
+    }
+
+    static void updateRootSchema(Element root, CompilationEnvironment env,
+                             ViewSchema schema, Set visited)
+    {
+      ToplevelCompiler ec = (ToplevelCompiler)getElementCompiler(root, env);
+      // Update schema for auto-includes
+      for (Iterator iter = ec.getLibraries(root).iterator();
+           iter.hasNext(); ) {
+        File library = (File) iter.next();
+        Compiler.updateSchemaFromLibrary(library, env, schema, visited);
+      }
+      ec.updateSchema(root, schema, visited);
     }
 
     static void updateSchema(Element element, CompilationEnvironment env,

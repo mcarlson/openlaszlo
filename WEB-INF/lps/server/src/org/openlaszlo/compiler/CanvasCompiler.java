@@ -159,16 +159,6 @@ class CanvasCompiler extends ToplevelCompiler {
         
     }
         
-    void updateSchema(Element element, ViewSchema schema, Set visited) {
-        for (Iterator iter = getLibraries(element).iterator();
-             iter.hasNext(); ) {
-            File file = (File) iter.next();
-            Compiler.updateSchemaFromLibrary(file, mEnv, schema, visited);
-        }
-        // Visit the children:
-        super.updateSchema(element, schema, visited);
-    }
-    
     private Map createCanvasObject(Element element, Canvas canvas) {
         NodeModel model =
             NodeModel.elementOnlyAsModel(element, mEnv.getSchema(), mEnv);
