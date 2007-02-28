@@ -82,7 +82,7 @@ class LibraryCompiler extends ToplevelCompiler {
                     for (StringTokenizer st = new StringTokenizer(includesAttr);
                          st.hasMoreTokens();) {
                         String name = (String) st.nextToken();
-                        visited.add((new File(base, name)).getCanonicalFile());
+                        visited.add(env.resolve(name, base).getCanonicalFile());
                     }
                 }
 
