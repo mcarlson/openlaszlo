@@ -109,21 +109,23 @@ class DefaultFileResolver implements FileResolver {
 );
         }
 
-
-        File f = new File(base, pathname);
         // FIXME: [ebloch] this vector should be in a properties file
         Vector v = new Vector();
+        if (pathname.startsWith("/")) {
+          // Try absolute
+          v.add("");
+        }
         v.add(base);
         if (!pathname.startsWith("./") && !pathname.startsWith("../")) {
-            v.add(LPS.getComponentsDirectory());
-            v.add(LPS.getFontDirectory());
-            v.add(LPS.getLFCDirectory());
+          v.add(LPS.getComponentsDirectory());
+          v.add(LPS.getFontDirectory());
+          v.add(LPS.getLFCDirectory());
         }
         
         Enumeration e = v.elements();
         while (e.hasMoreElements()) {
             String dir = (String)e.nextElement();
-            f = new File(dir, pathname);
+            File f = new File(dir, pathname);
             mLogger.debug("Trying " + f.getAbsolutePath());
             if (f.exists()) {
                 // TODO: [2002-11-23 ows] check for case mismatch

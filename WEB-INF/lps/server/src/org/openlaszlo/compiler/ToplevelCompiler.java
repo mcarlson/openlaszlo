@@ -153,8 +153,6 @@ abstract class ToplevelCompiler extends ElementCompiler {
         }
     }
 
-
-
     static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded, Set visited) {
         List libraryNames = new ArrayList();
         String librariesAttr = element.getAttributeValue("libraries");
@@ -210,18 +208,35 @@ abstract class ToplevelCompiler extends ElementCompiler {
                     }
                 }
             }
-            libraryNames.addAll(additionalLibraries);
+            // If not linking, consider all external libraries as
+            // 'auto'
             if (autoIncluded != null) {
-              autoIncluded.addAll(libraryNames);
+            try {
+              String basePrefix = (new File(base)).getCanonicalPath();
+              for (Iterator i = visited.iterator(); i.hasNext(); ) {
+                File file = (File)i.next();
+                String path = file.getCanonicalPath();
+                if (! path.startsWith(basePrefix)) {
+                  autoIncluded.add(file);
+                }
+              }
+            } catch (IOException e) {
+              throw new CompilationError(element, e);
             }
+            }
+            libraryNames.addAll(additionalLibraries);
         }
         // Turn the library names into pathnames
         List libraries = new ArrayList();
         for (Iterator iter = libraryNames.iterator(); iter.hasNext(); ) {
             String name = (String) iter.next();
             try {
-              libraries.add(env.resolveLibrary(name, base));
-            } catch (FileNotFoundException e) {
+              File file = env.resolveLibrary(name, base).getCanonicalFile();
+              libraries.add(file);
+              if (autoIncluded != null) {
+                autoIncluded.add(file);
+              }
+            } catch (IOException e) {
                 throw new CompilationError(element, e);
             }
         }

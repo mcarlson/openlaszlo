@@ -221,7 +221,8 @@ public class Compiler {
         // Copy target properties (debug, logdebug, profile, krank,
         // runtime) from props arg to CompilationEnvironment
         String swfversion = props.getProperty(CompilationEnvironment.SWFVERSION_PROPERTY);
-        
+        boolean linking = (! "false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY)));
+
         if (swfversion != null) {
             mLogger.info("canvas compiler compiling runtime = " + swfversion);
             env.setProperty(CompilationEnvironment.SWFVERSION_PROPERTY, swfversion);
@@ -334,7 +335,11 @@ public class Compiler {
                 throw new ChainedException(e);
             }
             ViewSchema schema = env.getSchema();
-            Compiler.updateRootSchema(root, env, schema, new HashSet());
+            Set externalLibraries = null;
+            // If we are not linking, then we consider all external
+            // files to have already been imported.
+            if (! linking) { externalLibraries = env.getImportedLibraryFiles(); }
+            Compiler.updateRootSchema(root, env, schema, externalLibraries);
             if (SchemaLogger.isDebugEnabled()) {
                 org.jdom.output.XMLOutputter xmloutputter =
                     new org.jdom.output.XMLOutputter();
@@ -350,20 +355,18 @@ public class Compiler {
             } 
             
             SWFWriter writer = null;
-            if ("false".equals(env.getProperty(env.LINK_PROPERTY))) {
+            if (linking) {
+              writer = new SWFWriter(env.getProperties(), ostr, mMediaCache, true, env);
+            } else {
               LibraryWriter lw = new LibraryWriter(props, ostr, mMediaCache, true, env);
               env.setApplicationFile(file);
               lw.setRoot(root);
               writer = lw;
-            } else {
-              writer = new SWFWriter(env.getProperties(), ostr, mMediaCache, true, env);
             }
             env.setSWFWriter(writer);
             mLogger.debug("new env..." + env.getProperties().toString());
             if (root.getName().intern() != 
-                (("false".equals(env.getProperty(CompilationEnvironment.LINK_PROPERTY))) ?
-                 "library" :
-                 "canvas")) {
+                (linking ? "canvas" :  "library")) {
                 throw new CompilationError(
 /* (non-Javadoc)
  * @i18n.test
@@ -568,11 +571,14 @@ public class Compiler {
     }
 
     static void updateRootSchema(Element root, CompilationEnvironment env,
-                             ViewSchema schema, Set visited)
+                                 ViewSchema schema, Set externalLibraries)
     {
       ToplevelCompiler ec = (ToplevelCompiler)getElementCompiler(root, env);
+      Set visited = new HashSet();
       // Update schema for auto-includes
-      for (Iterator iter = ec.getLibraries(root).iterator();
+      // Note:  this call does _not_ share visited with the update
+      // calls intentionally.
+      for (Iterator iter = ec.getLibraries(env, root, null, externalLibraries, new HashSet()).iterator();
            iter.hasNext(); ) {
         File library = (File) iter.next();
         Compiler.updateSchemaFromLibrary(library, env, schema, visited);
