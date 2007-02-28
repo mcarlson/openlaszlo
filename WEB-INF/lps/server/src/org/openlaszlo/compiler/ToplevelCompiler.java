@@ -212,7 +212,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
             // 'auto'
             if (autoIncluded != null) {
             try {
-              String basePrefix = (new File(base)).getCanonicalPath();
+              String basePrefix = (new File((base != null) ? base : ".")).getCanonicalPath();
               for (Iterator i = visited.iterator(); i.hasNext(); ) {
                 File file = (File)i.next();
                 String path = file.getCanonicalPath();
