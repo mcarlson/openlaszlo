@@ -1,4 +1,5 @@
-<canvas layout="spacing: 5" width="200">
+<canvas width="200">
+<simplelayout axis="y" spacing="10"/>
   <class name="box" bgcolor="red"
          height="100" width="100" />
   
@@ -23,3 +24,5 @@
   <borderedbox bordersize="6"/>
   <borderedbox bordersize="9"/>
 </canvas>
+
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
