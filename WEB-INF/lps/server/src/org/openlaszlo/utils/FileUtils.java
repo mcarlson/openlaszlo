@@ -711,6 +711,12 @@ mLogger.warn(
                                 "/");
     }
 
+    public static String fromURLPath(String path) {
+      return StringUtils.join(StringUtils.split(path,
+                                                "/"),
+                              File.separator);
+    }
+
     /** Remove "." and non-top "..".  Destructive. */
     public static void normalizePath(List path) {
         for (int i = 0; i < path.size(); i++) {

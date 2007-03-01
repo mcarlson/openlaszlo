@@ -13,6 +13,7 @@ import java.util.*;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.openlaszlo.utils.ChainedException;
+import org.openlaszlo.utils.FileUtils;
 import org.apache.log4j.*;
 
 /** Compiler for <code>library</code> elements.
@@ -77,12 +78,12 @@ class LibraryCompiler extends ToplevelCompiler {
                 Element root = doc.getRootElement();
                 // Look for and add any includes from a binary library
                 String includesAttr = root.getAttributeValue("includes");
-                String base = new File(Parser.getSourcePathname(root)).getParent();
+                File base = new File(Parser.getSourcePathname(root)).getParentFile();
                 if (includesAttr != null) {
                     for (StringTokenizer st = new StringTokenizer(includesAttr);
                          st.hasMoreTokens();) {
-                        String name = (String) st.nextToken();
-                        visited.add(env.resolve(name, base).getCanonicalFile());
+                      String name = FileUtils.fromURLPath((String)st.nextToken());
+                      visited.add(new File(base, name).getCanonicalFile());
                     }
                 }
 

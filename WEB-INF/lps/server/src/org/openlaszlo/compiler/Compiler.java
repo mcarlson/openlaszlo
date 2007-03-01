@@ -386,16 +386,16 @@ public class Compiler {
             writer.close();
             
             Canvas canvas = env.getCanvas();
+            if (!errors.isEmpty()) {
+                if (canvas != null) {
+                    canvas.setCompilationWarningText(
+                        errors.toCompilationError().getMessage());
+                    canvas.setCompilationWarningXML(
+                        errors.toXML());
+                }
+                System.err.println(errors.toCompilationError().getMessage());
+            }
             if (canvas != null) {
-              if (!errors.isEmpty()) {
-                  if (canvas != null) {
-                      canvas.setCompilationWarningText(
-                          errors.toCompilationError().getMessage());
-                      canvas.setCompilationWarningXML(
-                          errors.toXML());
-                  }
-                  System.err.println(errors.toCompilationError().getMessage());
-              }
               // set file path (relative to webapp) in canvas
               canvas.setFilePath(FileUtils.relativePath(file, LPS.HOME()));
             }

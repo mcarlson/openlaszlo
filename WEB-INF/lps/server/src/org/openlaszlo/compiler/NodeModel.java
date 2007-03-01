@@ -490,6 +490,10 @@ public class NodeModel implements Cloneable {
                          attrs, events, references, paths, styles);
         }
 
+        ClassModel classModel = getClassModel();
+        if (classModel == null) {
+          throw new CompilationError("Could not find class definition for tag `" + className + "`", element);
+        }
         // Encode the attributes
         for (Iterator iter = element.getAttributes().iterator(); iter.hasNext(); ) {
             Attribute attr = (Attribute) iter.next();
@@ -609,7 +613,7 @@ public class NodeModel implements Cloneable {
                 if (className.equals("class")) {
                     type = getAttributeTypeInfoFromSuperclass(element, name);
                 }  else {
-                    type = schema.getAttributeType(element, name);
+                    type = classModel.getAttributeTypeOrException(name);
                 }
 
             } catch (UnknownAttributeException e) {
