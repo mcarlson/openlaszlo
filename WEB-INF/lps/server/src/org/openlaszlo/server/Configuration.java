@@ -3,7 +3,7 @@
  * ****************************************************************************/
 
 /* J_LZ_COPYRIGHT_BEGIN *******************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * J_LZ_COPYRIGHT_END *********************************************************/
 
@@ -35,7 +35,8 @@ public class Configuration {
     Map mAppPatterns  = new Hashtable();
     ArrayList mAppRegexps   = new ArrayList();
     Map mAppOptions   = new Hashtable(); // options set in application LZX
-
+    Map mDebugRegexps = new Hashtable();
+    
     private static Logger mLogger  = Logger.getLogger(Configuration.class);
 
     /**
@@ -101,6 +102,7 @@ public class Configuration {
                         Hashtable appOpts = getOptions(elt, "option", "name");
                         if (appOpts.size() != 0) {
                             RE re = new RE(pattern);
+                            mDebugRegexps.put(re, pattern);
                             mAppRegexps.add(re);
                             mAppPatterns.put(re, appOpts);
                         }
@@ -150,11 +152,15 @@ mLogger.error(
             if (elt.getName().equals(tagname)) {
                 String name = elt.getAttributeValue(optname);
                 if (name != null && !name.equals("")) {
-                    addOption(options, elt);
+                    addOptionNamed(options, elt, name);
                 }
             }
         }
         return options;
+    }
+
+    public String getPattern(RE re) {
+        return (String) mDebugRegexps.get(re);
     }
 
     public static void addOption(Map options, Element elt) {
@@ -168,6 +174,17 @@ mLogger.error(
         }
     }
     
+    public static void addOptionNamed(Map options, Element elt, String name) {
+        Option option = (Option)options.get(name);
+        if (option == null) {
+            option = new Option(elt);
+            options.put(name, option);
+        } else {
+            option.addElement(elt);
+        }
+    }
+
+
     /**
      * @param path application path - .lzo extensions treated like .lzx
      * @return table of application options
@@ -257,8 +274,9 @@ mLogger.debug(
         appOptions = (Map)mAppPaths.get(path);
         if (appOptions != null) {
             opt = (Option)appOptions.get(key);
-            if (opt != null) 
+            if (opt != null) {
                 return opt.allows(value, allow);
+            }
         }
 
         // Check regexp patterns
