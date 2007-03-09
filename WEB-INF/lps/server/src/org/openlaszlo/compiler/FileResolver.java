@@ -57,16 +57,18 @@ class DefaultFileResolver implements FileResolver {
                 return binary;
             }
             File library = resolveInternal(pathname, base);
-            if (library != null && (! library.isDirectory())) {
+            if (library != null) {
+              if (! library.isDirectory()) {
                 return library;
-            }
-            binary = new File(library, "library.lzo");
-            if (binary.exists()) {
+              }
+              binary = new File(library, "library.lzo");
+              if (binary.exists()) {
                 return binary;
-            }
-            library = new File(library, "library.lzx");
-            if (library.exists()) {
+              }
+              library = new File(library, "library.lzx");
+              if (library.exists()) {
                 return library;
+              }
             }
         } else {
             File resolved = resolveInternal(pathname, base);
