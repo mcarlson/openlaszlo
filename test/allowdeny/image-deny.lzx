@@ -5,7 +5,7 @@
         <button text="switch image" x="10" y="10"
                 onclick="this.parent.doIt()" />
         <view name="img" x="100" y="100" bgcolor="#EFFFFF"
-              resource="http://www.10th-avenue.com/~bloch/beavis.jpg" 
+              resource="http://www.openlaszlo.org/images/animal_3_bg_102602.jpg" 
               clickable="true" >
         </view>
         <method name="init" >
@@ -17,8 +17,8 @@
         <method name="doIt" >
             switch (this.nextImage) {
               case 1:
-                Debug.write("Loading beavis (denied)");
-                this.img.setSource("http://www.10th-avenue.com/~bloch/beavis.jpg");
+                Debug.write("Loading Mallard (denied)");
+                this.img.setSource("http://www.openlaszlo.org/images/animal_3_bg_102602.jpg");
                 this.nextImage = 2;
                 break;
             case 2:
@@ -27,8 +27,8 @@
                 this.nextImage = 3;
                 break;
             case 3:
-                Debug.write("Loading horses (allowed)");
-                this.img.setSource("http://www2.images.com/webimages/gps/thumb/hor%2003%20mak002.jpg");
+                Debug.write("Loading Jupiter (allowed)");
+                this.img.setSource("http://heritage.stsci.edu/2007/14/images/p0714aa.jpg");
                 this.nextImage = 1;
                 break;
              default:
@@ -40,6 +40,6 @@
 </canvas>    
 
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->

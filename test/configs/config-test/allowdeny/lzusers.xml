@@ -1,0 +1,31 @@
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<users>
+  <user name="adam"   password="adam" />
+  <user name="bret"   password="bret" />
+  <user name="david"  password="david" />
+  <user name="eric"   password="eric" />
+  <user name="max"    password="max" />
+  <user name="oliver" password="oliver" />
+  <user name="pablo"  password="pablo" />
+  <user name="peter"  password="peter" />
+  <user name="emily"  password="emily" />
+  <user name="natesh" password="natesh" />
+  <user name="sarah"  password="sarah" />
+  <user name="antony" password="antony" />
+  <user name="anne"   password="anne" />
+  <user name="antun"  password="antun" />
+  <user name="dan"    password="dan" />
+  <user name="kevin"  password="kevin" />
+  <user name="henry"  password="henry" />
+  <user name="todd"   password="todd" />
+  <user name="hal"    password="hal" />
+  <user name="yossie" password="yossie" />
+  <user name="tucker" password="tucker" />
+  <user name="grig"   password="grig" />
+  <user name="charlotte"   password="charlotte" />
+  <user name="barry james"   password="barry james" />
+</users>
+

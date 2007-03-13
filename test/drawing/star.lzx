@@ -1,0 +1,45 @@
+<canvas>
+  <class name="star" extends="drawview">
+    <attribute name="vertices" type="number" value="5"/>
+    <attribute name="radius" type="number" value="50"/>
+    <attribute name="depth" type="number"  value="25" />
+    <attribute name="border" type="number" value="1"/>
+    <attribute name="startangle" type="number" value="0"/> 
+    <attribute name="colors" value="[0x888888,0xaaaaaa]"/> 
+    <attribute name="bordercolors" value="[0x000000,0x000000]"/> 
+    <method event="oninit">
+      var a, i, x1, y1, length =0;
+      var pi = Math.PI;
+      for (i=0; i != 2 * vertices ; i++){
+        this.beginPath();
+        this.moveTo(0,0);
+        a = i * (2 * pi/ (2*vertices) ) + startangle;
+        length = radius - depth * (i % 2);
+        x1 = length * Math.sin(a);
+        y1 = length * Math.cos(a);
+        this.lineTo( x1, y1);
+        a = (i +1)* (2 * pi/ (2*vertices) ) + startangle;
+        length = radius - depth * ((i +1)% 2);
+        x1 = length * Math.sin(a);
+        y1 = length * Math.cos(a);
+        this.lineTo( x1, y1);
+        this.closePath();
+        this.fillStyle= colors[i % 2];
+        this.fill();
+        this.strokeStyle =bordercolors[i % 2];
+        this.lineWidth = border;
+        this.stroke();
+      }
+    </method>
+  </class>
+  <star x="200" 
+        y="200"
+        vertices="7"
+        depth="100" 
+        radius="200"  
+        border="10"
+        colors="[0x00ff00, 0x0000ff]" 
+        bordercolors="[0xffffff,0xffffff]"
+        startangle="$once{Math.PI}"/>
+</canvas>
+<!-- copyright 2006-2007 laszlo systems -->
