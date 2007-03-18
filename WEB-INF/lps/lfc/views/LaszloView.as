@@ -162,7 +162,7 @@ LzView.prototype.width = null;
 LzView.prototype.height = null;
 LzView.prototype.x = 0;
 LzView.prototype.y = 0;
-
+LzView.prototype.clickable = false;
 
 //@field Boolean clip: If true, the resource and children of this view
 //are masked to its width and height.
