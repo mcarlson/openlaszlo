@@ -2,7 +2,11 @@
 
 <include href="tooltipview.lzx"/>
 <!--- This class allows you to show a floating "tooltip" on any
-    view.  To use it you make it a child of a view.  For example:
+    view.  To use it you make it a child of a view.  The parent view has
+    to be clickable for the tooltip to work.  Setting clickable to false
+    will disable the tooltip.
+    
+    For example:
 
     @START_CODE
         <button text="OK">
@@ -14,7 +18,7 @@
     which must be named "tooltipview" and have a setText method and
     options="ignorelayout"
 -->
-<class name="tooltip" initstage="late">
+<class name="tooltip" extends="node" initstage="late">
     <!--- text that appears in the tooltip.  null or empty string means tooltip will not show. -->
     <attribute name="text" type="text"/>
     <!--- @keywords private -->
@@ -34,8 +38,8 @@
     
     <!--- @keywords private -->
     <method event="oninit">
-        this.overdel = new LzDelegate(this, "startCheck", parent, "onmouseover");
-        this.outdel = new LzDelegate(this, "hideTip", parent, "onmouseout");
+        this.overdel = new LzDelegate(this, "startCheck",parent,"onmouseover");
+        this.outdel = new LzDelegate(this, "hideTip",parent,"onmouseout");
         this.outdel.register(parent, "onclick");
     </method>
 
@@ -110,7 +114,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.                 *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
