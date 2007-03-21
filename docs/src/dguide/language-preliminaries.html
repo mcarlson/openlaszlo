@@ -236,7 +236,7 @@ to test that program's validity.</p>
 
 <example executable="false">
 &lt;class name="froboz" extends="view"&gt; 
-  &lt;attribute name="whatnot" value="17"&gt; 
+  &lt;attribute name="whatnot" value="17"/&gt; 
 &lt;/class&gt;
 </example>
 
@@ -301,7 +301,7 @@ operator. Thus,</p>
 <pre>
 &lt;view name="dog"&gt;   
   &lt;method name="bark"&gt; 
-    &lt;!-- some JavaScript code ---&gt; 
+    &lt;!-- some JavaScript code --&gt; 
   &lt;/method&gt; 
 &lt;/view&gt;
 </pre>
@@ -320,7 +320,7 @@ with this name. For example,</p>
 <pre>
 &lt;view&gt; 
   &lt;handler name="onclick"&gt; 
-    &lt;!-- some JavaScript code ---&gt; 
+    &lt;!-- some JavaScript code --&gt; 
   &lt;/handler&gt; 
 &lt;/view&gt;
 </pre>
@@ -331,12 +331,12 @@ Consider</p>
 <pre> 
 &lt;view&gt; 
   &lt;method name="bark"&gt; 
-    &lt;!-- some JavaScript code ---&gt; 
+    &lt;!-- some JavaScript code --&gt; 
   &lt;/method&gt; 
   &lt;handler name="onclick"&gt; 
     this.bark()  
   &lt;/handler &gt; 
-&lt;view&gt;
+&lt;/view&gt;
 </pre>  
 
 <p>When the view is clicked on, the <event>onclick</event> event causes the execution of the <method>handler</method> which in turn invokes the method named <method>bark</method>.  Event handlers are often identified in an opening tag, as in</p> 
@@ -644,6 +644,6 @@ display information while the program is being initialized.</p>
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
