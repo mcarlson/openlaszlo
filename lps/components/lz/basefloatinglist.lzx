@@ -193,8 +193,17 @@
             var own_x = attachtarget.getAttributeRelative('x',canvas);
             while (true) {
                 if (validattach=="bottom" || validattach=="top") {
-                        this.setAttribute( 'x' , own_x );
-                        break;
+                    var tmp_x = own_x;
+                    if (tmp_x < 0) {
+                        //if our left edge isn't visible move list to left edge
+                        tmp_x = 0;
+                    } else if (tmp_x + attachtarget.width > canvas.width) {
+                        tmp_x = canvas.width - this.width;
+                    } else if (tmp_x + this.width > canvas.width) {
+                        tmp_x = (own_x + attachtarget.width) - this.width;
+                    }
+                    this.setAttribute( 'x' , tmp_x );
+                    break;
                 } else
                 if (validattach=="left") {
                     var tmp_x = own_x - this.width;
@@ -224,7 +233,7 @@
                     }
                 }
             }
-                        
+            
             // Adjust Y
 
             this._setShownItems(this._origshownitems, true);
@@ -339,7 +348,7 @@
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
