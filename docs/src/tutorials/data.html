@@ -39,7 +39,7 @@
 &lt;/canvas&gt;
 </example>
 
-<p>In the above example, the single root element is myXML. The <attribute>datapath</attribute> attribute of the <tagname>text</tagname> tag binds it to the data.</p>
+<p>In the above example, the single root element is myXML. The <attribute>datapath</attribute> attribute of the <tagname>text</tagname> tag binds it to the data (always attach <attribute>datapath</attribute> to a view; if <attribute>datapath</attribute> is set on the canvas, the Laszlo application won't work).</p>
 
 <p>Datapaths use XPath attributes to navigate through the XML data. So the name of the dataset to use goes before the colon <code>myData:</code>, followed by the nodes, separated by forward slashes (/). The square brackets provide a (one-based) space to enter which sibling node we want. </p>
 
