@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -108,11 +108,16 @@ LzDataNode.prototype.__LZXMLescape = function ( t ){
     var olen = t.length;
     var r = "";
     for ( var i = 0; i < olen; i++ ){
-        var c = t.charAt( i );
-        if ( this.__LZescapechars[ c ] != null ){
-            r += this.__LZescapechars[ c ];
+        //handle newlines
+        if ( t.charCodeAt( i ) == 13 ){
+            r += "&#xD;";
         } else {
-            r += c;
+            var c = t.charAt( i );
+            if ( this.__LZescapechars[ c ] != null ){
+                r += this.__LZescapechars[ c ];
+            } else {
+                r += c;
+            }
         }
     }
 
