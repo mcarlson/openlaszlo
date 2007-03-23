@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -55,6 +55,12 @@ LzText.prototype.construct = function ( parent, args ) {
     mc.createTextField( txtname, 1, 0, 0, 100, 12 );
     var textclip = mc[txtname];
     this.__LZtextclip = textclip;
+
+    // set a pointer back to this view from the TextField object
+    // this property matched the name in inputtext and is used to 
+    // detect the field for sending mouse events to it
+    textclip.__lzview = this;
+
     textclip._visible = true;
     textclip.__control = this;
     //    textclip._quality = "BEST";
