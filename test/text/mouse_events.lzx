@@ -1,0 +1,41 @@
+<canvas debug="true">
+  <simplelayout spacing="2"/>
+  <handler name="onmousedown" reference="LzGlobalMouse" args="v">
+    Debug.write('LzGlobalMouse onmousedown', v);
+  </handler>
+  <handler name="onmouseup" reference="LzGlobalMouse" args="v">
+    Debug.write('LzGlobalMouse onmouseup', v);
+  </handler>
+  <handler name="onclick" reference="LzGlobalMouse" args="v">
+    Debug.write('LzGlobalMouse onclick', v);
+  </handler>
+  <inputtext bgcolor="#cccccc" clickable="false" >default input
+    <handler name="onmousedown" args="v">
+        Debug.write('    view onmousedown event', this);
+    </handler>
+    <handler name="onmouseup" args="v">
+        Debug.write('    view onmouseup event', this);
+    </handler>
+    <handler name="onclick" args="v">
+        Debug.write('    view onclick event', this);
+    </handler>
+    
+  </inputtext>
+  <text bgcolor="#ffcccc" selectable="true" clickable="false">&lt;text&gt; selectable
+    <handler name="onmousedown" args="v">
+        Debug.write('    view onmousedown event', this);
+    </handler>
+    <handler name="onmouseup" args="v">
+        Debug.write('    view onmouseup event', this);
+    </handler>
+    <handler name="onclick" args="v">
+        Debug.write('    view onclick event', this);
+    </handler>
+  </text>
+
+</canvas>
+<!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
+* Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Use is subject to license terms.                                            *
+* X_LZ_COPYRIGHT_END ****************************************************** -->
+<!-- @LZX_VERSION@  
