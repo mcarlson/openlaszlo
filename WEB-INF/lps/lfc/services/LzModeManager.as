@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -109,14 +109,9 @@ LzModeManager.handleMouseButton = function ( view , eventStr){
 // @param String eventStr: the event string
 //-----------------------------------------------------------------------------
 LzModeManager.handleMouseEvent= function ( view, eventStr ) {
-    //_root.Debug.warn(view + ', ' + eventStr);
+    //_root.Debug.warn("%w, %w", view , eventStr);
 
-     if (eventStr == "onmouseup") _root.LzTrack.__LZmouseup();
-    _root.LzGlobalMouse[ eventStr ].sendEvent( view );
-
-    if ( this.eventsLocked == true ){
-        return;
-    }
+    if (eventStr == "onmouseup") _root.LzTrack.__LZmouseup();
 
     var dosend = true;
     var isinputtext = false;
@@ -124,10 +119,18 @@ LzModeManager.handleMouseEvent= function ( view, eventStr ) {
     if (view == null ) {  // check if the mouse event is in a inputtext
         var ss = Selection.getFocus();
         if ( ss != null ){
-            var focusview = eval( ss.substring( 0 , ss.lastIndexOf( '.' ) ) 
-                                  + ".view");
-            if ( focusview ) view = focusview;
+            var focusview = eval(ss + '.__lzview');
+            //_root.Debug.warn("Selection.getFocus: %w, %w, %w", focusview, ss);
+            if ( focusview != undefined ) {
+                view = focusview;
+            }
         } 
+    }
+
+    _root.LzGlobalMouse[ eventStr ].sendEvent( view );
+
+    if ( this.eventsLocked == true ){
+        return;
     }
 
     var i = this.modeArray.length-1;
@@ -160,6 +163,8 @@ LzModeManager.handleMouseEvent= function ( view, eventStr ) {
                 this.__LZlastClickTime = getTimer();
             }
         }
+    
+        //_root.Debug.warn("sending %w, %w", view , eventStr);
 
         view[ eventStr ].sendEvent( view );
         if ( eventStr == "onmousedown" ){
