@@ -199,7 +199,7 @@ invoked. Here's an example of their use.</p>
         assertEquals(2, nav.getNodeCount())
         assertTrue(nav.selectChild())
         nav.deleteNode()
-        assertFalse('Buffalo', nav.getNodeText())
+        assertFalse('Buffalo'==nav.getNodeText())
         assertTrue(nav.selectParent())
         assertEquals(1, nav.getNodeCount())
       &lt;/method&gt;
@@ -267,6 +267,6 @@ Of course, running both animators simultaneously will superimpose the effect of 
 </body>
 </html>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.              *
+* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.              *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
