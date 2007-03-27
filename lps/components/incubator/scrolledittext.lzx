@@ -112,11 +112,22 @@
             this.myDel = new LzDelegate(this, "setvscrollwidthfromvisibility", this._vs, "onvisible");
         </method>
 
+ <!--- Overrides a parent method which calculates y position for text
+            in a way that doesn't make sense for this class. We just trap the 
+            call and do nothing. This field is positioned in y by the constraint
+            y=${parent.border}
+            Note: although this method is a no-op, it still has to be declared,
+            so the parent class's method does not get called on instances of 
+            this class. 
+        -->
+        <method name="_placeTextY">
+        </method>
+
     </class>
 
 </library>
 <!-- * X_LZ_COPYRIGHT_BEGIN ***************************************************
-* Copyright 2006 Laszlo Systems, Inc. All Rights Reserved.                    *
+* Copyright 2006-2007 Laszlo Systems, Inc. All Rights Reserved.               *
 * Use is subject to license terms.                                            *
 * X_LZ_COPYRIGHT_END ****************************************************** -->
 <!-- @LZX_VERSION@                                                         -->
