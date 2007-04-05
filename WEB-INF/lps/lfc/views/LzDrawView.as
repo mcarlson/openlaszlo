@@ -3,7 +3,7 @@
  *****************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
@@ -280,12 +280,14 @@ LzDrawView.prototype.createRadialGradient = function(x0, y0, r0, x1, y1, r1) {
 // @param Number clockwise: anticlockwise if true, clockwise otherwise 
 //-----------------------------------------------------------------------------
 LzDrawView.prototype.arc = function(x, y, radius, startAngle, endAngle, clockwise) {
-	x += radius*Math.cos(startAngle);
-	y += radius*Math.sin(startAngle);
-	startAngle *= 180/Math.PI;
-	endAngle *= 180/Math.PI;
-    var arc = clockwise == true ? startAngle - endAngle : endAngle - startAngle;
-	this.moveTo(x, y);
+    var sx = x + radius*Math.cos(startAngle);
+    var sy = y + radius*Math.sin(2 * Math.PI - startAngle);
+    startAngle *= 180/Math.PI;
+    endAngle *= 180/Math.PI;
+    var arc = clockwise == true ? ((endAngle - startAngle) - 360): endAngle - startAngle; 
+    //move pen to the point along the circle at startAngle
+    this.moveTo(sx, sy);
+    //retain the center of the arc as the center point passed in.
     return this._drawArc(x, y, radius, arc, startAngle);
 }
 
@@ -452,7 +454,7 @@ LzDrawView.prototype._drawArc = function(x, y, radius, arc, startAngle, yRadius)
         yRadius = radius;
     }
     // Init vars
-    var segAngle, theta, angle, angleMid, segs, ax, ay, bx, by, cx, cy;
+    var segAngle, theta, angle, angleMid, segs,bx, by, cx, cy;
     // no sense in drawing more than is needed :)
     if (Math.abs(arc)>360) {
         arc = 360;
@@ -464,13 +466,11 @@ LzDrawView.prototype._drawArc = function(x, y, radius, arc, startAngle, yRadius)
     // Now calculate the sweep of each segment
     segAngle = arc/segs;
     // The math requires radians rather than degrees. To convert from degrees
-    // use the formula (degrees/180)*Math.PI to get radians. 
+    // use the formula (degrees/180)*Math.PI to get radians.
     theta = -(segAngle/180)*Math.PI;
     // convert angle startAngle to radians
     angle = -(startAngle/180)*Math.PI;
-    // find our starting points (ax,ay) relative to the secified x,y
-    ax = x-Math.cos(angle)*radius;
-    ay = y-Math.sin(angle)*yRadius;
+
     // if our arc is larger than 45 degrees, draw as 45 degree segments
     // so that we match Flash's native circle routines.
     if (segs>0) {
@@ -481,19 +481,19 @@ LzDrawView.prototype._drawArc = function(x, y, radius, arc, startAngle, yRadius)
             // find the angle halfway between the last angle and the new
             angleMid = angle-(theta/2);
             // calculate our end point
-            bx = ax+Math.cos(angle)*radius;
-            by = ay+Math.sin(angle)*yRadius;
+            bx = x+Math.cos(angle)*radius;
+            by = y+Math.sin(angle)*yRadius;
             // calculate our control point
-            cx = ax+Math.cos(angleMid)*(radius/Math.cos(theta/2));
-            cy = ay+Math.sin(angleMid)*(yRadius/Math.cos(theta/2));
+            cx = x+Math.cos(angleMid)*(radius/Math.cos(theta/2));
+            cy = y+Math.sin(angleMid)*(yRadius/Math.cos(theta/2));
             // draw the arc segment
             this.quadraticCurveTo(cx, cy, bx, by);
         }
     }
     // In the native draw methods the user must specify the end point
     // which means that they always know where they are ending at, but
-    // here the endpoint is unknown unless the user calculates it on their 
-    // own. Lets be nice and let save them the hassle by passing it back. 
+    // here the endpoint is unknown unless the user calculates it on their
+    // own. Lets be nice and let save them the hassle by passing it back.
     return {x:bx, y:by};
 }
 
