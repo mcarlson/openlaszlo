@@ -266,9 +266,9 @@
 
 <h2><a name="datapointers"/>Datapointers</h2>
 
-<p>Datapaths are extremely handy, but if you need more control over the data, they can become cumbersome. Datapaths are actually extensions of datapointers, but are easier to learn, which is why we introduced them first. A datapointer is a pointer into the dataset, which can be moved around. It can only be in one place of the dataset at a time, but you can have multiple datapointers, each pointing to a different part of a dataset.</p>
+<p>We introduced datapaths first, which are extensions of datapointers, but they can become cumbersome. A datapointer points to just one place of the dataset at a time, but can be moved around -- you can have multiple datapointers, each pointing to a different part of a dataset.</p>
 
-<p>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy (i.e. they know about parents and children).</p>
+<p>Datapointers are not bound to views like datapaths are, but they do have a place in the view hierarchy (i.e. they know about parents and children). It is OK to declare a datapath and a datapointer within the same node, which was not always the case.</p>
 
 <p>You will use a datapointer when you need to operate on the data in some way. For example, using the same format of data as in the previous examples, say you wanted to find all the people who were in the South Park show:</p>
 
