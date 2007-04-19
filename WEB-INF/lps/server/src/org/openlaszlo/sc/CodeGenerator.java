@@ -1645,9 +1645,10 @@ public class CodeGenerator implements Translator {
       byteLen = str.length()*4;
       if (byteLen > maxBytes) {
         // Find a split that makes it fit
+        // wtf doesn't Java have ceil, etc. methods on frickin' ints?
         int nChunks = (byteLen + (maxBytes - 1))/maxBytes; // (int)Math.ceil((double)l/(double)maxBytes);
         int strLen = str.length();
-        int chunkLen = strLen/nChunks;
+        int chunkLen = (strLen + (nChunks - 1))/nChunks; // (int)Math.ceil((double)l/(double)nChunks);
         int start = 0, end = chunkLen, next;
         while (start < strLen) {
           collector.push(str.substring(start, end));
