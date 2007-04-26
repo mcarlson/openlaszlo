@@ -379,7 +379,9 @@ public class Compiler {
             
             processCompilerInstructions(root, env);
             compileElement(root, env);
-            ViewCompiler.checkUnresolvedResourceReferences (env);
+            if (linking) {
+              ViewCompiler.checkUnresolvedResourceReferences (env);
+            }
             mLogger.debug("done...");
             // This isn't in a finally clause, because it won't generally
             // succeed if an error occurs.

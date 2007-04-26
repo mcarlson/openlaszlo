@@ -24,4 +24,4 @@ else
   . "${LPS_HOME}/WEB-INF/lps/server/bin/lzenv"
 fi
 
-${JAVA_HOME}/bin/java ${JAVA_OPTS} -DLPS_HOME="${LPS_HOME}" -cp "$LZCP" org.openlaszlo.compiler.Main "$@"
+"${JAVA_HOME}/bin/java" ${JAVA_OPTS} -DLPS_HOME="${LPS_HOME}" -cp "$LZCP" org.openlaszlo.compiler.Main "$@"
