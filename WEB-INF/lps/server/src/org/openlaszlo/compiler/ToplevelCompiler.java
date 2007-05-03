@@ -108,35 +108,45 @@ abstract class ToplevelCompiler extends ElementCompiler {
     }
 
 
-    static void collectReferences(CompilationEnvironment env,
-                                  Element element, Set defined,
-                                  Set referenced)
-    {
-        Set visited = new HashSet();
-        ViewCompiler.collectLayoutElement(element, referenced);
-        collectReferences(env, element, defined, referenced, visited);
-    }
-
     /** This also collects "attribute", "method", and HTML element
      * names, but that's okay since none of them has an autoinclude
      * entry.
      */
     static void collectReferences(CompilationEnvironment env,
                                   Element element, Set defined,
-                                  Set referenced, Set libsVisited) {
+                                  Set referenced, Map libsVisited) {
         ElementCompiler compiler = Compiler.getElementCompiler(element, env);
         if (compiler instanceof ToplevelCompiler) {
-            if (compiler instanceof LibraryCompiler || compiler instanceof ImportCompiler ) {
-                Element library = LibraryCompiler.resolveLibraryElement(element, env, libsVisited, false);
+            Set libStart = null;
+            Set libFound = null;
+            Element library = null;
+            File libFile = null;
+            if (compiler instanceof LibraryCompiler || compiler instanceof ImportCompiler) {
+                libStart = new LinkedHashSet(libsVisited.keySet());
+                libFound = new LinkedHashSet(libStart);
+                library = LibraryCompiler.resolveLibraryElement(element, env, libFound, false);
+                if (library == element) {
+                    // Not an external library
+                    library = null;
+                }
                 if (library != null) {
                     element = library;
+                    try {
+                        libFile = new File(Parser.getSourcePathname(library)).getCanonicalFile();
+                        libsVisited.put(libFile, null);
+                    } catch (IOException f) {
+                        assert false : "Can't happen";
+                    }
                 }
             }
-
-            for (Iterator iter = element.getChildren().iterator();
-                 iter.hasNext(); ) {
+            for (Iterator iter = element.getChildren().iterator(); iter.hasNext(); ) {
                 collectReferences(env, (Element) iter.next(), defined, referenced,
                                   libsVisited);
+            }
+            if (library != null) {
+                Set includes = new LinkedHashSet(libsVisited.keySet());
+                includes.removeAll(libStart);
+                libsVisited.put(libFile, includes);
             }
         } else if (compiler instanceof ClassCompiler || compiler instanceof InterfaceCompiler) {
             String name = element.getAttributeValue("name");
@@ -153,17 +163,12 @@ abstract class ToplevelCompiler extends ElementCompiler {
         }
     }
 
-    static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded, Set visited) {
-        List libraryNames = new ArrayList();
+    static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Map autoIncluded, Map visited) {
         String librariesAttr = element.getAttributeValue("libraries");
+        assert librariesAttr == null : "unsupported attribute `libraries`";
+        List libraryNames = new ArrayList();
         String base = new File(Parser.getSourcePathname(element)).getParent();
-        if (librariesAttr != null) {
-            for (StringTokenizer st = new StringTokenizer(librariesAttr);
-                 st.hasMoreTokens();) {
-                String name = (String) st.nextToken();
-                libraryNames.add(name);
-            }
-        }
+
         // figure out which tags are referenced but not defined, and
         // look up their libraries in the autoincludes file
         {
@@ -192,7 +197,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
                     // emitted where the auto-include would have been.
                     if (defined.contains(key)) {
                         File canonical = (File)canonicalAuto.get(key);
-                        if (visited.contains(canonical)) {
+                        if (visited.containsKey(canonical)) {
                             // Annotate as explicit
                             if (explanations != null) {
                                 explanations.put(value, "explicit include");
@@ -213,11 +218,11 @@ abstract class ToplevelCompiler extends ElementCompiler {
             if (autoIncluded != null) {
             try {
               String basePrefix = (new File((base != null) ? base : ".")).getCanonicalPath();
-              for (Iterator i = visited.iterator(); i.hasNext(); ) {
+              for (Iterator i = visited.keySet().iterator(); i.hasNext(); ) {
                 File file = (File)i.next();
                 String path = file.getCanonicalPath();
                 if (! path.startsWith(basePrefix)) {
-                  autoIncluded.add(file);
+                  autoIncluded.put(file, visited.get(file));
                 }
               }
             } catch (IOException e) {
@@ -234,7 +239,7 @@ abstract class ToplevelCompiler extends ElementCompiler {
               File file = env.resolveLibrary(name, base).getCanonicalFile();
               libraries.add(file);
               if (autoIncluded != null) {
-                autoIncluded.add(file);
+                autoIncluded.put(file, visited.get(file));
               }
             } catch (IOException e) {
                 throw new CompilationError(element, e);
@@ -254,6 +259,25 @@ abstract class ToplevelCompiler extends ElementCompiler {
         return libraries;
     }
     
+    static List getLibraries(CompilationEnvironment env, Element element, Map explanations, Set autoIncluded, Set visited) {
+        Map externalMap = null;
+        Map visitedMap = null;
+        if (autoIncluded != null) {
+            externalMap = new LinkedHashMap();
+        }
+        if (visited != null) {
+            visitedMap = new LinkedHashMap();
+        }
+        List libs = getLibraries(env, element, explanations, externalMap, visitedMap);
+        if (autoIncluded != null) {
+            autoIncluded.addAll(externalMap.keySet());
+        }
+        if (visited != null) {
+            visited.addAll(visitedMap.keySet());
+        }
+        return libs;
+    }
+
     List getLibraries(Element element) {
         return getLibraries(mEnv, element, null, null, new HashSet());
     }

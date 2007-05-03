@@ -127,23 +127,17 @@ class DefaultFileResolver implements FileResolver {
         Enumeration e = v.elements();
         while (e.hasMoreElements()) {
             String dir = (String)e.nextElement();
-            File f = new File(dir, pathname);
-            mLogger.debug("Trying " + f.getAbsolutePath());
-            if (f.exists()) {
+            try {
+              File f = (new File(dir, pathname)).getCanonicalFile();
+              mLogger.debug("Trying " + f.getAbsolutePath());
+              if (f.exists()) {
                 // TODO: [2002-11-23 ows] check for case mismatch
                 mLogger.debug("Resolving " + pathname + " to "  +
                               f.getAbsolutePath());
-                /*
-                 * TODO: [2004-06-01 bloch] The code below results in weird compiler errors. 
-                 * I think I was going to put it here so we could add the canvas info
-                 * resolver elements in one place.   
-                try {
-                    return f.getCanonicalFile();
-                } catch (java.io.IOException ex) {
-                    throw new CompilationError("Can't get canonical file name " + f.getPath());
-                }
-                */
-                return f;
+                    return f;
+              }
+            } catch (java.io.IOException ex) {
+              // Not a valid file?
             }
         }
         return null;

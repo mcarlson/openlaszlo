@@ -183,16 +183,16 @@ class LibraryWriter extends SWFWriter {
   } 
   
   // Must preserve visited order for output of includes
-  private Set autoIncludes = new LinkedHashSet();
-  private Set includes = new LinkedHashSet();
+  private Map autoIncludes = new LinkedHashMap();
+  private Map includes = new LinkedHashMap();
 
   private String libraries() {
     StringWriter writer = new StringWriter();
     PrintWriter out = new PrintWriter(writer);
     String indent = "";
-    for (Iterator i = includes.iterator(); i.hasNext(); ) {
+    for (Iterator i = includes.keySet().iterator(); i.hasNext(); ) {
       File library = (File)i.next();
-      if (! autoIncludes.contains(library)) {
+      if (! autoIncludes.containsKey(library)) {
         String path = adjustResourcePath(library.getPath());
         out.println(indent + path);
         indent = "  ";
@@ -206,9 +206,18 @@ class LibraryWriter extends SWFWriter {
   }
 
   private void exportIncludes() {
-    for (Iterator i = autoIncludes.iterator(); i.hasNext(); ) {
-      String path = adjustResourcePath(((File)i.next()).getPath());
-      out.println("<include href='" + path + "' />");
+    Set implicit = new HashSet();
+    for (Iterator i = autoIncludes.keySet().iterator(); i.hasNext(); ) {
+      File key = (File)i.next();
+      if (! implicit.contains(key)) {
+        Set subIncludes = (Set)autoIncludes.get(key);
+        if (subIncludes != null) {
+          // An auto-include will not have been parsed for sub-includes?
+          implicit.addAll(subIncludes);
+        }
+        String path = adjustResourcePath(key.getPath());
+        out.println("<include href='" + path + "' />");
+      }
     }
   }
 

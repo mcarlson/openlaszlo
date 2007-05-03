@@ -22,10 +22,11 @@ import org.apache.log4j.*;
  */
 class LibraryCompiler extends ToplevelCompiler {
     final static String HREF_ANAME = "href";
+    final static String INCLUDES_ANAME = "includes";
 
     /** Logger
      */
-    private static Logger mLogger  = Logger.getLogger(Compiler.class);
+    private static Logger mLogger  = Logger.getLogger(LibraryCompiler.class);
 
 
     LibraryCompiler(CompilationEnvironment env) {
@@ -47,6 +48,7 @@ class LibraryCompiler extends ToplevelCompiler {
         try {
             File key = file.getCanonicalFile();
             if (!visited.contains(key)) {
+                mLogger.debug("Resolving: " + key);
                 visited.add(key);
 
                 // If we're compiling a loadable library, add this to
@@ -76,14 +78,17 @@ class LibraryCompiler extends ToplevelCompiler {
                 if (validate)
                     Parser.validate(doc, file.getPath(), env);
                 Element root = doc.getRootElement();
+                mLogger.debug("" + file + ": " + root + " attributes: " + root.getAttributes());
                 // Look for and add any includes from a binary library
-                String includesAttr = root.getAttributeValue("includes");
+                String includesAttr = root.getAttributeValue(INCLUDES_ANAME);
                 File base = new File(Parser.getSourcePathname(root)).getParentFile();
                 if (includesAttr != null) {
                     for (StringTokenizer st = new StringTokenizer(includesAttr);
                          st.hasMoreTokens();) {
                       String name = FileUtils.fromURLPath((String)st.nextToken());
-                      visited.add(new File(base, name).getCanonicalFile());
+                      File canon = new File(base, name).getCanonicalFile();
+                      mLogger.debug("binary include: " + canon);
+                      visited.add(canon);
                     }
                 }
 
