@@ -441,6 +441,12 @@ public class Parser {
 , child);
                 }
                 File target = resolver.resolve(href, base, true);
+                // If this file is already implicitly included, just
+                // leave it, don't try to expand it.  It will be
+                // skipped at the compilation stage.
+                if (resolver.getBinaryIncludes().contains(target)) {
+                  continue;
+                }
                 if (type.equals("text")) {
                     replacements.put(child,
                                      new org.jdom.Text(

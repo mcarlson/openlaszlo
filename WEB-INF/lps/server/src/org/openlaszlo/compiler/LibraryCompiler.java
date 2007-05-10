@@ -83,12 +83,15 @@ class LibraryCompiler extends ToplevelCompiler {
                 String includesAttr = root.getAttributeValue(INCLUDES_ANAME);
                 File base = new File(Parser.getSourcePathname(root)).getParentFile();
                 if (includesAttr != null) {
+                    // This modularity sucks
+                    Set binaryIncludes = env.getFileResolver().getBinaryIncludes();
                     for (StringTokenizer st = new StringTokenizer(includesAttr);
                          st.hasMoreTokens();) {
                       String name = FileUtils.fromURLPath((String)st.nextToken());
                       File canon = new File(base, name).getCanonicalFile();
                       mLogger.debug("binary include: " + canon);
                       visited.add(canon);
+                      binaryIncludes.add(canon);
                     }
                 }
 

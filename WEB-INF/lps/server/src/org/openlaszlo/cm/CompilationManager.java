@@ -1038,6 +1038,8 @@ class TrackingFileResolver implements FileResolver {
         this.mDependencies = tracker;
     }
     
+    public Set getBinaryIncludes() { return mBaseResolver.getBinaryIncludes(); }
+
     /**
      * Implement the FileResolver interface.
      *

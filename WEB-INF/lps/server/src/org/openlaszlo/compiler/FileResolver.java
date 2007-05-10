@@ -9,8 +9,7 @@
 
 package org.openlaszlo.compiler;
 import java.io.File;
-import java.util.Vector;
-import java.util.Enumeration;
+import java.util.*;
 import org.openlaszlo.server.*;
 import org.apache.log4j.*;
 
@@ -33,6 +32,14 @@ public interface FileResolver {
      */
     File resolve(String pathname, String base, boolean asLibrary)
         throws java.io.FileNotFoundException;
+
+    /**
+     * The Set of Files that represents the includes that have been
+     * implicitly included by binary libraries.  This is updated by
+     * the library compiler and used to resolve paths that may not
+     * exist in the binary distribution.
+     */
+    Set getBinaryIncludes();
 }
 
 /** DefaultFileResolver maps each pathname onto the File that
@@ -42,6 +49,10 @@ public interface FileResolver {
  */
 class DefaultFileResolver implements FileResolver {
 
+    public Set binaryIncludes = new HashSet();
+
+    public Set getBinaryIncludes() { return binaryIncludes; }
+
     public DefaultFileResolver() {
     }
 
@@ -49,32 +60,30 @@ class DefaultFileResolver implements FileResolver {
     public File resolve(String pathname, String base, boolean asLibrary)
         throws java.io.FileNotFoundException {
         if (asLibrary) {
-            File binary = null;
+            // If it is a library, search for .lzo's, consider the
+            // path may be just to the directory of the library
+            File library = null;
             if (pathname.endsWith(".lzx")) {
-                binary = resolveInternal(pathname.substring(0, pathname.length()-4) +".lzo", base);
+                library = resolveInternal(pathname.substring(0, pathname.length()-4) +".lzo", base);
+                if (library != null) {
+                  return library;
+                }
+            } else {
+                // Try pathname as a directory
+                library = resolveInternal((new File(pathname, "library.lzo").getPath()), base);
+                if (library != null) {
+                  return library;
+                }
+                library = resolveInternal((new File(pathname, "library.lzx").getPath()), base);
+                if (library != null) {
+                  return library;
+                }
             }
-            if (binary != null) {
-                return binary;
-            }
-            File library = resolveInternal(pathname, base);
-            if (library != null) {
-              if (! library.isDirectory()) {
-                return library;
-              }
-              binary = new File(library, "library.lzo");
-              if (binary.exists()) {
-                return binary;
-              }
-              library = new File(library, "library.lzx");
-              if (library.exists()) {
-                return library;
-              }
-            }
-        } else {
-            File resolved = resolveInternal(pathname, base);
-            if (resolved != null) {
-                return resolved;
-            }
+        }
+        // Last resort for a library, normal case for plain files
+        File resolved = resolveInternal(pathname, base);
+        if (resolved != null) {
+            return resolved;
         }
         throw new java.io.FileNotFoundException(pathname);
     }
@@ -129,10 +138,10 @@ class DefaultFileResolver implements FileResolver {
             String dir = (String)e.nextElement();
             try {
               File f = (new File(dir, pathname)).getCanonicalFile();
-              mLogger.debug("Trying " + f.getAbsolutePath());
-              if (f.exists()) {
+              if (f.exists() ||
+                  ((binaryIncludes != null) && binaryIncludes.contains(f))) {
                 // TODO: [2002-11-23 ows] check for case mismatch
-                mLogger.debug("Resolving " + pathname + " to "  +
+                mLogger.debug("Resolved " + pathname + " to "  +
                               f.getAbsolutePath());
                     return f;
               }
