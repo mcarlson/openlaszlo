@@ -7,51 +7,47 @@
 
 
     <resource name="light_rsc">
-    <frame src="resources/red-orb.swf"/>
-    <frame src="resources/yellow-orb.swf"/>
-    <frame src="resources/green-orb.swf"/>
+        <frame src="resources/red-orb.swf"/>
+        <frame src="resources/yellow-orb.swf"/>
+        <frame src="resources/green-orb.swf"/>
     </resource>
 
 
     <class name="rtmpstatus" 
-    resource="light_rsc" 
-    width="16" 
-    height="16" 
-    stretches="both"
-    >
+           resource="light_rsc" 
+           width="16" 
+           height="16" 
+           stretches="both"
+           >
 
+        <!--- rtmpconnection to monitor -->
+        <attribute name="rtmpc" value="null" />
 
-    <attribute name="_updateStageDelegate" value="null"/>
+        <attribute name="_updateStageDelegate" value="null"/>
 
-
-    <method event="oninit" reference="canvas"><![CDATA[
-        // FIXME: could this be on this.oninit instead of canvas.oninit,
-        // or does it have to do this because of init ordering? 
+        <handler name="oninit"><![CDATA[
         // This class should have an rtmp attribute to use a particular 
         // rtmpconnection, but default to the global one, and it should
         // also clean up properly.
-        this._rtmp = rtmpconnection.prototype._default;
-        if ($debug) {
-        if (!this['_rtmp']) {
-            Debug.write('rtmpconnection must be defined', this);
-        }
-        }
+        if (!this.rtmpc) 
+            this.rtmpc = rtmpconnection.prototype._default;
+
         this._updateStageDelegate = 
-        new LzDelegate(this, "_updateStage", this._rtmp, "onstage");
-      ]]>
-    </method>
+            new LzDelegate(this, "_updateStage", this.rtmpc, "onstage");
+        ]]>
+        </handler>
 
-
-    <method event="ondestroy"><![CDATA[
+        <method event="ondestroy"><![CDATA[
         this._updateStageDelegate.unregisterAll();
-      ]]>
-    </method>
+        ]]>
+        </method>
 
 
-    <method name="_updateStage"><![CDATA[
-        this.setAttribute('frame', this._rtmp.stage + 1);
-      ]]>
-    </method>
+        <!--- @access private -->
+        <method name="_updateStage"><![CDATA[
+        this.setAttribute('frame', this.rtmpc.stage + 1);
+        ]]>
+        </method>
 
 
     </class>
