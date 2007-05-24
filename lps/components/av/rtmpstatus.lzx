@@ -43,7 +43,6 @@
         </method>
 
 
-        <!--- @access private -->
         <method name="_updateStage"><![CDATA[
         this.setAttribute('frame', this.rtmpc.stage + 1);
         ]]>
