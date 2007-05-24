@@ -1,0 +1,1013 @@
+<canvas height="2000" debug="true">
+<include href="lzunit"/>
+
+<include href="/test"/>
+<include href="/designerview.lzx" />
+<include href="neighborhood/neighborhoodclasses.lzx" />
+<include href="neighborhood/kennedyfamily.lzx" />
+<include href="neighborhood/thestreet.lzx" />    
+<include href="fake/html-fake-elements.lzx" />
+
+<stylesheet>
+
+<!--attribute tests-->
+
+    [name='Philip'] {
+        width: 300;
+        miscdata: "san jose state";
+        innercolor: #8F008F;
+    }
+
+    [name='George'] {
+        width: 200;
+        miscdata: "somewhere far away";
+        innercolor: #245f84;
+    }
+    
+    [group="groovyattrs"] {
+        innercolor: #25592c;
+    }
+    
+    [group="yuckyattrs"] {
+        innercolor: #be6127;
+    }
+    
+        <!-- Remember: attribute selectors win over element selectors. --> 
+    
+       /* rule 1, specificity 10 */ 
+        [name="thename"] {
+            testdata: "i am thename";
+        }
+        
+        /* rule 2, specificity 1 */ 
+        testclass {
+            testdata: "i am testclass";
+        }
+        
+        /* rule 3, specificity 1 */ 
+        view {
+            testdata: "i am view";
+        }
+
+<!--end attribute tests-->
+
+<!--constraint tests-->
+
+        #pacifica {
+          innerbgcolor: #00AA00; 
+          logo: "constraints/resources/beach_bungalow.jpg";        
+          cityname: "pacifica";
+          description: "This should have a green background.";
+        }
+        
+        #losangeles {
+            logo: "constraints/resources/los_angeles.jpg";
+            cityname: "los angeles";
+            nicebgcolor: #94A586;
+            specialcolor: #FFA586;
+            description: "This should have a pink background.";
+            innerbgcolor: #00AA00; 
+        }
+        
+    #gComplicatedView {
+        indirect1: 200;
+        indirect2: "foo";
+    }
+    
+    #gSimpleView {
+        nicebgcolor: #00AA33; /* nicebgcolor is green*/
+        nicexpos: 44;
+    }
+    
+    #gSB {
+        stylebgcolor : #AA0000;
+        styleinnercolor : #AAFFFF;        
+    }
+    
+    /* This should match gPlainView, and gWidthThirty, but the next
+        rule should take precedence for gWidthThirty */ 
+    /* Note that right now lexical order matters; this works if this
+        less-specific rule comes after the more-specific rule. 
+        The tests with width="62" test what happens when the rules
+        are declared in the opposite lexical order, most specific
+        first. */ 
+
+    [width="30"] {
+        stylebgcolor: #A4B2B1;
+    }
+    
+    /* This should only get gWidthThirty, not gPlainView */ 
+    styledbox[width="30"] {
+        stylebgcolor: #8E694B;
+        styleinnercolor: #880000;                
+    }
+    
+    styledbox[width="62"] {
+        stylebgcolor: #6B7347;
+        styleinnercolor: #8C9870;                    
+    }
+    
+    [width="62"] {
+        stylebgcolor: #963A1E;
+        styleinnercolor: #D2B46C;                            
+    }
+
+    
+    /* This should match gNugget bot not gWidthThirty */ 
+    styledbox {
+        stylebgcolor: #71919F;
+        styleinnercolor: #B79FC2;        
+    }
+    
+<!--subclassing-->
+    styledboxsub {
+            stylebgcolor : purple;
+            styleinnercolor : attr(myInnerColor);
+        }
+<!--end subclassing-->
+<!--end constraint tests-->
+
+<!--element selector tests-->
+designerview {
+    nonsense: 'nonsense';
+    borderwidth: 10; 
+    bordercolor: #652f15; 
+    textinset: 2;
+    innercolor: #b4a88f;
+    labelcolor: #000000;
+    }
+
+dezignerview {
+    width: 279;
+    miscdata: "uc berkeley";
+    innercolor: #1e4d75;
+}
+<!--end element selector test-->
+
+<!--descendant tests-->
+   /* this should apply only to preston */ 
+    styledboxdescendant {
+        stylebgcolor: #515151;
+        styleinnercolor: #FF8888;
+    }
+    
+    /* this should apply only to george */ 
+    styledboxdescendant styledboxdescendant {
+        styleinnercolor: #8888FF;  
+    }
+    
+    /* This should apply only to jeb and gwb */ 
+    styledboxdescendant styledboxdescendant styledboxdescendant {
+        styleinnercolor: #88FF00;  
+    }
+    
+    person { favoritecolor: #0000AA}
+    #gEasyStreet person person { favoritecolor: #00AA00}
+    #gStreet person { favoritecolor: #AA0000}
+    #gStreet person person { favoritecolor: #AA00AA}    
+    #gStreet person person person { favoritecolor: #441a0a}    
+    #gStreet cat { meowsound: "gstreetcat"}   
+    #gKennedyHouse cat { meowsound: "kennedycat"}       
+
+<!--end descendant tests-->
+<!--fake tests-->
+   fakep {color:  #008800;}
+   fakeli { color: #000088;}
+   fakeul fakeul fakeli { color: #880000;}
+<!--end fake-->
+
+<!--id test-->
+#iPhilip {
+    width: 300;
+    miscdata: "san jose state";
+    innercolor: #8F008F;
+}
+
+#iGeorge {
+    width: 200;
+    miscdata: "somewhere far away";
+    innercolor: #245f84;
+}
+<!--end id tests-->
+
+<!--name tests-->
+       #g-Max {
+            lzx-bgcolor: #652f15;
+        }
+       #gMax {
+            lzxbgcolor: #00FF00;
+        }
+        #brown {
+            lzx\_bgcolor: #00FF00;
+            lzx\5f content: "now is the time...";
+        }
+<!-- end name tests-->
+
+<!--test resources-->
+       #gBonk {
+            styledresource: "resource/test.png"; 
+        }
+<!--end test resources-->
+
+<!--specificity tests-->
+       /*IMPORTANT: This test is only testing properly if the definitions
+          are not in class-hierarchy order. */
+
+        superclass {
+            testme: 1;
+        }
+
+        subsubclass {
+            testme: 3;
+        }
+
+        subclass {
+            testme: 2;
+        }
+        
+
+        supercontainer superclass {
+            testme: 4;
+        }
+
+        supercontainer subsubclass {
+            testme: 6;
+        }
+
+        supercontainer subclass {
+            testme: 5;
+        }
+
+        superclass subclass{
+            testme :7;
+        }
+
+        superclass superclass{
+            testme :8;
+        }
+
+        superclass superclass{
+            testme :9;
+        }
+
+        subclass subsubclass{
+            testme :11;
+        }
+
+        superclass subsubclass{
+            testme :10;
+        }
+
+        #multimatch{
+            testme : 10;
+        }
+
+        #multimatch{
+            testme : 100;
+        }
+                /* 1 */
+        view{
+            value1 : #000001;
+            value2 : #000001;
+            value3 : #000001;
+            value4 : #000001;
+            value5 : #000001;
+            value6 : #000001;
+            value7 : #000001;
+            value8 : #000001;
+            value9 : #000001;
+            value10 : #000001;
+            value11 : #000001;
+        }
+
+        /* 2 */
+        view view{
+            value2 : #000002;
+            value3 : #000002;
+            value4 : #000002;
+            value5 : #000002;
+            value6 : #000002;
+            value7 : #000002;
+            value8 : #000002;
+            value9 : #000002;
+            value10 : #000002;
+            value11 : #000002;
+        }
+        
+        /* 10 */
+        [ name="aname" ]{
+            value3 : #000003;
+            value4 : #000003;
+            value5 : #000003;
+            value6 : #000003;
+            value7 : #000003;
+            value8 : #000003;
+            value9 : #000003;
+            value10 : #000003;
+            value11 : #000003;
+        }
+
+        /* 11 */
+        [name="aname"] view{
+            value4 : #000004;
+            value5 : #000004;
+            value6 : #000004;
+            value7 : #000004;
+            value8 : #000004;
+            value9 : #000004;
+            value10 : #000004;
+            value11 : #000004;
+        }
+
+        /* 11 */
+        view [name="aname"] {
+            value5 : #000005;
+            value6 : #000005;
+            value7 : #000005;
+            value8 : #000005;
+            value9 : #000005;
+            value10 : #000005;
+            value11 : #000005;
+        }
+
+        /* 11 */
+        view[ name="aname" ]{
+            value6 : #000006;
+            value7 : #000006;
+            value8 : #000006;
+            value9 : #000006;
+            value10 : #000006;
+            value11 : #000006;
+        }
+
+        /* 12 */
+        view[name="aname"] view{
+            value7 : #000007;
+            value8 : #000007;
+            value9 : #000007;
+            value10 : #000007;
+            value11 : #000007;
+        }
+
+        /* 22 */
+        view[name="aname"] view[name="aname"]{
+            value8 : #000008;
+            value9 : #000008;
+            value10 : #000008;
+            value11 : #000008;
+        }
+
+        /* 100 */
+        #childID{
+            value9 : #000009;
+            value10 : #000009;
+            value11 : #000009;
+        }
+
+        /* 101 */
+        view #childID{
+            value10 : #000010;
+            value11 : #000010;
+        }
+
+        /* 101 */
+        #parentID view{
+            value11 : '#000011';
+        }
+
+    person { favoritecolor: "0x0000AA"}
+    #gEasyStreet person person { favoritecolor: "0x00AA00"}
+    #gStreet person { favoritecolor: "0xAA0000"}
+    #gStreet person person { favoritecolor: "0xAA00AA"}    
+    #gStreet person person person { favoritecolor: "0x441a0a"}    
+    #gStreet cat { meowsound: "gstreetcat"}   
+    #gKennedyHouse cat { meowsound: "kennedycat"}       
+
+<!--end specificity tests-->
+<!--typography tests-->
+        #gt2 {
+            textbg : #AA33AA; /* purple background for text */ 
+        }
+        
+        #gt3 {
+            stylefontcolor: #993399; /* the text itself should be purple */ 
+        }
+
+        #gt4 {
+            stylefontsize: 18; /* nice big text */ 
+        }
+        
+        #gt7 {
+            stylefontstyle: "bold"; 
+        }
+<!--end typography tests-->
+
+</stylesheet>
+
+<!--attribute tests-->
+
+    <designerview name="Philip" id="gPhilip" initstage="late"/>
+    <designerview name="George" id="gGeorge" initstage="late" />
+
+  <!--This stopped working
+  <designerview id="gGroove" group="groovyattrs" />
+    <designerview id="gYuck" group="yuckyattrs" />  -->
+    
+    <view name="thename" id="joseph">
+        <attribute name="testdata" value="$style{'testdata'}" />
+    </view>
+    
+    <class name="testclass" />
+    
+    <view> <!-- this view just makes a new scope for name="thename" -->
+        <view name="thename"> 
+            <testclass id="edgar">
+                <attribute name="testdata" value="$style{'testdata'}" />
+            </testclass>    
+            <view id="cheever">
+                <attribute name="testdata" value="$style{'testdata'}" />
+            </view>
+        </view>
+    </view> 
+    
+    <view id="snoopy">
+        <attribute name="testdata" value="$style{'testdata'}" />
+    </view> 
+
+    <testclass id="jackie">
+            <view id="alice">
+                <!-- Should alice get her style from rule 2 or rule 3? 
+                I think she should get her style from rule 3.
+                --> 
+                <attribute name="testdata" value="$style{'testdata'}" />
+            </view>
+    </testclass>
+
+    <view> <!-- another scope for name="thename" --> 
+        <testclass id="doug" name="thename">
+                <attribute name="testdata" value="$style{'testdata'}" />
+                
+                <view id="randy">
+                    <attribute name="testdata" value="$style{'testdata'}" />
+                </view>
+        </testclass>
+    </view> 
+
+<!--end attribute tests-->
+
+<!--constraint tests-->
+
+    <view id="seattle" width="300" height="200" bgcolor="0x94a586" clip="true">
+        <view name="container" x="10" y="10" width="$once{parent.width-20}" height="$once{parent.height-20}">
+            <simplelayout axis="y" spacing="10" />
+            <view name="logo" resource="/constraints/resources/seattle_pike_place.jpg" x="10" y="10" />
+            <text name="title" text="foghorns" x="10" y="70" width="${parent.width-20}"/>
+            <view name="inner" y="100" x="10" width="${parent.width-20}" height="${parent.height-110}"
+                 bgcolor="#5F787F">            
+                 <text x="5" y="5" width="${parent.width-10}" text="We like Seattle" />
+            </view>        
+        </view> 
+    </view>
+
+    <class name="citybox" width="300" height="200" clip="true">
+        <view name="container" x="10" y="10" width="$once{parent.width-20}" height="$once{parent.height-20}">
+            <simplelayout axis="y" spacing="10" />
+            <view name="logo" source="$style{'logo'}" x="10" y="10" />
+            <text name="title" text="$style{'cityname'}" x="10" y="70" width="${parent.width-20}"/>
+            <view name="inner" y="100" x="10" width="${parent.width-20}" height="${parent.height-110}" bgcolor="$style{'innerbgcolor'}">            
+                 <text x="5" y="5" width="${parent.width-10}" text="$style{'description'}" />
+            </view>        
+        </view> 
+    </class>
+    
+    <citybox id="losangeles" bgcolor="$style{'specialcolor'}"/>
+    <citybox id="pacifica" bgcolor="$style{'nicebgcolor'}"  />    
+
+
+    <view id="gBefore" bgcolor="#AA0033" width="50" height="50" />
+    <view id="gSimpleView" bgcolor="$style{'nicebgcolor'}" width="50" 
+          x="$style{ 'nicexpos' }" height="50" />
+    <view id="gAfter" bgcolor="#3300BB" width="50" height="50" />
+
+    <text id="gComplicatedView" width="$style{ mystyleval1 }" 
+          text="$style{ mystyleval2 }">
+        <attribute name="mystyleval1" value="indirect1" type="string"/>
+        <attribute name="mystyleval2" value="indirect2" type="string"/>
+    </text>
+    
+    <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
+    </class>
+    
+    <styledbox x="20" y="20" id="gSB" />
+    <styledbox x="20" y="20" />    
+    
+    <view name="containerForNameTest" bgcolor="#95A1A1" width="${parent.width-5}" height="110">
+        <simplelayout axis="x" spacing="5" />
+        <text text="gWidthThirty:" />
+        <styledbox x="10" id="gWidthThirty" width="30" > <!-- Test selecting for this with styledbox[width="30"] -->
+        </styledbox>
+        <text text="gNugget:" />        
+        <styledbox id="gNugget">
+        </styledbox>
+        <text text="gPlainView:" />                
+        <view id="gPlainView" width="30" height="70" bgcolor="$style{'stylebgcolor'}"> <!-- This should not match `styledbox[width="30"] -->
+        </view>
+        <text text="gOdd:" />
+        <styledbox name="odd" id="gOdd" width="62"/>
+        <text text="gOtter:" />        
+        <view name="otter" id="gOtter" width="62" height="70" bgcolor="$style{'stylebgcolor'}"/>
+    </view>
+
+<!--subclassing-->
+
+    <!-- This class has a bgcolor defined by a style and an inner view
+         whose bgcolor is defined by a style that references an
+         attribute of the view that is constrained to an attribute of
+         the parent.  This was the most complex dependency I could
+         think of to test. [2007-01-04 ptw] -->
+    <class name="styledboxsub" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+        <attribute name="innerColor" type="color" value="fuchsia" />
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10">
+          <attribute name="myInnerColor" type="color" value="${parent.innerColor}" />
+        </view>
+    </class>
+
+    <!-- Instances of this class should be navy, overriding the parent's bgcolor style constraint -->
+    <!-- Instances of this class should also have width=150,
+         overriding the parent's width attribute. -->
+    <!-- And finally, their inner view should be blue -->
+    <class name="subclassboxsub" extends="styledboxsub">
+        <attribute name="bgcolor" value="navy" />
+        <attribute name="width" value="150" />
+        <attribute name="innerColor" value="blue" />
+    </class>
+
+    <!-- This box should be green with an inner view of lime. -->
+    <class name="otherlassboxsub" extends="styledboxsub" bgcolor="green">
+        <attribute name="innerColor" value="lime" />
+    </class>
+
+    <styledboxsub id="sb0" />
+
+    <!-- This box is maroon with an inner view of red -->
+    <styledboxsub id="sb1" bgcolor="maroon" innerColor="red" />
+
+    <subclassboxsub id="sb2" />
+    <otherlassboxsub id="sb3" />
+<!--end subclassing-->
+<!--end constraint tests-->
+
+<!--element selector tests-->
+    <dezignerview id="gRobby" />
+    <dezignerview id="ePatrick" />    
+    <dezignerview id="gSteve" />    
+
+    <dezignerview /> <!-- no id, just plain --> 
+    <dezignerview id="gFindMe" /> 
+    <dezignerview bordercolor="0xABBADD" /> <!-- no id -->
+<!--end element selector test-->
+
+<!--descendant selector test-->
+    <class name="styledboxdescendant" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+        <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
+    </class>
+    
+    <styledboxdescendant id="preston" width="150">
+        <styledboxdescendant id="cGeorge" x="30" width="150" y="20">
+            <styledboxdescendant x="50" id="jeb" y="20"/>
+            <styledboxdescendant x="70" id="gwb" y="20"/>            
+        </styledboxdescendant>
+    </styledboxdescendant>
+
+<!--end descendant selector tests-->
+
+<!--fake tests-->
+<fakebody width="300" height="300">
+    <fakep id="gBan">banana paragraph should be green</fakep>
+    <fakep id="gLuff">luff luff luff luff ballot should be green</fakep>
+    <fakep id="gPeek">peek out at the fake p</fakep>
+           
+    <fakep> here there here here . </fakep>
+    <fakeul>
+        <fakeli id="gLiOne">i should be blue list item number one</fakeli>
+        <fakeli>i should be blue list item number two</fakeli>        
+        <fakeul>
+            <fakeli id="gLiSub">i am a sublist item should be red</fakeli>                                
+            <fakeli>another sublist item should be red</fakeli>                
+        </fakeul>
+        <fakeul>
+            <fakeli id="gLiSpecial"> i am a special one. should be red. </fakeli>
+         </fakeul>
+    </fakeul>
+</fakebody>
+<!--end fake tests-->
+
+<!--id selector tests-->
+    <dezignerview id="iPhilip" initstage="late"/>
+    <dezignerview id="iGeorge" initstage="late" />   
+    <dezignerview id="iIzzy" initstage="late" />    
+    <dezignerview id="cabinet"/>
+
+    <dezignerview /> <!-- no id, just plain --> 
+    <dezignerview id="iFindMe" /> 
+    <dezignerview bordercolor="0xABBADD" /> <!-- no id -->
+<!--end id selector tests-->
+
+<!-- name tests-->
+<class name="B" width="50" height="50" bgcolor="$style{'lzxbgcolor'}"/>
+    
+<B id="gMax" />
+   <class name="underscored" width="50" height="50" bgcolor="$style{'lzx_bgcolor'}">
+      <text name='text' text="$style{'lzx_content'}" />
+    </class>
+    
+<underscored id="brown" />
+<!--end name tests-->
+
+<!--test resources-->
+    <view id="gBonk" source="$style{'styledresource'}" />
+<!--end test resources-->
+
+<!--specificity tests-->
+   <class name="superclass">
+        <attribute name="cprop" value="$style{ 'testme' }"/>
+    </class>
+
+    <class name="subclass" extends="superclass"/>
+    <class name="subsubclass" extends="subclass"/>
+
+    <superclass  id="supi"/>
+    <subclass    id="subi"/>
+    <subsubclass id="subsubi"/>
+
+    <class name="supercontainer"/>
+    <class name="subcontainer" extends="supercontainer"/>
+
+    <supercontainer>
+        <superclass  id="sp_supi"/>
+        <subclass    id="sp_subi"/>
+        <subsubclass id="sp_subsubi"/>
+    </supercontainer>
+
+    <subclass>
+        <superclass  id="sb_supi"/>
+        <subclass    id="sb_subi"/>
+        <subsubclass id="sb_subsubi"/>
+    </subclass>
+
+    <view id="multimatch">
+        <attribute name="cprop" value="$style{ 'testme' }"/>
+    </view>
+    <view name="aname" id="parentID">
+        <view name="aname" id="childID">
+            <attribute name="value1"  value="$style{ 'value1'}"/>
+            <attribute name="value2"  value="$style{ 'value2'}"/>
+            <attribute name="value3"  value="$style{ 'value3'}"/>
+            <attribute name="value4"  value="$style{ 'value4'}"/>
+            <attribute name="value5"  value="$style{ 'value5'}"/>
+            <attribute name="value6"  value="$style{ 'value6'}"/>
+            <attribute name="value7"  value="$style{ 'value7'}"/>
+            <attribute name="value8"  value="$style{ 'value8'}"/>
+            <attribute name="value9"  value="$style{ 'value9'}"/>
+            <attribute name="value10" value="$style{ 'value10'}"/>
+            <attribute name="value11" value="$style{ 'value11'}"/>
+        </view>
+    </view>
+
+<!--end specificity tests-->
+
+<!--typography tests-->
+    <text id="gt1" width="300" multiline="true" 
+        text="(plain) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt2" width="300" multiline="true" 
+        bgcolor="$style{'textbg'}"
+        text="(bg purple by css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt3" width="300" multiline="true" 
+        fgcolor="$style{'stylefontcolor'}"
+        text="(fgcolor purple by css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+    
+    <!-- this causes a compile warning:
+    bad value for attribute "fontsize"
+    but then the text is drawn properly, at size 18. 
+    <text id="gt4" width="300" multiline="true" 
+        fontsize="$style{'stylefontsize'}"
+        text="(fontsize 18 via css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>--> 
+
+   <text id="gt5" width="300" multiline="true" 
+        fontsize="18"
+        text="(fontsize 18) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+
+    <text id="gt6" width="300" multiline="true" 
+        fontstyle="bold"
+        text="(bold) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text>
+    
+    <text id="gt7" width="300" multiline="true" 
+        fontstyle="$style{'stylefontstyle'}"
+        text="(bold via css) OpenLaszlo is an open source platform for creating zero-install web applications with the user interface capabilities of desktop client software.">
+    </text> 
+
+<!--end typography tests-->
+
+<TestSuite>
+    <TestCase>
+    
+<!--attribute tests-->
+        <method name="testPhilip">
+            assertNotNull( gPhilip );
+            assertEquals( 300, gPhilip.getWidth() );
+            assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
+            Debug.write('attribute testPhilip');
+        </method>
+
+        <method name="testGeorge">
+            assertNotNull( gGeorge );
+            assertEquals( 200, gGeorge.getWidth() );
+            assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
+            Debug.write('attribute testGeorge');
+        </method>
+
+        <!-- fix
+        <method name="testNonNameAttrs">
+            assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
+            assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
+            Debug.write('attribute testNonNameAttrs');
+         </method>
+         -->
+
+        <method name="testthename">
+            assertEquals( "i am thename", joseph.getAttribute("testdata") );
+            assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
+            Debug.write('attribute testTheName');
+        </method>
+
+        <method name="testNamedAncestor">
+            /* 
+                Should edgar take his style from rule 1, which his
+                ancestor matches but he does not, or from rule 2, which
+                he matches, but has lower specificity than rule 1?
+                If edgar takes his style from rule 2, which feels like the
+                right behavior, the next assertion will pass.
+            */ 
+            assertEquals( "i am testclass", edgar.getAttribute("testdata") );             
+            /* 
+                The situation is the same for cheever, but with selecting for
+                element type of view rather than a user class. 
+                
+                If our implementation is consistent, then both of these assertions
+                should have the same success, because they only differ by whether
+                the class is a user class or built-in class.                 
+            */            
+            assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
+           Debug.write('attribute testNamedAncestor');
+         </method>
+
+        <method name="testNameVsElement">
+            assertEquals( "i am view", alice.getAttribute("testdata") );            
+            /* randy is the reverse of the edgar test case */ 
+            assertEquals( "i am view", randy.getAttribute("testdata") );                        
+            assertEquals( "i am thename", doug.getAttribute("testdata") );            
+           Debug.write('attribute testNameVsElement');
+         </method>
+<!--end attribute tests-->
+
+<!--constraint tests-->
+<!-- descendant selectors test -->        
+        <method name="testSimpleConstraint">
+            assertEquals(  '0x00AA33', gSimpleView.bgcolor);
+            assertEquals(  44 , gSimpleView.x);
+            assertEquals(  200 , gComplicatedView.width);
+            assertEquals(  "foo" , gComplicatedView.text);
+            Debug.write('constraint testSimpleConstraint');
+        </method>
+        
+        <method name="testClassConstraint">
+            assertEquals(  '0xAA0000', gSB.bgcolor);
+            assertEquals(  '0xAAFFFF', gSB.inner.bgcolor);
+            Debug.write('constraint testClassConstraint');
+        </method>
+        
+        <method name="testClassAttrValSelector">
+            assertEquals(  '0x8E694B', gWidthThirty.bgcolor);  //  9,333,067 
+            assertEquals(  '0x71919F', gNugget.bgcolor);       //  7,442,847
+            assertEquals(  '0xA4B2B1', gPlainView.bgcolor);    // 10,793,649
+            assertEquals(  '0x963A1E', gOtter.bgcolor );       //  9,845,278
+            assertEquals(  '0x6B7347', gOdd.bgcolor );         //  7,041,863           
+            Debug.write('constraint testClassAttrValSelector');
+        </method>
+
+<!--subclassing-->
+         <method name="testClassConstraint">
+             this.assertEquals(purple, sb0.getAttribute("bgcolor"));
+             this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"));
+             Debug.write("subclassing testClassConstraint");
+         </method>
+
+         <method name="testInstanceOverrideConstraint">
+             this.assertEquals(maroon, sb1.getAttribute("bgcolor"));
+             this.assertEquals(red, sb1.inner.getAttribute("bgcolor"));
+             Debug.write("subclassing testInstanceOverrideConstraint");
+         </method>
+
+         <method name="testSubclassOverrideConstraint">
+             this.assertEquals("150", sb2.getAttribute("width"));
+             this.assertEquals(navy, sb2.getAttribute("bgcolor"));
+             this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"));
+             this.assertEquals(green, sb3.getAttribute("bgcolor"));
+             this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"));
+             Debug.write("subclassing testSubclassOverrideConstraint");
+         </method>
+<!--end subclassing-->
+<!--end constraint tests-->
+
+<!--element selector tests-->
+        <method name="testRobby">
+            assertNotNull( gRobby );
+            assertEquals( 279, gRobby.getWidth() );
+            assertEquals( "uc berkeley", gRobby.getAttribute("miscdata"));
+            Debug.write('Element selector testRobby');
+        </method>
+
+        <method name="testPatrick">
+            assertNotNull( ePatrick );
+            assertEquals( 279, ePatrick.getWidth() );
+            assertEquals( "uc berkeley", ePatrick.getAttribute("miscdata"));
+            Debug.write('Element selector testPatrick');
+        </method>
+<!--end element selector test-->
+
+<!--descendant selector test-->
+        <method name="testSimpleDescendant">
+            assertEquals(  '0x515151', preston.bgcolor);
+            assertEquals(  '0xFF8888', preston.inner.bgcolor); 
+            assertEquals(  '0x8888FF', cGeorge.inner.bgcolor); 
+            assertEquals(  '0x88FF00', jeb.inner.bgcolor);                         
+            assertEquals(  '0x88FF00', gwb.inner.bgcolor); 
+            Debug.write('Simple descendant sector testSimpleDescendant');
+        </method>
+        
+         <method name="testTopLevel">
+            assertEquals( "0x0000AA", gJoeSr.getAttribute("favoritecolor"));
+            Debug.write("testTopLevel");
+        </method>
+
+        <method name="testTwoLevel">
+            assertEquals( "0x00AA00", gJFK.getAttribute("favoritecolor"));
+            assertEquals( "0xAA0000", gBo.getAttribute("favoritecolor"));            
+            assertEquals( "gstreetcat", gKittycat.getAttribute("meowsound"));
+            assertEquals( "gstreetcat", gBlackie.getAttribute("meowsound"));            
+            assertEquals( "kennedycat", gPatCat.getAttribute("meowsound"));            
+            Debug.write("testTwoLevel");
+        </method>
+
+        <method name="testThreeLevel">
+            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
+            assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
+            assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
+            Debug.write("testThreeLevel");
+        </method>
+
+<!--end descendant selector tests-->
+<!--fake tests-->
+    <method name="testColors">
+        assertEquals( '0x000088', gLiOne.getAttribute("fontcolor") );
+        assertEquals( '0x008800', gBan.getAttribute("fontcolor") );        
+        assertEquals( '0x880000', gLiSub.getAttribute("fontcolor") );                
+        assertEquals( '0x880000', gLiSpecial.getAttribute("fontcolor") );                        
+        Debug.write("testColors");
+    </method>
+<!--end fake-->
+        
+       <!--id selector tests-->
+        <method name="testPhilip">
+            assertNotNull( iPhilip );
+            assertEquals( 300, iPhilip.getWidth() );
+            assertEquals( "san jose state", iPhilip.getAttribute("miscdata"));
+            Debug.write("id selector testPhilip");
+        </method>
+
+        <method name="testGeorge">
+            assertNotNull( iGeorge );
+            assertEquals( 200, iGeorge.getWidth() );
+            assertEquals( "somewhere far away", iGeorge.getAttribute("miscdata"));
+            Debug.write("testGeorge");
+        </method>
+        
+    <!--end id selector tests-->
+<!--name tests-->
+        <method name="testnamesuite">
+                assertEquals('0x00FF00', brown.bgcolor);
+                assertEquals("now is the time...", brown.text.text)
+                assertEquals('0x00FF00', gMax.bgcolor);
+                Debug.write('name tests');
+        </method>
+<!--end name tests-->
+
+<!--test resources-->
+       <method name="testFoundStyledResource">
+            assertTrue( "test.png", gBonk.getAttribute("resource") );
+            assertEquals( 77, gBonk.getAttribute("resourceheight") );
+            assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
+            Debug.write("testFoundStyledResource");
+        </method>
+
+<!--end test resources-->
+
+<!--specificity tests-->
+
+        <method name="testClasses">
+            assertEquals( 1, supi.cprop );
+            assertEquals( 2, subi.cprop );
+            assertEquals( 3, subsubi.cprop );
+            Debug.write("testClasses");
+        </method>
+        
+        <method name="testCompound">
+            assertEquals( 4, sp_supi.cprop );
+            assertEquals( 5, sp_subi.cprop );
+            assertEquals( 6, sp_subsubi.cprop );
+            Debug.write("testCompound");
+        </method>
+
+        <method name="testComplexFunky">
+            //you hit a closer 
+            //if the selectors match, lexical order should win
+            assertEquals( 9, sb_supi.cprop );
+
+            //should grab the more specific subclass selector
+            assertEquals( 7, sb_subi.cprop );
+
+            //should walk up and grab the more specifc previous descendant
+            //selector
+            assertEquals( 11, sb_subsubi.cprop );
+            Debug.write("testComplexFunky");
+        </method>
+
+        <method name="testRuleOrder">
+            assertEquals( 100, multimatch.cprop );
+            Debug.write("testRuleOrder");
+        </method>
+
+        <method name="testRuleOrder">
+            var n = childID;
+            assertEquals( 1 , n.value1 );
+            assertEquals( 2 , n.value2 );
+            assertEquals( 3 , n.value3 );
+            assertEquals( 4 , n.value4 );
+            assertEquals( 5 , n.value5 );
+            assertEquals( 6 , n.value6 );
+            assertEquals( 7 , n.value7 );
+            assertEquals( 8 , n.value8 );
+            assertEquals( 9 , n.value9 );
+            assertEquals( 10, (n.value9 + 1) );
+            assertEquals( 11, (n.value9 + 2) );
+            Debug.write( 'testRuleOrder' );
+        </method>
+
+        <method name="testLittleBoys">
+            assertEquals( "0xAA00AA", gLittleGeorge.getAttribute("favoritecolor"));
+            this.assertEquals( "0xAA00AA", gRobertJr.getAttribute("favoritecolor"));            
+            this.assertEquals( "0x441a0a", gIndio.getAttribute("favoritecolor"));               
+            Debug.write("testLittleBoys"); 
+        </method>
+
+<!--end specificity tests-->
+
+<!--typography tests-->
+       <method name="testSimpleText">
+            assertEquals( '0xAA33AA', gt2.getAttribute("bgcolor"));
+            
+            // The htmltext for gt3 should now have the color string specified in
+            // stylefontcolor
+            var textclip = gt3.__LZtextclip;
+            var htmlText = textclip.htmlText;
+            var indexOfColor = htmlText.indexOf("993399");
+            this.assertTrue( indexOfColor > 0 , "993399 present in htmltext"); 
+
+<!--            // it would be nice if this worked, too. 
+            assertEquals( '0x993399', gt3.getAttribute("fgcolor"));             
+            assertEquals( 18, gt4.getAttribute("fontsize"));-->
+             
+            assertEquals( "bold", gt6.getAttribute("fontstyle")); 
+            // this.assertEquals( "bold", gt7.getAttribute("fontstyle"));             
+            
+            Debug.write("testSimpleText");
+        </method>
+
+<!--end typography tests-->
+
+
+    </TestCase>
+</TestSuite>
+
+</canvas>
+
+<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. -->

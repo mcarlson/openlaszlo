@@ -10,7 +10,7 @@
         designerview {
             width: 279;
             miscdata: "uc berkeley";
-            innercolor: "0xFF0000";
+            innercolor: #FF0000;
         }
         
         [name='Philip'] {
@@ -88,13 +88,13 @@
      </method>
 
      <method name="testNonNameAttrs">
-         assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
-         assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
+         assertEquals( '0x25592c', gGroove.getAttribute("innercolor") );
+         assertEquals( '0xbe6127', gYuck.getAttribute("innercolor") );            
          <!--this.finishedTest("testNonNameAttrs");-->
      </method>
 
      <method name="testLibrary">
-         assertEquals( 0x004499, gBiblio.getAttribute("innercolor") );
+         assertEquals( '0x004499', gBiblio.getAttribute("innercolor") );
          <!--this.finishedTest("testLibrary");-->
      </method>
 

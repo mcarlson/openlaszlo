@@ -1,13 +1,13 @@
-/* Copyright 2006 Laszlo Systems */ 
+/* Copyright 2007 Laszlo Systems */ 
 
 [name='Philip'] {
     width: 300;
     miscdata: "san jose state";
-    innercolor: "0x8F008F";
+    innercolor: #8F008F;
 }
 
 [name='George'] {
     width: 200;
     miscdata: "somewhere far away";
-    innercolor: "0x245f84";
+    innercolor: #245f84;
 }
