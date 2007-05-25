@@ -1,0 +1,21 @@
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<library>
+    
+    <class name="B" traits="cssable" bgcolor="0x776699" width="50" height="50">
+        <handler name="onconstruct" method="_applyCSS" />
+        <attribute name="cssPropertyMap" 
+            value="{width: 'width', bgcolor: 'lzxbgcolor', coolness: 'coolness', height: 'lzxheight'}" />
+    </class>
+    
+    <B id="gB1" y="0"/>
+    <B id="gB2" width="200"  y="75"/>
+    <B id="gB3" y="150"/>   
+ 
+    <class name="TraitsTestCase" extends="TestCase">
+
+        <method name="testB">
+            assertEquals( 200, gB2.getWidth());
+        </method>
+    </class>
+    
+</library>
