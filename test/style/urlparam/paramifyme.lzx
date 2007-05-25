@@ -1,4 +1,4 @@
-<!-- Copyright 2006 Laszlo Systems -->
+<!-- Copyright 2006-2007 Laszlo Systems -->
 <!-- This file is to demonstrate the feature whereby a cssfile can
         be specified as a http parameter. Run with ?cssfile=carla.css
         to test this feature. cf LPP-2703.
@@ -7,7 +7,7 @@
     <include href="../test"/>
     <simplelayout />
     <stylesheet>
-        #gCarla { cssbg: "0x245680"; }
+        #gCarla { cssbg: #245680; }
     </stylesheet>
     <view id="gCarla" bgcolor="$style{'cssbg'}" width="100" height="100" />
 

@@ -1,13 +1,4 @@
-<!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
-<canvas debug="true"  bgcolor="#AAAAAA">
-<include href="lzunit"/>
-    <include href="../test"/>
-    <script>
-    Debug.write("This test file exercises compiler and runtime support for $style constraints");
-    </script>
-    <include href="../test"/>
-    <debug/>
-    
+<library>    
     <stylesheet>
     #gComplicatedView {
         indirect1: 200;
@@ -59,52 +50,44 @@
     }
     
     </stylesheet>
-
-    <simplelayout axis="y" spacing="0"/>
-    <view id="gBefore" bgcolor="#AA0033" width="50" height="50" />
-    <view id="gSimpleView" bgcolor="$style{'nicebgcolor'}" width="50" 
-          x="$style{ 'nicexpos' }" height="50" />
-    <view id="gAfter" bgcolor="#3300BB" width="50" height="50" />
-
-    <text id="gComplicatedView" width="$style{ mystyleval1 }" 
-          text="$style{ mystyleval2 }">
-        <attribute name="mystyleval1" value="indirect1" type="string"/>
-        <attribute name="mystyleval2" value="indirect2" type="string"/>
-    </text>
-    
     <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
         <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
     </class>
-    
-    <styledbox x="20" y="20" id="gSB" />
-    <styledbox x="20" y="20" />    
-    
-    <view name="containerForNameTest" bgcolor="#95A1A1" width="${parent.width-5}" height="110">
-        <simplelayout axis="x" spacing="5" />
-        <text text="gWidthThirty:" />
-        <styledbox x="10" id="gWidthThirty" width="30" > <!-- Test selecting for this with styledbox[width="30"] -->
-        </styledbox>
-        <text text="gNugget:" />        
-        <styledbox id="gNugget">
-        </styledbox>
-        <text text="gPlainView:" />                
-        <view id="gPlainView" width="30" height="70" bgcolor="$style{'stylebgcolor'}"> <!-- This should not match `styledbox[width="30"] -->
-        </view>
-        <text text="gOdd:" />
-        <styledbox name="odd" id="gOdd" width="62"/>
-        <text text="gOtter:" />        
-        <view name="otter" id="gOtter" width="62" height="70" bgcolor="$style{'stylebgcolor'}"/>
-    </view>
-       
-<TestSuite>
-    <TestCase>
-<!--        <handler name="oninit">
-            this.addTest("testSimpleConstraint");
-            this.addTest("testClassConstraint");         
-            this.addTest("testClassAttrValSelector");                        
-            this.run();
-        </handler>-->
 
+    <class name="StyleConstraintTestCase" extends="TestCase">
+
+        <view id="gBefore" bgcolor="#AA0033" width="50" height="50" />
+        <view id="gSimpleView" bgcolor="$style{'nicebgcolor'}" width="50" 
+              x="$style{ 'nicexpos' }" height="50" />
+        <view id="gAfter" bgcolor="#3300BB" width="50" height="50" />
+
+        <text id="gComplicatedView" width="$style{ mystyleval1 }" 
+              text="$style{ mystyleval2 }">
+            <attribute name="mystyleval1" value="indirect1" type="string"/>
+            <attribute name="mystyleval2" value="indirect2" type="string"/>
+        </text>
+    
+    
+        <styledbox x="20" y="20" id="gSB" />
+        <styledbox x="20" y="20" />    
+    
+        <view name="containerForNameTest" bgcolor="#95A1A1" width="${parent.width-5}" height="110">
+            <simplelayout axis="x" spacing="5" />
+            <text text="gWidthThirty:" />
+            <styledbox x="10" id="gWidthThirty" width="30" > <!-- Test selecting for this with styledbox[width="30"] -->
+            </styledbox>
+            <text text="gNugget:" />        
+            <styledbox id="gNugget">
+            </styledbox>
+            <text text="gPlainView:" />                
+            <view id="gPlainView" width="30" height="70" bgcolor="$style{'stylebgcolor'}"> <!-- This should not match `styledbox[width="30"] -->
+            </view>
+            <text text="gOdd:" />
+            <styledbox name="odd" id="gOdd" width="62"/>
+            <text text="gOtter:" />        
+            <view name="otter" id="gOtter" width="62" height="70" bgcolor="$style{'stylebgcolor'}"/>
+        </view>
+       
         <!-- Descendant selectors test -->        
         <method name="testSimpleConstraint">
             assertEquals(  '0x00AA33', gSimpleView.bgcolor);
@@ -128,8 +111,6 @@
             assertEquals(  '0x6B7347', gOdd.bgcolor );         //  7,041,863           
             <!--this.finishedTest("testClassAttrValSelector");-->
         </method>
-
-    </TestCase> 
-</TestSuite>
-    
-</canvas>
+</class>
+</library>
+<!-- Copyright 2007 Laszlo Systems -->

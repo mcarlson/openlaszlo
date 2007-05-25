@@ -1,17 +1,14 @@
 <!-- Copyright 2007 Laszlo Systems -->
-<canvas title="subclassing test">
-
-  <include href="lzunit"/>
+<library>
 
     <!-- [bshine 10.06.2006] This test validates (LPP-2894) The
          expected behavior is: if a class explicitly sets the value of
          an attribute to a constant, instances of that class have the
          attribute value specified by that constant, regardless of
          what the class's superclasses do. -->
-    <include href="../test"/>
 
     <stylesheet>
-        styledbox {
+        happystyledbox {
             stylebgcolor : purple;
             styleinnercolor : attr(myInnerColor);
         }
@@ -24,7 +21,7 @@
          attribute of the view that is constrained to an attribute of
          the parent.  This was the most complex dependency I could
          think of to test. [2007-01-04 ptw] -->
-    <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+    <class name="happystyledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
         <attribute name="innerColor" type="color" value="fuchsia" />
         <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10">
           <attribute name="myInnerColor" type="color" value="${parent.innerColor}" />
@@ -35,44 +32,35 @@
     <!-- Instances of this class should also have width=150,
          overriding the parent's width attribute. -->
     <!-- And finally, their inner view should be blue -->
-    <class name="subclassbox" extends="styledbox">
+    <class name="subclassbox" extends="happystyledbox">
         <attribute name="bgcolor" value="navy" />
         <attribute name="width" value="150" />
         <attribute name="innerColor" value="blue" />
     </class>
 
     <!-- This box should be green with an inner view of lime. -->
-    <class name="otherlassbox" extends="styledbox" bgcolor="green">
+    <class name="otherlassbox" extends="happystyledbox" bgcolor="green">
         <attribute name="innerColor" value="lime" />
     </class>
 
-    <styledbox id="sb0" />
+    <happystyledbox id="sb0" />
 
     <!-- This box is maroon with an inner view of red -->
-    <styledbox id="sb1" bgcolor="maroon" innerColor="red" />
+    <happystyledbox id="sb1" bgcolor="maroon" innerColor="red" />
 
     <subclassbox id="sb2" />
     <otherlassbox id="sb3" />
 
-<TestSuite name="subclasssuite">
-    <TestCase>
-<!--         <handler name="oninit">
-             this.addTest("testClassConstraint");
-             this.addTest("testInstanceOverrideConstraint");
-             this.addTest("testSubclassOverrideConstraint");
-             this.run();
-         </handler>-->
+    <class name="CSSSubclassingTestCase" extends="TestCase" >
 
          <method name="testClassConstraint">
              this.assertEquals(purple, sb0.getAttribute("bgcolor"));
              this.assertEquals(fuchsia, sb0.inner.getAttribute("bgcolor"));
-             <!--this.finishedTest("testClassConstraint");-->
          </method>
 
          <method name="testInstanceOverrideConstraint">
              this.assertEquals(maroon, sb1.getAttribute("bgcolor"));
              this.assertEquals(red, sb1.inner.getAttribute("bgcolor"));
-             <!--this.finishedTest("testInstanceOverrideConstraint"); -->
          </method>
 
          <method name="testSubclassOverrideConstraint">
@@ -81,9 +69,6 @@
              this.assertEquals(blue, sb2.inner.getAttribute("bgcolor"));
              this.assertEquals(green, sb3.getAttribute("bgcolor"));
              this.assertEquals(lime, sb3.inner.getAttribute("bgcolor"));
-             <!--this.finishedTest("testSubclassOverrideConstraint"); -->
          </method>
-
-    </TestCase>
-</TestSuite>    
-</canvas>
+     </class>
+</library>

@@ -1,0 +1,13 @@
+<!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
+<canvas debug="true">
+    <include href="lzunit"/>
+
+    <include href="../designerview.lzx" />
+    <include href="stylesheetelement-test.lzx" />    
+    
+    <TestSuite>
+        <StylesheetTestCase />
+    </TestSuite>
+
+
+</canvas>

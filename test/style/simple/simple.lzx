@@ -1,5 +1,7 @@
-<!-- Copyright 2006 Laszlo Systems --> 
+<!-- Copyright 2007 Laszlo Systems --> 
 <canvas>
+<include href="lzunit" />
+<include href="../designerview.lzx" />
 
 <stylesheet>
     #gSimple {
@@ -23,5 +25,30 @@
 </view> 
 
 <view width="50" height="50" bgcolor="0x00B300" />
+
+<stylesheet>
+    #gTravis { innercolor: #6ab5e6; }
+</stylesheet>
+<view>
+    <simplelayout axis="x" />
+    <designerview id="gSoy"/>   
+    <designerview id="gAngelica" width="75" height="85"/>
+    <designerview id="gTravis" />
+</view>    
+
+
+
+<TestSuite>
+    <TestCase>
+        <method name="testBasics">
+            assertEquals(50, gSoy.width);
+            assertEquals(75, gAngelica.width);
+        </method>
+        <method name="testColors">
+            assertEquals(0x6ab5e6, gTravis.innercolor);
+        </method>
+    </TestCase>
+</TestSuite>
+
 
 </canvas>

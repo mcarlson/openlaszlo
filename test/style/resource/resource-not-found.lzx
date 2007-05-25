@@ -1,11 +1,4 @@
-<canvas debug="true">
-    <include href="lzunit"/>
-    <include href="../test"/>
-    <script>
-    Debug.write("This test file exercises loading and styling resources.");
-    </script>
-    <debug/>
-
+<library>
     <stylesheet>
         #gBonk {
             styledresource: "test.png"; 
@@ -18,8 +11,7 @@
     </stylesheet>
 
     <simplelayout axis="y" spacing="30"/>
-
-    <view id="gView" resource="test.png" />
+    <view id="gJason" resource="test.png" />
 
     <!-- the resource used by the following view, missing.png,
       does not exist, so this line, if uncommented, would cause a
@@ -49,49 +41,34 @@
      gives a compiler error. This is correct behavior. Uncomment the
      following line to manifest this error. -->
     <!-- resource name="sillyresource" src="idontexist.png" -->
+    
+    <!-- it is correct to get a compilation warning here 
+    "The resource named 'sillyresource' has not been declared" -->
     <view id="gSilly" resource="sillyresource" />
-
-<TestSuite name="resourcesuite">
-<TestCase>
-<!--        <handler name="oninit">
-            this.addTest("testFoundResource");
-            this.addTest("testFoundStyledResource");
-            this.addTest("testNotFoundResource");
-            this.run();
-        </handler>-->
-
+    
+    <class name="ResourceTestCase" extends="TestCase">
         <!-- Descendant selectors test -->
         <method name="testFoundResource">
-            assertTrue( "test.png", gView.getAttribute("resource") );
-            assertEquals( 77, gView.getAttribute("resourceheight") );
-            assertEquals( 206, gView.getAttribute("resourcewidth") );
+            assertTrue( "test.png", gJason.getAttribute("resource") );
+            assertEquals( 77, gJason.getAttribute("resourceheight") );
+            assertEquals( 206, gJason.getAttribute("resourcewidth") );
 
             assertTrue( 77, gMarsh.getAttribute("resourceheight") );
             assertTrue( 206, gMarsh.getAttribute("resourcewidth") );
 
             assertTrue( 77, gJim.getAttribute("resourceheight") );
             assertTrue( 206, gJim.getAttribute("resourcewidth") );
-
-            <!--this.finishedTest("testFoundResource");-->
         </method>
 
         <method name="testFoundStyledResource">
-            // gBonk should be just like gView, but gBonk is styled with CSS
+            // gBonk should be just like gJason, but gBonk is styled with CSS
             assertTrue( "test.png", gBonk.getAttribute("resource") );
             assertEquals( 77, gBonk.getAttribute("resourceheight") );
             assertEquals( 206, gBonk.getAttribute("resourcewidth") );             
-
-            <!--this.finishedTest("testFoundStyledResource");-->
         </method>
 
-        <method name="testNotFoundResource">
+    </class>
 
-<!--            this.finishedTest("testNotFoundResource");-->
-        </method>
-</TestCase>
-</TestSuite>
-
-
-</canvas>
+</library>
 <!-- Copyright 2007 Laszlo Systems -->       
    

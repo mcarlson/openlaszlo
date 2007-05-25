@@ -19,8 +19,6 @@
         }
         
     </stylesheet>
-
-    <simplelayout />
     
     <view name="thename" id="joseph">
         <attribute name="testdata" value="$style{'testdata'}" />
@@ -62,15 +60,7 @@
         </testclass>
     </view> 
 
-<TestSuite>
-    <TestCase>
-<!--        <handler name="oninit">
-            this.addTest( "testthename");
-            this.addTest( "testNamedAncestor"); 
-            this.addTest( "testNameVsElement");              
-            this.run();
-        </handler>-->
-
+<class name="AttrNameTestCase" extends="TestCase">
         <method name="testthename">
             assertEquals( "i am thename", joseph.getAttribute("testdata") );
             assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
@@ -106,7 +96,6 @@
             <!--this.finishedTest("testNameVsElement");-->
         </method>
 
-    </TestCase> 
-</TestSuite>
-    
+</class>
+
 </library>

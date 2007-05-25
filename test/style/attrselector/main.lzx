@@ -1,15 +1,21 @@
 <!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <canvas debug="true">
 <include href="lzunit"/>
+    <include href="../designerview.lzx" />
 
     <script>
     Debug.write("This test file exercises compiler support for CSS [attr='val'].");
     </script>
     <include href="../test"/>
     <debug/>
-    
-    <include href="attrs.lzx" />
+
     <include href="name-test.lzx" />    
+    <include href="attrs.lzx" />        
+    
+    <TestSuite>
+        <AttrNameTestCase />
+        <AttrSelectorTestCase />
+    </TestSuite>
 
 
 </canvas>

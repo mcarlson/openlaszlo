@@ -1,6 +1,5 @@
 <!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
-    <include href="lzunit"/>
     <stylesheet>
         view {
             nicebgcolor: #366d3c;
@@ -17,44 +16,32 @@
 
     </stylesheet>
     
-    <view id="gView" 
-        name="$style{'styledname'}"
-        bgcolor="$style{'nicebgcolor'}"
-        height="100" width="100">
-        <text text="$style{'styledname'}" 
-            width="$once{parent.width}"/>
-    </view>
     
-    <text id="gFooText" text="$style{'foo'}" width="200" />
-    
-    <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
+    <class name="SpecialClassNamesTestCase">
+        <view id="gView" 
+            name="$style{'styledname'}"
+            bgcolor="$style{'nicebgcolor'}"
+            height="100" width="100">
+            <text text="$style{'styledname'}" 
+                width="$once{parent.width}"/>
+        </view>
 
-    <TestSuite name="specialClassNamesSuite">
-        <TestCase>
-        <!--<handler name="oninit">
-            this.addTest( "testview");
-            this.addTest( "testtext");
-            this.addTest( "testclassattr");            
-            this.run();
-        </handler>-->
+        <text id="gFooText" text="$style{'foo'}" width="200" />
+
+        <view id="gJean" name="jean" width="250" height="150" bgcolor="$style{'nicebgcolor'}" />
 
         <method name="testview">
             assertEquals( '0x366d3c', gView.getAttribute("bgcolor") );
             assertEquals( "Frank", gView.getAttribute("name"))
-            <!--this.finishedTest("testview");-->
         </method>
 
         <method name="testtext">
             assertEquals( "text loves foo!", gFooText.getAttribute("text"));
-            <!--this.finishedTest("testtext");-->
         </method>
 
         <method name="testclassattr">
             assertEquals( '0x81103f', gJean.getAttribute("bgcolor"));
-            <!--this.finishedTest("testclassattr");-->
         </method>
-        </TestCase>
-    </TestSuite>
-    
+    </class>
     
 </library>

@@ -1,0 +1,56 @@
+<!-- Copyright 2007 Laszlo Systems -->
+<!--
+    Unified test suite for CSS. Currently executes 526 tests, all of which pass. 
+     
+    We expect these warnings; 
+    resource/resource-not-found.lzx:34:44: Can't import /resource:  /Users/ben/src/svn/openlaszlo/trunk/test/style/resource (No such file or directory)
+    resource/resource-not-found.lzx:44:50: The resource named 'sillyresource' has not been declared
+--> 
+
+<canvas title="css metasuite" width="100%" height="100%">
+    <include href="designerview.lzx" />
+    <include href="lzunit" />
+    <include href="attrselector/name-test.lzx" />
+    <include href="attrselector/attrs.lzx" />
+    <include href="compiler/stylesheetelement-test.lzx" />
+    <include href="constraints/constraint-test.lzx" />
+    <include href="constraints/speedtest.lzx" />
+    <include href="constraints/subclassing.lzx" />
+    <include href="descendantselector/simplerdescendant-test.lzx" />
+    <include href="descendantselector/descendantselector-test.lzx" />
+    <include href="descendantselector/complex-descendant-selector-test.lzx" />
+    <include href="idselector/ids.lzx"/>
+    <include href="elementselector/elementselector-test.lzx" />
+    <include href="elementselector/specialclassnames-test.lzx" />
+    <include href="resource/resource-not-found.lzx" />
+    <include href="specificity/applicability.lzx" />
+    <include href="specificity/newspecificity.lzx" />
+    
+    
+    <include href="trait/cssable-test.lzx" />
+
+    <include href="neighborhood/neighborhoodclasses.lzx" />
+    <include href="neighborhood/kennedyfamily.lzx" />
+    <include href="neighborhood/thestreet.lzx" />
+
+    <TestSuite options="ignorelayout" y="150">
+        <AttrNameTestCase />
+        <AttrSelectorTestCase />
+        <StylesheetTestCase />
+        <StyleConstraintTestCase />
+        <CSSSubclassingTestCase />
+        <SimplerDescendantSelectorTestCase />
+        <DescendantSelectorTestCase />
+        <ComplexDescendantSelectorTestCase />
+        <IdsTestCase />
+        <ElementTestCase />
+        <SpecialClassNamesTestCase />
+        <ResourceTestCase />
+        <TraitsTestCase />
+        <ConstraintSpeedTestCase />
+        <ApplicabilityTestCase />
+        <NewSpecificityTestCase />
+        
+    </TestSuite>
+
+</canvas>

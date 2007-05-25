@@ -1,37 +1,24 @@
 <!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. -->
 <library>
-<include href="lzunit"/>
-    <simplelayout />
-    <designerview id="gRobby" />
-    <designerview id="gPatrick" />    
-    <designerview id="gSteve" />    
 
-    <designerview /> <!-- no id, just plain --> 
-    <designerview id="gFindMe" /> 
-    <designerview bordercolor="0xABBADD" /> <!-- no id -->
-
-    <TestSuite name="elementsuite">
-        <TestCase>
-<!--        <handler name="oninit">
-            this.addTest( "testRobby");
-            this.addTest("testPatrick");
-            this.run();
-        </handler>-->
-
+    <stylesheet src="elementselectors.css" />
+    
+    <class name="ElementTestCase" extends="TestCase">
+        
+        <designerview id="gRobbyElement" />
+        <designerview id="gPatrickElement" />    
+        <designerview id="gSteveElement" />    
+        
         <method name="testRobby">
-            assertNotNull( gRobby );
-            assertEquals( 279, gRobby.getWidth() );
-            assertEquals( "uc berkeley", gRobby.getAttribute("miscdata"));
-            <!--this.finishedTest("testRobby");-->
+            assertNotNull( gRobbyElement );
+            assertEquals( 279, gRobbyElement.getWidth() );
+            assertEquals( "uc berkeley", gRobbyElement.getAttribute("miscdata"));
         </method>
         <method name="testPatrick">
-            assertNotNull( gPatrick );
-            assertEquals( 279, gPatrick.getWidth() );
-            assertEquals( "uc berkeley", gPatrick.getAttribute("miscdata"));
-            <!--this.finishedTest("testPatrick");-->
+            assertNotNull( gPatrickElement );
+            assertEquals( 279, gPatrickElement.getWidth() );
+            assertEquals( "uc berkeley", gPatrickElement.getAttribute("miscdata"));
         </method>
-        </TestCase> 
-    </TestSuite>
-    
+    </class>    
     
 </library>

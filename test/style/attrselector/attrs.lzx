@@ -1,68 +1,52 @@
 <!-- Copyright 2007 Laszlo Systems -->
 <library>
-    <include href="../designerview.lzx" />
-    <simplelayout />
     
     <stylesheet>
-    [name='Philip'] {
+    [name='Canyon'] {
         width: 300;
         miscdata: "san jose state";
-        innercolor: "0x8F008F";
+        innercolor: #8F008F;
     }
 
-    [name='George'] {
+    [name='Jareth'] {
         width: 200;
         miscdata: "somewhere far away";
-        innercolor: "0x245f84";
+        innercolor: #245f89;
     }
     
-    [group="groovy"] {
-        innercolor: "0x25592c";
+    [group="everest"] {
+        innercolor: #25592c;
     }
     
-    [group="yucky"] {
-        innercolor: "0xbe6127";
+    [group="dougy"] {
+        innercolor: #be6127;
     }
     
     </stylesheet> 
     
-    <designerview name="Philip" id="gPhilip" initstage="late"/>
-    <designerview name="George" id="gGeorge" initstage="late" />
+    <designerview name="Canyon" id="gCanyon" initstage="late"/>
+    <designerview name="Jareth" id="gJareth" initstage="late" />
 
-    <designerview id="gGroove" group="groovy" />
-    <designerview id="gYuck" group="yucky" />    
+    <designerview id="gEverest" group="everest" />
+    <designerview id="gDouggie" group="dougy" />    
     
         
-<TestSuite name="idssuite">
-    <TestCase>  
-<!--        <handler name="oninit">
-            this.addTest( "testPhilip");
-            this.addTest("testGeorge");
-            this.addTest("testNonNameAttrs");
-            this.run();
-        </handler>-->
-
-        <method name="testPhilip">
-            assertNotNull( gPhilip );
-            assertEquals( 300, gPhilip.getWidth() );
-            assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
-            <!--this.finishedTest("testPhilip");-->
+    <class name="AttrSelectorTestCase" extends="TestCase">
+        <method name="testCanyon">
+            assertNotNull( gCanyon );
+            assertEquals( 300, gCanyon.getWidth() );
+            assertEquals( "san jose state", gCanyon.getAttribute("miscdata"));
         </method>
 
-        <method name="testGeorge">
-            assertNotNull( gGeorge );
-            assertEquals( 200, gGeorge.getWidth() );
-            assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
-            <!--this.finishedTest("testGeorge");-->
+        <method name="testJareth">
+            assertNotNull( gJareth );
+            assertEquals( 200, gJareth.getWidth() );
+            assertEquals( "somewhere far away", gJareth.getAttribute("miscdata"));
         </method>
 
         <method name="testNonNameAttrs">
-            assertEquals( 0x25592c, gGroove.getAttribute("innercolor") );
-            assertEquals( 0xbe6127, gYuck.getAttribute("innercolor") );            
-            <!--this.finishedTest("testNonNameAttrs");-->
+            assertEquals( 0x25592c, gEverest.getAttribute("innercolor") );
+            assertEquals( 0xbe6127, gDouggie.getAttribute("innercolor") );            
         </method>
-
-    </TestCase> 
-</TestSuite>
-
+    </class>
 </library>

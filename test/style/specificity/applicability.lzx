@@ -1,7 +1,5 @@
 <!-- Copyright 2007 Laszlo Systems -->
-<canvas debug="true">
-<include href="lzunit"/>
-<include href="../test"/>
+<library> 
     <stylesheet>
         /*IMPORTANT: This test is only testing properly if the definitions
           are not in class-hierarchy order. */
@@ -10,11 +8,11 @@
             testme: 1;
         }
 
-        subsubclass {
+        subAPLsubclass {
             testme: 3;
         }
 
-        subclass {
+        APLsubclass {
             testme: 2;
         }
         
@@ -23,15 +21,15 @@
             testme: 4;
         }
 
-        supercontainer subsubclass {
+        supercontainer subAPLsubclass {
             testme: 6;
         }
 
-        supercontainer subclass {
+        supercontainer APLsubclass {
             testme: 5;
         }
 
-        superclass subclass{
+        superclass APLsubclass{
             testme :7;
         }
 
@@ -43,11 +41,11 @@
             testme :9;
         }
 
-        subclass subsubclass{
+        APLsubclass subAPLsubclass{
             testme :11;
         }
 
-        superclass subsubclass{
+        superclass subAPLsubclass{
             testme :10;
         }
 
@@ -65,55 +63,45 @@
         <attribute name="cprop" value="$style{ 'testme' }"/>
     </class>
 
-    <class name="subclass" extends="superclass"/>
-    <class name="subsubclass" extends="subclass"/>
+    <class name="APLsubclass" extends="superclass"/>
+    <class name="subAPLsubclass" extends="APLsubclass"/>
 
     <superclass  id="supi"/>
-    <subclass    id="subi"/>
-    <subsubclass id="subsubi"/>
+    <APLsubclass    id="subi"/>
+    <subAPLsubclass id="subsubi"/>
 
     <class name="supercontainer"/>
     <class name="subcontainer" extends="supercontainer"/>
 
     <supercontainer>
         <superclass  id="sp_supi"/>
-        <subclass    id="sp_subi"/>
-        <subsubclass id="sp_subsubi"/>
+        <APLsubclass    id="sp_subi"/>
+        <subAPLsubclass id="sp_subsubi"/>
     </supercontainer>
 
-    <subclass>
+    <APLsubclass>
         <superclass  id="sb_supi"/>
-        <subclass    id="sb_subi"/>
-        <subsubclass id="sb_subsubi"/>
-    </subclass>
+        <APLsubclass    id="sb_subi"/>
+        <subAPLsubclass id="sb_subsubi"/>
+    </APLsubclass>
 
     <view id="multimatch">
         <attribute name="cprop" value="$style{ 'testme' }"/>
     </view>
 
 
-<TestSuite name="applicability">
-<TestCase>
-        <!--<handler name="oninit">
-            this.addTest( "testClasses");
-            this.addTest( "testCompound");
-            this.addTest( "testComplexFunky");
-            this.addTest( "testRuleOrder");
-            this.run();
-        </handler>-->
+    <class name="ApplicabilityTestCase" extends="TestCase">
 
         <method name="testClasses">
             assertEquals( 1, supi.cprop );
             assertEquals( 2, subi.cprop );
             assertEquals( 3, subsubi.cprop );
-            <!--this.finishedTest("testClasses");-->
         </method>
         
         <method name="testCompound">
             assertEquals( 4, sp_supi.cprop );
             assertEquals( 5, sp_subi.cprop );
             assertEquals( 6, sp_subsubi.cprop );
-            <!--this.finishedTest("testCompound");-->
         </method>
 
         <method name="testComplexFunky">
@@ -121,22 +109,16 @@
             //if the selectors match, lexical order should win
             assertEquals( 9, sb_supi.cprop );
 
-            //should grab the more specific subclass selector
+            //should grab the more specific APLsubclass selector
             assertEquals( 7, sb_subi.cprop );
 
             //should walk up and grab the more specifc previous descendant
             //selector
             assertEquals( 11, sb_subsubi.cprop );
-            <!--this.finishedTest("testComplexFunky");-->
         </method>
 
         <method name="testRuleOrder">
             assertEquals( 100, multimatch.cprop );
-            <!--this.finishedTest("testRuleOrder");-->
         </method>
-
-</TestCase>
-</TestSuite>
-
-</canvas>
-
+    </class>
+</library>

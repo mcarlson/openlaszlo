@@ -1,11 +1,5 @@
 <!-- Copyright 2007 Laszlo Systems -->
-<canvas>
-<include href="lzunit"/>
-
-    <text text="this file tests what happens when we include an inline stylesheet, and a src= stylesheet" />
-    <debug/>
-
-
+<library>
     <stylesheet>
         designerview {
             width: 279;
@@ -23,6 +17,12 @@
     <stylesheet src="external1.css" />
     <stylesheet src="external2.css" />
     
+    <include href="nicelibraryfile.lzx" />
+    
+    <class name="StylesheetTestCase" extends="TestCase">
+        <text text="this file tests what happens when we include an inline stylesheet, and a src= stylesheet" />
+
+    
     <!-- this should cause a compiler error, and does -->
     <!-- 
     <stylesheet src="idontexist.css">
@@ -34,72 +34,49 @@
     <!-- this should cause a compiler error, and does -->
     <!--   <stylesheet></stylesheet> --> 
     
-    <include href="../designerview.lzx" />
-    <include href="../test"/>    
-    
-    <include href="nicelibraryfile.lzx" />
 
-    <simplelayout axis="y" spacing="5" />
+    <view>
+        <simplelayout axis="x" spacing="2" />
+        <!-- this view is styled by the element selector "designerview" 
+            declared in the inline stylesheet above --> 
+        <designerview id="gPlainDV" />
     
-    <!-- this view is styled by the element selector "designerview" 
-        declared in the inline stylesheet above --> 
-    <designerview id="gPlainDV" />
+        <!-- these two views are styled by external1.css --> 
+        <designerview name="Philip" id="gPhilip" />
+        <designerview name="George" id="gGeorge" />
+
+        <!-- these two views are styled by external2.css -->
+        <designerview id="gGroove" group="groovy" />
+        <designerview id="gYuck" group="yucky" />  
     
-    <!-- these two views are styled by external1.css --> 
-    <designerview name="Philip" id="gPhilip" />
-    <designerview name="George" id="gGeorge" />
-
-    <!-- these two views are styled by external2.css -->
-    <designerview id="gGroove" group="groovy" />
-    <designerview id="gYuck" group="yucky" />  
-    
-    <designerview id="mynewfun" />
-
-<TestSuite>
-    <TestCase>
-
-<!--     <handler name="oninit">
-         this.addTest( "testPlain");
-         this.addTest( "testPhilip");
-         this.addTest( "testGeorge");         
-         this.addTest( "testNonNameAttrs"); 
-         this.addTest( "testLibrary");          
-         this.run();
-     </handler>-->
+        <designerview id="mynewfun" />
+    </view>
 
      <method name="testPlain">
          assertEquals( 279, gPlainDV.getWidth() );
          assertEquals( "uc berkeley", gPlainDV.getAttribute("miscdata"));
-         <!--this.finishedTest("testPlain");-->
      </method>
 
      <method name="testPhilip">
          assertNotNull( gPhilip );
          assertEquals( 300, gPhilip.getWidth() );
          assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
-<!--         this.finishedTest("testPhilip");-->
      </method>
 
      <method name="testGeorge">
          assertNotNull( gGeorge );
          assertEquals( 200, gGeorge.getWidth() );
          assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
-<!--         this.finishedTest("testGeorge");-->
      </method>
 
      <method name="testNonNameAttrs">
          assertEquals( '0x25592c', gGroove.getAttribute("innercolor") );
          assertEquals( '0xbe6127', gYuck.getAttribute("innercolor") );            
-         <!--this.finishedTest("testNonNameAttrs");-->
      </method>
 
      <method name="testLibrary">
          assertEquals( '0x004499', gBiblio.getAttribute("innercolor") );
-         <!--this.finishedTest("testLibrary");-->
      </method>
 
-
-    </TestCase> 
-</TestSuite>
-
-</canvas> 
+</class>
+</library>

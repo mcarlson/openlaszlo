@@ -1,63 +1,45 @@
 <!-- Copyright 2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
-<canvas debug="true"  bgcolor="0xAAAAAA">
-<include href="lzunit"/>
-    <include href="../test"/>
-    <script>
-    Debug.write("This test file demonstrates descendant selectors.");
-    </script>
-    <include href="../test"/>
-    <debug/>
-    
+<library>
     <stylesheet>
-    /* this should apply only to preston */ 
-    styledbox {
+    /* this should apply only to lecithin */ 
+    groovystyledbox {
         stylebgcolor: #515151;
         styleinnercolor: #FF8888;
     }
     
-    /* this should apply only to george */ 
-    styledbox styledbox {
+    /* this should apply only to tinder */ 
+    groovystyledbox groovystyledbox {
         styleinnercolor: #8888FF;  
     }
     
-    /* This should apply only to jeb and gwb */ 
-    styledbox styledbox styledbox {
+    /* This should apply only to delaney and loden */ 
+    groovystyledbox groovystyledbox groovystyledbox {
         styleinnercolor: #88FF00;  
     }
     
     
     </stylesheet>
     
-    <class name="styledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
+    <class name="groovystyledbox" width="70" height="70" bgcolor="$style{'stylebgcolor'}" >
         <view name="inner" bgcolor="$style{'styleinnercolor'}" x="5" y="5" width="10" height="10" />
     </class>
-    
-    <styledbox id="preston" width="150">
-        <styledbox id="george" x="30" width="150" y="20">
-            <styledbox x="50" id="jeb" y="20"/>
-            <styledbox x="70" id="gwb" y="20"/>            
-        </styledbox>
-    </styledbox>
 
-    <simplelayout axis="y" spacing="0"/>
-    <TestSuite name="simpledescendant">
-        <TestCase>
-        <!--<handler name="oninit">
-            this.addTest("testSimpleDescendant");
-            this.run();
-        </handler>-->
+    <class name="SimplerDescendantSelectorTestCase" extends="TestCase">
+    
+        <groovystyledbox id="lecithin" width="150">
+            <groovystyledbox id="tinder" x="30" width="150" y="20">
+                <groovystyledbox x="50" id="delaney" y="20"/>
+                <groovystyledbox x="70" id="loden" y="20"/>            
+            </groovystyledbox>
+        </groovystyledbox>
 
         <!-- Descendant selectors test -->        
         <method name="testSimpleDescendant">
-            assertEquals(  '0x515151', preston.bgcolor);
-            assertEquals(  '0xFF8888', preston.inner.bgcolor); 
-            assertEquals(  '0x8888FF', george.inner.bgcolor); 
-            assertEquals(  '0x88FF00', jeb.inner.bgcolor);                         
-            assertEquals(  '0x88FF00', gwb.inner.bgcolor);                                     
-            <!--this.finishedTest("testSimpleDescendant");-->
+            assertEquals(  '0x515151', lecithin.bgcolor);
+            assertEquals(  '0xFF8888', lecithin.inner.bgcolor); 
+            assertEquals(  '0x8888FF', tinder.inner.bgcolor); 
+            assertEquals(  '0x88FF00', delaney.inner.bgcolor);                         
+            assertEquals(  '0x88FF00', loden.inner.bgcolor);                                     
         </method>
-        </TestCase>
-    </TestSuite>
-        
-    
-</canvas>
+    </class>    
+</library>

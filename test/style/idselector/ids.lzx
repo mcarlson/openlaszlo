@@ -1,45 +1,38 @@
 <!-- Copyright 2007 Laszlo Systems -->
 <library>
-    <include href="lzunit"/>
-    <include href="../designerview.lzx" />
-    <simplelayout />
-    <designerview id="gPhilip" initstage="late"/>
-    <designerview id="gGeorge" initstage="late" />   
-    <designerview id="gIzzy" initstage="late" />    
+
+    <stylesheet src="ids.css" />
+
+    <designerview id="gPhilipAndrew" />
+    <designerview id="gGeorgeRobin" />
+    <designerview id="gIzzy" />
     <designerview id="cabinet"/>
 
     <designerview /> <!-- no id, just plain --> 
     <designerview id="gFindMe" /> 
     <designerview bordercolor="0xABBADD" /> <!-- no id -->
+    
+    <stylesheet>
+        #gFindMe {
+            miscdata: "find me please";
+        }
+    </stylesheet>
         
-    <TestSuite name="idssuite">
-        <TestCase>
-<!--        <handler name="oninit">
-            this.addTest( "testPhilip");
-            this.addTest("testGeorge");
-            // this.addTest( "testTagTypeAndId");            
-            this.run();
-        </handler>-->
-
-        <method name="testPhilip">
-            assertNotNull( gPhilip );
-            assertEquals( 300, gPhilip.getWidth() );
-            assertEquals( "san jose state", gPhilip.getAttribute("miscdata"));
-            <!--this.finishedTest("testPhilip");-->
+    <class name="IdsTestCase" extends="TestCase">
+        <method name="testPhilipAndrew">
+            assertNotNull( gPhilipAndrew );
+            assertEquals( 300, gPhilipAndrew.getWidth() );
+            assertEquals( "san jose state", gPhilipAndrew.getAttribute("miscdata"));
         </method>
 
-        <method name="testGeorge">
-            assertNotNull( gGeorge );
-            assertEquals( 200, gGeorge.getWidth() );
-            assertEquals( "somewhere far away", gGeorge.getAttribute("miscdata"));
-            <!--this.finishedTest("testGeorge");-->
+        <method name="testGeorgeRobin">
+            assertNotNull( gGeorgeRobin );
+            assertEquals( 200, gGeorgeRobin.getWidth() );
+            assertEquals( "somewhere far away", gGeorgeRobin.getAttribute("miscdata"));
         </method>
         
         <method name="testTagTypeAndId">
             assertEquals( "find me please", gFindMe.getAttribute("miscdata"));            
-            <!--this.finishedTest("testTagTypeAndId");-->
         </method>
-        </TestCase> 
-    </TestSuite>
-
+    </class>
 </library>

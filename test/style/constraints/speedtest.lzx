@@ -1,13 +1,6 @@
 <!-- Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved. --> 
-<canvas debug="true"  bgcolor="0xAAAAAA">
-    <include href="lzunit"/>
-    <include href="../test"/>
-    <script>
-    Debug.write("This test file exercises the time it takes to lookup CSS properties");
-    </script>
-    <include href="../test"/>
-    <debug/>
-    
+<library>    
+    <include href="lzunit" />
     <stylesheet>
         baseclass {
             prop1: 10;
@@ -63,18 +56,10 @@
         </subclass>
     </baseclass>
 
-<TestSuite name="constraintsuite">
-    <TestCase>
-<!--        <handler name="oninit">
-            this.addTest("testLookupTimes");
-            this.addTest("makeSomeNodes");
-            this.run();
-        </handler>-->
 
-        <attribute name="iter" value="500"/>
-        <!--
-        <attribute name="iter" value="1000"/>
-        -->
+    <class name="ConstraintSpeedTestCase" extends="TestCase">
+
+        <attribute name="iter" value="50"/>
 
         <method name="getCSSProp" args="n, prop">
             var cssStyle = LzCSSStyle.getComputedStyle( n );
@@ -95,9 +80,8 @@
                 assertEquals( 70, this.getCSSProp( subsubID, "prop8" ) );
             }
             var tt = getTimer() - t ;
-            assertTrue(1000 > tt );
+            assertTrue(2000 > tt );
             Debug.write( 'Lookup test took: ' + tt );
-            <!--this.finishedTest("testLookupTimes");-->
         </method>
 
         <method name="makeSomeNodes">
@@ -106,9 +90,6 @@
 
             }
             assertEquals( iter, subsubID.subnodes.length );
-            <!--this.finishedTest("makeSomeNodes");-->
         </method>
-
-    </TestCase>        
-</TestSuite> 
-</canvas>
+    </class>
+</library>
