@@ -98,7 +98,12 @@ LzCSSStyle.getPropertyValueFor = function ( node , pname ){
         }
 
         //now look at any preprocessed rules
-        var pprules = node.name ? this._nameRules[ node.name ] : null;
+        // NOTE: 
+        // it would be nice to just use (node.name) as the condition, but 
+        // swf6 does not obey obey the ECMA string->boolean coercion specification.
+        // As a workaround, we compare node.name to null, thereby ensuring we get a boolean
+        // in swf6 or ECMA-compatible runtimes
+        var pprules = (node.name != null) ? this._nameRules[ node.name ] : null;
         if ( pprules ){
             //same code as above, but inline to avoid function call overhead
             for ( var i = pprules.length -1; i >=0; i-- ){

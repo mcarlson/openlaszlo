@@ -18,8 +18,19 @@
             testdata: "i am view";
         }
         
+        text {
+            x:3;
+        }
+        text[name="title"] {
+            x:100;
+        }
+        
+        
     </stylesheet>
     
+    <text name="title" id="mytitle" y="10" text="the title is here" resize="true"
+        x="$style{'x'}"/>
+        
     <view name="thename" id="joseph">
         <attribute name="testdata" value="$style{'testdata'}" />
     </view>
@@ -53,7 +64,6 @@
     <view> <!-- another scope for name="thename" --> 
         <testclass id="doug" name="thename">
                 <attribute name="testdata" value="$style{'testdata'}" />
-                
                 <view id="randy">
                     <attribute name="testdata" value="$style{'testdata'}" />
                 </view>
@@ -64,9 +74,11 @@
         <method name="testthename">
             assertEquals( "i am thename", joseph.getAttribute("testdata") );
             assertEquals( "i am view", snoopy.getAttribute("testdata") );                                    
-            <!--this.finishedTest("testthename");-->
         </method>
 
+        <!-- This is known to fail in swf6, but works in swf7 and swf8. Filed as 
+            LPP-4090, CSS specificity in swf6 for name selectors 
+            [2007.06.04 bshine] -->
         <method name="testNamedAncestor">
             /* 
                 Should edgar take his style from rule 1, which his
@@ -85,7 +97,6 @@
                 the class is a user class or built-in class.                 
             */            
             assertEquals( "i am view", cheever.getAttribute("testdata") );                                   
-            <!--this.finishedTest("testNamedAncestor");-->
         </method>
 
         <method name="testNameVsElement">
@@ -93,7 +104,12 @@
             /* randy is the reverse of the edgar test case */ 
             assertEquals( "i am view", randy.getAttribute("testdata") );                        
             assertEquals( "i am thename", doug.getAttribute("testdata") );            
-            <!--this.finishedTest("testNameVsElement");-->
+        </method>
+        
+        <method name="testBigParty">
+            Debug.write("testBigParty");
+            // This tests LPP-4063, CSS name attribute selector doesn't work in Flash 6
+            assertEquals(100, mytitle.getAttribute("x") );
         </method>
 
 </class>
