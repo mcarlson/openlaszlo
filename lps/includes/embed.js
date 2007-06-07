@@ -1,7 +1,6 @@
-//* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2006 Laszlo Systems, Inc.  All Rights Reserved.            *
-//* Use is subject to license terms.                                          *
-//* A_LZ_COPYRIGHT_END ********************************************************
+/*Copyright (c) 2002-2007 Laszlo Systems, Inc. All Rights Reserved.
+     This software is the proprietary information of Laszlo Systems, Inc.
+     Use is subject to license terms. */
 
 /*
  * JavaScript library for embedding Laszlo applications
@@ -59,10 +58,15 @@ __lzwroteiediv = false;
  * override the attributes and <param> children of the <object> tag, and
  * the attributes of the <embed> tag.
  */
-function lzEmbed(properties, ieupgradeversion, escapeme) {
+function lzEmbed(properties, ieupgradeversion, escapeme, doDocWrite ) {
     // don't upgrade IE activex control unless asked
     if (ieupgradeversion == null) ieupgradeversion = 6;
 
+    var doWrite = true;
+    if (typeof(doDocWrite) != "undefined") {
+        doWrite = doDocWrite;
+    }
+    
     var url = properties.url;
 
     // strip query string and use FlashVars instead
@@ -113,7 +117,7 @@ function lzEmbed(properties, ieupgradeversion, escapeme) {
     objectParams = {
         movie: url,
         scale: 'noscale',
-        quality: 'best',
+        quality: 'high',
         menu: lzCanvasRuntimeVersion > 6,
         salign: 'lt',
         //allowScriptAccess: 'sameDomain',
@@ -128,7 +132,7 @@ function lzEmbed(properties, ieupgradeversion, escapeme) {
         pluginspage: "http://www.macromedia.com/go/getflashplayer",
         scale: 'noscale',
         src: url,
-        quality: 'best',
+        quality: 'high',
         salign: 'lt',
         menu: lzCanvasRuntimeVersion > 6,
         // The properties parameter should override these.
@@ -177,7 +181,9 @@ function lzEmbed(properties, ieupgradeversion, escapeme) {
         o += lt + '/object>\n';
     } 
     //alert(o);
-    document.write(o);
+    if (doWrite) {
+        document.write(o);
+    }
     return o;
 }
 
@@ -266,15 +272,20 @@ if (this != top) {
 
 function lzHistEmbed(wr) {
     top.webapproot = wr;
-    //alert(top.webapproot + ', ' + window.webapproot);
-    document.write("<div style='position:absolute;left:0px;top:0px;'><iframe src='"+top.webapproot+"/lps/includes/h.html' name='_lzhist' frameborder='0' scrolling='no' width='22' height='0'></iframe></div>");
-    document.write('<div id="_lzevent" style="position:absolute;top:0px;left:0px;"></div>');
+    document.write('<div id="histDiv" style="position:absolute;top:0px;left:0px;"></div>');
+}
+
+//lzWriteHistoryIframe is called by LzHistory.as and should not be called by any wrapper Javascript
+function lzWriteHistoryIframe() {
+    var histHtml = '<div style="position:absolute;left:0px;top:0px;"><iframe src="'+top.webapproot+'/lps/includes/h.html" name="_lzhist" frameborder="0" scrolling="no" width="22" height="0"></iframe></div>';
+    histHtml += '<div id="_lzevent" style="position:absolute;top:0px;left:0px;"></div>';
+    document.getElementById("histDiv").innerHTML += histHtml;
 }
 
 
 // string name
 // string value
-// bool add history event   
+// bool add history    event   
 lzSetCanvasAttributeQ = null;
 function lzSetCanvasAttribute(name, value, addhist) {
     if (lzSetCanvasAttributeQ == null) {

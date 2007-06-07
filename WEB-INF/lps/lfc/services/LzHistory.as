@@ -3,20 +3,19 @@
  ******************************************************************************/
 
 //* A_LZ_COPYRIGHT_BEGIN ******************************************************
-//* Copyright 2001-2004 Laszlo Systems, Inc.  All Rights Reserved.            *
+//* Copyright 2001-2007 Laszlo Systems, Inc.  All Rights Reserved.            *
 //* Use is subject to license terms.                                          *
 //* A_LZ_COPYRIGHT_END ********************************************************
 
 //==============================================================================
 // DEFINE OBJECT: LzHistory
 //
-// NOTE: You must load your lzx with the lzt=history wrapper HTML to use LzHistory.
 //
 // The LzHistory service manages interaction with the browser history and back button.  Save state as often as you like, and advance the history when a new 'page' of values is required.
 // 
 // LzHistory also receives canvas attribute requests from the browser JavaScript method lzSetCanvasAttribute('attrname', attrvalue).  
 // 
-// For example, to set the foo attribute on the canvas no 0 or 1, include this HTML in a copy of the lzt=history wrapper HTML:
+// For example, to set the foo attribute on the canvas to 0 or 1, include this HTML in your wrapper HTML:
 // 
 // <form>
 //     <input type="button" value="0" onclick="lzSetCanvasAttribute('foo', 0)"/>
@@ -59,40 +58,47 @@ LzHistory.__lzloading = false;
 LzHistory.__lzloadcache = {};
 LzHistory.__loadcacheused = false;
 
+LzHistory.__isFirstLoad = true;
+LzHistory.isReady = false;
+LzHistory.onready = new LzEvent();
 //-----------------------------------------------------------------------------
 // @keywords private
 //-----------------------------------------------------------------------------
 LzHistory.receiveHistory = function(o){
-    //_root.Debug.write('onhistory ', o, this.__lzhistq);
-    o *= 1;
-    if (! o) o = 0;
-    if (o > this.__lzhistq.length - 1) o = this.__lzhistq.length;
-    this.offset = o;
-    this.onoffset.sendEvent(o);
-    
-    var h = this.__lzhistq[o];
-    for (var u in h) {
-        var o = h[u];
-        //_root.Debug.write('restoring state ', o);
-        o.c.setAttribute(o.n, o.v);
-    }
-    
-    
-    // copy values cached during load
-    if (this.__loadcacheused) {
-        var out = this.__lzhistq[this.offset];
-        if (out == null) out = {};
-        var u;
-        for (u in this.__lzloadcache) {
-            //_root.Debug.write('restoring', o, this.__lzloadcache[u]);
-            out[u] = this.__lzloadcache[u];
-        }
-        this.__lzhistq[this.offset] = out;
-        this.__lzloadcache = {};
-        this.__loadcacheused = false;
-    }
-    
-    this.__lzloading = false;
+	if (this.__isFirstLoad) {
+		this.__isFirstLoad = false;
+		this.isReady = true;
+		this.onready.sendEvent();
+	} else {
+	    o *= 1;
+	    if (! o) o = 0;
+	    if (o > this.__lzhistq.length - 1) o = this.__lzhistq.length;
+	    this.offset = o;
+	    this.onoffset.sendEvent(o);
+	    
+	    var h = this.__lzhistq[o];
+	    for (var u in h) {
+	        var o = h[u];
+	        //_root.Debug.write('restoring state ', o);
+	        o.c.setAttribute(o.n, o.v);
+	    }
+	    
+	    // copy values cached during load
+	    if (this.__loadcacheused) {
+	        var out = this.__lzhistq[this.offset];
+	        if (out == null) out = {};
+	        var u;
+	        for (u in this.__lzloadcache) {
+	            //_root.Debug.write('restoring', o, this.__lzloadcache[u]);
+	            out[u] = this.__lzloadcache[u];
+	        }
+	        this.__lzhistq[this.offset] = out;
+	        this.__lzloadcache = {};
+	        this.__loadcacheused = false;
+	    }
+	    
+	    this.__lzloading = false;
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -212,4 +218,6 @@ LzHistory.next = function() {
 LzHistory.prev = function() {
     this.move(-1);
 }
+
+LzBrowser.loadJS('lzWriteHistoryIframe();');
 
