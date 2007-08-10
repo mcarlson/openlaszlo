@@ -323,7 +323,7 @@ LzLoadQueue.makeRequest = function( loadobj ){
 LzLoadQueue.loadMovieProxiedOrDirect = function (loadobj) {
     var reqstr;
     if ( !loadobj.proxied ) {
-        reqstr = loadobj.reqobj.url;
+        reqstr = _root.LzBrowser.toAbsoluteURL(loadobj.reqobj.url, false);
     } else {
 
         delete loadobj.proxied;
